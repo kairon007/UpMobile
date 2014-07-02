@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppBaseTheme" parent="android:Theme"/>
+    
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- common customizations -->
+        <item name="android:windowBackground">@color/window_background</item>
+        
+    </style>
+
+    
+    
+	<style name="Dialog" parent="android:Theme.Dialog" />
+	<style name="Library" parent="AppTheme">
+		<item name="android:windowNoTitle">true</item>
+	</style>
+	<style name="Playback" parent="AppTheme">
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowBackground">@null</item>
+	</style>
+	<style name="BackActionBar" parent="AppTheme" />
+	<style name="AlertDialogItem">
+		<item name="android:textColor">@android:color/primary_text_light</item>
+	</style>
+	<!-- Color used in LibraryActivity list dividers -->
+	<color name="divider_color">#f444</color>
+	<color name="window_background">#333</color>
+	<color name="dimmed">#3fff</color>
+		
+</resources>
