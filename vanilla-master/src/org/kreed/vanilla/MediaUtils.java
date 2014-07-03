@@ -43,7 +43,7 @@ public class MediaUtils {
 	/**
 	 * A special invalid media type.
 	 */
-	public static final int TYPE_INVALID = -1;
+	public static final int TYPE_INVALID = -1; 
 	/**
 	 * Type indicating an id represents an artist.
 	 */
