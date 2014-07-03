@@ -112,5 +112,6 @@ THE SOFTWARE.
 	    <item>SearchSoundCloud</item>
 	    <item>SearchSogou</item>
 	    <item>SearchGrooveshark</item>
+	    <item>SearchTing</item>
 	</string-array>
 </resources>
