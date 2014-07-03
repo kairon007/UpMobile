@@ -56,7 +56,7 @@ THE SOFTWARE.-->
                     android:text="29"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/dimmed"
-                    android:textSize="36sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/caption"
@@ -69,7 +69,7 @@ THE SOFTWARE.-->
                     android:text="tracks"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/dimmed"
-                    android:textSize="12dp" />
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 
