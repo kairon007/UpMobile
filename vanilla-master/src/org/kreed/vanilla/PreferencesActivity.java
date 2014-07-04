@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -221,5 +222,11 @@ public class PreferencesActivity extends PreferenceActivity {
 			view.setBackgroundColor(Color.TRANSPARENT);
 			return view;
 		}
+	}
+	
+	@TargetApi( Build.VERSION_CODES.KITKAT )
+	@Override
+	protected boolean isValidFragment( String fragmentName ) {
+	    return true;
 	}
 }
