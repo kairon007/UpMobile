@@ -1086,7 +1086,7 @@ public class LibraryActivity
 	{
 		switch (item.getItemId()) {
 		case MENU_SEARCH:
-			int position = mPagerAdapter.getCurrentPosition();
+			int position = mPagerAdapter.getCurrentType();
 			if (position == -1) {
 				position = page;
 			}
@@ -1128,7 +1128,7 @@ public class LibraryActivity
 		header.check(check);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		int position = mPagerAdapter.getCurrentPosition();
+		int position = mPagerAdapter.getCurrentType();
 		if (position == -1) {
 			position = page;
 		}

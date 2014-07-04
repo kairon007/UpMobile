@@ -206,7 +206,7 @@ public class LibraryPagerAdapter
 
 	boolean serchboxIsHide = false;
 	
-	private int currentPosition = -1;
+	private int currentType = -1;
 	
 	/**
 	 * Create the LibraryPager.
@@ -432,6 +432,16 @@ public class LibraryPagerAdapter
 			mCurrentPage = position;
 			mActivity.onPageChanged(position, adapter);
 		}
+		
+		if(mActivity.isSearchBoxVisible() && type == MediaUtils.TYPE_SEARCH) {
+			mActivity.setSearchBoxVisible(false);
+			serchboxIsHide = true;
+		}
+		if(serchboxIsHide && type != MediaUtils.TYPE_SEARCH) {
+			mActivity.setSearchBoxVisible(true);
+			serchboxIsHide = false;
+		}
+		currentType = type;
 	}
 
 	@Override
@@ -809,8 +819,8 @@ public class LibraryPagerAdapter
 	{
 	}
 	
-	public int getCurrentPosition() {
-		return currentPosition;
+	public int getCurrentType() {
+		return currentType;
 	}
 	
 	@Override
@@ -824,15 +834,6 @@ public class LibraryPagerAdapter
 		//   makes tab bar and limiter updates look bad
 		// So we use both.
 		setPrimaryItem(null, position, null);
-		if(mActivity.isSearchBoxVisible() && position == 0) {
-			mActivity.setSearchBoxVisible(false);
-			serchboxIsHide = true;
-		}
-		if(serchboxIsHide && position != 0) {
-			mActivity.setSearchBoxVisible(true);
-			serchboxIsHide = false;
-		}
-		currentPosition = position;
 	}
 
 	/**
