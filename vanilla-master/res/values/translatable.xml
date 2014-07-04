@@ -235,6 +235,7 @@ THE SOFTWARE.
 	<string name="toggle_controls">Toggle controls</string>
 	
 	<string name="search_hint">Title, Album or Artist</string>
+	<string name="filter_hint">Filter your artists</string>
 	<string name="download">Download</string>
 	<string name="download_started">Download started for %s</string>
 	<string name="downloads">Downloads</string>

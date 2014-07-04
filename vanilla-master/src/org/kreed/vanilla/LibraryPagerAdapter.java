@@ -26,6 +26,8 @@ import java.util.Arrays;
 
 import org.kreed.vanilla.app.VanillaAp;
 
+import com.google.ads.internal.ActivationOverlay;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -40,6 +42,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -48,6 +51,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * PagerAdapter that manages the library media ListViews.
@@ -200,6 +204,10 @@ public class LibraryPagerAdapter
 		}
 	};
 
+	boolean serchboxIsHide = false;
+	
+	private int currentPosition = -1;
+	
 	/**
 	 * Create the LibraryPager.
 	 *
@@ -800,7 +808,11 @@ public class LibraryPagerAdapter
 	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 	{
 	}
-
+	
+	public int getCurrentPosition() {
+		return currentPosition;
+	}
+	
 	@Override
 	public void onPageSelected(int position)
 	{
@@ -812,6 +824,15 @@ public class LibraryPagerAdapter
 		//   makes tab bar and limiter updates look bad
 		// So we use both.
 		setPrimaryItem(null, position, null);
+		if(mActivity.isSearchBoxVisible() && position == 0) {
+			mActivity.setSearchBoxVisible(false);
+			serchboxIsHide = true;
+		}
+		if(serchboxIsHide && position != 0) {
+			mActivity.setSearchBoxVisible(true);
+			serchboxIsHide = false;
+		}
+		currentPosition = position;
 	}
 
 	/**

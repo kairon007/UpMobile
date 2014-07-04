@@ -26,26 +26,6 @@ THE SOFTWARE.
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-	<android.support.v4.view.ViewPager
-		android:id="@+id/pager"
-		android:layout_width="fill_parent"
-		android:layout_height="0px"
-		android:layout_weight="1" />
-	<HorizontalScrollView
-		android:id="@+id/limiter_scroller"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom|left">
-		<LinearLayout
-			android:id="@+id/limiter_layout"
-			android:layout_width="wrap_content"
-			android:layout_height="fill_parent" />
-	</HorizontalScrollView>
-	<com.mopub.mobileads.MoPubView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/banner_view"
-    android:layout_width="match_parent"
-    android:layout_gravity="bottom"
-    android:layout_height="50dp" />
 	<LinearLayout
 		android:id="@+id/search_box"
 		android:layout_width="fill_parent"
@@ -60,6 +40,7 @@ THE SOFTWARE.
 			android:layout_width="0px"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
+			android:hint="@string/filter_hint"
 			android:inputType="textFilter" />
 		<ImageButton
 			android:id="@+id/clear_button"
@@ -70,8 +51,31 @@ THE SOFTWARE.
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent"
 			android:background="@drawable/selectable_item_bg"
-			android:src="@drawable/close"
+			android:src="@drawable/ic_action_sort_by_size"
 			android:contentDescription="@string/clear_search" />
 	</LinearLayout>
+    
+	<android.support.v4.view.ViewPager
+		android:id="@+id/pager"
+		android:layout_width="fill_parent"
+		android:layout_height="0px"
+		android:layout_weight="1" />
+	<HorizontalScrollView
+		android:id="@+id/limiter_scroller"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom|left">
+		<LinearLayout
+			android:id="@+id/limiter_layout"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:orientation="horizontal" />
+	</HorizontalScrollView>
+	<com.mopub.mobileads.MoPubView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/banner_view"
+    android:layout_width="match_parent"
+    android:layout_gravity="bottom"
+    android:layout_height="50dp" />
+	
 </LinearLayout>
 

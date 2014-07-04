@@ -747,11 +747,12 @@ public class LibraryActivity
 	@Override
 	public void onClick(View view)
 	{
-		if (view == mClearButton) {
-			if (mTextFilter.getText().length() == 0)
-				setSearchBoxVisible(false);
-			else
-				mTextFilter.setText("");
+		if (view == mClearButton) {//mClearButton
+//			if (mTextFilter.getText().length() == 0)
+//				setSearchBoxVisible(false);
+//			else
+//				mTextFilter.setText("");
+			openSortDialog();
 		} else if (view == mCover || view == mActionControls) {
 			openPlaybackActivity();
 		} else if (view == mEmptyQueue) {
@@ -1074,6 +1075,10 @@ public class LibraryActivity
 		return super.onPrepareOptionsMenu(menu);
 	}
 
+	public boolean isSearchBoxVisible() {
+		return mSearchBoxVisible;
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -1085,35 +1090,7 @@ public class LibraryActivity
 			openPlaybackActivity();
 			return true;
 		case MENU_SORT: {
-			MediaAdapter adapter = (MediaAdapter)mCurrentAdapter;
-			int mode = adapter.getSortMode();
-			int check;
-			if (mode < 0) {
-				check = R.id.descending;
-				mode = ~mode;
-			} else {
-				check = R.id.ascending;
-			}
-
-			int[] itemIds = adapter.getSortEntries();
-			String[] items = new String[itemIds.length];
-			Resources res = getResources();
-			for (int i = itemIds.length; --i != -1; ) {
-				items[i] = res.getString(itemIds[i]);
-			}
-
-			RadioGroup header = (RadioGroup)getLayoutInflater().inflate(R.layout.sort_dialog, null);
-			header.check(check);
-
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(R.string.sort_by);
-			builder.setSingleChoiceItems(items, mode + 1, this); // add 1 for header
-			builder.setNeutralButton(R.string.done, null);
-
-			AlertDialog dialog = builder.create();
-			dialog.getListView().addHeaderView(header);
-			dialog.setOnDismissListener(this);
-			dialog.show();
+			openSortDialog();
 			return true;
 		}
 		default:
@@ -1121,6 +1098,38 @@ public class LibraryActivity
 		}
 	}
 
+	public void openSortDialog() {
+		MediaAdapter adapter = (MediaAdapter)mCurrentAdapter;
+		int mode = adapter.getSortMode();
+		int check;
+		if (mode < 0) {
+			check = R.id.descending;
+			mode = ~mode;
+		} else {
+			check = R.id.ascending;
+		}
+
+		int[] itemIds = adapter.getSortEntries();
+		String[] items = new String[itemIds.length];
+		Resources res = getResources();
+		for (int i = itemIds.length; --i != -1; ) {
+			items[i] = res.getString(itemIds[i]);
+		}
+
+		RadioGroup header = (RadioGroup)getLayoutInflater().inflate(R.layout.sort_dialog, null);
+		header.check(check);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getResources().getString(R.string.sort_by) + " \"" + mPagerAdapter.getPageTitle(mPagerAdapter.getCurrentPosition())+"\"");
+		builder.setSingleChoiceItems(items, mode + 1, this); // add 1 for header
+		builder.setNeutralButton(R.string.done, null);
+
+		AlertDialog dialog = builder.create();
+		dialog.getListView().addHeaderView(header);
+		dialog.setOnDismissListener(this);
+		dialog.show();
+	}
+	
 	/**
 	 * Call addToPlaylist with the results from a NewPlaylistDialog stored in
 	 * obj.
@@ -1194,24 +1203,24 @@ public class LibraryActivity
 		mPagerAdapter.invalidateData();
 	}
 
-	private void setSearchBoxVisible(boolean visible)
+	protected void setSearchBoxVisible(boolean visible)
 	{
 		mSearchBoxVisible = visible;
 		mSearchBox.setVisibility(visible ? View.VISIBLE : View.GONE);
-		if (mControls != null) {
-			mControls.setVisibility(visible || (mState & PlaybackService.FLAG_NO_MEDIA) != 0 ? View.GONE : View.VISIBLE);
-		} else if (mActionControls != null) {
-			// try to hide the bottom action bar
-			ViewParent parent = mActionControls.getParent();
-			if (parent != null)
-				parent = parent.getParent();
-			if (parent != null && parent instanceof ViewGroup) {
-				ViewGroup ab = (ViewGroup)parent;
-				if (ab.getChildCount() == 1) {
-					ab.setVisibility(visible ? View.GONE : View.VISIBLE);
-				}
-			}
-		}
+//		if (mControls != null) {
+//			mControls.setVisibility(visible || (mState & PlaybackService.FLAG_NO_MEDIA) != 0 ? View.GONE : View.VISIBLE);
+//		} else if (mActionControls != null) {
+//			// try to hide the bottom action bar
+//			ViewParent parent = mActionControls.getParent();
+//			if (parent != null)
+//				parent = parent.getParent();
+//			if (parent != null && parent instanceof ViewGroup) {
+//				ViewGroup ab = (ViewGroup)parent;
+//				if (ab.getChildCount() == 1) {
+//					ab.setVisibility(visible ? View.GONE : View.VISIBLE);
+//				}
+//			}
+//		}
 
 		if (visible) {
 			mTextFilter.requestFocus();
