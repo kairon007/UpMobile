@@ -202,7 +202,10 @@ public abstract class PagerAdapter {
      * and associated views should update.
      */
     public void notifyDataSetChanged() {
-        mObservable.notifyChanged();
+    	try {
+    		mObservable.notifyChanged();
+		} catch (Exception e) {
+		}
     }
 
     void registerDataSetObserver(DataSetObserver observer) {
