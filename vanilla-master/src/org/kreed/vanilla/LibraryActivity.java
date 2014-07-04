@@ -151,6 +151,8 @@ public class LibraryActivity
 
 	private HorizontalScrollView mLimiterScroller;
 	private ViewGroup mLimiterViews;
+	
+	private int page;
 
 	/**
 	 * The action to execute when a row is tapped.
@@ -399,7 +401,7 @@ public class LibraryActivity
 		}
 
 		loadTabOrder();
-		int page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);   
+		page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);   
 		if (page != 0) {
 			pager.setCurrentItem(page);
 		}
@@ -1084,7 +1086,13 @@ public class LibraryActivity
 	{
 		switch (item.getItemId()) {
 		case MENU_SEARCH:
-			setSearchBoxVisible(!mSearchBoxVisible);
+			int position = mPagerAdapter.getCurrentPosition();
+			if (position == -1) {
+				position = page;
+			}
+			if (position != 0) {
+				setSearchBoxVisible(!mSearchBoxVisible);
+			}
 			return true;
 		case MENU_PLAYBACK:
 			openPlaybackActivity();
@@ -1120,7 +1128,12 @@ public class LibraryActivity
 		header.check(check);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getResources().getString(R.string.sort_by) + " \"" + mPagerAdapter.getPageTitle(mPagerAdapter.getCurrentPosition())+"\"");
+		int position = mPagerAdapter.getCurrentPosition();
+		if (position == -1) {
+			position = page;
+		}
+		builder.setTitle(getResources().getString(R.string.sort_by) + " \""
+				+ mPagerAdapter.getPageTitle(position)+"\"");
 		builder.setSingleChoiceItems(items, mode + 1, this); // add 1 for header
 		builder.setNeutralButton(R.string.done, null);
 
