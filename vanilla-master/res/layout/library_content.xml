@@ -43,7 +43,7 @@ THE SOFTWARE.
             <EditText
                 android:id="@+id/filter_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:imeOptions="actionSearch|flagNoExtractUi"
                 android:inputType="textFilter"
                 android:lines="1"
@@ -68,7 +68,7 @@ THE SOFTWARE.
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent"
 			android:background="@drawable/selectable_item_bg"
-			android:src="@drawable/ic_action_sort_by_size"
+			android:src="@android:drawable/ic_menu_sort_by_size"
 			android:contentDescription="@string/clear_search" />
 	</LinearLayout>
     
