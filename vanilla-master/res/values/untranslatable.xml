@@ -103,6 +103,7 @@ THE SOFTWARE.
 		<item>@string/fixed_info</item>
 	</string-array>
 	<string-array name="search_engines">
+	    <item>SearchGrooveshark</item>
 	    <item>SearchVmusice</item>
 	    <item>SearchPleer</item>
 	    <item>SearchPoisk</item>
