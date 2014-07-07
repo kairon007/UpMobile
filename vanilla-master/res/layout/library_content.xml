@@ -34,15 +34,33 @@ THE SOFTWARE.
 		android:paddingTop="4dip"
 		android:paddingLeft="4dip"
 		android:background="@drawable/search_background">
-		<EditText
-			android:id="@+id/filter_text"
-			android:layout_width="0px"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:hint="@string/filter_hint"
-			android:inputType="textFilter" />
+		
+	    <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <EditText
+                android:id="@+id/filter_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch|flagNoExtractUi"
+                android:inputType="textFilter"
+                android:lines="1"
+                android:singleLine="true" />
+
+            <ImageButton
+                android:id="@+id/clear_filter"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/selectable_item_bg"
+                android:src="@drawable/close" />
+
+        </FrameLayout>
+		
 		<ImageButton
-			android:id="@+id/clear_button"
+			android:id="@+id/sort_button"
 			android:scaleType="fitCenter"
 			android:paddingLeft="4dip"
 			android:paddingRight="4dip"

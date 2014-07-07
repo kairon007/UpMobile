@@ -64,6 +64,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -137,7 +138,7 @@ public class LibraryActivity
 	private boolean mSearchBoxVisible;
 
 	private TextView mTextFilter;
-	private View mClearButton;
+	private View mSortButton;
 
 	Song song;
 	
@@ -148,6 +149,7 @@ public class LibraryActivity
 	private TextView mAlbum;
 	private ImageView mCover;
 	private View mEmptyQueue;
+	private ImageButton mClearFilterEditText;
 
 	private HorizontalScrollView mLimiterScroller;
 	private ViewGroup mLimiterViews;
@@ -288,6 +290,13 @@ public class LibraryActivity
 		mSearchBox = findViewById(R.id.search_box);
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
+		mClearFilterEditText = (ImageButton)findViewById(R.id.clear_filter);
+		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				mTextFilter.setText(null);
+			}
+		});
 		//Intent intent = getIntent();
 	//	if (intent.getAction().equals(Intent.ACTION_VIEW)){//startActivity(new Intent(this, FullPlaybackActivity.class)); 
 	//		Uri playUri = Uri.parse("file:///sdcard/music/Cassie - Alex.mp3");
@@ -301,8 +310,8 @@ public class LibraryActivity
 		moPubView.setAdUnitId("105feb2adf084dcb9677fd49d099e2ef"); // Enter your Ad Unit ID from www.mopub.com
 		moPubView.loadAd();
 		
-		mClearButton = findViewById(R.id.clear_button);
-		mClearButton.setOnClickListener(this);
+		mSortButton = findViewById(R.id.sort_button);
+		mSortButton.setOnClickListener(this);
 
 		mLimiterScroller = (HorizontalScrollView)findViewById(R.id.limiter_scroller);
 		mLimiterViews = (ViewGroup)findViewById(R.id.limiter_layout);
@@ -749,7 +758,7 @@ public class LibraryActivity
 	@Override
 	public void onClick(View view)
 	{
-		if (view == mClearButton) {//mClearButton
+		if (view == mSortButton) {//mClearButton
 //			if (mTextFilter.getText().length() == 0)
 //				setSearchBoxVisible(false);
 //			else
