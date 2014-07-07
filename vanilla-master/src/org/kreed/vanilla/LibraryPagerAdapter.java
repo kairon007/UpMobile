@@ -203,8 +203,6 @@ public class LibraryPagerAdapter
 			}
 		}
 	};
-
-	boolean serchboxIsHide = false;
 	
 	private int currentType = -1;
 	
@@ -433,13 +431,11 @@ public class LibraryPagerAdapter
 			mActivity.onPageChanged(position, adapter);
 		}
 		
-		if(mActivity.isSearchBoxVisible() && type == MediaUtils.TYPE_SEARCH) {
+		if(type == MediaUtils.TYPE_SEARCH) {
 			mActivity.setSearchBoxVisible(false);
-			serchboxIsHide = true;
 		}
-		if(serchboxIsHide && type != MediaUtils.TYPE_SEARCH) {
+		if(type != MediaUtils.TYPE_SEARCH) {
 			mActivity.setSearchBoxVisible(true);
-			serchboxIsHide = false;
 		}
 		currentType = type;
 	}

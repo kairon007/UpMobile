@@ -1059,10 +1059,12 @@ public class LibraryActivity
 			MenuItem controls = menu.add(null);
 			CompatHoneycomb.setActionView(controls, mActionControls);
 			CompatHoneycomb.setShowAsAction(controls, MenuItem.SHOW_AS_ACTION_ALWAYS);
-			MenuItem search = menu.add(0, MENU_SEARCH, 0, R.string.search).setIcon(R.drawable.ic_menu_search);
-			CompatHoneycomb.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//			removed
+//			MenuItem search = menu.add(0, MENU_SEARCH, 0, R.string.search).setIcon(R.drawable.ic_menu_search);
+//			CompatHoneycomb.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		} else {
-			menu.add(0, MENU_SEARCH, 0, R.string.search).setIcon(R.drawable.ic_menu_search);
+//			removed
+//			menu.add(0, MENU_SEARCH, 0, R.string.search).setIcon(R.drawable.ic_menu_search);
 			menu.add(0, MENU_PLAYBACK, 0, R.string.playback_view).setIcon(R.drawable.ic_menu_gallery);
 		}
 		menu.add(0, MENU_SORT, 0, R.string.sort_by).setIcon(R.drawable.ic_menu_sort_alphabetically);
@@ -1077,23 +1079,25 @@ public class LibraryActivity
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	public boolean isSearchBoxVisible() {
-		return mSearchBoxVisible;
-	}
+//	removed
+//	public boolean isSearchBoxVisible() {
+//		return mSearchBoxVisible;
+//	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getItemId()) {
-		case MENU_SEARCH:
-			int position = mPagerAdapter.getCurrentType();
-			if (position == -1) {
-				position = page;
-			}
-			if (position != 0) {
-				setSearchBoxVisible(!mSearchBoxVisible);
-			}
-			return true;
+//		removed
+//		case MENU_SEARCH:
+//			int position = mPagerAdapter.getCurrentType();
+//			if (position == -1) {
+//				position = page;
+//			}
+//			if (position != 0) {
+//				setSearchBoxVisible(!mSearchBoxVisible);
+//			}
+//			return true;
 		case MENU_PLAYBACK:
 			openPlaybackActivity();
 			return true;
@@ -1235,10 +1239,11 @@ public class LibraryActivity
 //			}
 //		}
 
-		if (visible) {
-			mTextFilter.requestFocus();
-			((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(mTextFilter, 0);
-		}
+//		removed
+//		if (visible) {
+//			mTextFilter.requestFocus();
+//			((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(mTextFilter, 0);
+//		}
 	}
 
 	@Override

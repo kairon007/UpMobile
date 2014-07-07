@@ -33,7 +33,6 @@ THE SOFTWARE.
 		android:layout_gravity="bottom"
 		android:paddingTop="4dip"
 		android:paddingLeft="4dip"
-		android:visibility="gone"
 		android:background="@drawable/search_background">
 		<EditText
 			android:id="@+id/filter_text"
