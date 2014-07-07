@@ -436,6 +436,7 @@ public class LibraryPagerAdapter
 		}
 		if(type != MediaUtils.TYPE_SEARCH) {
 			mActivity.setSearchBoxVisible(true);
+			mActivity.setFilterHint(type);
 		}
 		currentType = type;
 	}

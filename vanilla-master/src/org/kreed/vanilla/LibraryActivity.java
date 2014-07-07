@@ -418,6 +418,13 @@ public class LibraryActivity
 	//	loadAlbumIntent(getIntent());
 	}
 
+	public void setFilterHint(int type){
+		int[] hintResIds = new int[] {R.string.filter_artists_hint, 
+				R.string.filter_songs_hint, R.string.filter_playlists_hint,
+				R.string.filter_genres_hint, R.string.filter_files_hint};
+		mTextFilter.setHint(hintResIds[type - 1]);
+	}
+	
 	@Override
 	public void onRestart()
 	{
