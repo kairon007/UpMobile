@@ -44,11 +44,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.PaintDrawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
+import android.os.Process;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -429,6 +432,7 @@ public class LibraryActivity
 	public void onRestart()
 	{
 		super.onRestart();
+		mPagerAdapter.notifyDataSetChanged();
 		loadTabOrder();
 	}
 

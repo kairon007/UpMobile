@@ -220,7 +220,7 @@ public class LibraryPagerAdapter
 		mCurrentPage = -1;
 		activity.getContentResolver().registerContentObserver(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, true, mPlaylistObserver);
 	}
-
+	
 	/**
 	 * Load the tab order from SharedPreferences.
 	 *
@@ -386,12 +386,13 @@ public class LibraryPagerAdapter
 	@Override
 	public int getItemPosition(Object item)
 	{
-		int type = (Integer)((ListView)item).getTag();
-		int[] order = mTabOrder;
-		for (int i = mTabCount; --i != -1; ) {
-			if (order[i] == type)
-				return i;
-		}
+//		int type = (Integer)((ListView)item).getTag();
+//		Log.d("ffuu", ""+type);
+//		int[] order = mTabOrder;
+//		for (int i = mTabCount; --i != -1; ) {
+//			if (order[i] == type)
+//				return i;
+//		}
 		return POSITION_NONE;
 	}
 
