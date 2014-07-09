@@ -4,11 +4,16 @@ import org.kreed.vanilla.Song;
 
 public class RemoteSong extends Song {
 
-	private String downloadUrl;
+	protected String downloadUrl;
 
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
 		this.downloadUrl = downloadUrl;
+	}
+	
+	protected RemoteSong(long id) {
+		super(id);
+		downloadUrl = null;
 	}
 
 	public RemoteSong setTitle(String songTitle) {

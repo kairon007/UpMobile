@@ -68,7 +68,6 @@ public class SearchTab {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_TITLE = "title.song.vanilla";
 	private static final String KEY_ARTIST = "artist.song.vanilla";
-	private static final String KEY_DOWNLOAD_URL = "url.song.vanilla";
 	private static SearchTab instance;
 	private static List<Class<? extends BaseSearchTask>> engines;
 
@@ -106,16 +105,14 @@ public class SearchTab {
 	
 	private static class DownloadClickListener implements AlertDialog.OnClickListener, OnBitmapReadyListener {
 		private final Context context;
-		private final String downloadUrl;
 		private final String songTitle;
 		private final Player player;
 		private String songArtist;
 		private Bitmap cover;
 		private boolean waitingForCover = true;
 
-		private DownloadClickListener(Context context, String downloadUrl, String songTitle, String songArtist, Player player) {
+		private DownloadClickListener(Context context, String songTitle, String songArtist, Player player) {
 			this.context = context;
-			this.downloadUrl = downloadUrl;
 			this.songTitle = songTitle;
 			this.songArtist = songArtist;
 			this.player = player;
@@ -125,6 +122,7 @@ public class SearchTab {
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
 			player.cancel();
+			String downloadUrl = player.getDownloadUrl();
 			final File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
@@ -294,11 +292,17 @@ public class SearchTab {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (position == resultAdapter.getCount()) return; //progress click
 				final Song song = resultAdapter.getItem(position);
-				Bundle bundle = new Bundle(2);
+				Bundle bundle = new Bundle(1);
 				bundle.putString(KEY_TITLE, song.getTitle());
 				bundle.putString(KEY_ARTIST, song.getArtist());
-				bundle.putString(KEY_DOWNLOAD_URL, ((RemoteSong) song).getDownloadUrl());
 				activity.showDialog(STREAM_DIALOG_ID, bundle);
+				new Thread(new Runnable() {
+					public void run() {
+						String downloadUrl = ((RemoteSong) song).getDownloadUrl();
+						player.setDownloadUrl(downloadUrl);
+						player.execute();
+					}
+				}).start();
 			}
 		});
 		searchField = (TextView)instanceView.findViewById(R.id.text);
@@ -385,18 +389,15 @@ public class SearchTab {
 	public Dialog createStreamDialog(Bundle args) {
 		if (!(
 				args.containsKey(KEY_TITLE) && 
-				args.containsKey(KEY_ARTIST) && 
-				args.containsKey(KEY_DOWNLOAD_URL)
+				args.containsKey(KEY_ARTIST)
 			 )
 		) {
 			return null;
 		}
-		final String downloadUrl = args.getString(KEY_DOWNLOAD_URL);
 		final String artist = args.getString(KEY_ARTIST);
 		final String title = args.getString(KEY_TITLE);
 		if (null == player) {
-			player = new Player(title, artist, downloadUrl, inflater.inflate(R.layout.download_dialog, null));
-			player.execute();
+			player = new Player(title, artist, inflater.inflate(R.layout.download_dialog, null));
 			coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
 			coverLoader.addListener(new OnBitmapReadyListener() {
 				@Override
@@ -417,7 +418,7 @@ public class SearchTab {
 				activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
-		DownloadClickListener downloadClickListener = new DownloadClickListener(context, downloadUrl, title, artist, player) {
+		DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				super.onClick(dialog, which);
@@ -473,7 +474,7 @@ public class SearchTab {
 	}
 	
 	private final static class Player extends AsyncTask<String, Void, Boolean> {
-		private String url; 
+		private String url = null; 
 		private MediaPlayer mediaPlayer;
 		private boolean prepared = false;
 		private ProgressBar spinner;
@@ -486,11 +487,10 @@ public class SearchTab {
 		private ProgressBar coverProgress;
 		private View view;
 		
-		public Player(String title, String artist, String url, View view) {
+		public Player(String title, String artist, View view) {
 			super();
 			this.title = title;
 			this.artist = artist;
-			this.url = url;
 			this.view = view;
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -506,6 +506,14 @@ public class SearchTab {
 					playPause();
 				}
 			});
+		}
+		
+		private void setDownloadUrl(String downloadUrl) {
+			url = downloadUrl;
+		}
+		
+		private String getDownloadUrl() {
+			return url;
 		}
 
 		public void setCover(Bitmap bmp) {

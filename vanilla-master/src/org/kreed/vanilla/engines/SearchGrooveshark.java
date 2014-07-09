@@ -44,10 +44,10 @@ public class SearchGrooveshark extends BaseSearchTask {
 			SearchArtistResult[] results = getClient().SearchArtist(getSongName()).result.result;
 			if (results.length != 0 ) {
 				for (SearchArtistResult result : results) {
-					String downloadUrl = client.GetStreamKey(result.SongID).result.DirectURL();
+					int songId = result.SongID;
 					String songArtist = result.ArtistName;
 					String songTitle = result.Name;
-					addSong(new RemoteSong(downloadUrl).setArtistName(songArtist).setTitle(songTitle));
+					addSong(new GrooveSong(result.hashCode(), songId).setArtistName(songArtist).setTitle(songTitle));
 				}
 			}
 		} catch (Exception e) {
@@ -65,6 +65,15 @@ public class SearchGrooveshark extends BaseSearchTask {
 			}
 		}
 		return client;
+	}
+	
+	public static String getDownloadUrl(int songId) {
+		try {
+			return getClient().GetStreamKey(songId).result.DirectURL();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }
