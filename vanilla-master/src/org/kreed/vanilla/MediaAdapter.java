@@ -202,7 +202,7 @@ public class MediaAdapter
 			break;
 		case MediaUtils.TYPE_GENRE: 
 			mStore = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Genres.NAME, "null", BaseColumns._ID };
+			mFields = new String[] { MediaStore.Audio.Genres.NAME, MediaStore.Audio.GenresColumns.NAME, MediaStore.Audio.GenresColumns.NAME };
 			mFieldKeys = null;
 			mSortEntries = new int[] { R.string.name };
 			mSortValues = new String[] { "name %1$s" };
@@ -461,7 +461,7 @@ public class MediaAdapter
 			.setId(cursor.getLong(0))
 			.setExpandable(mExpandable)
 			.setLine1(cursor.getString(1))
-			.setLine2(count > 2 ? cursor.getString(2) : null)
+			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
 			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
 		return builder.build();
 	}
@@ -576,7 +576,10 @@ public class MediaAdapter
 		if (cursor == null)
 			return 0;
 		cursor.moveToPosition(position);
-		return cursor.getLong(0);
+		try {
+			return cursor.getLong(0);
+		} catch (Exception e) {		}
+		return 0;
 	}
 
 	@Override
