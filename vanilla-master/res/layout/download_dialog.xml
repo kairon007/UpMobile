@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <ImageView
+    <ImageView 
         android:id="@+id/cover"
         android:layout_width="170dp"
         android:layout_height="170dp"
