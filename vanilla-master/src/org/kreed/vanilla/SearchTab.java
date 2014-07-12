@@ -66,8 +66,7 @@ import android.widget.Toast;
 public class SearchTab {
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
-	private static final String KEY_TITLE = "title.song.vanilla";
-	private static final String KEY_ARTIST = "artist.song.vanilla";
+	private static final String KEY_POSITION = "position.song.vanilla";
 	private static SearchTab instance;
 	private static List<Class<? extends BaseSearchTask>> engines;
 
@@ -121,8 +120,13 @@ public class SearchTab {
 		@SuppressLint("NewApi")
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-			player.cancel();
+			if(player == null) return;
 			String downloadUrl = player.getDownloadUrl();
+			if(downloadUrl == null || downloadUrl.equals("")) {
+				Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			player.cancel();
 			final File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
@@ -291,18 +295,9 @@ public class SearchTab {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (position == resultAdapter.getCount()) return; //progress click
-				final Song song = resultAdapter.getItem(position);
-				Bundle bundle = new Bundle(1);
-				bundle.putString(KEY_TITLE, song.getTitle());
-				bundle.putString(KEY_ARTIST, song.getArtist());
+				Bundle bundle = new Bundle(0);
+				bundle.putInt(KEY_POSITION, position);
 				activity.showDialog(STREAM_DIALOG_ID, bundle);
-				new Thread(new Runnable() {
-					public void run() {
-						String downloadUrl = ((RemoteSong) song).getDownloadUrl();
-						player.setDownloadUrl(downloadUrl);
-						player.execute();
-					}
-				}).start();
 			}
 		});
 		searchField = (TextView)instanceView.findViewById(R.id.text);
@@ -387,17 +382,23 @@ public class SearchTab {
 	
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args) {
-		if (!(
-				args.containsKey(KEY_TITLE) && 
-				args.containsKey(KEY_ARTIST)
-			 )
-		) {
+		if(!(args.containsKey(KEY_POSITION))) {
 			return null;
 		}
-		final String artist = args.getString(KEY_ARTIST);
-		final String title = args.getString(KEY_TITLE);
+		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
+		final String artist = song.getTitle();
+		final String title = song.getArtist();
 		if (null == player) {
-			player = new Player(title, artist, inflater.inflate(R.layout.download_dialog, null));
+			player = new Player(inflater.inflate(R.layout.download_dialog, null));
+			new Thread(new Runnable() {
+				public void run() {
+					String downloadUrl = ((RemoteSong) song).getDownloadUrl();
+					if(null != player) {
+						player.setDownloadUrl(downloadUrl);
+						player.execute();
+					}
+				}
+			}).start();
 			coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
 			coverLoader.addListener(new OnBitmapReadyListener() {
 				@Override
@@ -413,8 +414,11 @@ public class SearchTab {
 		final Runnable dialogDismisser = new Runnable() {
 			@Override
 			public void run() {
-				player.cancel();
-				player = null;
+				if(player != null) {
+					player.cancel();
+					player = null;
+				}
+				coverLoader.cancel(true);
 				activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
@@ -481,16 +485,12 @@ public class SearchTab {
 		private ImageButton button;
 		private ProgressBar progress;
 		private TextView time;
-		private String title;
-		private String artist;
 		private ImageView coverImage;
 		private ProgressBar coverProgress;
 		private View view;
 		
-		public Player(String title, String artist, View view) {
+		public Player(View view) {
 			super();
-			this.title = title;
-			this.artist = artist;
 			this.view = view;
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
