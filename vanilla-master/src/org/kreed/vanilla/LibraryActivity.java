@@ -768,7 +768,7 @@ public class LibraryActivity
 
 	@Override
 	public void onClick(View view)
-	{
+	{//TODO
 		if (view == mSortButton) {//mClearButton
 //			if (mTextFilter.getText().length() == 0)
 //				setSearchBoxVisible(false);
