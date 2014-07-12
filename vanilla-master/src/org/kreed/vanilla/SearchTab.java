@@ -629,8 +629,7 @@ public class SearchTab {
 				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 					@Override
 					public void onCompletion(MediaPlayer mp) {
-						mediaPlayer.stop();
-						mediaPlayer.release();
+						releasePlayer();
 						onFinished();
 					}
 				});
