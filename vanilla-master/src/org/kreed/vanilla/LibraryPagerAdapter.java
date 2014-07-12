@@ -368,8 +368,8 @@ public class LibraryPagerAdapter
 				view.addHeaderView(header);
 			}
 			view.setAdapter(adapter);
-			if (type != MediaUtils.TYPE_FILE)
-				loadSortOrder((MediaAdapter)adapter);
+//			if (type != MediaUtils.TYPE_FILE)
+				loadSortOrder((SortAdapter)adapter);
 			enableFastScroll(view);
 			adapter.setFilter(mFilter);
 
@@ -644,7 +644,7 @@ public class LibraryPagerAdapter
 	{ 
 		switch (message.what) {
 		case MSG_RUN_QUERY: {
-			LibraryAdapter adapter = (LibraryAdapter)message.obj;
+			SortAdapter adapter = (SortAdapter)message.obj;
 			int index = adapter.getMediaType();
 			Handler handler = mUiHandler;
 			handler.sendMessage(handler.obtainMessage(MSG_COMMIT_QUERY, index, 0, adapter.query()));
@@ -664,7 +664,7 @@ public class LibraryPagerAdapter
 			break;
 		}
 		case MSG_SAVE_SORT: {
-			MediaAdapter adapter = (MediaAdapter)message.obj;
+			SortAdapter adapter = (SortAdapter)message.obj;
 			SharedPreferences.Editor editor = PlaybackService.getSettings(mActivity).edit();
 			editor.putInt(String.format("sort_%d_%d", adapter.getMediaType(), adapter.getLimiterType()), adapter.getSortMode());
 			editor.commit();
@@ -755,7 +755,7 @@ public class LibraryPagerAdapter
 	 *
 	 * @param adapter The adapter to load for.
 	 */
-	public void loadSortOrder(MediaAdapter adapter)
+	public void loadSortOrder(SortAdapter adapter)
 	{
 		String key = String.format("sort_%d_%d", adapter.getMediaType(), adapter.getLimiterType());
 		int def = adapter.getDefaultSortMode();
@@ -773,7 +773,7 @@ public class LibraryPagerAdapter
 	 */
 	public void setSortMode(int mode)
 	{
-		MediaAdapter adapter = (MediaAdapter)mCurrentAdapter;
+		SortAdapter adapter = (SortAdapter)mCurrentAdapter;//MediaAdapter adapter = (MediaAdapter)mCurrentAdapter;
 		if (mode == adapter.getSortMode())
 			return;
 

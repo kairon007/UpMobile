@@ -48,7 +48,7 @@ import android.widget.BaseAdapter;
  * is set through a {@link Limiter} and rows are displayed using MediaViews.
  */
 public class FileSystemAdapter
-	extends BaseAdapter
+	extends SortAdapter
 	implements LibraryAdapter
 	         , View.OnClickListener
 {
@@ -108,7 +108,10 @@ public class FileSystemAdapter
 			boolean aIsFolder = a.isDirectory();
 			boolean bIsFolder = b.isDirectory();
 			if (bIsFolder == aIsFolder) {
-				return a.getName().compareToIgnoreCase(b.getName());
+				if(mSortMode == 0)
+					return a.getName().compareToIgnoreCase(b.getName());
+				else
+					return b.getName().compareToIgnoreCase(a.getName());
 			} else if (bIsFolder) {
 				return 1;
 			}
@@ -140,7 +143,12 @@ public class FileSystemAdapter
 		}
 		setLimiter(limiter);
 	}
-
+//	from MediaAdapter
+//	@Override
+//	public Object query() {
+//		return buildQuery(mProjection, false).runQuery(mActivity.getContentResolver());
+//	}
+	
 	@Override
 	public Object query()
 	{
@@ -310,5 +318,19 @@ public class FileSystemAdapter
 		} else {
 			mActivity.onItemClicked(intent);
 		}
+	}
+	
+	/**
+	 * Returns the type of the current limiter.
+	 *
+	 * @return One of MediaUtils.TYPE_, or MediaUtils.TYPE_INVALID if there is
+	 * no limiter set.
+	 */
+	public int getLimiterType()
+	{
+		Limiter limiter = mLimiter;
+		if (limiter != null)
+			return limiter.type;
+		return MediaUtils.TYPE_INVALID;
 	}
 }

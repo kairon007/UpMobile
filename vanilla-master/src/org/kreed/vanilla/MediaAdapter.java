@@ -53,7 +53,7 @@ import android.widget.SectionIndexer;
  * See getLimiter and setLimiter for details.
  */
 public class MediaAdapter
-	extends BaseAdapter
+	extends SortAdapter
 	implements SectionIndexer
 	         , LibraryAdapter
 	         , View.OnClickListener
@@ -129,20 +129,10 @@ public class MediaAdapter
 	 */
 	private String mSongSort;
 	/**
-	 * The human-readable descriptions for each sort mode.
-	 */
-	private int[] mSortEntries;
-	/**
 	 * An array ORDER BY expressions for each sort mode. %1$s is replaced by
 	 * ASC or DESC as appropriate before being passed to the query.
 	 */
 	private String[] mSortValues;
-	/**
-	 * The index of the current of the current sort mode in mSortValues, or
-	 * the inverse of the index (in which case sort should be descending
-	 * instead of ascending).
-	 */
-	private int mSortMode;
 	/**
 	 * If true, show the expander button on each row.
 	 */

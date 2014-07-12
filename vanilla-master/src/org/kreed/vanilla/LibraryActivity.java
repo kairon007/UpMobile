@@ -1131,8 +1131,10 @@ public class LibraryActivity
 	}
 
 	public void openSortDialog() {
-		MediaAdapter adapter = (MediaAdapter)mCurrentAdapter;
+		SortAdapter adapter = (SortAdapter)mCurrentAdapter;
 		int mode = adapter.getSortMode();
+		int[] itemIds = adapter.getSortEntries();
+		
 		int check;
 		if (mode < 0) {
 			check = R.id.descending;
@@ -1141,7 +1143,6 @@ public class LibraryActivity
 			check = R.id.ascending;
 		}
 
-		int[] itemIds = adapter.getSortEntries();
 		String[] items = new String[itemIds.length];
 		Resources res = getResources();
 		for (int i = itemIds.length; --i != -1; ) {
