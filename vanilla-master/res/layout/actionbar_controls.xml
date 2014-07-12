@@ -20,55 +20,72 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:background="@drawable/selectable_item_bg"
-    android:orientation="horizontal"
-    android:clickable="true" >
 
-    <ImageView
-        android:id="@+id/cover"
-        android:layout_width="36dip"
-        android:layout_height="36dip"
-        android:layout_gravity="center"
-        android:layout_marginLeft="5dip"
-        android:contentDescription="@string/cover_art"
-        android:scaleType="fitCenter" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="5dip"
-        android:orientation="vertical" >
+        android:id="@+id/LinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:background="@drawable/selectable_item_bg"
+        android:clickable="true"
+        android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/title"
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="36dip"
+            android:layout_height="36dip"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dip"
+            android:contentDescription="@string/cover_art"
+            android:scaleType="fitCenter" />
+
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textSize="14sp" />
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dip"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/artist"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textSize="12sp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textSize="14sp" />
 
-    <!--ImageButton
+            <TextView
+                android:id="@+id/artist"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!--
+        ImageButton
         android:id="@+id/pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@drawable/selectable_item_bg"
-        android:src="@drawable/pause" /-->
+        android:src="@drawable/pause" 
+        -->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="130dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent" >
+    </LinearLayout>
 
 </LinearLayout>
