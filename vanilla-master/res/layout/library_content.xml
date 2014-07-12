@@ -47,7 +47,8 @@ THE SOFTWARE.
                 android:imeOptions="actionSearch|flagNoExtractUi"
                 android:inputType="textFilter"
                 android:lines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:paddingRight="50dp" />
 
             <ImageButton
                 android:id="@+id/clear_filter"
