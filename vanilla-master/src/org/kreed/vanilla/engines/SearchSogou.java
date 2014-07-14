@@ -43,7 +43,7 @@ public class SearchSogou extends BaseSearchTask {
 					.get();
 			
 			Elements songs = doc.body().select("div[id=otherResult]").first().select("div[class=music_list]").select("tr");
-			
+			if (songs.isEmpty()) return null;
 			//This eliminates the first row which is not a song element
 			songs.remove(0);
 
