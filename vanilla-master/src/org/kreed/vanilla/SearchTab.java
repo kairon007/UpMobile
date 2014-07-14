@@ -250,6 +250,7 @@ public class SearchTab {
 		@Override
 		public void onFinishParsing(List<Song> songsList) {
 			resultAdapter.hideProgress();
+			if(searchStopped) return; 
 			if (songsList.isEmpty()) {
 				getNextResults();
 				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
@@ -277,6 +278,7 @@ public class SearchTab {
 	private LibraryActivity activity;
 	private Player player;
 	private MuzicBrainzCoverLoaderTask coverLoader;
+	private boolean searchStopped = true;
 
 	public SearchTab(final View instanceView, final LayoutInflater inflater, LibraryActivity libraryActivity) {
 		this.view = instanceView;
@@ -330,6 +332,7 @@ public class SearchTab {
 				searchField.setText(null);
 				message.setText(R.string.search_message_default);
 				resultAdapter.clear();
+				searchStopped = true;
 			}
 		});
 	}
@@ -356,6 +359,7 @@ public class SearchTab {
 	}
 	
 	public void search(String songName) {
+		searchStopped = false;
 		taskIterator = engines.iterator();
 		resultAdapter.clear();
 		currentName = songName;
