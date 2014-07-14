@@ -44,7 +44,7 @@ THE SOFTWARE.
                 android:id="@+id/filter_text"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:imeOptions="actionSearch|flagNoExtractUi"
+                android:imeOptions="actionSearch"
                 android:inputType="textFilter"
                 android:lines="1"
                 android:singleLine="true"
