@@ -8,40 +8,53 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class SearchZaycev extends BaseSearchTask {
-	
+
+	private int maxZaycevPages = 5;
+
 	public SearchZaycev(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
-	
+
 	@Override
 	protected Void doInBackground(Void... params) {
 		try {
 			String songName = URLEncoder.encode(getSongName(), "UTF-8").replace(" ", "%20");
-			String link = "http://go.mail.ru/search_site?q="+songName+"&p=1&rch=l&aux=Kd7dJd&sf=10";
-				Document document = Jsoup.connect(link).get();
-				for (Element result : document.select("li.result__li")) {
-					Elements source = result.select("h3.result__title").select("a");
-					String[] array = source.text().split("-");
-					String artist = array[0].trim();
-					String title = array[1].trim();
-					String pageUrl = source.attr("href");
-					addSong(new ZaycevSong(pageUrl).setTitle(title).setArtistName(artist));
-				} 
-		} catch (Exception e) {
+			String link = "http://zaycev.net/search.html?query_search="+songName+"&page="+maxZaycevPages;
+			Document doc = Jsoup.connect(link).timeout(20000).userAgent(getMobileUserAgent()).get();
+			Elements searchResults = doc.getElementsByClass("result-list__item");
+			for (Element searchResult: searchResults) {
+				String title = searchResult.getElementsByClass("result-list__item-title").html();
+				title = title.replaceAll("&amp;", "&").replaceAll("&quot;", "\"");
+				String artist = searchResult.getElementsByClass("result-list__item-subtitle").html();
+				artist = artist.replaceAll("&amp;", "&").replaceAll("&quot;", "\"");
+				String pageUrl = searchResult.getElementsByTag("a").get(0).attr("href");
+				pageUrl = "http://zaycev.net" + pageUrl;
+				addSong(new ZaycevSong(pageUrl).setTitle(title).setArtistName(artist));
+			}
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public static String getDownloadUrl(String pageUrl) {
 		try {
-			Document document = Jsoup.connect(pageUrl).get();
-			for (Element resultElement : document.select("script")) {
-				String result = resultElement.toString();
-				if (result.contains("url") && result.contains("http")) {
-					String[] parts = result.substring(result.indexOf("url")).split("'");
-					String downloadUrl = parts[1];
-					return downloadUrl;
+			Document doc = Jsoup.connect(pageUrl).timeout(20000).userAgent(getMobileUserAgent()).get();
+			String downloadUrl = null;
+			Elements scripts = doc.getElementsByTag("script");
+			if (scripts.size() > 0) {
+				for (Element script: scripts) {
+					String text = script.html();
+					if (text != null && text.contains(".mp3")) {
+						String[] tokens = text.split("\\.mp3");
+						for (String token : tokens) {
+							int httpIndex = token.lastIndexOf("http:");
+							if (httpIndex != -1) {
+								downloadUrl = tokens[0].substring(httpIndex) + ".mp3?dlKind=dl";
+								return downloadUrl;
+							}
+						}
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -50,4 +63,8 @@ public class SearchZaycev extends BaseSearchTask {
 		return null;
 	}
 
+	private static String getMobileUserAgent() {
+		return "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19";
+	}
+	
 }

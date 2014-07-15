@@ -278,6 +278,7 @@ public class SearchTab {
 	private LibraryActivity activity;
 	private Player player;
 	private MuzicBrainzCoverLoaderTask coverLoader;
+	private AsyncTask<Void, Void, String> getUrlTask;
 	private boolean searchStopped = true;
 
 	public SearchTab(final View instanceView, final LayoutInflater inflater, LibraryActivity libraryActivity) {
@@ -392,17 +393,23 @@ public class SearchTab {
 		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
 		final String artist = song.getTitle();
 		final String title = song.getArtist();
+		
 		if (null == player) {
 			player = new Player(inflater.inflate(R.layout.download_dialog, null));
-			new Thread(new Runnable() {
-				public void run() {
-					String downloadUrl = ((RemoteSong) song).getDownloadUrl();
+			getUrlTask = new AsyncTask<Void, Void, String>() {
+				@Override
+				protected String doInBackground(Void... params) {
+					return ((RemoteSong) song).getDownloadUrl();
+				}
+				@Override
+				protected void onPostExecute(String downloadUrl) {
 					if(null != player) {
 						player.setDownloadUrl(downloadUrl);
 						player.execute();
 					}
-				}
-			}).start();
+				}	
+			};
+			getUrlTask.execute(NO_PARAMS);
 			coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
 			coverLoader.addListener(new OnBitmapReadyListener() {
 				@Override
@@ -422,6 +429,7 @@ public class SearchTab {
 					player.cancel();
 					player = null;
 				}
+				getUrlTask.cancel(true);
 				coverLoader.cancel(true);
 				activity.removeDialog(STREAM_DIALOG_ID);
 			}
