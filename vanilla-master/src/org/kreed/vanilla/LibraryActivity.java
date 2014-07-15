@@ -44,14 +44,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.PaintDrawable;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
-import android.os.Process;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -65,9 +62,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -143,7 +138,7 @@ public class LibraryActivity
 	private TextView mTextFilter;
 	private View mSortButton;
 
-	Song song;
+	private Song song;
 	
 	private View mActionControls;
 	private View mControls;
@@ -191,16 +186,11 @@ public class LibraryActivity
 
 	//-------------------------------------------------------------------------
 	
-	MoPubView mBannerViewPlayer;
-	public MoPubView mBannerView;
-	MoPubInterstitial mInterstitial;
-	private String adUnitId = "105feb2adf084dcb9677fd49d099e2ef";
-	private String adUnitIdint = "b21bfda885f94f4abc934887f6850f2f";
-	
+	private final String adUnitId = "3a0d11f3de694617aa81f8e3901eb33c";
+	private MoPubInterstitial mInterstitial;
 	private MoPubView moPubView;
 	
-	public static void validateAdUnitId(String adUnitId)
-			throws IllegalArgumentException {
+	public static void validateAdUnitId(String adUnitId) throws IllegalArgumentException {
 		if (adUnitId == null) {
 			throw new IllegalArgumentException(
 					"Invalid Ad Unit ID: null ad unit.");
@@ -236,30 +226,30 @@ public class LibraryActivity
 	
 	
 	
-	protected void loadMoPubView(MoPubView moPubView, String adUnitId,
-			String keywords) {
-		if (moPubView == null) {
-			logToast(this, "Unable to inflate MoPubView from xml.");
-			return;
-		}
-
-		try {
-			validateAdUnitId(adUnitId);
-		} catch (IllegalArgumentException exception) {
-			//logToast(BaseActivity.this, exception.getMessage());
-			return;
-		}
-
-	//	moPubView.setBannerAdListener(this);
-		moPubView.setAdUnitId(adUnitId);
-		moPubView.setKeywords(keywords);
-		moPubView.loadAd();
-	}
+//	protected void loadMoPubView(MoPubView moPubView, String adUnitId, String keywords) {
+//		//TODO
+//		if (moPubView == null) {
+//			logToast(this, "Unable to inflate MoPubView from xml.");
+//			return;
+//		}
+//
+//		try {
+//			validateAdUnitId(adUnitId);
+//		} catch (IllegalArgumentException exception) {
+//			//logToast(BaseActivity.this, exception.getMessage());
+//			return;
+//		}
+//
+//	//	moPubView.setBannerAdListener(this);
+//		moPubView.setAdUnitId(adUnitId);
+//		moPubView.setKeywords(keywords);
+//		moPubView.loadAd();
+//	}
 	
 	
 	@Override
 	public void onBackPressed() {
-		mInterstitial = new MoPubInterstitial(this, adUnitIdint);
+		mInterstitial = new MoPubInterstitial(this, adUnitId);
 		//mInterstitial.setInterstitialAdListener(this);
 		mInterstitial.load();
 		super.onBackPressed();
@@ -310,7 +300,7 @@ public class LibraryActivity
 	//		startActivity(intent);
 	//	}
 		moPubView = (MoPubView) findViewById(R.id.banner_view);
-		moPubView.setAdUnitId("105feb2adf084dcb9677fd49d099e2ef"); // Enter your Ad Unit ID from www.mopub.com
+		moPubView.setAdUnitId(adUnitId); // Enter your Ad Unit ID from www.mopub.com
 		moPubView.loadAd();
 		
 		mSortButton = findViewById(R.id.sort_button);
