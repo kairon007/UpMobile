@@ -1799,8 +1799,9 @@ public final class PlaybackService extends Service
 		case Nothing:
 			break;
 		case Library:
-			Intent intent = new Intent(this, LibraryActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			Intent intent = new Intent(receiver, LibraryActivity.class);
+//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
 			break;
 		case PlayPause: {
