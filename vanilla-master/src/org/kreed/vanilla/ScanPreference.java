@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.preference.Preference;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * A preference that allows the MediaScanner to be triggered.
@@ -60,13 +61,18 @@ public class ScanPreference extends Preference {
 	@Override
 	public void onClick()
 	{
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
-		intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
-		intentFilter.addDataScheme("file");
-		getContext().registerReceiver(mReceiver, intentFilter);
-
-		Uri storage = Uri.parse("file://" + Environment.getExternalStorageDirectory());
-		getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, storage));
+		try{
+			IntentFilter intentFilter = new IntentFilter();
+			intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
+			intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+			intentFilter.addDataScheme("file");
+			getContext().registerReceiver(mReceiver, intentFilter);
+	
+			Uri storage = Uri.parse("file://" + Environment.getExternalStorageDirectory());
+			getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, storage));
+		} catch(Exception e) {
+			Log.e(getClass().getSimpleName(), "Scan Flash Card");
+			setSummary(getContext().getResources().getString(R.string.finished_scanning));
+		}
 	}
 }
