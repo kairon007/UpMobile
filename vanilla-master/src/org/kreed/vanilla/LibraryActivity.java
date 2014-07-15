@@ -73,6 +73,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ironsource.mobilcore.MobileCore;
+import com.ironsource.mobilcore.MobileCore.AD_UNITS;
+import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 import com.viewpagerindicator.TabPageIndicator;
@@ -276,6 +279,11 @@ public class LibraryActivity
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
+		
+		MobileCore.init(this,"6AFPIUJW9K2IAEMIJ41605AI1UJUY", LOG_TYPE.DEBUG, AD_UNITS.ALL_UNITS);
+		MobileCore.showOfferWall(this, null);
+		
+		
 		if (state == null) {
 			checkForLaunch(getIntent());
 		}
