@@ -195,6 +195,10 @@ THE SOFTWARE.
 			android:name="TabOrderActivity"
 			android:theme="@style/BackActionBar" />
 		
+		<meta-data
+			android:name="com.google.android.backup.api_key"
+			android:value="AEdPqrEAAAAIH6Xcxa4hn6sHN1m4jMpi4MFFFMP5sv3XhFuWeA" />
+		
 		<!-- mobileCore ad -->
 		<service 
 		    android:name="com.ironsource.mobilcore.MobileCoreReport" 
@@ -208,8 +212,11 @@ THE SOFTWARE.
 		    android:process=":installationTracker">
 		</receiver>
 		
-		<meta-data
-			android:name="com.google.android.backup.api_key"
-			android:value="AEdPqrEAAAAIH6Xcxa4hn6sHN1m4jMpi4MFFFMP5sv3XhFuWeA" />
+		<!-- startapp ad -->
+		<activity android:name="com.startapp.android.publish.list3d.List3DActivity"
+          android:theme="@android:style/Theme" />
+		<activity android:name="com.startapp.android.publish.AppWallActivity"
+          android:theme="@android:style/Theme.Translucent"
+          android:configChanges="orientation|keyboardHidden|screenSize" />
 	</application>
 </manifest>

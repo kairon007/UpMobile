@@ -26,7 +26,7 @@ import java.util.Arrays;
 
 import org.kreed.vanilla.app.VanillaAp;
 
-import com.google.ads.internal.ActivationOverlay;
+
 
 import android.content.Intent;
 import android.content.SharedPreferences;

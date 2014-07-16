@@ -78,6 +78,7 @@ import com.ironsource.mobilcore.MobileCore.AD_UNITS;
 import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
+import com.startapp.android.publish.StartAppAd;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -278,16 +279,13 @@ public class LibraryActivity
 	
 	@Override
 	public void onCreate(Bundle state) {
-		super.onCreate(state);
-		
-		MobileCore.init(this,"6AFPIUJW9K2IAEMIJ41605AI1UJUY", LOG_TYPE.DEBUG, AD_UNITS.ALL_UNITS);
-		MobileCore.showOfferWall(this, null);
-		
-		
+		super.onCreate(state);		
 		if (state == null) {
 			checkForLaunch(getIntent());
 		}
 		setContentView(R.layout.library_content);
+		Advertisement.startAppInit(this);
+		Advertisement.mobileCoreInit(this);
 		mSearchBox = findViewById(R.id.search_box);
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
