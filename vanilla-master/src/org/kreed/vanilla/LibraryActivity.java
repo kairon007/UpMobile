@@ -73,6 +73,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.raivz.hbkds194978.MA;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -245,8 +246,10 @@ public class LibraryActivity
 	public void onBackPressed() {
 		Advertisement.moPubOnBackPressed(this);
 		Advertisement.startAppOnBackPressed(this);
+		Advertisement.airPushOnBackPressed(this);
+		Log.i(getClass().getSimpleName(), "onBackPressed()");
 		//mInterstitial.setInterstitialAdListener(this);
-		super.onBackPressed();
+//		super.onBackPressed();
 	}
 	
 	@Override
@@ -286,7 +289,8 @@ public class LibraryActivity
 		Advertisement.startAppInit(this);
 		Advertisement.mobileCoreInit(this);
 		Advertisement.moPubInit(this);
-		
+		Advertisement.airPushShow(this);
+				
 		mSearchBox = findViewById(R.id.search_box);
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
@@ -524,38 +528,42 @@ public class LibraryActivity
 	public boolean onKeyUp(int keyCode, KeyEvent event)
 	{ 
 		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK: 
-			if (mSearchBoxVisible) { 
-				mTextFilter.setText("");
-				setSearchBoxVisible(false);
-			} else { 
-				Limiter limiter = mPagerAdapter.getCurrentLimiter();
-				if (limiter != null && limiter.type != MediaUtils.TYPE_FILE) {
-					int pos = -1;
-					switch (limiter.type) {
-					case MediaUtils.TYPE_ALBUM: 
-						setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
-						pos = mPagerAdapter.mAlbumsPosition;
-						break;
-					case MediaUtils.TYPE_ARTIST: 
-						mPagerAdapter.clearLimiter(MediaUtils.TYPE_ARTIST);
-						pos = mPagerAdapter.mArtistsPosition;
-						break;
-					case MediaUtils.TYPE_GENRE: 
-						mPagerAdapter.clearLimiter(MediaUtils.TYPE_GENRE);
-						pos = mPagerAdapter.mGenresPosition;
-						break;
-					}
-					if (pos == -1) {
-						updateLimiterViews();
-					} else {
-						mViewPager.setCurrentItem(pos);
-					}
-				} else {
-					finish();
-				}
-			}
+		case KeyEvent.KEYCODE_BACK:
+			mTextFilter.setText("");
+			onBackPressed();
 			break;
+//		case KeyEvent.KEYCODE_BACK: 
+//			if (mSearchBoxVisible) { 
+//				mTextFilter.setText("");
+//				setSearchBoxVisible(false);
+//			} else { 
+//				Limiter limiter = mPagerAdapter.getCurrentLimiter();
+//				if (limiter != null && limiter.type != MediaUtils.TYPE_FILE) {
+//					int pos = -1;
+//					switch (limiter.type) {
+//					case MediaUtils.TYPE_ALBUM: 
+//						setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
+//						pos = mPagerAdapter.mAlbumsPosition;
+//						break;
+//					case MediaUtils.TYPE_ARTIST: 
+//						mPagerAdapter.clearLimiter(MediaUtils.TYPE_ARTIST);
+//						pos = mPagerAdapter.mArtistsPosition;
+//						break;
+//					case MediaUtils.TYPE_GENRE: 
+//						mPagerAdapter.clearLimiter(MediaUtils.TYPE_GENRE);
+//						pos = mPagerAdapter.mGenresPosition;
+//						break;
+//					}
+//					if (pos == -1) {
+//						updateLimiterViews();
+//					} else {
+//						mViewPager.setCurrentItem(pos);
+//					}
+//				} else {
+//					finish();
+//				}
+//			}
+//			break;
 		case KeyEvent.KEYCODE_SEARCH:
 			setSearchBoxVisible(!mSearchBoxVisible);
 			break;
