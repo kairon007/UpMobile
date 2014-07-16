@@ -73,12 +73,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ironsource.mobilcore.MobileCore;
-import com.ironsource.mobilcore.MobileCore.AD_UNITS;
-import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
-import com.mopub.mobileads.MoPubInterstitial;
-import com.mopub.mobileads.MoPubView;
-import com.startapp.android.publish.StartAppAd;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -190,10 +184,6 @@ public class LibraryActivity
 
 	//-------------------------------------------------------------------------
 	
-	private final String adUnitId = "3a0d11f3de694617aa81f8e3901eb33c";
-	private MoPubInterstitial mInterstitial;
-	private MoPubView moPubView;
-	
 	public static void validateAdUnitId(String adUnitId) throws IllegalArgumentException {
 		if (adUnitId == null) {
 			throw new IllegalArgumentException(
@@ -253,15 +243,15 @@ public class LibraryActivity
 	
 	@Override
 	public void onBackPressed() {
-		mInterstitial = new MoPubInterstitial(this, adUnitId);
+		Advertisement.moPubOnBackPressed(this);
+		Advertisement.startAppOnBackPressed(this);
 		//mInterstitial.setInterstitialAdListener(this);
-		mInterstitial.load();
 		super.onBackPressed();
 	}
 	
 	@Override
 	public void onDestroy() {
-		moPubView.destroy();
+		Advertisement.moPubOnDestroy(this);
 		super.onDestroy();
 	}
 
@@ -273,9 +263,17 @@ public class LibraryActivity
         }
     };
 	
-	
-	
-	
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	Advertisement.startAppOnPause(this);
+    }
+    
+    @Override
+	public void onResume() {
+		super.onResume();
+		Advertisement.startAppOnResume(this);
+	}
 	
 	@Override
 	public void onCreate(Bundle state) {
@@ -284,8 +282,11 @@ public class LibraryActivity
 			checkForLaunch(getIntent());
 		}
 		setContentView(R.layout.library_content);
+		
 		Advertisement.startAppInit(this);
 		Advertisement.mobileCoreInit(this);
+		Advertisement.moPubInit(this);
+		
 		mSearchBox = findViewById(R.id.search_box);
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
@@ -305,9 +306,7 @@ public class LibraryActivity
 			//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	//		startActivity(intent);
 	//	}
-		moPubView = (MoPubView) findViewById(R.id.banner_view);
-		moPubView.setAdUnitId(adUnitId); // Enter your Ad Unit ID from www.mopub.com
-		moPubView.loadAd();
+		
 		
 		mSortButton = findViewById(R.id.sort_button);
 		mSortButton.setOnClickListener(this);
