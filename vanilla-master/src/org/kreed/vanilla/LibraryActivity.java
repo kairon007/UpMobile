@@ -286,10 +286,10 @@ public class LibraryActivity
 		}
 		setContentView(R.layout.library_content);
 		
-		Advertisement.startAppInit(this);
-		Advertisement.mobileCoreInit(this);
-		Advertisement.moPubInit(this);
-		Advertisement.airPushShow(this);
+//		Advertisement.startAppInit(this);
+//		Advertisement.mobileCoreInit(this);
+//		Advertisement.moPubInit(this);
+//		Advertisement.airPushShow(this);
 				
 		mSearchBox = findViewById(R.id.search_box);
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
