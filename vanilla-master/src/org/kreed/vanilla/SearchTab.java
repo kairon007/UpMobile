@@ -229,7 +229,8 @@ public class SearchTab {
 				.setExpandable(false)
 				.setLine1(song.getTitle())
 				.setLine2(song.getArtist())
-				.setNumber(String.valueOf(position+1), 0);
+//				.setNumber(String.valueOf(position+1), 0)
+				.setIcon(R.drawable.fallback_cover);
 			if (position == getCount()-1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
 				getNextResults();
