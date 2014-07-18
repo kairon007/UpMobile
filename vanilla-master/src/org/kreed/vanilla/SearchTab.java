@@ -16,9 +16,12 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.engines.BaseSearchTask;
 import org.kreed.vanilla.engines.FinishedParsingSongs;
+import org.kreed.vanilla.engines.GrooveSong;
 import org.kreed.vanilla.engines.RemoteSong;
+import org.kreed.vanilla.engines.cover.CoverLoaderTask;
+import org.kreed.vanilla.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import org.kreed.vanilla.engines.cover.GrooveSharkCoverLoaderTask;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask;
-import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask.OnBitmapReadyListener;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import org.kreed.vanilla.ui.AdapterHelper;
 import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
@@ -69,6 +72,20 @@ public class SearchTab {
 	private static final String KEY_POSITION = "position.song.vanilla";
 	private static SearchTab instance;
 	private static List<Class<? extends BaseSearchTask>> engines;
+	private Iterator<Class<? extends BaseSearchTask>> taskIterator;
+	private String currentName = null;
+	private SongSearchAdapter resultAdapter;
+	private TextView message;
+	private String searchString;
+	private View progress;
+	private TextView searchField;
+	private LayoutInflater inflater;
+	private View view;
+	private LibraryActivity activity;
+	private Player player;
+	private CoverLoaderTask coverLoader;
+	private AsyncTask<Void, Void, String> getUrlTask;
+	private boolean searchStopped = true;
 
 	@SuppressWarnings("unchecked")
 	public static final SearchTab getInstance(LayoutInflater inflater, LibraryActivity activity) {
@@ -101,7 +118,6 @@ public class SearchTab {
 		return instanceView;
 	}
 
-	
 	private static class DownloadClickListener implements AlertDialog.OnClickListener, OnBitmapReadyListener {
 		private final Context context;
 		private final String songTitle;
@@ -230,6 +246,7 @@ public class SearchTab {
 				.setLine1(song.getTitle())
 				.setLine2(song.getArtist())
 //				.setNumber(String.valueOf(position+1), 0)
+				//TODO
 				.setIcon(R.drawable.fallback_cover);
 			if (position == getCount()-1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
@@ -266,21 +283,6 @@ public class SearchTab {
 			}
 		}
 	};
-	
-	private Iterator<Class<? extends BaseSearchTask>> taskIterator;
-	private String currentName = null;
-	private SongSearchAdapter resultAdapter;
-	private TextView message;
-	private String searchString;
-	private View progress;
-	private TextView searchField;
-	private LayoutInflater inflater;
-	private View view;
-	private LibraryActivity activity;
-	private Player player;
-	private MuzicBrainzCoverLoaderTask coverLoader;
-	private AsyncTask<Void, Void, String> getUrlTask;
-	private boolean searchStopped = true;
 
 	public SearchTab(final View instanceView, final LayoutInflater inflater, LibraryActivity libraryActivity) {
 		this.view = instanceView;
@@ -411,7 +413,12 @@ public class SearchTab {
 				}	
 			};
 			getUrlTask.execute(NO_PARAMS);
-			coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
+			if (song instanceof GrooveSong) {
+				String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
+				coverLoader = new GrooveSharkCoverLoaderTask(artist, title, urlLargeImage);
+			} else {
+				coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
+			}
 			coverLoader.addListener(new OnBitmapReadyListener() {
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
