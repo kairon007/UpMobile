@@ -352,6 +352,10 @@ public class LibraryPagerAdapter
 				break;
 			case MediaUtils.TYPE_SEARCH:
 				View searchView = SearchTab.getInstanceView(inflater, activity);
+				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
+					searchView.findViewById(R.id.search_field).setBackgroundDrawable
+						(activity.getResources().getDrawable(R.drawable.search_background_white));
+				}
 				container.addView(searchView);
 				return searchView;
 			default:

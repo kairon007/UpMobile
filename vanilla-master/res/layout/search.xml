@@ -5,10 +5,12 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/search_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@drawable/layout_divider"
         android:dividerPadding="4dp"
+        android:background="@drawable/search_background"
         android:orientation="horizontal"
         android:showDividers="middle" >
 

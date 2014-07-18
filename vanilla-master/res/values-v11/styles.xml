@@ -21,10 +21,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <resources>
-    <style name="AppBaseTheme" parent="android:Theme.Holo"/>
     
+    <style name="AppThemeBase" parent="android:Theme.Holo"/>
+        
+    <style name="AppThemeBase.White" parent="android:Theme.Holo.Light"/>
     
 	<style name="Dialog" parent="android:Theme.Holo.Dialog" />
+	<style name="Dialog.White" parent="android:Theme.Holo.Light.Dialog" />
 	<style name="AlertDialogItem">
 		<item name="android:textColor">?android:textColorAlertDialogListItem</item>
 	</style>
@@ -32,16 +35,34 @@ THE SOFTWARE.
 		<item name="android:actionBarStyle">@style/PlaybackActionBar</item>
 		<item name="android:windowBackground">@android:color/black</item>
 	</style>
+	<style name="Playback.White" parent="AppTheme.White">
+		<item name="android:actionBarStyle">@style/PlaybackActionBar.White</item>
+		<item name="android:windowBackground">@android:color/white</item>
+	</style>
+	
 	<style name="BackActionBar" parent="AppTheme">
 		<item name="android:actionBarStyle">@style/PlaybackActionBar</item>
 	</style>
+	<style name="BackActionBar.White" parent="AppTheme.White">
+		<item name="android:actionBarStyle">@style/PlaybackActionBar.White</item>
+	</style>
+	
 	<style name="Library" parent="AppTheme">
 		<item name="android:actionBarStyle">@style/LibraryActionBar</item>
+	</style>
+	<style name="Library.White" parent="AppTheme.White">
+		<item name="android:actionBarStyle">@style/LibraryActionBar.White</item>
 	</style>
 	<style name="PlaybackActionBar" parent="android:Widget.Holo.ActionBar">
 		<item name="android:displayOptions">showTitle|homeAsUp</item>
 	</style>
-		<style name="LibraryActionBar" parent="android:Widget.Holo.ActionBar">
+	<style name="PlaybackActionBar.White" parent="android:Widget.Holo.Light.ActionBar">
+		<item name="android:displayOptions">showTitle|homeAsUp</item>
+	</style>
+	<style name="LibraryActionBar" parent="android:Widget.Holo.ActionBar">
+		<item name="android:displayOptions"></item>
+	</style>
+	<style name="LibraryActionBar.White" parent="android:Widget.Holo.Light.ActionBar">
 		<item name="android:displayOptions"></item>
 	</style>
 </resources>

@@ -56,6 +56,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,6 +75,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.raivz.hbkds194978.MA;
+import com.startapp.android.publish.splash.SplashConfig.Theme;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -83,8 +85,7 @@ public class LibraryActivity
 	extends PlaybackActivity
 	implements TextWatcher
 	         , DialogInterface.OnClickListener
-	         , DialogInterface.OnDismissListener
-{
+	         , DialogInterface.OnDismissListener {
 	/**
 	 * Action for row click: play the row.
 	 */
@@ -284,6 +285,11 @@ public class LibraryActivity
 		if (state == null) {
 			checkForLaunch(getIntent());
 		}
+		if ("AppTheme.White".equals(Util.getThemeName(this))) {
+			setTheme(R.style.Library_White);
+		} else {
+			setTheme(R.style.Library);
+		}
 		setContentView(R.layout.library_content);
 		
 //		Advertisement.startAppInit(this);
@@ -292,6 +298,9 @@ public class LibraryActivity
 //		Advertisement.airPushShow(this);
 				
 		mSearchBox = findViewById(R.id.search_box);
+		if ("AppTheme.White".equals(Util.getThemeName(this))) {
+			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_white));
+		}
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
 		mClearFilterEditText = (ImageButton)findViewById(R.id.clear_filter);
@@ -338,7 +347,7 @@ public class LibraryActivity
 			mArtist.setTypeface(VanillaAp.FONT_LIGHT);
 			mTitle.setTypeface(VanillaAp.FONT_REGULAR);
 			
-			mTitle.setTextColor(Color.WHITE);
+//			mTitle.setTextColor(Color.WHITE);
 			mTitle.setTextSize(20);
 			mArtist.setTextSize(15);
 			

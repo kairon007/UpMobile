@@ -50,6 +50,11 @@ public class PreferencesActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		if ("AppTheme.White".equals(Util.getThemeName(this))) {
+			setTheme(R.style.BackActionBar_White);
+		} else {
+			setTheme(R.style.BackActionBar);
+		}
 		super.onCreate(savedInstanceState);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			addPreferencesFromResource(R.xml.preferences);

@@ -38,7 +38,11 @@ public class MiniPlaybackActivity extends PlaybackActivity {
 	public void onCreate(Bundle state)
 	{
 		super.onCreate(state);
-
+		if ("AppTheme.White".equals(Util.getThemeName(this))) {
+			setTheme(R.style.Dialog_White);
+		} else {
+			setTheme(R.style.Dialog);
+		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.mini_playback);
 

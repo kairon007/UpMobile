@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppBaseTheme" parent="android:Theme"/>
-    
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- common customizations -->
-        <item name="android:windowBackground">@color/window_background</item>
-        
+
+    <style name="AppThemeBase" parent="android:Theme"/>
+
+    <style name="AppThemeBase.White" parent="android:Theme.Light"/>
+
+    <style name="AppTheme" parent="AppThemeBase">
+        <item name="android:windowBackground">@color/window_background_dark</item>
     </style>
 
+    <style name="AppTheme.White" parent="AppThemeBase.White">
+        <item name="android:windowBackground">@color/window_background_light</item>
+    </style>
+
+    <style name="Dialog" parent="android:Theme.Dialog" />
+    <style name="Dialog.White" parent="android:Theme.Dialog" />
+
+    <style name="Library" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
     
-    
-	<style name="Dialog" parent="android:Theme.Dialog" />
-	<style name="Library" parent="AppTheme">
-		<item name="android:windowNoTitle">true</item>
-	</style>
-	<style name="Playback" parent="AppTheme">
-		<item name="android:windowNoTitle">true</item>
+    <style name="Library.White" parent="AppTheme.White">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Playback" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
 		<item name="android:windowBackground">@null</item>
-	</style>
-	<style name="BackActionBar" parent="AppTheme" />
+    </style>
+    <style name="Playback.White" parent="AppTheme.White">
+        <item name="android:windowNoTitle">true</item>
+		<item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="BackActionBar" parent="AppTheme" />
+    <style name="BackActionBar.White" parent="AppTheme.White" />
+
 	<style name="AlertDialogItem">
 		<item name="android:textColor">@android:color/primary_text_light</item>
 	</style>
-	<!-- Color used in LibraryActivity list dividers -->
-	<color name="divider_color">#f444</color>
-	<color name="window_background">#333</color>
-	<color name="dimmed">#3fff</color>
-		
+
+
+
+    <!-- Color used in LibraryActivity list dividers -->
+    <color name="divider_color">#f444</color>
+    <color name="window_background_dark">#333</color>
+    <color name="window_background_light">#fff</color>
+    <color name="dimmed">#3fff</color>
+
 </resources>

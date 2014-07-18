@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -91,7 +92,12 @@ public class PlaylistActivity extends Activity
 	public void onCreate(Bundle state)
 	{
 		super.onCreate(state);
-
+		Log.d(getClass().getSimpleName(), "");
+		if ("AppTheme.White".equals(Util.getThemeName(this))) {
+			setTheme(R.style.BackActionBar_White);
+		} else {
+			setTheme(R.style.BackActionBar);
+		}
 		HandlerThread thread = new HandlerThread(getClass().getName());
 		thread.start();
 

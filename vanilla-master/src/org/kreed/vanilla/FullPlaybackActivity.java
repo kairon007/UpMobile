@@ -130,7 +130,11 @@ public class FullPlaybackActivity extends PlaybackActivity
 	public void onCreate(Bundle icicle)
 	{
 		super.onCreate(icicle);
-
+		if ("AppTheme.White".equals(Util.getThemeName(this))) {
+			setTheme(R.style.Playback_White);
+		} else {
+			setTheme(R.style.Playback);
+		}
 		setTitle(R.string.playback_view);
 
 		SharedPreferences settings = PlaybackService.getSettings(this);
