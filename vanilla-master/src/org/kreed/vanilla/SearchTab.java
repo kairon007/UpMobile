@@ -4,8 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -224,6 +226,7 @@ public class SearchTab {
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
+		private Map<Integer, Bitmap> bitmaps = new HashMap<Integer, Bitmap>(0);
 
 		private SongSearchAdapter(Context context, LayoutInflater inflater) {
 			super(context, -1, new ArrayList<Song>());
@@ -236,9 +239,9 @@ public class SearchTab {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			Song song = getItem(position);
-			ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
+			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
 			builder
 				.setButtonVisible(false)
 				.setLongClickable(false)
@@ -246,8 +249,26 @@ public class SearchTab {
 				.setLine1(song.getTitle())
 				.setLine2(song.getArtist())
 //				.setNumber(String.valueOf(position+1), 0)
-				//TODO
+				.setId(position)
 				.setIcon(R.drawable.fallback_cover);
+			if (song instanceof GrooveSong) {
+				if (bitmaps.containsKey(position)) {
+					builder.setIcon(bitmaps.get(position));
+				} else {
+					String urlSmallImage = ((GrooveSong) song).getUrlSmallImage();
+					CoverLoaderTask coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+					coverLoader.addListener(new OnBitmapReadyListener() {
+						@Override
+						public void onBitmapReady(Bitmap bmp) {
+							bitmaps.put(position, bmp);
+							if (builder != null && builder.getId() == position) {
+								builder.setIcon(bmp);
+							}
+						}
+					});
+					coverLoader.execute(NO_PARAMS);
+				}
+			} 
 			if (position == getCount()-1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
 				getNextResults();
@@ -262,6 +283,13 @@ public class SearchTab {
 		public void hideProgress() {
     		refreshSpinner.setVisibility(View.GONE);
 		}
+
+		@Override
+		public void clear() {
+			super.clear();
+			bitmaps.clear();
+		}
+		
 	}
 
 	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
@@ -415,7 +443,7 @@ public class SearchTab {
 			getUrlTask.execute(NO_PARAMS);
 			if (song instanceof GrooveSong) {
 				String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
-				coverLoader = new GrooveSharkCoverLoaderTask(artist, title, urlLargeImage);
+				coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
 			} else {
 				coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
 			}

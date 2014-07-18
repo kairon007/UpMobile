@@ -22,10 +22,14 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 	private static final String URL_PATTERN = "http://www.musicbrainz.org/ws/2/recording/?query=artist:%s+recording:%s";
 	public static enum Size {original, large, small};
 	protected Size size;
+	protected String artist;
+	protected String title;
 
 	public MuzicBrainzCoverLoaderTask(String artist, String title, Size size) {
-		super(artist, title);
-		this.size = size;		
+		super();
+		this.size = size;	
+		this.artist = artist;	
+		this.title = title;	
 	}
 	
 	@Override

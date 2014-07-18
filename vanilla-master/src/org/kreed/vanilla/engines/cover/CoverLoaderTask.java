@@ -12,14 +12,7 @@ public abstract class CoverLoaderTask extends AsyncTask<Void, Void, Bitmap> {
 		public void onBitmapReady(Bitmap bmp);
 	}
 	
-	protected String artist;
-	protected String title;
 	protected List<OnBitmapReadyListener> listeners = new ArrayList<OnBitmapReadyListener>();
-	
-	public CoverLoaderTask(String artist, String title) {
-		this.artist = artist;
-		this.title = title;
-	}
 	
 	public void addListener(OnBitmapReadyListener listener) {
 		listeners.add(listener);

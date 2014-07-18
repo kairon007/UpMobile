@@ -16,8 +16,8 @@ public class GrooveSharkCoverLoaderTask extends CoverLoaderTask {
 
 	private String urlImage;
 	
-	public GrooveSharkCoverLoaderTask(String artist, String title, String urlImage) {
-		super(artist, title);
+	public GrooveSharkCoverLoaderTask(String urlImage) {
+		super();
 		this.urlImage = urlImage;
 	}
 	
