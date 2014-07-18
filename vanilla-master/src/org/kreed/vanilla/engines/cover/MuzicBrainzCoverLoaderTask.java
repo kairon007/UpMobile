@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,30 +15,17 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.Log;
 
-public class MuzicBrainzCoverLoaderTask extends AsyncTask<Void, Void, Bitmap> {
-	public interface OnBitmapReadyListener {
-		public void onBitmapReady(Bitmap bmp);
-	}
-	
+public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
+
+	private static final String URL_PATTERN = "http://www.musicbrainz.org/ws/2/recording/?query=artist:%s+recording:%s";
 	public static enum Size {original, large, small};
-	public static final String URL_PATTERN = "http://www.musicbrainz.org/ws/2/recording/?query=artist:%s+recording:%s";
-	private String artist;
-	private String song;
-	private Size size;
-	private List<OnBitmapReadyListener> listeners = new ArrayList<OnBitmapReadyListener>();
+	protected Size size;
 
-	public MuzicBrainzCoverLoaderTask(String artist, String song, Size size) {
-		super();
-		this.artist = artist;
-		this.song = song;
-		this.size = size;
-	}
-
-	public void addListener(OnBitmapReadyListener listener) {
-		listeners.add(listener);
+	public MuzicBrainzCoverLoaderTask(String artist, String title, Size size) {
+		super(artist, title);
+		this.size = size;		
 	}
 	
 	@Override
@@ -53,7 +38,7 @@ public class MuzicBrainzCoverLoaderTask extends AsyncTask<Void, Void, Bitmap> {
 		link = String.format(
 				URL_PATTERN, 
 				URLEncoder.encode(artist, "UTF-8"), 
-				URLEncoder.encode(song, "UTF-8")
+				URLEncoder.encode(title, "UTF-8")
 			);
 		} catch (UnsupportedEncodingException e) {
 			return null;
@@ -105,16 +90,6 @@ public class MuzicBrainzCoverLoaderTask extends AsyncTask<Void, Void, Bitmap> {
 			} catch (IOException e) {
 				Log.e(getClass().getName(), "Error downloading the cover", e);
 				return null;
-			}
-		}
-	}
-
-	@Override
-	protected void onPostExecute(Bitmap result) {
-		super.onPostExecute(result);
-		for (OnBitmapReadyListener listener : listeners) {
-			if (null != listener) {
-				listener.onBitmapReady(result);
 			}
 		}
 	}

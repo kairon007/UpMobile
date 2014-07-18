@@ -45,9 +45,10 @@ public class SearchGrooveshark extends BaseSearchTask {
 			if (results.length != 0 ) {
 				for (SearchArtistResult result : results) {
 					int songId = result.SongID;
+					int albumId = result.AlbumID;
 					String songArtist = result.ArtistName;
 					String songTitle = result.Name;
-					addSong(new GrooveSong(result.hashCode(), songId).setArtistName(songArtist).setTitle(songTitle));
+					addSong(new GrooveSong(result.hashCode(), songId, albumId).setArtistName(songArtist).setTitle(songTitle));
 				}
 			}
 		} catch (Exception e) {
