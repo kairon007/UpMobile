@@ -323,6 +323,9 @@ public class LibraryPagerAdapter
 				adapter = mArtistAdapter = new MediaAdapter(activity, MediaUtils.TYPE_ARTIST, null);
 				mArtistAdapter.setExpandable(mSongsPosition != -1 || mAlbumsPosition != -1);
 				mArtistHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
+				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
+					mArtistHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
+				}
 			    mArtistHeader.setTypeface(font);
 				break;
 			case MediaUtils.TYPE_ALBUM:
@@ -330,12 +333,18 @@ public class LibraryPagerAdapter
 				mAlbumAdapter.setExpandable(mSongsPosition != -1);
 				mPendingAlbumLimiter = null;
 				mAlbumHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
+				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
+					mAlbumHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
+				}
 				mAlbumHeader.setTypeface(font);
 				break;
 			case MediaUtils.TYPE_SONG: 
 				adapter = mSongAdapter = new MediaAdapter(activity, MediaUtils.TYPE_SONG, mPendingSongLimiter);
 				mPendingSongLimiter = null;
 				mSongHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
+				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
+					mSongHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
+				}
 				mSongHeader.setTypeface(font);
 				mSongHeader.setText("");
 				break;
