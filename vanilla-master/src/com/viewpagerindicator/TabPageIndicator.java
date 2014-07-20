@@ -31,6 +31,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import org.kreed.vanilla.R;
+import org.kreed.vanilla.Util;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change
@@ -120,7 +121,10 @@ public class TabPageIndicator extends HorizontalScrollView
 		tabView.setBackgroundResource(R.drawable.vpi__tab_indicator);
 		tabView.setPadding(padX, padY, padX, padY);
 		tabView.setGravity(Gravity.CENTER);
-		tabView.setTextColor(0xfff3f3f3);
+		if ("AppTheme".equals(Util.getThemeName(getContext()))) {
+			tabView.setTextColor(getResources().getColor(R.color
+					.tab_page_indicator_textview));
+		}
 		tabView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 		tabView.setTypeface(tabView.getTypeface(), Typeface.BOLD);
 		tabView.setSingleLine();

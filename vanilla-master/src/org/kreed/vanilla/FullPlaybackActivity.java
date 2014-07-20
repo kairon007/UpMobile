@@ -161,7 +161,6 @@ public class FullPlaybackActivity extends PlaybackActivity
 		}
 
 		setContentView(layout);
-
 		CoverView coverView = (CoverView)findViewById(R.id.cover_view);
 		coverView.setup(mLooper, this, coverStyle);
 		coverView.setOnClickListener(this);
@@ -181,6 +180,13 @@ public class FullPlaybackActivity extends PlaybackActivity
 			table.setOnClickListener(this);
 			table.setOnLongClickListener(this);
 			mInfoTable = table;
+			if ("AppTheme.White".equals(Util.getThemeName(this))){
+				findViewById(R.id.info_table).setBackgroundColor(
+						this.getResources().getColor(R.color.full_playback_alt_table_background_light));
+			} else {
+				findViewById(R.id.info_table).setBackgroundColor(
+						this.getResources().getColor(R.color.full_playback_alt_table_background_dark));
+			}
 		}
 
 		mTitle = (TextView)findViewById(R.id.title);

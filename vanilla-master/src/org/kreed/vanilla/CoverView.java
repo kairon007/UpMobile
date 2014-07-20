@@ -211,7 +211,12 @@ public final class CoverView extends View implements Handler.Callback {
 		int x = 0;
 		int scrollX = mScrollX;
 
-		canvas.drawColor(Color.BLACK);
+		
+		if ("AppTheme.White".equals(Util.getThemeName(getContext()))){
+			canvas.drawColor(Color.WHITE);
+		} else {
+			canvas.drawColor(Color.BLACK);
+		}
 
 		for (Bitmap bitmap : mActiveBitmaps) {
 			if (bitmap != null && scrollX + width > x && scrollX < x + width) {

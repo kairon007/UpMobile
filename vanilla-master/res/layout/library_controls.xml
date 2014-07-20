@@ -20,13 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
+<!-- 
+	android:background="@drawable/music_bottom_playback_bg_light" -->
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/controls"
-	android:background="@drawable/music_bottom_playback_bg"
 	android:layout_width="fill_parent"
 	android:visibility="visible"
-	android:layout_height="80dip">
+	android:layout_height="80dip"
+	android:orientation="horizontal">
 	<TextView
 		android:id="@+id/empty_queue"
 		android:gravity="center"

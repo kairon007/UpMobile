@@ -279,6 +279,7 @@ public class LibraryActivity
 		Advertisement.startAppOnResume(this);
 	}
 	
+	
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);		
@@ -363,7 +364,7 @@ public class LibraryActivity
 			mTabs = tabs;
 
 			LinearLayout content = (LinearLayout)findViewById(R.id.content);
-		
+			
 			//aici se adauga taburile de sus
 			content.addView(tabs, 0, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
@@ -376,7 +377,13 @@ public class LibraryActivity
 				getLayoutInflater().inflate(R.layout.library_controls, content, true);
 
 				mControls = findViewById(R.id.controls);
-
+				if ("AppTheme.White".equals(Util.getThemeName(this))) {
+					mControls.setBackgroundResource
+						(R.drawable.music_bottom_playback_bg_light);
+				} else {
+					mControls.setBackgroundResource
+						(R.drawable.music_bottom_playback_bg);
+				}
 				mTitle = (TextView)mControls.findViewById(R.id.title);
 				mArtist = (TextView)mControls.findViewById(R.id.artist);
 				mAlbum = (TextView)mControls.findViewById(R.id.album);
