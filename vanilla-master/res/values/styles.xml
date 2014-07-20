@@ -40,12 +40,4 @@
 		<item name="android:textColor">@android:color/primary_text_light</item>
 	</style>
 
-
-
-    <!-- Color used in LibraryActivity list dividers -->
-    <color name="divider_color">#f444</color>
-    <color name="window_background_dark">#333</color>
-    <color name="window_background_light">#fff</color>
-    <color name="dimmed">#3fff</color>
-
 </resources>

@@ -32,7 +32,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -372,6 +375,11 @@ public class LibraryPagerAdapter
 			}
 
 			view = (ListView)inflater.inflate(R.layout.listview, null);
+			if ("AppTheme.White".equals(Util.getThemeName(mActivity))) {
+				view.setDivider(new ColorDrawable
+						(activity.getResources().getColor(R.color.divider_color_light)));
+				view.setDividerHeight(1);
+			}
 			view.setOnCreateContextMenuListener(this);
 			view.setOnItemClickListener(this);
 			view.setTag(type);
@@ -393,6 +401,7 @@ public class LibraryPagerAdapter
 
 		requeryIfNeeded(type);
 		container.addView(view);
+
 		return view;
 	}
 

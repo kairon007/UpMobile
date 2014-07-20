@@ -4,4 +4,11 @@
     <color name="full_playback_alt_table_background_dark">#a000</color>
     <color name="full_playback_alt_table_background_light">#afff</color>
     <color name="full_playback_alt_control_background">#a000</color>
+    
+    <!-- Color used in LibraryActivity list dividers -->
+    <color name="divider_color">#f444</color>
+    <color name="divider_color_light">#fddd</color>
+    <color name="window_background_dark">#333</color>
+    <color name="window_background_light">#fff</color>
+    <color name="dimmed">#3fff</color>
 </resources>
