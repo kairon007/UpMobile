@@ -279,7 +279,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 					if (null == fileName) {
 						fileName = data.getLastPathSegment();
 						if (null == fileName) {
-							fileName = "unknown.mp3";
+							fileName = getResources().getString(R.string.fileName_unknown_mp3) + ".mp3";
 						}
 					}
 					final File outFile = new File(
