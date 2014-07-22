@@ -10,7 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.kreed.vanilla.SearchTab;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,8 +44,9 @@ public class SearchZaycev extends BaseSearchTask {
 				JSONObject songObject = songResults.getJSONObject(i);
 				String songTitle = songObject.getString("track");
 				String songArtist = songObject.getString("artistName");
+				String userId = songObject.getString("userId");
 				String songId = songObject.getString("id");
-				addSong(new ZaycevSong(songId).setTitle(songTitle).setArtistName(songArtist));
+				addSong(new ZaycevSong(userId, songId).setTitle(songTitle).setArtistName(songArtist));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
