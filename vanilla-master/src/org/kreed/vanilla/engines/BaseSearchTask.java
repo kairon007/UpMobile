@@ -19,11 +19,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.kreed.vanilla.Song;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
-	public static final Class[] PARAMETER_TYPES = new Class[]{FinishedParsingSongs.class, String.class};
+	public static final Class[] PARAMETER_TYPES = new Class[]{FinishedParsingSongs.class, String.class, Context.class};
 	private static String[] agents = new String[] {
 		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36", 
 		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0", 
@@ -40,10 +41,12 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	private boolean finished;
 	private FinishedParsingSongs dInterface;
 	private String songName;
+	protected Context context;
 
-	public BaseSearchTask(FinishedParsingSongs dInterface, String songName) {
+	public BaseSearchTask(FinishedParsingSongs dInterface, String songName, Context context) {
 		this.dInterface = dInterface;
 		this.songName = songName;
+		this.context = context;
 	}
 
 	protected StringBuffer readLink(String link) throws MalformedURLException {

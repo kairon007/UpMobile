@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
 
 
@@ -17,8 +18,8 @@ public class SearchPleer extends BaseSearchTask {
 	
 	public static final int PLEER_SEARCH_RESULTS = 20;
 
-	public SearchPleer(FinishedParsingSongs dInterface, String songName) {
-		super(dInterface, songName);
+	public SearchPleer(FinishedParsingSongs dInterface, String songName, Context context) {
+		super(dInterface, songName, context);
 		this.pageNumber = 1;
 	}
 

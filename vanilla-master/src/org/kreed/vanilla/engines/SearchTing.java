@@ -13,12 +13,13 @@ import java.net.URLEncoder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
 
 public class SearchTing extends BaseSearchTask {
 
-	public SearchTing(FinishedParsingSongs dInterface, String songName) {
-		super(dInterface, songName);
+	public SearchTing(FinishedParsingSongs dInterface, String songName, Context context) {
+		super(dInterface, songName, context);
 	}
 
 	@Override

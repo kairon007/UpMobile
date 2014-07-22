@@ -10,10 +10,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.Context;
+
 public class SearchMp3World extends BaseSearchTask {
 	private static final Pattern SONG_TITLE_PATTERN = Pattern.compile("([^-]*)-(.*)mp3");
-	public SearchMp3World(FinishedParsingSongs dInterface, String songName) {
-		super(dInterface, songName);
+	public SearchMp3World(FinishedParsingSongs dInterface, String songName, Context context) {
+		super(dInterface, songName, context);
 	}
 
 	@Override

@@ -7,6 +7,8 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.content.Context;
+
 import com.mopub.mobileads.util.Base64;
 
 
@@ -16,8 +18,8 @@ public class SearchHulkShare extends BaseSearchTask {
 	public String hulkshareSuffix =new String(Base64.decode("L2h1bGtzaGFyZS5tcDM/ZD0x", Base64.DEFAULT));
 	public String hulkshareSearchUrl = new String(Base64.decode("aHR0cDovL3d3dy5odWxrc2hhcmUuY29tL3NlYXJjaC5waHA/cT0=", Base64.DEFAULT)); 
 	
-	public SearchHulkShare(FinishedParsingSongs dInterface, String songName) {
-		super(dInterface, songName);
+	public SearchHulkShare(FinishedParsingSongs dInterface, String songName, Context context) {
+		super(dInterface, songName, context);
 	}
 
 	@Override

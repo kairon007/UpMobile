@@ -440,7 +440,7 @@ public class SearchTab {
 		Class<? extends BaseSearchTask> engineClass = taskIterator.next();
 		BaseSearchTask engine;
 		try {
-			engine = engineClass.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName });
+			engine = engineClass.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName, activity });
 		} catch (Exception e) {
 			getNextResults();
 			return;

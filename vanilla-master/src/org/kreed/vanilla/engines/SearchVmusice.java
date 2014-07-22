@@ -7,12 +7,13 @@ import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import android.content.Context;
 import android.util.Log;
 
 public class SearchVmusice extends BaseSearchTask {
 	
-	public SearchVmusice(FinishedParsingSongs dInterface, String songName) {
-		super(dInterface, songName);
+	public SearchVmusice(FinishedParsingSongs dInterface, String songName, Context context) {
+		super(dInterface, songName, context);
 	}
 	
 	@Override

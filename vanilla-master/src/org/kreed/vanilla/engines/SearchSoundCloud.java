@@ -4,13 +4,14 @@ package org.kreed.vanilla.engines;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import android.content.Context;
 import android.util.Log;
 
 public class SearchSoundCloud extends BaseSearchTask {
 	private int specialIndex = 0;
 	
-	public SearchSoundCloud(FinishedParsingSongs dInterface, String songName) {
-		super(dInterface, songName);
+	public SearchSoundCloud(FinishedParsingSongs dInterface, String songName, Context context) {
+		super(dInterface, songName, context);
 	}
 
 	@Override
