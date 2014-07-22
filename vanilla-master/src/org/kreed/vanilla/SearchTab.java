@@ -131,6 +131,10 @@ public class SearchTab {
 		return downloadPath;
 	}
 
+	public static String getSimpleDownloadPath(String absPath) {
+		return absPath.replace(Environment.getExternalStorageDirectory().getAbsolutePath(), "");
+	}
+
 	public static void setDownloadPath(Context context, String downloadPath) {
 		SharedPreferences downloadDetails = context.getSharedPreferences(SearchTab.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
 		Editor edit = downloadDetails.edit();
@@ -181,16 +185,15 @@ public class SearchTab {
 			}
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
-			final String fileName = songTitle + ".mp3";
-			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(songTitle);
-			request.setDestinationInExternalPublicDir(getDownloadPath(context), fileName);
-			// request.setDestinationUri(Uri.fromFile(new
-			// File(getDownloadPath(context) + fileName)));
+			StringBuilder sb = new StringBuilder(songTitle).append(" - ").append(songArtist);
+			final String fileName = sb.toString();
+			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(fileName);
+			request.setDestinationInExternalPublicDir(getSimpleDownloadPath(getDownloadPath(context)), sb.append(".mp3").toString());
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				request.allowScanningByMediaScanner();
 			}
 			final long downloadId = manager.enqueue(request);
-			Toast.makeText(context, String.format(context.getString(R.string.download_started), songTitle), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
 			final TimerTask progresUpdateTask = new TimerTask() {
 				private File src;
 
