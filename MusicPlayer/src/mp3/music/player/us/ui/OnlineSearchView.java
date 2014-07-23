@@ -111,7 +111,7 @@ public class OnlineSearchView {
 				engines = new ArrayList<Class<? extends BaseSearchTask>>(engineNames.length);
 				for (int i = 0; i < engineNames.length; i++) {
 					try {
-						engines.add((Class<? extends BaseSearchTask>) Class.forName("org.kreed.vanilla.engines." + engineNames[i]));
+						engines.add((Class<? extends BaseSearchTask>) Class.forName("mp3.music.player.us.engines." + engineNames[i]));
 					} catch (ClassNotFoundException e) {
 						Log.e("SearchTab", "Unknown engine", e);
 					}
@@ -399,6 +399,7 @@ public class OnlineSearchView {
 			@Override
 			public void onClick(View v) {
 				searchField.setText(null);
+				progress.setVisibility(View.GONE);
 				message.setText(R.string.search_message_default);
 				resultAdapter.clear();
 				searchStopped = true;

@@ -13,8 +13,12 @@ package mp3.music.player.us.ui.activities;
 
 import java.util.Random;
 
+import mp3.music.player.us.R;
+import mp3.music.player.us.ui.OnlineSearchView;
+import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,9 +32,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
-import mp3.music.player.us.R;
-import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
-
 /**
  * This class is used to display the {@link ViewPager} used to swipe between the
  * main {@link Fragment}s used to browse the user's music.
@@ -39,157 +40,166 @@ import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
  */
 public class HomeActivity extends BaseActivity {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Load the music browser fragment
-        if (savedInstanceState == null) { 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.activity_base_content, new MusicBrowserPhoneFragment()).commit();
-        }
-        
-        
-        start(true);
-    }
-    
-    
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		// Load the music browser fragment
+		if (savedInstanceState == null) { 
+			getSupportFragmentManager().beginTransaction()
+			.replace(R.id.activity_base_content, new MusicBrowserPhoneFragment()).commit();
+		}
+
+
+		start(true);
+	}
+
+
 
 	public static boolean isOnline(Context context) {
-	    ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-	    boolean isOnline = activeNetworkInfo != null;
-	    //"isonline::: " + isOnline);
-	    return isOnline;
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		boolean isOnline = activeNetworkInfo != null;
+		//"isonline::: " + isOnline);
+		return isOnline;
 	}
 
 
 
 
-public static void toast(Activity activity, String text) {
-	Toast toast = Toast.makeText(activity, text, Toast.LENGTH_LONG);
-	toast.show();
-}
-
-
-public static int getRandomTheme() {
-	int[] array = {AlertDialog.THEME_HOLO_LIGHT, AlertDialog.THEME_HOLO_DARK};
-    int rnd = new Random().nextInt(array.length);
-    return array[rnd];
-}
-
-
-
-public static SharedPreferences getSharedPrefs(Context context) {
-	return PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-}
-
-
-public boolean hasRated() {
-	SharedPreferences prefs = getApplicationContext().getSharedPreferences("HasRated", 0);
-	boolean has_rated = prefs.getBoolean("rated", false);
-	return has_rated;
-	
-}
-
-public void start(boolean showRateMePopup) {
-	// if first time running
-	long installTime = getSharedPrefLong(this, "install_time", -999);
-	if (installTime < 0) {
-		// first time run
-		putSharedPrefLong(this, "install_time", System.currentTimeMillis()); // save install time, which is needed
+	public static void toast(Activity activity, String text) {
+		Toast toast = Toast.makeText(activity, text, Toast.LENGTH_LONG);
+		toast.show();
 	}
-	
-	if (showRateMePopup && !hasRated()) {
-		showRatePopup(200000); 
+
+
+	public static int getRandomTheme() {
+		int[] array = {AlertDialog.THEME_HOLO_LIGHT, AlertDialog.THEME_HOLO_DARK};
+		int rnd = new Random().nextInt(array.length);
+		return array[rnd];
 	}
-}
 
-public static long getInstallTime(Context context) {
-	long installTime = getSharedPrefLong(context, "install_time", 0); 
-	if (installTime == 0) {
-		putSharedPrefLong(context, "install_time", System.currentTimeMillis());
-		return System.currentTimeMillis();
-	} else {
-		return installTime;
+
+
+	public static SharedPreferences getSharedPrefs(Context context) {
+		return PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 	}
-}
 
-public void showRatePopup(long initialDelayMillis) { 
-	if (System.currentTimeMillis() - getInstallTime(this) > initialDelayMillis) { // if x seconds have passed
-		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
-			public void onClick(DialogInterface dialog, int which) { 
-				switch (which) {
-				case DialogInterface.BUTTON_POSITIVE:
+	public boolean hasRated() {
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences("HasRated", 0);
+		boolean has_rated = prefs.getBoolean("rated", false);
+		return has_rated;
 
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, 
-							Uri.parse("https://play.google.com/store/apps/details?id=" + getActivity().getPackageName()));
-					startActivity(browserIntent);
+	}
 
-					SharedPreferences prefs = getApplicationContext().getSharedPreferences("HasRated", 0);
-					SharedPreferences.Editor editor = prefs.edit();
-					editor.putBoolean("rated", true).commit();  
-					
-					Toast.makeText(getActivity(), "Thank you so much :) Your support means everything", Toast.LENGTH_LONG).show(); 
+	public void start(boolean showRateMePopup) {
+		// if first time running
+		long installTime = getSharedPrefLong(this, "install_time", -999);
+		if (installTime < 0) {
+			// first time run
+			putSharedPrefLong(this, "install_time", System.currentTimeMillis()); // save install time, which is needed
+		}
 
-					break;
+		if (showRateMePopup && !hasRated()) {
+			showRatePopup(200000); 
+		}
+	}
 
-				case DialogInterface.BUTTON_NEGATIVE:
-					break;
+	public static long getInstallTime(Context context) {
+		long installTime = getSharedPrefLong(context, "install_time", 0); 
+		if (installTime == 0) {
+			putSharedPrefLong(context, "install_time", System.currentTimeMillis());
+			return System.currentTimeMillis();
+		} else {
+			return installTime;
+		}
+	}
+
+	public void showRatePopup(long initialDelayMillis) { 
+		if (System.currentTimeMillis() - getInstallTime(this) > initialDelayMillis) { // if x seconds have passed
+			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int which) { 
+					switch (which) {
+					case DialogInterface.BUTTON_POSITIVE:
+
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, 
+								Uri.parse("https://play.google.com/store/apps/details?id=" + getActivity().getPackageName()));
+						startActivity(browserIntent);
+
+						SharedPreferences prefs = getApplicationContext().getSharedPreferences("HasRated", 0);
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putBoolean("rated", true).commit();  
+
+						Toast.makeText(getActivity(), "Thank you so much :) Your support means everything", Toast.LENGTH_LONG).show(); 
+
+						break;
+
+					case DialogInterface.BUTTON_NEGATIVE:
+						break;
+					}
 				}
-			}
-		};
+			};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Like our music player?");
-		builder.setMessage("If you like it, please rate it 5 stars. Your support helps us a lot! THANK YOU!").setPositiveButton("Rate Now", dialogClickListener).setNegativeButton("No", dialogClickListener).setCancelable(false).show();
-	} 
-}
-
-
-
-public Activity getActivity() {
-	return this;
-}
-
-
-public static void putSharedPrefString(Context context, String property, String value) {
-	SharedPreferences sharedPreferences = getSharedPrefs(context);
-	SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-	if (sharedPreferencesEditor != null) {
-		sharedPreferencesEditor.putString(property, value);
-		sharedPreferencesEditor.commit();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Like our music player?");
+			builder.setMessage("If you like it, please rate it 5 stars. Your support helps us a lot! THANK YOU!").setPositiveButton("Rate Now", dialogClickListener).setNegativeButton("No", dialogClickListener).setCancelable(false).show();
+		} 
 	}
-}
 
-public static void putSharedPrefLong(Context context, String property, long value) {
-	SharedPreferences sharedPreferences = getSharedPrefs(context);
-	SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-	if (sharedPreferencesEditor != null) {
-		sharedPreferencesEditor.putLong(property, value);
-		sharedPreferencesEditor.commit();
+
+
+	public Activity getActivity() {
+		return this;
 	}
-}
 
 
-public static long getSharedPrefLong(Context context, String property, long defaultValue) {
-	SharedPreferences sharedPreferences = getSharedPrefs(context.getApplicationContext());
-	if (sharedPreferences != null) {
-		return sharedPreferences.getLong(property, defaultValue);
-	} else {
-		return defaultValue;
+	public static void putSharedPrefString(Context context, String property, String value) {
+		SharedPreferences sharedPreferences = getSharedPrefs(context);
+		SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+		if (sharedPreferencesEditor != null) {
+			sharedPreferencesEditor.putString(property, value);
+			sharedPreferencesEditor.commit();
+		}
 	}
-}
+
+	public static void putSharedPrefLong(Context context, String property, long value) {
+		SharedPreferences sharedPreferences = getSharedPrefs(context);
+		SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+		if (sharedPreferencesEditor != null) {
+			sharedPreferencesEditor.putLong(property, value);
+			sharedPreferencesEditor.commit();
+		}
+	}
 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int setContentView() {
-        return R.layout.activity_base;
-    }
+	public static long getSharedPrefLong(Context context, String property, long defaultValue) {
+		SharedPreferences sharedPreferences = getSharedPrefs(context.getApplicationContext());
+		if (sharedPreferences != null) {
+			return sharedPreferences.getLong(property, defaultValue);
+		} else {
+			return defaultValue;
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int setContentView() {
+		return R.layout.activity_base;
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle args) {
+		if (id == OnlineSearchView.STREAM_DIALOG_ID) {
+			return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args);
+		}
+		return super.onCreateDialog(id, args);
+	}
+	
 }
