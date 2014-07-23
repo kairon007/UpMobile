@@ -709,7 +709,10 @@ public class SearchTab {
 		@Override
 		protected Boolean doInBackground(String... params) {
 			try {
-				mediaPlayer.setDataSource(url);
+//				mediaPlayer.setDataSource(url);
+				HashMap<String, String> headers = new HashMap<String,String>();
+				headers.put("User-Agent", "2.0.0.6 в Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+				mediaPlayer.setDataSource(view.getContext(), Uri.parse(url), headers);
 				mediaPlayer.prepare();
 				prepared = true;
 				if (isCancelled()) {
