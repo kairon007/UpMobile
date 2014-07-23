@@ -544,7 +544,7 @@ public class SearchTab {
 			}
 		});
 
-		AlertDialog.Builder b = new AlertDialog.Builder(context).setTitle(title).setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
+		AlertDialog.Builder b = new AlertDialog.Builder(context).setTitle(title + " - " + artist).setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialogDismisser.run();
