@@ -184,4 +184,11 @@
    	
 	<string name="search_message_default">No results yet.\nSearch for something.</string>
 	<string name="search_hint">Title, Album or Artist</string>
+	<string name="download_error">Please wait while song loads.</string>
+	<string name="download_started">Download started for %s</string>
+	<string name="search_message_empty">No results for %s.\nSearch for something else.</string>
+	<string name="search_message_nothing">Please enter a query</string>
+	<string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
+	<string name="download_location">Download location</string>
+	<string name="download">Download</string>
 </resources>

@@ -25,6 +25,13 @@ import mp3.music.player.us.engines.cover.GrooveSharkCoverLoaderTask;
 import mp3.music.player.us.engines.cover.MuzicBrainzCoverLoaderTask;
 import mp3.music.player.us.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import mp3.music.player.us.ui.activities.HomeActivity;
+
+import org.cmc.music.common.ID3WriteException;
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -73,7 +80,8 @@ import android.widget.Toast;
 public class OnlineSearchView {
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
-	private static final String KEY_POSITION = "position.song.vanilla";
+	private static final String KEY_POSITION = "position.song.music.player";
+	public static final String ACTION_PAUSE = "mp3.music.player.us.action.PAUSE";
 	private static OnlineSearchView instance;
 	private static List<Class<? extends BaseSearchTask>> engines;
 	private Iterator<Class<? extends BaseSearchTask>> taskIterator;
@@ -339,10 +347,10 @@ public class OnlineSearchView {
 		}
 	};
 
-	public OnlineSearchView(final View instanceView, final LayoutInflater inflater, HomeActivity activity) {
+	public OnlineSearchView(final View instanceView, final LayoutInflater inflater, HomeActivity homeActivity) {
 		this.view = instanceView;
 		this.inflater = inflater;
-		this.activity = libraryActivity;
+		this.activity = homeActivity;
 
 		resultAdapter = new SongSearchAdapter(instanceView.getContext(), inflater);
 		message = (TextView) instanceView.findViewById(R.id.message);
@@ -664,7 +672,7 @@ public class OnlineSearchView {
 		public void onPrepared() {
 			spinner.setVisibility(View.GONE);
 			button.setVisibility(View.VISIBLE);
-			Intent i = new Intent(PlaybackService.ACTION_PAUSE);
+			Intent i = new Intent(ACTION_PAUSE);
 			spinner.getContext().startService(i);
 			int duration = mediaPlayer.getDuration();
 			if (duration == -1) {
