@@ -1,6 +1,6 @@
 package mp3.music.player.us.engines;
 
-public class RemoteSong extends Song {
+public class RemoteSong extends OnlineSong {
 
 	protected String downloadUrl;
 

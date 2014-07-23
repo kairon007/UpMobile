@@ -32,7 +32,7 @@ import android.provider.MediaStore;
  * Represents a Song backed by the MediaStore. Includes basic metadata and
  * utilities to retrieve songs from the MediaStore.
  */
-public class Song implements Comparable<Song> {
+public class OnlineSong implements Comparable<OnlineSong> {
 	/**
 	 * Indicates that this song was randomly selected from all songs.
 	 */
@@ -135,7 +135,7 @@ public class Song implements Comparable<Song> {
 	 * Initialize the song with the specified id. Call populate to fill fields
 	 * in the song.
 	 */
-	public Song(long id)
+	public OnlineSong(long id)
 	{
 		this.id = id;
 	}
@@ -144,7 +144,7 @@ public class Song implements Comparable<Song> {
 	 * Initialize the song with the specified id and flags. Call populate to
 	 * fill fields in the song.
 	 */
-	public Song(long id, int flags)
+	public OnlineSong(long id, int flags)
 	{
 		this.id = id;
 		this.flags = flags;
@@ -214,7 +214,7 @@ public class Song implements Comparable<Song> {
 	 * Compares the album ids of the two songs; if equal, compares track order.
 	 */
 	@Override
-	public int compareTo(Song other)
+	public int compareTo(OnlineSong other)
 	{
 		if (albumId == other.albumId)
 			return trackNumber - other.trackNumber;
@@ -225,7 +225,7 @@ public class Song implements Comparable<Song> {
 
 	@Override
 	public boolean equals(Object o) {
-		return (o instanceof Song) && ((Song)o).id == id;
+		return (o instanceof OnlineSong) && ((OnlineSong)o).id == id;
 	}
 
 	public String getTitle() {

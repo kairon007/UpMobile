@@ -57,5 +57,7 @@
 
     <!-- A dark Holo shade of orange -->
     <color name="holo_orange_dark">#ffff8800</color>
+    
+    <color name="divider_color">#f444</color>
 
 </resources>

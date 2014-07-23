@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface FinishedParsingSongs {
 
-	void onFinishParsing(List<Song> songsList);
+	void onFinishParsing(List<OnlineSong> songsList);
 
 }

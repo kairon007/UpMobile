@@ -174,7 +174,7 @@ public class AdapterHelper {
 		View target = convertView;
 		ViewBuilder builder;
 		if (null == target) {
-			target = inflater.inflate(R.layout.library_row_expandable, null);
+			target = inflater.inflate(R.layout.row_online_search, null);
 			builder = new ViewBuilder(target);
 		} else {
 			try {

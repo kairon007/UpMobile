@@ -35,7 +35,7 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	};
 	private final static StringBuffer EMPTY_BUFFER = new StringBuffer();
 
-	private List<Song> songsList = new ArrayList<Song>();
+	private List<OnlineSong> songsList = new ArrayList<OnlineSong>();
 	private boolean downloadStopped = false;
 	private boolean finished;
 	private FinishedParsingSongs dInterface;
@@ -104,7 +104,7 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 		downloadStopped = true;
 	}
 
-	protected void addSong(Song song) {
+	protected void addSong(OnlineSong song) {
 		songsList.add(song);
 	}
 

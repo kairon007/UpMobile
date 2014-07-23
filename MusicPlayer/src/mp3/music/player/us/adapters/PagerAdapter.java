@@ -19,10 +19,12 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import mp3.music.player.us.R;
 import mp3.music.player.us.ui.fragments.AlbumFragment;
 import mp3.music.player.us.ui.fragments.ArtistFragment;
 import mp3.music.player.us.ui.fragments.GenreFragment;
+import mp3.music.player.us.ui.fragments.OnlineSearchFragment;
 import mp3.music.player.us.ui.fragments.PlaylistFragment;
 import mp3.music.player.us.ui.fragments.RecentFragment;
 import mp3.music.player.us.ui.fragments.SongFragment;
@@ -189,7 +191,11 @@ public class PagerAdapter extends FragmentPagerAdapter {
         /**
          * The genre fragment
          */
-        GENRE(GenreFragment.class);
+        GENRE(GenreFragment.class),
+        /**
+         * The genre fragment
+         */
+        ONLINE_SEARCH(OnlineSearchFragment.class);
 
         private Class<? extends Fragment> mFragmentClass;
 
