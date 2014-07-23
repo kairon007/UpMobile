@@ -152,7 +152,7 @@ public class SearchTab {
 		return instanceView;
 	}
 
-	private static class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
+	private static class DownloadClickListener implements DialogInterface.OnClickListener, OnBitmapReadyListener {
 		private final Context context;
 		private final String songTitle;
 		private final Player player;
@@ -169,7 +169,7 @@ public class SearchTab {
 
 		@SuppressLint("NewApi")
 		@Override
-		public void onClick(View v) {
+		public void onClick(DialogInterface dialog, int which) {
 			if (player == null)
 				return;
 			String downloadUrl = player.getDownloadUrl();
@@ -255,6 +255,7 @@ public class SearchTab {
 			this.cover = bmp;
 			this.waitingForCover = false;
 		}
+
 	}
 
 	private final class SongSearchAdapter extends ArrayAdapter<Song> {
@@ -503,46 +504,14 @@ public class SearchTab {
 				activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
-		DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
+		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
 			@Override
-			public void onClick(View v) {
-				super.onClick(v);
-				if (v.getTag() != null) {
-					Object tag = v.getTag();
-					if (tag instanceof AlertDialog) {
-						((AlertDialog) tag).cancel();
-					}
-				}
+			public void onClick(DialogInterface dialog, int which) {
+				super.onClick(dialog, which);
 				dialogDismisser.run();
 			}
 		};
 		coverLoader.addListener(downloadClickListener);
-
-		final View downLoadDialog = inflater.inflate(R.layout.download_dialog_chosen, null);
-		final TextView textPath = (TextView) downLoadDialog.findViewById(R.id.text_path_download);
-		textPath.setText(getDownloadPath(context));
-		LinearLayout viewChooser = (LinearLayout) downLoadDialog.findViewById(R.id.path_download);
-		Button startDownload = (Button) downLoadDialog.findViewById(R.id.b_download);
-		startDownload.setOnClickListener(downloadClickListener);
-		AlertDialog.Builder showDownLoadOtionsBuilder = new AlertDialog.Builder(context);
-
-		showDownLoadOtionsBuilder.setView(downLoadDialog);
-		final AlertDialog aDialogDownLoadOtions = showDownLoadOtionsBuilder.create();
-		startDownload.setTag(aDialogDownLoadOtions);
-		viewChooser.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(v.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
-					@Override
-					public void onChosenDir(String chosenDir) {
-						textPath.setText(chosenDir);
-						SearchTab.setDownloadPath(context, chosenDir);
-					}
-				});
-				directoryChooserDialog.chooseDirectory(SearchTab.getDownloadPath(context));
-			}
-		});
 
 		AlertDialog.Builder b = new AlertDialog.Builder(context).setTitle(title + " - " + artist).setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
 			@Override
@@ -554,16 +523,7 @@ public class SearchTab {
 			public void onCancel(DialogInterface dialog) {
 				dialogDismisser.run();
 			}
-		}).setPositiveButton(R.string.download,
-		//
-				new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-
-						aDialogDownLoadOtions.show();
-					}
-				}).setView(player.getView());
+		}).setPositiveButton(R.string.download, downloadClickListener).setView(player.getView());
 		return b.create();
 	}
 
@@ -603,9 +563,12 @@ public class SearchTab {
 		private TextView time;
 		private ImageView coverImage;
 		private ProgressBar coverProgress;
+		private TextView textPath;
+		private LinearLayout viewChooser;
+		private LinearLayout spinerPath;
 		private View view;
 
-		public Player(View view) {
+		public Player(final View view) {
 			super();
 			this.view = view;
 			mediaPlayer = new MediaPlayer();
@@ -616,12 +579,45 @@ public class SearchTab {
 			time = (TextView) view.findViewById(R.id.time);
 			coverImage = (ImageView) view.findViewById(R.id.cover);
 			coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
+			textPath = (TextView) view.findViewById(R.id.text_path_download);
+			textPath.setText(getDownloadPath(view.getContext()));
+			viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
+			spinerPath = (LinearLayout) view.findViewById(R.id.spiner_path_download);
+			spinerPath.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					showHideChooser();
+				}
+			});
+			viewChooser.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(v.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
+						@Override
+						public void onChosenDir(String chosenDir) {
+							textPath.setText(chosenDir);
+							SearchTab.setDownloadPath(view.getContext(), chosenDir);
+						}
+					});
+					directoryChooserDialog.chooseDirectory(SearchTab.getDownloadPath(view.getContext()));
+				}
+			});
+
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					playPause();
 				}
 			});
+		}
+
+		private void showHideChooser() {
+			if (viewChooser.getVisibility() == View.VISIBLE)
+				viewChooser.setVisibility(View.GONE);
+			else
+				viewChooser.setVisibility(View.VISIBLE);
 		}
 
 		private void setDownloadUrl(String downloadUrl) {
