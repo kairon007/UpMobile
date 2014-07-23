@@ -359,12 +359,18 @@ public class SearchTab {
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (position == resultAdapter.getCount())
-					return; // progress click
-				Bundle bundle = new Bundle(0);
-				bundle.putInt(KEY_POSITION, position);
-				activity.showDialog(STREAM_DIALOG_ID, bundle);
+			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+				if (position == resultAdapter.getCount()) return; // progress click
+				activity.runOnUiThread(new Runnable() {
+					   @Override
+					   public void run() {
+						   if (!activity.isFinishing()) {
+								Bundle bundle = new Bundle(0);
+								bundle.putInt(KEY_POSITION, position);
+							    activity.showDialog(STREAM_DIALOG_ID, bundle);
+						   }
+					   }
+				});
 			}
 		});
 		searchField = (TextView) instanceView.findViewById(R.id.text);
@@ -451,7 +457,7 @@ public class SearchTab {
 
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args) {
-		if (!(args.containsKey(KEY_POSITION))) {
+		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return null;
 		}
 		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
