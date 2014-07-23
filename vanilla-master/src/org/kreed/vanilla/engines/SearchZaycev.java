@@ -21,8 +21,6 @@ public class SearchZaycev extends BaseSearchTask {
 	protected static String INIT_TOKEN_URL = "http://zaycev.net/external/hello";
 	protected static String AUTHENTICATION_TOKEN_URL = "http://zaycev.net/external/auth?code=%s&hash=%s";
 	protected static String TAG_TOKEN = "token";
-	
-	private int maxZaycevPages = 1;
 
 	public SearchZaycev(FinishedParsingSongs dInterface, String songName, Context context) {
 		super(dInterface, songName, context);
@@ -32,7 +30,7 @@ public class SearchZaycev extends BaseSearchTask {
 	protected Void doInBackground(Void... params) {
 		try {
 			String songName = URLEncoder.encode(getSongName(), "UTF-8").replace(" ", "%20");
-			String baseUrl = "http://zaycev.net/external/search?query="+songName+"&page="+maxZaycevPages+"&access_token=";
+			String baseUrl = "http://zaycev.net/external/search?query="+songName+"&page=1&access_token=";
 			String link = baseUrl + getAccessToken();
 			JSONObject response = new JSONObject(readLink(link).toString());
 			if(response.has("error")) {
