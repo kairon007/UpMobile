@@ -12,7 +12,6 @@
 package mp3.music.player.us.ui.fragments;
 
 import static mp3.music.player.us.utils.PreferenceUtils.ARTIST_LAYOUT;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -32,11 +31,13 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+
 import mp3.music.player.us.MusicStateListener;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.ArtistAdapter;
@@ -51,6 +52,7 @@ import mp3.music.player.us.utils.ApolloUtils;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.NavUtils;
 import mp3.music.player.us.utils.PreferenceUtils;
+
 import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.List;
@@ -174,6 +176,10 @@ public class ArtistFragment extends SherlockFragment implements LoaderCallbacks<
         setHasOptionsMenu(true);
         // Start the loader
         getLoaderManager().initLoader(LOADER, null, this);
+    }
+    
+    public ArrayAdapter<Artist> getAdapter() {
+    	return mAdapter;
     }
 
     /**

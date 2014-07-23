@@ -11,6 +11,10 @@
 
 package mp3.music.player.us.ui.fragments.phone;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -22,6 +26,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.PagerAdapter;
 import mp3.music.player.us.adapters.PagerAdapter.MusicFragments;
@@ -33,6 +38,7 @@ import mp3.music.player.us.utils.NavUtils;
 import mp3.music.player.us.utils.PreferenceUtils;
 import mp3.music.player.us.utils.SortOrder;
 import mp3.music.player.us.utils.ThemeUtils;
+
 import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator.OnCenterItemClickListener;
 
@@ -48,8 +54,7 @@ import com.viewpagerindicator.TitlePageIndicator.OnCenterItemClickListener;
  *        Apollo for a couple of weeks or so before merging it with CM.
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class MusicBrowserPhoneFragment extends SherlockFragment implements
-        OnCenterItemClickListener {
+public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCenterItemClickListener {
 
     /**
      * Pager
@@ -74,6 +79,19 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements
     public MusicBrowserPhoneFragment() {
     }
 
+    public final static String ACTION_UPDATE = "action.update.mp3.music.player.us";
+    
+	private BroadcastReceiver br = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			for (int i=0; i<mPagerAdapter.getCount()-1; i++) {
+				if(i==4) {
+					System.out.println("!!!!!");
+					((SongFragment)mPagerAdapter.getItem(i)).getAdapter().notifyDataSetChanged();
+				}
+			}
+		}
+	};
     /**
      * {@inheritDoc}
      */
@@ -82,6 +100,8 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements
         super.onCreate(savedInstanceState);
         // Get the preferences
         mPreferences = PreferenceUtils.getInstace(getSherlockActivity());
+        IntentFilter filter = new IntentFilter(ACTION_UPDATE);
+        getSherlockActivity().registerReceiver(br, filter);	
     }
 
     /**
@@ -189,7 +209,7 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements
                 // Toggle the current track as a favorite and update the menu
                 // item
                 MusicUtils.toggleFavorite();
-                getSherlockActivity().invalidateOptionsMenu();
+                getSherlockActivity().supportInvalidateOptionsMenu();
                 return true;
             case R.id.menu_sort_by_az:
                 if (isArtistPage()) {
@@ -342,4 +362,11 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements
     private boolean isRecentPage() {
         return mViewPager.getCurrentItem() == 1;
     }
+
+	@Override
+	public void onDestroy() {
+		getSherlockActivity().unregisterReceiver(br);
+		super.onDestroy();
+	}   
+	
 }

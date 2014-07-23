@@ -29,10 +29,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+
 import mp3.music.player.us.MusicStateListener;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.SongAdapter;
@@ -40,12 +42,14 @@ import mp3.music.player.us.loaders.SongLoader;
 import mp3.music.player.us.menu.CreateNewPlaylist;
 import mp3.music.player.us.menu.DeleteDialog;
 import mp3.music.player.us.menu.FragmentMenuItems;
+import mp3.music.player.us.model.Artist;
 import mp3.music.player.us.model.Song;
 import mp3.music.player.us.provider.FavoritesStore;
 import mp3.music.player.us.recycler.RecycleHolder;
 import mp3.music.player.us.ui.activities.BaseActivity;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.NavUtils;
+
 import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.List;
@@ -122,6 +126,10 @@ public class SongFragment extends SherlockFragment implements LoaderCallbacks<Li
         super.onAttach(activity);
         // Register the music status listener
         ((BaseActivity)activity).setMusicStateListenerListener(this);
+    }
+    
+    public ArrayAdapter<Song> getAdapter() {
+    	return mAdapter;
     }
 
     /**

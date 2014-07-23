@@ -25,6 +25,7 @@ import mp3.music.player.us.engines.cover.GrooveSharkCoverLoaderTask;
 import mp3.music.player.us.engines.cover.MuzicBrainzCoverLoaderTask;
 import mp3.music.player.us.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import mp3.music.player.us.ui.activities.HomeActivity;
+import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
 
 import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.ImageData;
@@ -33,6 +34,7 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -41,6 +43,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -207,8 +210,7 @@ public class OnlineSearchView {
 					if (waitingForCover)
 						return;
 					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-					if (c == null || !c.moveToFirst())
-						return;
+					if (c == null || !c.moveToFirst()) return;						
 					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
 					c.close();
 					src = new File(path);
@@ -232,6 +234,8 @@ public class OnlineSearchView {
 																		// metadata
 						dst.renameTo(src);
 						this.cancel();
+						Intent intent = new Intent(MusicBrowserPhoneFragment.ACTION_UPDATE);
+						context.sendBroadcast(intent);
 					} catch (IOException e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);
 					} catch (ID3WriteException e) {
