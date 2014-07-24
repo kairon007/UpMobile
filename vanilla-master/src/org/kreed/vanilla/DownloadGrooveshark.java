@@ -37,7 +37,7 @@ public class DownloadGrooveshark extends AsyncTask<Void, Void, Integer> {
 
 		this.notifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		this.builder = new Notification.Builder(context);
-		builder.setContentTitle("Music Download").setContentText("Download in progress").setSmallIcon(R.drawable.icon).build();
+		builder.setContentTitle("Download " + fileName).setContentText("Download in progress").setSmallIcon(R.drawable.icon).build();
 
 	}
 
