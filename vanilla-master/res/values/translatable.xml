@@ -49,6 +49,9 @@ THE SOFTWARE.
 	<string name="_artist">artist</string>
 	<string name="_album">album</string>
 	<string name="_year">year</string>
+	
+	<!-- PreferencesActivity -->
+	<string name="rate_app">Rate app 5 stars</string>
 
 	<!-- New Playlist Dialog -->
 	<string name="choose_playlist_name">Choose Playlist Name</string>
