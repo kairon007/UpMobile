@@ -7,43 +7,25 @@ import com.scilor.grooveshark.API.Base.GroovesharkClient;
 import com.scilor.grooveshark.API.Functions.SearchArtist.SearchArtistResult;
 
 public class SearchGrooveshark extends BaseSearchTask {
-	
-	private static final String sharkConfig =
-		  "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"
-		+ "<GrooveFix version=\"20130530\">"
-	  		+ "<htmlshark>"
-		  		+ "<GrooveClient>htmlshark</GrooveClient>"
-		  		+ "<GrooveClientRevision>20130520</GrooveClientRevision>"
-		  		+ "<GrooveStaticRandomizer>:nuggetsOfBaller:</GrooveStaticRandomizer>"
-	  		+ "</htmlshark>"
-	  		+ "<jsqueue>"
-		  		+ "<GrooveClient>jsqueue</GrooveClient>"
-		  		+ "<GrooveClientRevision>20130520</GrooveClientRevision>"
-		  		+ "<GrooveStaticRandomizer>:chickenFingers:</GrooveStaticRandomizer>"
-	  		+ "</jsqueue>"
-	  		+ "<mobileshark>"
-		  		+ "<GrooveClient>mobileshark</GrooveClient>"
-		  		+ "<GrooveClientRevision>20120112</GrooveClientRevision>"
-		  		+ "<GrooveStaticRandomizer>:boomGoesTheDolphin:</GrooveStaticRandomizer>"
-	  		+ "</mobileshark>"
-	  		+ "<mobileshark>"
-		  		+ "<GrooveClient>jsplayer</GrooveClient>"
-		  		+ "<GrooveClientRevision>20120124.01</GrooveClientRevision>"
-		  		+ "<GrooveStaticRandomizer>:needsMoarFoodForSharks:</GrooveStaticRandomizer>"
-	  		+ "</mobileshark>"
-  		+ "</GrooveFix>";
-	
+
+	private static final String sharkConfig = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<GrooveFix version=\"20130530\">" + "<htmlshark>" + "<GrooveClient>htmlshark</GrooveClient>"
+			+ "<GrooveClientRevision>20130520</GrooveClientRevision>" + "<GrooveStaticRandomizer>:nuggetsOfBaller:</GrooveStaticRandomizer>" + "</htmlshark>" + "<jsqueue>"
+			+ "<GrooveClient>jsqueue</GrooveClient>" + "<GrooveClientRevision>20130520</GrooveClientRevision>" + "<GrooveStaticRandomizer>:chickenFingers:</GrooveStaticRandomizer>" + "</jsqueue>"
+			+ "<mobileshark>" + "<GrooveClient>mobileshark</GrooveClient>" + "<GrooveClientRevision>20120112</GrooveClientRevision>"
+			+ "<GrooveStaticRandomizer>:boomGoesTheDolphin:</GrooveStaticRandomizer>" + "</mobileshark>" + "<mobileshark>" + "<GrooveClient>jsplayer</GrooveClient>"
+			+ "<GrooveClientRevision>20120124.01</GrooveClientRevision>" + "<GrooveStaticRandomizer>:needsMoarFoodForSharks:</GrooveStaticRandomizer>" + "</mobileshark>" + "</GrooveFix>";
+
 	private static GroovesharkClient client = null;
 
 	public SearchGrooveshark(FinishedParsingSongs dInterface, String songName, Context context) {
 		super(dInterface, songName, context);
 	}
-	
+
 	@Override
 	protected Void doInBackground(Void... params) {
 		try {
 			SearchArtistResult[] results = getClient().SearchArtist(getSongName()).result.result;
-			if (results.length != 0 ) {
+			if (results.length != 0) {
 				for (SearchArtistResult result : results) {
 					int songId = result.SongID;
 					int albumId = result.AlbumID;
@@ -58,17 +40,17 @@ public class SearchGrooveshark extends BaseSearchTask {
 		return null;
 	}
 
-	private static GroovesharkClient getClient() {
+	public static GroovesharkClient getClient() {
 		if (null == client) {
 			try {
-			client = new GroovesharkClient(true, sharkConfig);
+				client = new GroovesharkClient(true, sharkConfig);
 			} catch (Exception e) {
 				Log.e("GroovesharkClient", "Error creating client", e);
 			}
 		}
 		return client;
 	}
-	
+
 	public static String getDownloadUrl(int songId) {
 		try {
 			return getClient().GetStreamKey(songId).result.DirectURL();
@@ -76,6 +58,7 @@ public class SearchGrooveshark extends BaseSearchTask {
 			e.printStackTrace();
 			return null;
 		}
+	
 	}
 
 }

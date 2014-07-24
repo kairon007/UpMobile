@@ -173,6 +173,7 @@ public class SearchTab {
 			if (player == null)
 				return;
 			String downloadUrl = player.getDownloadUrl();
+			Integer songId = player.getSongId();
 			if (downloadUrl == null || downloadUrl.equals("")) {
 				Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 				return;
@@ -183,68 +184,78 @@ public class SearchTab {
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
 			}
-			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
 			StringBuilder sb = new StringBuilder(songTitle).append(" - ").append(songArtist);
-			final String fileName = sb.toString();
-			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(fileName);
-			request.setDestinationInExternalPublicDir(getSimpleDownloadPath(getDownloadPath(context)), sb.append(".mp3").toString());
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				request.allowScanningByMediaScanner();
-			}
-			final long downloadId = manager.enqueue(request);
-			Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
-			final TimerTask progresUpdateTask = new TimerTask() {
-				private File src;
+			if (songId != -1) {
+				Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
+				DownloadGrooveshark manager = new DownloadGrooveshark(songId, getDownloadPath(context), sb.append(".mp3").toString(), context);
+				manager.execute();
+			} else {
+				final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+				DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
 
-				@Override
-				public void run() {
-					try {
-						if (waitingForCover) return;
+				final String fileName = sb.toString();
+				request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(fileName);
+				request.setDestinationInExternalPublicDir(getSimpleDownloadPath(getDownloadPath(context)), sb.append(".mp3").toString());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					request.allowScanningByMediaScanner();
+				}
+				final long downloadId = manager.enqueue(request);
+				Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
+				final TimerTask progresUpdateTask = new TimerTask() {
+					private File src;
+
+					@Override
+					public void run() {
+						if (waitingForCover)
+							return;
 						Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-						if (c == null || !c.moveToFirst()) return;
-						int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-						if (columnIndex == -1) return;
-						String path = c.getString(columnIndex);
+						if (c == null || !c.moveToFirst())
+							return;
+						String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
 						c.close();
 						src = new File(path);
-						MusicMetadataSet src_set = new MyID3().read(src); // read
+						try {
+							MusicMetadataSet src_set = new MyID3().read(src); // read
+																				// metadata
+							if (src_set == null) {
+								return;
+							}
+							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+							metadata.setSongTitle(songTitle);
+							metadata.setArtist(songArtist);
+							if (null != cover) {
+								ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+								cover.compress(CompressFormat.JPEG, 85, out);
+								metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+							}
+							File dst = new File(src.getParentFile(), src.getName() + "-1");
+							new MyID3().write(src, dst, src_set, metadata); // write
+																			// updated
 																			// metadata
-						if (src_set == null) {
-							return;
+							dst.renameTo(src);
+							this.cancel();
+						} catch (IOException e) {
+							Log.e(getClass().getSimpleName(), "error writing ID3", e);
+						} catch (ID3WriteException e) {
+							Log.e(getClass().getSimpleName(), "error writing ID3", e);
 						}
-						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-						metadata.setSongTitle(songTitle);
-						metadata.setArtist(songArtist);
-						if (null != cover) {
-							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-							cover.compress(CompressFormat.JPEG, 85, out);
-							metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-						}
-						File dst = new File(src.getParentFile(), src.getName() + "-1");
-						new MyID3().write(src, dst, src_set, metadata); // write
-																		// updated
-																		// metadata
-						dst.renameTo(src);
-						this.cancel();
-					} catch (Exception e) {
-						Log.e(getClass().getSimpleName(), "error writing ID3", e);
-					} 
-				}
-				// private void notifyMediascanner() {
-				// Uri uri = Uri.fromFile(src.getParentFile());
-				// Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, uri);
-				// context.sendBroadcast(intent);
-				// MediaScannerConnection.scanFile(context,
-				// new String[] { dst.getAbsolutePath() }, null,
-				// new MediaScannerConnection.OnScanCompletedListener() {
-				// public void onScanCompleted(String path, Uri uri) {
-				// Log.i("TAG", "Finished scanning " + path);
-				// }
-				// });
-				// }
-			};
-			new Timer().schedule(progresUpdateTask, 1000, 1000);
+					}
+					// private void notifyMediascanner() {
+					// Uri uri = Uri.fromFile(src.getParentFile());
+					// Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED,
+					// uri);
+					// context.sendBroadcast(intent);
+					// MediaScannerConnection.scanFile(context,
+					// new String[] { dst.getAbsolutePath() }, null,
+					// new MediaScannerConnection.OnScanCompletedListener() {
+					// public void onScanCompleted(String path, Uri uri) {
+					// Log.i("TAG", "Finished scanning " + path);
+					// }
+					// });
+					// }
+				};
+				new Timer().schedule(progresUpdateTask, 1000, 1000);
+			}
 		}
 
 		@Override
@@ -357,16 +368,17 @@ public class SearchTab {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				if (position == resultAdapter.getCount()) return; // progress click
+				if (position == resultAdapter.getCount())
+					return; // progress click
 				activity.runOnUiThread(new Runnable() {
-					   @Override
-					   public void run() {
-						   if (!activity.isFinishing()) {
-								Bundle bundle = new Bundle(0);
-								bundle.putInt(KEY_POSITION, position);
-							    activity.showDialog(STREAM_DIALOG_ID, bundle);
-						   }
-					   }
+					@Override
+					public void run() {
+						if (!activity.isFinishing()) {
+							Bundle bundle = new Bundle(0);
+							bundle.putInt(KEY_POSITION, position);
+							activity.showDialog(STREAM_DIALOG_ID, bundle);
+						}
+					}
 				});
 			}
 		});
@@ -570,10 +582,12 @@ public class SearchTab {
 		private LinearLayout viewChooser;
 		private LinearLayout spinerPath;
 		private View view;
+		private int songId;
 
 		public Player(final View view) {
 			super();
 			this.view = view;
+			songId = -1;
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			spinner = (ProgressBar) view.findViewById(R.id.spinner);
@@ -614,6 +628,10 @@ public class SearchTab {
 					playPause();
 				}
 			});
+		}
+
+		public Integer getSongId() {
+			return songId;
 		}
 
 		private void showHideChooser() {
@@ -703,12 +721,14 @@ public class SearchTab {
 			progress.removeCallbacks(progressAction);
 		}
 
+		@SuppressLint("NewApi")
 		@Override
 		protected Boolean doInBackground(String... params) {
 			try {
-//				mediaPlayer.setDataSource(url);
-				HashMap<String, String> headers = new HashMap<String,String>();
-				headers.put("User-Agent", "2.0.0.6 в Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+				// mediaPlayer.setDataSource(url);
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("User-Agent",
+						"2.0.0.6 в Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 				mediaPlayer.setDataSource(view.getContext(), Uri.parse(url), headers);
 				mediaPlayer.prepare();
 				prepared = true;
