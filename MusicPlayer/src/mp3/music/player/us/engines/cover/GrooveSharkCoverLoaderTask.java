@@ -28,7 +28,7 @@ public class GrooveSharkCoverLoaderTask extends CoverLoaderTask {
 			HttpGet httpget = new HttpGet(urlImage);
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
-			BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent(), 5242880);
+			BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent());
 			return BitmapFactory.decodeStream(bitmapStream);			
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), "Error while reading links contents", e);

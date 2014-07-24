@@ -74,10 +74,8 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	}
 	
 	private StringBuffer readStream(InputStream in) throws UnsupportedEncodingException, IOException {
-		StringBuffer sb = new StringBuffer(5242880);
-		BufferedReader rd = new BufferedReader(
-			new InputStreamReader(in, "UTF-8"), 5242880 
-		);
+		StringBuffer sb = new StringBuffer();
+		BufferedReader rd = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 		String line;
 		while (!downloadStopped && (line = rd.readLine()) != null) {
 			sb.append(line);

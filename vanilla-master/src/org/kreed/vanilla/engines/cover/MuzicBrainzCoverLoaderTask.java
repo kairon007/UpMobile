@@ -56,12 +56,8 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 			// Create an InputStream with the response
-			BufferedReader reader = 
-				new BufferedReader(
-					new InputStreamReader(entity.getContent()), 
-					5242880
-				);
-			sb = new StringBuffer(5242880);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
+			sb = new StringBuffer();
 			String line;
 			while ((line = reader.readLine()) != null) {
 				sb.append(line);
@@ -85,11 +81,7 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 				HttpResponse response = httpclient.execute(httpget);
 				HttpEntity entity = response.getEntity();
 				// Create an InputStream with the response
-				BufferedInputStream bitmapStream = 
-					new BufferedInputStream(
-						entity.getContent(), 
-						5242880
-					);
+				BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent());
 				return BitmapFactory.decodeStream(bitmapStream);
 			} catch (IOException e) {
 				Log.e(getClass().getName(), "Error downloading the cover", e);
