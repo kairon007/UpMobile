@@ -18,13 +18,12 @@ public class Advertisement {
 
 	private static StartAppAd startAppAd;
 	private static MoPubView moPubView;
-	private static final String adUnitId = "3a0d11f3de694617aa81f8e3901eb33c";
 	private static MA ma;
 
 	public static void startAppInit(Activity activity) {
 		if (startAppAd == null) {
 			startAppAd = new StartAppAd(activity);
-			StartAppAd.init(activity, "105125878", "207452668");
+			StartAppAd.init(activity, Settings.STARTAPP_DEV_ID, Settings.STARTAPP_APP_ID);
 		}
 	}
 
@@ -44,7 +43,7 @@ public class Advertisement {
 	}
 
 	public static void mobileCoreInit(Activity activity) {
-		MobileCore.init(activity, "6AFPIUJW9K2IAEMIJ41605AI1UJUY",
+		MobileCore.init(activity, Settings.MOBILECORE_ID,
 				LOG_TYPE.DEBUG, AD_UNITS.ALL_UNITS);
 		MobileCore.showOfferWall(activity, null);
 	}
@@ -52,7 +51,7 @@ public class Advertisement {
 	public static void moPubInit(Activity activity) {
 		if (moPubView == null) {
 			moPubView = (MoPubView) activity.findViewById(R.id.banner_view);
-			moPubView.setAdUnitId(adUnitId); // Enter your Ad Unit ID from
+			moPubView.setAdUnitId(Settings.MOPUB_ID); // Enter your Ad Unit ID from
 												// www.mopub.com
 			moPubView.loadAd();
 		}
@@ -61,7 +60,7 @@ public class Advertisement {
 	public static void moPubOnBackPressed(Activity activity) {
 		if (moPubView != null) {
 			MoPubInterstitial mInterstitial = new MoPubInterstitial(activity,
-					adUnitId);
+					Settings.MOPUB_ID);
 			mInterstitial.load();
 		} else {
 			moPubInit(activity);
@@ -80,29 +79,17 @@ public class Advertisement {
 		if (ma == null) {			
 			ma = new MA(activity, null, false);
 		}
-
 //		ma.callSmartWallAd();
 //		ma.callAppWall(); // this will start the AppWall ad but it will not show you AppWall instantly.
-//		ma.callLandingPageAd();	// work
-		ma.callOverlayAd();		// work
-//		ma.callVideoAd();		// work
+//		ma.callLandingPageAd();
+		ma.callOverlayAd();
+//		ma.callVideoAd();
 //		ma.displayRichMediaInterstitialAd();
-		
-		/*
-		 * AdView Class is same as View Class. You can use the Adview object
-		 * as View object.
-		 */
-//		AdView adView = new AdView(activity, AdView.BANNER_TYPE_IN_APP_AD,
-//				AdView.PLACEMENT_TYPE_INTERSTITIAL, false, false,
-//				AdView.ANIMATION_TYPE_LEFT_TO_RIGHT);
-//			adView.setAdListener(new MraidAdListener() {
 	}
 	
 	public static void airPushOnBackPressed(Activity activity) {
 		try{
 			ma.showCachedAd(activity, AdType.overlay); 
-	    }catch (Exception e) {
-//		    	activity.finish();
-	    }
+	    }catch (Exception e) {}
 	}	
 }

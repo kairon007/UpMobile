@@ -103,7 +103,8 @@ THE SOFTWARE.
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true" />
-  <!-- 
+    
+  	<!-- AirPush Ad -->
     <com.raivz.hbkds194978.AdView
 		xmlns:ap="http://hbkds194978.raivz.com/AdView"
 		android:id="@+id/myAdView"
@@ -113,5 +114,5 @@ THE SOFTWARE.
 		ap:banner_type="inappad"
 		ap:placementType="interstitial"
 		ap:test_mode="false"
-		ap:canShowMR="false" />  -->
+		ap:canShowMR="false" /> 
 </LinearLayout>

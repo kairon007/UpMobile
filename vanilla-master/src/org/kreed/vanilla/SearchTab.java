@@ -102,7 +102,7 @@ public class SearchTab {
 			instance = new SearchTab(inflater.inflate(R.layout.search, null), inflater, activity);
 			Context context = inflater.getContext();
 			if (null == engines) {
-				String[] engineNames = context.getResources().getStringArray(R.array.search_engines);
+				String[] engineNames = Settings.SEARCH_ENGINES;
 				engines = new ArrayList<Class<? extends BaseSearchTask>>(engineNames.length);
 				for (int i = 0; i < engineNames.length; i++) {
 					try {

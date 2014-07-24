@@ -102,17 +102,4 @@ THE SOFTWARE.
 		<item>@string/info_below_cover</item>
 		<item>@string/fixed_info</item>
 	</string-array>
-	<string-array name="search_engines">
-	    <item>SearchVmusice</item>
-	    <item>SearchPleer</item>
-	    <item>SearchPoisk</item>
-	    <item>SearchHulkShare</item>
-	    <item>SearchMp3skull</item>
-	    <item>SearchMp3World</item>
-	    <item>SearchSoundCloud</item>
-	    <item>SearchSogou</item>
-	    <item>SearchGrooveshark</item>
-	    <item>SearchTing</item>
-	    <item>SearchZaycev</item>
-	</string-array>
 </resources>
