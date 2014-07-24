@@ -199,15 +199,15 @@ public class SearchTab {
 
 				@Override
 				public void run() {
-					if (waitingForCover)
-						return;
-					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-					if (c == null || !c.moveToFirst())
-						return;
-					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-					c.close();
-					src = new File(path);
 					try {
+						if (waitingForCover) return;
+						Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+						if (c == null || !c.moveToFirst()) return;
+						int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+						if (columnIndex == -1) return;
+						String path = c.getString(columnIndex);
+						c.close();
+						src = new File(path);
 						MusicMetadataSet src_set = new MyID3().read(src); // read
 																			// metadata
 						if (src_set == null) {
@@ -227,13 +227,10 @@ public class SearchTab {
 																		// metadata
 						dst.renameTo(src);
 						this.cancel();
-					} catch (IOException e) {
+					} catch (Exception e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);
-					} catch (ID3WriteException e) {
-						Log.e(getClass().getSimpleName(), "error writing ID3", e);
-					}
+					} 
 				}
-
 				// private void notifyMediascanner() {
 				// Uri uri = Uri.fromFile(src.getParentFile());
 				// Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, uri);
