@@ -187,21 +187,25 @@ public class FullPlaybackActivity extends PlaybackActivity
 				findViewById(R.id.info_table).setBackgroundColor(
 						this.getResources().getColor(R.color.full_playback_alt_table_background_dark));
 			}
+			mAlbum = (TextView)findViewById(R.id.album);
+			mArtist = (TextView)findViewById(R.id.artist);
+			
+			mArtist.setGravity(Gravity.CENTER);
+			mAlbum.setGravity(Gravity.CENTER);
 		}
 
 		mTitle = (TextView)findViewById(R.id.title);
-		mAlbum = (TextView)findViewById(R.id.album);
-		mArtist = (TextView)findViewById(R.id.artist);
 
-		
-		
-		mArtist.setGravity(Gravity.CENTER);
-		mAlbum.setGravity(Gravity.CENTER);
-		
-		
-		
-		
 		mControlsTop = findViewById(R.id.controls_top);
+		if (mControlsTop != null) {
+			if ("AppTheme.White".equals(Util.getThemeName(this))){
+				mControlsTop.setBackgroundColor(
+						this.getResources().getColor(R.color.full_playback_alt_table_background_light));
+			} else {
+				mControlsTop.setBackgroundColor(
+						this.getResources().getColor(R.color.full_playback_alt_table_background_dark));
+			}
+		}
 		mElapsedView = (TextView)findViewById(R.id.elapsed);
 		mDurationView = (TextView)findViewById(R.id.duration);
 		mSeekBar = (SeekBar)findViewById(R.id.seek_bar);
