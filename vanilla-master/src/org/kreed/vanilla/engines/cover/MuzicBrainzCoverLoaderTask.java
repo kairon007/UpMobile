@@ -69,9 +69,12 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 		if (null == sb) {
 			return null;
 		}
-		arrayString2 = filterRecordingByScore(sb.toString());
-		arrayString4 = takeMBID(arrayString2);
-		String fromWhereToGetThePic = getTheLinkToPicture(arrayString4);
+		String fromWhereToGetThePic = null;
+		try {
+			arrayString2 = filterRecordingByScore(sb.toString());
+			arrayString4 = takeMBID(arrayString2);
+			fromWhereToGetThePic = getTheLinkToPicture(arrayString4);
+		} catch (Exception e) {}
 		// String theLink =
 		if (fromWhereToGetThePic==null) {
 			return null;
