@@ -42,4 +42,10 @@ THE SOFTWARE.
 	<header
 		android:fragment="org.kreed.vanilla.PreferencesActivity$AboutFragment"
 		android:title="@string/about" />
+	<header
+		android:title="@string/rate_app">
+		<intent 
+		    android:action="android.intent.action.VIEW"
+		    android:data="http://play.google.com/store/apps/details?id=org.kreed.vanilla"/>
+	</header>  
 </preference-headers>

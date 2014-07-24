@@ -26,17 +26,13 @@ import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,24 +68,11 @@ public class PreferencesActivity extends PreferenceActivity {
 		loadHeadersFromResource(R.xml.preference_headers, target);
 	}
 
-	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.rate_app, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
 		if (item.getItemId() == android.R.id.home) {
 			finish();
-			return true;
-		} else if(item.getItemId() == R.id.rate_app) {
-			try {
-			  startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+getPackageName())));
-			} catch (ActivityNotFoundException e) {
-			  startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+getPackageName())));
-			}
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
