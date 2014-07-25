@@ -23,7 +23,6 @@ THE SOFTWARE.
 <resources>
     
     <style name="AppThemeBase" parent="android:Theme.Holo"/>
-        
     <style name="AppThemeBase.White" parent="android:Theme.Holo.Light"/>
     
 	<style name="Dialog" parent="android:Theme.Holo.Dialog" />
@@ -65,4 +64,5 @@ THE SOFTWARE.
 	<style name="LibraryActionBar.White" parent="android:Widget.Holo.Light.ActionBar">
 		<item name="android:displayOptions"></item>
 	</style>
+	
 </resources>
