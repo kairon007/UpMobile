@@ -153,7 +153,7 @@ public class SearchTab {
 		return instanceView;
 	}
 
-	private static class DownloadClickListener implements DialogInterface.OnClickListener, OnBitmapReadyListener {
+	private static class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
 		private final Context context;
 		private final String songTitle;
 		private final Player player;
@@ -170,7 +170,7 @@ public class SearchTab {
 
 		@SuppressLint("NewApi")
 		@Override
-		public void onClick(DialogInterface dialog, int which) {
+		public void onClick(View v) {
 			if (player == null)
 				return;
 			String downloadUrl = player.getDownloadUrl();
@@ -476,7 +476,15 @@ public class SearchTab {
 
 		if (null == player) {
 			player = new Player(inflater.inflate(R.layout.download_dialog, null));
+			if (song instanceof GrooveSong) {
+				player.setSongId(((GrooveSong) song).getSongId());
+			}
 			getUrlTask = new AsyncTask<Void, Void, String>() {
+				@Override
+				protected void onPreExecute() {
+					player.getUrlDownloadComplite(false);
+				}
+
 				@Override
 				protected String doInBackground(Void... params) {
 					return ((RemoteSong) song).getDownloadUrl();
@@ -486,6 +494,7 @@ public class SearchTab {
 				protected void onPostExecute(String downloadUrl) {
 					if (null != player) {
 						player.setDownloadUrl(downloadUrl);
+						player.getUrlDownloadComplite(true);
 						player.execute();
 					}
 				}
@@ -527,25 +536,21 @@ public class SearchTab {
 		};
 		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				super.onClick(dialog, which);
+			public void onClick(View v) {
+				super.onClick(v);
 				dialogDismisser.run();
 			}
 		};
 		if (Settings.ENABLE_ALBUM_COVERS)
 			coverLoader.addListener(downloadClickListener);
-
-		AlertDialog.Builder b = new AlertDialog.Builder(context).setTitle(title + " - " + artist).setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
+		player.setTitle(title + " - " + artist);
+		player.setOnButtonClicListener(downloadClickListener, new View.OnClickListener() {
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(View v) {
 				dialogDismisser.run();
 			}
-		}).setOnCancelListener(new OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				dialogDismisser.run();
-			}
-		}).setPositiveButton(R.string.download, downloadClickListener).setView(player.getView());
+		});
+		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
 		return b.create();
 	}
 
@@ -590,6 +595,39 @@ public class SearchTab {
 		private LinearLayout spinerPath;
 		private View view;
 		private int songId;
+		private LinearLayout downloadProgress;
+		private LinearLayout playerLayout;
+		private Button download;
+		private Button cancel;
+
+		public void setOnButtonClicListener(View.OnClickListener downloadClickListener, View.OnClickListener cancelClickListener) {
+			if (download != null && downloadClickListener != null)
+				download.setOnClickListener(downloadClickListener);
+			if (cancel != null && cancelClickListener != null)
+				cancel.setOnClickListener(cancelClickListener);
+		}
+
+		public void setSongId(Integer songId) {
+			this.songId = songId;
+
+		}
+
+		public void getUrlDownloadComplite(boolean result) {
+			if (downloadProgress != null && playerLayout != null)
+				if (result) {
+					downloadProgress.setVisibility(View.GONE);
+					playerLayout.setVisibility(View.VISIBLE);
+				} else {
+					downloadProgress.setVisibility(View.VISIBLE);
+					playerLayout.setVisibility(View.GONE);
+				}
+		}
+
+		public void setTitle(String title) {
+			TextView textView = (TextView) view.findViewById(R.id.download_title);
+			if (textView != null)
+				textView.setText(title);
+		}
 
 		public Player(final View view) {
 			super();
@@ -607,6 +645,11 @@ public class SearchTab {
 			textPath.setText(getDownloadPath(view.getContext()));
 			viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
 			spinerPath = (LinearLayout) view.findViewById(R.id.spiner_path_download);
+			downloadProgress = (LinearLayout) view.findViewById(R.id.download_progress);
+			playerLayout = (LinearLayout) view.findViewById(R.id.player_layout);
+			download = (Button) view.findViewById(R.id.b_positiv);
+			cancel = (Button) view.findViewById(R.id.b_negativ);
+
 			spinerPath.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -662,7 +705,7 @@ public class SearchTab {
 				coverImage.setImageBitmap(bmp);
 			}
 		}
-		
+
 		public void hideCoverProgress() {
 			coverProgress.setVisibility(View.GONE);
 		}
