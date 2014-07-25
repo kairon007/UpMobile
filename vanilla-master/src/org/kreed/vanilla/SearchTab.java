@@ -2,7 +2,6 @@ package org.kreed.vanilla;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,7 +10,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
@@ -33,9 +31,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -52,7 +47,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.method.HideReturnsTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -63,9 +57,9 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -207,15 +201,15 @@ public class SearchTab {
 
 					@Override
 					public void run() {
-						if (waitingForCover)
-							return;
-						Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-						if (c == null || !c.moveToFirst())
-							return;
-						String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-						c.close();
-						src = new File(path);
-						try {
+	 					try {
+	 						if (waitingForCover) return;
+		 					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+	 						if (c == null || !c.moveToFirst()) return;
+	 						int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+	 						if (columnIndex == -1) return;
+	 						String path = c.getString(columnIndex);
+	 						c.close();
+	 						src = new File(path);
 							MusicMetadataSet src_set = new MyID3().read(src); // read
 																				// metadata
 							if (src_set == null) {
@@ -235,11 +229,9 @@ public class SearchTab {
 																			// metadata
 							dst.renameTo(src);
 							this.cancel();
-						} catch (IOException e) {
+						} catch (Exception e) {
 							Log.e(getClass().getSimpleName(), "error writing ID3", e);
-						} catch (ID3WriteException e) {
-							Log.e(getClass().getSimpleName(), "error writing ID3", e);
-						}
+						} 
 					}
 					// private void notifyMediascanner() {
 					// Uri uri = Uri.fromFile(src.getParentFile());
@@ -369,8 +361,7 @@ public class SearchTab {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				if (position == resultAdapter.getCount())
-					return; // progress click
+				if (position == resultAdapter.getCount()) return; // progress click
 				activity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
