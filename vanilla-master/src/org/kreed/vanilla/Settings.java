@@ -5,6 +5,7 @@ public class Settings {
 			"SearchPleer", "SearchPoisk", "SearchHulkShare", "SearchMp3skull",
 			"SearchMp3World", "SearchSoundCloud", "SearchSogou",
 			"SearchGrooveshark", "SearchTing", "SearchZaycev" };
+	public static final boolean ENABLE_ALBUM_COVERS = true;
 	
 	public static final String MOPUB_ID = "3a0d11f3de694617aa81f8e3901eb33c";
 	public static final String STARTAPP_DEV_ID = "105125878";

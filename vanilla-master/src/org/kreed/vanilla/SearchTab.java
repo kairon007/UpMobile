@@ -52,6 +52,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.method.HideReturnsTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -490,21 +491,25 @@ public class SearchTab {
 				}
 			};
 			getUrlTask.execute(NO_PARAMS);
-			if (song instanceof GrooveSong) {
-				String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
-				coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
-			} else {
-				coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
-			}
-			coverLoader.addListener(new OnBitmapReadyListener() {
-				@Override
-				public void onBitmapReady(Bitmap bmp) {
-					if (null != player) {
-						player.setCover(bmp);
-					}
+			if (Settings.ENABLE_ALBUM_COVERS) {
+				if (song instanceof GrooveSong) {
+					String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
+					coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
+				} else {
+					coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
 				}
-			});
-			coverLoader.execute(NO_PARAMS);
+				coverLoader.addListener(new OnBitmapReadyListener() {
+					@Override
+					public void onBitmapReady(Bitmap bmp) {
+						if (null != player) {
+							player.setCover(bmp);
+						}
+					}
+				});
+				coverLoader.execute(NO_PARAMS);
+			} else {
+				player.hideCoverProgress();
+			}
 		}
 		final Context context = view.getContext();
 		final Runnable dialogDismisser = new Runnable() {
@@ -515,7 +520,8 @@ public class SearchTab {
 					player = null;
 				}
 				getUrlTask.cancel(true);
-				coverLoader.cancel(true);
+				if (Settings.ENABLE_ALBUM_COVERS)
+					coverLoader.cancel(true);
 				activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
@@ -526,7 +532,8 @@ public class SearchTab {
 				dialogDismisser.run();
 			}
 		};
-		coverLoader.addListener(downloadClickListener);
+		if (Settings.ENABLE_ALBUM_COVERS)
+			coverLoader.addListener(downloadClickListener);
 
 		AlertDialog.Builder b = new AlertDialog.Builder(context).setTitle(title + " - " + artist).setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
 			@Override
@@ -654,6 +661,10 @@ public class SearchTab {
 			if (null != bmp) {
 				coverImage.setImageBitmap(bmp);
 			}
+		}
+		
+		public void hideCoverProgress() {
+			coverProgress.setVisibility(View.GONE);
 		}
 
 		public View getView() {
