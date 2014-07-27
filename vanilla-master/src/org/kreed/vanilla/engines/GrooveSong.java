@@ -1,8 +1,8 @@
 package org.kreed.vanilla.engines;
 
-public class GrooveSong extends RemoteSong {
+public class GrooveSong extends RemoteSong implements SongWithCover{
 
-	private static final String urlImage = "http://images.gs-cdn.net/static/albums/%d_%d.jpg";
+	private static final String coverUrl = "http://images.gs-cdn.net/static/albums/%d_%d.jpg";
 	private int songId;
 	private int albumId;
 
@@ -20,12 +20,14 @@ public class GrooveSong extends RemoteSong {
 		return downloadUrl;
 	}
 
-	public String getUrlSmallImage() {
-		return String.format(urlImage, 40, albumId);
+	@Override
+	public String getSmallCoverUrl() {
+		return String.format(coverUrl, 40, albumId);
 	}
 
-	public String getUrlLargeImage() {
-		return String.format(urlImage, 500, albumId);
+	@Override
+	public String getLargeCoverUrl() {
+		return String.format(coverUrl, 500, albumId);
 	}
 
 	public Integer getSongId() {

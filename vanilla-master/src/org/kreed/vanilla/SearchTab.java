@@ -18,9 +18,9 @@ import org.kreed.vanilla.engines.BaseSearchTask;
 import org.kreed.vanilla.engines.FinishedParsingSongs;
 import org.kreed.vanilla.engines.GrooveSong;
 import org.kreed.vanilla.engines.RemoteSong;
+import org.kreed.vanilla.engines.SongWithCover;
 import org.kreed.vanilla.engines.cover.CoverLoaderTask;
 import org.kreed.vanilla.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import org.kreed.vanilla.engines.cover.GrooveSharkCoverLoaderTask;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import org.kreed.vanilla.ui.AdapterHelper;
@@ -95,7 +95,6 @@ public class SearchTab {
 	public static final SearchTab getInstance(LayoutInflater inflater, LibraryActivity activity) {
 		if (null == instance) {
 			instance = new SearchTab(inflater.inflate(R.layout.search, null), inflater, activity);
-			Context context = inflater.getContext();
 			if (null == engines) {
 				String[] engineNames = Settings.SEARCH_ENGINES;
 				engines = new ArrayList<Class<? extends BaseSearchTask>>(engineNames.length);
@@ -279,25 +278,32 @@ public class SearchTab {
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
-			// .setNumber(String.valueOf(position+1), 0)
-					.setId(position).setIcon(R.drawable.fallback_cover);
-			if (song instanceof GrooveSong) {
+			builder
+				.setButtonVisible(false)
+				.setLongClickable(false)
+				.setExpandable(false)
+				.setLine1(song.getTitle())
+				.setLine2(song.getArtist())
+			 // .setNumber(String.valueOf(position+1), 0)
+				.setId(position).setIcon(R.drawable.fallback_cover);
+			if (song instanceof SongWithCover) {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
 				} else {
-					String urlSmallImage = ((GrooveSong) song).getUrlSmallImage();
-					CoverLoaderTask coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
-					coverLoader.addListener(new OnBitmapReadyListener() {
-						@Override
-						public void onBitmapReady(Bitmap bmp) {
-							bitmaps.put(position, bmp);
-							if (builder != null && builder.getId() == position) {
-								builder.setIcon(bmp);
+					String smallCoverUrl = ((SongWithCover) song).getSmallCoverUrl();
+					if (smallCoverUrl != null) {
+						CoverLoaderTask coverLoader = new CoverLoaderTask(smallCoverUrl);
+						coverLoader.addListener(new OnBitmapReadyListener() {
+							@Override
+							public void onBitmapReady(Bitmap bmp) {
+								bitmaps.put(position, bmp);
+								if (builder != null && builder.getId() == position) {
+									builder.setIcon(bmp);
+								}
 							}
-						}
-					});
-					coverLoader.execute(NO_PARAMS);
+						});
+						coverLoader.execute(NO_PARAMS);
+					}
 				}
 			}
 			if (position == getCount() - 1) {
@@ -492,9 +498,9 @@ public class SearchTab {
 			};
 			getUrlTask.execute(NO_PARAMS);
 			if (Settings.ENABLE_ALBUM_COVERS) {
-				if (song instanceof GrooveSong) {
-					String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
-					coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
+				if (song instanceof SongWithCover) {
+					String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
+					coverLoader = new CoverLoaderTask(largeCoverUrl);
 				} else {
 					coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
 				}
