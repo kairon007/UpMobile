@@ -39,8 +39,10 @@ import android.content.Intent;
 import android.view.View;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+
 import com.mopub.mobileads.test.support.SdkTestRunner;
 import com.mopub.mobileads.test.support.TestHtmlInterstitialWebViewFactory;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -150,6 +152,13 @@ public class MoPubActivityTest extends BaseInterstitialActivityTest {
         moPubUriJavascriptFireFinishLoadListener.onInterstitialLoaded();
 
         verify(customEventInterstitialListener).onInterstitialLoaded();
+    }
+
+    @Test
+    public void onCreate_shouldSetContentView() throws Exception {
+        subject.onCreate(null);
+
+        assertThat(getContentView(subject).getChildCount()).isEqualTo(2);
     }
 
     @Test

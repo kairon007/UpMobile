@@ -7,7 +7,7 @@ import java.net.URLEncoder;
 import android.content.Context;
 import android.util.Log;
 
-public class SearchSoundCloud extends BaseSearchTask {
+public class SearchSoundCloud extends BaseSearchTask { 
 	private int specialIndex = 0;
 	
 	public SearchSoundCloud(FinishedParsingSongs dInterface, String songName, Context context) {
@@ -21,7 +21,7 @@ public class SearchSoundCloud extends BaseSearchTask {
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
 			songName = songName.replace("%20", "_");
 			String link="http://api.soundcloud.com/tracks.json?client_id=2fd7fa3d5ed2be9ac17c538f644fc4c6&filter=downloadable&q="+songName;
-			StringBuffer sb = readLinkApacheHttp(link);
+			StringBuffer sb = readLinkApacheHttp(link); 
 			int i=1;
 			String songString;
 			do {
@@ -30,9 +30,13 @@ public class SearchSoundCloud extends BaseSearchTask {
 					Log.e("Melodie",songString.toString());
 					RemoteSong song = new RemoteSong(getDownloadUrl(songString)+"?client_id=2fd7fa3d5ed2be9ac17c538f644fc4c6");
 					song.setArtistName("artistname"+i);
-					song.setTitle(getTitle(songString));
+					String titlu = getTitle(songString);
+					song.setTitle(titlu);
 					song.setArtistName(getArtistName(getTitle(songString)));
-					addSong(song);
+					
+					if (titlu != null && (titlu.toLowerCase().contains("remix") || titlu.toLowerCase().contains("mash up") || titlu.toLowerCase().contains("cover") || titlu.toLowerCase().contains(" mix") || titlu.toLowerCase().contains(" mashup"))) {
+						addSong(song); 
+					}
 				}
 			} while (songString != null);
 		} catch (UnsupportedEncodingException e) {

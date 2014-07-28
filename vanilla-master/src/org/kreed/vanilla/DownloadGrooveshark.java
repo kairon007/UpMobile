@@ -10,7 +10,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompat;
+
 import android.util.Log;
 
 import com.scilor.grooveshark.API.Base.GroovesharkAudioStream;

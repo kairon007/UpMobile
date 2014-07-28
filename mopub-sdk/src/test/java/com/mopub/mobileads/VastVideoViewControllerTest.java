@@ -12,8 +12,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.VideoView;
+
 import com.mopub.common.MoPubBrowser;
 import com.mopub.common.util.Dips;
 import com.mopub.common.util.Drawables;
@@ -22,6 +24,7 @@ import com.mopub.mobileads.test.support.GestureUtils;
 import com.mopub.mobileads.test.support.SdkTestRunner;
 import com.mopub.mobileads.util.vast.VastCompanionAd;
 import com.mopub.mobileads.util.vast.VastVideoConfiguration;
+
 import org.apache.http.HttpRequest;
 import org.apache.maven.artifact.ant.shaded.ReflectionUtils;
 import org.junit.After;
@@ -36,12 +39,14 @@ import org.robolectric.shadows.ShadowVideoView;
 import org.robolectric.tester.org.apache.http.RequestMatcher;
 import org.robolectric.tester.org.apache.http.TestHttpResponse;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static android.media.MediaPlayer.OnPreparedListener;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.mopub.common.MoPubBrowser.DESTINATION_URL_KEY;
+import static com.mopub.common.util.test.support.CommonUtils.assertHttpRequestsMade;
 import static com.mopub.mobileads.BaseVideoViewController.BaseVideoViewControllerListener;
 import static com.mopub.mobileads.EventForwardingBroadcastReceiver.ACTION_INTERSTITIAL_DISMISS;
 import static com.mopub.mobileads.EventForwardingBroadcastReceiver.ACTION_INTERSTITIAL_FAIL;
@@ -73,6 +78,7 @@ public class VastVideoViewControllerTest {
     private BaseVideoViewControllerListener baseVideoViewControllerListener;
     private EventForwardingBroadcastReceiver broadcastReceiver;
     private int expectedBrowserRequestCode;
+    private String expectedUserAgent;
 
     @Before
     public void setUp() throws Exception {
@@ -120,6 +126,8 @@ public class VastVideoViewControllerTest {
         }, new TestHttpResponse(200, "body"));
 
         ShadowLocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, getHtmlInterstitialIntentFilter());
+
+        expectedUserAgent = new WebView(context).getSettings().getUserAgentString();
     }
 
     @After
@@ -145,10 +153,11 @@ public class VastVideoViewControllerTest {
 
         initializeSubject();
 
+        Robolectric.getUiThreadScheduler().unPause();
         Robolectric.getBackgroundScheduler().unPause();
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("imp");
+        assertHttpRequestsMade(expectedUserAgent, "imp");
     }
 
     @Test
@@ -275,7 +284,13 @@ public class VastVideoViewControllerTest {
         assertThat(imageView.performClick()).isTrue();
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("companion_image_url", "imp", "companion_click_tracking_url_1", "companion_click_tracking_url_2");
+        assertHttpRequestsMade(
+                expectedUserAgent,
+                "companion_image_url",
+                "imp",
+                "companion_click_tracking_url_1",
+                "companion_click_tracking_url_2"
+        );
 
         ArgumentCaptor<Bundle> bundleCaptor = ArgumentCaptor.forClass(Bundle.class);
         verify(baseVideoViewControllerListener).onStartActivityForResult(
@@ -332,6 +347,7 @@ public class VastVideoViewControllerTest {
 
         verify(baseVideoViewControllerListener, never()).onFinish();
     }
+
 
     @Test
     public void onTouch_withTouchUp_whenVideoLessThan16Seconds_andClickBeforeEnd_shouldDoNothing() throws Exception {
@@ -431,10 +447,11 @@ public class VastVideoViewControllerTest {
         subject.setCloseButtonVisible(true);
 
         getShadowVideoView().getOnTouchListener().onTouch(null, GestureUtils.createActionUp(0, 0));
+        Robolectric.getUiThreadScheduler().unPause();
         Robolectric.getBackgroundScheduler().unPause();
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("click_1", "click_2");
+        assertHttpRequestsMade(expectedUserAgent, "click_1", "click_2");
     }
 
     @Test
@@ -520,10 +537,11 @@ public class VastVideoViewControllerTest {
 
         getShadowVideoView().getOnCompletionListener().onCompletion(null);
 
+        Robolectric.getUiThreadScheduler().unPause();
         Robolectric.getBackgroundScheduler().unPause();
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("complete_1", "complete_2");
+        assertHttpRequestsMade(expectedUserAgent, "complete_1", "complete_2");
     }
 
     @Test
@@ -542,11 +560,11 @@ public class VastVideoViewControllerTest {
         initializeSubject();
         subject.onResume();
 
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isTrue();
 
         getShadowVideoView().getOnCompletionListener().onCompletion(null);
 
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(0);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isFalse();
     }
 
     @Test
@@ -603,14 +621,11 @@ public class VastVideoViewControllerTest {
         initializeSubject();
         subject.onResume();
 
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isTrue();
 
         getShadowVideoView().getOnErrorListener().onError(null, 0, 0);
 
-        // The error event broadcasts a ACTION_INTERSTITIAL_FAIL action, so make sure the enqueued task is of that type
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
-        Robolectric.getUiThreadScheduler().remove(subject.getVideoProgressCheckerRunnable());
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isFalse();
     }
 
     @Test
@@ -734,10 +749,11 @@ public class VastVideoViewControllerTest {
         setMediaPlayer(mediaPlayer);
 
         // this runs the videoProgressChecker
-        Robolectric.getUiThreadScheduler().runOneTask();
+        Robolectric.getUiThreadScheduler().unPause();
+        Robolectric.getBackgroundScheduler().unPause();
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("first", "second", "third");
+        assertHttpRequestsMade(expectedUserAgent, "first", "second", "third");
     }
 
     @Test
@@ -752,7 +768,7 @@ public class VastVideoViewControllerTest {
         initializeSubject();
         setMediaPlayer(mediaPlayer);
         subject.onResume();
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(2);
 
         Robolectric.getUiThreadScheduler().runOneTask();
         // make sure the repeated task hasn't run yet
@@ -776,7 +792,7 @@ public class VastVideoViewControllerTest {
         initializeSubject();
         subject.onResume();
         setMediaPlayer(mediaPlayer);
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(2);
 
         Robolectric.getUiThreadScheduler().runOneTask();
         // make sure the repeated task hasn't run yet
@@ -785,7 +801,7 @@ public class VastVideoViewControllerTest {
         Thread.sleep(NETWORK_DELAY);
 
         // Since it has not yet been a second, we expect that the start tracker has not been fired
-        assertHttpRequestsMade();
+        assertHttpRequestsMade(expectedUserAgent);
         Robolectric.getFakeHttpLayer().clearRequestInfos();
 
         // run checker another time
@@ -810,15 +826,14 @@ public class VastVideoViewControllerTest {
         initializeSubject();
         subject.onResume();
         setMediaPlayer(mediaPlayer);
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(2);
 
-        Robolectric.getUiThreadScheduler().runOneTask();
-        // make sure the repeated task hasn't run yet
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        Robolectric.getUiThreadScheduler().unPause();
+        Robolectric.getBackgroundScheduler().unPause();
 
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("start");
+        assertHttpRequestsMade(expectedUserAgent, "start");
         Robolectric.getFakeHttpLayer().clearRequestInfos();
 
         // run checker another time
@@ -843,21 +858,17 @@ public class VastVideoViewControllerTest {
         initializeSubject();
         subject.onResume();
         setMediaPlayer(mediaPlayer);
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(2);
 
-        Robolectric.getUiThreadScheduler().runOneTask();
-        // make sure the repeated task hasn't run yet
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
-
+        Robolectric.getUiThreadScheduler().unPause();
+        Robolectric.getBackgroundScheduler().unPause();
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("first");
+        assertHttpRequestsMade(expectedUserAgent, "first");
         Robolectric.getFakeHttpLayer().clearRequestInfos();
 
         // run checker another time
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
         Robolectric.getUiThreadScheduler().runOneTask();
-
         Thread.sleep(NETWORK_DELAY);
 
         assertThat(Robolectric.httpRequestWasMade()).isFalse();
@@ -877,21 +888,16 @@ public class VastVideoViewControllerTest {
         initializeSubject();
         subject.onResume();
         setMediaPlayer(mediaPlayer);
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(2);
 
-        Robolectric.getUiThreadScheduler().runOneTask();
-        // make sure the repeated task hasn't run yet
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
-
+        Robolectric.getUiThreadScheduler().unPause();
+        Robolectric.getBackgroundScheduler().unPause();
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("first", "second");
+        assertHttpRequestsMade(expectedUserAgent, "first", "second");
         Robolectric.getFakeHttpLayer().clearRequestInfos();
 
-        // run checker another time
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
         Robolectric.getUiThreadScheduler().runOneTask();
-
         Thread.sleep(NETWORK_DELAY);
 
         assertThat(Robolectric.httpRequestWasMade()).isFalse();
@@ -912,21 +918,16 @@ public class VastVideoViewControllerTest {
         initializeSubject();
         subject.onResume();
         setMediaPlayer(mediaPlayer);
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(2);
 
-        Robolectric.getUiThreadScheduler().runOneTask();
-        // make sure the repeated task hasn't run yet
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
-
+        Robolectric.getUiThreadScheduler().unPause();
+        Robolectric.getBackgroundScheduler().unPause();
         Thread.sleep(NETWORK_DELAY);
 
-        assertHttpRequestsMade("first", "second", "third");
+        assertHttpRequestsMade(expectedUserAgent, "first", "second", "third");
         Robolectric.getFakeHttpLayer().clearRequestInfos();
 
-        // run checker another time
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
         Robolectric.getUiThreadScheduler().runOneTask();
-
         Thread.sleep(NETWORK_DELAY);
 
         assertThat(Robolectric.httpRequestWasMade()).isFalse();
@@ -987,17 +988,17 @@ public class VastVideoViewControllerTest {
     }
 
     @Test
-    public void onPause_shouldStopProgressCheckerOnce() throws Exception {
+    public void onPause_shouldStopProgressChecker() throws Exception {
         initializeSubject();
 
         subject.onResume();
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isTrue();
 
         subject.onPause();
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(0);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isFalse();
 
         subject.onPause();
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(0);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isFalse();
     }
 
     @Test
@@ -1005,16 +1006,16 @@ public class VastVideoViewControllerTest {
         initializeSubject();
 
         subject.onResume();
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isTrue();
 
         subject.onPause();
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(0);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isFalse();
 
         subject.onResume();
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isTrue();
 
         subject.onResume();
-        assertThat(Robolectric.getUiThreadScheduler().enqueuedTaskCount()).isEqualTo(1);
+        assertThat(subject.getIsVideoProgressShouldBeChecked()).isTrue();
     }
 
     @Test
@@ -1092,24 +1093,16 @@ public class VastVideoViewControllerTest {
         ReflectionUtils.setVariableValueInObject(videoView, "mCurrentState", state);
     }
 
-    private void assertHttpRequestsMade(String... urls) {
-        final int numberOfReceivedHttpRequests = Robolectric.getFakeHttpLayer().getSentHttpRequestInfos().size();
-        assertThat(numberOfReceivedHttpRequests).isEqualTo(urls.length);
-
-        for (final String url : urls) {
-            assertThat(Robolectric.httpRequestWasMade(url)).isTrue();
-        }
-    }
-
     private void fastForwardMediaPlayerAndAssertRequestMade(int time, String... urls) throws Exception {
         stub(mediaPlayer.getCurrentPosition()).toReturn(time);
-        Robolectric.getUiThreadScheduler().runOneTask();
+        Robolectric.getUiThreadScheduler().unPause();
+        Robolectric.getBackgroundScheduler().unPause();
         Thread.sleep(NETWORK_DELAY);
 
         if (urls == null) {
             assertThat(Robolectric.getNextSentHttpRequest()).isNull();
         } else {
-            assertHttpRequestsMade(urls);
+            assertHttpRequestsMade(expectedUserAgent, urls);
         }
 
         Robolectric.getFakeHttpLayer().clearRequestInfos();

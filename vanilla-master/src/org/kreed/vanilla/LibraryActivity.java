@@ -74,7 +74,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.raivz.hbkds194978.MA;
 import com.startapp.android.publish.splash.SplashConfig.Theme;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -244,18 +243,8 @@ public class LibraryActivity
 	
 	
 	@Override
-	public void onBackPressed() {
-		Advertisement.moPubOnBackPressed(this);
-		Advertisement.startAppOnBackPressed(this);
-		Advertisement.airPushOnBackPressed(this);
-		Log.i(getClass().getSimpleName(), "onBackPressed()");
-		//mInterstitial.setInterstitialAdListener(this);
-//		super.onBackPressed();
-	}
-	
-	@Override
 	public void onDestroy() {
-		Advertisement.moPubOnDestroy(this);
+		Advertisement.onDestroy(this);
 		super.onDestroy();
 	}
 
@@ -270,13 +259,13 @@ public class LibraryActivity
     @Override
     protected void onPause() {
     	super.onPause();
-    	Advertisement.startAppOnPause(this);
+    	Advertisement.onPause(this);
     }
     
     @Override
 	public void onResume() {
 		super.onResume();
-		Advertisement.startAppOnResume(this);
+		Advertisement.onResume(this);
 	}
 	
 	
@@ -434,6 +423,63 @@ public class LibraryActivity
 		}
 
 	//	loadAlbumIntent(getIntent());
+		
+		
+		
+		
+		
+		
+		
+		// show cross promo box
+		try{
+			LinearLayout downloadsLayout = (LinearLayout)findViewById(R.id.content);
+			if (downloadsLayout != null) {  
+				if (Settings.getIsBlacklisted(this)) {
+					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				} else {
+					Advertisement.showCrossPromoBox(this, downloadsLayout);
+				} 
+			}
+		} catch(Exception e) {
+			
+		}
+		
+		// show or hide disclaimer
+		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
+		if (editTextDisclaimer != null) {
+			if (Settings.getIsBlacklisted(this)) {
+				editTextDisclaimer.setVisibility(View.VISIBLE); 
+			} else {
+				editTextDisclaimer.setVisibility(View.GONE);
+			}
+		}
+		
+		
+		
+		
+		// initialize ad networks
+		try {
+			if (!Settings.getIsBlacklisted(this)) {	
+				Advertisement.start(this);
+			} else {
+				Advertisement.showDisclaimer(this); 
+			}
+		} catch (Exception e) { 
+ 
+		} 
+		
+		
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.mopubShowBanner(this); 
+			}
+		} catch (Exception e) { 
+			 
+		} 
+		
+		
+
 	}
 
 	public void setFilterHint(int type){
