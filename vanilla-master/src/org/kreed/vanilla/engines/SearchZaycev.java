@@ -44,7 +44,12 @@ public class SearchZaycev extends BaseSearchTask {
 				String songArtist = songObject.getString("artistName");
 				String userId = songObject.getString("userId");
 				String songId = songObject.getString("id");
-				addSong(new ZaycevSong(userId, songId).setTitle(songTitle).setArtistName(songArtist));
+				
+				String jsonUrl = "http://zaycev.net/external/download?id=" 
+						+ songId + "&access_token=" + getAccessToken();
+				JSONObject response1 = new JSONObject(readLink(jsonUrl).toString());
+				String downloadUrl = response1.getString("url");
+				addSong(new ZaycevSong(userId, songId, downloadUrl).setTitle(songTitle).setArtistName(songArtist));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
