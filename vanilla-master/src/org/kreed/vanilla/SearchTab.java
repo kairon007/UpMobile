@@ -113,16 +113,17 @@ public class SearchTab {
 	}
 
 	public static String getDownloadPath(Context context) {
-		String downloadPath = Environment.getExternalStorageDirectory().toString() + "/Music";
+		String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
 		if (context != null) {
 			SharedPreferences downloadDetails = context.getSharedPreferences(SearchTab.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
-			downloadPath = downloadDetails.getString(SearchTab.DOWNLOAD_DIR, "");
-			if (downloadPath.equals("")) {
+			String sharedDownloadPath = downloadDetails.getString(SearchTab.DOWNLOAD_DIR, "");
+			if (sharedDownloadPath.equals("")) {
 				Editor edit = downloadDetails.edit();
 				edit.clear();
 				edit.putString(SearchTab.DOWNLOAD_DIR, downloadPath);
 				edit.commit();
-			}
+			} else
+				return sharedDownloadPath;
 		}
 		return downloadPath;
 	}
