@@ -65,13 +65,17 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical" >
 
-            <TextView
+            <org.kreed.vanilla.ScrollingTextView
                 android:id="@+id/download_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:gravity="left"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
 

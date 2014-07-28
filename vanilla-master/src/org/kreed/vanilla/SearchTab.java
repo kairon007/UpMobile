@@ -623,7 +623,7 @@ public class SearchTab {
 		}
 
 		public void setTitle(String title) {
-			TextView textView = (TextView) view.findViewById(R.id.download_title);
+			ScrollingTextView textView = (ScrollingTextView) view.findViewById(R.id.download_title);
 			if (textView != null)
 				textView.setText(title);
 		}
