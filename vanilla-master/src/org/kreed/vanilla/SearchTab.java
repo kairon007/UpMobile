@@ -113,14 +113,16 @@ public class SearchTab {
 	}
 
 	public static String getDownloadPath(Context context) {
-		SharedPreferences downloadDetails = context.getSharedPreferences(SearchTab.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
-		String downloadPath = downloadDetails.getString(SearchTab.DOWNLOAD_DIR, "");
-		if (downloadPath.equals("")) {
-			downloadPath = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).getPath();
-			Editor edit = downloadDetails.edit();
-			edit.clear();
-			edit.putString(SearchTab.DOWNLOAD_DIR, downloadPath);
-			edit.commit();
+		String downloadPath = Environment.getExternalStorageDirectory().toString() + "/Music";
+		if (context != null) {
+			SharedPreferences downloadDetails = context.getSharedPreferences(SearchTab.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
+			downloadPath = downloadDetails.getString(SearchTab.DOWNLOAD_DIR, "");
+			if (downloadPath.equals("")) {
+				Editor edit = downloadDetails.edit();
+				edit.clear();
+				edit.putString(SearchTab.DOWNLOAD_DIR, downloadPath);
+				edit.commit();
+			}
 		}
 		return downloadPath;
 	}
@@ -200,15 +202,18 @@ public class SearchTab {
 
 					@Override
 					public void run() {
-	 					try {
-	 						if (waitingForCover) return;
-		 					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-	 						if (c == null || !c.moveToFirst()) return;
-	 						int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-	 						if (columnIndex == -1) return;
-	 						String path = c.getString(columnIndex);
-	 						c.close();
-	 						src = new File(path);
+						try {
+							if (waitingForCover)
+								return;
+							Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+							if (c == null || !c.moveToFirst())
+								return;
+							int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+							if (columnIndex == -1)
+								return;
+							String path = c.getString(columnIndex);
+							c.close();
+							src = new File(path);
 							MusicMetadataSet src_set = new MyID3().read(src); // read
 																				// metadata
 							if (src_set == null) {
@@ -230,7 +235,7 @@ public class SearchTab {
 							this.cancel();
 						} catch (Exception e) {
 							Log.e(getClass().getSimpleName(), "error writing ID3", e);
-						} 
+						}
 					}
 					// private void notifyMediascanner() {
 					// Uri uri = Uri.fromFile(src.getParentFile());
@@ -278,14 +283,9 @@ public class SearchTab {
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder
-				.setButtonVisible(false)
-				.setLongClickable(false)
-				.setExpandable(false)
-				.setLine1(song.getTitle())
-				.setLine2(song.getArtist())
-			 // .setNumber(String.valueOf(position+1), 0)
-				.setId(position).setIcon(R.drawable.fallback_cover);
+			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
+			// .setNumber(String.valueOf(position+1), 0)
+					.setId(position).setIcon(R.drawable.fallback_cover);
 			if (song instanceof SongWithCover) {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
@@ -367,7 +367,8 @@ public class SearchTab {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				if (position == resultAdapter.getCount()) return; // progress click
+				if (position == resultAdapter.getCount())
+					return; // progress click
 				activity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
