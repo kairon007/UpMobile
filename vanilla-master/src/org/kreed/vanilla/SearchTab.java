@@ -31,6 +31,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -550,7 +552,16 @@ public class SearchTab {
 			}
 		});
 		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
-		return b.create();
+		AlertDialog alertDialog = b.create();
+		alertDialog.setOnDismissListener(new OnDismissListener() {
+			
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				// TODO Auto-generated method stub
+				dialogDismisser.run();
+			}
+		});
+		return alertDialog;
 	}
 
 	private void showDownloadsList() {
