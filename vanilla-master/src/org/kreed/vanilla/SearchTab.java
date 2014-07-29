@@ -32,7 +32,9 @@ import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -553,11 +555,9 @@ public class SearchTab {
 		});
 		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
 		AlertDialog alertDialog = b.create();
-		alertDialog.setOnDismissListener(new OnDismissListener() {
-			
+		alertDialog.setOnCancelListener(new OnCancelListener() {
 			@Override
-			public void onDismiss(DialogInterface dialog) {
-				// TODO Auto-generated method stub
+			public void onCancel(DialogInterface dialog) {
 				dialogDismisser.run();
 			}
 		});
