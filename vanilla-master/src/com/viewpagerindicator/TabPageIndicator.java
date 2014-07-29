@@ -124,6 +124,9 @@ public class TabPageIndicator extends HorizontalScrollView
 		if ("AppTheme".equals(Util.getThemeName(getContext()))) {
 			tabView.setTextColor(getResources().getColor(R.color
 					.tab_page_indicator_textview));
+		} else if ("AppTheme.Black".equals(Util.getThemeName(getContext()))){
+			tabView.setTextColor(getResources().getColor(R.color
+					.tab_page_indicator_textview_white));
 		}
 		tabView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 		tabView.setTypeface(tabView.getTypeface(), Typeface.BOLD);
