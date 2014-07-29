@@ -177,7 +177,7 @@ public class MediaAdapter
 			break;
 		case MediaUtils.TYPE_SONG: 
 			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ALBUM };
+			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST };
 			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
 			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };
 			mSortValues = new String[] { "title_key %1$s", "artist_key %1$s,album_key %1$s,track %1$s", "artist_key %1$s,album_key %1$s,title_key %1$s", "artist_key %1$s,year %1$s,track %1$s", "year %1$s,title_key %1$s" };
