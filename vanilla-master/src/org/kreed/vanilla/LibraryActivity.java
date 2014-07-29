@@ -277,6 +277,8 @@ public class LibraryActivity
 		}
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			setTheme(R.style.Library_White);
+		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+			setTheme(R.style.Library_Black);
 		} else {
 			setTheme(R.style.Library);
 		}
@@ -290,6 +292,8 @@ public class LibraryActivity
 		mSearchBox = findViewById(R.id.search_box);
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_white));
+		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
 		}
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
@@ -369,6 +373,9 @@ public class LibraryActivity
 				if ("AppTheme.White".equals(Util.getThemeName(this))) {
 					mControls.setBackgroundResource
 						(R.drawable.music_bottom_playback_bg_light);
+				} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+					mControls.setBackgroundResource
+					(R.drawable.music_bottom_playback_bg_black);
 				} else {
 					mControls.setBackgroundResource
 						(R.drawable.music_bottom_playback_bg);

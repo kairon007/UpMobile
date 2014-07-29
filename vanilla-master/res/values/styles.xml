@@ -28,6 +28,9 @@
     <style name="Library.White" parent="AppTheme.White">
         <item name="android:windowNoTitle">true</item>
     </style>
+    <style name="Library.Black" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
     <style name="Playback" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>

@@ -370,6 +370,9 @@ public class LibraryPagerAdapter
 					((ListView)searchView.findViewById(R.id.list)).setDivider(new ColorDrawable
 							(activity.getResources().getColor(R.color.divider_color_light)));
 					((ListView)searchView.findViewById(R.id.list)).setDividerHeight(1);
+				} else if ("AppTheme.Black".equals(Util.getThemeName(activity))){
+					searchView.findViewById(R.id.search_field).setBackgroundDrawable
+						(activity.getResources().getDrawable(R.drawable.search_background_black));
 				}
 				container.addView(searchView);
 				return searchView;

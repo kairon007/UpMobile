@@ -52,6 +52,9 @@ THE SOFTWARE.
 	<style name="Library.White" parent="AppTheme.White">
 		<item name="android:actionBarStyle">@style/LibraryActionBar.White</item>
 	</style>
+	<style name="Library.Black" parent="AppTheme.Black">
+		<item name="android:actionBarStyle">@style/LibraryActionBar.Black</item>
+	</style>
 	<style name="PlaybackActionBar" parent="android:Widget.Holo.ActionBar">
 		<item name="android:displayOptions">showTitle|homeAsUp</item>
 	</style>
@@ -62,6 +65,9 @@ THE SOFTWARE.
 		<item name="android:displayOptions"></item>
 	</style>
 	<style name="LibraryActionBar.White" parent="android:Widget.Holo.Light.ActionBar">
+		<item name="android:displayOptions"></item>
+	</style>
+	<style name="LibraryActionBar.Black" parent="android:Widget.Holo.ActionBar">
 		<item name="android:displayOptions"></item>
 	</style>
 	
