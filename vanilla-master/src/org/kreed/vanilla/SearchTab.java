@@ -41,6 +41,7 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -479,6 +480,9 @@ public class SearchTab {
 
 		if (null == player) {
 			player = new Player(inflater.inflate(R.layout.download_dialog, null));
+			if ("AppTheme.Black".equals(Util.getThemeName(activity))) {
+				player.setBlackBackground();
+			}
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());
 			}
@@ -728,6 +732,11 @@ public class SearchTab {
 				Log.d(getClass().getSimpleName(), "...removed from parent");
 			}
 			return view;
+		}
+		
+		public void setBlackBackground(){
+			LinearLayout ll = (LinearLayout)view.findViewById(R.id.download_dialog);
+			ll.setBackgroundColor(Color.parseColor("#ff101010"));
 		}
 
 		private Runnable progressAction = new Runnable() {
