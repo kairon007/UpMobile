@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.apache.http.HttpEntity;
@@ -34,62 +33,35 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 	
 	@Override
 	protected Bitmap doInBackground(Void... params) {
-		String[] arrayString2, arrayString4;
-		// Form the link
-		// http://www.musicbrainz.org/ws/2/recording/?query=artist:placebo+recording:
-		String link;
 		try {
-		link = String.format(
-				URL_PATTERN, 
-				URLEncoder.encode(artist, "UTF-8"), 
-				URLEncoder.encode(title, "UTF-8")
-			);
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
-		StringBuffer sb = null;
-		HttpClient httpclient = new DefaultHttpClient();
-		try {
-			// Create HTTP Client
-			// Set the action you want to do
+			String[] arrayString2, arrayString4;
+			String link = String.format(URL_PATTERN, URLEncoder.encode(artist, "UTF-8"), URLEncoder.encode(title, "UTF-8"));
+			HttpClient httpclient = new DefaultHttpClient();
 			HttpGet httpget = new HttpGet(link);
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
-			// Create an InputStream with the response
 			BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-			sb = new StringBuffer();
+			StringBuffer sb = new StringBuffer();
 			String line;
 			while ((line = reader.readLine()) != null) {
 				sb.append(line);
 			}
 			reader.close();
-		} catch (IOException e) {
-			Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
-		} // Executeit
-		if (null == sb) {
-			return null;
-		}
-		String fromWhereToGetThePic = null;
-		try {
 			arrayString2 = filterRecordingByScore(sb.toString());
 			arrayString4 = takeMBID(arrayString2);
-			fromWhereToGetThePic = getTheLinkToPicture(arrayString4);
-		} catch (Exception e) {}
-		// String theLink =
-		if (fromWhereToGetThePic==null) {
-			return null;
-		} else {
-			try {
-				HttpGet httpget = new HttpGet(getTHEdamnURL(fromWhereToGetThePic, size.name()));
-				HttpResponse response = httpclient.execute(httpget);
-				HttpEntity entity = response.getEntity();
-				// Create an InputStream with the response
+			String fromWhereToGetThePic = getTheLinkToPicture(arrayString4);
+			if (fromWhereToGetThePic == null) {
+				return null;
+			} else {
+				httpget = new HttpGet(getTHEdamnURL(fromWhereToGetThePic, size.name()));
+				response = httpclient.execute(httpget);
+				entity = response.getEntity();
 				BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent());
 				return BitmapFactory.decodeStream(bitmapStream);
-			} catch (IOException e) {
-				Log.e(getClass().getName(), "Error downloading the cover", e);
-				return null;
 			}
+		} catch (Exception e) {
+			Log.e(getClass().getName(), "Error downloading the cover", e);
+			return null;
 		}
 	}
 
@@ -97,18 +69,12 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 		String[] arrayString = new String[30];
 		int positionOfSearch = 0;
 		int indexOfStartingTag = 0;
-
 		int indexOfEndingTag = 0;
 		int indexOfBigEndingTag = 0;
-
 		String startingTag = "<recording id";
 		String endingTag = ">";
 		String endingBigTag = "</recording>";
-
-
-		if (theString == null)
-			return arrayString;
-
+		if (theString == null) return arrayString;
 		int i = 0;
 		while ((indexOfStartingTag = theString.indexOf(startingTag, positionOfSearch)) != -1) {
 			positionOfSearch = indexOfEndingTag = theString.indexOf(endingTag, indexOfStartingTag);
@@ -119,7 +85,6 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 			}
 		}
 		return arrayString;
-
 	}
 
 	private boolean checkScore(String stringWithScore) {
@@ -188,10 +153,10 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 					// InputStream
 					// with the response
 					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(entity.getContent()), 42880);
+							new InputStreamReader(entity.getContent()));
 
 					// Get the response
-					sb = new StringBuffer(42880);
+					sb = new StringBuffer();
 					// BufferedReader rd = new BufferedReader(new
 					// InputStreamReader(conn.getInputStream()));
 

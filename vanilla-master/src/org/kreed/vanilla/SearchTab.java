@@ -192,7 +192,7 @@ public class SearchTab {
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
 			}
-			StringBuilder sb = new StringBuilder(songTitle).append(" - ").append(songArtist);
+			StringBuilder sb = new StringBuilder(songArtist).append(" - ").append(songTitle);
 			if (songId != -1) {
 				Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
 				DownloadGrooveshark manager = new DownloadGrooveshark(songId, getDownloadPath(context), sb.append(".mp3").toString(), context);
@@ -483,8 +483,8 @@ public class SearchTab {
 			return null;
 		}
 		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
-		final String artist = song.getTitle();
-		final String title = song.getArtist();
+		final String title = song.getTitle();
+		final String artist = song.getArtist();
 
 		if (null == player) {
 			player = new Player(inflater.inflate(R.layout.download_dialog, null));
@@ -558,7 +558,7 @@ public class SearchTab {
 		};
 		if (Settings.ENABLE_ALBUM_COVERS)
 			coverLoader.addListener(downloadClickListener);
-		player.setTitle(title + " - " + artist);
+		player.setTitle(artist + " - " + title);
 		player.setOnButtonClicListener(downloadClickListener, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
