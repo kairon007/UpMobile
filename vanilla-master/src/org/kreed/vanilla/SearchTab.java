@@ -38,6 +38,7 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -481,7 +482,7 @@ public class SearchTab {
 		if (null == player) {
 			player = new Player(inflater.inflate(R.layout.download_dialog, null));
 			if ("AppTheme.Black".equals(Util.getThemeName(activity))) {
-				player.setBlackBackground();
+				player.setBlackTheme();
 			}
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());
@@ -734,9 +735,13 @@ public class SearchTab {
 			return view;
 		}
 		
-		public void setBlackBackground(){
+		public void setBlackTheme(){
 			LinearLayout ll = (LinearLayout)view.findViewById(R.id.download_dialog);
 			ll.setBackgroundColor(Color.parseColor("#ff101010"));
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+				download.setTextColor(Color.LTGRAY);
+				cancel.setTextColor(Color.LTGRAY);
+			}
 		}
 
 		private Runnable progressAction = new Runnable() {
