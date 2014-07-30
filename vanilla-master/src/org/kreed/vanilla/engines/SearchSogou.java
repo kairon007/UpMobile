@@ -6,8 +6,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.kreed.vanilla.song.RemoteSong;
 
-import android.content.Context;
 import android.util.Log;
 
 /**
@@ -31,8 +31,8 @@ public class SearchSogou extends BaseSearchTask {
 	 * This is the constructor used to search only.
 	 * @param con - the Cotext of the activity
 	 */
-	public SearchSogou(FinishedParsingSongs dInterface, String songName, Context context) {
-		super(dInterface, songName, context);
+	public SearchSogou(FinishedParsingSongs dInterface, String songName) {
+		super(dInterface, songName);
 	}
 
 

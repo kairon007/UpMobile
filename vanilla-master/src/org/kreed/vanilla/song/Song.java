@@ -20,9 +20,9 @@
  * THE SOFTWARE.
  */
 
-package org.kreed.vanilla;
+package org.kreed.vanilla.song;
 
-import org.kreed.vanilla.app.VanillaAp;
+import org.kreed.vanilla.app.VanillaApp;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -199,7 +199,7 @@ public class Song implements Comparable<Song> {
 		if (mDisableCoverArt || id == -1 || (flags & FLAG_NO_COVER) != 0)
 			return null;
 
-		Bitmap cover = VanillaAp.getCoverCache().get(id);
+		Bitmap cover = VanillaApp.getCoverCache().get(id);
 		if (cover == null)
 			flags |= FLAG_NO_COVER;
 		return cover;

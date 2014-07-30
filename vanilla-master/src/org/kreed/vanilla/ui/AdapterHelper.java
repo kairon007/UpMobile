@@ -1,7 +1,7 @@
 package org.kreed.vanilla.ui;
 
 import org.kreed.vanilla.R;
-import org.kreed.vanilla.app.VanillaAp;
+import org.kreed.vanilla.app.VanillaApp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,13 +33,13 @@ public class AdapterHelper {
 			this.view = view; 
 			view.setLongClickable(true);
 			text = (TextView)view.findViewById(R.id.text);
-			text.setTypeface(VanillaAp.FONT_LIGHT);
+			text.setTypeface(VanillaApp.FONT_LIGHT);
 			line2 = (TextView)view.findViewById(R.id.line2);
-			line2.setTypeface(VanillaAp.FONT_REGULAR);
+			line2.setTypeface(VanillaApp.FONT_REGULAR);
 			number = (TextView)view.findViewById(R.id.number);
-			number.setTypeface(VanillaAp.FONT_LIGHT);
+			number.setTypeface(VanillaApp.FONT_LIGHT);
 			caption = (TextView)view.findViewById(R.id.caption);
-			caption.setTypeface(VanillaAp.FONT_LIGHT);
+			caption.setTypeface(VanillaApp.FONT_LIGHT);
 			arrow = (ImageView)view.findViewById(R.id.arrow);
 			cover = (ImageView)view.findViewById(R.id.cover);
 			left = (View) number.getParent();

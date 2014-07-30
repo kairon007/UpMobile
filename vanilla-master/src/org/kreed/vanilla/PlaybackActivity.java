@@ -22,6 +22,8 @@
 
 package org.kreed.vanilla;
 
+import org.kreed.vanilla.song.Song;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;

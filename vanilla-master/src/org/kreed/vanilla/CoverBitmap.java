@@ -22,6 +22,8 @@
 
 package org.kreed.vanilla;
 
+import org.kreed.vanilla.song.Song;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;

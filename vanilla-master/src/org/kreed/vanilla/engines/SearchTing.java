@@ -1,25 +1,15 @@
 package org.kreed.vanilla.engines;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import android.content.Context;
-import android.util.Log;
+import org.kreed.vanilla.song.TingSong;
 
 public class SearchTing extends BaseSearchTask {
 
-	public SearchTing(FinishedParsingSongs dInterface, String songName, Context context) {
-		super(dInterface, songName, context);
+	public SearchTing(FinishedParsingSongs dInterface, String songName) {
+		super(dInterface, songName);
 	}
 
 	@Override
@@ -52,27 +42,6 @@ public class SearchTing extends BaseSearchTask {
 			e.printStackTrace();
 		}
 		return downloadUrl;
-	}
-	
-	private static String handleLink(String link) {
-		try {
-			URL url = new URL(link);
-			URLConnection conn = url.openConnection();
-			conn.setRequestProperty("User-Agent", getRandomUserAgent());
-			conn.setDoOutput(true);
-			conn.setConnectTimeout(3000);
-			StringBuffer sb = new StringBuffer();
-			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-			String line;
-			while ((line = rd.readLine()) != null) {
-				sb.append(line);
-			}
-			rd.close();
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "";
 	}
 	
 }

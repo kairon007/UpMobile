@@ -5,19 +5,23 @@ import java.io.FileDescriptor;
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
 
-public class VanillaAp extends Application {
+public class VanillaApp extends Application {
 	private static final BitmapFactory.Options BITMAP_OPTIONS = new BitmapFactory.Options();
 	public static Typeface FONT_LIGHT;
 	public static Typeface FONT_REGULAR;
 	public static Typeface FONT_BOLD;
 
+	private static SharedPreferences prefs;
+	
 	static {
 		BITMAP_OPTIONS.inPreferredConfig = Bitmap.Config.RGB_565;
 		BITMAP_OPTIONS.inDither = false;
@@ -80,7 +84,11 @@ public class VanillaAp extends Application {
 		FONT_BOLD = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Bold.otf");
 		FONT_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Regular.otf");
 		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 	
+	public static SharedPreferences getSharedPreferences() {
+		return prefs;
+	}
 	
 }

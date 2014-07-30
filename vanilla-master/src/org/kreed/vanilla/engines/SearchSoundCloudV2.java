@@ -3,7 +3,8 @@ package org.kreed.vanilla.engines;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import android.content.Context;
+import org.kreed.vanilla.song.SoundCloudV2Song;
+
 import de.voidplus.soundcloud.SoundCloud;
 import de.voidplus.soundcloud.Track;
 
@@ -12,8 +13,8 @@ public class SearchSoundCloudV2 extends BaseSearchTask {
 	private static final String APP_CLIENT_ID = "f66e127e703b3896443f7f5f0fc49075";
 	private static final String APP_CLIENT_SECRET = "112295d92bd30c61374d9fbf61dc9f6d";
 	
-	public SearchSoundCloudV2(FinishedParsingSongs dInterface, String songName, Context context) {
-		super(dInterface, songName, context);
+	public SearchSoundCloudV2(FinishedParsingSongs dInterface, String songName) {
+		super(dInterface, songName);
 	}
 
 	@Override

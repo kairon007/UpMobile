@@ -17,14 +17,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.kreed.vanilla.Song;
+import org.kreed.vanilla.song.Song;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
-	public static final Class[] PARAMETER_TYPES = new Class[]{FinishedParsingSongs.class, String.class, Context.class};
+	public static final Class[] PARAMETER_TYPES = new Class[]{FinishedParsingSongs.class, String.class};
 	private static String[] agents = new String[] {
 		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36", 
 		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0", 
@@ -41,12 +40,10 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	private boolean finished;
 	private FinishedParsingSongs dInterface;
 	private String songName;
-	protected Context context;
 
-	public BaseSearchTask(FinishedParsingSongs dInterface, String songName, Context context) {
+	public BaseSearchTask(FinishedParsingSongs dInterface, String songName) {
 		this.dInterface = dInterface;
 		this.songName = songName;
-		this.context = context;
 	}
 
 	protected StringBuffer readLink(String link) throws MalformedURLException {
@@ -85,6 +82,28 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 		}
 		rd.close();
 		return sb;
+	}
+	
+	//without downloadStopped
+	protected static String handleLink(String link) {
+		try {
+			URL url = new URL(link);
+			URLConnection conn = url.openConnection();
+			conn.setRequestProperty("User-Agent", getRandomUserAgent());
+			conn.setDoOutput(true);
+			conn.setConnectTimeout(3000);
+			StringBuffer sb = new StringBuffer();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			String line;
+			while ((line = rd.readLine()) != null) {
+				sb.append(line);
+			}
+			rd.close();
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 	
 	protected static String getRandomUserAgent() {

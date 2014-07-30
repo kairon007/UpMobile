@@ -27,7 +27,8 @@ import java.io.File;
 
 import junit.framework.Assert;
 
-import org.kreed.vanilla.app.VanillaAp;
+import org.kreed.vanilla.app.VanillaApp;
+import org.kreed.vanilla.song.Song;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -338,8 +339,8 @@ public class LibraryActivity
 			mCover = (ImageView)controls.findViewById(R.id.cover);
 			
 			//mAlbum.setTypeface(font);
-			mArtist.setTypeface(VanillaAp.FONT_LIGHT);
-			mTitle.setTypeface(VanillaAp.FONT_REGULAR);
+			mArtist.setTypeface(VanillaApp.FONT_LIGHT);
+			mTitle.setTypeface(VanillaApp.FONT_REGULAR);
 			
 //			mTitle.setTextColor(Color.WHITE);
 			mTitle.setTextSize(20);

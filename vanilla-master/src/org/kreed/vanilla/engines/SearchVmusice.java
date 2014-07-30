@@ -6,14 +6,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.kreed.vanilla.song.RemoteSong;
 
-import android.content.Context;
 import android.util.Log;
 
 public class SearchVmusice extends BaseSearchTask {
 	
-	public SearchVmusice(FinishedParsingSongs dInterface, String songName, Context context) {
-		super(dInterface, songName, context);
+	public SearchVmusice(FinishedParsingSongs dInterface, String songName) {
+		super(dInterface, songName);
 	}
 	
 	@Override

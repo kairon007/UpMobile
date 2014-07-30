@@ -9,15 +9,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.kreed.vanilla.song.RemoteSong;
 
-import android.content.Context;
 import android.util.Log;
 
 
 public class SearchPoisk extends BaseSearchTask {
+	
 	private String Tag = SearchPoisk.class.getSimpleName();
-	public SearchPoisk(FinishedParsingSongs dInterface, String songName, Context context) {
-		super(dInterface, songName, context);
+	
+	public SearchPoisk(FinishedParsingSongs dInterface, String songName) {
+		super(dInterface, songName);
 	}
 
 	@Override

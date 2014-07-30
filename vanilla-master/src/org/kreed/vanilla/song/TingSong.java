@@ -1,11 +1,13 @@
-package org.kreed.vanilla.engines;
+package org.kreed.vanilla.song;
+
+import org.kreed.vanilla.engines.SearchTing;
 
 public class TingSong extends RemoteSong {
 	
 	private int songId;
 	
-	public TingSong(long id, int songId) {
-		super(id);
+	public TingSong(Integer id, int songId) {
+		super(id.hashCode());
 		this.songId = songId;
 	}
 	

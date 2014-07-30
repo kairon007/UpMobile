@@ -6,52 +6,45 @@ import java.security.NoSuchAlgorithmException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.kreed.vanilla.app.VanillaApp;
+import org.kreed.vanilla.song.ZaycevSong;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-public class SearchZaycev extends BaseSearchTask {
+public class SearchZaycev extends SearchWithPages {
 
 	private static final String access_token_key = "key.access.token.prefs";
-	protected static String INIT_TOKEN_URL = "http://zaycev.net/external/hello";
-	protected static String AUTHENTICATION_TOKEN_URL = "http://zaycev.net/external/auth?code=%s&hash=%s";
-	protected static String TAG_TOKEN = "token";
+	private static String INIT_TOKEN_URL = "http://zaycev.net/external/hello";
+	private static String AUTHENTICATION_TOKEN_URL = "http://zaycev.net/external/auth?code=%s&hash=%s";
+	private static String TAG_TOKEN = "token";
 
-	public SearchZaycev(FinishedParsingSongs dInterface, String songName, Context context) {
-		super(dInterface, songName, context);
+	public SearchZaycev(FinishedParsingSongs dInterface, String songName) {
+		super(dInterface, songName);
 	}
 	
 	@Override
 	protected Void doInBackground(Void... params) {
+		if (page == 1) maxPages = 1;
+		if (page > maxPages) return null;
 		try {
 			String songName = URLEncoder.encode(getSongName(), "UTF-8").replace(" ", "%20");
-			String baseUrl = "http://zaycev.net/external/search?query="+songName+"&page=1&access_token=";
+			String baseUrl = "http://zaycev.net/external/search?query="+songName+"&page="+page+"&access_token=";
 			String link = baseUrl + getAccessToken();
 			JSONObject response = new JSONObject(readLink(link).toString());
 			if(response.has("error")) {
 				link = baseUrl + generateAccessToken();
 				response = new JSONObject(readLink(link).toString());
 			}
+			if (response.has("pagesCount")) {
+				maxPages = response.getInt("pagesCount");
+			} 
 			JSONArray songResults = response.getJSONArray("tracks");
 			for (int i = 0; i < songResults.length(); i++) {
 				JSONObject songObject = songResults.getJSONObject(i);
 				String songTitle = songObject.getString("track");
 				String songArtist = songObject.getString("artistName");
-				String userId = songObject.getString("userId");
-				String songId = songObject.getString("id");
-				
-				String jsonUrl = "http://zaycev.net/external/track/" + songId + "/download?id=" 
-						+ songId + "&access_token=" + getAccessToken();
-//				String jsonUrl = "http://zaycev.net/external/download?id=" 
-//						+ songId + "&access_token=" + getAccessToken();
-				JSONObject response1 = new JSONObject(readLink(jsonUrl).toString());
-				String downloadUrl = response1.getString("url");
-				addSong(new ZaycevSong(userId, songId, downloadUrl).setTitle(songTitle).setArtistName(songArtist));
+				int songId = songObject.getInt("id");
+				addSong(new ZaycevSong(songId).setTitle(songTitle).setArtistName(songArtist));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -59,8 +52,8 @@ public class SearchZaycev extends BaseSearchTask {
 		return null;
 	}
 	
-	private String getAccessToken() {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	private static String getAccessToken() {
+		SharedPreferences prefs = VanillaApp.getSharedPreferences();
 		String accessToken = prefs.getString(access_token_key, null);
 		if (accessToken == null || accessToken.equals("")) {
 			accessToken = generateAccessToken();
@@ -68,16 +61,16 @@ public class SearchZaycev extends BaseSearchTask {
 		return accessToken;
 	}
 	
-	private String generateAccessToken() {
+	private static String generateAccessToken() {
 		String authenticationToken = "";
 		try {
-			JSONObject response = new JSONObject(readLink(INIT_TOKEN_URL).toString());
+			JSONObject response = new JSONObject(handleLink(INIT_TOKEN_URL));
 			String initKey = response.getString(TAG_TOKEN);
 			String salt = "llf7116f22c";
 			String hashKey = md5(initKey + encryptB(salt));
-			response = new JSONObject(readLink(String.format(AUTHENTICATION_TOKEN_URL, initKey, hashKey)).toString());
+			response = new JSONObject(handleLink(String.format(AUTHENTICATION_TOKEN_URL, initKey, hashKey)));
 			authenticationToken = response.getString(TAG_TOKEN);
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			SharedPreferences prefs = VanillaApp.getSharedPreferences();
 			prefs.edit().putString(access_token_key, authenticationToken).commit();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -129,34 +122,24 @@ public class SearchZaycev extends BaseSearchTask {
 		return "";
 	}
 
-	public static String getDownloadUrl(String pageUrl) {
+	public static String getDownloadUrl(int songId) {
 		try {
-			Document doc = Jsoup.connect(pageUrl).timeout(20000).userAgent(getMobileUserAgent()).get();
-			String downloadUrl = null;
-			Elements scripts = doc.getElementsByTag("script");
-			if (scripts.size() > 0) {
-				for (Element script: scripts) {
-					String text = script.html();
-					if (text != null && text.contains(".mp3")) {
-						String[] tokens = text.split("\\.mp3");
-						for (String token : tokens) {
-							int httpIndex = token.lastIndexOf("http:");
-							if (httpIndex != -1) {
-								downloadUrl = tokens[0].substring(httpIndex) + ".mp3?dlKind=dl";
-								return downloadUrl;
-							}
-						}
-					}
-				}
+			//	String link = "http://zaycev.net/external/download?id=" 
+			//			+ songId + "&access_token=" + getAccessToken();
+			String baseUrl = "http://zaycev.net/external/track/" + songId + "/download?id=" 
+					+ songId + "&access_token=";
+			String link = baseUrl + getAccessToken();
+			JSONObject response = new JSONObject(handleLink(link));
+			if(response.has("error")) {
+				link = baseUrl + generateAccessToken();
+				response = new JSONObject(handleLink(link));
 			}
+			String downloadUrl = response.getString("url");
+			return downloadUrl;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	private static String getMobileUserAgent() {
-		return "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19";
 	}
 	
 }
