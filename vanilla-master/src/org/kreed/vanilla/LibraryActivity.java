@@ -182,6 +182,8 @@ public class LibraryActivity
 	 * ApplicationInfo with targetSdkVersion set to Gingerbread.
 	 */
 	private ApplicationInfo mFakeInfo;
+	
+	int lastPage = -1;
 
 	//-------------------------------------------------------------------------
 	
@@ -1434,6 +1436,10 @@ public class LibraryActivity
 			Handler handler = mHandler;
 			handler.sendMessage(mHandler.obtainMessage(MSG_SAVE_PAGE, position, 0));
 		}
+		if (lastPage != position && lastPage != -1) {
+			mTextFilter.setText("");
+		}
+		lastPage = position;
 	}
 
 	@Override
