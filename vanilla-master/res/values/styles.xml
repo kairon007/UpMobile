@@ -45,6 +45,8 @@
     <style name="BackActionBar" parent="AppTheme" />
 
     <style name="BackActionBar.White" parent="AppTheme.White" />
+    
+    <style name="BackActionBar.Black" parent="AppTheme.Black" />
 
     <style name="AlertDialogItem">
         <item name="android:textColor">@android:color/primary_text_light</item>

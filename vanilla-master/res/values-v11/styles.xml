@@ -45,6 +45,9 @@ THE SOFTWARE.
 	<style name="BackActionBar.White" parent="AppTheme.White">
 		<item name="android:actionBarStyle">@style/PlaybackActionBar.White</item>
 	</style>
+	<style name="BackActionBar.Black" parent="AppTheme.Black">
+		<item name="android:actionBarStyle">@style/PlaybackActionBar</item>
+	</style>
 	
 	<style name="Library" parent="AppTheme">
 		<item name="android:actionBarStyle">@style/LibraryActionBar</item>

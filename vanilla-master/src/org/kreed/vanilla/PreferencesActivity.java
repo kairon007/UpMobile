@@ -52,7 +52,9 @@ public class PreferencesActivity extends PreferenceActivity {
 	{
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			setTheme(R.style.BackActionBar_White);
-		} else {
+		} else if("AppTheme.Black".equals(Util.getThemeName(this))){ 
+			setTheme(R.style.BackActionBar_Black);
+		}else{
 			setTheme(R.style.BackActionBar);
 		}
 		super.onCreate(savedInstanceState);
