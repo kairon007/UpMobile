@@ -254,6 +254,9 @@ THE SOFTWARE.
 	
 	<string name="fileName_unknown_mp3">unknown</string>
 	
+	<string name="loading_download_url_title">Please Wait...</string>
+	<string name="loading_download_url_message">Loading song details...</string>
+	
 	<string-array name="tracks">
 	    <item>tracks</item>
 	    <item>track</item>
