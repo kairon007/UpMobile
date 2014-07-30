@@ -22,6 +22,15 @@
 
 package org.kreed.vanilla;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.kreed.vanilla.song.Song;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -59,12 +68,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Handles music playback and pretty much all the other work.
@@ -77,6 +80,8 @@ public final class PlaybackService extends Service
 	         , SongTimeline.Callback
 	         , SensorEventListener
 {
+	
+	public static final String BROADCAST_ACTION_UPDATE = "org.kreed.vanilla.broadcast.update";
 	/**
 	 * Name of the state file.
 	 */
@@ -438,6 +443,8 @@ public final class PlaybackService extends Service
 		filter.addAction(Intent.ACTION_SCREEN_ON);
 		registerReceiver(mReceiver, filter);
 
+		//TODO
+		//registerReceiver(br, new IntentFilter(BROADCAST_ACTION_UPDATE));	
 		getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, mObserver);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -561,6 +568,7 @@ public final class PlaybackService extends Service
 		if (mWakeLock != null && mWakeLock.isHeld())
 			mWakeLock.release();
 
+		//unregisterReceiver(br);
 		super.onDestroy();
 	}
 
@@ -1508,14 +1516,20 @@ public final class PlaybackService extends Service
 			list.get(i).onPositionInfoChanged();
 	}
 
-	private final ContentObserver mObserver = new ContentObserver(null) {
+	public final ContentObserver mObserver = new ContentObserver(null) {
 		@Override
-		public void onChange(boolean selfChange)
-		{
+		public void onChange(boolean selfChange) {
 			MediaUtils.onMediaChange();
 			onMediaChange();
 		}
 	};
+	
+//	private BroadcastReceiver br = new BroadcastReceiver() {
+//		@Override
+//		public void onReceive(Context context, Intent intent) {
+//			mObserver.onChange(true);
+//		}
+//	};
 
 	/**
 	 * Return the PlaybackService instance, creating one if needed.

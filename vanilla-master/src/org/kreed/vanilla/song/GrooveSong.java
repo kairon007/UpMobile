@@ -1,4 +1,6 @@
-package org.kreed.vanilla.engines;
+package org.kreed.vanilla.song;
+
+import org.kreed.vanilla.engines.SearchGrooveshark;
 
 public class GrooveSong extends RemoteSong implements SongWithCover{
 

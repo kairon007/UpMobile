@@ -1,4 +1,4 @@
-package org.kreed.vanilla.engines;
+package org.kreed.vanilla.song;
 
 public interface SongWithCover {
 

@@ -24,7 +24,7 @@ package org.kreed.vanilla;
 
 import java.util.Arrays;
 
-import org.kreed.vanilla.app.VanillaAp;
+import org.kreed.vanilla.app.VanillaApp;
 
 
 
@@ -319,7 +319,7 @@ public class LibraryPagerAdapter
 			LayoutInflater inflater = activity.getLayoutInflater();
 			LibraryAdapter adapter;
 			TextView header = null;
-			Typeface font = VanillaAp.FONT_LIGHT;
+			Typeface font = VanillaApp.FONT_LIGHT;
 
 			switch (type) {
 			case MediaUtils.TYPE_ARTIST: 
@@ -510,15 +510,15 @@ public class LibraryPagerAdapter
 		
 		if (mArtistHeader != null) {	
 			mArtistHeader.setText(text);
-			mArtistHeader.setTypeface(VanillaAp.FONT_LIGHT);
+			mArtistHeader.setTypeface(VanillaApp.FONT_LIGHT);
 		} 
 		if (mAlbumHeader != null) {
 			mAlbumHeader.setText(text);
-			mAlbumHeader.setTypeface(VanillaAp.FONT_LIGHT);
+			mAlbumHeader.setTypeface(VanillaApp.FONT_LIGHT);
 		}
 		if (mSongHeader != null) {
 			mSongHeader.setText(text);
-			mSongHeader.setTypeface(VanillaAp.FONT_LIGHT);
+			mSongHeader.setTypeface(VanillaApp.FONT_LIGHT);
 
 		}
 		mHeaderText = text;

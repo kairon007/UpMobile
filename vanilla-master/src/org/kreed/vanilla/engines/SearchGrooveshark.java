@@ -1,6 +1,7 @@
 package org.kreed.vanilla.engines;
 
-import android.content.Context;
+import org.kreed.vanilla.song.GrooveSong;
+
 import android.util.Log;
 
 import com.scilor.grooveshark.API.Base.GroovesharkClient;
@@ -17,8 +18,8 @@ public class SearchGrooveshark extends BaseSearchTask {
 
 	private static GroovesharkClient client = null;
 
-	public SearchGrooveshark(FinishedParsingSongs dInterface, String songName, Context context) {
-		super(dInterface, songName, context);
+	public SearchGrooveshark(FinishedParsingSongs dInterface, String songName) {
+		super(dInterface, songName);
 	}
 
 	@Override

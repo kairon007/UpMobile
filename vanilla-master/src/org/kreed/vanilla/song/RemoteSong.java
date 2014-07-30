@@ -1,6 +1,5 @@
-package org.kreed.vanilla.engines;
+package org.kreed.vanilla.song;
 
-import org.kreed.vanilla.Song;
 
 public class RemoteSong extends Song {
 

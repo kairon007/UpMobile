@@ -28,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.kreed.vanilla.song.Song;
+
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;

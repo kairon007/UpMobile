@@ -15,14 +15,17 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.engines.BaseSearchTask;
+import org.kreed.vanilla.engines.Engine;
 import org.kreed.vanilla.engines.FinishedParsingSongs;
-import org.kreed.vanilla.engines.GrooveSong;
-import org.kreed.vanilla.engines.RemoteSong;
-import org.kreed.vanilla.engines.SongWithCover;
+import org.kreed.vanilla.engines.SearchWithPages;
 import org.kreed.vanilla.engines.cover.CoverLoaderTask;
 import org.kreed.vanilla.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask.Size;
+import org.kreed.vanilla.song.GrooveSong;
+import org.kreed.vanilla.song.RemoteSong;
+import org.kreed.vanilla.song.Song;
+import org.kreed.vanilla.song.SongWithCover;
 import org.kreed.vanilla.ui.AdapterHelper;
 import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
 
@@ -33,12 +36,9 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -79,8 +79,8 @@ public class SearchTab {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
 	private static SearchTab instance;
-	private static List<Class<? extends BaseSearchTask>> engines;
-	private Iterator<Class<? extends BaseSearchTask>> taskIterator;
+	private static List<Engine> engines;
+	private Iterator<Engine> taskIterator;
 	private String currentName = null;
 	private SongSearchAdapter resultAdapter;
 	private TextView message;
@@ -102,11 +102,16 @@ public class SearchTab {
 		if (null == instance) {
 			instance = new SearchTab(inflater.inflate(R.layout.search, null), inflater, activity);
 			if (null == engines) {
-				String[] engineNames = Settings.SEARCH_ENGINES;
-				engines = new ArrayList<Class<? extends BaseSearchTask>>(engineNames.length);
-				for (int i = 0; i < engineNames.length; i++) {
+				String[][] engineArray = Settings.SEARCH_ENGINES;
+				engines = new ArrayList<Engine>(engineArray.length);
+				for (int i=0; i<engineArray.length; i++) {
 					try {
-						engines.add((Class<? extends BaseSearchTask>) Class.forName("org.kreed.vanilla.engines." + engineNames[i]));
+						Class<? extends BaseSearchTask> engineClass = 
+								(Class<? extends BaseSearchTask>) Class.forName("org.kreed.vanilla.engines." + engineArray[i][0]);
+						int maxPages = Integer.parseInt(engineArray[i][1]);
+						for(int page=1; page<=maxPages; page++) {
+							engines.add(new Engine(engineClass, page));
+						}
 					} catch (ClassNotFoundException e) {
 						Log.e("SearchTab", "Unknown engine", e);
 					}
@@ -459,17 +464,19 @@ public class SearchTab {
 			resultAdapter.hideProgress();
 			return;
 		}
-		Class<? extends BaseSearchTask> engineClass = taskIterator.next();
-		BaseSearchTask engine;
 		try {
-			engine = engineClass.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName, activity });
+			Engine engine = taskIterator.next();
+			BaseSearchTask searchTask = engine.getEngineClass()
+					.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName});
+			if (searchTask instanceof SearchWithPages) {
+				int page = engine.getPage();
+				((SearchWithPages) searchTask).setPage(page);
+			}
+			searchTask.execute(NO_PARAMS);
 		} catch (Exception e) {
 			getNextResults();
-			return;
 		}
-		engine.execute(NO_PARAMS);
 	}
-
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args) {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {

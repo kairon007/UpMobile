@@ -4,14 +4,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 
-import android.content.Context;
+import org.kreed.vanilla.song.RemoteSong;
+
 import android.util.Log;
 
 
 
 public class SearchMp3skull extends BaseSearchTask {
-	public SearchMp3skull(FinishedParsingSongs dInterface, String songName, Context context) {
-		super(dInterface, songName, context);
+	public SearchMp3skull(FinishedParsingSongs dInterface, String songName) {
+		super(dInterface, songName);
 	}
 
 	@Override

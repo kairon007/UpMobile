@@ -1,4 +1,5 @@
-package org.kreed.vanilla.engines;
+package org.kreed.vanilla.song;
+
 
 public class SoundCloudV2Song extends RemoteSong implements SongWithCover {
 
