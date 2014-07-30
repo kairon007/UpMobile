@@ -53,7 +53,10 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 			if (fromWhereToGetThePic == null) {
 				return null;
 			} else {
-				httpget = new HttpGet(getTHEdamnURL(fromWhereToGetThePic, size.name()));
+				//TODO
+				String damnUrl = getTHEdamnURL(fromWhereToGetThePic, size.name());
+				if (damnUrl == null) return null;
+				httpget = new HttpGet(damnUrl);
 				response = httpclient.execute(httpget);
 				entity = response.getEntity();
 				BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent());
@@ -130,7 +133,6 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 			}
 		return arrayString3;
 	}
-
 
 	private String getTheLinkToPicture(String[] arrayString4) {
 		// TODO Auto-generated method stub

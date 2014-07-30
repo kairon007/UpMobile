@@ -1468,5 +1468,10 @@ public class LibraryActivity
 		return super.onCreateDialog(id, args);
 	}
 	
-	
+	@Override
+	public void onBackPressed() {
+		Intent showOptions = new Intent(Intent.ACTION_MAIN);
+		showOptions.addCategory(Intent.CATEGORY_HOME);
+		startActivity(showOptions);
+	}
 }
