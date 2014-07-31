@@ -38,4 +38,5 @@ THE SOFTWARE.
 		android:orientation="horizontal">
 		<include layout="@layout/controls" />
 	</LinearLayout>
+	<include layout="@layout/banner" />
 </LinearLayout>
