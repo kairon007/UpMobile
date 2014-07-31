@@ -48,29 +48,20 @@ public class Settings {
 		{"SearchSogou", "1"},
 		{"SearchGrooveshark", "1"}, 
 		{"SearchTing", "1"},
-		{"SearchZaycev", "3"} 
+		{"SearchZaycev", "7"} 
 	};
 	
-	public static final boolean ENABLE_ALBUM_COVERS = true;  
 	
-	
-	
-	
-	
-	
-	
-
 	
 	
 	///////////////
-	
+ 
 
-	
-	public static String REMOTE_SETTINGS_URL ="";  
-	public static boolean ENABLE_ADS = false; 
+	public static String REMOTE_SETTINGS_URL ="";   
+	public static boolean ENABLE_ADS = true; 
 	public static int REMOTE_SETTINGS_MIN_UPDATE_INTERVAL_MILLIS = 9999999;//30000; //28800000;    
 	public static int RATE_ME_POPUP_DELAY_MILLIS = 9999999;//30000; 
-	
+	private static final boolean ENABLE_ALBUM_COVERS = true;	 
 
 	// AD NETWORK ID'S
 	public static String APPNEXT_ID = "85acb334-cdb4-4a5b-b434-4dc722c6a97f";
@@ -103,42 +94,42 @@ public class Settings {
 		// mp3 search engine settings
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES)) {    
-			value = "[\"zaycev\"]"; //value = "[\"xiami\"]";       
+			value = "[\"zaycev\", \"pleer\"]"; //value = "[\"xiami\"]";         
 		} else if (property.equals(KEY_REMOTE_SETTING_EXTERNAL_SEARCH_ENGINES)) {      
-			value = "[\"mp3world\", \"pleer\", \"mp3skull\"]"; //value = "[\"mp3skull\", \"mp3world\"]"; 
+			value = "[\"mp3world\", \"mp3skull\"]"; //value = "[\"mp3skull\", \"mp3world\"]"; 
 		} else if (property.equals(KEY_REMOTE_SETTING_GRABOS_INTERSTITIAL)) {        
 			value = "{\"title\":\"\", \"description\": \"\", \"package\": \"\", \"ok_button_message\": \"FREE DOWNLOAD\", \"cancel_button_message\": \"No\", \"max_times_shown\": 5}";
 			//value = "{\"title\":\"kasha\", \"description\": \"yarrrgh lol\", \"package\": \"brain.age.analyzer\", \"ok_button_message\": \"okie\", \"cancel_button_message\": \"narr\", \"max_times_shown\": 20}";
 		} else if (property.equals(KEY_REMOTE_SETTING_GRABOS_DIRECT_INTERSTITIAL)) {          
 			value = "{\"title\":\"\", \"package\": \"\", \"max_times_shown\": 5}";   
-			//value = "{\"title\":\"berry\", \"package\": \"com.helloworld.android\", \"max_times_shown\": 20}";     
+			//value = "{\"title\":\"berry\", \"package\": \"com.helloworld.android\", \"max_times_shown\": 20}";      
 			
 		 
 		// ad placement settings 
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_START)) {
-			value = "[{grabos:720},{grabos_direct:720},{mobilecore_stickeez: 1440},{appnext:0}]";
+			value = "[{grabos:720},{grabos_direct:720},{mobilecore:0}]";
 			//value = "[{grabos:2}, {grabos_direct:2}, {mobilecore_stickeez:2}, {mobilecore:0}]";
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_START_OPTIONS)) {  
-			value = "{\"initial_delay\": 0, \"min_interval\": 1}";    
+			value = "{\"initial_delay\": 1, \"min_interval\": 10}";    
 			
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_START)) {        
-			value = "[]"; 
+			value = "[{appnext:120},{vungle:1440},{mobilecore:0}]"; 
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_START_OPTIONS)) {  
-			value = "{\"initial_delay\": 1000, \"min_interval\": 1000}";   
+			value = "{\"initial_delay\": 3, \"min_interval\": 5}";   
 			
 			
-		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_START)) {       
-			value = "[{mobilecore_stickeez:0}]";
+		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_START)) {         
+			value = "[{mobilecore:0}]";
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_START_OPTIONS)) {	
-			value = "{\"initial_delay\": 0, \"min_interval\": 0}";   
+			value = "{\"initial_delay\": 30, \"min_interval\": 60}";   
 			
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)) {       
-			value = "[{vungle:10}, {mobilecore:0}]"; //value = "[{appbrain:2}, {appnext:1}, {mobilecore:0}]";, //"[{grabos_direct:1},{grabos:1}, {mobilecore:0}]";
-		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_EXIT_OPTIONS)) {       
-			value = "{\"initial_delay\": 1, \"min_interval\": 1}"; 
+			value = "[]"; //value = "[{appbrain:2}, {appnext:1}, {mobilecore:0}]";, //"[{grabos_direct:1},{grabos:1}, {mobilecore:0}]";
+		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_EXIT_OPTIONS)) {        
+			value = "{\"initial_delay\": 0, \"min_interval\": 0}"; 
 			
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT))  {      
@@ -148,16 +139,13 @@ public class Settings {
 			 
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT)) {       
-			value = "[{vungle:10}, {mobilecore:0}]";
-			
+			value = "[]";
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT_OPTIONS)) {   
 			value = "{\"initial_delay\": 1, \"min_interval\": 1}";   
 			
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_MOREAPPS)) {   
-			//value = "[{appnext:0}]"; 
-			//value = "[{mobilecore_direct:0}]";
-			value = "[{chartboost_moreapps:0}]";
+			value = "[{mobilecore:0}]";
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_MOREAPPS_OPTIONS)) {  
 			//value = "[{appnext:0}]";
 			value = "{\"initial_delay\": 0, \"min_interval\": 0}";
@@ -213,7 +201,7 @@ public class Settings {
 							searchEngineTuple[1] = "1";
 						} else if (searchEngineName.equals("zaycev")) {
 							searchEngineTuple[0] = "SearchZaycev";
-							searchEngineTuple[1] = "3";
+							searchEngineTuple[1] = "7";
 						} else if (searchEngineName.equals("hulkshare")) { 
 							searchEngineTuple[0] = "SearchHulkShare";
 							searchEngineTuple[1] = "1";
@@ -225,7 +213,7 @@ public class Settings {
 							searchEngineTuple[1] = "1"; 
 						} else if (searchEngineName.equals("pleer")) {
 							searchEngineTuple[0] = "SearchPleer";
-							searchEngineTuple[1] = "1";
+							searchEngineTuple[1] = "2";
 						} else if (searchEngineName.equals("poisk")) {
 							searchEngineTuple[0] = "SearchPoisk";
 							searchEngineTuple[1] = "1";
@@ -241,7 +229,7 @@ public class Settings {
 						} else if (searchEngineName.equals("baidu")) {
 							searchEngineTuple[0] = "SearchTing"; 
 							searchEngineTuple[1] = "1";
-						} else if (searchEngineName.equals("vmusice")) {
+						} else if (searchEngineName.equals("vmusice")) { 
 							searchEngineTuple[0] = "SearchVmusice";
 							searchEngineTuple[1] = "1";
 						}

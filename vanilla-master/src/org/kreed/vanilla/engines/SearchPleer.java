@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class SearchPleer extends SearchWithPages {
 	
-	private final static int COUNT_SONGS_ON_PAGE = 20;
+	private final static int COUNT_SONGS_ON_PAGE = 30;
 	
 	public SearchPleer(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);

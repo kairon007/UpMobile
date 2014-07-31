@@ -75,7 +75,7 @@ public class Advertisement {
 	
 	
 	// special mopub objects for exit interstitials. only needed for exits
-	public static MoPubInterstitial mopubExitInterstitial;  
+	public static MoPubInterstitial mopubExitInterstitial;   
 	public static MoPubInterstitial mopubSearchExitInterstitial; 
 	public static MoPubInterstitial mopubDownloadsExitInterstitial;
 	
@@ -159,18 +159,18 @@ public class Advertisement {
 	
 	
 	public static void start(Activity activity) {
-		//Log.e("nulldroid", "start()");
+		
 		if (Settings.ENABLE_ADS) {  
-			
+		
 			
 			if (activity != null) {	
 	
+				
 				//initializeAppbrain(activity);
 				initializeMobileCore(activity, AD_UNITS.ALL_UNITS);
 				initializeVungle(activity);
 				initializeAirpush(activity);
-				initializeStartapp(activity);
-				
+				//initializeStartapp(activity);
 				//initializeApplovin(activity);
 				 
 	
@@ -452,7 +452,7 @@ public class Advertisement {
 	}
 	
 	public static void exit(Activity activity) {
-		//Log.e("nulldroid", "exit");
+		
 		if (Settings.ENABLE_ADS) {
 			if (activity != null) {	
 				showExitInterstitial(activity);
@@ -484,7 +484,7 @@ public class Advertisement {
 	
 	
 	public static void searchStart(Activity activity) {
-		//Log.e("nulldroid", "searchStart");
+		
 		
 		if (Settings.ENABLE_ADS) {
 			try {
@@ -502,7 +502,7 @@ public class Advertisement {
 	}
 	
 	public static void searchExit(Activity activity) {
-		//Log.e("nulldroid", "searchExit");
+		
 		
 		if (Settings.ENABLE_ADS) {
 			if (activity != null) {	
@@ -518,7 +518,7 @@ public class Advertisement {
 	}
 	
 	public static void downloadsStart(Activity activity) {
-		//Log.e("nulldroid", "downlaodsStart");
+		
 		 
 		if (Settings.ENABLE_ADS) {
 			try {
@@ -552,7 +552,7 @@ public class Advertisement {
 	
 	
 	public static void downloadsExit(Activity activity) {
-		//Log.e("nulldroid", "downlaodsExit");
+		
 		
 		if (Settings.ENABLE_ADS) {
 			if (activity != null) {	
@@ -858,8 +858,6 @@ public class Advertisement {
 	
 	public static void showInterstitial(Activity activity, String adPositionKey) {
 		
-		 
-		
 		
 		if (activity != null) {
 			if (isOnline(activity)) {
@@ -890,8 +888,6 @@ public class Advertisement {
 				String adsString = Settings.getRemoteSetting(activity, adPositionKey, null);
 				//"show interstitial: " + adsKey + " /// " + adsString);
 				
-				//Log.e("nulldroid", "show interstitial: " + adsString);
-				 
 				
 				
 				if (adsString == null || adsString.equals("")) {
@@ -916,7 +912,7 @@ public class Advertisement {
 						for (int i = 0; i < jsonArray.length(); i++) {
 							JSONObject adNetwork = jsonArray.getJSONObject(i);
 							String adNetworkName = (String) adNetwork.keys().next();
-							   
+							 
 							
 							
 							// make sure ad network is not null
@@ -934,14 +930,21 @@ public class Advertisement {
 									boolean isShowInterstitialRun = false;									
 									
 									// find the appropriate ad network showInterstitial function and run it
-									if (adNetworkName.equals("startapp")) {
+									
+									if (adNetworkName.equals("mobilecore")) {
+										
+										mobilecoreShowInterstitial(activity, adPositionKey); 
+										isShowInterstitialRun = true;
+										
+										/*
+									} else if (adNetworkName.equals("startapp")) { 
 										
 										startappShowInterstitial(activity, adPositionKey); 
 										isShowInterstitialRun = true;
-								
-									} else if (adNetworkName.equals("mobilecore")) {
+								*/
+									}else if (adNetworkName.equals("airpush")) {
 										
-										mobilecoreShowInterstitial(activity, adPositionKey); 
+										airpushShowInterstitial(activity, adPositionKey); 
 										isShowInterstitialRun = true;
 								
 									} else if (adNetworkName.equals("vungle")) {
@@ -1396,6 +1399,7 @@ public class Advertisement {
 	public static void initializeStartapp(Activity activity) {
 		try {  
 			StartAppSDK.init(activity,Settings.STARTAPP_DEV_ID, Settings.STARTAPP_APP_ID, false);
+			
 		} catch (Exception e) {
 			
 		}
@@ -1845,8 +1849,7 @@ public class Advertisement {
 	
 	public static void vungleShowInterstitial(final Activity activity, String adPositionKey) {
 		
-		
-		
+		 
 		
 		VunglePub.setEventListener(new VunglePub.EventListener() {
 		    /**
@@ -1875,6 +1878,7 @@ public class Advertisement {
 		     */
 		    @Override
 		    public void onVungleView(double watchedSeconds, double totalAdSeconds) {
+		    	
 		        final double watchedPercent = watchedSeconds / totalAdSeconds;
 		        if (watchedPercent >= 0.8) { 
 		        	
@@ -1887,7 +1891,7 @@ public class Advertisement {
 		try {
 
 			boolean isAv = VunglePub.isVideoAvailable(true);
-			  
+			
 			 
 			wasVungleAdPlayed = VunglePub.displayAdvert();    
 			 
@@ -1907,14 +1911,18 @@ public class Advertisement {
 	
 	
 	
-	public static void startappShowInterstitial(final Activity activity, String adPositionKey) {
+	public static void startappShowInterstitial(final Activity activity, String adPositionKey) { 
+		
 		try {
 			if (adPositionKey != null && (adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
 				// back
+				
 				StartAppAd startAppAd = new StartAppAd(activity);
-				startAppAd.onBackPressed(); // load the next ad
+				startAppAd.onBackPressed(); // load the next ad  
 				
 			} else {
+				
+				
 				StartAppAd startAppAd = new StartAppAd(activity);
 				startAppAd.showAd(); // show the ad
 				startAppAd.loadAd(); // load the next ad
@@ -1925,8 +1933,32 @@ public class Advertisement {
 	}
 		
 	
+	public static void airpushShowInterstitial(final Activity activity, String adPositionKey) {
+		
+
+		
+		
+		try {
+
+			try {  
+				
+			     MA ma =new MA(activity, null, false); 
+			    ma.callAppWall();    
+			} catch (Exception e) {
+				
+			}
+			
+		} catch(Exception e) {
+			
+		}
+	}
+	
 	
 	public static void mobilecoreShowInterstitial(final Activity activity, String adPositionKey) {
+		
+
+		
+		
 		try {
 			if (adPositionKey != null && (adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
 				initializeMobileCore(activity, AD_UNITS.OFFERWALL);
@@ -2001,14 +2033,14 @@ public class Advertisement {
 			
 			
 
-			//Log.e("nulldroid", "show appnext");
+			
 			
 			Appnext appnext = new Appnext(activity);
 			 
 			appnext.setNoAdsInterface(new NoAdsInterface() {  
 				 @Override 
 				 public void noAds() {
-					 //Log.e("nulldroid", "show appnext 2");
+					 
 					 showDefaultInterstitial(activity, adPositionKey);
 				 } 
 			});

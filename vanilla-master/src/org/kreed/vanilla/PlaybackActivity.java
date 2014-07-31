@@ -96,33 +96,15 @@ public abstract class PlaybackActivity extends Activity
 		thread.start();
 		mLooper = thread.getLooper();
 		mHandler = new Handler(mLooper, this);
-		
-		
-		
-		try {
-			if (Advertisement.isOnline(this)) {
-				Advertisement.downloadsStart(this);
-			}
-		} catch(Exception e) {
-			
-		}
-		
+
 	}
 
-	@Override
-	public void onBackPressed() {
-		if (Advertisement.isOnline(this)) {
-			Advertisement.downloadsExit(this);	
-		}  else {
-			finish();
-		}
-	}
 	
 	@Override
 	public void onDestroy()
 	{
-		PlaybackService.removeActivity(this);
-		mLooper.quit();
+		PlaybackService.removeActivity(this); 
+		mLooper.quit(); 
 		super.onDestroy();
 	}
 

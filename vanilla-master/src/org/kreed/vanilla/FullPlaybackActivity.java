@@ -231,8 +231,40 @@ public class FullPlaybackActivity extends PlaybackActivity
 		setControlsVisible(settings.getBoolean(PrefKeys.VISIBLE_CONTROLS, true));
 		setExtraInfoVisible(settings.getBoolean(PrefKeys.VISIBLE_EXTRA_INFO, false));
 		setDuration(0);
+		
+		
+
+		
+		try {
+			if (Advertisement.isOnline(this)) {
+				Advertisement.downloadsStart(this);
+			}
+		} catch(Exception e) {
+			
+		}
+		
+		
+		
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.mopubShowBanner(this); 
+			}
+		} catch (Exception e) { 
+			 
+		} 
 	}
 
+
+	@Override
+	public void onBackPressed() {
+		if (Advertisement.isOnline(this)) {
+			Advertisement.downloadsExit(this);	
+		}  else {
+			finish();
+		}
+	}
+	
 	@Override
 	public void onStart() {
 		super.onStart();

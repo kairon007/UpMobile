@@ -51,7 +51,7 @@ THE SOFTWARE.
 	<string name="_year">year</string>
 	
 	<!-- PreferencesActivity -->
-	<string name="rate_app">Rate app 5 stars</string>
+	<string name="rate_app">Rate app 5 stars if you like our app. Your support helps us develop improve this app.</string>
 
 	<!-- New Playlist Dialog -->
 	<string name="choose_playlist_name">Choose Playlist Name</string>

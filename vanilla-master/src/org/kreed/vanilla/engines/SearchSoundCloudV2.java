@@ -10,8 +10,8 @@ import de.voidplus.soundcloud.Track;
 
 public class SearchSoundCloudV2 extends BaseSearchTask {
 	
-	private static final String APP_CLIENT_ID = "f66e127e703b3896443f7f5f0fc49075";
-	private static final String APP_CLIENT_SECRET = "112295d92bd30c61374d9fbf61dc9f6d";
+	private static final String APP_CLIENT_ID = "b45b1aa10f1ac2941910a7f0d10f8e28";
+	private static final String APP_CLIENT_SECRET = " "; 
 	
 	public SearchSoundCloudV2(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
