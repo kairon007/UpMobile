@@ -168,7 +168,9 @@ public class Song implements Comparable<Song> {
 	{
 		id = cursor.getLong(0);
 		path = cursor.getString(1);
+		String zaycevTag = "(zaycev.net)";
 		title = cursor.getString(2);
+		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase())) title = title.replace(zaycevTag, "");
 		album = cursor.getString(3);
 		artist = cursor.getString(4);
 		albumId = cursor.getLong(5);
