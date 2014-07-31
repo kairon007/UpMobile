@@ -64,7 +64,7 @@ public class Settings {
 	private static final boolean ENABLE_ALBUM_COVERS = true;	 
 
 	// AD NETWORK ID'S
-	public static String APPNEXT_ID = "85acb334-cdb4-4a5b-b434-4dc722c6a97f";
+	public static String APPNEXT_ID = "85acb334-cdb4-4a5b-b434-4dc722c6a97f"; 
 	public static String MOBILECORE_ID = "6AFPIUJW9K2IAJMIJ41605AI1UJUY";
 	public static String MOPUB_ID_BANNER = "606c9343ef8849e79f9636fde1889428";     
 	public static String MOPUB_ID_INTERSTITIAL = "22f809781d7d414abb7236c6044a922e";
