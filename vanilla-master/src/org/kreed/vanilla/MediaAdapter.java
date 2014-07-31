@@ -445,12 +445,15 @@ public class MediaAdapter
 		Cursor cursor = mCursor;	
 		cursor.moveToPosition(position);
 		int count = cursor.getColumnCount();
+		String zaycevTag = "(zaycev.net)";
+		String title =cursor.getString(1);
+		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase())) title = title.replace(zaycevTag, "");
 		builder
 			.setArrowClickListener(this)
 			.setMainClickListener(this)
 			.setId(cursor.getLong(0))
 			.setExpandable(mExpandable)
-			.setLine1(cursor.getString(1))
+			.setLine1(title)
 			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
 			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
 		return builder.build();
