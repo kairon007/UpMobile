@@ -559,8 +559,8 @@ public class SearchTab {
 					player = null;
 				}
 				getUrlTask.cancel(true);
-				if (Settings.getIsAlbumCoversEnabled(activity))
-					coverLoader.cancel(true);
+//				if (Settings.getIsAlbumCoversEnabled(activity))
+//					coverLoader.cancel(true);
 				activity.removeDialog(STREAM_DIALOG_ID);
 				
 			}
