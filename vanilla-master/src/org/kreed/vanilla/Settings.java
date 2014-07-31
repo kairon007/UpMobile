@@ -47,7 +47,7 @@ public class Settings {
 		{"SearchSoundCloudV2", "1"}, 
 		{"SearchSogou", "1"},
 		{"SearchGrooveshark", "1"}, 
-		{"SearchTing", "1"},
+		{"SearchTing", "1"}, 
 		{"SearchZaycev", "7"} 
 	};
 	
