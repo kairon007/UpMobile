@@ -269,6 +269,14 @@ public class LibraryActivity
 	public void onResume() {
 		super.onResume();
 		Advertisement.onResume(this);
+		
+
+		// refresh search engines
+		try {
+			SearchTab.refreshSearchEngines(this);
+		} catch(Exception e) {
+			
+		}
 	}
 	
 	
@@ -489,7 +497,6 @@ public class LibraryActivity
 		} 
 		
 		
-
 	}
 
 	public void setFilterHint(int type){
@@ -506,6 +513,8 @@ public class LibraryActivity
 		mPagerAdapter.notifyDataSetChanged();
 		loadTabOrder();
 	}
+	
+	
 
 	@Override
 	public void onStart()
@@ -1464,14 +1473,23 @@ public class LibraryActivity
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		if (id == SearchTab.STREAM_DIALOG_ID) {
 			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
-		}
+		} 
 		return super.onCreateDialog(id, args);
 	}
 	
 	@Override
-	public void onBackPressed() {
-		Intent showOptions = new Intent(Intent.ACTION_MAIN);
-		showOptions.addCategory(Intent.CATEGORY_HOME);
-		startActivity(showOptions);
+	public void onBackPressed() { 
+		
+		if (Advertisement.isOnline(this)) {
+			Advertisement.exit(this);	
+		}  else {
+			
+			// call the following instead of finish() or else you will get a force close (BadTokenException bug)  
+			Intent showOptions = new Intent(Intent.ACTION_MAIN);
+			showOptions.addCategory(Intent.CATEGORY_HOME);  
+			startActivity(showOptions);
+			
+		}
+		
 	}
 }

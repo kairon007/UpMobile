@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 
 
@@ -14,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -24,52 +28,48 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 
 public class Settings {
 	
 	
 	
-	
-	public static final String[][] SEARCH_ENGINES = new String[][] { 
-		{"SearchVmusice", "1"},
+	// if you need to access SEARCH_ENGINES, call the public static method GET_SEARCH_ENGINES()  
+	private static final String[][] SEARCH_ENGINES = new String[][] { 
+		{"SearchVmusice", "1"}, 
 		{"SearchPleer", "2"},
 		{"SearchPoisk", "1"}, 
 		{"SearchHulkShare", "1"}, 
 		{"SearchMp3skull", "1"},
 		{"SearchMp3World", "1"}, 
-		{"SearchSoundCloud", "1"}, 
-		{"SearchSoundCloudV2", "1"},
+		{"SearchSoundCloud", "1"},  
+		{"SearchSoundCloudV2", "1"}, 
 		{"SearchSogou", "1"},
 		{"SearchGrooveshark", "1"}, 
-		{"SearchTing", "1"}, 
-		{"SearchZaycev", "3"}
+		{"SearchTing", "1"},
+		{"SearchZaycev", "3"} 
 	};
 	
-	public static final boolean ENABLE_ALBUM_COVERS = true;
+	public static final boolean ENABLE_ALBUM_COVERS = true;  
 	
 	
 	
 	
-	///////////////
-	
-	
-	
-	
-	
-	
-	public static String REMOTE_SETTINGS_URL =  "";
-	public static boolean ENABLE_ADS = false;
-	public static int REMOTE_SETTINGS_MIN_UPDATE_INTERVAL_MILLIS = 28800000;  
-	public static int RATE_ME_POPUP_DELAY_MILLIS = 30000; 
 	
 	
 	
 
 	
 	
+	///////////////
 	
+
 	
+	public static String REMOTE_SETTINGS_URL ="";  
+	public static boolean ENABLE_ADS = false; 
+	public static int REMOTE_SETTINGS_MIN_UPDATE_INTERVAL_MILLIS = 9999999;//30000; //28800000;    
+	public static int RATE_ME_POPUP_DELAY_MILLIS = 9999999;//30000; 
 	
 
 	// AD NETWORK ID'S
@@ -92,14 +92,14 @@ public class Settings {
 	
 	
 	
+	
+	
 
-	public static String getDefaultValueForRemoteSettingIfSet(String property) {
+	public static String getDefaultValueForRemoteSettingIfSet(String property) { 
 		String value = null;
 		// test values
 		if (property.equals(KEY_REMOTE_SETTING_IS_ARTIST_SEARCH_ENABLED)) {  
 			return "true"; 
-			
-			
 		// mp3 search engine settings
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES)) {    
@@ -119,7 +119,7 @@ public class Settings {
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_START)) {
 			value = "[{grabos:720},{grabos_direct:720},{mobilecore_stickeez: 1440},{appnext:0}]";
 			//value = "[{grabos:2}, {grabos_direct:2}, {mobilecore_stickeez:2}, {mobilecore:0}]";
-		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_START_OPTIONS)) { 
+		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_START_OPTIONS)) {  
 			value = "{\"initial_delay\": 0, \"min_interval\": 1}";    
 			
 			
@@ -163,7 +163,7 @@ public class Settings {
 			value = "{\"initial_delay\": 0, \"min_interval\": 0}";
 		
 		
-		} else if (property.equals(KEY_REMOTE_SETTING_RATEME_MIN_MINUTES_BETWEEN_POPUPS)) { 
+		} else if (property.equals(KEY_REMOTE_SETTING_RATEME_MIN_MINUTES_BETWEEN_POPUPS)) {  
 			value = "2160"; // x minutes 	
 		} else if (property.equals(KEY_REMOTE_SETTING_RATEME_MIN_NUMBER_COMPLETED_DOWNLOADS)) {
 			value = "5"; // 1 completed download for now   
@@ -174,6 +174,114 @@ public class Settings {
 	
 	
 	
+	
+	public static boolean getIsRemoteSettingsOn() {
+		return REMOTE_SETTINGS_URL != null && !REMOTE_SETTINGS_URL.equals("");
+	}
+	
+
+	public static boolean getIsAlbumCoversEnabled(Context context) {
+		return !Settings.getIsBlacklisted(context) && ENABLE_ALBUM_COVERS;
+	}	
+
+	// this method tries to return remote search_engines if it exists, otherwise, it returns the default search egnines (SEARCH_ENGINES)
+	public static String[][] GET_SEARCH_ENGINES(Context context) {
+		String[][] ret = SEARCH_ENGINES;
+		
+		ArrayList<String[]> searchEngineTuples = new ArrayList<String[]>();
+		if (Settings.getIsBlacklisted(context)) {
+			
+			String[] searchEngineTuple = {"SearchSoundCloud", "1"};
+			searchEngineTuples.add(searchEngineTuple); 
+			
+		} else if (getIsRemoteSettingsOn()) {
+			
+			
+			// for remote settings
+			
+		
+			// get search engines from remote settings if it exists
+			ArrayList<String> searchEnginesNames = getSearchEngines(context);
+			 
+			
+			for (String searchEngineName : searchEnginesNames) {
+				try {
+					String[] searchEngineTuple = {"0", "0"};
+					if (searchEngineName != null) {
+						if (searchEngineName.equals("grooveshark")) {
+							searchEngineTuple[0] = "SearchGrooveshark";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("zaycev")) {
+							searchEngineTuple[0] = "SearchZaycev";
+							searchEngineTuple[1] = "3";
+						} else if (searchEngineName.equals("hulkshare")) { 
+							searchEngineTuple[0] = "SearchHulkShare";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("mp3skull")) {
+							searchEngineTuple[0] = "SearchMp3skull";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("mp3world")) {
+							searchEngineTuple[0] = "SearchMp3World";
+							searchEngineTuple[1] = "1"; 
+						} else if (searchEngineName.equals("pleer")) {
+							searchEngineTuple[0] = "SearchPleer";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("poisk")) {
+							searchEngineTuple[0] = "SearchPoisk";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("sogou")) {
+							searchEngineTuple[0] = "SearchSogou";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("soundcloud")) {
+							searchEngineTuple[0] = "SearchSoundCloud";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("soundcloudv2")) {
+							searchEngineTuple[0] = "SearchSoundCloudV2";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("baidu")) {
+							searchEngineTuple[0] = "SearchTing"; 
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("vmusice")) {
+							searchEngineTuple[0] = "SearchVmusice";
+							searchEngineTuple[1] = "1";
+						}
+					}
+					// if search engine is valid
+					if (searchEngineTuple[0] != null && searchEngineTuple[1] != null && !searchEngineTuple[0].equals("0") && !searchEngineTuple[1].equals("0")) {
+						searchEngineTuples.add(searchEngineTuple);
+					}
+				} catch(Exception e) {
+					
+				}
+			}
+		}
+		
+		try {
+			if (searchEngineTuples != null && searchEngineTuples.size() > 0) {
+				ret = searchEngineTuples.toArray(new String[searchEngineTuples.size()][2]);
+				
+			}
+		} catch(Exception e) {
+			
+		}
+	
+		return ret;
+	}
+
+
+	
+	
+
+	
+	// paradise / maniac
+	public static ArrayList<String> getSearchEngines(Context context) {
+		return getEngines(context, Settings.KEY_REMOTE_SETTING_SEARCH_ENGINES);
+	}
+	public static ArrayList<String> getExternalSearchEngines(Context context) {
+		return getEngines(context, Settings.KEY_REMOTE_SETTING_EXTERNAL_SEARCH_ENGINES);
+	}
+	
+
 	
 	
 	
@@ -202,6 +310,33 @@ public class Settings {
 		
 	}
 	
+	
+
+
+	
+	
+	public static ArrayList<String> getEngines(Context context, String remoteSetting) {
+		ArrayList<String> searchEngines = new ArrayList<String>();
+		try {
+			String remoteSettingSearchEngines = Settings.getRemoteSetting(context, remoteSetting, null);
+			JSONArray jsonArray = new JSONArray(remoteSettingSearchEngines);
+			for (int i = 0; i < jsonArray.length(); i++) {
+				try {
+					String searchEngine = jsonArray.getString(i);
+					searchEngines.add(searchEngine); 
+				}catch(Exception e) { 
+					
+				}
+			}
+		}catch(Exception e) {
+			
+		}
+		
+		return searchEngines;
+	}
+	
+	
+
 	
 	
 
@@ -365,20 +500,12 @@ public class Settings {
 	 			installTime = currentTime;
 	 			putSharedPrefLong(context, "install_time", currentTime);
 	 		}
-	 		
-	 		
-	 		
-	 		
-	 		
 			
 	 		if (isOnline(context)) {
 	 			
 	 			if (currentTime - lastUpdateTime >= minUpdateIntervalMillis) {
 	 				
 	 				
-	 				
-	 				
-					
 					if (serverUrl != null) {
 						
 						// create a new HttpClient
@@ -386,21 +513,22 @@ public class Settings {
 						HttpParams my_httpParams = new BasicHttpParams();
 						HttpConnectionParams.setConnectionTimeout(my_httpParams, connectionTimeoutMillis);
 						HttpConnectionParams.setSoTimeout(my_httpParams, socketTimeoutMillis);
-						DefaultHttpClient httpclient = new DefaultHttpClient(my_httpParams); 
+						DefaultHttpClient httpclient = new DefaultHttpClient(my_httpParams);  
 						
-						HttpGet httpget = new HttpGet(serverUrl); 
+						HttpGet httpget = new HttpGet(serverUrl);
+						
 						try { 
+						
 							HttpResponse response = httpclient.execute(httpget); 
 			
-							
 							// if error (eg. 404), throw error
 							int statusCode = response.getStatusLine().getStatusCode();
+
 							if (statusCode >= 300) {
 								
 								
 								
 							} else {
-								
 								
 								// we consider the request a success if we get to this point, so we will save it
 								putSharedPrefLong(context, "last_update_settings_time", currentTime);
@@ -433,12 +561,12 @@ public class Settings {
 										
 										JSONObject jObject = new JSONObject(ret);
 									    Iterator<?> keys = jObject.keys();
-		
+									    
 									    // store everything into getSharedPRefString
 								        while( keys.hasNext() ){
 								        	try {
-									            String key = (String)keys.next();
-									             String value = jObject.getString(key); 
+									            String key = (String)keys.next(); 
+									             String value = jObject.getString(key);
 									             
 									             putSharedPrefString(context, key, value); 
 								        	} catch(Exception e) {
@@ -488,9 +616,9 @@ public class Settings {
  
 	public static boolean getIsBlacklisted(Context ctx) {      
 		
+		
 		return getIsBlacklistedIP(ctx) || getIsBlacklistedLocation(ctx);     
-		  
-		//return true;  
+		   
 	}
 	
 	

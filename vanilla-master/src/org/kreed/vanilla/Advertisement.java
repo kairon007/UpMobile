@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-import org.kreed.vanilla.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -161,8 +159,8 @@ public class Advertisement {
 	
 	
 	public static void start(Activity activity) {
-		
-		if (Settings.ENABLE_ADS) { 
+		//Log.e("nulldroid", "start()");
+		if (Settings.ENABLE_ADS) {  
 			
 			
 			if (activity != null) {	
@@ -196,7 +194,7 @@ public class Advertisement {
 							if (!didShowPopup) showStartInterstitial(activity);
 							
 						} else {
-		
+							
 							// only run showStartINterstitial on subsequent runs    
 							showStartInterstitial(activity); 
 						}
@@ -454,51 +452,87 @@ public class Advertisement {
 	}
 	
 	public static void exit(Activity activity) {
-		if (activity != null) {	
-			showExitInterstitial(activity);
+		//Log.e("nulldroid", "exit");
+		if (Settings.ENABLE_ADS) {
+			if (activity != null) {	
+				showExitInterstitial(activity);
+			}
+		} else {
+			try {
+				//activity.finish();
+				
+
+				// call the following instead of finish() or else you will get a force close (BadTokenException bug)  
+				Intent showOptions = new Intent(Intent.ACTION_MAIN);
+				showOptions.addCategory(Intent.CATEGORY_HOME);  
+				activity.startActivity(showOptions);
+				
+			} catch(Exception e) {
+				
+			}
 		}
 	}
 	
 	public static void moreAppsStart(Activity activity) {
-		if (activity != null) {	
-			showMoreAppsInterstitial(activity); 
+		if (Settings.ENABLE_ADS) {
+			if (activity != null) {	 
+				showMoreAppsInterstitial(activity);  
+			}
 		}
 	}
 	
 	
 	
 	public static void searchStart(Activity activity) {
-		try {
-			if (activity != null) {	
-				showSearchStartInterstitial(activity);
-			
+		//Log.e("nulldroid", "searchStart");
+		
+		if (Settings.ENABLE_ADS) {
+			try {
+				if (activity != null) {	
+					showSearchStartInterstitial(activity);
 				
-				// if we should show  exit ad for this activity, then check if the next ad is a mopub one. if it's mopub, we will preload 
-				preloadExitAd(activity, Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT);
-			}			
-		} catch(Exception e) {
-			
+					
+					// if we should show  exit ad for this activity, then check if the next ad is a mopub one. if it's mopub, we will preload 
+					preloadExitAd(activity, Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT);
+				}			
+			} catch(Exception e) {
+				
+			}
 		}
 	}
 	
 	public static void searchExit(Activity activity) {
-		if (activity != null) {	
-			showSearchExitInterstitial(activity);
+		//Log.e("nulldroid", "searchExit");
+		
+		if (Settings.ENABLE_ADS) {
+			if (activity != null) {	
+				showSearchExitInterstitial(activity);
+			}
+		} else {
+			try {
+				activity.finish();
+			} catch(Exception e) {
+				
+			}
 		}
 	}
 	
 	public static void downloadsStart(Activity activity) {
-		
-		try {
-			if (activity != null) {	
-				showDownloadsStartInterstitial(activity);
-			
+		//Log.e("nulldroid", "downlaodsStart");
+		 
+		if (Settings.ENABLE_ADS) {
+			try {
+				if (activity != null) {	
+					showDownloadsStartInterstitial(activity);
 				
-				// if we should show  exit ad for this activity, then check if the next ad is a mopub one. if it's mopub, we will preload
-				preloadExitAd(activity, Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT);
-			}			
-		} catch(Exception e) {
+					
+					// if we should show  exit ad for this activity, then check if the next ad is a mopub one. if it's mopub, we will preload
+					preloadExitAd(activity, Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT);
+				}			
+			} catch(Exception e) {
 			
+			}
+				
 		}
 	}
 	
@@ -509,7 +543,7 @@ public class Advertisement {
 			if (nextAdNetwork != null) {
 				if (nextAdNetwork.equals("mopub")) { 
 					mopubPreloadExitInterstitial(activity, adPositionKey);
-				} else if (nextAdNetwork.equals("mopub_landscape")) {
+				} else if (nextAdNetwork.equals("mopub_landscape")) { 
 					mopubPreloadExitInterstitial(activity, adPositionKey, true);
 				}
 			} 
@@ -518,10 +552,19 @@ public class Advertisement {
 	
 	
 	public static void downloadsExit(Activity activity) {
+		//Log.e("nulldroid", "downlaodsExit");
 		
-		if (activity != null) {	
-			
-			showDownloadsExitInterstitial(activity);
+		if (Settings.ENABLE_ADS) {
+			if (activity != null) {	
+				
+				showDownloadsExitInterstitial(activity);
+			}
+		} else {
+			try {
+				activity.finish(); 
+			} catch(Exception e) { 
+				
+			}
 		}
 	}
 	
@@ -587,6 +630,7 @@ public class Advertisement {
 	
 	
 	public static boolean isXiamiEnabled(Context context) {
+		/*
 		 ArrayList<String> searchEngines = getSearchEngines(context);
 		 for (String searchEngine : searchEngines) {
 			 if (searchEngine.toUpperCase().equals("XIAMI")) return true;
@@ -596,40 +640,9 @@ public class Advertisement {
 		 for (String externalSearchEngine : externalSearchEngines) {
 			 if (externalSearchEngine.toUpperCase().equals("XIAMI")) return true;
 		 }
-		 
+		 */
 		 return false;
 	}
-	
-	
-	
-	public static ArrayList<String> getSearchEngines(Context context) {
-		return getEngines(context, Settings.KEY_REMOTE_SETTING_SEARCH_ENGINES);
-	}
-	public static ArrayList<String> getExternalSearchEngines(Context context) {
-		return getEngines(context, Settings.KEY_REMOTE_SETTING_EXTERNAL_SEARCH_ENGINES);
-	}
-	
-	
-	public static ArrayList<String> getEngines(Context context, String remoteSetting) {
-		ArrayList<String> searchEngines = new ArrayList<String>();
-		try {
-			String remoteSettingSearchEngines = Settings.getRemoteSetting(context, remoteSetting, null);
-			JSONArray jsonArray = new JSONArray(remoteSettingSearchEngines);
-			for (int i = 0; i < jsonArray.length(); i++) {
-				try {
-					String searchEngine = jsonArray.getString(i);
-					searchEngines.add(searchEngine); 
-				}catch(Exception e) { 
-					
-				}
-			}
-		}catch(Exception e) {
-			
-		}
-		
-		return searchEngines;
-	}
-	
 	
 	
 
@@ -744,7 +757,16 @@ public class Advertisement {
 		if (shouldShowInterstitial(activity, Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)) {
 			showInterstitial(activity, Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT);
 		} else if (activity != null) { // needed for *exit interstitials 
-			activity.finish();
+			//activity.finish();
+			
+			// call the following instead of finish() or else you will get a force close (BadTokenException bug)
+			try {
+				Intent showOptions = new Intent(Intent.ACTION_MAIN);
+				showOptions.addCategory(Intent.CATEGORY_HOME);  
+				activity.startActivity(showOptions);
+			} catch(Exception e) {
+				
+			}
 		}
 	}
 	
@@ -868,7 +890,7 @@ public class Advertisement {
 				String adsString = Settings.getRemoteSetting(activity, adPositionKey, null);
 				//"show interstitial: " + adsKey + " /// " + adsString);
 				
-				
+				//Log.e("nulldroid", "show interstitial: " + adsString);
 				 
 				
 				
@@ -899,6 +921,7 @@ public class Advertisement {
 							
 							// make sure ad network is not null
 							if (adNetworkName != null) {
+								
 								
 								// do time interval check (only run this ad network if it hasn't been run in past X m
 								String adNetworkLastRunTimeKey = adNetworkName + adPositionKey + "_time";
@@ -1073,6 +1096,7 @@ public class Advertisement {
 									} else {
 
 									}
+									
 									
 									
 									
@@ -1461,16 +1485,16 @@ public class Advertisement {
 
 	public static void mopubShowBanner(Activity activity) {
 		try {
-			Log.e("nulldroid", "mopub show banner");
+			
 			MoPubView moPubView = (MoPubView) activity.findViewById(R.id.banner_view);
 			
-			Log.e("nulldroid", "mopub show banner: " + moPubView);
+			
 			
 			moPubView.setAdUnitId(Settings.MOPUB_ID_BANNER); // Enter your Ad Unit ID from
 													// www.mopub.com
 			moPubView.loadAd();
 			
-			Log.e("nulldroid", "done"); 
+			 
 		} catch(Exception e) {
 			
 		}
@@ -1974,11 +1998,17 @@ public class Advertisement {
 	
 	public static void appnextShowInterstitial(final Activity activity, final String adPositionKey) { 
 		try { 
+			
+			
+
+			//Log.e("nulldroid", "show appnext");
+			
 			Appnext appnext = new Appnext(activity);
 			 
 			appnext.setNoAdsInterface(new NoAdsInterface() {  
 				 @Override 
-				 public void noAds() { 
+				 public void noAds() {
+					 //Log.e("nulldroid", "show appnext 2");
 					 showDefaultInterstitial(activity, adPositionKey);
 				 } 
 			});
@@ -1996,7 +2026,7 @@ public class Advertisement {
 					 } 
 				 });
 				appnext.setAppID(Settings.APPNEXT_ID);
-				appnext.showBubble();
+				appnext.showBubble(); 
 				
 			} else {
 				appnext.setAppID(Settings.APPNEXT_ID);

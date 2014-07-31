@@ -102,25 +102,29 @@ public class SearchTab {
 		if (null == instance) {
 			instance = new SearchTab(inflater.inflate(R.layout.search, null), inflater, activity);
 			if (null == engines) {
-				String[][] engineArray = Settings.SEARCH_ENGINES;
-				engines = new ArrayList<Engine>(engineArray.length);
-				for (int i=0; i<engineArray.length; i++) {
-					try {
-						Class<? extends BaseSearchTask> engineClass = 
-								(Class<? extends BaseSearchTask>) Class.forName("org.kreed.vanilla.engines." + engineArray[i][0]);
-						int maxPages = Integer.parseInt(engineArray[i][1]);
-						for(int page=1; page<=maxPages; page++) {
-							engines.add(new Engine(engineClass, page));
-						}
-					} catch (ClassNotFoundException e) {
-						Log.e("SearchTab", "Unknown engine", e);
-					}
-				}
+				refreshSearchEngines(activity);
 			}
 		} else {
 			instance.activity = activity;
 		}
 		return instance;
+	}
+	
+	public static void refreshSearchEngines(Context context) { 
+		String[][] engineArray = Settings.GET_SEARCH_ENGINES(context);
+		engines = new ArrayList<Engine>(engineArray.length);
+		for (int i=0; i<engineArray.length; i++) {
+			try {
+				Class<? extends BaseSearchTask> engineClass = 
+						(Class<? extends BaseSearchTask>) Class.forName("org.kreed.vanilla.engines." + engineArray[i][0]);
+				int maxPages = Integer.parseInt(engineArray[i][1]);
+				for(int page=1; page<=maxPages; page++) {
+					engines.add(new Engine(engineClass, page));
+				}
+			} catch (ClassNotFoundException e) {
+				Log.e("SearchTab", "Unknown engine", e);
+			}
+		}
 	}
 
 	public static String getDownloadPath(Context context) {
@@ -135,8 +139,8 @@ public class SearchTab {
 				edit.commit();
 			} else
 				return sharedDownloadPath;
-		}
-		return downloadPath;
+		} 
+		return downloadPath; 
 	}
 
 	public static String getSimpleDownloadPath(String absPath) {
@@ -435,6 +439,7 @@ public class SearchTab {
 	}
 
 	private void trySearch() {
+		
 		InputMethodManager imm = (InputMethodManager) searchField.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
 		searchString = searchField.getText().toString();
@@ -447,6 +452,16 @@ public class SearchTab {
 		} else {
 			search(searchString);
 		}
+		
+		
+		try {
+			if (Advertisement.isOnline(activity)) {
+				Advertisement.searchStart(activity);
+			}
+		} catch(Exception e) {
+			
+		}
+		
 	}
 
 	public void search(String songName) {
@@ -515,7 +530,7 @@ public class SearchTab {
 				}
 			};
 			getUrlTask.execute(NO_PARAMS);
-			if (Settings.ENABLE_ALBUM_COVERS) {
+			if (Settings.getIsAlbumCoversEnabled(activity)) {
 				if (song instanceof SongWithCover) {
 					String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
 					coverLoader = new CoverLoaderTask(largeCoverUrl);
@@ -544,19 +559,21 @@ public class SearchTab {
 					player = null;
 				}
 				getUrlTask.cancel(true);
-				if (Settings.ENABLE_ALBUM_COVERS)
+				if (Settings.getIsAlbumCoversEnabled(activity))
 					coverLoader.cancel(true);
 				activity.removeDialog(STREAM_DIALOG_ID);
+				
 			}
 		};
 		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);
+				
 				dialogDismisser.run();
 			}
 		};
-		if (Settings.ENABLE_ALBUM_COVERS)
+		if (Settings.getIsAlbumCoversEnabled(activity))
 			coverLoader.addListener(downloadClickListener);
 		player.setTitle(artist + " - " + title);
 		player.setOnButtonClicListener(downloadClickListener, new View.OnClickListener() {
@@ -813,7 +830,7 @@ public class SearchTab {
 				// mediaPlayer.setDataSource(url);
 				HashMap<String, String> headers = new HashMap<String, String>();
 				headers.put("User-Agent",
-						"2.0.0.6 в Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+						"2.0.0.6 –≤ Debian GNU/Linux 4.0 ‚Äî Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 				mediaPlayer.setDataSource(view.getContext(), Uri.parse(url), headers);
 				mediaPlayer.prepare();
 				prepared = true;
