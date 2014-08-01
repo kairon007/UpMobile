@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppThemeBase" parent="android:Theme.NoTitleBar" />
 
@@ -20,6 +20,11 @@
     <style name="Dialog" parent="android:Theme.Dialog" />
 
     <style name="Dialog.White" parent="android:Theme.Dialog" />
+    
+     <style name="Dialog.Black" parent="android:Theme.Holo.Dialog">
+        <item name="android:background">@color/window_background_black</item>
+    </style>
+    
 
     <style name="Library" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>

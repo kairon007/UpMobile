@@ -55,10 +55,14 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
+import android.view.InflateException;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.LayoutInflater.Factory;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -269,14 +273,6 @@ public class LibraryActivity
 	public void onResume() {
 		super.onResume();
 		Advertisement.onResume(this);
-		
-
-		// refresh search engines
-		try {
-			SearchTab.refreshSearchEngines(this);
-		} catch(Exception e) {
-			
-		}
 	}
 	
 	
@@ -497,6 +493,7 @@ public class LibraryActivity
 		} 
 		
 		
+
 	}
 
 	public void setFilterHint(int type){
@@ -513,8 +510,6 @@ public class LibraryActivity
 		mPagerAdapter.notifyDataSetChanged();
 		loadTabOrder();
 	}
-	
-	
 
 	@Override
 	public void onStart()
@@ -1159,6 +1154,10 @@ public class LibraryActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
+		if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+			setMenuBackgroundBlack();
+		}
+		Log.d("log", "onCreateOptionsMenu");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			MenuItem controls = menu.add(null);
 			CompatHoneycomb.setActionView(controls, mActionControls);
@@ -1174,10 +1173,33 @@ public class LibraryActivity
 		menu.add(0, MENU_SORT, 0, R.string.sort_by).setIcon(R.drawable.ic_menu_sort_alphabetically);
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+	protected void setMenuBackgroundBlack() {
+		Log.d("log", "setMenuBackgroundBlack");
+		getLayoutInflater().setFactory(new Factory() {
+			public View onCreateView(String name, Context context,
+					AttributeSet attrs) {
+					try {
+						LayoutInflater f = getLayoutInflater();
+						final View view = f.createView(name, null, attrs);
+						new Handler().post(new Runnable() {
+							public void run() {
+								view.setBackgroundResource(R.color.window_background_black);
+							}
+						});
+						return view;
+					} catch (InflateException e) {
+					} catch (ClassNotFoundException e) {
+					}
+				return null;
+			}
+		});
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
+		Log.d("log", "onPrepareOptionsMenu");
 		LibraryAdapter adapter = mCurrentAdapter;
 		menu.findItem(MENU_SORT).setEnabled(adapter != null);
 		return super.onPrepareOptionsMenu(menu);
@@ -1191,6 +1213,7 @@ public class LibraryActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		Log.d("log", "onOptionsItemSelected");
 		switch (item.getItemId()) {
 //		removed
 //		case MENU_SEARCH:
@@ -1236,7 +1259,18 @@ public class LibraryActivity
 		RadioGroup header = (RadioGroup)getLayoutInflater().inflate(R.layout.sort_dialog, null);
 		header.check(check);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder;
+		
+		if ("AppTheme.White".equals(Util.getThemeName(this))) {
+			Log.d("log", "a");
+			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog_White));
+		} else if("AppTheme.Black".equals(Util.getThemeName(this))){ 
+			Log.d("log", "b");
+			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog_Black));
+		}else{
+			Log.d("log", "c");
+			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog));
+		}
 		int position = mPagerAdapter.getCurrentType();
 		if (position == -1) {
 			position = page;
@@ -1473,23 +1507,14 @@ public class LibraryActivity
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		if (id == SearchTab.STREAM_DIALOG_ID) {
 			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
-		} 
+		}
 		return super.onCreateDialog(id, args);
 	}
 	
 	@Override
-	public void onBackPressed() { 
-		
-		if (Advertisement.isOnline(this)) {
-			Advertisement.exit(this);	
-		}  else {
-			
-			// call the following instead of finish() or else you will get a force close (BadTokenException bug)  
-			Intent showOptions = new Intent(Intent.ACTION_MAIN);
-			showOptions.addCategory(Intent.CATEGORY_HOME);  
-			startActivity(showOptions);
-			
-		}
-		
+	public void onBackPressed() {
+		Intent showOptions = new Intent(Intent.ACTION_MAIN);
+		showOptions.addCategory(Intent.CATEGORY_HOME);
+		startActivity(showOptions);
 	}
 }
