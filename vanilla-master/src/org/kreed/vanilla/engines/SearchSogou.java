@@ -23,7 +23,7 @@ import android.util.Log;
 public class SearchSogou extends BaseSearchTask {
 
 	/* CONSTANTS */
-	private static final String basicUrl = "http://mp3.sogou.com/music.so?query=";
+	private static String basicUrl = "http://mp3.sogou.com/music.so?query=";
 	private static int MIN_CHINESE = 13312;
 	
 	/* CONSTRUCTOR */

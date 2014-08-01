@@ -17,6 +17,7 @@ import android.util.Log;
 public class SearchPoisk extends BaseSearchTask {
 	
 	private String Tag = SearchPoisk.class.getSimpleName();
+	private static String POISK_URL = "http://www.mp3poisk.net/";
 	
 	public SearchPoisk(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -30,7 +31,7 @@ public class SearchPoisk extends BaseSearchTask {
 		} catch (UnsupportedEncodingException e) {
 			Log.e(getClass().getSimpleName(), "", e);
 		}
-		String urlMp3poisk = "http://www.mp3poisk.net/" + songName;
+		String urlMp3poisk = POISK_URL + songName;
 		downloadAndParseMp3poisk(urlMp3poisk);
 		return null;
 	}

@@ -13,11 +13,17 @@ import android.content.SharedPreferences;
 
 public class SearchZaycev extends SearchWithPages {
 
-	private static final String access_token_key = "key.access.token.prefs";
+	private static String access_token_key = "key.access.token.prefs";
 	private static String INIT_TOKEN_URL = "http://zaycev.net/external/hello";
 	private static String AUTHENTICATION_TOKEN_URL = "http://zaycev.net/external/auth?code=%s&hash=%s";
 	private static String TAG_TOKEN = "token";
-
+	private static String ZAYCEV_SEARCH_URL = "http://zaycev.net/external/search?query=";
+	private static String ACCESS = "access_token";
+	private static String SA = "llf7116f22c";
+	private static String CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static String TRACK_URL = "http://zaycev.net/external/track/";
+	private static String DOWNLOAD = "download";
+	
 	public SearchZaycev(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -28,7 +34,7 @@ public class SearchZaycev extends SearchWithPages {
 		if (page > maxPages) return null;
 		try {
 			String songName = URLEncoder.encode(getSongName(), "UTF-8").replace(" ", "%20");
-			String baseUrl = "http://zaycev.net/external/search?query="+songName+"&page="+page+"&access_token=";
+			String baseUrl = ZAYCEV_SEARCH_URL+songName+"&page="+page+"&" + ACCESS + "=";
 			String link = baseUrl + getAccessToken();
 			JSONObject response = new JSONObject(readLink(link).toString());
 			if(response.has("error")) {
@@ -66,8 +72,7 @@ public class SearchZaycev extends SearchWithPages {
 		try {
 			JSONObject response = new JSONObject(handleLink(INIT_TOKEN_URL));
 			String initKey = response.getString(TAG_TOKEN);
-			String salt = "llf7116f22c";
-			String hashKey = md5(initKey + encryptB(salt));
+			String hashKey = md5(initKey + encryptB(SA));
 			response = new JSONObject(handleLink(String.format(AUTHENTICATION_TOKEN_URL, initKey, hashKey)));
 			authenticationToken = response.getString(TAG_TOKEN);
 			SharedPreferences prefs = VanillaApp.getSharedPreferences();
@@ -89,12 +94,12 @@ public class SearchZaycev extends SearchWithPages {
 		byte[] arrayOfByte = paramString.toLowerCase().getBytes();
 		int j = arrayOfByte.length;
 		for (int k = 0; k < j; k++)
-			localStringBuilder1.append(encryptA("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(arrayOfByte[k]), 5));
+			localStringBuilder1.append(encryptA(CHARS.indexOf(arrayOfByte[k]), 5));
 		localStringBuilder1.setLength(localStringBuilder1.length() - localStringBuilder1.length() % 6);
 		int m = localStringBuilder1.length();
 		StringBuilder localStringBuilder2 = new StringBuilder();
 		while (i < m) {
-			localStringBuilder2.append("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Integer.parseInt(localStringBuilder1.substring(i, i + 6), 2)));
+			localStringBuilder2.append(CHARS.charAt(Integer.parseInt(localStringBuilder1.substring(i, i + 6), 2)));
 			i += 6;
 		}
 		return localStringBuilder2.toString();
@@ -126,8 +131,8 @@ public class SearchZaycev extends SearchWithPages {
 		try {
 			//	String link = "http://zaycev.net/external/download?id=" 
 			//			+ songId + "&access_token=" + getAccessToken();
-			String baseUrl = "http://zaycev.net/external/track/" + songId + "/download?id=" 
-					+ songId + "&access_token=";
+			String baseUrl = TRACK_URL + songId + "/" + DOWNLOAD + "?id=" 
+					+ songId + "&" + ACCESS + "=";
 			String link = baseUrl + getAccessToken();
 			JSONObject response = new JSONObject(handleLink(link));
 			if(response.has("error")) {

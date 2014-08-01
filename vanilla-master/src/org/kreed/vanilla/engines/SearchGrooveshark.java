@@ -9,7 +9,7 @@ import com.scilor.grooveshark.API.Functions.SearchArtist.SearchArtistResult;
 
 public class SearchGrooveshark extends BaseSearchTask {
 
-	private static final String sharkConfig = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<GrooveFix version=\"20130530\">" + "<htmlshark>" + "<GrooveClient>htmlshark</GrooveClient>"
+	private static String sharkConfig = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<GrooveFix version=\"20130530\">" + "<htmlshark>" + "<GrooveClient>htmlshark</GrooveClient>"
 			+ "<GrooveClientRevision>20130520</GrooveClientRevision>" + "<GrooveStaticRandomizer>:nuggetsOfBaller:</GrooveStaticRandomizer>" + "</htmlshark>" + "<jsqueue>"
 			+ "<GrooveClient>jsqueue</GrooveClient>" + "<GrooveClientRevision>20130520</GrooveClientRevision>" + "<GrooveStaticRandomizer>:chickenFingers:</GrooveStaticRandomizer>" + "</jsqueue>"
 			+ "<mobileshark>" + "<GrooveClient>mobileshark</GrooveClient>" + "<GrooveClientRevision>20120112</GrooveClientRevision>"
@@ -46,7 +46,7 @@ public class SearchGrooveshark extends BaseSearchTask {
 			try {
 				client = new GroovesharkClient(true, sharkConfig);
 			} catch (Exception e) {
-				Log.e("GroovesharkClient", "Error creating client", e);
+				//Log.e("GroovesharkClient", "Error creating client", e);
 			}
 		}
 		return client;

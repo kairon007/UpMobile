@@ -16,9 +16,11 @@ public class SearchVmusice extends BaseSearchTask {
 		super(dInterface, songName);
 	}
 	
+	private static String VMUSIC_URL = "http://vmusice.net/aj.php?p=0&mp3=";
+	
 	@Override
 	protected Void doInBackground(Void... params) {
-		String url = "http://vmusice.net/aj.php?p=0&mp3=" + getSongName();
+		String url = VMUSIC_URL + getSongName();
 		try {
 			// Connect to the web site
 			Document document = Jsoup.connect(url).get();

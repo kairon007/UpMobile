@@ -15,13 +15,16 @@ public class SearchSoundCloud extends BaseSearchTask {
 		super(dInterface, songName);
 	}
 
+	private static String SOUNDCLOUD_URL = "http://api.soundcloud.com/tracks.json?client_id=2fd7fa3d5ed2be9ac17c538f644fc4c6&filter=downloadable&q=";
+	private static String CLIENT_ID = "2fd7fa3d5ed2be9ac17c538f644fc4c6";
+	
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
 			specialIndex=0;
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
 			songName = songName.replace("%20", "_");
-			String link="http://api.soundcloud.com/tracks.json?client_id=2fd7fa3d5ed2be9ac17c538f644fc4c6&filter=downloadable&q="+songName;
+			String link=SOUNDCLOUD_URL+songName;
 			StringBuffer sb = readLinkApacheHttp(link); 
 			int i=1;
 			String songString;
@@ -29,7 +32,7 @@ public class SearchSoundCloud extends BaseSearchTask {
 				songString = searchNext(sb.toString());
 				if (songString!=null) {
 					Log.e("Melodie",songString.toString());
-					RemoteSong song = new RemoteSong(getDownloadUrl(songString)+"?client_id=2fd7fa3d5ed2be9ac17c538f644fc4c6");
+					RemoteSong song = new RemoteSong(getDownloadUrl(songString)+"?client_id=" + CLIENT_ID);
 					song.setArtistName("artistname"+i);
 					String titlu = getTitle(songString);
 					song.setTitle(titlu);

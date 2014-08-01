@@ -18,12 +18,14 @@ public class SearchMp3World extends BaseSearchTask {
 	public SearchMp3World(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
+	
+	private static String MP3_WORLD_URL = "http://emp3world.com/search/";
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
 			String songName = getSongName().replace(" ", "_");
-			String urlMp3World = "http://emp3world.com/search/" + songName + "_mp3_download.html";
+			String urlMp3World = MP3_WORLD_URL + songName + "_mp3_download.html";
 			Document doc = Jsoup.connect(urlMp3World).timeout(10000).get();
 			Elements searchResults = doc.getElementsByAttributeValue("id", "results_box");
 			if (searchResults.size() > 0) {

@@ -14,13 +14,15 @@ public class SearchMp3skull extends BaseSearchTask {
 	public SearchMp3skull(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
+	
+	private static String MP3_SKULL_URL = "http://mp3skull.com/mp3/";
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
 			songName = songName.replace("%20", "_");
-			String link = "http://mp3skull.com/mp3/" + songName + ".html";
+			String link = MP3_SKULL_URL + songName + ".html";
 			System.out.println(link);
 			// Send data
 			StringBuffer sb = readLink(link);

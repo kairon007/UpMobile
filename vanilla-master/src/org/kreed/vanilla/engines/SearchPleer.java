@@ -17,13 +17,15 @@ public class SearchPleer extends SearchWithPages {
 		super(dInterface, songName);
 	}
 
+	private static String PLEER_URL = "http://pleer.com/browser-extension/search?limit=";
+	
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		if (page == 1) maxPages = 100;
 		if (page > maxPages) return null;
 		try {
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
-			String link = "http://pleer.com/browser-extension/search?limit="+COUNT_SONGS_ON_PAGE+"&page="+page+"&q="+songName;
+			String link = PLEER_URL+COUNT_SONGS_ON_PAGE+"&page="+page+"&q="+songName;
 			String result = readLink(link).toString();
 			if ((result != null) && !(result.equals(""))) {
 				JSONObject jsonResult = new JSONObject(result);
