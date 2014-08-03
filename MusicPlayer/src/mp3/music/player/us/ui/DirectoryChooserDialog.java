@@ -138,6 +138,7 @@ public class DirectoryChooserDialog {
 
 	private List<String> getDirectories(String dir) {
 		List<String> dirs = new ArrayList<String>();
+		File system = new File(Environment.getExternalStorageDirectory().getPath() + "/Android");
 
 		try {
 			File dirFile = new File(dir);
@@ -146,7 +147,7 @@ public class DirectoryChooserDialog {
 			}
 
 			for (File file : dirFile.listFiles()) {
-				if (file.isDirectory()) {
+				if (file.isDirectory() && !file.getPath().equals(system.getPath())) {
 					dirs.add(file.getName());
 				}
 			}

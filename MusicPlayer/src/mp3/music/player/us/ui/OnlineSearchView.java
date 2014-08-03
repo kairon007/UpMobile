@@ -34,7 +34,6 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -43,7 +42,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -52,6 +50,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -101,8 +100,8 @@ public class OnlineSearchView {
 	private CoverLoaderTask coverLoader;
 	private AsyncTask<Void, Void, String> getUrlTask;
 	private boolean searchStopped = true;
-	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
-	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
+	public static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
+	public static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 
 	@SuppressWarnings("unchecked")
 	public static final OnlineSearchView getInstance(LayoutInflater inflater, HomeActivity activity) {
@@ -130,7 +129,7 @@ public class OnlineSearchView {
 		SharedPreferences downloadDetails = context.getSharedPreferences(OnlineSearchView.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
 		String downloadPath = downloadDetails.getString(OnlineSearchView.DOWNLOAD_DIR, "");
 		if (downloadPath.equals("")) {
-			downloadPath = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).getPath();
+			downloadPath = Environment.getExternalStorageDirectory().getPath() + "/" + Environment.DIRECTORY_MUSIC;
 			Editor edit = downloadDetails.edit();
 			edit.clear();
 			edit.putString(OnlineSearchView.DOWNLOAD_DIR, downloadPath);
@@ -207,8 +206,9 @@ public class OnlineSearchView {
 
 				@Override
 				public void run() {
-					if (waitingForCover)
+					if (waitingForCover) {
 						return;
+					}
 					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 					if (c == null || !c.moveToFirst()) return;						
 					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
@@ -233,9 +233,8 @@ public class OnlineSearchView {
 																		// updated
 																		// metadata
 						dst.renameTo(src);
+						notifyMediascanner();
 						this.cancel();
-						Intent intent = new Intent(MusicBrowserPhoneFragment.ACTION_UPDATE);
-						context.sendBroadcast(intent);
 					} catch (IOException e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);
 					} catch (ID3WriteException e) {
@@ -243,18 +242,21 @@ public class OnlineSearchView {
 					}
 				}
 
-				// private void notifyMediascanner() {
-				// Uri uri = Uri.fromFile(src.getParentFile());
-				// Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, uri);
-				// context.sendBroadcast(intent);
-				// MediaScannerConnection.scanFile(context,
-				// new String[] { dst.getAbsolutePath() }, null,
-				// new MediaScannerConnection.OnScanCompletedListener() {
-				// public void onScanCompleted(String path, Uri uri) {
-				// Log.i("TAG", "Finished scanning " + path);
-				// }
-				// });
-				// }
+				 private void notifyMediascanner() {
+				 Uri uri = Uri.fromFile(src.getParentFile());
+				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, uri);
+				 Log.d("logd", "notifyMediascanner");
+				 context.sendBroadcast(intent);
+				 MediaScannerConnection.scanFile(context, new String[] {getDownloadPath(context)}, null,
+						 new MediaScannerConnection.OnScanCompletedListener() {
+					 		public void onScanCompleted(String path, Uri uri) {
+					 			Log.i("logd", "Finished scanning " + path);
+								Intent intent = new Intent(MusicBrowserPhoneFragment.ACTION_UPDATE);
+								context.sendBroadcast(intent);
+								Log.d("logd", "broadcast sended");
+					 		}
+				 		});
+				 }
 			};
 			new Timer().schedule(progresUpdateTask, 1000, 1000);
 		}
@@ -509,7 +511,7 @@ public class OnlineSearchView {
 					player = null;
 				}
 				getUrlTask.cancel(true);
-				coverLoader.cancel(true);
+//				coverLoader.cancel(true);
 				activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};

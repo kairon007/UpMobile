@@ -18,6 +18,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,8 +87,8 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
 		public void onReceive(Context context, Intent intent) {
 			for (int i=0; i<mPagerAdapter.getCount()-1; i++) {
 				if(i==4) {
-					System.out.println("!!!!!");
-					((SongFragment)mPagerAdapter.getItem(i)).getAdapter().notifyDataSetChanged();
+					Log.d("logd", "broadcast received");
+					getSongFragment().refresh();
 				}
 			}
 		}
