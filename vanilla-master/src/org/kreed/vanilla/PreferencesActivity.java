@@ -26,16 +26,22 @@ import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.LayoutInflater.Factory;
 import android.webkit.WebView;
 import android.webkit.WebViewFragment;
 
@@ -46,15 +52,19 @@ public class PreferencesActivity extends PreferenceActivity {
 	/**
 	 * Initialize the activity, loading the preference specifications.
 	 */
+
+	private static int colorBlack = R.color.window_background_black;
+	private static int colorWhite = R.color.window_background_light;
+	private static int colorDark = R.color.window_background_dark;
+
 	@SuppressWarnings("deprecation")
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			setTheme(R.style.BackActionBar_White);
-		} else if("AppTheme.Black".equals(Util.getThemeName(this))){ 
+		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
 			setTheme(R.style.BackActionBar_Black);
-		}else{
+		} else {
 			setTheme(R.style.BackActionBar);
 		}
 		super.onCreate(savedInstanceState);
@@ -65,14 +75,12 @@ public class PreferencesActivity extends PreferenceActivity {
 
 	@TargetApi(11)
 	@Override
-	public void onBuildHeaders(List<Header> target)
-	{
+	public void onBuildHeaders(List<Header> target) {
 		loadHeadersFromResource(R.xml.preference_headers, target);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
-	{
+	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
@@ -84,8 +92,14 @@ public class PreferencesActivity extends PreferenceActivity {
 	public static class AudioActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
+			if ("AppTheme.White".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_White);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_Black);
+			} else {
+				setTheme(R.style.BackActionBar);
+			}
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_audio);
 		}
@@ -94,19 +108,39 @@ public class PreferencesActivity extends PreferenceActivity {
 	@TargetApi(11)
 	public static class AudioFragment extends PreferenceFragment {
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_audio);
+		}
+
+		@Override
+		public View onCreateView(final LayoutInflater inflater,
+				ViewGroup container, Bundle savedInstanceState) {
+			Context context = inflater.getContext();
+			View view = (View) super.onCreateView(inflater, container,
+					savedInstanceState);
+			if ("AppTheme.White".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorWhite);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorBlack);
+			} else {
+				view.setBackgroundColor(colorDark);
+			}
+			return view;
 		}
 	}
 
 	public static class PlaybackActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
-			super.onCreate(savedInstanceState);
+		public void onCreate(Bundle savedInstanceState) {
+			if ("AppTheme.White".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_White);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_Black);
+			} else {
+				setTheme(R.style.BackActionBar);
+			}
 			addPreferencesFromResource(R.xml.preference_playback);
 		}
 	}
@@ -114,18 +148,39 @@ public class PreferencesActivity extends PreferenceActivity {
 	@TargetApi(11)
 	public static class PlaybackFragment extends PreferenceFragment {
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_playback);
+		}
+
+		@Override
+		public View onCreateView(final LayoutInflater inflater,
+				ViewGroup container, Bundle savedInstanceState) {
+			Context context = inflater.getContext();
+			View view = (View) super.onCreateView(inflater, container,
+					savedInstanceState);
+			if ("AppTheme.White".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorWhite);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorBlack);
+			} else {
+				view.setBackgroundColor(colorDark);
+			}
+			return view;
 		}
 	}
 
 	public static class LibraryActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
+			if ("AppTheme.White".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_White);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_Black);
+			} else {
+				setTheme(R.style.BackActionBar);
+			}
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_library);
 		}
@@ -134,20 +189,41 @@ public class PreferencesActivity extends PreferenceActivity {
 	@TargetApi(11)
 	public static class LibraryFragment extends PreferenceFragment {
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_library);
 			PreferenceGroup group = getPreferenceScreen();
 			group.removePreference(group.findPreference("controls_in_selector"));
+		}
+
+		@Override
+		public View onCreateView(final LayoutInflater inflater,
+				ViewGroup container, Bundle savedInstanceState) {
+			Context context = inflater.getContext();
+			View view = (View) super.onCreateView(inflater, container,
+					savedInstanceState);
+			if ("AppTheme.White".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorWhite);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorBlack);
+			} else {
+				view.setBackgroundColor(colorDark);
+			}
+			return view;
 		}
 	}
 
 	public static class NotificationsActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
+			if ("AppTheme.White".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_White);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_Black);
+			} else {
+				setTheme(R.style.BackActionBar);
+			}
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_notifications);
 		}
@@ -156,18 +232,39 @@ public class PreferencesActivity extends PreferenceActivity {
 	@TargetApi(11)
 	public static class NotificationsFragment extends PreferenceFragment {
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_notifications);
+		}
+
+		@Override
+		public View onCreateView(final LayoutInflater inflater,
+				ViewGroup container, Bundle savedInstanceState) {
+			Context context = inflater.getContext();
+			View view = (View) super.onCreateView(inflater, container,
+					savedInstanceState);
+			if ("AppTheme.White".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorWhite);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorBlack);
+			} else {
+				view.setBackgroundColor(colorDark);
+			}
+			return view;
 		}
 	}
 
 	public static class ShakeActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
+			if ("AppTheme.White".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_White);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_Black);
+			} else {
+				setTheme(R.style.BackActionBar);
+			}
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_shake);
 		}
@@ -176,18 +273,40 @@ public class PreferencesActivity extends PreferenceActivity {
 	@TargetApi(11)
 	public static class ShakeFragment extends PreferenceFragment {
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_shake);
+		}
+
+		@Override
+		public View onCreateView(final LayoutInflater inflater,
+				ViewGroup container, Bundle savedInstanceState) {
+			Context context = inflater.getContext();
+			View view = (View) super.onCreateView(inflater, container,
+					savedInstanceState);
+			view.setBackgroundColor(Color.TRANSPARENT);
+			if ("AppTheme.White".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorWhite);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorBlack);
+			} else {
+				view.setBackgroundColor(colorDark);
+			}
+			return view;
 		}
 	}
 
 	public static class MiscActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
+			if ("AppTheme.White".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_White);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_Black);
+			} else {
+				setTheme(R.style.BackActionBar);
+			}
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_misc);
 		}
@@ -196,23 +315,42 @@ public class PreferencesActivity extends PreferenceActivity {
 	@TargetApi(11)
 	public static class MiscFragment extends PreferenceFragment {
 		@Override
-		public void onCreate(Bundle savedInstanceState)
-		{
+		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_misc);
+		}
+
+		@Override
+		public View onCreateView(final LayoutInflater inflater,
+				ViewGroup container, Bundle savedInstanceState) {
+			Context context = inflater.getContext();
+			View view = (View) super.onCreateView(inflater, container,
+					savedInstanceState);
+			if ("AppTheme.White".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorWhite);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorBlack);
+			} else {
+				view.setBackgroundColor(colorDark);
+			}
+			return view;
 		}
 	}
 
 	public static class AboutActivity extends Activity {
 		@Override
-		public void onCreate(Bundle state)
-		{
+		public void onCreate(Bundle state) {
 			super.onCreate(state);
-
 			WebView view = new WebView(this);
 			view.getSettings().setJavaScriptEnabled(true);
 			view.loadUrl("file:///android_asset/about.html");
-			view.setBackgroundColor(Color.TRANSPARENT);
+			if ("AppTheme.White".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_White);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+				setTheme(R.style.BackActionBar_Black);
+			} else {
+				setTheme(R.style.BackActionBar);
+			}
 			setContentView(view);
 		}
 	}
@@ -220,20 +358,28 @@ public class PreferencesActivity extends PreferenceActivity {
 	@TargetApi(11)
 	public static class AboutFragment extends WebViewFragment {
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-		{
-			WebView view = (WebView)super.onCreateView(inflater, container, savedInstanceState);
+		public View onCreateView(final LayoutInflater inflater,
+				ViewGroup container, Bundle savedInstanceState) {
+			Context context = inflater.getContext();
+			WebView view = (WebView) super.onCreateView(inflater, container,
+					savedInstanceState);
 			view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 			view.getSettings().setJavaScriptEnabled(true);
 			view.loadUrl("file:///android_asset/about.html");
-			view.setBackgroundColor(Color.TRANSPARENT);
+			if ("AppTheme.White".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorWhite);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorBlack);
+			} else {
+				view.setBackgroundColor(colorDark);
+			}
 			return view;
 		}
 	}
-	
-	@TargetApi( Build.VERSION_CODES.KITKAT )
+
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	@Override
-	protected boolean isValidFragment( String fragmentName ) {
-	    return true;
+	protected boolean isValidFragment(String fragmentName) {
+		return true;
 	}
 }
