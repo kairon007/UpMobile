@@ -36,6 +36,8 @@ public class DirectoryChooserDialog {
 	private List<String> m_subdirs = null;
 	private ChosenDirectoryListener m_chosenDirectoryListener = null;
 	private ArrayAdapter<String> m_listAdapter = null;
+	
+	private File parent;
 
 	// ////////////////////////////////////////////////////
 	// Callback interface for selected directory
@@ -85,7 +87,14 @@ public class DirectoryChooserDialog {
 
 		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
 			public void onClick(DialogInterface dialog, int item) {
-				m_dir += "/" + ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
+				if(((AlertDialog) dialog).getListView().getAdapter().getItem(item).toString().equals("[..]")) {
+					if (m_dir.equals(m_sdcardDirectory)) {
+						return;
+					}
+					m_dir = parent.getPath();
+				} else {
+					m_dir += "/" + ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
+				}
 				updateDirectory();
 			}
 		}
@@ -139,6 +148,7 @@ public class DirectoryChooserDialog {
 	private List<String> getDirectories(String dir) {
 		List<String> dirs = new ArrayList<String>();
 		File system = new File(Environment.getExternalStorageDirectory().getPath() + "/Android");
+		parent = new File(dir).getParentFile();
 
 		try {
 			File dirFile = new File(dir);
@@ -159,6 +169,10 @@ public class DirectoryChooserDialog {
 				return o1.compareTo(o2);
 			}
 		});
+		
+		if (null != parent) {
+			dirs.add(0, "[..]");
+		}
 
 		return dirs;
 	}
@@ -227,7 +241,6 @@ public class DirectoryChooserDialog {
 		m_subdirs.clear();
 		m_subdirs.addAll(getDirectories(m_dir));
 		m_titleView.setText(m_dir);
-
 		m_listAdapter.notifyDataSetChanged();
 	}
 
