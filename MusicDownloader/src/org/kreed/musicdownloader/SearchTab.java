@@ -313,7 +313,7 @@ public class SearchTab {
 		}
 	};
 
-	public SearchTab(final View instanceView, final LayoutInflater inflater, Activity libraryActivity) {
+	private SearchTab(final View instanceView, final LayoutInflater inflater, Activity libraryActivity) {
 		this.view = instanceView;
 		this.inflater = inflater;
 		this.activity = libraryActivity;

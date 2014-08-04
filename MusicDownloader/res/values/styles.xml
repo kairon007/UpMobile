@@ -1,23 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.NoTitleBar">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+    <style name="AppThemeBase" parent="android:Theme.NoTitleBar" />
+
+    <style name="AppThemeBase.White" parent="android:Theme.Light.NoTitleBar" />
+
+    <style name="AppTheme" parent="AppThemeBase">
         <item name="android:windowBackground">@color/window_background_dark</item>
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="AppTheme.Black" parent="AppThemeBase">
+        <item name="android:windowBackground">@color/window_background_black</item>
     </style>
 
-    <color name="window_background_dark">#333</color>
-    
+    <style name="AppTheme.White" parent="AppThemeBase.White">
+        <item name="android:windowBackground">@color/window_background_light</item>
+    </style>
+
+    <style name="Dialog" parent="android:Theme.Dialog" />
+
+    <style name="Dialog.White" parent="android:Theme.Dialog" />
+
+    <style name="Dialog.Black" parent="android:Theme.Holo.Dialog">
+        <item name="android:background">@color/window_background_black</item>
+    </style>
+
+    <style name="Library" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Library.White" parent="AppTheme.White">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Library.Black" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Playback" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="Playback.White" parent="AppTheme.White">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="BackActionBar" parent="AppTheme" />
+
+    <style name="BackActionBar.White" parent="AppTheme.White" />
+
+    <style name="BackActionBar.Black" parent="AppTheme.Black" />
+
+    <style name="AlertDialogItem">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="Autoscroll">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
 </resources>
