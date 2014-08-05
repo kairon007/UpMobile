@@ -26,6 +26,7 @@ import java.util.Arrays;
 
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -38,9 +39,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -57,27 +60,23 @@ public class LibraryPagerAdapter
 	extends PagerAdapter
 	implements Handler.Callback
 	         , ViewPager.OnPageChangeListener
-	         , View.OnCreateContextMenuListener
+//	         , View.OnCreateContextMenuListener
 	         , AdapterView.OnItemClickListener
 {
 	/**
 	 * The number of unique list types. The number of visible lists may be
 	 * smaller.
 	 */
-	public static final int MAX_ADAPTER_COUNT = 6;//7;
+	public static final int MAX_ADAPTER_COUNT = 3;//7;
 	/**
 	 * The human-readable title for each list. The positions correspond to the
 	 * MediaUtils ids, so e.g. TITLES[MediaUtils.TYPE_SONG] = R.string.songs
 	 */
-	public static final int[] TITLES = { R.string.search, R.string.artists, 
-		// R.string.albums,
-		R.string.songs, R.string.playlists, R.string.genres, R.string.files };
+	public static final int[] TITLES = { R.string.downloads, R.string.music, R.string.library };
 	/**
 	 * Default tab order.
 	 */
-	public static final int[] DEFAULT_ORDER = { MediaUtils.TYPE_SEARCH, MediaUtils.TYPE_ARTIST, 
-		// MediaUtils.TYPE_ALBUM, 
-		MediaUtils.TYPE_SONG, MediaUtils.TYPE_PLAYLIST, MediaUtils.TYPE_GENRE, MediaUtils.TYPE_FILE };
+	public static final int[] DEFAULT_ORDER = { MediaUtils.TYPE_DOWNLOADS, MediaUtils.TYPE_MUSIC, MediaUtils.TYPE_LIBRARY };
 	/**
 	 * The user-chosen tab order.
 	 */
@@ -104,27 +103,15 @@ public class LibraryPagerAdapter
 	/**
 	 * The artist adapter instance, also stored at mAdapters[MediaUtils.TYPE_ARTIST].
 	 */
-	private MediaAdapter mArtistAdapter;
+	private MediaAdapter mDownloadsAdapter;
 	/**
 	 * The album adapter instance, also stored at mAdapters[MediaUtils.TYPE_ALBUM].
 	 */
-	private MediaAdapter mAlbumAdapter;
+	private MediaAdapter mLibraryAdapter;
 	/**
 	 * The song adapter instance, also stored at mAdapters[MediaUtils.TYPE_SONG].
 	 */
-	private MediaAdapter mSongAdapter;
-	/**
-	 * The playlist adapter instance, also stored at mAdapters[MediaUtils.TYPE_PLAYLIST].
-	 */
-	MediaAdapter mPlaylistAdapter;
-	/**
-	 * The genre adapter instance, also stored at mAdapters[MediaUtils.TYPE_GENRE].
-	 */
-	private MediaAdapter mGenreAdapter;
-	/**
-	 * The file adapter instance, also stored at mAdapters[MediaUtils.TYPE_FILE].
-	 */
-	private FileSystemAdapter mFilesAdapter;
+	private MediaAdapter mMusicAdapter;
 	/**
 	 * The adapter of the currently visible list.
 	 */
@@ -133,18 +120,6 @@ public class LibraryPagerAdapter
 	 * The index of the current page.
 	 */
 	private int mCurrentPage;
-	/**
-	 * A limiter that should be set when the album adapter is created.
-	 */
-	private Limiter mPendingAlbumLimiter;
-	/**
-	 * A limiter that should be set when the song adapter is created.
-	 */
-	private Limiter mPendingSongLimiter;
-	/**
-	 * A limiter that should be set when the files adapter is created.
-	 */
-	private Limiter mPendingFileLimiter;
 	/**
 	 * List positions stored in the saved state, or null if none were stored.
 	 */
@@ -177,31 +152,18 @@ public class LibraryPagerAdapter
 	/**
 	 * The position of the songs page, or -1 if it is hidden.
 	 */
-	public int mSongsPosition = -1;
+	public int mMusicPosition = -1;
 	/**
 	 * The position of the albums page, or -1 if it is hidden.
 	 */
-	public int mAlbumsPosition = -1;
+	public int mDownloadsPosition = -1;
 	/**
 	 * The position of the artists page, or -1 if it is hidden.
 	 */
-	public int mArtistsPosition = -1;
-	/**
-	 * The position of the genres page, or -1 if it is hidden.
-	 */
-	public int mGenresPosition = -1;
+	public int mLibraryPosition = -1;
 
-	private final ContentObserver mPlaylistObserver = new ContentObserver(null) {
-		@Override
-		public void onChange(boolean selfChange)
-		{
-			if (mPlaylistAdapter != null) {
-				postRequestRequery(mPlaylistAdapter);
-			}
-		}
-	};
-	
 	private int currentType = -1;
+	private Context context;
 	
 	/**
 	 * Create the LibraryPager.
@@ -212,10 +174,11 @@ public class LibraryPagerAdapter
 	 */
 	public LibraryPagerAdapter(MainActivity activity, Looper workerLooper) 	{  
 		mActivity = activity;
+		context = activity.getBaseContext();
 		mUiHandler = new Handler(this);
 		mWorkerHandler = new Handler(workerLooper, this);
 		mCurrentPage = -1;
-		activity.getContentResolver().registerContentObserver(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, true, mPlaylistObserver);
+//		activity.getContentResolver().registerContentObserver(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, true, mPlaylistObserver);
 	}
 	
 	/**
@@ -223,9 +186,8 @@ public class LibraryPagerAdapter
 	 *
 	 * @return True if order has changed.
 	 */
-	public boolean loadTabOrder()
-	{
-		String in = PlaybackService.getSettings(mActivity).getString(PrefKeys.TAB_ORDER, null);
+	public boolean loadTabOrder() {
+		String in = PreferenceManager.getDefaultSharedPreferences(context).getString( PrefKeys.TAB_ORDER, null);
 		int[] order;
 		int count;
 		if (in == null || in.length() != MAX_ADAPTER_COUNT) {
@@ -261,45 +223,35 @@ public class LibraryPagerAdapter
 		return false;
 	}
 
-	/**
-	 * Determines whether adapters should be expandable from the visibility of
-	 * the adapters each expands to. Also updates mSongsPosition/mAlbumsPositions.
-	 */
-	public void computeExpansions()
-	{ 
+	public void computeExpansions() {
 		int[] order = mTabOrder;
-		int songsPosition = -1;
-		int albumsPosition = -1;
-		int artistsPosition = -1;
-		int genresPosition = -1;
-		for (int i = mTabCount-1; --i > -1; ) {
+		int musicPosition = -1;
+		int downloadsPosition = -1;
+		int libraryPosition = -1;
+		for (int i = mTabCount - 1; --i > -1;) {
 			switch (order[i]) {
-			case MediaUtils.TYPE_ALBUM:
-				albumsPosition = i;
+			case MediaUtils.TYPE_DOWNLOADS:
+				downloadsPosition = i;
 				break;
-			case MediaUtils.TYPE_SONG:
-				songsPosition = i;
+			case MediaUtils.TYPE_MUSIC:
+				musicPosition = i;
 				break;
-			case MediaUtils.TYPE_ARTIST:
-				artistsPosition = i;
-				break;
-			case MediaUtils.TYPE_GENRE:
-				genresPosition = i;
+			case MediaUtils.TYPE_LIBRARY:
+				libraryPosition = i;
 				break;
 			}
 		}
 
-		if (mArtistAdapter != null)
-			mArtistAdapter.setExpandable(songsPosition != -1 || albumsPosition != -1);
-		if (mAlbumAdapter != null)
-			mAlbumAdapter.setExpandable(songsPosition != -1);
-		if (mGenreAdapter != null)
-			mGenreAdapter.setExpandable(songsPosition != -1);
+		if (mDownloadsAdapter != null)
+			mDownloadsAdapter.setExpandable(musicPosition != -1 || downloadsPosition != -1);
+		if (mLibraryAdapter != null)
+			mLibraryAdapter.setExpandable(musicPosition != -1);
+		if (mMusicAdapter != null)
+			mMusicAdapter.setExpandable(musicPosition != -1);
 
-		mSongsPosition = songsPosition;
-		mAlbumsPosition = albumsPosition;
-		mArtistsPosition = artistsPosition;
-		mGenresPosition = genresPosition;
+		mMusicPosition = musicPosition;
+		mDownloadsPosition = downloadsPosition;
+		mLibraryPosition = libraryPosition;
 	}
 
 	@Override
@@ -316,28 +268,26 @@ public class LibraryPagerAdapter
 			Typeface font = MusicDownloaderApp.FONT_LIGHT;
 
 			switch (type) {
-			case MediaUtils.TYPE_ARTIST: 
-				adapter = mArtistAdapter = new MediaAdapter(activity, MediaUtils.TYPE_ARTIST, null);
-				mArtistAdapter.setExpandable(mSongsPosition != -1 || mAlbumsPosition != -1);
+			case MediaUtils.TYPE_DOWNLOADS: 
+				adapter = mDownloadsAdapter = new MediaAdapter(activity, MediaUtils.TYPE_DOWNLOADS);
+				mDownloadsAdapter.setExpandable(mMusicPosition != -1 || mDownloadsPosition != -1);
 				mArtistHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					mArtistHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
 				}
 			    mArtistHeader.setTypeface(font);
 				break;
-			case MediaUtils.TYPE_ALBUM:
-				adapter = mAlbumAdapter = new MediaAdapter(activity, MediaUtils.TYPE_ALBUM, mPendingAlbumLimiter);
-				mAlbumAdapter.setExpandable(mSongsPosition != -1);
-				mPendingAlbumLimiter = null;
+			case MediaUtils.TYPE_LIBRARY:
+				adapter = mLibraryAdapter = new MediaAdapter(activity, MediaUtils.TYPE_LIBRARY);
+				mLibraryAdapter.setExpandable(mMusicPosition != -1);
 				mAlbumHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					mAlbumHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
 				}
 				mAlbumHeader.setTypeface(font);
 				break;
-			case MediaUtils.TYPE_SONG: 
-				adapter = mSongAdapter = new MediaAdapter(activity, MediaUtils.TYPE_SONG, mPendingSongLimiter);
-				mPendingSongLimiter = null;
+			case MediaUtils.TYPE_MUSIC: 
+				adapter = mMusicAdapter = new MediaAdapter(activity, MediaUtils.TYPE_MUSIC);
 				mSongHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					mSongHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
@@ -345,31 +295,6 @@ public class LibraryPagerAdapter
 				mSongHeader.setTypeface(font);
 				mSongHeader.setText("");
 				break;
-			case MediaUtils.TYPE_PLAYLIST:
-				adapter = mPlaylistAdapter = new MediaAdapter(activity, MediaUtils.TYPE_PLAYLIST, null);
-				break;
-			case MediaUtils.TYPE_GENRE: 
-				adapter = mGenreAdapter = new MediaAdapter(activity, MediaUtils.TYPE_GENRE, null);
-				mGenreAdapter.setExpandable(mSongsPosition != -1);
-				break;
-			case MediaUtils.TYPE_FILE: 
-				adapter = mFilesAdapter = new FileSystemAdapter(activity, mPendingFileLimiter);
-				mPendingFileLimiter = null;
-				break;
-			case MediaUtils.TYPE_SEARCH:
-				View searchView = SearchTab.getInstanceView(inflater, activity);
-				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					searchView.findViewById(R.id.search_field).setBackgroundDrawable
-						(activity.getResources().getDrawable(R.drawable.search_background_white));
-					((ListView)searchView.findViewById(R.id.list)).setDivider(new ColorDrawable
-							(activity.getResources().getColor(R.color.divider_color_light)));
-					((ListView)searchView.findViewById(R.id.list)).setDividerHeight(1);
-				} else if ("AppTheme.Black".equals(Util.getThemeName(activity))){
-					searchView.findViewById(R.id.search_field).setBackgroundDrawable
-						(activity.getResources().getDrawable(R.drawable.search_background_black));
-				}
-				container.addView(searchView);
-				return searchView;
 			default:
 				throw new IllegalArgumentException("Invalid media type: " + type);
 			}
@@ -380,7 +305,7 @@ public class LibraryPagerAdapter
 						(activity.getResources().getColor(R.color.divider_color_light)));
 				view.setDividerHeight(1);
 			}
-			view.setOnCreateContextMenuListener(this);
+//			view.setOnCreateContextMenuListener(this);
 			view.setOnItemClickListener(this);
 			view.setTag(type);
 			if (header != null) {
@@ -390,7 +315,7 @@ public class LibraryPagerAdapter
 			}
 			view.setAdapter(adapter);
 //			if (type != MediaUtils.TYPE_FILE)
-				loadSortOrder((SortAdapter)adapter);
+			loadSortOrder((SortAdapter)adapter);
 			enableFastScroll(view);
 			adapter.setFilter(mFilter);
 
@@ -408,13 +333,13 @@ public class LibraryPagerAdapter
 	@Override
 	public int getItemPosition(Object item)
 	{
-//		int type = (Integer)((ListView)item).getTag();
+		int type = (Integer)((ListView)item).getTag();
 //		Log.d("ffuu", ""+type);
-//		int[] order = mTabOrder;
-//		for (int i = mTabCount; --i != -1; ) {
-//			if (order[i] == type)
-//				return i;
-//		}
+		int[] order = mTabOrder;
+		for (int i = mTabCount; --i != -1; ) {
+			if (order[i] == type)
+				return i;
+		}
 		return POSITION_NONE;
 	}
 
@@ -442,35 +367,27 @@ public class LibraryPagerAdapter
 		return view == object;
 	}
 
-//	@Override
-//	public void setPrimaryItem(ViewGroup container, int position, Object object)
-//	{
-//		int type = mTabOrder[position];
-//		LibraryAdapter adapter = mAdapters[type];
-//		if (position != mCurrentPage || adapter != mCurrentAdapter) {
-//			requeryIfNeeded(type);
-//			mCurrentAdapter = adapter;
-//			mCurrentPage = position;
-//			mActivity.onPageChanged(position, adapter);
-//		}
-//		
-//		if(type == MediaUtils.TYPE_SEARCH) {
-//			mActivity.setSearchBoxVisible(false);
-//		}
-//		if(type != MediaUtils.TYPE_SEARCH) {
-//			mActivity.setSearchBoxVisible(true);
-//			mActivity.setFilterHint(type);
-//		}
-//		currentType = type;
-//	}
+	@Override
+	public void setPrimaryItem(ViewGroup container, int position, Object object)
+	{
+		int type = mTabOrder[position];
+		LibraryAdapter adapter = mAdapters[type];
+		if (position != mCurrentPage || adapter != mCurrentAdapter) {
+			requeryIfNeeded(type);
+			mCurrentAdapter = adapter;
+			mCurrentPage = position;
+			mActivity.onPageChanged(position, adapter);
+		}
+		currentType = type;
+	}
 
 	@Override
 	public void restoreState(Parcelable state, ClassLoader loader)
 	{
 		Bundle in = (Bundle)state;
-		mPendingAlbumLimiter = (Limiter)in.getSerializable("limiter_albums");
-		mPendingSongLimiter = (Limiter)in.getSerializable("limiter_songs");
-		mPendingFileLimiter = (Limiter)in.getSerializable("limiter_files");
+//		mPendingLibraryLimiter = (Limiter)in.getSerializable("limiter_albums");
+//		mPendingSongLimiter = (Limiter)in.getSerializable("limiter_songs");
+//		mPendingFileLimiter = (Limiter)in.getSerializable("limiter_files");
 		mSavedPositions = in.getIntArray("pos");
 	}
 
@@ -478,13 +395,6 @@ public class LibraryPagerAdapter
 	public Parcelable saveState()
 	{
 		Bundle out = new Bundle(10);
-		if (mAlbumAdapter != null)
-			out.putSerializable("limiter_albums", mAlbumAdapter.getLimiter());
-		if (mSongAdapter != null)
-			out.putSerializable("limiter_songs", mSongAdapter.getLimiter());
-		if (mFilesAdapter != null)
-			out.putSerializable("limiter_files", mFilesAdapter.getLimiter());
-
 		int[] savedPositions = new int[MAX_ADAPTER_COUNT];
 		ListView[] lists = mLists;
 		for (int i = MAX_ADAPTER_COUNT; --i != -1; ) {
@@ -518,37 +428,28 @@ public class LibraryPagerAdapter
 		mHeaderText = text;
 	}
 
-	/**
-	 * Clear a limiter.
-	 *
-	 * @param type Which type of limiter to clear.
-	 */
-	public void clearLimiter(int type)
-	{
-		if (type == MediaUtils.TYPE_FILE) {
-			if (mFilesAdapter == null) {
-				mPendingFileLimiter = null;
-			} else {
-				mFilesAdapter.setLimiter(null);
-				requestRequery(mFilesAdapter);
-			}
-		} else {
-			if (mAlbumAdapter == null) {
-				mPendingAlbumLimiter = null;
-			} else {
-				mAlbumAdapter.setLimiter(null);
-				loadSortOrder(mAlbumAdapter);
-				requestRequery(mAlbumAdapter);
-			}
-			if (mSongAdapter == null) {
-				mPendingSongLimiter = null;
-			} else {
-				mSongAdapter.setLimiter(null);
-				loadSortOrder(mSongAdapter);
-				requestRequery(mSongAdapter);
-			}
-		}
-	}
+//	/**
+//	 * Clear a limiter.
+//	 * 
+//	 * @param type
+//	 *            Which type of limiter to clear.
+//	 */
+//	public void clearLimiter(int type) {
+//		if (mLibraryAdapter == null) {
+//			mPendingLibraryLimiter = null;
+//		} else {
+//			mLibraryAdapter.setLimiter(null);
+//			loadSortOrder(mLibraryAdapter);
+//			requestRequery(mLibraryAdapter);
+//		}
+//		if (mSongAdapter == null) {
+//			mPendingSongLimiter = null;
+//		} else {
+//			mSongAdapter.setLimiter(null);
+//			loadSortOrder(mSongAdapter);
+//			requestRequery(mSongAdapter);
+//		}
+//	}
 
 	/**
 	 * Update the adapters with the given limiter.
@@ -556,83 +457,83 @@ public class LibraryPagerAdapter
 	 * @param limiter The limiter to set.
 	 * @return The tab type that should be switched to to expand the row.
 	 */
-	public int setLimiter(Limiter limiter)
-	{
-		int tab;
-
-		switch (limiter.type) {
-		case MediaUtils.TYPE_ALBUM: 
-			if (mSongAdapter == null) {
-				mPendingSongLimiter = limiter;
-			} else {
-				mSongAdapter.setLimiter(limiter);
-				loadSortOrder(mSongAdapter);
-				requestRequery(mSongAdapter);
-			}
-			tab = mSongsPosition;
-			break;
-		case MediaUtils.TYPE_ARTIST: 
-			if (mAlbumAdapter == null) {
-				mPendingAlbumLimiter = limiter;
-			} else {
-				mAlbumAdapter.setLimiter(limiter);
-				loadSortOrder(mAlbumAdapter);
-				requestRequery(mAlbumAdapter);
-			}
-			if (mSongAdapter == null) {
-				mPendingSongLimiter = limiter;
-			} else {
-				mSongAdapter.setLimiter(limiter);
-				loadSortOrder(mSongAdapter);
-				requestRequery(mSongAdapter);
-			}
-			tab = mAlbumsPosition;
-			if (tab == -1)
-				tab = mSongsPosition;
-			break;
-		case MediaUtils.TYPE_GENRE: 
-			if (mAlbumAdapter == null) {
-				mPendingAlbumLimiter = limiter;
-			} else {
-				mAlbumAdapter.setLimiter(limiter);
-				loadSortOrder(mAlbumAdapter);
-				requestRequery(mAlbumAdapter);
-			}
-			if (mSongAdapter == null) {
-				mPendingSongLimiter = null;
-			} else {
-				mSongAdapter.setLimiter(limiter);
-				loadSortOrder(mSongAdapter);
-				requestRequery(mSongAdapter);
-			}
-			tab = mSongsPosition;
-			break;
-		case MediaUtils.TYPE_FILE: 
-			if (mFilesAdapter == null) {
-				mPendingFileLimiter = limiter;
-			} else {
-				mFilesAdapter.setLimiter(limiter);
-				requestRequery(mFilesAdapter);
-			}
-			tab = -1;
-			break;
-		default:
-			throw new IllegalArgumentException("Unsupported limiter type: " + limiter.type);
-		}
-
-		return tab;
-	}
+//	public int setLimiter(Limiter limiter)
+//	{
+//		int tab;
+//
+//		switch (limiter.type) {
+//		case MediaUtils.TYPE_ALBUM: 
+//			if (mSongAdapter == null) {
+//				mPendingSongLimiter = limiter;
+//			} else {
+//				mSongAdapter.setLimiter(limiter);
+//				loadSortOrder(mSongAdapter);
+//				requestRequery(mSongAdapter);
+//			}
+//			tab = mSongsPosition;
+//			break;
+//		case MediaUtils.TYPE_ARTIST: 
+//			if (mLibraryAdapter == null) {
+//				mPendingLibraryLimiter = limiter;
+//			} else {
+//				mLibraryAdapter.setLimiter(limiter);
+//				loadSortOrder(mLibraryAdapter);
+//				requestRequery(mLibraryAdapter);
+//			}
+//			if (mSongAdapter == null) {
+//				mPendingSongLimiter = limiter;
+//			} else {
+//				mSongAdapter.setLimiter(limiter);
+//				loadSortOrder(mSongAdapter);
+//				requestRequery(mSongAdapter);
+//			}
+//			tab = mDownloadsPosition;
+//			if (tab == -1)
+//				tab = mSongsPosition;
+//			break;
+//		case MediaUtils.TYPE_LIBRARY: 
+//			if (mLibraryAdapter == null) {
+//				mPendingLibraryLimiter = limiter;
+//			} else {
+//				mLibraryAdapter.setLimiter(limiter);
+//				loadSortOrder(mLibraryAdapter);
+//				requestRequery(mLibraryAdapter);
+//			}
+//			if (mSongAdapter == null) {
+//				mPendingSongLimiter = null;
+//			} else {
+//				mSongAdapter.setLimiter(limiter);
+//				loadSortOrder(mSongAdapter);
+//				requestRequery(mSongAdapter);
+//			}
+//			tab = mSongsPosition;
+//			break;
+//		case MediaUtils.TYPE_FILE: 
+//			if (mFilesAdapter == null) {
+//				mPendingFileLimiter = limiter;
+//			} else {
+//				mFilesAdapter.setLimiter(limiter);
+//				requestRequery(mFilesAdapter);
+//			}
+//			tab = -1;
+//			break;
+//		default:
+//			throw new IllegalArgumentException("Unsupported limiter type: " + limiter.type);
+//		}
+//
+//		return tab;
+//	}
 
 	/**
 	 * Returns the limiter set on the current adapter or null if there is none.
-	 */
-	public Limiter getCurrentLimiter()
-	{
-		LibraryAdapter current = mCurrentAdapter;
-		if (current == null)
-			return null;
-		return current.getLimiter();
-	}
+//	 */
+//	public Limiter getCurrentLimiter()
+//	{
+//		LibraryAdapter current = mCurrentAdapter;
+//		if (current == null)
+//			return null;
+//		return current.getLimiter();
+//	}
 
 	/**
 	 * Run on query on the adapter passed in obj.
@@ -687,7 +588,7 @@ public class LibraryPagerAdapter
 		}
 		case MSG_SAVE_SORT: {
 			SortAdapter adapter = (SortAdapter)message.obj;
-			SharedPreferences.Editor editor = PlaybackService.getSettings(mActivity).edit();
+			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 			editor.putInt(String.format("sort_%d_%d", adapter.getMediaType(), adapter.getLimiterType()), adapter.getSortMode());
 			editor.commit();
 			break;
@@ -781,7 +682,7 @@ public class LibraryPagerAdapter
 	{
 		String key = String.format("sort_%d_%d", adapter.getMediaType(), adapter.getLimiterType());
 		int def = adapter.getDefaultSortMode();
-		int sort = PlaybackService.getSettings(mActivity).getInt(key, def);
+		int sort = PreferenceManager.getDefaultSharedPreferences(context).getInt(key, def);
 		adapter.setSortMode(sort);
 	}
 
@@ -830,13 +731,12 @@ public class LibraryPagerAdapter
 	}
 
 	@Override
-	public void onPageScrollStateChanged(int state)
-	{
+	public void onPageScrollStateChanged(int state) {
 	}
 
 	@Override
-	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-	{
+	public void onPageScrolled(int position, float positionOffset,
+			int positionOffsetPixels) {
 	}
 	
 	public int getCurrentType() {
@@ -853,7 +753,7 @@ public class LibraryPagerAdapter
 		// - setPrimaryItem isn't called until scrolling is complete, which
 		//   makes tab bar and limiter updates look bad
 		// So we use both.
-//		setPrimaryItem(null, position, null);
+		setPrimaryItem(null, position, null);
 	}
 
 	/**
@@ -868,14 +768,14 @@ public class LibraryPagerAdapter
 		return intent;
 	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo)
-	{
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-		View targetView = info.targetView;
-		Intent intent = info.id == -1 ? createHeaderIntent(targetView) : mCurrentAdapter.createData(targetView);
-		mActivity.onCreateContextMenu(menu, intent);
-	}
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo)
+//	{
+//		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+//		View targetView = info.targetView;
+//		Intent intent = info.id == -1 ? createHeaderIntent(targetView) : mCurrentAdapter.createData(targetView);
+//		mActivity.onCreateContextMenu(menu, intent);
+//	}
 
 	@Override
 	public void onItemClick(AdapterView<?> list, View view, int position, long id)

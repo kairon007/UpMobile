@@ -29,6 +29,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,7 +73,10 @@ public class CompatHoneycomb {
 		int[] order = activity.mPagerAdapter.mTabOrder;
 		int[] titles = LibraryPagerAdapter.TITLES;
 		for (int i = 0, n = activity.mPagerAdapter.getCount(); i != n; ++i) {
-			ab.addTab(ab.newTab().setText(titles[order[i]]).setTabListener(listener));
+			ab.addTab
+			(ab.newTab()
+					.setText(titles[order[i]])
+					.setTabListener(listener));
 		}
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 	}

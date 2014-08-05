@@ -32,6 +32,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 
@@ -80,7 +81,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 	private static void beep(Context context)
 	{
 		if (sBeep == -1) {
-			SharedPreferences settings = PlaybackService.getSettings(context);
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 			sBeep = settings.getBoolean(PrefKeys.MEDIA_BUTTON_BEEP, true) ? 1 : 0;
 		}
 
@@ -118,7 +119,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 	public static boolean useHeadsetControls(Context context)
 	{
 		if (sUseControls == -1) {
-			SharedPreferences settings = PlaybackService.getSettings(context);
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 			sUseControls = settings.getBoolean(PrefKeys.MEDIA_BUTTON, true) ? 1 : 0;
 		}
 
@@ -157,59 +158,59 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 	 * @return True if the event was handled and the broadcast should be
 	 * aborted.
 	 */
-	public static boolean processKey(Context context, KeyEvent event)
-	{
-		if (event == null || isInCall(context) || !useHeadsetControls(context))
-			return false;
-
-		int action = event.getAction();
-		String act = null;
-
-		switch (event.getKeyCode()) {
-		case KeyEvent.KEYCODE_HEADSETHOOK:
-		case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-			// single click: pause/resume.
-			// double click: next track
-
-			if (action == KeyEvent.ACTION_DOWN) {
-				long time = SystemClock.uptimeMillis();
-				if (time - sLastClickTime < DOUBLE_CLICK_DELAY) {
-					beep(context);
-					act = PlaybackService.ACTION_NEXT_SONG_AUTOPLAY;
-				} else {
-					act = PlaybackService.ACTION_TOGGLE_PLAYBACK;
-				}
-				sLastClickTime = time;
-			}
-			break;
-		case KeyEvent.KEYCODE_MEDIA_NEXT:
-			if (action == KeyEvent.ACTION_DOWN)
-				act = PlaybackService.ACTION_NEXT_SONG_AUTOPLAY;
-			break;
-		case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-			if (action == KeyEvent.ACTION_DOWN)
-				act = PlaybackService.ACTION_PREVIOUS_SONG_AUTOPLAY;
-			break;
-		case KeyEvent.KEYCODE_MEDIA_PLAY:
-			if (action == KeyEvent.ACTION_DOWN)
-				act = PlaybackService.ACTION_PLAY;
-			break;
-		case KeyEvent.KEYCODE_MEDIA_PAUSE:
-			if (action == KeyEvent.ACTION_DOWN)
-				act = PlaybackService.ACTION_PAUSE;
-			break;
-		default:
-			return false;
-		}
-
-		if (act != null) {
-			Intent intent = new Intent(context, PlaybackService.class);
-			intent.setAction(act);
-			context.startService(intent);
-		}
-
-		return true;
-	}
+//	public static boolean processKey(Context context, KeyEvent event)
+//	{
+//		if (event == null || isInCall(context) || !useHeadsetControls(context))
+//			return false;
+//
+//		int action = event.getAction();
+//		String act = null;
+//
+//		switch (event.getKeyCode()) {
+//		case KeyEvent.KEYCODE_HEADSETHOOK:
+//		case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+//			// single click: pause/resume.
+//			// double click: next track
+//
+//			if (action == KeyEvent.ACTION_DOWN) {
+//				long time = SystemClock.uptimeMillis();
+//				if (time - sLastClickTime < DOUBLE_CLICK_DELAY) {
+//					beep(context);
+//					act = PlaybackService.ACTION_NEXT_SONG_AUTOPLAY;
+//				} else {
+//					act = PlaybackService.ACTION_TOGGLE_PLAYBACK;
+//				}
+//				sLastClickTime = time;
+//			}
+//			break;
+//		case KeyEvent.KEYCODE_MEDIA_NEXT:
+//			if (action == KeyEvent.ACTION_DOWN)
+//				act = PlaybackService.ACTION_NEXT_SONG_AUTOPLAY;
+//			break;
+//		case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+//			if (action == KeyEvent.ACTION_DOWN)
+//				act = PlaybackService.ACTION_PREVIOUS_SONG_AUTOPLAY;
+//			break;
+//		case KeyEvent.KEYCODE_MEDIA_PLAY:
+//			if (action == KeyEvent.ACTION_DOWN)
+//				act = PlaybackService.ACTION_PLAY;
+//			break;
+//		case KeyEvent.KEYCODE_MEDIA_PAUSE:
+//			if (action == KeyEvent.ACTION_DOWN)
+//				act = PlaybackService.ACTION_PAUSE;
+//			break;
+//		default:
+//			return false;
+//		}
+//
+//		if (act != null) {
+//			Intent intent = new Intent(context, PlaybackService.class);
+//			intent.setAction(act);
+//			context.startService(intent);
+//		}
+//
+//		return true;
+//	}
 
 	/**
 	 * Request focus on the media buttons from AudioManager if media buttons
@@ -245,11 +246,11 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
-		if (Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
-			KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-			boolean handled = processKey(context, event);
-			if (handled && isOrderedBroadcast())
-				abortBroadcast();
-		}
+//		if (Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
+//			KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+//			boolean handled = processKey(context, event);
+//			if (handled && isOrderedBroadcast())
+//				abortBroadcast();
+//		}
 	}
 }

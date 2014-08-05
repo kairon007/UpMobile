@@ -34,7 +34,7 @@ import android.view.ViewConfiguration;
  * Framework methods only in Froyo or above go here.
  */
 @TargetApi(8)
-public class CompatFroyo implements AudioManager.OnAudioFocusChangeListener {
+public class CompatFroyo {
 	/**
 	 * Instance of the audio focus listener created by {@link #createAudioFocus()}.
 	 */
@@ -75,19 +75,19 @@ public class CompatFroyo implements AudioManager.OnAudioFocusChangeListener {
 	/**
 	 * Calls {@link AudioManager#requestAudioFocus(AudioManager.OnAudioFocusChangeListener, int, int)}
 	 */
-	public static void requestAudioFocus(AudioManager manager)
-	{
-		manager.requestAudioFocus(sAudioFocus, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-	}
+//	public static void requestAudioFocus(AudioManager manager)
+//	{
+//		manager.requestAudioFocus(sAudioFocus, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+//	}
 
-	@Override
-	public void onAudioFocusChange(int type)
-	{
-		PlaybackService service = PlaybackService.sInstance;
-		if (service != null) {
-			service.onAudioFocusChange(type);
-		}
-	}
+//	@Override
+//	public void onAudioFocusChange(int type)
+//	{
+//		PlaybackService service = PlaybackService.sInstance;
+//		if (service != null) {
+//			service.onAudioFocusChange(type);
+//		}
+//	}
 
 	/**
 	 * Calls {@link VelocityTracker#getYVelocity(int)}.

@@ -59,13 +59,14 @@ public class MediaAdapter
 {
 	private static final Pattern SPACE_SPLIT = Pattern.compile("\\s+");
 	private static final SparseIntArray stringCaptions = new SparseIntArray() {{
-		put(MediaUtils.TYPE_SEARCH, 0);
-		put(MediaUtils.TYPE_ARTIST, R.array.songs);
-		put(MediaUtils.TYPE_ALBUM, R.array.tracks);
-		put(MediaUtils.TYPE_SONG, 0);
-		put(MediaUtils.TYPE_PLAYLIST, 0);
-		put(MediaUtils.TYPE_GENRE, R.array.tracks);
-		put(MediaUtils.TYPE_FILE, 0);
+//		put(MediaUtils.TYPE_SEARCH, 0);
+//		put(MediaUtils.TYPE_ARTIST, R.array.songs);
+//		put(MediaUtils.TYPE_ALBUM, R.array.tracks);
+//		put(MediaUtils.TYPE_SONG, 0);
+		
+		put(MediaUtils.TYPE_DOWNLOADS, 0);
+		put(MediaUtils.TYPE_MUSIC, 0);
+		put(MediaUtils.TYPE_LIBRARY, 0);
 	}};
 
 	/**
@@ -106,12 +107,6 @@ public class MediaAdapter
 	 */
 	private String[] mProjection;
 	/**
-	 * A limiter is used for filtering. The intention is to restrict items
-	 * displayed in the list to only those of a specific artist or album, as
-	 * selected through an expander arrow in a broader MediaAdapter list.
-	 */
-	private Limiter mLimiter;
-	/**
 	 * The constraint used for filtering, set by the search box.
 	 */
 	private String mConstraint;
@@ -149,52 +144,33 @@ public class MediaAdapter
 	 */
 	
 	
-	public MediaAdapter(MainActivity activity, int type, Limiter limiter) {
+	public MediaAdapter(MainActivity activity, int type) {
 		mActivity = activity;
 		mType = type;
-		mLimiter = limiter;
 		mIndexer = new MusicAlphabetIndexer(1);
 		mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		switch (type) {
-		case MediaUtils.TYPE_ARTIST: 
-			mStore = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Artists.ARTIST, "null", MediaStore.Audio.Artists.NUMBER_OF_TRACKS };
-			mFieldKeys = new String[] { MediaStore.Audio.Artists.ARTIST_KEY };
-			mSongSort = MediaUtils.DEFAULT_SORT;
-			mSortEntries = new int[] { R.string.name, R.string.number_of_tracks };
-			mSortValues = new String[] { "artist_key %1$s", "number_of_tracks %1$s,artist_key %1$s" };
-			break;
-		case MediaUtils.TYPE_ALBUM: 
-			mStore = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ARTIST, MediaStore.Audio.Albums.NUMBER_OF_SONGS };
-			// Why is there no artist_key column constant in the album MediaStore? The column does seem to exist.
-			mFieldKeys = new String[] { "artist_key", MediaStore.Audio.Albums.ALBUM_KEY };
-			mSongSort = "album_key,track";
-			mSortEntries = new int[] { R.string.name, R.string.artist_album, R.string.year, R.string.number_of_tracks };
-			mSortValues = new String[] { "album_key %1$s", "artist_key %1$s,album_key %1$s", "minyear %1$s,album_key %1$s", "numsongs %1$s,album_key %1$s" };
-			break;
-		case MediaUtils.TYPE_SONG: 
+		case MediaUtils.TYPE_DOWNLOADS: 
 			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST };
 			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
 			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };
 			mSortValues = new String[] { "title_key %1$s", "artist_key %1$s,album_key %1$s,track %1$s", "artist_key %1$s,album_key %1$s,title_key %1$s", "artist_key %1$s,year %1$s,track %1$s", "year %1$s,title_key %1$s" };
 			break;
-		case MediaUtils.TYPE_PLAYLIST: 
-			mStore = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Playlists.NAME };
-			mFieldKeys = null;
-			mSortEntries = new int[] { R.string.name, R.string.date_added };
-			mSortValues = new String[] { "name %1$s", "date_added %1$s" };
-			mExpandable = true;
+		case MediaUtils.TYPE_MUSIC: 
+			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST };
+			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
+			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };
+			mSortValues = new String[] { "title_key %1$s", "artist_key %1$s,album_key %1$s,track %1$s", "artist_key %1$s,album_key %1$s,title_key %1$s", "artist_key %1$s,year %1$s,track %1$s", "year %1$s,title_key %1$s" };
 			break;
-		case MediaUtils.TYPE_GENRE: 
-			mStore = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Genres.NAME, MediaStore.Audio.GenresColumns.NAME, MediaStore.Audio.GenresColumns.NAME };
-			mFieldKeys = null;
-			mSortEntries = new int[] { R.string.name };
-			mSortValues = new String[] { "name %1$s" };
+		case MediaUtils.TYPE_LIBRARY: 
+			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST };
+			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
+			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };
+			mSortValues = new String[] { "title_key %1$s", "artist_key %1$s,album_key %1$s,track %1$s", "artist_key %1$s,album_key %1$s,title_key %1$s", "artist_key %1$s,year %1$s,track %1$s", "year %1$s,title_key %1$s" };
 			break;
 		default:
 			throw new IllegalArgumentException("Invalid value for type: " + type);
@@ -233,7 +209,7 @@ public class MediaAdapter
 	 */
 	public QueryTask buildQuery(String[] projection, boolean forceMusicCheck) {
 		String constraint = mConstraint;
-		Limiter limiter = mLimiter;
+//		Limiter limiter = mLimiter;
 
 		StringBuilder selection = new StringBuilder();
 		String[] selectionArgs = null;
@@ -291,21 +267,21 @@ public class MediaAdapter
 			}
 		}
 
-		if (limiter != null && limiter.type == MediaUtils.TYPE_GENRE) { 
-			// Genre is not standard metadata for MediaStore.Audio.Media.
-			// We have to query it through a separate provider. : /
-			return MediaUtils.buildGenreQuery((Long)limiter.data, projection,  selection.toString(), selectionArgs, sort);
-		} else {
-			if (limiter != null) { 
-				if (selection.length() != 0)
-					selection.append(" AND ");
-				selection.append(limiter.data);
-			}
+//		if (limiter != null && limiter.type == MediaUtils.TYPE_GENRE) { 
+//			// Genre is not standard metadata for MediaStore.Audio.Media.
+//			// We have to query it through a separate provider. : /
+//			return MediaUtils.buildGenreQuery((Long)limiter.data, projection,  selection.toString(), selectionArgs, sort);
+//		} else {
+//			if (limiter != null) { 
+//				if (selection.length() != 0)
+//					selection.append(" AND ");
+//				selection.append(limiter.data);
+//			}
 
-			QueryTask queryTask = new QueryTask(mStore, projection, selection.toString(), selectionArgs, sort);
-			queryTask.type = mType;
-			return queryTask;
-		}
+		QueryTask queryTask = new QueryTask(mStore, projection, selection.toString(), selectionArgs, sort);
+		queryTask.type = mType;
+		return queryTask;
+//		}
 	}
 
 	@Override
@@ -347,50 +323,50 @@ public class MediaAdapter
 		return mType;
 	}
 
-	@Override
-	public void setLimiter(Limiter limiter) {
-		mLimiter = limiter;
-	}
+//	@Override
+//	public void setLimiter(Limiter limiter) {
+//		mLimiter = limiter;
+//	}
 
-	@Override
-	public Limiter getLimiter() {
-		return mLimiter;
-	}
+//	@Override
+//	public Limiter getLimiter() {
+//		return mLimiter;
+//	}
 
-	@Override
-	public Limiter buildLimiter(long id) {
-		String[] fields;
-		Object data;
-
-		Cursor cursor = mCursor;
-		if (cursor == null)
-			return null;
-		for (int i = 0, count = cursor.getCount(); i != count; ++i) {
-			
-			cursor.moveToPosition(i);
-			if (cursor.getLong(0) == id)
-				break;
-		}
-
-		switch (mType) {
-		case MediaUtils.TYPE_ARTIST:
-			fields = new String[] { cursor.getString(1) };
-			data = String.format("%s=%d", MediaStore.Audio.Media.ARTIST_ID, id);
-			break;
-		case MediaUtils.TYPE_ALBUM:
-			fields = new String[] { cursor.getString(2), cursor.getString(1) };
-			data = String.format("%s=%d",  MediaStore.Audio.Media.ALBUM_ID, id);
-			break;
-		case MediaUtils.TYPE_GENRE:
-			fields = new String[] { cursor.getString(1) };
-			data = id;
-			break;
-		default:
-			throw new IllegalStateException("getLimiter() is not supported for media type: " + mType);
-		}
-
-		return new Limiter(mType, fields, data);
-	}
+//	@Override
+//	public Limiter buildLimiter(long id) {
+//		String[] fields;
+//		Object data;
+//
+//		Cursor cursor = mCursor;
+//		if (cursor == null)
+//			return null;
+//		for (int i = 0, count = cursor.getCount(); i != count; ++i) {
+//			
+//			cursor.moveToPosition(i);
+//			if (cursor.getLong(0) == id)
+//				break;
+//		}
+//
+//		switch (mType) {
+//		case MediaUtils.TYPE_ARTIST:
+//			fields = new String[] { cursor.getString(1) };
+//			data = String.format("%s=%d", MediaStore.Audio.Media.ARTIST_ID, id);
+//			break;
+//		case MediaUtils.TYPE_ALBUM:
+//			fields = new String[] { cursor.getString(2), cursor.getString(1) };
+//			data = String.format("%s=%d",  MediaStore.Audio.Media.ALBUM_ID, id);
+//			break;
+//		case MediaUtils.TYPE_GENRE:
+//			fields = new String[] { cursor.getString(1) };
+//			data = id;
+//			break;
+//		default:
+//			throw new IllegalStateException("getLimiter() is not supported for media type: " + mType);
+//		}
+//
+//		return new Limiter(mType, fields, data);
+//	}
 
 	/**
 	 * Set a new cursor for this adapter. The old cursor will be closed.
@@ -450,7 +426,7 @@ public class MediaAdapter
 			.setId(cursor.getLong(0))
 			.setExpandable(mExpandable)
 			.setLine1(cursor.getString(1))
-			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
+//			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
 			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
 		return builder.build();
 	}
@@ -461,13 +437,13 @@ public class MediaAdapter
 	 * @return One of MediaUtils.TYPE_, or MediaUtils.TYPE_INVALID if there is
 	 * no limiter set.
 	 */
-	public int getLimiterType()
-	{
-		Limiter limiter = mLimiter;
-		if (limiter != null)
-			return limiter.type;
-		return MediaUtils.TYPE_INVALID;
-	}
+//	public int getLimiterType()
+//	{
+//		Limiter limiter = mLimiter;
+//		if (limiter != null)
+//			return limiter.type;
+//		return MediaUtils.TYPE_INVALID;
+//	}
 
 	/**
 	 * Return the available sort modes for this adapter.
@@ -536,9 +512,9 @@ public class MediaAdapter
 			}
 		}
 		Intent intent = createData(view);
-		if (arrowClicked) {
-			mActivity.onItemExpanded(intent);
-		} else {
+		if (!arrowClicked) {
+//			mActivity.onItemExpanded(intent);
+//		} else {
 			mActivity.onItemClicked(intent);
 		}
 	}

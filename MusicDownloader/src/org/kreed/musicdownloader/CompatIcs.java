@@ -42,6 +42,7 @@ public class CompatIcs {
 	 */
 	private static RemoteControlClient sRemote;
 
+	public static final int FLAG_PLAYING = 0x1;
 	/**
 	 * Perform initialization required for RemoteControlClient.
 	 *
@@ -86,7 +87,7 @@ public class CompatIcs {
 		if (remote == null)
 			return;
 
-		remote.setPlaybackState((state & PlaybackService.FLAG_PLAYING) != 0 ? RemoteControlClient.PLAYSTATE_PLAYING : RemoteControlClient.PLAYSTATE_PAUSED);
+		remote.setPlaybackState((state & FLAG_PLAYING) != 0 ? RemoteControlClient.PLAYSTATE_PLAYING : RemoteControlClient.PLAYSTATE_PAUSED);
 		RemoteControlClient.MetadataEditor editor = remote.editMetadata(true);
 		if (song != null) {
 			editor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.artist);

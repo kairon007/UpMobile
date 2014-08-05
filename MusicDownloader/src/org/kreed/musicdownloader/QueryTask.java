@@ -24,9 +24,7 @@ package org.kreed.musicdownloader;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.database.MergeCursor;
 import android.net.Uri;
-import android.provider.MediaStore.Audio;
 import android.util.Log;
 
 /**
@@ -60,8 +58,7 @@ public class QueryTask {
 	 * Create the tasks. All arguments are passed directly to
 	 * ContentResolver.query().
 	 */
-	public QueryTask(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
-	{
+	public QueryTask(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder){
 		this.uri = uri;
 		this.projection = projection;
 		this.selection = selection;
@@ -74,51 +71,50 @@ public class QueryTask {
 	 *
 	 * @param resolver The ContentResolver to query with.
 	 */
-	public Cursor runQuery(ContentResolver resolver)
-	{
+	public Cursor runQuery(ContentResolver resolver){
 		final Cursor query = resolver.query(uri, projection, selection, selectionArgs, sortOrder);
-		Log.i(getClass().getSimpleName(), "runQuery()");
-		if (type == MediaUtils.TYPE_GENRE && query != null && query.getCount() > 0) {
-			Log.i(getClass().getSimpleName(), "... genreCursor returned");
-			return new GenreCursorWrapper(query, resolver);
-		}
+		Log.d("log", "QueryTask.runQuery()");
+//		if (type == MediaUtils.TYPE_GENRE && query != null && query.getCount() > 0) {
+//			Log.i(getClass().getSimpleName(), "... genreCursor returned");
+//			return new GenreCursorWrapper(query, resolver);
+//		}
 		return query;
 	}
 	
-	private final class GenreCursorWrapper extends MergeCursor {
-		private static final int COUNT_COLUMN = 3;
-		private final Cursor query;
-		private int[] counts;
-		
-		private GenreCursorWrapper(Cursor query, ContentResolver resolver) {
-			super(new Cursor[]{query});
-			Log.i(getClass().getSimpleName(), "GenreCursor constructor");
-			this.query = query;
-			this.counts = new int[query.getCount()];
-		    int i = 1;
-			query.moveToFirst();
-			while (query.moveToNext() && !query.isAfterLast()) {
-			    Uri uri = Audio.Genres.Members.getContentUri("external", query.getLong(0)); 
-			    Cursor c = resolver.query(uri, null, null, null, null);
-			    if (c == null || c.getCount() == 0) {
-			    	counts[i++] = 0;
-			    	continue;
-			    }
-			    int num = c.getCount();
-			    c.close();
-				counts[i++] = num;
-			}
-		}
-
-		@Override
-		public String getString(int column) {
-			Log.i(getClass().getSimpleName(), "getString("+column+")");
-			if (COUNT_COLUMN == column) {
-				return String.valueOf(counts[getPosition()]);
-			} else {
-				return query.getString(column);
-			}
-		}
-	}
+//	private final class GenreCursorWrapper extends MergeCursor {
+//		private static final int COUNT_COLUMN = 3;
+//		private final Cursor query;
+//		private int[] counts;
+//		
+//		private GenreCursorWrapper(Cursor query, ContentResolver resolver) {
+//			super(new Cursor[]{query});
+//			Log.i(getClass().getSimpleName(), "GenreCursor constructor");
+//			this.query = query;
+//			this.counts = new int[query.getCount()];
+//		    int i = 1;
+//			query.moveToFirst();
+//			while (query.moveToNext() && !query.isAfterLast()) {
+//			    Uri uri = Audio.Genres.Members.getContentUri("external", query.getLong(0)); 
+//			    Cursor c = resolver.query(uri, null, null, null, null);
+//			    if (c == null || c.getCount() == 0) {
+//			    	counts[i++] = 0;
+//			    	continue;
+//			    }
+//			    int num = c.getCount();
+//			    c.close();
+//				counts[i++] = num;
+//			}
+//		}
+//
+//		@Override
+//		public String getString(int column) {
+//			Log.i(getClass().getSimpleName(), "getString("+column+")");
+//			if (COUNT_COLUMN == column) {
+//				return String.valueOf(counts[getPosition()]);
+//			} else {
+//				return query.getString(column);
+//			}
+//		}
+//	}
 
 }
