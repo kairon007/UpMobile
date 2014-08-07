@@ -32,6 +32,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.util.SparseIntArray;
@@ -63,9 +64,8 @@ public class MediaAdapter
 //		put(MediaUtils.TYPE_ARTIST, R.array.songs);
 //		put(MediaUtils.TYPE_ALBUM, R.array.tracks);
 //		put(MediaUtils.TYPE_SONG, 0);
-		
+		put(MediaUtils.TYPE_SEARCH, 0);
 		put(MediaUtils.TYPE_DOWNLOADS, 0);
-		put(MediaUtils.TYPE_MUSIC, 0);
 		put(MediaUtils.TYPE_LIBRARY, 0);
 	}};
 
@@ -153,13 +153,8 @@ public class MediaAdapter
 		switch (type) {
 		case MediaUtils.TYPE_DOWNLOADS: 
 			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST };
-			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
-			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };
-			mSortValues = new String[] { "title_key %1$s", "artist_key %1$s,album_key %1$s,track %1$s", "artist_key %1$s,album_key %1$s,title_key %1$s", "artist_key %1$s,year %1$s,track %1$s", "year %1$s,title_key %1$s" };
-			break;
-		case MediaUtils.TYPE_MUSIC: 
-			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+			mStore = Uri.parse(Environment.getExternalStorageDirectory()
+					+ "/MusicDownloader/");
 			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST };
 			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
 			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };
@@ -167,6 +162,7 @@ public class MediaAdapter
 			break;
 		case MediaUtils.TYPE_LIBRARY: 
 			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+			mStore = Uri.parse(Environment.getExternalStorageDirectory() + "/MusicDownloader/");
 			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST };
 			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
 			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };

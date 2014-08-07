@@ -72,11 +72,13 @@ public class LibraryPagerAdapter
 	 * The human-readable title for each list. The positions correspond to the
 	 * MediaUtils ids, so e.g. TITLES[MediaUtils.TYPE_SONG] = R.string.songs
 	 */
-	public static final int[] TITLES = { R.string.downloads, R.string.music, R.string.library };
+	public static final int[] TITLES = { R.string.search, R.string.downloads,
+			R.string.library };
 	/**
 	 * Default tab order.
 	 */
-	public static final int[] DEFAULT_ORDER = { MediaUtils.TYPE_DOWNLOADS, MediaUtils.TYPE_MUSIC, MediaUtils.TYPE_LIBRARY };
+	public static final int[] DEFAULT_ORDER = { MediaUtils.TYPE_SEARCH,
+			MediaUtils.TYPE_DOWNLOADS, MediaUtils.TYPE_LIBRARY };
 	/**
 	 * The user-chosen tab order.
 	 */
@@ -230,10 +232,10 @@ public class LibraryPagerAdapter
 		int libraryPosition = -1;
 		for (int i = mTabCount - 1; --i > -1;) {
 			switch (order[i]) {
-			case MediaUtils.TYPE_DOWNLOADS:
+			case MediaUtils.TYPE_SEARCH:
 				downloadsPosition = i;
 				break;
-			case MediaUtils.TYPE_MUSIC:
+			case MediaUtils.TYPE_DOWNLOADS:
 				musicPosition = i;
 				break;
 			case MediaUtils.TYPE_LIBRARY:
@@ -254,6 +256,7 @@ public class LibraryPagerAdapter
 		mLibraryPosition = libraryPosition;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{ 
@@ -266,38 +269,34 @@ public class LibraryPagerAdapter
 			LibraryAdapter adapter;
 			TextView header = null;
 			Typeface font = MusicDownloaderApp.FONT_LIGHT;
-
 			switch (type) {
-			case MediaUtils.TYPE_DOWNLOADS: 
-				adapter = mDownloadsAdapter = new MediaAdapter(activity, MediaUtils.TYPE_DOWNLOADS);
-				mDownloadsAdapter.setExpandable(mMusicPosition != -1 || mDownloadsPosition != -1);
-				mArtistHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
+			case MediaUtils.TYPE_SEARCH: 
+				View searchView = SearchTab.getInstanceView(inflater, activity);
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					mArtistHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
+					searchView.findViewById(R.id.search_field).setBackgroundDrawable
+						(activity.getResources().getDrawable(R.drawable.search_background_white));
+					((ListView)searchView.findViewById(R.id.list)).setDivider(new ColorDrawable
+							(activity.getResources().getColor(R.color.divider_color_light)));
+					((ListView)searchView.findViewById(R.id.list)).setDividerHeight(1);
+					searchView.findViewById(R.id.search_field).setBackgroundDrawable
+						(activity.getResources().getDrawable(R.drawable.search_background_black));
 				}
-			    mArtistHeader.setTypeface(font);
-				break;
+				container.addView(searchView);
+				return searchView;
+			case MediaUtils.TYPE_DOWNLOADS:
+				 View downloadView = DownloadsTab.getInstanceView(inflater,
+				 activity);
+				 container.addView(downloadView);
+				 return downloadView;
 			case MediaUtils.TYPE_LIBRARY:
-				adapter = mLibraryAdapter = new MediaAdapter(activity, MediaUtils.TYPE_LIBRARY);
-				mLibraryAdapter.setExpandable(mMusicPosition != -1);
-				mAlbumHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
-				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					mAlbumHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
-				}
-				mAlbumHeader.setTypeface(font);
-				break;
-			case MediaUtils.TYPE_MUSIC: 
-				adapter = mMusicAdapter = new MediaAdapter(activity, MediaUtils.TYPE_MUSIC);
-				mSongHeader = header = (TextView)inflater.inflate(R.layout.library_row, null);
-				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					mSongHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
-				}
-				mSongHeader.setTypeface(font);
-				mSongHeader.setText("");
+//				adapter = mDownloadsAdapter = new MediaAdapter(activity,
+//						MediaUtils.TYPE_DOWNLOADS);
+//				mDownloadsAdapter.setExpandable(mMusicPosition != -1
+//						|| mDownloadsPosition != -1);
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid media type: " + type);
-			}
+				throw new IllegalArgumentException("Invalid media type: "+ type);
+			} 
 
 			view = (ListView)inflater.inflate(R.layout.listview, null);
 			if ("AppTheme.White".equals(Util.getThemeName(mActivity))) {
@@ -305,21 +304,13 @@ public class LibraryPagerAdapter
 						(activity.getResources().getColor(R.color.divider_color_light)));
 				view.setDividerHeight(1);
 			}
-//			view.setOnCreateContextMenuListener(this);
 			view.setOnItemClickListener(this);
 			view.setTag(type);
-			if (header != null) {
-				header.setText(mHeaderText);
-				header.setTag(type);
-				view.addHeaderView(header);
-			}
-			view.setAdapter(adapter);
-//			if (type != MediaUtils.TYPE_FILE)
-			loadSortOrder((SortAdapter)adapter);
+//			view.setAdapter(adapter);
+//			loadSortOrder((SortAdapter)adapter);
 			enableFastScroll(view);
-			adapter.setFilter(mFilter);
-
-			mAdapters[type] = adapter;
+//			adapter.setFilter(mFilter);
+//			mAdapters[type] = adapter;
 			mLists[type] = view;
 			mRequeryNeeded[type] = true;
 		}
@@ -342,7 +333,7 @@ public class LibraryPagerAdapter
 		}
 		return POSITION_NONE;
 	}
-
+ 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object)
 	{
@@ -406,27 +397,6 @@ public class LibraryPagerAdapter
 		return out;
 	}
 
-	/**
-	 * Sets the text to be displayed in the first row of the artist, album, and
-	 * song lists.
-	 */
-	public void setHeaderText(String text) {
-		
-		if (mArtistHeader != null) {	
-			mArtistHeader.setText(text);
-			mArtistHeader.setTypeface(MusicDownloaderApp.FONT_LIGHT);
-		} 
-		if (mAlbumHeader != null) {
-			mAlbumHeader.setText(text);
-			mAlbumHeader.setTypeface(MusicDownloaderApp.FONT_LIGHT);
-		}
-		if (mSongHeader != null) {
-			mSongHeader.setText(text);
-			mSongHeader.setTypeface(MusicDownloaderApp.FONT_LIGHT);
-
-		}
-		mHeaderText = text;
-	}
 
 //	/**
 //	 * Clear a limiter.

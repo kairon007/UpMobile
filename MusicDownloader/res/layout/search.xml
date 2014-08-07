@@ -46,13 +46,6 @@
             android:layout_height="48dp"
             android:background="@drawable/clear_clickable"
             android:src="@android:drawable/ic_menu_search" />
-
-        <ImageButton
-            android:id="@+id/downloads"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/clear_clickable"
-            android:src="@drawable/ic_menu_archive" />
     </LinearLayout>
 
     <FrameLayout

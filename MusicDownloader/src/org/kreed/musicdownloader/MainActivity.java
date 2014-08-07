@@ -79,7 +79,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.startapp.android.publish.splash.SplashConfig.Theme;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -629,7 +628,7 @@ public class MainActivity extends Activity implements TextWatcher{
 			action = mLastAction;
 		boolean isEnqueue = action == ACTION_ENQUEUE || action == ACTION_ENQUEUE_ALL;
 		String text = getString(isEnqueue ? R.string.enqueue_all : R.string.play_all);
-		mPagerAdapter.setHeaderText(text);
+//		mPagerAdapter.setHeaderText(text);
 	}
 
 	/**
@@ -1389,13 +1388,13 @@ public class MainActivity extends Activity implements TextWatcher{
 		return info;
 	}
 
-//	@Override
-//	protected Dialog onCreateDialog(int id, Bundle args) {
-//		if (id == SearchTab.STREAM_DIALOG_ID) {
-//			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
-//		}
-//		return super.onCreateDialog(id, args);
-//	}
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle args) {
+		if (id == SearchTab.STREAM_DIALOG_ID) {
+			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
+		}
+		return super.onCreateDialog(id, args);
+	}
 	
 	@Override
 	public void onBackPressed() {

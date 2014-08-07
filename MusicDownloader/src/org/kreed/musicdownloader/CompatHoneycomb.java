@@ -70,7 +70,7 @@ public class CompatHoneycomb {
 		ActionBar ab =  activity.getActionBar();
 			ab.removeAllTabs();
 		
-		int[] order = activity.mPagerAdapter.mTabOrder;
+			int[] order = activity.mPagerAdapter.mTabOrder;
 		int[] titles = LibraryPagerAdapter.TITLES;
 		for (int i = 0, n = activity.mPagerAdapter.getCount(); i != n; ++i) {
 			ab.addTab

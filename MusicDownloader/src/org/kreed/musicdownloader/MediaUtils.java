@@ -59,11 +59,11 @@ public class MediaUtils {
 	/**
 	 * Type indicating an id represents a playlist.
 	 */
-	public static final int TYPE_DOWNLOADS = 0;//4;
+	public static final int TYPE_DOWNLOADS = 1;//4;
 	/**
 	 * Type indicating ids represent genres.
 	 */
-	public static final int TYPE_MUSIC = 1;//5;
+	//public static final int TYPE_MUSIC = 1;//5;
 	/**
 	 * Special type for files and folders. Most methods do not accept this type
 	 * since files have no MediaStore id and require special handling.
@@ -77,7 +77,7 @@ public class MediaUtils {
 	 * Special type for search. Most methods do not accept this type
 	 * since files have no MediaStore id and require special handling.
 	 */
-	public static final int TYPE_SEARCH = 3;
+	public static final int TYPE_SEARCH = 0;
 
 	/**
 	 * The default sort order for media queries. First artist, then album, then
@@ -136,10 +136,10 @@ public class MediaUtils {
 
 		switch (type) {
 		case TYPE_DOWNLOADS:
-			selection.append(MediaStore.Audio.Media._ID);
+//			selection.append(MediaStore.Audio.Media._ID);
 			break;
-		case TYPE_MUSIC:
-			selection.append(MediaStore.Audio.Media.ARTIST_ID);
+		case TYPE_SEARCH:
+//			selection.append(MediaStore.Audio.Media.ARTIST_ID);
 			break;
 		case TYPE_LIBRARY:
 			selection.append(MediaStore.Audio.Media.ALBUM_ID);
@@ -215,9 +215,10 @@ public class MediaUtils {
 	public static QueryTask buildQuery(int type, long id, String[] projection, String selection)
 	{
 		switch (type) {
-		case TYPE_DOWNLOADS:
+		case TYPE_SEARCH:
 		case TYPE_LIBRARY:
-		case TYPE_MUSIC:
+		case TYPE_DOWNLOADS:
+		
 			return buildMediaQuery(type, id, projection, selection);
 //		case TYPE_PLAYLIST:
 //			return buildPlaylistQuery(id, projection, selection);
