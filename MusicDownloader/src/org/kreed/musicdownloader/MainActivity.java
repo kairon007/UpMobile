@@ -22,6 +22,7 @@ package org.kreed.musicdownloader;
  */
 
 import java.io.File;
+import java.io.FileDescriptor;
 
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 
@@ -46,6 +47,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -274,6 +276,13 @@ public class MainActivity extends Activity implements TextWatcher{
 //		if (state == null) {
 //			checkForLaunch(getIntent());
 //		}
+		File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
+		if (file.exists()) {
+			file.mkdirs();
+		}
+		else{
+			file.mkdirs();
+		}
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			setTheme(R.style.Library_White);
 		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {

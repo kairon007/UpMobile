@@ -22,30 +22,32 @@ package org.kreed.musicdownloader;
  */
 
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -266,7 +268,7 @@ public class LibraryPagerAdapter
 		if (view == null) {
 			MainActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
-			LibraryAdapter adapter;
+			LibraryPageAdapter adapter;
 			TextView header = null;
 			Typeface font = MusicDownloaderApp.FONT_LIGHT;
 			switch (type) {
@@ -289,16 +291,32 @@ public class LibraryPagerAdapter
 				 container.addView(downloadView);
 				 return downloadView;
 			case MediaUtils.TYPE_LIBRARY:
-//				adapter = mDownloadsAdapter = new MediaAdapter(activity,
-//						MediaUtils.TYPE_DOWNLOADS);
-//				mDownloadsAdapter.setExpandable(mMusicPosition != -1
-//						|| mDownloadsPosition != -1);
+				ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
+				File contentFile = new File(
+						Environment.getExternalStorageDirectory()
+								+ PrefKeys.DIRECTORY_PREFIX);
+				if (contentFile.canRead()) {
+					File[] files = contentFile.listFiles();
+					for (int i = 0; i < files.length; i++) {
+						try {
+							MusicMetadataSet src_set = new MyID3().read(files[i]);
+							Log.d("log", src_set.toString());
+							String songArtist = src_set.merged.getArtist();
+							String songTitle = src_set.merged.getSongTitle();
+							String songDuration= src_set.merged.getDurationSeconds();
+							MusicData data = new MusicData(songArtist, songTitle, songDuration, null);
+							arrayMusic.add(data);
+						} catch (IOException e) {
+						}
+					}
+				}
+				adapter = new LibraryPageAdapter(mActivity, 0, arrayMusic);
+				view = (ListView)inflater.inflate(R.layout.listview, null);
+				view.setAdapter(adapter);
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid media type: "+ type);
+				break;
 			} 
-
-			view = (ListView)inflater.inflate(R.layout.listview, null);
 			if ("AppTheme.White".equals(Util.getThemeName(mActivity))) {
 				view.setDivider(new ColorDrawable
 						(activity.getResources().getColor(R.color.divider_color_light)));
@@ -306,18 +324,12 @@ public class LibraryPagerAdapter
 			}
 			view.setOnItemClickListener(this);
 			view.setTag(type);
-//			view.setAdapter(adapter);
-//			loadSortOrder((SortAdapter)adapter);
 			enableFastScroll(view);
-//			adapter.setFilter(mFilter);
-//			mAdapters[type] = adapter;
 			mLists[type] = view;
 			mRequeryNeeded[type] = true;
 		}
-
 		requeryIfNeeded(type);
 		container.addView(view);
-
 		return view;
 	}
 
