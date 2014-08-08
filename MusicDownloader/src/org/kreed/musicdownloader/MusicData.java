@@ -7,6 +7,7 @@ public class MusicData {
 	private String songTitle;
 	private String songDuration;
 	private Bitmap songBitmap;
+	private String downloadProgress;
 
 	public MusicData() {
 
@@ -20,10 +21,11 @@ public class MusicData {
 		this.songBitmap = songBitmap;
 	}
 
-	public MusicData(String songArtist, String songTitle, String songDuration) {
+	public MusicData(String songArtist, String songTitle, String songDuration,String downloadProgress) {
 		this.songArtist = songArtist;
 		this.songTitle = songTitle;
 		this.songDuration = songDuration;
+		this.downloadProgress = downloadProgress;
 	}
 
 	public String getSongArtist() {
@@ -56,6 +58,14 @@ public class MusicData {
 
 	public void setSongBitmap(Bitmap songBitmap) {
 		this.songBitmap = songBitmap;
+	}
+
+	public String getDownloadProgress() {
+		return downloadProgress;
+	}
+
+	public void setDownloadProgress(String downloadProgress) {
+		this.downloadProgress = downloadProgress;
 	}
 
 }

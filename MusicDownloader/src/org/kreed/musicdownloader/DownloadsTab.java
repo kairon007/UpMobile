@@ -1,10 +1,15 @@
 package org.kreed.musicdownloader;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
+
+import com.startapp.android.publish.model.AdPreferences;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,29 +31,51 @@ public class DownloadsTab implements LoadPercentageInterface,
 	private Activity activity;
 	private LayoutInflater inflater;
 	private ImageView remove;
+	int count= 0;
+	private MusicData mData;
 	
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> {
 		private LayoutInflater inflater;
-
+		
 		public DownloadsAdapter(Context context, int resource) {
 			super(context, resource);
 			this.inflater = LayoutInflater.from(context);
 		}
 
 		@SuppressLint("NewApi")
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			ViewHolder holder = null;
+
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.downloads_row, parent,
 						false);
 				holder = new ViewHolder();
-				holder.artist = (TextView) convertView.findViewById(R.id.songArtist);
-				holder.title = (TextView) convertView.findViewById(R.id.songTitle);
+				holder.artist = (TextView) convertView
+						.findViewById(R.id.songArtist);
+				holder.title = (TextView) convertView
+						.findViewById(R.id.songTitle);
 				holder.cover = (ImageView) convertView.findViewById(R.id.cover);
-				holder.duration = (TextView) convertView.findViewById(R.id.totalTime);
+				holder.duration = (TextView) convertView
+						.findViewById(R.id.totalTime);
 				holder.downloadProgress = (ProgressBar) convertView
 						.findViewById(R.id.progressBar);
-				holder.remove = (ImageView) convertView.findViewById(R.id.cancel);
+				remove = (ImageView) convertView
+						.findViewById(R.id.cancel);
+				count++;
+				Log.d("holder.remove == null",
+						String.valueOf(remove == null));
+				
+				remove.setTag(position);
+				if (remove != null) {
+					remove.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							 adapter.remove(adapter.getItem(0));
+						}
+					});
+				} 
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
@@ -56,9 +83,11 @@ public class DownloadsTab implements LoadPercentageInterface,
 			if (song != null) {
 				holder.artist.setText(song.getSongArtist());
 				holder.title.setText(song.getSongTitle());
-				holder.cover.setImageAlpha(R.drawable.fallback_cover);
-				holder.downloadProgress.setProgress(Integer
-						.valueOf(progressString));
+				// holder.cover.setImageAlpha(R.drawable.fallback_cover);
+				if (progressString != null) {
+					holder.downloadProgress.setProgress(Integer
+							.valueOf(progressString));
+				} 
 				holder.duration.setText(song.getSongDuration());
 			}
 			convertView.setTag(holder);
@@ -78,17 +107,24 @@ public class DownloadsTab implements LoadPercentageInterface,
 	@Override
 	public void insertProgress(String progressString) {
 		this.progressString = progressString;
-		Log.d("pgrogress download", progressString);
+//		Log.d("pgrogress download in download tab", progressString);
+//		int pos=adapter.getPosition(mData);			//get position item
+//		Log.d("------------", String.valueOf(adapter.getPosition(mData)));
+//		progressView = listView.getChildAt(pos - listView.getFirstVisiblePosition());
+//		ProgressBar pb = (ProgressBar) progressView.findViewById(R.id.progressBar);
+//		pb.setProgress(Integer.valueOf(progressString));
+		adapter.getItem(0).setDownloadProgress(progressString);
 		adapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public void insertData(ArrayList<MusicData> result) {
 		for (MusicData data : result) {
-		//	adapter.add(data);
+			mData = data;
 			adapter.insert(data, 0);
 		}
 		adapter.notifyDataSetChanged();
+		
 	}
 
 	public static View getInstanceView(LayoutInflater layoutInflater,
@@ -128,16 +164,7 @@ public class DownloadsTab implements LoadPercentageInterface,
 		adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
-		if (remove != null) {
-			remove.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					adapter.remove(adapter.getItem(0));
-				}
-			});
-		}
+		
 	}
 
 	public DownloadsTab() {

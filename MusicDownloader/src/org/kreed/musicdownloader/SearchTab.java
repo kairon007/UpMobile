@@ -39,6 +39,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.DownloadManager.Query;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -152,59 +153,88 @@ public class SearchTab {
 			String downloadUrl = player.getDownloadUrl();
 			if(downloadUrl == null || downloadUrl.equals("")) {
 				Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
-				return;
+				return; 
 			}
-			//TODO if player does not ready, we can't get duration, but url we have(what?!)
-			DownloadsTab dt = DownloadsTab.getInstance();
-			DownloadFile downloadFile = new DownloadFile(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), dt,dt);
-			downloadFile.execute(downloadUrl);
+//			//TODO if player does not ready, we can't get duration, but url we have(what?!)
+			DownloadsTab downloadsTab = DownloadsTab.getInstance();
+			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), downloadsTab);
+			insertDownloadItem.insertData();
+//			DownloadFile downloadFile = new DownloadFile(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), dt,dt);
+//			downloadFile.execute(downloadUrl);
 			
-//			final TimerTask progresUpdateTask = new TimerTask() {
-//				private File src;
-//				private String path = Environment.getExternalStorageDirectory()
-//						+ "/MusicDownloader/" + songTitle + " - " + songArtist
-//						+ ".mp3";
-//				@Override
-//				public void run() {
-//					if (waitingForCover)
-//						return;
-//					src = new File(path);
-//					try {
-//						MusicMetadataSet src_set = new MyID3().read(src); // read
-//																			// metadata
-//						if (src_set == null) {
-//							return;
-//						}
-//						MusicMetadata metadata = (MusicMetadata) src_set
-//								.getSimplified();
-//						metadata.setSongTitle(songTitle);
-//						metadata.setArtist(songArtist);
-//						if (null != cover) {
-//							ByteArrayOutputStream out = new ByteArrayOutputStream(
-//									80000);
-//							cover.compress(CompressFormat.JPEG, 85, out);
-//							metadata.addPicture(new ImageData(
-//									out.toByteArray(), "image/jpeg", "cover", 3));
-//						}
-//						File dst = new File(src.getParentFile(), src.getName()
-//								+ "-1");
-//						new MyID3().write(src, dst, src_set, metadata); // write
-//																		// updated
-//																		// metadata
-//						dst.renameTo(src);
-//						this.cancel();
-//					} catch (IOException e) {
-//						Log.e(getClass().getSimpleName(), "error writing ID3",
-//								e);
-//					} catch (ID3WriteException e) {
-//						Log.e(getClass().getSimpleName(), "error writing ID3",
-//								e);
-//					}
-//				}
-//			};
-//			new Timer().schedule(progresUpdateTask, 1000, 1000);
-		}
+			player.cancel();
+			final File musicDir = new File(Environment.getExternalStorageDirectory()
+	                + "/MusicDownloader");
+			if (!musicDir.exists()) {
+				musicDir.mkdirs();
+			}
+			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+			final String fileName = songTitle+" - "+songArtist+".mp3";
+			request.
+				setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).
+				setAllowedOverRoaming(false).
+				setTitle(songTitle).
+				setDestinationInExternalPublicDir("/MusicDownloader/", fileName);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {	
+				request.allowScanningByMediaScanner();
+			}
+			final long downloadId = manager.enqueue(request);
+			GetCurrentProgress getCurrentProgress = new GetCurrentProgress(manager,downloadId,downloadsTab);
+			getCurrentProgress.execute();
 
+			final TimerTask progresUpdateTask = new TimerTask() {
+				private File src;
+				
+				@Override
+				public void run() {
+					if (waitingForCover) return;
+					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+					if (c == null || !c.moveToFirst()) return;
+					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+					c.close();
+					src = new File(path);
+					try {
+						MusicMetadataSet src_set = new MyID3().read(src); // read metadata
+						if (src_set == null) {
+							return;
+						}
+						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+						metadata.setSongTitle(songTitle);
+						metadata.setArtist(songArtist);
+						if (null != cover) {
+							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+							cover.compress(CompressFormat.JPEG, 85, out);
+							metadata.addPicture(
+								new ImageData(out.toByteArray(), "image/jpeg", "cover", 3)
+							);
+						}
+						File dst = new File(src.getParentFile(), src.getName()+"-1");
+						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
+						dst.renameTo(src);
+						this.cancel();
+					} catch (IOException e) {
+						Log.e(getClass().getSimpleName(), "error writing ID3", e);
+					} catch (ID3WriteException e) {
+						Log.e(getClass().getSimpleName(), "error writing ID3", e);
+					}
+				}
+//				private void notifyMediascanner() {
+//					Uri uri = Uri.fromFile(src.getParentFile());
+//					Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, uri);
+//					context.sendBroadcast(intent);
+//					MediaScannerConnection.scanFile(context,
+//						new String[] { dst.getAbsolutePath() }, null,
+//						new MediaScannerConnection.OnScanCompletedListener() {
+//							public void onScanCompleted(String path, Uri uri) {
+//								Log.i("TAG", "Finished scanning " + path);
+//							}
+//						});
+//				}
+			};
+			new Timer().schedule(progresUpdateTask, 1000, 1000);
+		}
+		
 		@Override
 		public void onBitmapReady(Bitmap bmp) {
 			this.cover = bmp;
@@ -681,7 +711,80 @@ public class SearchTab {
 		}
 		
 	}
+	
+	
+	private static class InsertDownloadItem {
+		private MusicDataInterface musicDataInterface;
+		private String songTitle;
+		private String songArtist;
+		private String duration;
 
+		public InsertDownloadItem(String songTitle, String songArtist,
+				String formatTime, MusicDataInterface musicDataInterface) {
+			// TODO Auto-generated constructor stub
+			this.songArtist = songArtist;
+			this.songTitle = songTitle;
+			this.duration = formatTime;
+			this.musicDataInterface = musicDataInterface;
+		}
+
+		public void insertData() {
+			ArrayList<MusicData> mData = new ArrayList<MusicData>();
+			MusicData mItem = new MusicData();
+			mItem.setSongArtist(songArtist);
+			mItem.setSongTitle(songTitle);
+			mItem.setSongDuration(String.valueOf(duration));
+			// mItem.setSongBitmap(BitmapFactory.decodeResource(getc, id));
+			mData.add(mItem);
+			musicDataInterface.insertData(mData);
+		}
+	}
+	private static class GetCurrentProgress extends AsyncTask<Integer, Integer, Integer> {
+		private double progress = 0.0;
+		private int currentProgress;
+		private DownloadManager manager;
+		long downloadId;
+		private LoadPercentageInterface loadPercentageInterface;
+		
+		public GetCurrentProgress(DownloadManager manager, long downloadId, LoadPercentageInterface loadPercentageInterface) {
+			this.manager = manager;
+			this.downloadId = downloadId;
+			this.loadPercentageInterface = loadPercentageInterface;
+		}
+
+		@Override
+		protected Integer doInBackground(Integer... params) {
+			Cursor c = null;
+			while (currentProgress != 100) {
+				c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
+				if (c.moveToFirst()) {
+				  int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+				  int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+				  long size = c.getInt(sizeIndex);
+				  long downloaded = c.getInt(downloadedIndex);
+				  if (size != -1) progress = downloaded*100.0/size; 
+				  c.close();
+				  publishProgress((int) progress);
+				}
+				currentProgress = (int) progress;
+			}
+			return null;
+		}
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			super.onProgressUpdate(progress);
+			loadPercentageInterface.insertProgress(String.valueOf(progress[0]));
+		}
+
+//		@Override
+//		protected void onPostExecute(Integer result) {
+//			loadPercentageInterface.insertProgress(String.valueOf(result));
+//			super.onPostExecute(result);
+//		}
+		
+		
+	}
+	/**custom downloader manager**/
 	private static class DownloadFile extends AsyncTask<String, Integer, String>
 			implements OnBitmapReadyListener {
 		String songTitle;
@@ -699,6 +802,7 @@ public class SearchTab {
 			this.cover = bmp;
 			this.waitingForCover = false;
 		}
+					
 
 		public DownloadFile(String songTitle, String songArtist,
 				String duration, LoadPercentageInterface progressInterface,
@@ -746,7 +850,7 @@ public class SearchTab {
 					output.write(data, 0, count);
 				}
 
-				output.flush();
+				output.flush();	
 				output.close();
 				input.close();
 			} catch (Exception e) {

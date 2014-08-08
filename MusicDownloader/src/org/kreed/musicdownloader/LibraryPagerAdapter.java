@@ -304,7 +304,7 @@ public class LibraryPagerAdapter
 							String songArtist = src_set.merged.getArtist();
 							String songTitle = src_set.merged.getSongTitle();
 							String songDuration= src_set.merged.getDurationSeconds();
-							MusicData data = new MusicData(songArtist, songTitle, songDuration, null);
+							MusicData data = new MusicData(songArtist, songTitle, songDuration, "0");
 							arrayMusic.add(data);
 						} catch (IOException e) {
 						}
