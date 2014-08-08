@@ -47,7 +47,7 @@ public class MediaUtils {
 	/**
 	 * Type indicating an id represents an artist.
 	 */
-	public static final int TYPE_ARTIST = 1;
+	public static final int TYPE_ARTIST = 4;
 	/**
 	 * Type indicating an id represents an album.
 	 */
@@ -55,20 +55,20 @@ public class MediaUtils {
 	/**
 	 * Type indicating an id represents a song.
 	 */
-	public static final int TYPE_SONG = 2;//3;
+	public static final int TYPE_SONG = 5;//3;
 	/**
 	 * Type indicating an id represents a playlist.
 	 */
-	public static final int TYPE_PLAYLIST = 3;//4;
+	public static final int TYPE_DOWNLOADS = 1;//4;
 	/**
 	 * Type indicating ids represent genres.
 	 */
-	public static final int TYPE_GENRE = 4;//5;
+	//public static final int TYPE_MUSIC = 1;//5;
 	/**
 	 * Special type for files and folders. Most methods do not accept this type
 	 * since files have no MediaStore id and require special handling.
 	 */
-	public static final int TYPE_FILE = 5;//6;
+	public static final int TYPE_LIBRARY = 2;//6;
 	/**
 	 * The number of different valid media types.
 	 */
@@ -135,13 +135,13 @@ public class MediaUtils {
 		StringBuilder selection = new StringBuilder();
 
 		switch (type) {
-		case TYPE_SONG:
-			selection.append(MediaStore.Audio.Media._ID);
+		case TYPE_DOWNLOADS:
+//			selection.append(MediaStore.Audio.Media._ID);
 			break;
-		case TYPE_ARTIST:
-			selection.append(MediaStore.Audio.Media.ARTIST_ID);
+		case TYPE_SEARCH:
+//			selection.append(MediaStore.Audio.Media.ARTIST_ID);
 			break;
-		case TYPE_ALBUM:
+		case TYPE_LIBRARY:
 			selection.append(MediaStore.Audio.Media.ALBUM_ID);
 			break;
 		default:
@@ -171,14 +171,14 @@ public class MediaUtils {
 	 * @param selection The selection to pass to the query, or null.
 	 * @return The initialized query.
 	 */
-	public static QueryTask buildPlaylistQuery(long id, String[] projection, String selection)
-	{
-		Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id);
-		String sort = MediaStore.Audio.Playlists.Members.PLAY_ORDER;
-		QueryTask result = new QueryTask(uri, projection, selection, null, sort);
-		result.type = TYPE_PLAYLIST;
-		return result;
-	}
+//	public static QueryTask buildPlaylistQuery(long id, String[] projection, String selection)
+//	{
+//		Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id);
+//		String sort = MediaStore.Audio.Playlists.Members.PLAY_ORDER;
+//		QueryTask result = new QueryTask(uri, projection, selection, null, sort);
+//		result.type = TYPE_PLAYLIST;
+//		return result;
+//	}
 
 	/**
 	 * Builds a query that will return all the songs in the genre with the
@@ -190,17 +190,17 @@ public class MediaUtils {
 	 * @param selectionArgs The arguments to substitute into the selection.
 	 * @param sort The sort order.
 	 */
-	public static QueryTask buildGenreQuery(long id, String[] projection, String selection, String[] selectionArgs, String sort)
-	{
-		Uri uri = MediaStore.Audio.Genres.Members.getContentUri("external", id);
-		if (projection.length > 3) {
-			projection = projection.clone();
-			projection[3] = "null";
-		}
-		QueryTask result = new QueryTask(uri, projection, selection, selectionArgs, sort);
-		result.type = TYPE_GENRE;
-		return result;
-	}
+//	public static QueryTask buildGenreQuery(long id, String[] projection, String selection, String[] selectionArgs, String sort)
+//	{
+//		Uri uri = MediaStore.Audio.Genres.Members.getContentUri("external", id);
+//		if (projection.length > 3) {
+//			projection = projection.clone();
+//			projection[3] = "null";
+//		}
+//		QueryTask result = new QueryTask(uri, projection, selection, selectionArgs, sort);
+//		result.type = TYPE_GENRE;
+//		return result;
+//	}
 
 	/**
 	 * Builds a query with the given information.
@@ -215,14 +215,15 @@ public class MediaUtils {
 	public static QueryTask buildQuery(int type, long id, String[] projection, String selection)
 	{
 		switch (type) {
-		case TYPE_ARTIST:
-		case TYPE_ALBUM:
-		case TYPE_SONG:
+		case TYPE_SEARCH:
+		case TYPE_LIBRARY:
+		case TYPE_DOWNLOADS:
+		
 			return buildMediaQuery(type, id, projection, selection);
-		case TYPE_PLAYLIST:
-			return buildPlaylistQuery(id, projection, selection);
-		case TYPE_GENRE:
-			return buildGenreQuery(id, projection, selection, null,  MediaStore.Audio.Genres.Members.TITLE_KEY);
+//		case TYPE_PLAYLIST:
+//			return buildPlaylistQuery(id, projection, selection);
+//		case TYPE_GENRE:
+//			return buildGenreQuery(id, projection, selection, null,  MediaStore.Audio.Genres.Members.TITLE_KEY);
 		default:
 			throw new IllegalArgumentException("Specified type not valid: " + type);
 		}
@@ -235,40 +236,40 @@ public class MediaUtils {
 	 * @param resolver A ContentResolver to use.
 	 * @param id The id of the song to query the genre for.
 	 */
-	public static long queryGenreForSong(ContentResolver resolver, long id)
-	{
-		String[] projection = { "_id" };
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			Uri uri = CompatHoneycomb.getContentUriForAudioId((int)id);
-			Cursor cursor = resolver.query(uri, projection, null, null, null);
-			if (cursor != null) {
-				if (cursor.moveToNext())
-					return cursor.getLong(0);
-				cursor.close();
-			}
-		} else {
-			Uri uri = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
-			Cursor cursor = resolver.query(uri, projection, null, null, null);
-			if (cursor != null) {
-				String selection = "_id=" + id;
-				while (cursor.moveToNext()) {
-					// check if the given song belongs to this genre
-					long genreId = cursor.getLong(0);
-					Uri genreUri = MediaStore.Audio.Genres.Members.getContentUri("external", genreId);
-					Cursor c = resolver.query(genreUri, projection, selection, null, null);
-					if (c != null) {
-						if (c.getCount() == 1)
-							return genreId;
-						c.close();
-					}
-				}
-				cursor.close();
-			}
-		}
-
-		return 0;
-	}
+//	public static long queryGenreForSong(ContentResolver resolver, long id)
+//	{
+//		String[] projection = { "_id" };
+//
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//			Uri uri = CompatHoneycomb.getContentUriForAudioId((int)id);
+//			Cursor cursor = resolver.query(uri, projection, null, null, null);
+//			if (cursor != null) {
+//				if (cursor.moveToNext())
+//					return cursor.getLong(0);
+//				cursor.close();
+//			}
+//		} else {
+//			Uri uri = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
+//			Cursor cursor = resolver.query(uri, projection, null, null, null);
+//			if (cursor != null) {
+//				String selection = "_id=" + id;
+//				while (cursor.moveToNext()) {
+//					// check if the given song belongs to this genre
+//					long genreId = cursor.getLong(0);
+//					Uri genreUri = MediaStore.Audio.Genres.Members.getContentUri("external", genreId);
+//					Cursor c = resolver.query(genreUri, projection, selection, null, null);
+//					if (c != null) {
+//						if (c.getCount() == 1)
+//							return genreId;
+//						c.close();
+//					}
+//				}
+//				cursor.close();
+//			}
+//		}
+//
+//		return 0;
+//	}
 
 	/**
 	 * Shuffle an array using Fisher-Yates algorithm.
@@ -548,20 +549,20 @@ public class MediaUtils {
 	 * @param projection The columns to query
 	 * @return The initialized query.
 	 */
-	public static QueryTask buildFileQuery(String path, String[] projection)
-	{
-		// It would be better to use selectionArgs to pass path here, but there
-		// doesn't appear to be any way to pass the * when using it.
-		StringBuilder selection = new StringBuilder();
-		selection.append("_data GLOB ");
-		DatabaseUtils.appendEscapedSQLString(selection, path);
-		 // delete the quotation mark added by the escape method
-		selection.deleteCharAt(selection.length() - 1);
-		selection.append("*' AND is_music!=0");
-
-		Uri media = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-		QueryTask result = new QueryTask(media, projection, selection.toString(), null, DEFAULT_SORT);
-		result.type = TYPE_FILE;
-		return result;
-	}
+//	public static QueryTask buildFileQuery(String path, String[] projection)
+//	{
+//		// It would be better to use selectionArgs to pass path here, but there
+//		// doesn't appear to be any way to pass the * when using it.
+//		StringBuilder selection = new StringBuilder();
+//		selection.append("_data GLOB ");
+//		DatabaseUtils.appendEscapedSQLString(selection, path);
+//		 // delete the quotation mark added by the escape method
+//		selection.deleteCharAt(selection.length() - 1);
+//		selection.append("*' AND is_music!=0");
+//
+//		Uri media = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+//		QueryTask result = new QueryTask(media, projection, selection.toString(), null, DEFAULT_SORT);
+//		result.type = TYPE_FILE;
+//		return result;
+//	}
 }

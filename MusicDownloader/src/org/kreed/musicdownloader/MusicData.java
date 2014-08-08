@@ -1,0 +1,61 @@
+package org.kreed.musicdownloader;
+
+import android.graphics.Bitmap;
+
+public class MusicData {
+	private String songArtist;
+	private String songTitle;
+	private String songDuration;
+	private Bitmap songBitmap;
+
+	public MusicData() {
+
+	}
+
+	public MusicData(String songArtist, String songTitle, String songDuration,
+			Bitmap songBitmap) {
+		this.songArtist = songArtist;
+		this.songTitle = songTitle;
+		this.songDuration = songDuration;
+		this.songBitmap = songBitmap;
+	}
+
+	public MusicData(String songArtist, String songTitle, String songDuration) {
+		this.songArtist = songArtist;
+		this.songTitle = songTitle;
+		this.songDuration = songDuration;
+	}
+
+	public String getSongArtist() {
+		return songArtist;
+	}
+
+	public void setSongArtist(String songArtist) {
+		this.songArtist = songArtist;
+	}
+
+	public String getSongTitle() {
+		return songTitle;
+	}
+
+	public void setSongTitle(String songTitle) {
+		this.songTitle = songTitle;
+	}
+
+	public String getSongDuration() {
+		return songDuration;
+	}
+
+	public void setSongDuration(String songDuration) {
+		this.songDuration = songDuration;
+	}
+
+	public Bitmap getSongBitmap() {
+		return songBitmap;
+	}
+
+	public void setSongBitmap(Bitmap songBitmap) {
+		this.songBitmap = songBitmap;
+	}
+
+}

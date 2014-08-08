@@ -29,6 +29,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,14 +41,14 @@ import android.widget.ListView;
 @TargetApi(11)
 public class CompatHoneycomb {
 	/**
-	 * Add ActionBar tabs for LibraryActivity.
+	 * Add ActionBar tabs for MainActivity.
 	 *
 	 * @param activity The activity to add to.
 	 */
-	public static void addActionBarTabs(final Activity activity)
+	public static void addActionBarTabs(final MainActivity activity)
 	{
 		ActionBar.TabListener listener = new ActionBar.TabListener() {
-			private final Activity mActivity = activity;
+			private final MainActivity mActivity = activity;
 
 			@Override
 			public void onTabReselected(Tab tab, FragmentTransaction ft)
@@ -57,7 +58,7 @@ public class CompatHoneycomb {
 			@Override
 			public void onTabSelected(Tab tab, FragmentTransaction ft)
 			{
-//!!!				mActivity.mViewPager.setCurrentItem(tab.getPosition());
+				mActivity.mViewPager.setCurrentItem(tab.getPosition());
 			}
 
 			@Override
@@ -66,13 +67,17 @@ public class CompatHoneycomb {
 			}
 		};
 
-		ActionBar ab = activity.getActionBar();
-		ab.removeAllTabs();
-		int[] order = new int[]{0};//!!!activity.mPagerAdapter.mTabOrder;
-		int[] titles = new int[]{0};//!!!LibraryPagerAdapter.TITLES;
-//		for (int i = 0, n = activity.mPagerAdapter.getCount(); i != n; ++i) {
-//			ab.addTab(ab.newTab().setText(titles[order[i]]).setTabListener(listener));
-//		}
+		ActionBar ab =  activity.getActionBar();
+			ab.removeAllTabs();
+		
+			int[] order = activity.mPagerAdapter.mTabOrder;
+		int[] titles = LibraryPagerAdapter.TITLES;
+		for (int i = 0, n = activity.mPagerAdapter.getCount(); i != n; ++i) {
+			ab.addTab
+			(ab.newTab()
+					.setText(titles[order[i]])
+					.setTabListener(listener));
+		}
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 	}
 
