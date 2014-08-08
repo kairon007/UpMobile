@@ -174,7 +174,7 @@ public class OnlineSearchView {
 			this.player = player;
 		}
 
-		@SuppressLint("NewApi")
+		@SuppressLint("NewApi") 
 		@Override
 		public void onClick(View v) {
 			if (player == null)
@@ -206,15 +206,26 @@ public class OnlineSearchView {
 
 				@Override
 				public void run() {
-					if (waitingForCover) {
-						return;
-					}
-					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-					if (c == null || !c.moveToFirst()) return;						
-					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-					c.close();
-					src = new File(path);
 					try {
+						if (waitingForCover)
+							return;
+						Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+						if (c == null || !c.moveToFirst())
+							return;
+						int columnIndex = 0;
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+						} else if (columnIndex != -1) {
+							columnIndex = c.getColumnIndex("local_uri");
+						}
+						if (columnIndex == -1)
+							return;
+						String path = c.getString(columnIndex);
+						c.close();
+						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+							path = cutPath(path);
+						}
+						src = new File(path);
 						MusicMetadataSet src_set = new MyID3().read(src); // read
 																			// metadata
 						if (src_set == null) {
@@ -235,27 +246,31 @@ public class OnlineSearchView {
 						dst.renameTo(src);
 						notifyMediascanner();
 						this.cancel();
-					} catch (IOException e) {
-						Log.e(getClass().getSimpleName(), "error writing ID3", e);
-					} catch (ID3WriteException e) {
+					} catch (Exception e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);
 					}
 				}
 
+				private String cutPath(String s) {
+					int index = s.indexOf('m');
+					return s.substring(index - 1);
+				}
+
 				 private void notifyMediascanner() {
-				 Uri uri = Uri.fromFile(src.getParentFile());
-				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, uri);
-				 Log.d("logd", "notifyMediascanner");
-				 context.sendBroadcast(intent);
-				 MediaScannerConnection.scanFile(context, new String[] {getDownloadPath(context)}, null,
-						 new MediaScannerConnection.OnScanCompletedListener() {
-					 		public void onScanCompleted(String path, Uri uri) {
-					 			Log.i("logd", "Finished scanning " + path);
-								Intent intent = new Intent(MusicBrowserPhoneFragment.ACTION_UPDATE);
-								context.sendBroadcast(intent);
-								Log.d("logd", "broadcast sended");
-					 		}
-				 		});
+					 File directoryPath = Environment.getExternalStorageDirectory();
+					 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
+							 Uri.parse("file://"+ directoryPath));
+					 context.sendBroadcast(intent);
+					 MediaScannerConnection.scanFile(context,
+							 new String[] { directoryPath.getAbsolutePath() }, null,
+							 new MediaScannerConnection.OnScanCompletedListener() {
+				 
+				 public void onScanCompleted(String path, Uri uri) {
+					 Log.i("TAG", "Finished scanning " + path);
+					 Intent intent = new Intent(MusicBrowserPhoneFragment.ACTION_UPDATE);
+					 context.sendBroadcast(intent);
+				 } 
+				 });
 				 }
 			};
 			new Timer().schedule(progresUpdateTask, 1000, 1000);
