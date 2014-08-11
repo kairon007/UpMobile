@@ -334,15 +334,14 @@ public class LibraryPagerAdapter
 	}
 
 	@Override
-	public int getItemPosition(Object item)
-	{
-		int type = (Integer)((ListView)item).getTag();
+	public int getItemPosition(Object item) {
+//		int type = (Integer)((ListView)item).getTag();
 //		Log.d("ffuu", ""+type);
-		int[] order = mTabOrder;
-		for (int i = mTabCount; --i != -1; ) {
-			if (order[i] == type)
-				return i;
-		}
+//		int[] order = mTabOrder;
+//		for (int i = mTabCount; --i != -1; ) {
+//			if (order[i] == type)
+//				return i;
+//		}
 		return POSITION_NONE;
 	}
  
