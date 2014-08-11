@@ -142,6 +142,7 @@ public class SearchTab {
 			if(player == null) return;
 			String downloadUrl = player.getDownloadUrl();
 			if(downloadUrl == null || downloadUrl.equals("")) {
+				//TODO
 				Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 				return; 
 			}
@@ -152,6 +153,7 @@ public class SearchTab {
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
 			}
+			final String durationSong = player.formatTime(player.mediaPlayer.getDuration());
 			player.cancel();
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
@@ -167,7 +169,6 @@ public class SearchTab {
 			final long downloadId = manager.enqueue(request);
 //			//TODO if player does not ready, we can't get duration, but url we have(what?!)
 			final DownloadsTab downloadsTab = DownloadsTab.getInstance();
-			final String durationSong = player.formatTime(player.mediaPlayer.getDuration());
 			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, 
 					songArtist,player.formatTime(player.mediaPlayer.getDuration()), downloadsTab, downloadId);
 			insertDownloadItem.insertData();
@@ -249,20 +250,14 @@ public class SearchTab {
 
 		@Override
 		public void insertProgress(String progress) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public void insertData(ArrayList<MusicData> musicDatas) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public void insertCover(Bitmap cover) {
-			// TODO Auto-generated method stub
-			
 		}
 	}
 
