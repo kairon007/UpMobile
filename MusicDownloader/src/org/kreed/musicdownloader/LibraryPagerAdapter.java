@@ -295,22 +295,8 @@ public class LibraryPagerAdapter
 				File contentFile = new File(
 						Environment.getExternalStorageDirectory()
 								+ PrefKeys.DIRECTORY_PREFIX);
-				if (contentFile.canRead()) {
-					File[] files = contentFile.listFiles();
-					for (int i = 0; i < files.length; i++) {
-						try {
-							MusicMetadataSet src_set = new MyID3().read(files[i]);
-							Log.d("log", src_set.toString());
-							String songArtist = src_set.merged.getArtist();
-							String songTitle = src_set.merged.getSongTitle();
-							String songDuration= src_set.merged.getDurationSeconds();
-//							MusicData data = new MusicData(songArtist, songTitle, songDuration, "0");
-//							arrayMusic.add(data);
-						} catch (IOException e) {
-						}
-					}
-				}
-				adapter = new LibraryPageAdapter(mActivity, 0, arrayMusic);
+				File[] files = contentFile.listFiles();
+				adapter = new LibraryPageAdapter(mActivity, 0, files);
 				view = (ListView)inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapter);
 				break;

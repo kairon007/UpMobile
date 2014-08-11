@@ -157,6 +157,7 @@ public class SearchTab {
 			}
 //			//TODO if player does not ready, we can't get duration, but url we have(what?!)
 			DownloadsTab downloadsTab = DownloadsTab.getInstance();
+			final String durationSong = player.formatTime(player.mediaPlayer.getDuration());
 			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), downloadsTab);
 			insertDownloadItem.insertData();
 //			DownloadFile downloadFile = new DownloadFile(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), dt,dt);
@@ -201,6 +202,8 @@ public class SearchTab {
 						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 						metadata.setSongTitle(songTitle);
 						metadata.setArtist(songArtist);
+						metadata.clearComment();
+						metadata.setComment(durationSong);//this is reading duration into metadata
 						if (null != cover) {
 							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 							cover.compress(CompressFormat.JPEG, 85, out);
