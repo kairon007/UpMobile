@@ -101,7 +101,7 @@ public class LibraryPageAdapter extends ArrayAdapter<File> {
 					Drawable cover = new BitmapDrawable(bitmap);
 					String strGenre;
 					if (metadata.containsKey("genre_id")) {
-						int genre_id = (int) metadata.get("genre_id");
+						int genre_id = (Integer) metadata.get("genre_id");
 						strGenre = ID3v1Genre.get(genre_id);
 					} else {
 						strGenre = "unknown";
