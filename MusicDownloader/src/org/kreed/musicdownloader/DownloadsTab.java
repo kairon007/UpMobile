@@ -32,6 +32,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private LayoutInflater inflater;
 	private MusicData mData;
 	private Bitmap cover;
+	private final String SET_VIS = "set.vis";
 
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> {
 		private LayoutInflater inflater;
@@ -74,7 +75,14 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 					holder.cover.setImageBitmap(song.getSongBitmap());
 				}
 				if (progressString != null) {
-					holder.downloadProgress.setProgress(Integer.valueOf(song.getDownloadProgress()));
+					if (song.getDownloadProgress().equals(SET_VIS)) {
+						holder.downloadProgress.setVisibility(View.INVISIBLE);
+						holder.remove.setImageResource(R.drawable.ok);
+					} else {
+						holder.downloadProgress.setVisibility(View.VISIBLE);
+						holder.remove.setImageResource(R.drawable.cancel);
+						holder.downloadProgress.setProgress(Integer.valueOf(song.getDownloadProgress()));
+					}
 				}
 				holder.duration.setText(song.getSongDuration());
 			}
@@ -96,6 +104,9 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	public void insertProgress(String progressString) {
 		this.progressString = progressString;
 		adapter.getItem(0).setDownloadProgress(progressString);
+		if (progressString.equals("100")) {
+			adapter.getItem(0).setDownloadProgress(SET_VIS);
+		}
 		adapter.notifyDataSetChanged();
 	}
 	@Override
