@@ -1,14 +1,8 @@
 package org.kreed.musicdownloader;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,7 +33,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
-import android.app.DownloadManager.Query;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -96,7 +89,6 @@ public class SearchTab {
 	private CoverLoaderTask coverLoader;
 	private AsyncTask<Void, Void, String> getUrlTask;
 	private boolean searchStopped = true;
-	private MusicDataInterface musicDataInterface;
 
 	@SuppressWarnings("unchecked")
 	public static final SearchTab getInstance(LayoutInflater inflater, Activity activity) {
@@ -135,7 +127,6 @@ public class SearchTab {
 		private final Player player;
 		private String songArtist;
 		private Bitmap cover;
-		private String duration;
 		private boolean waitingForCover = true;
 
 		private DownloadClickListener(Context context, String songTitle, String songArtist, Player player, String duration) {
@@ -143,7 +134,6 @@ public class SearchTab {
 			this.songTitle = songTitle;
 			this.songArtist = songArtist;
 			this.player = player;
-			this.duration = duration;
 		}
 
 		@SuppressLint("NewApi")
@@ -155,11 +145,6 @@ public class SearchTab {
 				Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 				return; 
 			}
-//			//TODO if player does not ready, we can't get duration, but url we have(what?!)
-			DownloadsTab downloadsTab = DownloadsTab.getInstance();
-			final String durationSong = player.formatTime(player.mediaPlayer.getDuration());
-			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), downloadsTab);
-			insertDownloadItem.insertData();
 //			DownloadFile downloadFile = new DownloadFile(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), dt,dt);
 //			downloadFile.execute(downloadUrl);
 			final File musicDir = new File(Environment.getExternalStorageDirectory()
@@ -180,7 +165,13 @@ public class SearchTab {
 				request.allowScanningByMediaScanner();
 			}
 			final long downloadId = manager.enqueue(request);
-			GetCurrentProgress getCurrentProgress = new GetCurrentProgress(manager,downloadId,downloadsTab);
+//			//TODO if player does not ready, we can't get duration, but url we have(what?!)
+			final DownloadsTab downloadsTab = DownloadsTab.getInstance();
+			final String durationSong = player.formatTime(player.mediaPlayer.getDuration());
+			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, 
+					songArtist,player.formatTime(player.mediaPlayer.getDuration()), downloadsTab, downloadId);
+			insertDownloadItem.insertData();
+			GetCurrentProgress getCurrentProgress = new GetCurrentProgress(manager, downloadId, downloadsTab);
 			getCurrentProgress.execute();
 
 			final TimerTask progresUpdateTask = new TimerTask() {
@@ -188,9 +179,22 @@ public class SearchTab {
 				
 				@Override
 				public void run() {
-					if (waitingForCover) return;
+					if (downloadsTab.getCancelledId() == downloadId) {
+						Log.d("logd", "cancel");
+						this.cancel();
+					}
+					if (waitingForCover) {
+						Log.d("logd", "waitingForCover");
+//						return;
+					}
 					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-					if (c == null || !c.moveToFirst()) return;
+					if (c == null || !c.moveToFirst()) {
+						if (c != null) {
+							c.close();
+							Log.d("logd", "c.close();");
+						}
+						return;
+					}
 					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
 					c.close();
 					src = new File(path);
@@ -502,7 +506,7 @@ public class SearchTab {
 					player = null;
 				}
 				getUrlTask.cancel(true);
-				coverLoader.cancel(true);
+//				coverLoader.cancel(true);
 				activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};	
@@ -726,14 +730,16 @@ public class SearchTab {
 		private String songTitle;
 		private String songArtist;
 		private String duration;
+		private long downloadId;
 
 		public InsertDownloadItem(String songTitle, String songArtist,
-				String formatTime, MusicDataInterface musicDataInterface) {
+				String formatTime, MusicDataInterface musicDataInterface, long downloadId) {
 			// TODO Auto-generated constructor stub
 			this.songArtist = songArtist;
 			this.songTitle = songTitle;
 			this.duration = formatTime;
 			this.musicDataInterface = musicDataInterface;
+			this.downloadId = downloadId;
 		}
 
 		public void insertData() {
@@ -743,6 +749,7 @@ public class SearchTab {
 			mItem.setSongTitle(songTitle);
 			mItem.setSongDuration(String.valueOf(duration));
 			// mItem.setSongBitmap(BitmapFactory.decodeResource(getc, id));
+			mItem.setDownloadId(downloadId);
 			mItem.setDownloadProgress("0");
 			mData.add(mItem);
 			musicDataInterface.insertData(mData);
@@ -805,91 +812,4 @@ public class SearchTab {
 		
 		
 	}
-	/**custom downloader manager**/
-	private static class DownloadFile extends AsyncTask<String, Integer, String>
-			implements OnBitmapReadyListener {
-		String songTitle;
-		String songArtist;
-		private LoadPercentageInterface progressInterface;
-		private File src;
-		private Bitmap cover;
-		private String path;
-		private boolean waitingForCover = true;
-		private String duration;
-		private MusicDataInterface musicDataInterface;
-
-		@Override
-		public void onBitmapReady(Bitmap bmp) {
-			this.cover = bmp;
-			this.waitingForCover = false;
-		}
-					
-
-		public DownloadFile(String songTitle, String songArtist,
-				String duration, LoadPercentageInterface progressInterface,
-				MusicDataInterface musicdatainterface) {
-			// TODO Auto-generated constructor stub
-			this.songTitle = songTitle;
-			this.songArtist = songArtist;
-			this.progressInterface = progressInterface;
-			this.musicDataInterface = musicdatainterface;
-			this.duration = duration;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			ArrayList<MusicData> mData = new ArrayList<MusicData>();
-			MusicData mItem = new MusicData();
-			mItem.setSongArtist(songArtist);
-			mItem.setSongTitle(songTitle);
-			mItem.setSongDuration(String.valueOf(duration));
-			// mItem.setSongBitmap(BitmapFactory.decodeResource(getc, id));
-			mData.add(mItem);
-			musicDataInterface.insertData(mData);
-			path = Environment.getExternalStorageDirectory()
-					+ "/MusicDownloader/" + songTitle + " - " + songArtist
-					+ ".mp3";
-		}
-
-		@Override
-		protected String doInBackground(String... sUrl) {
-			try {
-				URL url = new URL(sUrl[0]);
-				URLConnection connection = url.openConnection();
-				connection.connect();
-				int fileLength = connection.getContentLength();
-				InputStream input = new BufferedInputStream(url.openStream());
-				OutputStream output = new FileOutputStream(path);
-				byte data[] = new byte[1024];
-				long total = 0;
-				int count;
-				while ((count = input.read(data)) != -1) {
-					total += count;
-					// publishing the progress....
-					publishProgress((int) (total * 100 / fileLength));
-					output.write(data, 0, count);
-				}
-
-				output.flush();	
-				output.close();
-				input.close();
-			} catch (Exception e) {
-			}
-			return null;
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... progress) {
-			super.onProgressUpdate(progress);
-			progressInterface.insertProgress(String.valueOf(progress[0]));
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-		}
-
-	}
-
 }

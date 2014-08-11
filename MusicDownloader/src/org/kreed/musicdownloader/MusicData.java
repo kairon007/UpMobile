@@ -8,6 +8,7 @@ public class MusicData {
 	private String songDuration;
 	private Bitmap songBitmap;
 	private String downloadProgress;
+	private long downloadId;
 
 	public MusicData() {
 
@@ -69,4 +70,11 @@ public class MusicData {
 		this.downloadProgress = downloadProgress;
 	}
 
+	public void setDownloadId(long downloadId) {
+		this.downloadId = downloadId;
+	}
+	
+	public long getDownloadId() {
+		return downloadId;
+	}
 }

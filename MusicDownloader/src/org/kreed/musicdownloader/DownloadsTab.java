@@ -1,17 +1,12 @@
 package org.kreed.musicdownloader;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
-
-import com.startapp.android.publish.model.AdPreferences;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +28,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private MusicData mData;
 	private Bitmap cover;
 	private final String SET_VIS = "set.vis";
+	private long cancelledId;
 
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> {
 		private LayoutInflater inflater;
@@ -63,6 +59,9 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				holder.remove.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+						cancelledId = adapter.getItem(position).getDownloadId();
+						manager.remove(cancelledId);
 						adapter.remove(adapter.getItem(position));
 					}
 				});
@@ -164,6 +163,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	public DownloadsTab() {
 		// TODO Auto-generated constructor stub
 	}
-
-
+	
+	public long getCancelledId() {
+		return cancelledId;
+	}
 }
