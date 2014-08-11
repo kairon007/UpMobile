@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private Activity activity;
 	private LayoutInflater inflater;
 	private MusicData mData;
+	private Bitmap cover;
 
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> {
 		private LayoutInflater inflater;
@@ -68,7 +70,9 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			if (song != null) {
 				holder.artist.setText(song.getSongArtist());
 				holder.title.setText(song.getSongTitle());
-				// holder.cover.setImageAlpha(R.drawable.fallback_cover);
+				if (song.getSongBitmap() != null) {
+					holder.cover.setImageBitmap(song.getSongBitmap());
+				}
 				if (progressString != null) {
 					holder.downloadProgress.setProgress(Integer.valueOf(song.getDownloadProgress()));
 				}
@@ -92,6 +96,12 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	public void insertProgress(String progressString) {
 		this.progressString = progressString;
 		adapter.getItem(0).setDownloadProgress(progressString);
+		adapter.notifyDataSetChanged();
+	}
+	@Override
+	public void insertCover(Bitmap cover) {
+		this.cover = cover;
+		adapter.getItem(0).setSongBitmap(cover);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -143,4 +153,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	public DownloadsTab() {
 		// TODO Auto-generated constructor stub
 	}
+
+
 }

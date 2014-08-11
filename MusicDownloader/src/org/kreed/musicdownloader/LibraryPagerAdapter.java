@@ -286,10 +286,10 @@ public class LibraryPagerAdapter
 				container.addView(searchView);
 				return searchView;
 			case MediaUtils.TYPE_DOWNLOADS:
-				 View downloadView = DownloadsTab.getInstanceView(inflater,
-				 activity);
-				 container.addView(downloadView);
-				 return downloadView;
+				View downloadView = DownloadsTab.getInstanceView(inflater, activity);
+				container.addView(downloadView);
+//				mLists[type] = (ListView) downloadView;
+				return downloadView;
 			case MediaUtils.TYPE_LIBRARY:
 				ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
 				File contentFile = new File(
@@ -304,8 +304,8 @@ public class LibraryPagerAdapter
 							String songArtist = src_set.merged.getArtist();
 							String songTitle = src_set.merged.getSongTitle();
 							String songDuration= src_set.merged.getDurationSeconds();
-							MusicData data = new MusicData(songArtist, songTitle, songDuration, "0");
-							arrayMusic.add(data);
+//							MusicData data = new MusicData(songArtist, songTitle, songDuration, "0");
+//							arrayMusic.add(data);
 						} catch (IOException e) {
 						}
 					}

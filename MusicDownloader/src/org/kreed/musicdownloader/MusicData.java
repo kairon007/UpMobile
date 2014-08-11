@@ -21,11 +21,12 @@ public class MusicData {
 		this.songBitmap = songBitmap;
 	}
 
-	public MusicData(String songArtist, String songTitle, String songDuration,String downloadProgress) {
+	public MusicData(String songArtist, String songTitle, String songDuration,String downloadProgress, Bitmap cover) {
 		this.songArtist = songArtist;
 		this.songTitle = songTitle;
 		this.songDuration = songDuration;
 		this.downloadProgress = downloadProgress;
+		this.songBitmap = cover;
 	}
 
 	public String getSongArtist() {
