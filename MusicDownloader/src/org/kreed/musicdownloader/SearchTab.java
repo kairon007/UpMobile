@@ -55,6 +55,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -67,7 +68,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SearchTab {
 	private static final Void[] NO_PARAMS = {};
@@ -124,37 +124,25 @@ public class SearchTab {
 	private static class DownloadClickListener implements AlertDialog.OnClickListener, OnBitmapReadyListener,LoadPercentageInterface, MusicDataInterface {
 		private final Context context;
 		private final String songTitle;
-		private final Player player;
 		private String songArtist;
 		private Bitmap cover;
 		private boolean waitingForCover = true;
+		private String downloadUrl;
+		private String duration;
 
-		private DownloadClickListener(Context context, String songTitle, String songArtist, Player player, String duration) {
+		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration) {
 			this.context = context;
 			this.songTitle = songTitle;
 			this.songArtist = songArtist;
-			this.player = player;
+			this.downloadUrl = downloadUrl;
+			this.duration = duration;
 		}
-
-		@SuppressLint("NewApi")
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			if(player == null) return;
-			String downloadUrl = player.getDownloadUrl();
-			if(downloadUrl == null || downloadUrl.equals("")) {
-				//TODO
-				Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
-				return; 
-			}
-//			DownloadFile downloadFile = new DownloadFile(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), dt,dt);
-//			downloadFile.execute(downloadUrl);
+		@SuppressLint("NewApi") public void downloadFile() {
 			final File musicDir = new File(Environment.getExternalStorageDirectory()
 	                + "/MusicDownloader");
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
 			}
-			final String durationSong = player.formatTime(player.mediaPlayer.getDuration());
-			player.cancel();
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
 			final String fileName = songTitle+" - "+songArtist+".mp3";
@@ -167,10 +155,9 @@ public class SearchTab {
 				request.allowScanningByMediaScanner();
 			}
 			final long downloadId = manager.enqueue(request);
-//			//TODO if player does not ready, we can't get duration, but url we have(what?!)
 			final DownloadsTab downloadsTab = DownloadsTab.getInstance();
 			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, 
-					songArtist,player.formatTime(player.mediaPlayer.getDuration()), downloadsTab, downloadId);
+					songArtist,duration, downloadsTab, downloadId);
 			insertDownloadItem.insertData();
 			GetCurrentProgress getCurrentProgress = new GetCurrentProgress(manager, downloadId, downloadsTab);
 			getCurrentProgress.execute();
@@ -188,7 +175,8 @@ public class SearchTab {
 						Log.d("logd", "waitingForCover");
 //						return;
 					}
-					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+					Cursor c = null;
+					c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 					if (c == null || !c.moveToFirst()) {
 						if (c != null) {
 							c.close();
@@ -198,6 +186,9 @@ public class SearchTab {
 					}
 					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
 					c.close();
+					if(!c.isClosed()) {
+						c.close();
+					}
 					src = new File(path);
 					try {
 						MusicMetadataSet src_set = new MyID3().read(src); // read metadata
@@ -208,7 +199,7 @@ public class SearchTab {
 						metadata.setSongTitle(songTitle);
 						metadata.setArtist(songArtist);
 						metadata.clearComment();
-						metadata.setComment(durationSong);//this is reading duration into metadata
+						metadata.setComment(duration);//this is reading duration into metadata
 						if (null != cover) {
 							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 							cover.compress(CompressFormat.JPEG, 85, out);
@@ -241,6 +232,13 @@ public class SearchTab {
 			};
 			new Timer().schedule(progresUpdateTask, 1000, 1000);
 		}
+		@SuppressLint("NewApi")
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+//			DownloadFile downloadFile = new DownloadFile(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), dt,dt);
+//			downloadFile.execute(downloadUrl);
+
+		}
 		
 		@Override
 		public void onBitmapReady(Bitmap bmp) {
@@ -265,11 +263,14 @@ public class SearchTab {
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
+		private DownloadClickListener downloadClick;
+		Context context;
 		private Map<Integer, Bitmap> bitmaps = new HashMap<Integer, Bitmap>(0);
 
 		private SongSearchAdapter(Context context, LayoutInflater inflater) {
 			super(context, -1, new ArrayList<Song>());
 			this.inflater = inflater;
+			this.context = context;
 			this.footer = new FrameLayout(context);
     		this.refreshSpinner = new ProgressBar(context);
     		refreshSpinner.setIndeterminate(true);
@@ -279,17 +280,34 @@ public class SearchTab {
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			Song song = getItem(position);
+			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder
-				.setButtonVisible(false)
-				.setLongClickable(false)
-				.setExpandable(false)
-				.setLine1(song.getTitle())
-				.setLine2(song.getArtist())
-//				.setNumber(String.valueOf(position+1), 0)
-				.setId(position)
-				.setIcon(R.drawable.fallback_cover);
+			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
+			// .setNumber(String.valueOf(position+1), 0)
+					.setId(position).setIcon(R.drawable.fallback_cover);
+				builder.download.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Bundle bundle = new Bundle(0);
+						bundle.putInt(KEY_POSITION, position);
+						final Song song = resultAdapter.getItem(position);
+						Log.d("name", song.getArtist());
+						getUrlTask = new AsyncTask<Void, Void, String>() {
+							@Override
+							protected String doInBackground(Void... params) {
+								return ((RemoteSong) song).getDownloadUrl();
+							}
+
+							@Override
+							protected void onPostExecute(String downloadUrl) {
+							downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), downloadUrl, "10");
+							downloadClick.downloadFile();
+							}
+						};
+						getUrlTask.execute(NO_PARAMS);
+						
+					}
+				});
 			if (song instanceof GrooveSong) {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
@@ -450,90 +468,90 @@ public class SearchTab {
 		engine.execute(NO_PARAMS);
 	}
 	
-	@SuppressLint("NewApi")
-	public Dialog createStreamDialog(Bundle args) {
-		if(!(args.containsKey(KEY_POSITION))) {
-			return null;
-		}
-		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
-		final String artist = song.getTitle();
-		final String title = song.getArtist();
-		if (null == player) {
-			player = new Player(inflater.inflate(R.layout.download_dialog, null));
-			getUrlTask = new AsyncTask<Void, Void, String>() {
-				@Override
-				protected String doInBackground(Void... params) {
-					return ((RemoteSong) song).getDownloadUrl();
-				}
-				@Override
-				protected void onPostExecute(String downloadUrl) {
-					if(null != player) {
-						player.setDownloadUrl(downloadUrl);
-						player.execute();
-					}
-				}	
-			};
-			
-			getUrlTask.execute(NO_PARAMS);
-			if (song instanceof GrooveSong) {
-				String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
-				coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
-			} else {
-				coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
-			}
-			coverLoader.addListener(new OnBitmapReadyListener() {
-				@Override
-				public void onBitmapReady(Bitmap bmp) {
-					if (null != player) {
-						player.setCover(bmp);
-					}
-				}
-			});
-			coverLoader.execute(NO_PARAMS);
-		} 
-		final String duration = player.formatTime(player.mediaPlayer.getDuration());
-		final Context context = view.getContext();
-		final Runnable dialogDismisser = new Runnable() {
-			@Override
-			public void run() {
-				if(player != null) {
-					player.cancel();
-					player = null;
-				}
-				getUrlTask.cancel(true);
-//				coverLoader.cancel(true);
-				activity.removeDialog(STREAM_DIALOG_ID);
-			}
-		};	
-		DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player,duration) {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				super.onClick(dialog, which);
-				dialogDismisser.run();
-			}
-		};
-		coverLoader.addListener(downloadClickListener);
-		AlertDialog.Builder b = new AlertDialog.Builder(context)
-			.setTitle(title)
-			.setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialogDismisser.run();
-				}
-			})
-			.setOnCancelListener(new OnCancelListener() {						
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					dialogDismisser.run();
-				}
-			})
-			.setPositiveButton(
-				R.string.download, 
-				downloadClickListener
-			)
-			.setView(player.getView());
-		return b.create();
-	}
+//	@SuppressLint("NewApi")
+//	public Dialog createStreamDialog(Bundle args) {
+//		if(!(args.containsKey(KEY_POSITION))) {
+//			return null;
+//		}
+//		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
+//		final String artist = song.getTitle();
+//		final String title = song.getArtist();
+//		if (null == player) {
+//			player = new Player(inflater.inflate(R.layout.download_dialog, null));
+//			getUrlTask = new AsyncTask<Void, Void, String>() {
+//				@Override
+//				protected String doInBackground(Void... params) {
+//					return ((RemoteSong) song).getDownloadUrl();
+//				}
+//				@Override
+//				protected void onPostExecute(String downloadUrl) {
+//					if(null != player) {
+//						player.setDownloadUrl(downloadUrl);
+//						player.execute();
+//					}
+//				}	
+//			};
+//			
+//			getUrlTask.execute(NO_PARAMS);
+//			if (song instanceof GrooveSong) {
+//				String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
+//				coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
+//			} else {
+//				coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
+//			}
+//			coverLoader.addListener(new OnBitmapReadyListener() {
+//				@Override
+//				public void onBitmapReady(Bitmap bmp) {
+//					if (null != player) {
+//						player.setCover(bmp);
+//					}
+//				}
+//			});
+//			coverLoader.execute(NO_PARAMS);
+//		} 
+//		final String duration = player.formatTime(player.mediaPlayer.getDuration());
+//		final Context context = view.getContext();
+//		final Runnable dialogDismisser = new Runnable() {
+//			@Override
+//			public void run() {
+//				if(player != null) {
+//					player.cancel();
+//					player = null;
+//				}
+//				getUrlTask.cancel(true);
+////				coverLoader.cancel(true);
+//				activity.removeDialog(STREAM_DIALOG_ID);
+//			}
+//		};	
+////		DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player,duration) {
+////			@Override
+////			public void onClick(DialogInterface dialog, int which) {
+////				super.onClick(dialog, which);
+////				dialogDismisser.run();
+////			}
+////		};
+////		coverLoader.addListener(downloadClickListener);
+//		AlertDialog.Builder b = new AlertDialog.Builder(context)
+//			.setTitle(title)
+//			.setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					dialogDismisser.run();
+//				}
+//			})
+//			.setOnCancelListener(new OnCancelListener() {						
+//				@Override
+//				public void onCancel(DialogInterface dialog) {
+//					dialogDismisser.run();
+//				}
+//			})
+//			.setPositiveButton(
+//				R.string.download, 
+//				downloadClickListener
+//			)
+//			.setView(player.getView());
+//		return b.create();
+//	}
 	
 	private final static class Player extends AsyncTask<String, Void, Boolean> {
 		private String url = null; 
@@ -777,6 +795,9 @@ public class SearchTab {
 				  long downloaded = c.getInt(downloadedIndex);
 				  if (size != -1) progress = downloaded*100.0/size; 
 				  c.close();
+					if (!c.isClosed()) {
+						c.close();
+					}
 				  publishProgress((int) progress);
 				}
 				currentProgress = (int) progress;
@@ -798,13 +819,5 @@ public class SearchTab {
 			this.cover = bmp;
 			this.waitingForCover = true;
 		}
-
-//		@Override
-//		protected void onPostExecute(Integer result) {
-//			loadPercentageInterface.insertProgress(String.valueOf(result));
-//			super.onPostExecute(result);
-//		}
-		
-		
 	}
 }

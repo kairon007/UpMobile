@@ -118,6 +118,14 @@ public class Song implements Comparable<Song> {
 	 */
 	public String artist;
 
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
+	}
+
 	/**
 	 * Length of the song in milliseconds.
 	 */

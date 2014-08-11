@@ -1397,13 +1397,13 @@ public class MainActivity extends Activity implements TextWatcher{
 		return info;
 	}
 
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		if (id == SearchTab.STREAM_DIALOG_ID) {
-			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
-		}
-		return super.onCreateDialog(id, args);
-	}
+//	@Override
+//	protected Dialog onCreateDialog(int id, Bundle args) {
+//		if (id == SearchTab.STREAM_DIALOG_ID) {
+//			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
+//		}
+//		return super.onCreateDialog(id, args);
+//	}
 	
 	@Override
 	public void onBackPressed() {

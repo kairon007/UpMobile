@@ -8,9 +8,9 @@
         android:id="@+id/search_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/search_background"
         android:divider="@drawable/layout_divider"
         android:dividerPadding="4dp"
-        android:background="@drawable/search_background"
         android:orientation="horizontal"
         android:showDividers="middle" >
 
@@ -27,8 +27,8 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"
-                android:singleLine="true"
-                android:paddingRight="50dp" />
+                android:paddingRight="50dp"
+                android:singleLine="true" />
 
             <ImageButton
                 android:id="@+id/clear"
@@ -37,7 +37,6 @@
                 android:layout_gravity="center_vertical|right"
                 android:background="@drawable/selectable_item_bg"
                 android:src="@drawable/close" />
-
         </FrameLayout>
 
         <ImageButton
@@ -73,6 +72,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/player_row" />
     </FrameLayout>
 
 </LinearLayout>

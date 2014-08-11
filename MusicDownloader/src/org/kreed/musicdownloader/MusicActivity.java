@@ -34,13 +34,13 @@ public class MusicActivity extends FragmentActivity implements
 		dialog.dismiss();
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		if (id == SearchTab.STREAM_DIALOG_ID) {
-			return SearchTab.getInstance(getLayoutInflater(), this)
-					.createStreamDialog(args);
-		}
-		return super.onCreateDialog(id, args);
-	}
+//	@SuppressWarnings("deprecation")
+//	@Override
+//	protected Dialog onCreateDialog(int id, Bundle args) {
+//		if (id == SearchTab.STREAM_DIALOG_ID) {
+//			return SearchTab.getInstance(getLayoutInflater(), this)
+//					.createStreamDialog(args);
+//		}
+//		return super.onCreateDialog(id, args);
+//	}
 }
