@@ -149,53 +149,54 @@ public class SearchTab {
 		@SuppressLint("NewApi")
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-			if(player == null) return;
+			if (player == null)
+				return;
 			String downloadUrl = player.getDownloadUrl();
-			if(downloadUrl == null || downloadUrl.equals("")) {
+			if (downloadUrl == null || downloadUrl.equals("")) {
 				Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
-				return; 
+				return;
 			}
-//			//TODO if player does not ready, we can't get duration, but url we have(what?!)
-			DownloadsTab downloadsTab = DownloadsTab.getInstance();
-			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), downloadsTab);
-			insertDownloadItem.insertData();
-//			DownloadFile downloadFile = new DownloadFile(songTitle, songArtist,player.formatTime(player.mediaPlayer.getDuration()), dt,dt);
-//			downloadFile.execute(downloadUrl);
-			
-			player.cancel();
-			final File musicDir = new File(Environment.getExternalStorageDirectory()
-	                + "/MusicDownloader");
+			// DownloadFile downloadFile = new DownloadFile(songTitle,
+			// songArtist,player.formatTime(player.mediaPlayer.getDuration()),
+			// dt,dt);
+			// downloadFile.execute(downloadUrl);
+			final File musicDir = new File(Environment.getExternalStorageDirectory() + "/MusicDownloader");
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
 			}
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
-			final String fileName = songTitle+" - "+songArtist+".mp3";
-			request.
-				setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).
-				setAllowedOverRoaming(false).
-				setTitle(songTitle).
-				setDestinationInExternalPublicDir("/MusicDownloader/", fileName);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {	
+			final String fileName = songTitle + " - " + songArtist + ".mp3";
+			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+					.setAllowedOverRoaming(false).setTitle(songTitle).setDestinationInExternalPublicDir("/MusicDownloader/", fileName);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				request.allowScanningByMediaScanner();
 			}
 			final long downloadId = manager.enqueue(request);
-			GetCurrentProgress getCurrentProgress = new GetCurrentProgress(manager,downloadId,downloadsTab);
+			DownloadsTab downloadsTab = DownloadsTab.getInstance();
+			player.cancel();
+			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, songArtist,
+					player.formatTime(player.mediaPlayer.getDuration()), downloadsTab);
+			insertDownloadItem.insertData();
+			GetCurrentProgress getCurrentProgress = new GetCurrentProgress(manager, downloadId, downloadsTab);
 			getCurrentProgress.execute();
 
 			final TimerTask progresUpdateTask = new TimerTask() {
 				private File src;
-				
+
 				@Override
 				public void run() {
 					if (waitingForCover) return;
-					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-					if (c == null || !c.moveToFirst()) return;
+					Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(
+							DownloadManager.STATUS_SUCCESSFUL));
+					if (c == null || !c.moveToFirst())
+						return;
 					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
 					c.close();
 					src = new File(path);
 					try {
-						MusicMetadataSet src_set = new MyID3().read(src); // read metadata
+						MusicMetadataSet src_set = new MyID3().read(src); // read
+																			// metadata
 						if (src_set == null) {
 							return;
 						}
@@ -205,12 +206,12 @@ public class SearchTab {
 						if (null != cover) {
 							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 							cover.compress(CompressFormat.JPEG, 85, out);
-							metadata.addPicture(
-								new ImageData(out.toByteArray(), "image/jpeg", "cover", 3)
-							);
+							metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 						}
-						File dst = new File(src.getParentFile(), src.getName()+"-1");
-						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
+						File dst = new File(src.getParentFile(), src.getName() + "-1");
+						new MyID3().write(src, dst, src_set, metadata); // write
+																		// updated
+																		// metadata
 						dst.renameTo(src);
 						this.cancel();
 					} catch (IOException e) {
@@ -735,6 +736,7 @@ public class SearchTab {
 			mItem.setSongTitle(songTitle);
 			mItem.setSongDuration(String.valueOf(duration));
 			// mItem.setSongBitmap(BitmapFactory.decodeResource(getc, id));
+			mItem.setDownloadProgress("0");
 			mData.add(mItem);
 			musicDataInterface.insertData(mData);
 		}

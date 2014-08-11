@@ -21,8 +21,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class DownloadsTab implements LoadPercentageInterface,
-		MusicDataInterface {
+public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface {
 	private ListView listView;
 	private DownloadsAdapter adapter;
 	private String progressString = "0";
@@ -30,54 +29,40 @@ public class DownloadsTab implements LoadPercentageInterface,
 	private View view;
 	private Activity activity;
 	private LayoutInflater inflater;
-	private ImageView remove;
-	int count= 0;
 	private MusicData mData;
-	
+
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> {
 		private LayoutInflater inflater;
-		
+
 		public DownloadsAdapter(Context context, int resource) {
 			super(context, resource);
 			this.inflater = LayoutInflater.from(context);
 		}
 
 		@SuppressLint("NewApi")
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			ViewHolder holder = null;
 
 			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.downloads_row, parent,
-						false);
+				convertView = inflater.inflate(R.layout.downloads_row, parent, false);
 				holder = new ViewHolder();
-				holder.artist = (TextView) convertView
-						.findViewById(R.id.songArtist);
-				holder.title = (TextView) convertView
-						.findViewById(R.id.songTitle);
+				holder.artist = (TextView) convertView.findViewById(R.id.songArtist);
+				holder.title = (TextView) convertView.findViewById(R.id.songTitle);
 				holder.cover = (ImageView) convertView.findViewById(R.id.cover);
-				holder.duration = (TextView) convertView
-						.findViewById(R.id.totalTime);
-				holder.downloadProgress = (ProgressBar) convertView
-						.findViewById(R.id.progressBar);
-				remove = (ImageView) convertView
-						.findViewById(R.id.cancel);
-				count++;
-				Log.d("holder.remove == null",
-						String.valueOf(remove == null));
-				
-				remove.setTag(position);
-				if (remove != null) {
-					remove.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							 adapter.remove(adapter.getItem(0));
-						}
-					});
-				} 
+				holder.duration = (TextView) convertView.findViewById(R.id.totalTime);
+				holder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.progressBar);
+				holder.remove = (ImageView) convertView.findViewById(R.id.cancel);
+				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
+			}
+			if (holder.remove != null) {
+				holder.remove.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						adapter.remove(adapter.getItem(position));
+					}
+				});
 			}
 			MusicData song = getItem(position);
 			if (song != null) {
@@ -85,9 +70,8 @@ public class DownloadsTab implements LoadPercentageInterface,
 				holder.title.setText(song.getSongTitle());
 				// holder.cover.setImageAlpha(R.drawable.fallback_cover);
 				if (progressString != null) {
-					holder.downloadProgress.setProgress(Integer
-							.valueOf(progressString));
-				} 
+					holder.downloadProgress.setProgress(Integer.valueOf(song.getDownloadProgress()));
+				}
 				holder.duration.setText(song.getSongDuration());
 			}
 			convertView.setTag(holder);
@@ -107,12 +91,6 @@ public class DownloadsTab implements LoadPercentageInterface,
 	@Override
 	public void insertProgress(String progressString) {
 		this.progressString = progressString;
-//		Log.d("pgrogress download in download tab", progressString);
-//		int pos=adapter.getPosition(mData);			//get position item
-//		Log.d("------------", String.valueOf(adapter.getPosition(mData)));
-//		progressView = listView.getChildAt(pos - listView.getFirstVisiblePosition());
-//		ProgressBar pb = (ProgressBar) progressView.findViewById(R.id.progressBar);
-//		pb.setProgress(Integer.valueOf(progressString));
 		adapter.getItem(0).setDownloadProgress(progressString);
 		adapter.notifyDataSetChanged();
 	}
@@ -124,47 +102,42 @@ public class DownloadsTab implements LoadPercentageInterface,
 			adapter.insert(data, 0);
 		}
 		adapter.notifyDataSetChanged();
-		
+
 	}
 
-	public static View getInstanceView(LayoutInflater layoutInflater,
-			Activity activity) {
+	public static View getInstanceView(LayoutInflater layoutInflater, Activity activity) {
 		View instanceView = getInstance(layoutInflater, activity).view;
-		ViewGroup parent = (ViewGroup)instanceView.getParent();
+		ViewGroup parent = (ViewGroup) instanceView.getParent();
 		if (null != parent) {
 			parent.removeView(instanceView);
 		}
 		return instanceView;
 	}
 
-
-	private static DownloadsTab getInstance(LayoutInflater layoutInflater,
-			Activity activity) {
+	private static DownloadsTab getInstance(LayoutInflater layoutInflater, Activity activity) {
 		if (null == instance) {
-			instance = new DownloadsTab(layoutInflater.inflate(
-					R.layout.layout_download, null), layoutInflater, activity);
+			instance = new DownloadsTab(layoutInflater.inflate(R.layout.layout_download, null), layoutInflater, activity);
 		} else {
 			instance.activity = activity;
 		}
 		return instance;
 	}
-	
+
 	public static DownloadsTab getInstance() {
 		if (null == instance) {
 			instance = new DownloadsTab();
 		}
 		return instance;
 	}
-	
-	private DownloadsTab(final View inflateView,final LayoutInflater layoutInflater,
-			Activity activity) {
+
+	private DownloadsTab(final View inflateView, final LayoutInflater layoutInflater, Activity activity) {
 		this.view = inflateView;
 		this.inflater = layoutInflater;
 		this.activity = activity;
 		adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
-		
+
 	}
 
 	public DownloadsTab() {
