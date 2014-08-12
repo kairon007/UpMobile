@@ -786,21 +786,23 @@ public class SearchTab {
 		@Override
 		protected Integer doInBackground(Integer... params) {
 			Cursor c = null;
-			while (currentProgress != 100) {
+			while (currentProgress < 100) {
 				c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
 				if (c.moveToFirst()) {
-				  int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
-				  int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
-				  long size = c.getInt(sizeIndex);
-				  long downloaded = c.getInt(downloadedIndex);
-				  if (size != -1) progress = downloaded*100.0/size; 
-				  c.close();
-					if (!c.isClosed()) {
-						c.close();
+					int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+					int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+					long size = c.getInt(sizeIndex);
+					long downloaded = c.getInt(downloadedIndex);
+					if (size != -1) {
+						progress = downloaded * 100.0 / size;
 					}
-				  publishProgress((int) progress);
+					c.close();
+					publishProgress((int) progress);
 				}
 				currentProgress = (int) progress;
+				if (!c.isClosed()) {
+					c.close();
+				}
 			}
 			return null;
 		}
