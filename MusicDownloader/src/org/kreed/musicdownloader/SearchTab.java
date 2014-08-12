@@ -129,6 +129,7 @@ public class SearchTab {
 		private boolean waitingForCover = true;
 		private String downloadUrl;
 		private String duration;
+		private DownloadsTab downloadsTab;
 
 		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration) {
 			this.context = context;
@@ -155,9 +156,9 @@ public class SearchTab {
 				request.allowScanningByMediaScanner();
 			}
 			final long downloadId = manager.enqueue(request);
-			final DownloadsTab downloadsTab = DownloadsTab.getInstance();
+			downloadsTab = DownloadsTab.getInstance();
 			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, 
-					songArtist,duration, downloadsTab, downloadId);
+					songArtist,duration, downloadsTab, downloadId, cover);
 			insertDownloadItem.insertData();
 			GetCurrentProgress getCurrentProgress = new GetCurrentProgress(manager, downloadId, downloadsTab);
 			getCurrentProgress.execute();
@@ -173,7 +174,7 @@ public class SearchTab {
 					}
 					if (waitingForCover) {
 						Log.d("logd", "waitingForCover");
-//						return;
+						return;
 					}
 					Cursor c = null;
 					c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
@@ -244,6 +245,7 @@ public class SearchTab {
 		public void onBitmapReady(Bitmap bmp) {
 			this.cover = bmp;
 			this.waitingForCover = false;
+			((LoadPercentageInterface) downloadsTab).insertCover(bmp);
 		}
 
 		@Override
@@ -264,7 +266,7 @@ public class SearchTab {
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
 		private DownloadClickListener downloadClick;
-		Context context;
+		private Context context;
 		private Map<Integer, Bitmap> bitmaps = new HashMap<Integer, Bitmap>(0);
 
 		private SongSearchAdapter(Context context, LayoutInflater inflater) {
@@ -285,29 +287,54 @@ public class SearchTab {
 			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
 			// .setNumber(String.valueOf(position+1), 0)
 					.setId(position).setIcon(R.drawable.fallback_cover);
-				builder.download.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Bundle bundle = new Bundle(0);
-						bundle.putInt(KEY_POSITION, position);
-						final Song song = resultAdapter.getItem(position);
-						Log.d("name", song.getArtist());
-						getUrlTask = new AsyncTask<Void, Void, String>() {
-							@Override
-							protected String doInBackground(Void... params) {
-								return ((RemoteSong) song).getDownloadUrl();
-							}
+				builder.getDownload().setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle(0);
+					bundle.putInt(KEY_POSITION, position);
+					final Song song = resultAdapter.getItem(position);
+					Log.d("name", song.getArtist());
+					getUrlTask = new AsyncTask<Void, Void, String>() {
+						@Override
+						protected String doInBackground(Void... params) {
+							return ((RemoteSong) song).getDownloadUrl();
+						}
 
-							@Override
-							protected void onPostExecute(String downloadUrl) {
-							downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), downloadUrl, "10");
-							downloadClick.downloadFile();
-							}
-						};
-						getUrlTask.execute(NO_PARAMS);
-						
+						@Override
+						protected void onPostExecute(String downloadUrl) {
+							loadSong(downloadUrl);
+						}
+					};
+					try {
+						RemoteSong remSong = (RemoteSong) song;
+						String url = remSong.getParentUrl();
+						if (url != null) {
+							loadSong(url);
+						} else {
+							getUrlTask.execute(NO_PARAMS);
+						}
+					} catch (ClassCastException ex) {
+						Log.e(getClass().getSimpleName(), ex.getMessage());
 					}
-				});
+					
+				}
+
+				private void loadSong(String url) {
+					downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, "10");
+					downloadClick.downloadFile();
+					if (song instanceof GrooveSong) {
+						String urlSmallImage = ((GrooveSong) song).getUrlSmallImage();
+						coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+					} else {
+						coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.small);
+					}
+					coverLoader.addListener(downloadClick);
+					coverLoader.execute(NO_PARAMS);
+				}
+				
+			});
+					
 			if (song instanceof GrooveSong) {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
@@ -523,7 +550,7 @@ public class SearchTab {
 //				activity.removeDialog(STREAM_DIALOG_ID);
 //			}
 //		};	
-////		DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player,duration) {
+//		DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player,duration) {
 ////			@Override
 ////			public void onClick(DialogInterface dialog, int which) {
 ////				super.onClick(dialog, which);
@@ -744,15 +771,17 @@ public class SearchTab {
 		private String songArtist;
 		private String duration;
 		private long downloadId;
+		private Bitmap cover;
 
 		public InsertDownloadItem(String songTitle, String songArtist,
-				String formatTime, MusicDataInterface musicDataInterface, long downloadId) {
+				String formatTime, MusicDataInterface musicDataInterface, long downloadId, Bitmap cover) {
 			// TODO Auto-generated constructor stub
 			this.songArtist = songArtist;
 			this.songTitle = songTitle;
 			this.duration = formatTime;
 			this.musicDataInterface = musicDataInterface;
 			this.downloadId = downloadId;
+			this.cover = cover;
 		}
 
 		public void insertData() {
@@ -761,20 +790,26 @@ public class SearchTab {
 			mItem.setSongArtist(songArtist);
 			mItem.setSongTitle(songTitle);
 			mItem.setSongDuration(String.valueOf(duration));
-			// mItem.setSongBitmap(BitmapFactory.decodeResource(getc, id));
+			mItem.setSongBitmap(cover);
 			mItem.setDownloadId(downloadId);
 			mItem.setDownloadProgress("0");
 			mData.add(mItem);
 			musicDataInterface.insertData(mData);
 		}
+
+		public Bitmap getCover() {
+			return cover;
+		}
+
+		public void setCover(Bitmap cover) {
+			this.cover = cover;
+		}
 	}
-	private static class GetCurrentProgress extends AsyncTask<Integer, Integer, Integer> implements OnBitmapReadyListener {
+	private static class GetCurrentProgress extends AsyncTask<Integer, Integer, Integer> {
 		private double progress = 0.0;
 		private int currentProgress;
 		private DownloadManager manager;
-		long downloadId;
-		private Bitmap cover;
-		private boolean waitingForCover = false;
+		private long downloadId;
 		private LoadPercentageInterface loadPercentageInterface;
 		
 		public GetCurrentProgress(DownloadManager manager, long downloadId, LoadPercentageInterface loadPercentageInterface) {
@@ -810,16 +845,6 @@ public class SearchTab {
 		protected void onProgressUpdate(Integer... progress) {
 			super.onProgressUpdate(progress);
 			loadPercentageInterface.insertProgress(String.valueOf(progress[0]));
-			if (waitingForCover) {
-				loadPercentageInterface.insertCover(cover);
-			}
-		}
-
-		@Override
-		public void onBitmapReady(Bitmap bmp) {
-			// TODO Auto-generated method stub
-			this.cover = bmp;
-			this.waitingForCover = true;
 		}
 	}
 }

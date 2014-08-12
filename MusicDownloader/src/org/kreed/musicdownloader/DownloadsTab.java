@@ -122,7 +122,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			adapter.insert(data, 0);
 		}
 		adapter.notifyDataSetChanged();
-
 	}
 
 	public static View getInstanceView(LayoutInflater layoutInflater, Activity activity) {

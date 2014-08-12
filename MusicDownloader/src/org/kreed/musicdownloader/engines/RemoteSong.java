@@ -30,4 +30,8 @@ public class RemoteSong extends Song {
 		return downloadUrl;
 	}
 
+	public String getParentUrl() {
+		return downloadUrl;
+	}
+
 }

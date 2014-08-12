@@ -29,7 +29,7 @@ public class AdapterHelper {
 		private View view;
 		private View left;
 		private TextView caption;
-		public ImageView download;
+		private ImageView download;
 		
 		private ViewBuilder(View view) {
 			view.setTag(this);
@@ -45,7 +45,7 @@ public class AdapterHelper {
 			caption.setTypeface(MusicDownloaderApp.FONT_LIGHT);
 			arrow = (ImageView)view.findViewById(R.id.arrow);
 			cover = (ImageView)view.findViewById(R.id.cover);
-			download = (ImageView) view.findViewById(R.id.downloadIV);
+			download = ((ImageView) view.findViewById(R.id.downloadIV));
 			left = (View) number.getParent();
 		}
 		
@@ -172,6 +172,10 @@ public class AdapterHelper {
 		
 		public View build() {
 			return view;
+		}
+
+		public ImageView getDownload() {
+			return download;
 		}
 	}
 
