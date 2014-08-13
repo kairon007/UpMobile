@@ -7,7 +7,7 @@ import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -32,13 +32,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.appnext.appnextsdk.Appnext;
 import com.appnext.appnextsdk.NoAdsInterface;
 import com.appnext.appnextsdk.PopupClosedInterface;
 import com.ekejuifky.wxfvksrhp191084.MA;
-
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
 import com.ironsource.mobilcore.MobileCore.AD_UNITS;
@@ -1180,7 +1177,7 @@ public class Advertisement {
 	}
 	
 	
-	public static boolean grabosShowInterstitial(final Activity activity, final String adPositionKey, boolean useAppIcon, final boolean isLetangInterstitial, String grabosTitle, String grabosDescription, final String grabosPackage, String okButtonMessage, String cancelButtonMessage) {
+	@SuppressLint("NewApi") public static boolean grabosShowInterstitial(final Activity activity, final String adPositionKey, boolean useAppIcon, final boolean isLetangInterstitial, String grabosTitle, String grabosDescription, final String grabosPackage, String okButtonMessage, String cancelButtonMessage) {
 	
 		
 		if (!Settings.getIsBlacklisted(activity)) {
