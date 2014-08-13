@@ -163,6 +163,15 @@ public class SearchTab {
 			final TimerTask progresUpdateTask = new TimerTask() {
 				private File src;
 				
+				private void updateProgress() {
+					instance.activity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							downloadsTab.insertProgress(String.valueOf(progress));
+						}
+					});
+				}
+				
 				@Override
 				public void run() {
 					if (downloadsTab.getCancelledId() == downloadId) {
@@ -179,12 +188,7 @@ public class SearchTab {
 							progress = downloaded * 100.0 / size;
 						}
 						cs.close();
-						instance.activity.runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								downloadsTab.insertProgress(String.valueOf(progress));
-							}
-						});
+						updateProgress();
 					}
 					if (!cs.isClosed()) {
 						cs.close();
@@ -226,6 +230,8 @@ public class SearchTab {
 						File dst = new File(src.getParentFile(), src.getName()+"-1");
 						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
 						dst.renameTo(src);
+						progress = 100;
+						updateProgress();
 						this.cancel();
 					} catch (IOException e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);

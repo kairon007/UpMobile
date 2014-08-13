@@ -105,7 +105,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	public void insertProgress(String progressString) {
 		this.progressString = progressString;
 		adapter.getItem(0).setDownloadProgress(progressString);
-		if (progressString.equals("100")) {
+		if (progressString.equals("100.0") || progressString.equals("100")) {
 			adapter.getItem(0).setDownloadProgress(SET_VIS);
 		}
 		adapter.notifyDataSetChanged();
