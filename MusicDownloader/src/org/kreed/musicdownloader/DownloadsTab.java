@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,10 +56,17 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
+			//////
+			if (holder.remove == null) {
+				Log.d("logd", "holder.remove == null");
+			}
+			//////
 			if (holder.remove != null) {
+				Log.d("logd", "holder.remove != null");
 				holder.remove.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						Log.d("logd", "dismiss clicked");
 						DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 						cancelledId = adapter.getItem(position).getDownloadId();
 						manager.remove(cancelledId);
@@ -80,7 +88,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 					} else {
 						holder.downloadProgress.setVisibility(View.VISIBLE);
 						holder.remove.setImageResource(R.drawable.cancel);
-						holder.downloadProgress.setProgress(Integer.valueOf(song.getDownloadProgress()));
+						holder.downloadProgress.setProgress((int)Double.parseDouble(song.getDownloadProgress()));
 					}
 				}
 				holder.duration.setText(song.getSongDuration());

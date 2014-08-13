@@ -31,11 +31,9 @@ import org.kreed.musicdownloader.ui.AdapterHelper.ViewBuilder;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -130,6 +128,7 @@ public class SearchTab {
 		private String downloadUrl;
 		private String duration;
 		private DownloadsTab downloadsTab;
+		private double progress = 0.0;
 
 		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration) {
 			this.context = context;
@@ -160,8 +159,6 @@ public class SearchTab {
 			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, 
 					songArtist,duration, downloadsTab, downloadId, cover);
 			insertDownloadItem.insertData();
-			GetCurrentProgress getCurrentProgress = new GetCurrentProgress(manager, downloadId, downloadsTab);
-			getCurrentProgress.execute();
 
 			final TimerTask progresUpdateTask = new TimerTask() {
 				private File src;
@@ -169,11 +166,31 @@ public class SearchTab {
 				@Override
 				public void run() {
 					if (downloadsTab.getCancelledId() == downloadId) {
-						Log.d("logd", "cancel");
 						this.cancel();
 					}
+					Cursor cs = null;
+					cs = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
+					if (cs.moveToFirst()) {
+						int sizeIndex = cs.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+						int downloadedIndex = cs.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+						long size = cs.getInt(sizeIndex);
+						long downloaded = cs.getInt(downloadedIndex);
+						if (size != -1) {
+							progress = downloaded * 100.0 / size;
+						}
+						cs.close();
+						instance.activity.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								downloadsTab.insertProgress(String.valueOf(progress));
+//								Log.d("logd", "d = " + String.valueOf(progress));
+							}
+						});
+					}
+					if (!cs.isClosed()) {
+						cs.close();
+					}
 					if (waitingForCover) {
-						Log.d("logd", "waitingForCover");
 						return;
 					}
 					Cursor c = null;
@@ -181,7 +198,6 @@ public class SearchTab {
 					if (c == null || !c.moveToFirst()) {
 						if (c != null) {
 							c.close();
-							Log.d("logd", "c.close();");
 						}
 						return;
 					}
@@ -519,7 +535,7 @@ public class SearchTab {
 			return;
 		}
 		engine.execute(NO_PARAMS);
-	}	
+	}
 	
 	private final static class Player extends AsyncTask<String, Void, Boolean> {
 		private String url = null; 
@@ -752,48 +768,6 @@ public class SearchTab {
 
 		public void setCover(Bitmap cover) {
 			this.cover = cover;
-		}
-	}
-	private static class GetCurrentProgress extends AsyncTask<Integer, Integer, Integer> {
-		private double progress = 0.0;
-		private int currentProgress;
-		private DownloadManager manager;
-		private long downloadId;
-		private LoadPercentageInterface loadPercentageInterface;
-		
-		public GetCurrentProgress(DownloadManager manager, long downloadId, LoadPercentageInterface loadPercentageInterface) {
-			this.manager = manager;
-			this.downloadId = downloadId;
-			this.loadPercentageInterface = loadPercentageInterface;
-		}
-
-		@Override
-		protected Integer doInBackground(Integer... params) {
-			Cursor c = null;
-			while (currentProgress < 100) {
-				c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
-				if (c.moveToFirst()) {
-					int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
-					int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
-					long size = c.getInt(sizeIndex);
-					long downloaded = c.getInt(downloadedIndex);
-					if (size != -1) {
-						progress = downloaded * 100.0 / size;
-					}
-					c.close();
-					publishProgress((int) progress);
-				}
-				currentProgress = (int) progress;
-				if (!c.isClosed()) {
-					c.close();
-				}
-			}
-			return null;
-		}
-		@Override
-		protected void onProgressUpdate(Integer... progress) {
-			super.onProgressUpdate(progress);
-			loadPercentageInterface.insertProgress(String.valueOf(progress[0]));
 		}
 	}
 }
