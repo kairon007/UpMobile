@@ -408,16 +408,42 @@ public class SearchTab {
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setEmptyView(message);
+		final FrameLayout layout = (FrameLayout)instanceView.findViewById(R.id.player);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-			@SuppressWarnings("deprecation")
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (position == resultAdapter.getCount()) return; //progress click
-				Bundle bundle = new Bundle(0);
-				bundle.putInt(KEY_POSITION, position);
-				activity.showDialog(STREAM_DIALOG_ID, bundle);
-			}
+				final Song song = resultAdapter.getItem(position);
+				final String artist = song.getTitle();
+				final String title = song.getArtist();
+				if (null == player) {
+					player = new Player(inflater.inflate(R.layout.player_row, null));
+				} else {
+					player.cancel();
+					player = new Player(inflater.inflate(R.layout.player_row, null));
+				}
+					getUrlTask = new AsyncTask<Void, Void, String>() {
+						@Override
+						protected String doInBackground(Void... params) {
+							return ((RemoteSong) song).getDownloadUrl();
+						}
+
+						@Override
+						protected void onPostExecute(String downloadUrl) {
+							if (null != player) {
+								player.setSongName(artist, title);
+								player.setDownloadUrl(downloadUrl);
+								player.execute(); 
+								layout.setVisibility(View.VISIBLE);
+								layout.removeAllViews();
+								layout.addView(player.getView());
+							}
+						}
+					};
+					getUrlTask.execute(NO_PARAMS);
+				}
+			
 		});
 		searchField = (TextView)instanceView.findViewById(R.id.text);
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -493,92 +519,7 @@ public class SearchTab {
 			return;
 		}
 		engine.execute(NO_PARAMS);
-	}
-	
-//	@SuppressLint("NewApi")
-//	public Dialog createStreamDialog(Bundle args) {
-//		if(!(args.containsKey(KEY_POSITION))) {
-//			return null;
-//		}
-//		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
-//		final String artist = song.getTitle();
-//		final String title = song.getArtist();
-//		if (null == player) {
-//			player = new Player(inflater.inflate(R.layout.download_dialog, null));
-//			getUrlTask = new AsyncTask<Void, Void, String>() {
-//				@Override
-//				protected String doInBackground(Void... params) {
-//					return ((RemoteSong) song).getDownloadUrl();
-//				}
-//				@Override
-//				protected void onPostExecute(String downloadUrl) {
-//					if(null != player) {
-//						player.setDownloadUrl(downloadUrl);
-//						player.execute();
-//					}
-//				}	
-//			};
-//			
-//			getUrlTask.execute(NO_PARAMS);
-//			if (song instanceof GrooveSong) {
-//				String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
-//				coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
-//			} else {
-//				coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
-//			}
-//			coverLoader.addListener(new OnBitmapReadyListener() {
-//				@Override
-//				public void onBitmapReady(Bitmap bmp) {
-//					if (null != player) {
-//						player.setCover(bmp);
-//					}
-//				}
-//			});
-//			coverLoader.execute(NO_PARAMS);
-//		} 
-//		final String duration = player.formatTime(player.mediaPlayer.getDuration());
-//		final Context context = view.getContext();
-//		final Runnable dialogDismisser = new Runnable() {
-//			@Override
-//			public void run() {
-//				if(player != null) {
-//					player.cancel();
-//					player = null;
-//				}
-//				getUrlTask.cancel(true);
-////				coverLoader.cancel(true);
-//				activity.removeDialog(STREAM_DIALOG_ID);
-//			}
-//		};	
-//		DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player,duration) {
-////			@Override
-////			public void onClick(DialogInterface dialog, int which) {
-////				super.onClick(dialog, which);
-////				dialogDismisser.run();
-////			}
-////		};
-////		coverLoader.addListener(downloadClickListener);
-//		AlertDialog.Builder b = new AlertDialog.Builder(context)
-//			.setTitle(title)
-//			.setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
-//				@Override
-//				public void onClick(DialogInterface dialog, int which) {
-//					dialogDismisser.run();
-//				}
-//			})
-//			.setOnCancelListener(new OnCancelListener() {						
-//				@Override
-//				public void onCancel(DialogInterface dialog) {
-//					dialogDismisser.run();
-//				}
-//			})
-//			.setPositiveButton(
-//				R.string.download, 
-//				downloadClickListener
-//			)
-//			.setView(player.getView());
-//		return b.create();
-//	}
+	}	
 	
 	private final static class Player extends AsyncTask<String, Void, Boolean> {
 		private String url = null; 
@@ -591,6 +532,9 @@ public class SearchTab {
 		private ImageView coverImage;
 		private ProgressBar coverProgress;
 		private View view;
+		private TextView songArtistIV;
+		private TextView songTitleIV;
+		private String songArtistString, songTitleString;
 		
 		public Player(View view) {
 			super();
@@ -603,6 +547,8 @@ public class SearchTab {
 			time = (TextView) view.findViewById(R.id.time);
 			coverImage = (ImageView) view.findViewById(R.id.cover);
 			coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
+			songArtistIV = (TextView) view.findViewById(R.id.playerSongArtist);
+			songTitleIV = (TextView) view.findViewById(R.id.playerSongTitle);
 			button.setOnClickListener(new View.OnClickListener() {				
 				@Override
 				public void onClick(View v) {
@@ -615,8 +561,9 @@ public class SearchTab {
 			url = downloadUrl;
 		}
 		
-		private String getDownloadUrl() {
-			return url;
+		private void setSongName(String songArtist, String SongTitle) {
+			this.songArtistString = songArtist;
+			this.songTitleString = SongTitle;
 		}
 
 		public void setCover(Bitmap bmp) {
@@ -652,6 +599,8 @@ public class SearchTab {
 		};
 		
 		public void onPrepared() {
+			songArtistIV.setText(songArtistString + " ");
+			songTitleIV.setText(songTitleString + " - ");
 			spinner.setVisibility(View.GONE);
 			button.setVisibility(View.VISIBLE);
 			Intent i = new Intent("org.kreed.musicdownloader.action.PAUSE");

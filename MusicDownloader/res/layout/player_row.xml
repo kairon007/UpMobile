@@ -4,15 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+ <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/time"
-            android:layout_width="61dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:text="00:00"
@@ -25,7 +26,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:ellipsize="end"
-            android:hint="Иполнитель"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -37,9 +37,9 @@
             android:layout_toLeftOf="@+id/time"
             android:layout_toRightOf="@+id/playerSongTitle"
             android:ellipsize="end"
-            android:hint="Песня"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </RelativeLayout>
 
     <LinearLayout
