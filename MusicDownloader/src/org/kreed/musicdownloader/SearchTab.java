@@ -183,7 +183,6 @@ public class SearchTab {
 							@Override
 							public void run() {
 								downloadsTab.insertProgress(String.valueOf(progress));
-//								Log.d("logd", "d = " + String.valueOf(progress));
 							}
 						});
 					}

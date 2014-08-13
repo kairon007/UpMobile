@@ -56,13 +56,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			//////
-			if (holder.remove == null) {
-				Log.d("logd", "holder.remove == null");
-			}
-			//////
 			if (holder.remove != null) {
-				Log.d("logd", "holder.remove != null");
 				holder.remove.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
