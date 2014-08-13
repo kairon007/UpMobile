@@ -20,6 +20,7 @@ import org.kreed.vanilla.engines.FinishedParsingSongs;
 import org.kreed.vanilla.engines.SearchWithPages;
 import org.kreed.vanilla.engines.cover.CoverLoaderTask;
 import org.kreed.vanilla.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import org.kreed.vanilla.engines.cover.LastFmCoverLoaderTask;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import org.kreed.vanilla.song.GrooveSong;
@@ -535,13 +536,28 @@ public class SearchTab {
 					String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
 					coverLoader = new CoverLoaderTask(largeCoverUrl);
 				} else {
-					coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
+					coverLoader = new LastFmCoverLoaderTask(artist, title);
 				}
 				coverLoader.addListener(new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
-						if (null != player) {
-							player.setCover(bmp);
+						if (bmp == null) {
+							coverLoader.cancel(true);
+							coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
+							coverLoader.addListener(new OnBitmapReadyListener() {
+
+								@Override
+								public void onBitmapReady(Bitmap bmp) {
+									if (null != player) {
+										player.setCover(bmp);
+									}
+								}
+							});
+							coverLoader.execute(NO_PARAMS);
+						} else {
+							if (null != player) {
+								player.setCover(bmp);
+							}
 						}
 					}
 				});
