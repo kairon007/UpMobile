@@ -2,6 +2,15 @@ package org.kreed.musicdownloader;
 
 public class LoadPercentage {
 	String progress;
+	String currentDownloadingSongTitle;
+
+	public String getCurrentDownloadingSongTitle() {
+		return currentDownloadingSongTitle;
+	}
+
+	public void setCurrentDownloadingSongTitle(String currentDownloadingSongTitle) {
+		this.currentDownloadingSongTitle = currentDownloadingSongTitle;
+	}
 
 	public void loadPercentage() {
 	}
@@ -17,5 +26,5 @@ public class LoadPercentage {
 	public void setProgress(String progress) {
 		this.progress = progress;
 	}
-	
+
 }

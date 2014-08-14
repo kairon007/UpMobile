@@ -130,6 +130,8 @@ public class SearchTab {
 		private String duration;
 		private DownloadsTab downloadsTab;
 		private double progress = 0.0;
+		private String currentDownloadingSongTitle;
+		private Long currentDownloadingID;
 
 		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration) {
 			this.context = context;
@@ -168,6 +170,8 @@ public class SearchTab {
 					instance.activity.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
+							downloadsTab.currentDownloadingID(currentDownloadingID);
+							downloadsTab.currentDownloadingSongTitle(currentDownloadingSongTitle);
 							downloadsTab.insertProgress(String.valueOf(progress));
 						}
 					});
@@ -185,6 +189,9 @@ public class SearchTab {
 						int downloadedIndex = cs.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 						long size = cs.getInt(sizeIndex);
 						long downloaded = cs.getInt(downloadedIndex);
+						currentDownloadingID = downloadId;
+						currentDownloadingSongTitle= cs.getString(cs.getColumnIndex(DownloadManager.COLUMN_TITLE));
+						Log.d("-----------", downloadId + " -- " + downloadId);
 						if (size != -1) {
 							progress = downloaded * 100.0 / size;
 						}
@@ -280,6 +287,15 @@ public class SearchTab {
 
 		@Override
 		public void insertCover(Bitmap cover) {
+		}
+		@Override
+		public void currentDownloadingSongTitle(String currentDownloadingSongTitle) {
+			
+		}
+		@Override
+		public void currentDownloadingID(Long currentDownloadingID) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 
