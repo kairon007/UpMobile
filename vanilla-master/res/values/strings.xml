@@ -14,7 +14,8 @@
     <string name="up_label">Up</string>
     <!--  -->
     <string name="hader_download">Download location</string>
-
+    <string name="menu_equalizer">Equalizer</string>
+    
     
     
     <string name="rate_popup_title">Please rate our app 5 stars</string>

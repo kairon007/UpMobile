@@ -70,9 +70,17 @@ THE SOFTWARE.
             android:paddingRight="4dip"
             android:scaleType="fitCenter"
             android:src="@android:drawable/ic_menu_sort_by_size" />
-    </LinearLayout>
 
-    
+        <ImageButton
+            android:id="@+id/equalizer_button"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@drawable/selectable_item_bg"
+            android:paddingBottom="4dip"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_menu_equalizer" />
+
+    </LinearLayout>
     
     
 		<LinearLayout

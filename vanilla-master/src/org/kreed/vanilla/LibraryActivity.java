@@ -141,6 +141,7 @@ public class LibraryActivity
 
 	private TextView mTextFilter;
 	private View mSortButton;
+	private View mEqualizerButton;
 
 	private Song song;
 	private View mActionControls;
@@ -273,6 +274,7 @@ public class LibraryActivity
 	public void onResume() {
 		super.onResume();
 		Advertisement.onResume(this);
+		updateEqualizerVisibility();
 	}
 	
 	
@@ -325,6 +327,9 @@ public class LibraryActivity
 		
 		mSortButton = findViewById(R.id.sort_button);
 		mSortButton.setOnClickListener(this);
+		
+		mEqualizerButton = findViewById(R.id.equalizer_button);
+		mEqualizerButton.setOnClickListener(this);
 
 		mLimiterScroller = (HorizontalScrollView)findViewById(R.id.limiter_scroller);
 		mLimiterViews = (ViewGroup)findViewById(R.id.limiter_layout);
@@ -526,8 +531,17 @@ public class LibraryActivity
 		mDefaultAction = Integer.parseInt(settings.getString(PrefKeys.DEFAULT_ACTION_INT, "7"));
 		mLastActedId = LibraryAdapter.INVALID_ID;
 		updateHeaders();
+		updateEqualizerVisibility();
 	}
 
+	private void updateEqualizerVisibility() {
+		SharedPreferences settings = PlaybackService.getSettings(this);
+		boolean equalizer = settings.getBoolean(PrefKeys.EQUALIZER, false);
+		if (!equalizer) {
+			mEqualizerButton.setVisibility(View.GONE);
+		}
+	}
+	
 	/**
 	 * Load the tab order and update the tab bars if needed.
 	 */
@@ -853,6 +867,8 @@ public class LibraryActivity
 //			else
 //				mTextFilter.setText("");
 			openSortDialog();
+		} else if (view == mEqualizerButton) {
+			Toast.makeText(getApplicationContext(), "Equalizer", Toast.LENGTH_SHORT).show();
 		} else if (view == mCover || view == mActionControls) {
 			openPlaybackActivity();
 		} else if (view == mEmptyQueue) {

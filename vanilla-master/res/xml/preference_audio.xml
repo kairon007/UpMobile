@@ -54,4 +54,8 @@ THE SOFTWARE.
 		android:title="@string/headset_play_title"
 		android:summary="@string/headset_play_summary"
 		android:defaultValue="false" />
+	<CheckBoxPreference
+		android:key="equalizer"
+		android:title="@string/audio_equalizer"
+		android:defaultValue="false" />
 </PreferenceScreen>

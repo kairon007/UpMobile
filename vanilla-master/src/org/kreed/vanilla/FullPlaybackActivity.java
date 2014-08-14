@@ -43,11 +43,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +59,7 @@ import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * The primary playback screen with playback controls and large cover display.
@@ -379,6 +382,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 		super.onResume();
 		mPaused = false;
 		updateElapsedTime();
+		ActivityCompat.invalidateOptionsMenu(this);
 	}
 
 	@Override
@@ -526,9 +530,15 @@ public class FullPlaybackActivity extends PlaybackActivity
 		menu.add(0, MENU_ENQUEUE_ARTIST, 0, R.string.enqueue_current_artist).setIcon(R.drawable.ic_menu_add);
 		menu.add(0, MENU_ENQUEUE_GENRE, 0, R.string.enqueue_current_genre).setIcon(R.drawable.ic_menu_add);
 		menu.add(0, MENU_TOGGLE_CONTROLS, 0, R.string.toggle_controls);
+		SharedPreferences settings = PlaybackService.getSettings(this);
+		boolean equalizer = settings.getBoolean(PrefKeys.EQUALIZER, false);
+		if (equalizer) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.playback_menu, menu);
+		}
 		return true;
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -552,6 +562,9 @@ public class FullPlaybackActivity extends PlaybackActivity
 		case MENU_TOGGLE_CONTROLS:
 			setControlsVisible(!mControlsVisible);
 			mHandler.sendEmptyMessage(MSG_SAVE_CONTROLS);
+			break;
+		case R.id.menu_equalizer:
+			Toast.makeText(this, "Equalizer", Toast.LENGTH_SHORT).show();
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
