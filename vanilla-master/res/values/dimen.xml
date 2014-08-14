@@ -2,4 +2,5 @@
 <resources>
     <dimen name="xhdmi">450dp</dimen>
     <dimen name="hdmi">32dp</dimen>
+    <dimen name="padding_20px">20px</dimen>
 </resources>

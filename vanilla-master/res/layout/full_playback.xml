@@ -62,6 +62,7 @@ THE SOFTWARE.
 		android:layout_gravity="bottom|left"
 		android:layout_margin="0dip"
 		android:background="#a000"
+		android:paddingBottom="@dimen/padding_20px"
 		android:orientation="horizontal">
 		<include layout="@layout/controls" />
 	</LinearLayout>

@@ -29,7 +29,7 @@ THE SOFTWARE.
 	<TableLayout
 		android:id="@+id/info_table"
 		android:layout_width="fill_parent"
-		android:layout_height="150dp"
+		android:layout_height="165dp"
 		android:layout_gravity="bottom|center"
 		android:collapseColumns="0"
 		android:stretchColumns="1"
@@ -129,6 +129,7 @@ THE SOFTWARE.
 		android:layout_width="fill_parent"
 		android:layout_gravity="bottom|left"
 		android:layout_margin="0dip"
+		android:paddingBottom="@dimen/padding_20px"
 		android:background="@color/full_playback_alt_control_background"
 		android:orientation="horizontal">
 		<include layout="@layout/controls" />

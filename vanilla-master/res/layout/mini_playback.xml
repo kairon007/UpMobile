@@ -35,6 +35,7 @@ THE SOFTWARE.
 		android:layout_gravity="center"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
+		android:paddingBottom="@dimen/padding_20px"	
 		android:orientation="horizontal">
 		<include layout="@layout/controls" />
 	</LinearLayout>
