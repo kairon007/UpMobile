@@ -102,4 +102,12 @@ THE SOFTWARE.
 		<item>@string/info_below_cover</item>
 		<item>@string/fixed_info</item>
 	</string-array>
+	<string-array name="switching_tab_values">
+        <item>top</item>
+        <item>bottom</item>
+    </string-array>
+    <string-array name="switch_showing_tab">
+        <item>@string/show_top</item>
+       <item>@string/show_bottom</item>
+    </string-array>
 </resources>

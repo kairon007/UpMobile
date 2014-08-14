@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2012 Christopher Eby <kreed@kreed.org>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:persistent="true" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="controls_in_selector"
+        android:summary="@string/controls_in_selector_summary"
+        android:title="@string/controls_in_selector_title" />
+
+    <PreferenceScreen
+        android:summary="@string/customize_tab_order"
+        android:title="@string/tabs" >
+        <intent
+            android:targetClass="org.kreed.vanilla.TabOrderActivity"
+            android:targetPackage="org.kreed.vanilla" />
+    </PreferenceScreen>
+
+    <org.kreed.vanilla.ListPreferenceSummary
+        android:defaultValue="false"
+        android:entries="@array/switch_showing_tab"
+        android:entryValues="@array/switching_tab_values"
+        android:summary="@string/customize_show_position_tab"
+        android:key="show_tab_position"
+        android:title="@string/show_position_tab" />
+    <org.kreed.vanilla.ListPreferenceSummary
+        android:defaultValue="7"
+        android:entries="@array/default_action_entries"
+        android:entryValues="@array/entry_values"
+        android:key="default_action_int"
+        android:title="@string/default_action_title" />
+    <org.kreed.vanilla.ListPreferenceSummary
+        android:defaultValue="3"
+        android:entries="@array/default_playlist_action_entries"
+        android:entryValues="@array/entry_values"
+        android:key="default_playlist_action"
+        android:title="@string/default_playlist_action_title" />
+
+    <org.kreed.vanilla.ScanPreference />
+
+</PreferenceScreen>

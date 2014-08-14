@@ -143,7 +143,6 @@ public class LibraryActivity
 	private View mSortButton;
 
 	private Song song;
-	
 	private View mActionControls;
 	private View mControls;
 	private TextView mTitle;
@@ -189,6 +188,7 @@ public class LibraryActivity
 	private ApplicationInfo mFakeInfo;
 	
 	int lastPage = -1;
+	private Bundle state;
 
 	//-------------------------------------------------------------------------
 	
@@ -279,6 +279,7 @@ public class LibraryActivity
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);		
+		this.state = state;
 		if (state == null) {
 			checkForLaunch(getIntent());
 		}
@@ -363,16 +364,19 @@ public class LibraryActivity
 			tabs.setOnPageChangeListener(pagerAdapter);
 			mTabs = tabs;
 
-			LinearLayout content = (LinearLayout)findViewById(R.id.content);
-			
-			//aici se adauga taburile de sus
-			content.addView(tabs, 0, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-			
-			
-			//
-			
-			
+			LinearLayout content = (LinearLayout) findViewById(R.id.content);
+			String swichPlace = settings.getString(PrefKeys.SHOW_TAB_POSITION,
+					"top");
+			Log.d("log", "======================"+swichPlace);
+			switch (swichPlace) {
+			case "top":
+				content.addView(tabs, 0, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+				break;
+			case "bottom":
+				int i = content.getChildCount();
+				content.addView(tabs, i, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+				break;
+			}
 		//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false)) {
 				getLayoutInflater().inflate(R.layout.library_controls, content, true);
 
@@ -491,9 +495,6 @@ public class LibraryActivity
 		} catch (Exception e) { 
 			 
 		} 
-		
-		
-
 	}
 
 	public void setFilterHint(int type){
@@ -515,12 +516,9 @@ public class LibraryActivity
 	public void onStart()
 	{
 		super.onStart();
-
-		
-		
-		
+		onCreate(state);
 		SharedPreferences settings = PlaybackService.getSettings(this);
-	//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false) != (mControls != null)) {
+		//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false) != (mControls != null)) {
 	//		finish();
 	//		startActivity(new Intent(this, LibraryActivity.class));
 	//	}
@@ -1233,6 +1231,7 @@ public class LibraryActivity
 			return true;
 		}
 		default:
+			onDestroy();
 			return super.onOptionsItemSelected(item);
 		}
 	}

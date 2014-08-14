@@ -182,7 +182,7 @@ public class PreferencesActivity extends PreferenceActivity {
 				setTheme(R.style.BackActionBar);
 			}
 			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.preference_library);
+			addPreferencesFromResource(R.xml.preference_library_until_11);
 		}
 	}
 

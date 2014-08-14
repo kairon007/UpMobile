@@ -268,4 +268,10 @@ THE SOFTWARE.
 	    <item>song</item>
 	    <item>songs</item>
 	</string-array>
+	
+	<string name="show_position_tab">Switching show tab</string>
+	<string name="customize_show_position_tab">Swich showing tabs at the top or at the bottom</string>
+	<string name="show_top">Top</string>
+	<string name="show_bottom">Bottom</string>
+
 </resources>
