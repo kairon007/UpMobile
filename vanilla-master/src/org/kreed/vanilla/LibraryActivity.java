@@ -367,7 +367,6 @@ public class LibraryActivity
 			LinearLayout content = (LinearLayout) findViewById(R.id.content);
 			String swichPlace = settings.getString(PrefKeys.SHOW_TAB_POSITION,
 					"top");
-			Log.d("log", "======================"+swichPlace);
 			switch (swichPlace) {
 			case "top":
 				content.addView(tabs, 0, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -516,7 +515,9 @@ public class LibraryActivity
 	public void onStart()
 	{
 		super.onStart();
-		onCreate(state);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			onCreate(state);
+		}
 		SharedPreferences settings = PlaybackService.getSettings(this);
 		//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false) != (mControls != null)) {
 	//		finish();
