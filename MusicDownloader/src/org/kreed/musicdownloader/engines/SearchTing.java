@@ -1,19 +1,10 @@
 package org.kreed.musicdownloader.engines;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import android.util.Log;
+import org.kreed.musicdownloader.song.TingSong;
 
 public class SearchTing extends BaseSearchTask {
 
@@ -21,11 +12,14 @@ public class SearchTing extends BaseSearchTask {
 		super(dInterface, songName);
 	}
 
+	private static String BAIDU_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.search.common&format=json&page_size=10&page_no=1&query=";
+	private static String BAIDU_DOWNLOAD_URL = "http://ting.baidu.com/data/music/links?songIds=";
+	
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
 			String songName = URLEncoder.encode(getSongName(), "UTF-8").replace("%20", "+");
-			String link = "http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.search.common&format=json&page_size=10&page_no=1&query="+songName;
+			String link = BAIDU_URL + songName;
 			JSONObject response = new JSONObject(readLink(link).toString());
 			JSONArray songResults = response.getJSONArray("song_list");
 			for (int i = 0; i < songResults.length(); i++) {
@@ -44,34 +38,13 @@ public class SearchTing extends BaseSearchTask {
 	public static String getDownloadUrl(int songId) {
 		String downloadUrl = null;
 		try {
-			String link = "http://ting.baidu.com/data/music/links?songIds="+songId;
+			String link = BAIDU_DOWNLOAD_URL+songId;
 			JSONObject response = new JSONObject(handleLink(link));
 			downloadUrl = response.getJSONObject("data").getJSONArray("songList").getJSONObject(0).getString("songLink");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return downloadUrl;
-	}
-	
-	private static String handleLink(String link) {
-		try {
-			URL url = new URL(link);
-			URLConnection conn = url.openConnection();
-			conn.setRequestProperty("User-Agent", getRandomUserAgent());
-			conn.setDoOutput(true);
-			conn.setConnectTimeout(3000);
-			StringBuffer sb = new StringBuffer();
-			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-			String line;
-			while ((line = rd.readLine()) != null) {
-				sb.append(line);
-			}
-			rd.close();
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "";
 	}
 	
 }

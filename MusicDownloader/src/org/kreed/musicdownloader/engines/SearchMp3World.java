@@ -1,5 +1,6 @@
 package org.kreed.musicdownloader.engines;
 
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
@@ -9,18 +10,23 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.kreed.musicdownloader.song.RemoteSong;
 
 public class SearchMp3World extends BaseSearchTask {
+	
 	private static final Pattern SONG_TITLE_PATTERN = Pattern.compile("([^-]*)-(.*)mp3");
+	
 	public SearchMp3World(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
+	
+	private static String MP3_WORLD_URL = "http://emp3world.com/search/";
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
 			String songName = getSongName().replace(" ", "_");
-			String urlMp3World = "http://emp3world.com/search/" + songName + "_mp3_download.html";
+			String urlMp3World = MP3_WORLD_URL + songName + "_mp3_download.html";
 			Document doc = Jsoup.connect(urlMp3World).timeout(10000).get();
 			Elements searchResults = doc.getElementsByAttributeValue("id", "results_box");
 			if (searchResults.size() > 0) {

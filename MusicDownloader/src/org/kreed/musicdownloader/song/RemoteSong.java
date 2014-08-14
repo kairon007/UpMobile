@@ -1,6 +1,5 @@
-package org.kreed.musicdownloader.engines;
+package org.kreed.musicdownloader.song;
 
-import org.kreed.musicdownloader.Song;
 
 public class RemoteSong extends Song {
 

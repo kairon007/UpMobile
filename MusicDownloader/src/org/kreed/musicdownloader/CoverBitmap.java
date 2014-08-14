@@ -22,6 +22,8 @@
 
 package org.kreed.musicdownloader;
 
+import org.kreed.musicdownloader.song.Song;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;

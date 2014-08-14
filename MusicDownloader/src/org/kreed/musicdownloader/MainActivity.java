@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
+import org.kreed.musicdownloader.song.Song;
 
 import junit.framework.Assert;
 

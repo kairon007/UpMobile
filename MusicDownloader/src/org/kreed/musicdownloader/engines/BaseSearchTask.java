@@ -17,7 +17,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.kreed.musicdownloader.Song;
+import org.kreed.musicdownloader.song.Song;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -82,6 +82,28 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 		}
 		rd.close();
 		return sb;
+	}
+	
+	//without downloadStopped
+	protected static String handleLink(String link) {
+		try {
+			URL url = new URL(link);
+			URLConnection conn = url.openConnection();
+			conn.setRequestProperty("User-Agent", getRandomUserAgent());
+			conn.setDoOutput(true);
+			conn.setConnectTimeout(3000);
+			StringBuffer sb = new StringBuffer();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			String line;
+			while ((line = rd.readLine()) != null) {
+				sb.append(line);
+			}
+			rd.close();
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 	
 	protected static String getRandomUserAgent() {

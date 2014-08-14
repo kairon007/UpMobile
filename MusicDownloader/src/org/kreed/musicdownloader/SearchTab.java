@@ -18,13 +18,14 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.engines.BaseSearchTask;
 import org.kreed.musicdownloader.engines.FinishedParsingSongs;
-import org.kreed.musicdownloader.engines.GrooveSong;
-import org.kreed.musicdownloader.engines.RemoteSong;
 import org.kreed.musicdownloader.engines.cover.CoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import org.kreed.musicdownloader.engines.cover.GrooveSharkCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask.Size;
+import org.kreed.musicdownloader.song.RemoteSong;
+import org.kreed.musicdownloader.song.GrooveSong;
+import org.kreed.musicdownloader.song.Song;
 import org.kreed.musicdownloader.ui.AdapterHelper;
 import org.kreed.musicdownloader.ui.AdapterHelper.ViewBuilder;
 
@@ -266,7 +267,7 @@ public class SearchTab {
 		public void onBitmapReady(Bitmap bmp) {
 			this.cover = bmp;
 			this.waitingForCover = false;
-			((LoadPercentageInterface) downloadsTab).insertCover(bmp);
+//			((LoadPercentageInterface) downloadsTab).insertCover(bmp);
 		}
 
 		@Override
@@ -345,7 +346,7 @@ public class SearchTab {
 					downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, "10");
 					downloadClick.downloadFile();
 					if (song instanceof GrooveSong) {
-						String urlSmallImage = ((GrooveSong) song).getUrlSmallImage();
+						String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
 						coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
 					} else {
 						coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.small);
@@ -360,7 +361,7 @@ public class SearchTab {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
 				} else {
-					String urlSmallImage = ((GrooveSong) song).getUrlSmallImage();
+					String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
 					CoverLoaderTask coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
 					coverLoader.addListener(new OnBitmapReadyListener() {
 						@Override

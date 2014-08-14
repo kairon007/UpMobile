@@ -27,6 +27,7 @@
             android:layout_alignParentTop="true"
             android:ellipsize="end"
             android:singleLine="true"
+            android:paddingLeft="@dimen/pading_button_play"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
