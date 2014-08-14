@@ -30,6 +30,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private Bitmap cover;
 	private final String SET_VIS = "set.vis";
 	private long cancelledId;
+	private String currentDownloadingSongTitle;
+	private Long currentDownloadingID;
 
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> {
 		private LayoutInflater inflater;
@@ -104,12 +106,19 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	@Override
 	public void insertProgress(String progressString) {
 		this.progressString = progressString;
-		adapter.getItem(0).setDownloadProgress(progressString);
-		if (progressString.equals("100.0") || progressString.equals("100")) {
-			adapter.getItem(0).setDownloadProgress(SET_VIS);
+		if (currentDownloadingSongTitle != null) {
+			for (int i = 0; i < adapter.getCount(); i++) {
+				if (adapter.getItem(i).getSongTitle().equalsIgnoreCase(currentDownloadingSongTitle) && adapter.getItem(i).getDownloadId() ==  currentDownloadingID) {
+					adapter.getItem(i).setDownloadProgress(progressString);
+					if (progressString.equals("100.0") || progressString.equals("100")) {
+						adapter.getItem(i).setDownloadProgress(SET_VIS);
+					}
+				}
+			}
 		}
 		adapter.notifyDataSetChanged();
 	}
+
 	@Override
 	public void insertCover(Bitmap cover) {
 		this.cover = cover;
@@ -167,5 +176,15 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	
 	public long getCancelledId() {
 		return cancelledId;
+	}
+	@Override
+	public void currentDownloadingSongTitle(String currentDownloadingSongTitle) {
+		this.currentDownloadingSongTitle = currentDownloadingSongTitle;
+	}
+
+	@Override
+	public void currentDownloadingID(Long currentDownloadingID) {
+		// TODO Auto-generated method stub
+		this.currentDownloadingID = currentDownloadingID;
 	}
 }
