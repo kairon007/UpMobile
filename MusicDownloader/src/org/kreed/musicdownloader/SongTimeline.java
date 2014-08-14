@@ -31,6 +31,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import org.kreed.musicdownloader.song.Song;
+
 import junit.framework.Assert;
 import android.content.ContentResolver;
 import android.content.Context;

@@ -22,6 +22,8 @@
 
 package org.kreed.musicdownloader;
 
+import org.kreed.musicdownloader.song.Song;
+
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.ComponentName;

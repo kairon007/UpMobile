@@ -1,11 +1,13 @@
-package org.kreed.musicdownloader.engines;
+package org.kreed.musicdownloader.song;
+
+import org.kreed.musicdownloader.engines.SearchTing;
 
 public class TingSong extends RemoteSong {
 	
 	private int songId;
 	
-	public TingSong(long id, int songId) {
-		super(id);
+	public TingSong(Integer id, int songId) {
+		super(id.hashCode());
 		this.songId = songId;
 	}
 	

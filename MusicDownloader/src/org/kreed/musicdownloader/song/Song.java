@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package org.kreed.musicdownloader;
+package org.kreed.musicdownloader.song;
 
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 
@@ -118,14 +118,6 @@ public class Song implements Comparable<Song> {
 	 */
 	public String artist;
 
-	public long getDuration() {
-		return duration;
-	}
-
-	public void setDuration(long duration) {
-		this.duration = duration;
-	}
-
 	/**
 	 * Length of the song in milliseconds.
 	 */
@@ -176,7 +168,9 @@ public class Song implements Comparable<Song> {
 	{
 		id = cursor.getLong(0);
 		path = cursor.getString(1);
+		String zaycevTag = "(zaycev.net)";
 		title = cursor.getString(2);
+		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase())) title = title.replace(zaycevTag, "");
 		album = cursor.getString(3);
 		artist = cursor.getString(4);
 		albumId = cursor.getLong(5);
