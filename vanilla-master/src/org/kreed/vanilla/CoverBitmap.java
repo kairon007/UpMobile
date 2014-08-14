@@ -35,6 +35,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 
 /**
@@ -338,6 +339,10 @@ public final class CoverBitmap {
 	 */
 	public static Bitmap generateDefaultCover(int width, int height)
 	{
+		if (width < 0 && height < 0) {
+			width = 0;
+			height = 0;
+		}
 		int size = Math.min(width, height);
 		int halfSize = size / 2;
 		int eightSize = size / 8;

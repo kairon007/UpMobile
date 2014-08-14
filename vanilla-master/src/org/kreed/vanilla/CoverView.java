@@ -196,7 +196,7 @@ public final class CoverView extends View implements Handler.Callback {
 	@Override
 	protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight)
 	{
-		if (mPendingQuery && width != 0 && height != 0) {
+		if (mPendingQuery && width > 0 && height > 0) {
 			mPendingQuery = false;
 			querySongs(PlaybackService.get(getContext()));
 		}
