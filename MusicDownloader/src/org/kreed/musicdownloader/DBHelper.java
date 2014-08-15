@@ -40,7 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				+ "artist text,"
 				+ "title text,"
 				+ "duration text,"
-				+ "date int"
+				+ "imageuri text"
 				+ ");");
 	}
 
