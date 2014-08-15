@@ -111,7 +111,7 @@ public class OnlineSearchView {
 				engines = new ArrayList<Class<? extends BaseSearchTask>>(engineNames.length);
 				for (int i = 0; i < engineNames.length; i++) {
 					try {
-						engines.add((Class<? extends BaseSearchTask>) Class.forName("mp3.music.player.us.engines." + engineNames[i]));
+						engines.add((Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineNames[i]));
 					} catch (ClassNotFoundException e) {
 						Log.e("SearchTab", "Unknown engine", e);
 					}
@@ -465,7 +465,7 @@ public class OnlineSearchView {
 		Class<? extends BaseSearchTask> engineClass = taskIterator.next();
 		BaseSearchTask engine;
 		try {
-			engine = engineClass.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName, activity });
+			engine = engineClass.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName });
 		} catch (Exception e) {
 			getNextResults();
 			return;
