@@ -3,14 +3,12 @@ package org.kreed.vanilla;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import org.kreed.vanilla.engines.SearchGrooveshark;
-
+import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
-
 import android.util.Log;
 
 import com.scilor.grooveshark.API.Base.GroovesharkAudioStream;

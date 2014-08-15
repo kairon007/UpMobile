@@ -22,8 +22,7 @@
 
 package org.kreed.vanilla;
 
-import org.kreed.vanilla.song.Song;
-
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

@@ -22,8 +22,7 @@
 
 package org.kreed.vanilla;
 
-import org.kreed.vanilla.song.Song;
-
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.ComponentName;

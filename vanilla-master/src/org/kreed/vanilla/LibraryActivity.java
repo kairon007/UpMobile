@@ -28,8 +28,8 @@ import java.io.File;
 import junit.framework.Assert;
 
 import org.kreed.vanilla.app.VanillaApp;
-import org.kreed.vanilla.song.Song;
 
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -79,7 +79,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.startapp.android.publish.splash.SplashConfig.Theme;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**

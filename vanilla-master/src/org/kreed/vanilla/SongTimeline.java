@@ -32,9 +32,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 
 import junit.framework.Assert;
-
-import org.kreed.vanilla.song.Song;
-
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;

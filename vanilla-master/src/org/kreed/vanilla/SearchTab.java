@@ -14,22 +14,22 @@ import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
-import org.kreed.vanilla.engines.BaseSearchTask;
-import org.kreed.vanilla.engines.Engine;
-import org.kreed.vanilla.engines.FinishedParsingSongs;
-import org.kreed.vanilla.engines.SearchWithPages;
 import org.kreed.vanilla.engines.cover.CoverLoaderTask;
 import org.kreed.vanilla.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import org.kreed.vanilla.engines.cover.LastFmCoverLoaderTask;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask;
 import org.kreed.vanilla.engines.cover.MuzicBrainzCoverLoaderTask.Size;
-import org.kreed.vanilla.song.GrooveSong;
-import org.kreed.vanilla.song.RemoteSong;
-import org.kreed.vanilla.song.Song;
-import org.kreed.vanilla.song.SongWithCover;
 import org.kreed.vanilla.ui.AdapterHelper;
 import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
 
+import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
+import ru.johnlife.lifetoolsmp3.engines.Engine;
+import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
+import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
+import ru.johnlife.lifetoolsmp3.song.GrooveSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.song.SongWithCover;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -117,7 +117,7 @@ public class SearchTab {
 		for (int i=0; i<engineArray.length; i++) {
 			try {
 				Class<? extends BaseSearchTask> engineClass = 
-						(Class<? extends BaseSearchTask>) Class.forName("org.kreed.vanilla.engines." + engineArray[i][0]);
+						(Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineArray[i][0]);
 				int maxPages = Integer.parseInt(engineArray[i][1]);
 				for(int page=1; page<=maxPages; page++) {
 					engines.add(new Engine(engineClass, page));

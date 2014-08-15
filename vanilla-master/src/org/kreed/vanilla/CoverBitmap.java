@@ -22,8 +22,7 @@
 
 package org.kreed.vanilla;
 
-import org.kreed.vanilla.song.Song;
-
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -35,7 +34,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 
 /**

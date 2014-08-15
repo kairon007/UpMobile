@@ -28,9 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.kreed.vanilla.song.Song;
-
 import junit.framework.Assert;
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.database.DatabaseUtils;

@@ -29,8 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.kreed.vanilla.song.Song;
-
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

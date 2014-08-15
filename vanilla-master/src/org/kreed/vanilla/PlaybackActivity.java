@@ -22,14 +22,10 @@
 
 package org.kreed.vanilla;
 
-import org.kreed.vanilla.song.Song;
-
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
