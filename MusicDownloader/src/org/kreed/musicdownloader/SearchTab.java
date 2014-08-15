@@ -3,10 +3,14 @@ package org.kreed.musicdownloader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,6 +25,7 @@ import org.kreed.musicdownloader.engines.FinishedParsingSongs;
 import org.kreed.musicdownloader.engines.cover.CoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import org.kreed.musicdownloader.engines.cover.GrooveSharkCoverLoaderTask;
+import org.kreed.musicdownloader.engines.cover.LastFmCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import org.kreed.musicdownloader.song.RemoteSong;
@@ -46,6 +51,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -69,6 +75,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SearchTab {
+	private final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
+	
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.musicdownloader";//vanilla";
@@ -133,12 +141,14 @@ public class SearchTab {
 		private String currentDownloadingSongTitle;
 		private Long currentDownloadingID;
 
-		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration) {
+		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, 
+				String duration, Bitmap cover) {
 			this.context = context;
 			this.songTitle = songTitle;
 			this.songArtist = songArtist;
 			this.downloadUrl = downloadUrl;
 			this.duration = duration;
+			this.cover = cover;
 		}
 		@SuppressLint("NewApi") public void downloadFile() {
 			final File musicDir = new File(Environment.getExternalStorageDirectory()
@@ -274,7 +284,6 @@ public class SearchTab {
 		public void onBitmapReady(Bitmap bmp) {
 			this.cover = bmp;
 			this.waitingForCover = false;
-//			((LoadPercentageInterface) downloadsTab).insertCover(bmp);
 		}
 
 		@Override
@@ -319,6 +328,7 @@ public class SearchTab {
 		}
 		
 		private String formatTime(long duration) {
+			if (duration == 0) return null;
 			duration /= 1000;
 			int min = (int)duration / 60;
 			int sec = (int)duration % 60;
@@ -363,42 +373,55 @@ public class SearchTab {
 					} catch (ClassCastException ex) {
 						Log.e(getClass().getSimpleName(), ex.getMessage());
 					}
-					
 				}
-
+				
 				private void loadSong(String url) {
-					downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, "10");
-					downloadClick.downloadFile();
-					if (song instanceof GrooveSong) {
-						String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
-						coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+					Bitmap bmp = bitmaps.get(position);
+					if (bmp != null) {
+						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, 
+								formatDate(song.getDuration()), bitmaps.get(position));
 					} else {
-						coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.small);
+						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, 
+								formatDate(song.getDuration()), null);
+						if (song instanceof GrooveSong) {
+							String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
+							coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+						} else {
+							coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.small);
+						}
+						coverLoader.addListener(downloadClick);
+						coverLoader.execute(NO_PARAMS);
 					}
-					coverLoader.addListener(downloadClick);
-					coverLoader.execute(NO_PARAMS);
+					downloadClick.downloadFile();
 				}
 				
 			});
 					
-			if (song instanceof GrooveSong) {
-				if (bitmaps.containsKey(position)) {
-					builder.setIcon(bitmaps.get(position));
-				} else {
+
+			if (bitmaps.containsKey(position) && bitmaps.get(position) != null) {
+				builder.setIcon(bitmaps.get(position));
+			} else {
+				if (song instanceof GrooveSong) {
 					String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
-					CoverLoaderTask coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
-					coverLoader.addListener(new OnBitmapReadyListener() {
-						@Override
-						public void onBitmapReady(Bitmap bmp) {
-							bitmaps.put(position, bmp);
-							if (builder != null && builder.getId() == position) {
-								builder.setIcon(bmp);
-							}
-						}
-					});
-					coverLoader.execute(NO_PARAMS);
+					coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+				} else {
+					coverLoader = new LastFmCoverLoaderTask(song.getArtist(), song.getTitle());
 				}
-			} 
+				coverLoader.addListener(new OnBitmapReadyListener() {
+					@Override
+					public void onBitmapReady(Bitmap bmp) {
+						bitmaps.put(position, bmp);
+						if (builder != null && builder.getId() == position && bmp != null) {
+							builder.setIcon(bmp);
+						}
+					}
+				});
+			}
+			
+			if (coverLoader.getStatus() == Status.PENDING) {
+				coverLoader.execute(NO_PARAMS);
+			}	
+				
 			if (position == getCount()-1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
 				getNextResults();
@@ -419,7 +442,6 @@ public class SearchTab {
 			super.clear();
 			bitmaps.clear();
 		}
-		
 	}
 
 	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
@@ -442,6 +464,10 @@ public class SearchTab {
 		}
 	};
 
+	private final String formatDate(long date) {
+		return isoDateFormat.format(new Date(date));
+	}
+	
 	private SearchTab(final View instanceView, final LayoutInflater inflater, Activity libraryActivity) {
 		this.view = instanceView;
 		this.inflater = inflater;

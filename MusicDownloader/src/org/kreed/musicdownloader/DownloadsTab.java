@@ -2,6 +2,8 @@ package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
 
+import com.soundcloud.api.examples.GetResource;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -76,6 +78,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				holder.title.setText(song.getSongTitle());
 				if (song.getSongBitmap() != null) {
 					holder.cover.setImageBitmap(song.getSongBitmap());
+				} else {
+					holder.cover.setImageResource(R.drawable.fallback_cover);
 				}
 				if (progressString != null) {
 					if (song.getDownloadProgress().equals(SET_VIS)) {
