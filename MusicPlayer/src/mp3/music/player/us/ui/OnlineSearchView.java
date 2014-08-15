@@ -2,7 +2,6 @@ package mp3.music.player.us.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,25 +13,24 @@ import java.util.TimerTask;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.AdapterHelper;
 import mp3.music.player.us.adapters.AdapterHelper.ViewBuilder;
-import mp3.music.player.us.engines.BaseSearchTask;
-import mp3.music.player.us.engines.FinishedParsingSongs;
-import mp3.music.player.us.engines.GrooveSong;
-import mp3.music.player.us.engines.OnlineSong;
-import mp3.music.player.us.engines.RemoteSong;
-import mp3.music.player.us.engines.cover.CoverLoaderTask;
-import mp3.music.player.us.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import mp3.music.player.us.engines.cover.GrooveSharkCoverLoaderTask;
-import mp3.music.player.us.engines.cover.MuzicBrainzCoverLoaderTask;
-import mp3.music.player.us.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import mp3.music.player.us.ui.activities.HomeActivity;
 import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
 
-import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
+import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
+import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.cover.GrooveSharkCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask.Size;
+import ru.johnlife.lifetoolsmp3.song.GrooveSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -283,14 +281,14 @@ public class OnlineSearchView {
 		}
 	}
 
-	private final class SongSearchAdapter extends ArrayAdapter<OnlineSong> {
+	private final class SongSearchAdapter extends ArrayAdapter<Song> {
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
 		private Map<Integer, Bitmap> bitmaps = new HashMap<Integer, Bitmap>(0);
 
 		private SongSearchAdapter(Context context, LayoutInflater inflater) {
-			super(context, -1, new ArrayList<OnlineSong>());
+			super(context, -1, new ArrayList<Song>());
 			this.inflater = inflater;
 			this.footer = new FrameLayout(context);
 			this.refreshSpinner = new ProgressBar(context);
@@ -301,7 +299,7 @@ public class OnlineSearchView {
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			OnlineSong song = getItem(position);
+			Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
 			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
 			// .setNumber(String.valueOf(position+1), 0)
@@ -310,7 +308,7 @@ public class OnlineSearchView {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
 				} else {
-					String urlSmallImage = ((GrooveSong) song).getUrlSmallImage();
+					String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
 					CoverLoaderTask coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
 					coverLoader.addListener(new OnBitmapReadyListener() {
 						@Override
@@ -349,7 +347,7 @@ public class OnlineSearchView {
 
 	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
 		@Override
-		public void onFinishParsing(List<OnlineSong> songsList) {
+		public void onFinishParsing(List<Song> songsList) {
 			resultAdapter.hideProgress();
 			if (searchStopped)
 				return;
@@ -361,7 +359,7 @@ public class OnlineSearchView {
 				}
 			} else {
 				progress.setVisibility(View.GONE);
-				for (OnlineSong song : songsList) {
+				for (Song song : songsList) {
 					resultAdapter.add(song);
 				}
 			}
@@ -480,7 +478,7 @@ public class OnlineSearchView {
 		if (!(args.containsKey(KEY_POSITION))) {
 			return null;
 		}
-		final OnlineSong song = resultAdapter.getItem(args.getInt(KEY_POSITION));
+		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
 		final String artist = song.getTitle();
 		final String title = song.getArtist();
 
@@ -502,7 +500,7 @@ public class OnlineSearchView {
 			};
 			getUrlTask.execute(NO_PARAMS);
 			if (song instanceof GrooveSong) {
-				String urlLargeImage = ((GrooveSong) song).getUrlLargeImage();
+				String urlLargeImage = ((GrooveSong) song).getLargeCoverUrl();
 				coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
 			} else {
 				coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
