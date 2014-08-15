@@ -26,7 +26,6 @@ public class SearchZaycev extends SearchWithPages {
 	private static String CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private static String TRACK_URL = "http://zaycev.net/external/track/";
 	private static String DOWNLOAD = "download";
-	private static final DateFormat isoDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
 	public SearchZaycev(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -54,7 +53,7 @@ public class SearchZaycev extends SearchWithPages {
 				String songArtist = songObject.getString("artistName");
 				String songDuration = songObject.getString("duration");
 				int songId = songObject.getInt("id");
-				addSong(new ZaycevSong(songId).setTitle(songTitle).setArtistName(songArtist).setDuration(isoDateFormat.parse(songDuration).getTime()));
+				addSong(new ZaycevSong(songId).setTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -149,6 +148,14 @@ public class SearchZaycev extends SearchWithPages {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public long formatTime(String duration) {
+		long durationLong;
+		int min = Integer.valueOf(duration.replace("00:", "").substring(0, 2));
+		int sec = Integer.valueOf(duration.replace("00:", "").substring(3, 5));
+		durationLong = (min * 60 * 1000) +  (sec * 1000);
+		return durationLong;
 	}
 	
 }

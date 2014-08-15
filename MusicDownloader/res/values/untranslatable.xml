@@ -103,7 +103,7 @@ THE SOFTWARE.
 		<item>@string/fixed_info</item>
 	</string-array>
 	<string-array name="search_engines">
-	    <item>SearchVmusice</item>
+	   <item>SearchZaycev</item>
 	    <item>SearchPleer</item>
 	    <item>SearchPoisk</item>
 	    <item>SearchHulkShare</item>
@@ -113,6 +113,6 @@ THE SOFTWARE.
 	    <item>SearchSogou</item>
 	    <item>SearchGrooveshark</item>
 	    <item>SearchTing</item>
-	    <item>SearchZaycev</item>
+	    <item>SearchVmusice</item>
 	</string-array>
 </resources>

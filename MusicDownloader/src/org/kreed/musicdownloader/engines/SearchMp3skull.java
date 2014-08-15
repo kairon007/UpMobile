@@ -21,7 +21,6 @@ public class SearchMp3skull extends BaseSearchTask {
 	}
 	
 	private static String MP3_SKULL_URL = "http://mp3skull.com/mp3/";
-	private static final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.ENGLISH);
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
@@ -62,7 +61,7 @@ public class SearchMp3skull extends BaseSearchTask {
 							RemoteSong song = new RemoteSong(songURL);
 							song.setTitle(songTitle);
 							song.setArtistName(songArtist);
-							song.setDuration(isoDateFormat.parse(duration).getTime());
+							song.setDuration(formatTime(duration));
 							addSong(song);
 						}
 					}
@@ -70,10 +69,7 @@ public class SearchMp3skull extends BaseSearchTask {
 					Log.e(getClass().getSimpleName(), "", e);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					Log.e(getClass().getSimpleName(), "", e);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} 
 			}
 		} catch (MalformedURLException e) {
 			Log.e(getClass().getSimpleName(), "", e);
@@ -83,4 +79,11 @@ public class SearchMp3skull extends BaseSearchTask {
 		return null;
 	}
 
+	public long formatTime(String duration) {
+		long durationLong;
+		int min = Integer.valueOf(duration.substring(0, 2));
+		int sec = Integer.valueOf(duration.substring(3, 5));
+		durationLong = (min * 60 * 1000) +  (sec * 1000);
+		return durationLong;
+	}
 }

@@ -20,7 +20,6 @@ public class SearchHulkShare extends BaseSearchTask {
 	private static String hulkshareBaseUrl = "https://www.hulkshare.com/dl/";
 	private static String hulkshareSuffix = "/hulkshare.mp3?d=1";
 	private static String hulkshareSearchUrl = "http://www.hulkshare.com/search.php?q="; 
-	private static final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.ENGLISH);
 	public SearchHulkShare(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -56,7 +55,7 @@ public class SearchHulkShare extends BaseSearchTask {
 							RemoteSong song = new RemoteSong(songURL);
 							song.setTitle(songTitle);
 							song.setArtistName(songArtist);
-							song.setDuration(isoDateFormat.parse(duration).getTime());
+							song.setDuration(formatTime(duration));
 							addSong(song);
 						}
 					}
@@ -64,10 +63,7 @@ public class SearchHulkShare extends BaseSearchTask {
 					e.printStackTrace();
 				} catch (ArrayIndexOutOfBoundsException e) {
 					e.printStackTrace();
-				} catch (ParseException e) {	
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} 
 			}
 		
 		} catch (MalformedURLException e) {
@@ -79,5 +75,13 @@ public class SearchHulkShare extends BaseSearchTask {
 		}
 
 		return null;
+	}
+	
+	public long formatTime(String duration) {
+		long durationLong;
+		int min = Integer.valueOf(duration.substring(0, 2));
+		int sec = Integer.valueOf(duration.substring(3, 5));
+		durationLong = (min * 60 * 1000) +  (sec * 1000);
+		return durationLong;
 	}
 }
