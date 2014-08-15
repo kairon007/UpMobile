@@ -9,7 +9,7 @@
  * governing permissions and limitations under the License.
  */
 
-package com.simpleandroid.music.engines;
+package com.simpleandroid.music.util;
 
 import java.util.Formatter;
 import java.util.Locale;
