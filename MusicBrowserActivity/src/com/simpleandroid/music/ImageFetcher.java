@@ -19,20 +19,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Iterator;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.simpleandroid.music.engines.MusicUtils;
-import com.simpleandroid.music.lastfm.Album;
-import com.simpleandroid.music.lastfm.Artist;
-import com.simpleandroid.music.lastfm.Image;
-import com.simpleandroid.music.lastfm.ImageSize;
-import com.simpleandroid.music.lastfm.PaginatedResult;
+import com.simpleandroid.music.util.MusicUtils;
 
 /**
  * A subclass of {@link ImageWorker} that fetches images from a URL.
@@ -87,54 +80,6 @@ public class ImageFetcher extends ImageWorker {
             if (bitmap != null) {
                 return bitmap;
             }
-        }
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String processImageUrl(final String artistName, final String albumName,
-            final ImageType imageType) {
-        switch (imageType) {
-            case ARTIST:
-                if (!TextUtils.isEmpty(artistName)) {
-                    if (PreferenceUtils.getInstace(mContext).downloadMissingArtistImages()) {
-                        final PaginatedResult<Image> paginatedResult = Artist.getImages(mContext,
-                                artistName);
-                        if (paginatedResult != null) {
-                            final Iterator<Image> iterator = paginatedResult.pageResults.iterator();
-                            while (iterator.hasNext()) {
-                                final Image temp = iterator.next();
-                                final String url = temp.getImageURL(ImageSize.EXTRALARGE);
-                                if (url != null) {
-                                    return url;
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case ALBUM:
-                if (!TextUtils.isEmpty(artistName) && !TextUtils.isEmpty(albumName)) {
-                    if (PreferenceUtils.getInstace(mContext).downloadMissingArtwork()) {
-                        final Artist correction = Artist.getCorrection(mContext, artistName);
-                        if (correction != null) {
-                            final Album album = Album.getInfo(mContext, correction.getName(),
-                                    albumName);
-                            if (album != null) {
-                                final String url = album.getImageURL(ImageSize.LARGE);
-                                if (url != null) {
-                                    return url;
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
         }
         return null;
     }
@@ -402,5 +347,12 @@ public class ImageFetcher extends ImageWorker {
     public static final boolean hasHttpConnectionBug() {
         return !ApolloUtils.hasFroyo();
     }
+
+	@Override
+	protected String processImageUrl(String artistName, String albumName,
+			ImageType imageType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
