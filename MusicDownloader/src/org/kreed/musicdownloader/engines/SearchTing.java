@@ -26,6 +26,7 @@ public class SearchTing extends BaseSearchTask {
 				JSONObject songObject = songResults.getJSONObject(i);
 				String songTitle = songObject.getString("title").replaceAll("<em>", "").replaceAll("</em>", "");
 				String songArtist = songObject.getString("author").replaceAll("<em>", "").replaceAll("</em>", "");
+				String duration = songObject.getString("duration");
 				int songId = Integer.parseInt(songObject.getString("song_id"));
 				addSong(new TingSong(songObject.hashCode(), songId).setTitle(songTitle).setArtistName(songArtist));
 			}

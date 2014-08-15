@@ -33,6 +33,9 @@ THE SOFTWARE.-->
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/selectable_item_bg"
+        android:paddingStart="8dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="0dp"
         android:paddingLeft="8dp" >
 
         <FrameLayout
@@ -89,20 +92,42 @@ THE SOFTWARE.-->
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:padding="8dp" >
+			
+         <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
 
+             <TextView
+                 android:id="@+id/text"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true"
+                 android:layout_toLeftOf="@+id/time"
+                 android:ellipsize="end"
+                 android:gravity="left|center_vertical"
+                 android:lines="1"
+                 android:maxLines="1"
+                 android:textAppearance="?android:attr/textAppearanceMedium"
+                 android:textSize="22sp" />
+
+             <TextView
+                 android:id="@+id/time"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentRight="true"
+                 android:ellipsize="end"
+                 android:gravity="left|center_vertical"
+                 android:lines="1"
+                 android:maxLines="1"
+                 android:text="00:00"
+                 android:textAppearance="?android:attr/textAppearanceMedium"
+                 android:textSize="22sp" />
+
+        </RelativeLayout>
             <!-- android:textColor="#ffff" -->
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="left|center_vertical"
-                android:lines="1"
-                android:maxLines="1"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="22sp" />
 
             <!-- android:textColor="@color/dimmed" -->
+
             <TextView
                 android:id="@+id/line2"
                 android:layout_width="match_parent"
@@ -111,12 +136,16 @@ THE SOFTWARE.-->
                 android:maxLines="2"
                 android:textSize="16sp" />
         </LinearLayout>
+
+
+
     </LinearLayout>
 
     <ImageView
         android:id="@+id/downloadIV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:src="@drawable/ic_download" />
 
     <ImageView

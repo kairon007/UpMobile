@@ -238,4 +238,9 @@ public class Song implements Comparable<Song> {
 	public String getArtist() {
 		return artist;
 	}
+	
+	public long getDuration() {
+		return duration;
+	}
+
 }

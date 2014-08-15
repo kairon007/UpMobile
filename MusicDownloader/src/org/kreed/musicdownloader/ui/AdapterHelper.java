@@ -28,6 +28,7 @@ public class AdapterHelper {
 		private ImageView cover;
 		private View view;
 		private View left;
+		private TextView time;
 		private TextView caption;
 		private ImageView download;
 		
@@ -35,6 +36,7 @@ public class AdapterHelper {
 			view.setTag(this);
 			this.view = view; 
 			view.setLongClickable(true);
+			time = (TextView)view.findViewById(R.id.time);
 			text = (TextView)view.findViewById(R.id.text);
 			text.setTypeface(MusicDownloaderApp.FONT_LIGHT);
 			line2 = (TextView)view.findViewById(R.id.line2);
@@ -94,6 +96,14 @@ public class AdapterHelper {
 			setVisibility(line2, value);
 			return this;
 		}
+		
+		public ViewBuilder setTime(String value) {
+			if (value != null) {
+				time.setText(value);
+			}
+			return this;
+		}
+		
 		
 		public ViewBuilder setNumber(String value, int stringArrayResourceId) {
 			number.setText(value);

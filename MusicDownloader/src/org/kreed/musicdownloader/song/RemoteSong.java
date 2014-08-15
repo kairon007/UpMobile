@@ -1,8 +1,12 @@
 package org.kreed.musicdownloader.song;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 
 public class RemoteSong extends Song {
-
 	protected String downloadUrl;
 
 	public RemoteSong(String downloadUrl) {
@@ -24,6 +28,11 @@ public class RemoteSong extends Song {
 		artist = songArtist;
 		return this;
 	}
+	
+	public RemoteSong setDuration (Long songDuration) {
+		duration = songDuration;
+		return this;
+	}
 
 	public String getDownloadUrl() {
 		return downloadUrl;
@@ -32,5 +41,7 @@ public class RemoteSong extends Song {
 	public String getParentUrl() {
 		return downloadUrl;
 	}
+	
+	
 
 }

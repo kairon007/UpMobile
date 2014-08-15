@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +20,7 @@ public class SearchHulkShare extends BaseSearchTask {
 	private static String hulkshareBaseUrl = "https://www.hulkshare.com/dl/";
 	private static String hulkshareSuffix = "/hulkshare.mp3?d=1";
 	private static String hulkshareSearchUrl = "http://www.hulkshare.com/search.php?q="; 
-	
+	private static final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.ENGLISH);
 	public SearchHulkShare(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -24,6 +28,7 @@ public class SearchHulkShare extends BaseSearchTask {
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
+			String duration = "";
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
 			songName = songName.replace("%20", "+");
 			String link = hulkshareSearchUrl + songName + "&p=1&per_page=20";
@@ -32,6 +37,9 @@ public class SearchHulkShare extends BaseSearchTask {
 			for (int i = 1; i < searchRI.length; i++) {
 				try {
 					String content = searchRI[i];
+					String str = "<span class=\"vidDuration\">";
+					int start = content.indexOf(str);
+					duration = content.substring(start + str.length(), start + str.length() + 5);
 					String songData = content.substring(content.indexOf("<div class=\"resTP\">"));
 					songData = songData.substring(0, songData.indexOf("</div>"));
 					String songURL = songData.substring(songData.indexOf("<a href=\"/"));
@@ -48,12 +56,16 @@ public class SearchHulkShare extends BaseSearchTask {
 							RemoteSong song = new RemoteSong(songURL);
 							song.setTitle(songTitle);
 							song.setArtistName(songArtist);
+							song.setDuration(isoDateFormat.parse(duration).getTime());
 							addSong(song);
 						}
 					}
 				} catch (StringIndexOutOfBoundsException e) {
 					e.printStackTrace();
 				} catch (ArrayIndexOutOfBoundsException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {	
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

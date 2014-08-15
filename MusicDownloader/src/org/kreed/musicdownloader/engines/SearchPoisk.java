@@ -4,6 +4,9 @@ package org.kreed.musicdownloader.engines;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,7 +21,7 @@ public class SearchPoisk extends BaseSearchTask {
 	
 	private String Tag = SearchPoisk.class.getSimpleName();
 	private static String POISK_URL = "http://www.mp3poisk.net/";
-	
+	private static final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.ENGLISH);
 	public SearchPoisk(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -61,7 +64,10 @@ public class SearchPoisk extends BaseSearchTask {
 				RemoteSong realSong = new RemoteSong(link);
 				String artistName = ""; 
 				String title  = "";
+				String duration = "";
 				try {
+					Elements time = song.getElementsByClass("time");
+					duration = time.text();
 					Elements rawArtist = song.getElementsByClass("song-artist"); 
 					artistName = rawArtist.get(0).text();
 					if (rawArtist.size() > 1) {
@@ -88,6 +94,7 @@ public class SearchPoisk extends BaseSearchTask {
 					
 					realSong.setArtistName(artistName);
 					realSong.setTitle(title);
+					realSong.setDuration(isoDateFormat.parse(duration).getTime());
 				} catch(Exception e) {
 					Log.e(getClass().getSimpleName(), "", e);
 				}

@@ -17,7 +17,7 @@ public class SearchVmusice extends BaseSearchTask {
 		super(dInterface, songName);
 	}
 	
-	private static String VMUSIC_URL = "http://vmusice.net/aj.php?p=0&mp3=";
+	private static String VMUSIC_URL = "http://vmusice.net/mp3/";
 	
 	@Override
 	protected Void doInBackground(Void... params) {

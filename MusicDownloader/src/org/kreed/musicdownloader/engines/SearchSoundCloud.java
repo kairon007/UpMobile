@@ -5,6 +5,8 @@ package org.kreed.musicdownloader.engines;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.kreed.musicdownloader.song.RemoteSong;
 
 import android.util.Log;
@@ -29,15 +31,21 @@ public class SearchSoundCloud extends BaseSearchTask {
 			StringBuffer sb = readLinkApacheHttp(link); 
 			int i=1;
 			String songString;
+			String duration;
 			do {
 				songString = searchNext(sb.toString());
 				if (songString!=null) {
+					String startString = "\"duration\":";
+					int start = songString.indexOf(startString);
+					int end = songString.indexOf(",\"commentable\"");
+					duration = songString.substring(start + startString.length(), end);
 					Log.e("Melodie",songString.toString());
 					RemoteSong song = new RemoteSong(getDownloadUrl(songString)+"?client_id=" + CLIENT_ID);
 					song.setArtistName("artistname"+i);
 					String titlu = getTitle(songString);
 					song.setTitle(titlu);
 					song.setArtistName(getArtistName(getTitle(songString)));
+					song.setDuration(Long.valueOf(duration));
 					
 					if (titlu != null && (titlu.toLowerCase().contains("remix") || titlu.toLowerCase().contains("mash up") || titlu.toLowerCase().contains("cover") || titlu.toLowerCase().contains(" mix") || titlu.toLowerCase().contains(" mashup"))) {
 						addSong(song); 
@@ -46,7 +54,7 @@ public class SearchSoundCloud extends BaseSearchTask {
 			} while (songString != null);
 		} catch (UnsupportedEncodingException e) {
 			Log.e(getClass().getSimpleName(), "", e);
-		}
+		} 
 
 		return null;
 	}

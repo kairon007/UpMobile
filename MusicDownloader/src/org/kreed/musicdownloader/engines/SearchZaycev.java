@@ -3,6 +3,9 @@ package org.kreed.musicdownloader.engines;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,7 +26,7 @@ public class SearchZaycev extends SearchWithPages {
 	private static String CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private static String TRACK_URL = "http://zaycev.net/external/track/";
 	private static String DOWNLOAD = "download";
-	
+	private static final DateFormat isoDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
 	public SearchZaycev(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -49,8 +52,9 @@ public class SearchZaycev extends SearchWithPages {
 				JSONObject songObject = songResults.getJSONObject(i);
 				String songTitle = songObject.getString("track");
 				String songArtist = songObject.getString("artistName");
+				String songDuration = songObject.getString("duration");
 				int songId = songObject.getInt("id");
-				addSong(new ZaycevSong(songId).setTitle(songTitle).setArtistName(songArtist));
+				addSong(new ZaycevSong(songId).setTitle(songTitle).setArtistName(songArtist).setDuration(isoDateFormat.parse(songDuration).getTime()));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

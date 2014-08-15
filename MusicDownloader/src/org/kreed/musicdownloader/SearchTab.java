@@ -317,12 +317,20 @@ public class SearchTab {
     		footer.addView(refreshSpinner, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
     		refreshSpinner.setVisibility(View.GONE);
 		}
+		
+		private String formatTime(long duration) {
+			duration /= 1000;
+			int min = (int)duration / 60;
+			int sec = (int)duration % 60;
+			return String.format("%d:%02d", min, sec);
+		}
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
+			Log.d("-----getDuration", song.getDuration()+" ");
+			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist()).setTime(formatTime(song.getDuration()))
 			// .setNumber(String.valueOf(position+1), 0)
 					.setId(position).setIcon(R.drawable.fallback_cover);
 				builder.getDownload().setOnClickListener(new OnClickListener() {

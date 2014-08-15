@@ -33,7 +33,8 @@ public class SearchGrooveshark extends BaseSearchTask {
 					int albumId = result.AlbumID;
 					String songArtist = result.ArtistName;
 					String songTitle = result.Name;
-					addSong(new GrooveSong(result.hashCode(), songId, albumId).setArtistName(songArtist).setTitle(songTitle));
+					String duration = result.EstimateDuration;
+					addSong(new GrooveSong(result.hashCode(), songId, albumId).setArtistName(songArtist).setTitle(songTitle).setDuration((long) (Double.valueOf(duration) * 1000)));
 				}
 			}
 		} catch (Exception e) {

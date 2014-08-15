@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kreed.musicdownloader.song.RemoteSong;
+import org.kreed.musicdownloader.song.ZaycevSong;
 
 import android.util.Log;
 
@@ -40,6 +41,7 @@ public class SearchPleer extends SearchWithPages {
 						String songTitle = jsonSong.getString("track");
 						song.setTitle(songTitle);
 						song.setArtistName(jsonSong.getString("artist"));
+						song.setDuration((jsonSong.getLong("length") * 1000));
 						addSong(song);
 					}
 				}

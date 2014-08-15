@@ -30,11 +30,13 @@ public class SearchSoundCloudV2 extends BaseSearchTask {
 				    	String downloadUrl = track.getStreamUrl();
 				    	String largeCoverUrl = track.getArtworkUrl();
 				    	String[] pair = getPair(track.getTitle());
+				    	long duration = (long) track.getDuration();
 				    	String songArtist = pair[0].trim();
 				    	String songTitle = pair[1].trim();
 				    	SoundCloudV2Song song = new SoundCloudV2Song(downloadUrl, largeCoverUrl);
 						song.setArtistName(songArtist);
 						song.setTitle(songTitle);
+						song.setDuration(duration);
 						addSong(song);
 			    	}
 			    }
