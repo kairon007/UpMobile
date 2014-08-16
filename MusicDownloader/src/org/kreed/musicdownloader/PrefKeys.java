@@ -60,4 +60,6 @@ public class PrefKeys {
 	public static final String VISIBLE_EXTRA_INFO = "visible_extra_info";
 	public static final String VOLUME = "volume_int";
 	public static final String DIRECTORY_PREFIX = "/MusicDownloader/";
+	public static final String CALL_FROM_LIBRARY = "from_library";
+	public static final String CALL_FROM_SERCH= "from_serch";
 }

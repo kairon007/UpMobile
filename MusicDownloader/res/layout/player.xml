@@ -9,23 +9,23 @@
     android:showDividers="middle" >
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/selectable_item_bg"
-        android:paddingLeft="8dp" >
+        android:paddingLeft="@dimen/player_pading_side"
+        android:paddingRight="@dimen/player_pading_side" >
 
         <FrameLayout
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:minHeight="48dp" >
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
 
-            <ImageView
-                android:id="@+id/cover_song"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/fallback_cover" />
+            <ImageButton
+                android:id="@+id/player_play_song"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/pading_button_play"
+                android:src="@drawable/play" />
         </FrameLayout>
 
         <LinearLayout
@@ -37,60 +37,44 @@
             android:orientation="vertical"
             android:padding="8dp" >
 
-            <!-- android:textColor="#ffff" -->
-
-            <TextView
-                android:id="@+id/title_song"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:ellipsize="end"
-                android:gravity="left|center_vertical"
-                android:lines="1"
-                android:maxLines="1"
-                android:paddingBottom="@dimen/pading_min"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/text_library_page_size" />
-
-            <!-- android:textColor="@color/dimmed" -->
-
-            <FrameLayout
-                android:id="@+id/FrameLayout1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:layout_weight="1" >
 
                 <TextView
-                    android:id="@+id/genre_song"
+                    android:id="@+id/player_title_song"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:paddingBottom="@dimen/pading_min"
                     android:paddingTop="@dimen/pading_min"
-                    android:text="Genre"
+                    android:text="title"
                     android:textSize="@dimen/text_library_page_size" />
 
                 <TextView
-                    android:id="@+id/duration_song"
+                    android:id="@+id/player_duration_song"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right|center_vertical"
                     android:maxLines="2"
                     android:paddingBottom="@dimen/pading_min"
                     android:paddingTop="@dimen/pading_min"
-                    android:text="3:20"
+                    android:text="time"
                     android:textSize="@dimen/text_library_page_size" />
             </FrameLayout>
+
+            <ProgressBar
+                android:id="@+id/player_progress_song"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingTop="@dimen/pading_min"
+                android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/play_song"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/pading_button_play"
-        android:src="@drawable/play" />
 
 </LinearLayout>

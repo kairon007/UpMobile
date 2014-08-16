@@ -3,10 +3,14 @@ package org.kreed.musicdownloader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,6 +25,7 @@ import org.kreed.musicdownloader.engines.FinishedParsingSongs;
 import org.kreed.musicdownloader.engines.cover.CoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import org.kreed.musicdownloader.engines.cover.GrooveSharkCoverLoaderTask;
+import org.kreed.musicdownloader.engines.cover.LastFmCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import org.kreed.musicdownloader.song.RemoteSong;
@@ -46,6 +51,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -69,6 +75,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SearchTab {
+	private final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
+	
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.musicdownloader";//vanilla";
@@ -84,7 +92,6 @@ public class SearchTab {
 	private LayoutInflater inflater;
 	private View view;
 	private Activity activity;
-	private Player player;
 	private CoverLoaderTask coverLoader;
 	private AsyncTask<Void, Void, String> getUrlTask;
 	private boolean searchStopped = true;
@@ -133,12 +140,14 @@ public class SearchTab {
 		private String currentDownloadingSongTitle;
 		private Long currentDownloadingID;
 
-		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration) {
+		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, 
+				String duration, Bitmap cover) {
 			this.context = context;
 			this.songTitle = songTitle;
 			this.songArtist = songArtist;
 			this.downloadUrl = downloadUrl;
 			this.duration = duration;
+			this.cover = cover;
 		}
 		@SuppressLint("NewApi") public void downloadFile() {
 			final File musicDir = new File(Environment.getExternalStorageDirectory()
@@ -274,7 +283,6 @@ public class SearchTab {
 		public void onBitmapReady(Bitmap bmp) {
 			this.cover = bmp;
 			this.waitingForCover = false;
-//			((LoadPercentageInterface) downloadsTab).insertCover(bmp);
 		}
 
 		@Override
@@ -319,6 +327,7 @@ public class SearchTab {
 		}
 		
 		private String formatTime(long duration) {
+			if (duration == 0) return null;
 			duration /= 1000;
 			int min = (int)duration / 60;
 			int sec = (int)duration % 60;
@@ -363,42 +372,55 @@ public class SearchTab {
 					} catch (ClassCastException ex) {
 						Log.e(getClass().getSimpleName(), ex.getMessage());
 					}
-					
 				}
-
+				
 				private void loadSong(String url) {
-					downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, "10");
-					downloadClick.downloadFile();
-					if (song instanceof GrooveSong) {
-						String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
-						coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+					Bitmap bmp = bitmaps.get(position);
+					if (bmp != null) {
+						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, 
+								formatDate(song.getDuration()), bitmaps.get(position));
 					} else {
-						coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.small);
+						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, 
+								formatDate(song.getDuration()), null);
+						if (song instanceof GrooveSong) {
+							String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
+							coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+						} else {
+							coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.small);
+						}
+						coverLoader.addListener(downloadClick);
+						coverLoader.execute(NO_PARAMS);
 					}
-					coverLoader.addListener(downloadClick);
-					coverLoader.execute(NO_PARAMS);
+					downloadClick.downloadFile();
 				}
 				
 			});
 					
-			if (song instanceof GrooveSong) {
-				if (bitmaps.containsKey(position)) {
-					builder.setIcon(bitmaps.get(position));
-				} else {
+
+			if (bitmaps.containsKey(position) && bitmaps.get(position) != null) {
+				builder.setIcon(bitmaps.get(position));
+			} else {
+				if (song instanceof GrooveSong) {
 					String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
-					CoverLoaderTask coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
-					coverLoader.addListener(new OnBitmapReadyListener() {
-						@Override
-						public void onBitmapReady(Bitmap bmp) {
-							bitmaps.put(position, bmp);
-							if (builder != null && builder.getId() == position) {
-								builder.setIcon(bmp);
-							}
-						}
-					});
-					coverLoader.execute(NO_PARAMS);
+					coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+				} else {
+					coverLoader = new LastFmCoverLoaderTask(song.getArtist(), song.getTitle());
 				}
-			} 
+				coverLoader.addListener(new OnBitmapReadyListener() {
+					@Override
+					public void onBitmapReady(Bitmap bmp) {
+						bitmaps.put(position, bmp);
+						if (builder != null && builder.getId() == position && bmp != null) {
+							builder.setIcon(bmp);
+						}
+					}
+				});
+			}
+			
+			if (coverLoader.getStatus() == Status.PENDING) {
+				coverLoader.execute(NO_PARAMS);
+			}	
+				
 			if (position == getCount()-1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
 				getNextResults();
@@ -419,7 +441,6 @@ public class SearchTab {
 			super.clear();
 			bitmaps.clear();
 		}
-		
 	}
 
 	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
@@ -442,6 +463,10 @@ public class SearchTab {
 		}
 	};
 
+	private final String formatDate(long date) {
+		return isoDateFormat.format(new Date(date));
+	}
+	
 	private SearchTab(final View instanceView, final LayoutInflater inflater, Activity libraryActivity) {
 		this.view = instanceView;
 		this.inflater = inflater;
@@ -454,7 +479,6 @@ public class SearchTab {
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setEmptyView(message);
-		final FrameLayout layout = (FrameLayout)instanceView.findViewById(R.id.player);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -463,32 +487,22 @@ public class SearchTab {
 				final Song song = resultAdapter.getItem(position);
 				final String artist = song.getTitle();
 				final String title = song.getArtist();
-				if (null == player) {
-					player = new Player(inflater.inflate(R.layout.player_row, null));
-				} else {
-					player.cancel();
-					player = new Player(inflater.inflate(R.layout.player_row, null));
-				}
-					getUrlTask = new AsyncTask<Void, Void, String>() {
-						@Override
-						protected String doInBackground(Void... params) {
-							return ((RemoteSong) song).getDownloadUrl();
-						}
+				final String duration = formatTime((int)song.getDuration());
+				final  String key = PrefKeys.CALL_FROM_SERCH;
+				getUrlTask = new AsyncTask<Void, Void, String>() {
+					@Override
+					protected String doInBackground(Void... params) {
+						return ((RemoteSong) song).getDownloadUrl();
+					}
 
-						@Override
-						protected void onPostExecute(String downloadUrl) {
-							if (null != player) {
-								player.setSongName(artist, title);
-								player.setDownloadUrl(downloadUrl);
-								player.execute(); 
-								layout.setVisibility(View.VISIBLE);
-								layout.removeAllViews();
-								layout.addView(player.getView());
-							}
-						}
-					};
-					getUrlTask.execute(NO_PARAMS);
-				}
+					@Override
+					protected void onPostExecute(String downloadUrl) {
+						((MainActivity) activity).play(downloadUrl, artist, title, duration, key);
+					}
+				};
+				getUrlTask.execute(NO_PARAMS);
+
+			}
 			
 		});
 		searchField = (TextView)instanceView.findViewById(R.id.text);
@@ -518,6 +532,13 @@ public class SearchTab {
 				searchStopped = true;
 			}
 		});
+	}
+	
+	private String formatTime(int duration) {
+		duration /= 1000;
+		int min = duration / 60;
+		int sec = duration % 60;
+		return String.format("%d:%02d", min, sec);
 	}
 
 	public static boolean isOffline(Context context) {
@@ -566,199 +587,6 @@ public class SearchTab {
 		}
 		engine.execute(NO_PARAMS);
 	}
-	
-	private final static class Player extends AsyncTask<String, Void, Boolean> {
-		private String url = null; 
-		private MediaPlayer mediaPlayer;
-		private boolean prepared = false;
-		private ProgressBar spinner;
-		private ImageButton button;
-		private ProgressBar progress;
-		private TextView time;
-		private ImageView coverImage;
-		private ProgressBar coverProgress;
-		private View view;
-		private TextView songArtistIV;
-		private TextView songTitleIV;
-		private String songArtistString, songTitleString;
-		
-		public Player(View view) {
-			super();
-			this.view = view;
-			mediaPlayer = new MediaPlayer();
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			spinner = (ProgressBar) view.findViewById(R.id.spinner);
-			button = (ImageButton) view.findViewById(R.id.pause);
-			progress = (ProgressBar) view.findViewById(R.id.progress);
-			time = (TextView) view.findViewById(R.id.time);
-			coverImage = (ImageView) view.findViewById(R.id.cover);
-			coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
-			songArtistIV = (TextView) view.findViewById(R.id.playerSongArtist);
-			songTitleIV = (TextView) view.findViewById(R.id.playerSongTitle);
-			button.setOnClickListener(new View.OnClickListener() {				
-				@Override
-				public void onClick(View v) {
-					playPause();
-				}
-			});
-		}
-		
-		private void setDownloadUrl(String downloadUrl) {
-			url = downloadUrl;
-		}
-		
-		private void setSongName(String songArtist, String SongTitle) {
-			this.songArtistString = songArtist;
-			this.songTitleString = SongTitle;
-		}
-
-		public void setCover(Bitmap bmp) {
-			coverProgress.setVisibility(View.GONE);
-			if (null != bmp) {
-				coverImage.setImageBitmap(bmp);
-			}
-		}
-
-		public View getView() {
-			ViewGroup parent = (ViewGroup) view.getParent();
-			Log.d(getClass().getSimpleName(), "getView()");
-			if (null != parent) {
-				parent.removeView(view);
-				Log.d(getClass().getSimpleName(), "...removed from parent");
-			}
-			return view;
-		}
-
-		private Runnable progressAction = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					int current = mediaPlayer.getCurrentPosition();
-					int total = mediaPlayer.getDuration();
-					progress.setProgress(current);
-					time.setText(formatTime(current)+" / "+formatTime(total));
-					progress.postDelayed(this, 1000);
-				} catch (NullPointerException e) {
-					//terminate
-				}
-			}
-		};
-		
-		public void onPrepared() {
-			songArtistIV.setText(songArtistString + " ");
-			songTitleIV.setText(songTitleString + " - ");
-			spinner.setVisibility(View.GONE);
-			button.setVisibility(View.VISIBLE);
-			Intent i = new Intent("org.kreed.musicdownloader.action.PAUSE");
-			spinner.getContext().startService(i);
-			int duration = mediaPlayer.getDuration();
-			if (duration == -1) {
-				progress.setIndeterminate(true);
-			} else {
-				time.setText(formatTime(duration));
-				progress.setIndeterminate(false);
-				progress.setProgress(0);
-				progress.setMax(duration);
-				progress.postDelayed(progressAction, 1000);
-			}
-		}
-
-		private String formatTime(int duration) {
-			duration /= 1000;
-			int min = duration / 60;
-			int sec = duration % 60;
-			return String.format("%d:%02d", min, sec);
-		}
-		
-		public void onPaused() {
-			button.setImageResource(R.drawable.play);
-		}
-		
-		public void onResumed() {
-			button.setImageResource(R.drawable.pause);
-		}
-		
-		public void onFinished() {
-			button.setVisibility(View.INVISIBLE);
-			progress.setIndeterminate(false);
-			progress.setProgress(100);
-			progress.setMax(100);
-			progress.removeCallbacks(progressAction);
-		}
-		
-		@Override
-		protected Boolean doInBackground(String... params) {
-			try {
-				mediaPlayer.setDataSource(url);
-				mediaPlayer.prepare();
-				prepared = true;
-				if (isCancelled()) {
-					releasePlayer();
-				} else {
-					return true;
-				}
-			} catch (Exception e) {
-				Log.e(getClass().getSimpleName(), "Error buffering song", e);
-			}
-			return false;
-		}
-
-		private void releasePlayer() {
-			if (null != mediaPlayer && prepared) {
-				progress.removeCallbacks(progressAction);
-				try {
-					if (mediaPlayer.isPlaying()) {
-						mediaPlayer.stop();
-					}
-				} catch (IllegalStateException e) {
-					//do nothing
-				}
-				mediaPlayer.reset();
-				mediaPlayer.release();
-				mediaPlayer = null;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
-			if (result && prepared) {
-				mediaPlayer.start();
-				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-					@Override
-					public void onCompletion(MediaPlayer mp) {
-						releasePlayer();
-						onFinished();
-					}
-				});
-				onPrepared();
-			}
-		}
-		
-		public void cancel() {
-			super.cancel(true);
-			releasePlayer();
-		}
-		
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-			releasePlayer();
-		}
-
-		public void playPause() {
-			if (!prepared || null == mediaPlayer) return;
-			if (mediaPlayer.isPlaying()) {
-				mediaPlayer.pause();
-				onPaused();
-			} else {
-				mediaPlayer.start();
-				onResumed();
-			}
-		}
-		
-	}
-	
 	
 	private static class InsertDownloadItem {
 		private MusicDataInterface musicDataInterface;

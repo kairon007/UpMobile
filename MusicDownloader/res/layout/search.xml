@@ -74,16 +74,4 @@
             android:layout_gravity="center" />
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/player"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" >
-
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            layout="@layout/player_row" />
-    </FrameLayout>
-
 </LinearLayout>

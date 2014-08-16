@@ -21,7 +21,6 @@ public class SearchPoisk extends BaseSearchTask {
 	
 	private String Tag = SearchPoisk.class.getSimpleName();
 	private static String POISK_URL = "http://www.mp3poisk.net/";
-	private static final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.ENGLISH);
 	public SearchPoisk(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -94,7 +93,7 @@ public class SearchPoisk extends BaseSearchTask {
 					
 					realSong.setArtistName(artistName);
 					realSong.setTitle(title);
-					realSong.setDuration(isoDateFormat.parse(duration).getTime());
+					realSong.setDuration(formatTime(duration));
 				} catch(Exception e) {
 					Log.e(getClass().getSimpleName(), "", e);
 				}
@@ -105,6 +104,13 @@ public class SearchPoisk extends BaseSearchTask {
 			Log.e(getClass().getSimpleName(), "", e);
 		}
 
+	}
+	public long formatTime(String duration) {
+		long durationLong;
+		int min = Integer.valueOf(duration.substring(0, 2));
+		int sec = Integer.valueOf(duration.substring(3, 5));
+		durationLong = (min * 60 * 1000) +  (sec * 1000);
+		return durationLong;
 	}
 
 }

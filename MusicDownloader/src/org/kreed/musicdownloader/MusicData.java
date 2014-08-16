@@ -8,10 +8,10 @@ public class MusicData {
 	private String songDuration;
 	private Bitmap songBitmap;
 	private String downloadProgress;
+	private String songGenre;
 	private long downloadId;
 
 	public MusicData() {
-
 	}
 
 	public MusicData(String songArtist, String songTitle, String songDuration,
@@ -28,6 +28,14 @@ public class MusicData {
 		this.songDuration = songDuration;
 		this.downloadProgress = downloadProgress;
 		this.songBitmap = cover;
+	}
+	
+	public MusicData(String songArtist, String songTitle, String songDuration, Bitmap cover, String songGenre) {
+		this.songArtist = songArtist;
+		this.songTitle = songTitle;
+		this.songDuration = songDuration;
+		this.songBitmap = cover;
+		this.songGenre = songGenre;
 	}
 
 	public String getSongArtist() {
@@ -77,4 +85,13 @@ public class MusicData {
 	public long getDownloadId() {
 		return downloadId;
 	}
+
+	public String getSongGenre() {
+		return songGenre;
+	}
+
+	public void setSongGenre(String songGenre) {
+		this.songGenre = songGenre;
+	}
+	
 }

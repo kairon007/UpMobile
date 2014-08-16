@@ -98,9 +98,11 @@ public class AdapterHelper {
 		}
 		
 		public ViewBuilder setTime(String value) {
-			if (value != null) {
-				time.setText(value);
-			}
+				if (value == null) {
+					time.setVisibility(View.GONE);
+				} else {
+					time.setText(value);
+				}
 			return this;
 		}
 		

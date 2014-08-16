@@ -22,63 +22,42 @@ package org.kreed.musicdownloader;
  */
 
 import java.io.File;
-import java.io.FileDescriptor;
-
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.song.Song;
 
-import junit.framework.Assert;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.PaintDrawable;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.IBinder;
 import android.os.Looper;
-import android.os.Message;
 import android.os.Process;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextThemeWrapper;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -139,19 +118,11 @@ public class MainActivity extends Activity implements TextWatcher{
 
 	private TextView mTextFilter;
 
-//	private Song song;
-	
-//	private View mActionControls;
-//	private View mControls;
-//	private TextView mTitle;
-//	private TextView mArtist;
-//	private TextView mAlbum;
-//	private ImageView mCover;
-//	private View mEmptyQueue;
 	private ImageButton mClearFilterEditText;
 
 	private HorizontalScrollView mLimiterScroller;
 	private ViewGroup mLimiterViews;
+	Intent serviceIntent;
 	
 	private int page;
 
@@ -187,7 +158,9 @@ public class MainActivity extends Activity implements TextWatcher{
 	
 	int lastPage = -1;
 	protected Looper mLooper;
-
+	
+	private Player player;
+	private FrameLayout footer;
 	//-------------------------------------------------------------------------
 	
 	public static void validateAdUnitId(String adUnitId) throws IllegalArgumentException {
@@ -223,30 +196,6 @@ public class MainActivity extends Activity implements TextWatcher{
 				.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 	}
 	
-	
-	
-	
-//	protected void loadMoPubView(MoPubView moPubView, String adUnitId, String keywords) {
-//		//TODO
-//		if (moPubView == null) {
-//			logToast(this, "Unable to inflate MoPubView from xml.");
-//			return;
-//		}
-//
-//		try {
-//			validateAdUnitId(adUnitId);
-//		} catch (IllegalArgumentException exception) {
-//			//logToast(BaseActivity.this, exception.getMessage());
-//			return;
-//		}
-//
-//	//	moPubView.setBannerAdListener(this);
-//		moPubView.setAdUnitId(adUnitId);
-//		moPubView.setKeywords(keywords);
-//		moPubView.loadAd();
-//	}
-	
-	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -269,19 +218,17 @@ public class MainActivity extends Activity implements TextWatcher{
 	public void onResume() {
 		super.onResume();
 	}
-	
+    
+    @Override
+    protected void onStop() {
+    	super.onStop();
+    }
 	
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);		
-//		if (state == null) {
-//			checkForLaunch(getIntent());
-//		}
 		File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
-		if (file.exists()) {
-			file.mkdirs();
-		}
-		else{
+		if (!file.exists()) {
 			file.mkdirs();
 		}
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
@@ -310,15 +257,7 @@ public class MainActivity extends Activity implements TextWatcher{
 				mTextFilter.setText(null);
 			}
 		});
-		//Intent intent = getIntent();
-	//	if (intent.getAction().equals(Intent.ACTION_VIEW)){//startActivity(new Intent(this, FullPlaybackActivity.class)); 
-	//		Uri playUri = Uri.parse("file:///sdcard/music/Cassie - Alex.mp3");
-	//		 intent = new Intent(Intent.ACTION_VIEW, playUri); 
-	//		startActivity(intent);
-			// intent = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
-			//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	//		startActivity(intent);
-	//	}
+		footer = (FrameLayout) findViewById(R.id.footer);
 
 		mLimiterScroller = (HorizontalScrollView)findViewById(R.id.limiter_scroller);
 		mLimiterViews = (ViewGroup)findViewById(R.id.limiter_layout);
@@ -332,127 +271,27 @@ public class MainActivity extends Activity implements TextWatcher{
 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			Log.d("log", "a");
 			pager.setOnPageChangeListener(pagerAdapter);
-//			View controls = getLayoutInflater().inflate(R.layout.actionbar_controls, null);
-//			mTitle = (TextView)controls.findViewById(R.id.title);
-//			mArtist = (TextView)controls.findViewById(R.id.artist);
-//			mAlbum = (TextView)controls.findViewById(R.id.album);
-//			mCover = (ImageView)controls.findViewById(R.id.cover);
-//			
-//			//mAlbum.setTypeface(font);
-//			mArtist.setTypeface(MusicDownloaderApp.FONT_LIGHT);
-//			mTitle.setTypeface(MusicDownloaderApp.FONT_REGULAR);
-//			
-////			mTitle.setTextColor(Color.WHITE);
-//			mTitle.setTextSize(20);
-//			mArtist.setTextSize(15);
-//			
-//			
-//			
-//			controls.setOnClickListener(this);
-//			mActionControls = controls;
 		} else {
-			Log.d("log", "b");
 			TabPageIndicator tabs = new TabPageIndicator(this);
 			tabs.setViewPager(pager);
 			tabs.setOnPageChangeListener(pagerAdapter);
 			mTabs = tabs;
-
 			LinearLayout content = (LinearLayout)findViewById(R.id.content);
-			
-			//aici se adauga taburile de sus
 			content.addView(tabs, 0, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-			
-			
-			//
-			
-			
-		//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false)) {
-//				getLayoutInflater().inflate(R.layout.library_controls, content, true);
-//
-//				mControls = findViewById(R.id.controls);
-//				if ("AppTheme.White".equals(Util.getThemeName(this))) {
-//					mControls.setBackgroundResource
-//						(R.drawable.music_bottom_playback_bg_light);
-//				} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-//					mControls.setBackgroundResource
-//					(R.drawable.music_bottom_playback_bg_black);
-//				} else {
-//					mControls.setBackgroundResource
-//						(R.drawable.music_bottom_playback_bg);
-//				}
-//				mTitle = (TextView)mControls.findViewById(R.id.title);
-//				mArtist = (TextView)mControls.findViewById(R.id.artist);
-//				mAlbum = (TextView)mControls.findViewById(R.id.album);
-//				mCover = (ImageView)mControls.findViewById(R.id.cover);
-//				View previous = mControls.findViewById(R.id.previous);
-//				mPlayPauseButton = (ImageButton)mControls.findViewById(R.id.play_pause);
-//				View next = mControls.findViewById(R.id.next);
-
-				
-				
-				
-				
-				
-//				Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/ProximaNova-Bold.otf");
-//			
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {	
-//				
-//				mAlbum.setTypeface(font);
-//		    	mArtist.setTypeface(font);
-//				mTitle.setTypeface(font);
-				
-				}
-				
-				
-				
-				
-//				mCover.setOnClickListener(this);
-//				previous.setOnClickListener(this);
-//				mPlayPauseButton.setOnClickListener(this);
-//				next.setOnClickListener(this);
-//
-//				mShuffleButton = (ImageButton)findViewById(R.id.shuffle);
-//				mShuffleButton.setOnClickListener(this);
-//				registerForContextMenu(mShuffleButton);
-//				mEndButton = (ImageButton)findViewById(R.id.end_action);
-//				mEndButton.setOnClickListener(this);
-//				registerForContextMenu(mEndButton);
-//
-//				mEmptyQueue = findViewById(R.id.empty_queue);
-//				mEmptyQueue.setOnClickListener(this);
-			//}
+		}
 		loadTabOrder();
 		page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);   
 		if (page != 0) {
 			pager.setCurrentItem(page);
 		}
-
-	//	loadAlbumIntent(getIntent());
-		
-		
-		
-		
-		// show cross promo box
-		// show or hide disclaimer
-//		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
-//		if (editTextDisclaimer != null) {
-//			if (Settings.getIsBlacklisted(this)) {
-//				editTextDisclaimer.setVisibility(View.VISIBLE); 
-//			} else {
-//				editTextDisclaimer.setVisibility(View.GONE);
-//			}
-//		}
+		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().getPlayer() != null) {
+			footer.removeAllViews();
+			View view = MusicDownloaderApp.getService().getPlayer().getView();
+			footer.addView(view);
+			player = MusicDownloaderApp.getService().getPlayer();
+		}
 	}
-
-//	public void setFilterHint(int type){
-//		int[] hintResIds = new int[] {R.string.filter_artists_hint, 
-//				R.string.filter_songs_hint, R.string.filter_playlists_hint,
-//				R.string.filter_genres_hint, R.string.filter_files_hint};
-//		mTextFilter.setHint(hintResIds[type - 1]);
-//	}
 	
 	@Override
 	public void onRestart()
@@ -466,10 +305,6 @@ public class MainActivity extends Activity implements TextWatcher{
 	public void onStart()
 	{
 		super.onStart();
-
-		
-		
-		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 	//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false) != (mControls != null)) {
 	//		finish();
@@ -497,47 +332,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		}
 	}
 
-	/**
-	 * If this intent looks like a launch from icon/widget/etc, perform
-	 * launch actions.
-	 */
-//	private void checkForLaunch(Intent intent)
-//	{
-//		SharedPreferences settings = PlaybackService.getSettings(this);
-//		if (settings.getBoolean(PrefKeys.PLAYBACK_ON_STARTUP, false) && Intent.ACTION_MAIN.equals(intent.getAction())) {
-//			startActivity(new Intent(this, FullPlaybackActivity.class));
-//		}
-//	}
-
-//	/**
-//	 * If the given intent has album data, set a limiter built from that
-//	 * data.
-//	 */
-//	private void loadAlbumIntent(Intent intent)
-//	{
-//		long albumId = intent.getLongExtra("albumId", -1);
-//		if (albumId != -1) {
-//			String[] fields = { intent.getStringExtra("artist"), intent.getStringExtra("album") };
-//			String data = String.format("album_id=%d", albumId);
-//			Limiter limiter = new Limiter(MediaUtils.TYPE_ALBUM, fields, data);
-//			int tab = mPagerAdapter.setLimiter(limiter);
-//			if (tab == -1 || tab == mViewPager.getCurrentItem())
-//				updateLimiterViews();
-//			else
-//				mViewPager.setCurrentItem(tab);
-//
-//		}
-//	}
-//
-//	@Override
-//	public void onNewIntent(Intent intent)
-//	{
-//		if (intent == null)
-//			return;
-//
-//		checkForLaunch(intent);
-//		loadAlbumIntent(intent);
-//	}
 
 	@Override
 	public void onRestoreInstanceState(Bundle in)
@@ -553,79 +347,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		super.onSaveInstanceState(out);
 		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 	}
-
-//	@Override
-//	public boolean onKeyUp(int keyCode, KeyEvent event)
-//	{ 
-//		switch (keyCode) {
-//		case KeyEvent.KEYCODE_BACK:
-//			mTextFilter.setText("");
-//			onBackPressed();
-//			break;
-////		case KeyEvent.KEYCODE_BACK: 
-////			if (mSearchBoxVisible) { 
-////				mTextFilter.setText("");
-////				setSearchBoxVisible(false);
-////			} else { 
-////				Limiter limiter = mPagerAdapter.getCurrentLimiter();
-////				if (limiter != null && limiter.type != MediaUtils.TYPE_FILE) {
-////					int pos = -1;
-////					switch (limiter.type) {
-////					case MediaUtils.TYPE_ALBUM: 
-////						setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
-////						pos = mPagerAdapter.mAlbumsPosition;
-////						break;
-////					case MediaUtils.TYPE_ARTIST: 
-////						mPagerAdapter.clearLimiter(MediaUtils.TYPE_ARTIST);
-////						pos = mPagerAdapter.mArtistsPosition;
-////						break;
-////					case MediaUtils.TYPE_GENRE: 
-////						mPagerAdapter.clearLimiter(MediaUtils.TYPE_GENRE);
-////						pos = mPagerAdapter.mGenresPosition;
-////						break;
-////					}
-////					if (pos == -1) {
-////						updateLimiterViews();
-////					} else {
-////						mViewPager.setCurrentItem(pos);
-////					}
-////				} else {
-////					finish();
-////				}
-////			}
-////			break;
-//		case KeyEvent.KEYCODE_SEARCH:
-//			setSearchBoxVisible(!mSearchBoxVisible);
-//			break;
-//		default:
-//			return false;
-//		}
-//
-//		return true;
-//	}
-
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event)
-//	{
-//		if (keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_FORWARD_DEL)
-//			// On ICS, EditText reports backspace events as unhandled despite
-//			// actually handling them. To workaround, just assume the event was
-//			// handled if we get here.
-//			return true;
-//
-//		if (super.onKeyDown(keyCode, event))
-//			return true;
-//
-//		if (mTextFilter.onKeyDown(keyCode, event)) {
-//			if (!mSearchBoxVisible)
-//				setSearchBoxVisible(true);
-//			else
-//				mTextFilter.requestFocus();
-//			return true;
-//		}
-//
-//		return false;
-//	}
 
 	/**
 	 * Update the first row of the lists with the appropriate action (play all
@@ -679,33 +400,6 @@ public class MainActivity extends Activity implements TextWatcher{
 	}
 
 	/**
-	 * "Expand" the view represented by the given intent by setting the limiter
-	 * from the view and switching to the appropriate tab.
-	 *
-	 * @param intent An intent created with
-	 * {@link LibraryAdapter#createData(View)}.
-	 */
-//	private void expand(Intent intent)
-//	{
-//		int type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
-//		long id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-//		int tab = mPagerAdapter.setLimiter(mPagerAdapter.mAdapters[type].buildLimiter(id));
-//		if (tab == -1 || tab == mViewPager.getCurrentItem())
-//			updateLimiterViews();
-//		else
-//			mViewPager.setCurrentItem(tab);
-//	}
-
-	/**
-	 * Open the playback activity and close any activities above it in the
-	 * stack.
-	 */
-//	public void openPlaybackActivity()
-//	{
-//		startActivity(new Intent(this, FullPlaybackActivity.class));
-//	}
-
-	/**
 	 * Called by LibraryAdapters when a row has been clicked.
 	 *
 	 * @param rowData The data for the row that was clicked.
@@ -734,20 +428,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		}
 	}
 
-	/**
-	 * Called by LibraryAdapters when a row's expand arrow has been clicked.
-	 *
-	 * @param rowData The data for the row that was clicked.
-	 */
-//	public void onItemExpanded(Intent rowData)
-//	{
-//		int type = rowData.getIntExtra(LibraryAdapter.DATA_TYPE, MediaUtils.TYPE_INVALID);
-//		if (type == MediaUtils.TYPE_PLAYLIST)
-//			editPlaylist(rowData);
-//		else
-//			expand(rowData);
-//	}
-
 	@Override
 	public void afterTextChanged(Editable editable)
 	{
@@ -772,79 +452,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		mLimiterViews.removeAllViews();
 			mLimiterScroller.setVisibility(View.VISIBLE);
 	}
-
-//	@Override
-//	public void onClick(View view){//TODO
-//		if (view == mSortButton) {//mClearButton
-////			if (mTextFilter.getText().length() == 0)
-////				setSearchBoxVisible(false);
-////			else
-////				mTextFilter.setText("");
-//			openSortDialog();
-//		} else if (view == mCover || view == mActionControls) {
-//			openPlaybackActivity();
-//		} else if (view == mEmptyQueue) {
-//			setState(PlaybackService.get(this).setFinishAction(SongTimeline.FINISH_RANDOM));
-//		} else if (view.getTag() != null) {
-//			// a limiter view was clicked
-//			int i = (Integer)view.getTag();
-//
-//			Limiter limiter = mPagerAdapter.getCurrentLimiter();
-//			int type = limiter.type;
-//			if (i == 1 && type == MediaUtils.TYPE_ALBUM) {
-//				setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
-//			} else if (i > 0) {
-//				Assert.assertEquals(MediaUtils.TYPE_FILE, limiter.type);
-//				File file = (File)limiter.data;
-//				int diff = limiter.names.length - i;
-//				while (--diff != -1) {
-//					file = file.getParentFile();
-//				}
-//				mPagerAdapter.setLimiter(FileSystemAdapter.buildLimiter(file));
-//			} else {
-//				mPagerAdapter.clearLimiter(type);
-//			}
-//			updateLimiterViews();
-//		} else {
-//			super.onClick(view);
-//		}
-//	}
-
-	/**
-	 * Set a new limiter of the given type built from the first
-	 * MediaStore.Audio.Media row that matches the selection.
-	 *
-	 * @param limiterType The type of limiter to create. Must be either
-	 * MediaUtils.TYPE_ARTIST or MediaUtils.TYPE_ALBUM.
-	 * @param selection Selection to pass to the query.
-	 */
-//	private void setLimiter(int limiterType, String selection)
-//	{
-//		ContentResolver resolver = getContentResolver();
-//		Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-//		String[] projection = new String[] { MediaStore.Audio.Media.ARTIST_ID, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM };
-//		Cursor cursor = resolver.query(uri, projection, selection, null, null);
-//		if (cursor != null) {
-//			if (cursor.moveToNext()) {
-//				String[] fields;
-//				String data;
-//				switch (limiterType) {
-//				case MediaUtils.TYPE_ARTIST:
-//					fields = new String[] { cursor.getString(2) };
-//					data = String.format("artist_id=%d", cursor.getLong(0));
-//					break;
-//				case MediaUtils.TYPE_ALBUM:
-//					fields = new String[] { cursor.getString(2), cursor.getString(3) };
-//					data = String.format("album_id=%d", cursor.getLong(1));
-//					break;
-//				default:
-//					throw new IllegalArgumentException("setLimiter() does not support limiter type " + limiterType);
-//				}
-//				mPagerAdapter.setLimiter(new Limiter(limiterType, fields, data));
-//			}
-//			cursor.close();
-//		}
-//	}
 
 	/**
 	 * Builds a media query based off the data stored in the given intent.
@@ -880,479 +487,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		return query;
 	}
 
-//	private static final int MENU_PLAY = 0;
-//	private static final int MENU_ENQUEUE = 1;
-//	private static final int MENU_EXPAND = 2;
-//	private static final int MENU_ADD_TO_PLAYLIST = 3;
-//	private static final int MENU_NEW_PLAYLIST = 4;
-//	private static final int MENU_DELETE = 5;
-//	private static final int MENU_RENAME_PLAYLIST = 7;
-//	private static final int MENU_SELECT_PLAYLIST = 8;
-//	private static final int MENU_PLAY_ALL = 9;
-//	private static final int MENU_ENQUEUE_ALL = 10;
-//	private static final int MENU_MORE_FROM_ALBUM = 11;
-//	private static final int MENU_MORE_FROM_ARTIST = 12;
-
-	/**
-	 * Creates a context menu for an adapter row.
-	 *
-	 * @param menu The menu to create.
-	 * @param rowData Data for the adapter row.
-	 */
-//	public void onCreateContextMenu(ContextMenu menu, Intent rowData)
-//	{
-//		if (rowData.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID) == LibraryAdapter.HEADER_ID) {
-//			menu.setHeaderTitle(getString(R.string.all_songs));
-//			menu.add(0, MENU_PLAY_ALL, 0, R.string.play_all).setIntent(rowData);
-//			menu.add(0, MENU_ENQUEUE_ALL, 0, R.string.enqueue_all).setIntent(rowData);
-//			menu.addSubMenu(0, MENU_ADD_TO_PLAYLIST, 0, R.string.add_to_playlist).getItem().setIntent(rowData);
-//		} else {
-//			int type = rowData.getIntExtra(LibraryAdapter.DATA_TYPE, MediaUtils.TYPE_INVALID);
-//			boolean isAllAdapter = type <= MediaUtils.TYPE_SONG;
-//
-//			menu.setHeaderTitle(rowData.getStringExtra(LibraryAdapter.DATA_TITLE));
-//			menu.add(0, MENU_PLAY, 0, R.string.play).setIntent(rowData);
-//			if (isAllAdapter)
-//				menu.add(0, MENU_PLAY_ALL, 0, R.string.play_all).setIntent(rowData);
-//			menu.add(0, MENU_ENQUEUE, 0, R.string.enqueue).setIntent(rowData);
-//			if (isAllAdapter)
-//				menu.add(0, MENU_ENQUEUE_ALL, 0, R.string.enqueue_all).setIntent(rowData);
-//			if (type == MediaUtils.TYPE_PLAYLIST) {
-//				menu.add(0, MENU_RENAME_PLAYLIST, 0, R.string.rename).setIntent(rowData);
-//				menu.add(0, MENU_EXPAND, 0, R.string.edit).setIntent(rowData);
-//			} else if (rowData.getBooleanExtra(LibraryAdapter.DATA_EXPANDABLE, false)) {
-//				menu.add(0, MENU_EXPAND, 0, R.string.expand).setIntent(rowData);
-//			}
-//			if (type == MediaUtils.TYPE_ALBUM || type == MediaUtils.TYPE_SONG)
-//				menu.add(0, MENU_MORE_FROM_ARTIST, 0, R.string.more_from_artist).setIntent(rowData);
-//			if (type == MediaUtils.TYPE_SONG)
-//				menu.add(0, MENU_MORE_FROM_ALBUM, 0, R.string.more_from_album).setIntent(rowData);
-//			menu.addSubMenu(0, MENU_ADD_TO_PLAYLIST, 0, R.string.add_to_playlist).getItem().setIntent(rowData);
-//			menu.add(0, MENU_DELETE, 0, R.string.delete).setIntent(rowData);
-//		}
-//	}
-
-	/**
-	 * Add a set of songs represented by the intent to a playlist. Displays a
-	 * Toast notifying of success.
-	 *
-	 * @param playlistId The id of the playlist to add to.
-	 * @param intent An intent created with
-	 * {@link LibraryAdapter#createData(View)}.
-	 */
-//	private void addToPlaylist(long playlistId, Intent intent)
-//	{
-//		QueryTask query = buildQueryFromIntent(intent, true, false);
-//		int count = Playlist.addToPlaylist(getContentResolver(), playlistId, query);
-//
-//		String message = getResources().getQuantityString(R.plurals.added_to_playlist, count, count, intent.getStringExtra("playlistName"));
-//		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-//	}
-
-	/**
-	 * Open the playlist editor for the playlist with the given id.
-	 */
-//	private void editPlaylist(Intent rowData)
-//	{
-//		Intent launch = new Intent(this, PlaylistActivity.class);
-//		launch.putExtra("playlist", rowData.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID));
-//		launch.putExtra("title", rowData.getStringExtra(LibraryAdapter.DATA_TITLE));
-//		startActivity(launch);
-//	}
-
-	/**
-	 * Delete the media represented by the given intent and show a Toast
-	 * informing the user of this.
-	 *
-	 * @param intent An intent created with
-	 * {@link LibraryAdapter#createData(View)}.
-	 */
-//	private void delete(Intent intent)
-//	{
-//		int type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
-//		long id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-//		String message = null;
-//		Resources res = getResources();
-//
-//		if (type == MediaUtils.TYPE_FILE) {
-//			String file = intent.getStringExtra("file");
-//			boolean success = MediaUtils.deleteFile(new File(file));
-//			if (!success) {
-//				message = res.getString(R.string.delete_file_failed, file);
-//			}
-////		} else if (type == MediaUtils.TYPE_PLAYLIST) {
-////			Playlist.deletePlaylist(getContentResolver(), id);
-//		} else {
-//			int count = PlaybackService.get(this).deleteMedia(type, id);
-//			message = res.getQuantityString(R.plurals.deleted, count, count);
-//		}
-//
-//		if (message == null) {
-//			message = res.getString(R.string.deleted, intent.getStringExtra("title"));
-//		}
-//
-//		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-//	}
-
-//	@Override
-//	public boolean onContextItemSelected(MenuItem item)
-//	{
-//		if (item.getGroupId() != 0)
-//			return super.onContextItemSelected(item);
-//
-//		Intent intent = item.getIntent();
-//
-//		switch (item.getItemId()) {
-//		case MENU_EXPAND:
-//			expand(intent);
-//			if (mDefaultAction == ACTION_LAST_USED && mLastAction != ACTION_EXPAND) {
-//				mLastAction = ACTION_EXPAND;
-//				updateHeaders();
-//			}
-//			break;
-//		case MENU_ENQUEUE:
-//			pickSongs(intent, ACTION_ENQUEUE);
-//			break;
-//		case MENU_PLAY:
-//			pickSongs(intent, ACTION_PLAY);
-//			break;
-//		case MENU_PLAY_ALL:
-//			pickSongs(intent, ACTION_PLAY_ALL);
-//			break;
-//		case MENU_ENQUEUE_ALL:
-//			pickSongs(intent, ACTION_ENQUEUE_ALL);
-//			break;
-//		case MENU_NEW_PLAYLIST: {
-//			NewPlaylistDialog dialog = new NewPlaylistDialog(this, null, R.string.create, intent);
-//			dialog.setDismissMessage(mHandler.obtainMessage(MSG_NEW_PLAYLIST, dialog));
-//			dialog.show();
-//			break;
-//		}
-//		case MENU_RENAME_PLAYLIST: {
-//			NewPlaylistDialog dialog = new NewPlaylistDialog(this, intent.getStringExtra("title"), R.string.rename, intent);
-//			dialog.setDismissMessage(mHandler.obtainMessage(MSG_RENAME_PLAYLIST, dialog));
-//			dialog.show();
-//			break;
-//		}
-//		case MENU_DELETE:
-//			mHandler.sendMessage(mHandler.obtainMessage(MSG_DELETE, intent));
-//			break;
-//		case MENU_ADD_TO_PLAYLIST: {
-//			SubMenu playlistMenu = item.getSubMenu();
-//			playlistMenu.add(0, MENU_NEW_PLAYLIST, 0, R.string.new_playlist).setIntent(intent);
-//			Cursor cursor = Playlist.queryPlaylists(getContentResolver());
-//			if (cursor != null) {
-//				for (int i = 0, count = cursor.getCount(); i != count; ++i) {
-//					cursor.moveToPosition(i);
-//					long id = cursor.getLong(0);
-//					String name = cursor.getString(1);
-//					Intent copy = new Intent(intent);
-//					copy.putExtra("playlist", id);
-//					copy.putExtra("playlistName", name);
-//					playlistMenu.add(0, MENU_SELECT_PLAYLIST, 0, name).setIntent(copy);
-//				}
-//				cursor.close();
-//			}
-//			break;
-//		}
-//		case MENU_SELECT_PLAYLIST:
-//			mHandler.sendMessage(mHandler.obtainMessage(MSG_ADD_TO_PLAYLIST, intent));
-//			break;
-//		case MENU_MORE_FROM_ARTIST: {
-//			String selection;
-//			if (intent.getIntExtra(LibraryAdapter.DATA_TYPE, -1) == MediaUtils.TYPE_ALBUM) {
-//				selection = "album_id=";
-//			} else {
-//				selection = "_id=";
-//			}
-//			selection += intent.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID);
-//			setLimiter(MediaUtils.TYPE_ARTIST, selection);
-//			updateLimiterViews();
-//			break;
-//		}
-//		case MENU_MORE_FROM_ALBUM:
-//			setLimiter(MediaUtils.TYPE_ALBUM, "_id=" + intent.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID));
-//			updateLimiterViews();
-//			break;
-//		}
-//
-//		return true;
-//	}
-
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu)
-//	{
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//			MenuItem controls = menu.add(null);
-//			CompatHoneycomb.setActionView(controls, mActionControls);
-//			CompatHoneycomb.setShowAsAction(controls, MenuItem.SHOW_AS_ACTION_ALWAYS);
-////			removed
-////			MenuItem search = menu.add(0, MENU_SEARCH, 0, R.string.search).setIcon(R.drawable.ic_menu_search);
-////			CompatHoneycomb.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_IF_ROOM);
-//		} else {
-////			removed
-////			menu.add(0, MENU_SEARCH, 0, R.string.search).setIcon(R.drawable.ic_menu_search);
-//			menu.add(0, MENU_PLAYBACK, 0, R.string.playback_view).setIcon(R.drawable.ic_menu_gallery);
-//		}
-//		menu.add(0, MENU_SORT, 0, R.string.sort_by).setIcon(R.drawable.ic_menu_sort_alphabetically);
-//		return super.onCreateOptionsMenu(menu);
-//	}
-//
-//	@Override
-//	public boolean onPrepareOptionsMenu(Menu menu)
-//	{
-//		LibraryAdapter adapter = mCurrentAdapter;
-//		menu.findItem(MENU_SORT).setEnabled(adapter != null);
-//		return super.onPrepareOptionsMenu(menu);
-//	}
-
-//	removed
-//	public boolean isSearchBoxVisible() {
-//		return mSearchBoxVisible;
-//	}
-	
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item)
-//	{
-//		switch (item.getItemId()) {
-////		removed
-////		case MENU_SEARCH:
-////			int position = mPagerAdapter.getCurrentType();
-////			if (position == -1) {
-////				position = page;
-////			}
-////			if (position != 0) {
-////				setSearchBoxVisible(!mSearchBoxVisible);
-////			}
-////			return true;
-//		case MENU_PLAYBACK:
-//			openPlaybackActivity();
-//			return true;
-//		case MENU_SORT: {
-//			openSortDialog();
-//			return true;
-//		}
-//		default:
-//			return super.onOptionsItemSelected(item);
-//		}
-//	}
-
-//	public void openSortDialog() {
-//		SortAdapter adapter = (SortAdapter)mCurrentAdapter;
-//		int mode = adapter.getSortMode();
-//		int[] itemIds = adapter.getSortEntries();
-//		
-//		int check;
-//		if (mode < 0) {
-//			check = R.id.descending;
-//			mode = ~mode;
-//		} else {
-//			check = R.id.ascending;
-//		}
-//
-//		String[] items = new String[itemIds.length];
-//		Resources res = getResources();
-//		for (int i = itemIds.length; --i != -1; ) {
-//			items[i] = res.getString(itemIds[i]);
-//		}
-//		RadioGroup header = (RadioGroup)getLayoutInflater().inflate(R.layout.sort_dialog, null);
-//		header.check(check);
-//
-//		AlertDialog.Builder builder;
-//		
-//		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-//			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog_White));
-//		} else if("AppTheme.Black".equals(Util.getThemeName(this))){ 
-//			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog_NoActionBar));
-//		}else{
-//			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog));
-//		}
-//		int position = mPagerAdapter.getCurrentType();
-//		if (position == -1) {
-//			position = page;
-//		}
-//		builder.setTitle(getResources().getString(R.string.sort_by) + " \""
-//				+ mPagerAdapter.getPageTitle(position)+"\"");
-//		builder.setSingleChoiceItems(items, mode + 1, this); // add 1 for header
-//
-//		AlertDialog dialog = builder.create();
-//		dialog.getListView().addHeaderView(header);
-//		dialog.setOnDismissListener(this);
-//		dialog.show();
-//	}
-//	
-//	/**
-//	 * Call addToPlaylist with the results from a NewPlaylistDialog stored in
-//	 * obj.
-//	 */
-//	private static final int MSG_NEW_PLAYLIST = 11;
-//	/**
-//	 * Delete the songs represented by the intent stored in obj.
-//	 */
-//	private static final int MSG_DELETE = 12;
-//	/**
-//	 * Call renamePlaylist with the results from a NewPlaylistDialog stored in
-//	 * obj.
-//	 */
-//	private static final int MSG_RENAME_PLAYLIST = 13;
-//	/**
-//	 * Call addToPlaylist with data from the intent in obj.
-//	 */
-//	private static final int MSG_ADD_TO_PLAYLIST = 15;
-//	/**
-//	 * Save the current page, passed in arg1, to SharedPreferences.
-//	 */
-//	private static final int MSG_SAVE_PAGE = 16;
-//
-//	@Override
-//	public boolean handleMessage(Message message)
-//	{
-//		switch (message.what) {
-//		case MSG_ADD_TO_PLAYLIST: {
-//			Intent intent = (Intent)message.obj;
-//			addToPlaylist(intent.getLongExtra("playlist", -1), intent);
-//			break;
-//		}
-//		case MSG_NEW_PLAYLIST: {
-//			NewPlaylistDialog dialog = (NewPlaylistDialog)message.obj;
-//			if (dialog.isAccepted()) {
-//				String name = dialog.getText();
-//				long playlistId = Playlist.createPlaylist(getContentResolver(), name);
-//				Intent intent = dialog.getIntent();
-//				intent.putExtra("playlistName", name);
-//				addToPlaylist(playlistId, intent);
-//			}
-//			break;
-//		}
-//		case MSG_DELETE:
-//			delete((Intent)message.obj);
-//			break;
-//		case MSG_RENAME_PLAYLIST: {
-//			NewPlaylistDialog dialog = (NewPlaylistDialog)message.obj;
-//			if (dialog.isAccepted()) {
-//				long playlistId = dialog.getIntent().getLongExtra("id", -1);
-//				Playlist.renamePlaylist(getContentResolver(), playlistId, dialog.getText());
-//			}
-//			break;
-//		}
-//		case MSG_SAVE_PAGE: {
-//			SharedPreferences.Editor editor = PlaybackService.getSettings(this).edit();
-//			editor.putInt("library_page", message.arg1);
-//			editor.commit();
-//			break;
-//		}
-//		default:
-//			return super.handleMessage(message);
-//		}
-//
-//		return true;
-//	}
-//
-//	@Override
-//	public void onMediaChange()
-//	{
-//		mPagerAdapter.invalidateData();
-//	}
-//
-//	protected void setSearchBoxVisible(boolean visible)
-//	{
-//		mSearchBoxVisible = visible;
-//		mSearchBox.setVisibility(visible ? View.VISIBLE : View.GONE);
-////		if (mControls != null) {
-////			mControls.setVisibility(visible || (mState & PlaybackService.FLAG_NO_MEDIA) != 0 ? View.GONE : View.VISIBLE);
-////		} else if (mActionControls != null) {
-////			// try to hide the bottom action bar
-////			ViewParent parent = mActionControls.getParent();
-////			if (parent != null)
-////				parent = parent.getParent();
-////			if (parent != null && parent instanceof ViewGroup) {
-////				ViewGroup ab = (ViewGroup)parent;
-////				if (ab.getChildCount() == 1) {
-////					ab.setVisibility(visible ? View.GONE : View.VISIBLE);
-////				}
-////			}
-////		}
-//
-////		removed
-////		if (visible) {
-////			mTextFilter.requestFocus();
-////			((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(mTextFilter, 0);
-////		}
-//	}
-//
-//	@Override
-//	protected void onStateChange(int state, int toggled)
-//	{
-//		super.onStateChange(state, toggled);
-//
-//		if ((toggled & PlaybackService.FLAG_NO_MEDIA) != 0) {
-//			// update visibility of controls
-//			setSearchBoxVisible(mSearchBoxVisible);
-//		}
-//		if ((toggled & PlaybackService.FLAG_EMPTY_QUEUE) != 0 && mEmptyQueue != null) {
-//			mEmptyQueue.setVisibility((state & PlaybackService.FLAG_EMPTY_QUEUE) == 0 ? View.GONE : View.VISIBLE);
-//		}
-//	}
-
-//	@Override
-//	protected void onSongChange(Song song)
-//	{
-//		super.onSongChange(song);
-//        
-//		if (mTitle != null) {
-//			Bitmap cover = null;
-//
-//			if (song == null) {
-//				if (mActionControls == null) {
-//					mTitle.setText(R.string.none);
-//					mArtist.setText(null);
-//			//		mAlbum.setText(null);
-//				} else {
-//					mTitle.setText(null);
-//					mArtist.setText(null);
-//			//		mAlbum.setText(null);
-//					mCover.setImageDrawable(null);
-//					return;
-//				}
-//			} else {
-//				Resources res = getResources();
-//				String title = song.title == null ? res.getString(R.string.unknown) : song.title;
-//				String artist = song.artist == null ? res.getString(R.string.unknown) : song.artist;
-//			//	String album = song.album  == null? res.getString(R.string.unknown): song.album; 
-//				mTitle.setText(title);
-//				mArtist.setText(artist);
-//			//	mAlbum.setText(album);
-//				cover = song.getCover(this);
-//			}
-//
-//			if (Song.mDisableCoverArt)
-//				mCover.setVisibility(View.GONE);
-//			else if (cover == null)
-//				mCover.setImageResource(R.drawable.fallback_cover);
-//			else
-//				mCover.setImageBitmap(cover);
-//		}
-//	}
-
-//	@Override
-//	public void onClick(DialogInterface dialog, int which)
-//	{
-//		dialog.dismiss();
-//	}
-//
-//	@Override
-//	public void onDismiss(DialogInterface dialog)
-//	{
-//		ListView list = ((AlertDialog)dialog).getListView();
-//		// subtract 1 for header
-//		int which = list.getCheckedItemPosition() - 1;
-//
-//		RadioGroup group = (RadioGroup)list.findViewById(R.id.sort_direction);
-//		if (group.getCheckedRadioButtonId() == R.id.descending)
-//			which = ~which;
-//
-//		mPagerAdapter.setSortMode(which);
-//	}
 
 	/**
 	 * Called when a new page becomes visible.
@@ -1368,13 +502,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			CompatHoneycomb.selectTab(this, position);
 		}
-//		if (adapter != null && adapter.getLimiter() == null) {
-//			// Save current page so it is opened on next startup. Don't save if
-//			// the page was expanded to, as the expanded page isn't the starting
-//			// point.
-//			Handler handler = mHandler;
-//			handler.sendMessage(mHandler.obtainMessage(MSG_SAVE_PAGE, position, 0));
-//		}
 		if (lastPage != position && lastPage != -1) {
 			mTextFilter.setText("");
 		}
@@ -1397,14 +524,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		}
 		return info;
 	}
-
-//	@Override
-//	protected Dialog onCreateDialog(int id, Bundle args) {
-//		if (id == SearchTab.STREAM_DIALOG_ID) {
-//			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
-//		}
-//		return super.onCreateDialog(id, args);
-//	}
 	
 	@Override
 	public void onBackPressed() {
@@ -1412,4 +531,19 @@ public class MainActivity extends Activity implements TextWatcher{
 		showOptions.addCategory(Intent.CATEGORY_HOME);
 		startActivity(showOptions);
 	}
+	
+	public void play(String path, String strArtist, String strTitle, String strDuration, String from) {
+		if (player!= null){
+			player.remove();
+			player = null;
+		}
+		player = new Player(this, path, strArtist, strTitle, strDuration, from);
+		MusicDownloaderApp.getService().setPlayer(player);
+		View view = player.getView();
+		player.play();
+		footer.removeAllViews();
+		footer.invalidate();
+		footer.addView(view);
+	}
+	
 }

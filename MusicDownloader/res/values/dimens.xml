@@ -5,4 +5,5 @@
     <dimen name="pading_button_play">5dp</dimen>
     <dimen name="pading_progress_song">4dp</dimen>
     <dimen name="pading_min">1dp</dimen>
+    <dimen name="player_pading_side">8dp</dimen>
 </resources>
