@@ -289,7 +289,9 @@ public class MainActivity extends Activity implements TextWatcher{
 			footer.removeAllViews();
 			View view = MusicDownloaderApp.getService().getPlayer().getView();
 			footer.addView(view);
-			player = MusicDownloaderApp.getService().getPlayer();
+			if (MusicDownloaderApp.getService().conteinsPlayer()) {
+				player = MusicDownloaderApp.getService().getPlayer();
+			}
 		}
 	}
 	

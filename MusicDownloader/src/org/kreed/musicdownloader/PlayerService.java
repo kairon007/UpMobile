@@ -22,8 +22,11 @@ public class PlayerService extends Service {
 	}
 
 	public Player getPlayer() {
-		Log.d("log", "getPlayer" + player.getStrTitle());
 		return player;
+	}
+	
+	public boolean conteinsPlayer() {
+		return player != null;
 	}
 
 	public void setPlayer(Player player) {
