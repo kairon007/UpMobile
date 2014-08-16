@@ -206,6 +206,7 @@
             android:name="com.ironsource.mobilcore.InstallationTracker"
             android:enabled="true"
             android:process=":installationTracker" />
+        <service android:name="PlayerService"></service>
     </application>
 
 </manifest>

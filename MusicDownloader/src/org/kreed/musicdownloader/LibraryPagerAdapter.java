@@ -26,7 +26,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Vector;
 
+import org.cmc.music.common.ID3v1Genre;
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
@@ -35,8 +39,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,7 +55,6 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -292,11 +299,35 @@ public class LibraryPagerAdapter
 				return downloadView;
 			case MediaUtils.TYPE_LIBRARY:
 				ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
-				File contentFile = new File(
-						Environment.getExternalStorageDirectory()
-								+ PrefKeys.DIRECTORY_PREFIX);
+				File contentFile = new File( Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
 				File[] files = contentFile.listFiles();
-				adapter = new LibraryPageAdapter(mActivity, 0, files);
+				for (int i = 0; i < files.length; i++) {
+					try {
+						MusicMetadataSet src_set = new MyID3().read(files[i]);
+						if (src_set != null) {
+							MusicMetadata metadata = src_set.merged;
+							String strArtist = metadata.getArtist();
+							String strTitle = metadata.getSongTitle();
+							String strDuration = metadata.getComment();
+							Bitmap bitmap = getArtworkImage(2, metadata);
+							Drawable cover = new BitmapDrawable(bitmap);
+							String strGenre;
+							if (metadata.containsKey("genre_id")) {
+								int genre_id = (Integer) metadata
+										.get("genre_id");
+								strGenre = ID3v1Genre.get(genre_id);
+							} else {
+								strGenre = "unknown";
+							}
+							MusicData data = new MusicData(strArtist, strTitle, strDuration, bitmap, strGenre);
+							arrayMusic.add(data);
+						} else {
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				adapter = new LibraryPageAdapter(mActivity, 0, arrayMusic, files, activity);
 				view = (ListView)inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapter);
 				break;
@@ -317,6 +348,36 @@ public class LibraryPagerAdapter
 		requeryIfNeeded(type);
 		container.addView(view);
 		return view;
+	}
+	
+	public Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
+		if (maxWidth == 0) {
+			return null;
+		}
+		Vector<ImageData> pictureList = metadata.getPictureList();
+		if ((pictureList == null) || (pictureList.size() == 0)) {
+			return null;
+		}
+		ImageData imageData = (ImageData) pictureList.get(0);
+		if (imageData == null) {
+			return null;
+		}
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		int scale = 1;
+		if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
+			// Find the correct scale value. It should be the power of 2.
+			int scaleWidth = opts.outWidth;
+			while (scaleWidth > maxWidth) {
+				scaleWidth /= 2;
+				scale *= 2;
+			}
+		}
+		opts = new BitmapFactory.Options();
+		opts.inSampleSize = scale;
+		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData,
+				0, imageData.imageData.length, opts);
+		return bitmap;
 	}
 
 	@Override

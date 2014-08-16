@@ -2,14 +2,21 @@ package org.kreed.musicdownloader.app;
 
 import java.io.FileDescriptor;
 
+import org.kreed.musicdownloader.PlayerService;
+
+
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
@@ -19,7 +26,7 @@ public class MusicDownloaderApp extends Application {
 	public static Typeface FONT_LIGHT;
 	public static Typeface FONT_REGULAR;
 	public static Typeface FONT_BOLD;
-
+	private static PlayerService service;
 	private static SharedPreferences prefs;
 	
 	static {
@@ -74,6 +81,15 @@ public class MusicDownloaderApp extends Application {
 	public static CoverCache getCoverCache() {
 		return sCoverCache;
 	}
+	
+	
+	private ServiceConnection serviceConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName name, IBinder binder) {
+			service  = ((PlayerService.PlayerBinder) binder).getService(); 
+		}
+		public void onServiceDisconnected(ComponentName name) {}
+	};
+
 
 	@Override
 	public void onCreate() {
@@ -85,10 +101,15 @@ public class MusicDownloaderApp extends Application {
 //		FONT_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Regular.otf");
 //		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		bindService(new Intent(this, PlayerService.class), serviceConnection, BIND_AUTO_CREATE);
 	}
 	
 	public static SharedPreferences getSharedPreferences() {
 		return prefs;
+	}
+
+	public static PlayerService getService() {
+		return service;
 	}
 	
 }
