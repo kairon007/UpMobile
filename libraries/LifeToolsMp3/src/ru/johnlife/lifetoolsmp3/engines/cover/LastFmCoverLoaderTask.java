@@ -100,7 +100,7 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 		String imageUrl = list.get(3);
 		
 		// do not use Last.fm default image
-		if (imageUrl == null || imageUrl.contains("default_album_")) return null;
+		//if (imageUrl == null || imageUrl.contains("default_album_")) return null;
 		
 		return imageUrl;
 	}
