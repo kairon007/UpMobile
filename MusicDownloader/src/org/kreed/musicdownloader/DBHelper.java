@@ -1,5 +1,8 @@
 package org.kreed.musicdownloader;
 
+import java.util.ArrayList;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -40,27 +43,42 @@ public class DBHelper extends SQLiteOpenHelper {
 				+ "artist text,"
 				+ "title text,"
 				+ "duration text,"
-				+ "imageuri text"
+				+ "fileuri text"
 				+ ");");
 	}
-
+	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-	}
-
-	public void delete() {
 		
 	}
+
+	public void insert(MusicData data) {
+		ContentValues cv = new ContentValues();
+		cv.put("artist", data.getSongArtist());
+		cv.put("title", data.getSongTitle());
+		cv.put("duration", data.getSongDuration());
+		cv.put("fileuri", data.getFileUri());
+		getWritableDatabase().insert(DB_NAME, null, cv);
+	}
 	
-	public int getNextId() {
-		int id = -1;
-		String query = "SELECT MAX(id) from " + DB_NAME;
-		Cursor result = instance.getReadableDatabase().rawQuery(query, null);
-		while (result.moveToNext()) {
-			id = result.getInt(0);
+	public void getAll(TaskSuccessListener listener) {
+		ArrayList<MusicData> all = new ArrayList<MusicData>();
+		Cursor c = getReadableDatabase().query(DB_NAME, null, null, null, null, null, null);
+		while (c.moveToFirst()) {
+			MusicData data = new MusicData();
+			data.setSongArtist(c.getString(c.getColumnIndex("artist")));
+			data.setSongTitle(c.getString(c.getColumnIndex("title")));
+			data.setSongDuration(c.getString(c.getColumnIndex("duration")));
+			data.setFileUri(c.getString(c.getColumnIndex("fileuri")));
+			all.add(data);
 		}
-		result.close();
-		return id;
+		listener.success(all);
+	}
+	
+	public void delete(MusicData data) {
+		getWritableDatabase().delete(DB_NAME, "artist = " + data.getSongArtist()
+				+ "AND title = " + data.getSongTitle()
+				+ "AND duration = " + data.getSongDuration()
+				+ "AND fileuri = " + data.getFileUri(), null);
 	}
 }

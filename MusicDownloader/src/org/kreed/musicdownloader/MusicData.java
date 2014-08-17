@@ -10,6 +10,7 @@ public class MusicData {
 	private String downloadProgress;
 	private String songGenre;
 	private long downloadId;
+	private String fileUri;
 
 	public MusicData() {
 	}
@@ -92,6 +93,14 @@ public class MusicData {
 
 	public void setSongGenre(String songGenre) {
 		this.songGenre = songGenre;
+	}
+
+	public String getFileUri() {
+		return fileUri;
+	}
+
+	public void setFileUri(String fileUri) {
+		this.fileUri = fileUri;
 	}
 	
 }
