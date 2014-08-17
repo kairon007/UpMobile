@@ -200,24 +200,12 @@ public class SearchTab {
 						long downloaded = cs.getInt(downloadedIndex);
 						currentDownloadingID = downloadId;
 						currentDownloadingSongTitle= cs.getString(cs.getColumnIndex(DownloadManager.COLUMN_TITLE));
-						
+						Log.d("-----------", downloadId + " -- " + downloadId);
 						if (size != -1) {
 							progress = downloaded * 100.0 / size;
 						}
 						cs.close();
 						updateProgress();
-					}
-					Cursor completeCursor = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(
-							DownloadManager.STATUS_SUCCESSFUL));
-					if (completeCursor.moveToFirst()) {
-						if (currentDownloadingSongTitle.equalsIgnoreCase(completeCursor.getString(completeCursor.getColumnIndex(DownloadManager.COLUMN_TITLE)))) {
-							progress = 100;
-							updateProgress();
-						}
-					}
-					completeCursor.close();
-					if (!completeCursor.isClosed()) {
-						completeCursor.close();
 					}
 					if (!cs.isClosed()) {
 						cs.close();
@@ -235,7 +223,7 @@ public class SearchTab {
 					}
 					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
 					c.close();
-					if (!c.isClosed()) {
+					if(!c.isClosed()) {
 						c.close();
 					}
 					src = new File(path);
@@ -247,8 +235,8 @@ public class SearchTab {
 						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 						metadata.setSongTitle(songTitle);
 						metadata.setArtist(songArtist);
-						metadata.clearComment();
-						metadata.setComment(duration);//this is reading duration into metadata
+						metadata.clearComposer2();
+						metadata.setComposer2(duration);//this is reading duration into metadata
 						if (null != cover) {
 							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 							cover.compress(CompressFormat.JPEG, 85, out);
@@ -256,7 +244,7 @@ public class SearchTab {
 								new ImageData(out.toByteArray(), "image/jpeg", "cover", 3)
 							);
 						}
-						File dst = new File(src.getParentFile(), src.getName()+"-1");
+						File dst = new File(src.getParentFile(), src.getName());
 						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
 						dst.renameTo(src);
 						progress = 100;
@@ -281,7 +269,7 @@ public class SearchTab {
 //						});
 //				}
 			};
-			new Timer().schedule(progresUpdateTask, 100, 100);
+			new Timer().schedule(progresUpdateTask, 1000, 1000);
 		}
 		@SuppressLint("NewApi")
 		@Override
@@ -502,7 +490,6 @@ public class SearchTab {
 				final String duration = formatTime((int)song.getDuration());
 				final  String key = PrefKeys.CALL_FROM_SERCH;
 				getUrlTask = new AsyncTask<Void, Void, String>() {
-					
 					@Override
 					protected String doInBackground(Void... params) {
 						return ((RemoteSong) song).getDownloadUrl();
@@ -512,10 +499,11 @@ public class SearchTab {
 					protected void onPostExecute(String downloadUrl) {
 						((MainActivity) activity).play(downloadUrl, artist, title, duration, key);
 					}
-					
 				};
 				getUrlTask.execute(NO_PARAMS);
+
 			}
+			
 		});
 		searchField = (TextView)instanceView.findViewById(R.id.text);
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {

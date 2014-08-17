@@ -308,7 +308,7 @@ public class LibraryPagerAdapter
 							MusicMetadata metadata = src_set.merged;
 							String strArtist = metadata.getArtist();
 							String strTitle = metadata.getSongTitle();
-							String strDuration = metadata.getComment();
+							String strDuration = metadata.getComposer2();
 							Bitmap bitmap = getArtworkImage(2, metadata);
 							Drawable cover = new BitmapDrawable(bitmap);
 							String strGenre;
