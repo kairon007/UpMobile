@@ -502,6 +502,7 @@ public class SearchTab {
 				final String duration = formatTime((int)song.getDuration());
 				final  String key = PrefKeys.CALL_FROM_SERCH;
 				getUrlTask = new AsyncTask<Void, Void, String>() {
+					
 					@Override
 					protected String doInBackground(Void... params) {
 						return ((RemoteSong) song).getDownloadUrl();
@@ -511,11 +512,10 @@ public class SearchTab {
 					protected void onPostExecute(String downloadUrl) {
 						((MainActivity) activity).play(downloadUrl, artist, title, duration, key);
 					}
+					
 				};
 				getUrlTask.execute(NO_PARAMS);
-
 			}
-			
 		});
 		searchField = (TextView)instanceView.findViewById(R.id.text);
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {

@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class Player {
 	private String strTitle;
 	private String strDuration;
 	private String from;
+	private boolean playFinish = false;
 	private boolean prepared = false;
 	private boolean playOrPause = true; // if false buttonPlay == R.drawable.pause, else buttonPlay ==  R.drawable.play
 	private Runnable progressAction = new Runnable() {
@@ -85,8 +87,10 @@ public class Player {
 	}
 	
 	public void remove(){
-		mediaPlayer.stop();
-		mediaPlayer = null;
+		if (null != mediaPlayer) {
+			mediaPlayer.stop();
+			mediaPlayer = null;
+		}
 	}
 
 	private void releasePlayer() {
@@ -132,10 +136,21 @@ public class Player {
 			buttonPlay.setImageResource(R.drawable.pause);
 		}
 		buttonPlay.setOnClickListener(new View.OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
+				if (playFinish) {
+					mediaPlayer = new MediaPlayer();
+					mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+					PlaySong task = new PlaySong();
+					playFinish = false;
+					if (task.getStatus() == Status.PENDING) {
+						task.execute("");
+					}
+				}
 				playPause();
 			}
+
 		});
 		ViewGroup parent = (ViewGroup) view.getParent();
 		if (null != parent) {
@@ -175,8 +190,9 @@ public class Player {
 	}
 
 	public void playPause() {
-		if (null == mediaPlayer)
+		if (null == mediaPlayer) {
 			return;
+		}
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
 			playOrPause = true;
@@ -247,6 +263,9 @@ public class Player {
 					public void onCompletion(MediaPlayer mp) {
 						releasePlayer();
 						onFinished();
+						Log.d("log", "onCompletion");
+						buttonPlay.setImageResource(R.drawable.play);
+						playFinish = true;
 					}
 					
 				});

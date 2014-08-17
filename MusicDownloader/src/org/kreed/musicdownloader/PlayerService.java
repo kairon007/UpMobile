@@ -30,7 +30,6 @@ public class PlayerService extends Service {
 	}
 
 	public void setPlayer(Player player) {
-		Log.d("log", "setPlayer");
 		if (this.player != null) {
 			this.player = null;
 		}
