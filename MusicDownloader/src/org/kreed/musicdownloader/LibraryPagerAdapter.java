@@ -774,6 +774,10 @@ public class LibraryPagerAdapter
 	@Override
 	public void onPageSelected(int position)
 	{
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(PrefKeys.LIBRARY_PAGE, position);
+		editor.commit();
 		// onPageSelected and setPrimaryItem are called in similar cases, and it
 		// would be nice to use just one of them, but each has caveats:
 		// - onPageSelected isn't called when the ViewPager is first
