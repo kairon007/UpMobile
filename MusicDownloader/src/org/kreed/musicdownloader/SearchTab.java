@@ -28,8 +28,8 @@ import org.kreed.musicdownloader.engines.cover.GrooveSharkCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.LastFmCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask;
 import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask.Size;
-import org.kreed.musicdownloader.song.RemoteSong;
 import org.kreed.musicdownloader.song.GrooveSong;
+import org.kreed.musicdownloader.song.RemoteSong;
 import org.kreed.musicdownloader.song.Song;
 import org.kreed.musicdownloader.ui.AdapterHelper;
 import org.kreed.musicdownloader.ui.AdapterHelper.ViewBuilder;
@@ -44,9 +44,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -68,8 +66,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -151,7 +147,7 @@ public class SearchTab {
 		}
 		@SuppressLint("NewApi") public void downloadFile() {
 			final File musicDir = new File(Environment.getExternalStorageDirectory()
-	                + "/MusicDownloader");
+	                + PrefKeys.DIRECTORY_PREFIX);
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
 			}
@@ -162,7 +158,7 @@ public class SearchTab {
 				setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).
 				setAllowedOverRoaming(false).
 				setTitle(songTitle).
-				setDestinationInExternalPublicDir("/MusicDownloader/", fileName);
+				setDestinationInExternalPublicDir(PrefKeys.DIRECTORY_PREFIX, fileName);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {	
 				request.allowScanningByMediaScanner();
 			}
@@ -210,9 +206,9 @@ public class SearchTab {
 					if (!cs.isClosed()) {
 						cs.close();
 					}
-					if (waitingForCover) {
-						return;
-					}
+//					if (waitingForCover) {
+//						return;
+//					}
 					Cursor c = null;
 					c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 					if (c == null || !c.moveToFirst()) {
@@ -221,10 +217,23 @@ public class SearchTab {
 						}
 						return;
 					}
-					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+					int columnIndex = 0;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+					} else if (columnIndex != -1) {
+						columnIndex = c.getColumnIndex("local_uri");
+					}
+					if (columnIndex == -1)
+						return;
+					String path = c.getString(columnIndex);
 					c.close();
 					if(!c.isClosed()) {
 						c.close();
+					}
+					src = new File(path);
+					
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+						path = cutPath(path);
 					}
 					src = new File(path);
 					try {
@@ -247,6 +256,7 @@ public class SearchTab {
 						File dst = new File(src.getParentFile(), src.getName());
 						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
 						dst.renameTo(src);
+						notifyMediascanner();
 						progress = 100;
 						updateProgress();
 						this.cancel();
@@ -256,18 +266,26 @@ public class SearchTab {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);
 					}
 				}
-//				private void notifyMediascanner() {
-//					Uri uri = Uri.fromFile(src.getParentFile());
-//					Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, uri);
-//					context.sendBroadcast(intent);
-//					MediaScannerConnection.scanFile(context,
-//						new String[] { dst.getAbsolutePath() }, null,
-//						new MediaScannerConnection.OnScanCompletedListener() {
-//							public void onScanCompleted(String path, Uri uri) {
-//								Log.i("TAG", "Finished scanning " + path);
-//							}
-//						});
-//				}
+			
+			private String cutPath(String s) {
+				int index = s.indexOf('m');
+				return s.substring(index - 1);
+			}
+
+			 private void notifyMediascanner() {
+				 File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
+				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
+						 Uri.parse("file://"+ file));
+				 context.sendBroadcast(intent);
+				 MediaScannerConnection.scanFile(context,
+						 new String[] { file.getAbsolutePath() }, null,
+						 new MediaScannerConnection.OnScanCompletedListener() {
+			 
+			 public void onScanCompleted(String path, Uri uri) {
+				 Log.i("TAG", "Finished scanning " + path);
+			 } 
+			 });
+			 }
 			};
 			new Timer().schedule(progresUpdateTask, 1000, 1000);
 		}

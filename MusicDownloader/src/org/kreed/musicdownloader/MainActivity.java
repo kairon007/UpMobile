@@ -22,24 +22,21 @@ package org.kreed.musicdownloader;
  */
 
 import java.io.File;
+
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.song.Song;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.HandlerThread;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.Process;
 import android.preference.PreferenceManager;
@@ -49,7 +46,6 @@ import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -58,9 +54,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -238,6 +232,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		if(telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
+		PlayerService.removeActivity(this);
 		super.onDestroy();
 	}
 
@@ -266,7 +261,11 @@ public class MainActivity extends Activity implements TextWatcher{
 	
 	@Override
 	public void onCreate(Bundle state) {
-		super.onCreate(state);		
+		super.onCreate(state);	
+		if(android.os.Build.VERSION.SDK_INT < 11) { 
+		    requestWindowFeature(Window.FEATURE_NO_TITLE); 
+		} 
+		PlayerService.addActivity(this);
 		File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
 		if (!file.exists()) {
 			file.mkdirs();
@@ -278,7 +277,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		} else {
 			setTheme(R.style.Library);
 		}
-		setContentView(R.layout.library_content);
 		telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -292,6 +290,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
 		}
+		setContentView(R.layout.library_content);
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
 		mClearFilterEditText = (ImageButton)findViewById(R.id.clear_filter);
@@ -346,6 +345,10 @@ public class MainActivity extends Activity implements TextWatcher{
 		mPagerAdapter.notifyDataSetChanged();
 		loadTabOrder();
 	}
+	
+	public void onMediaChange() {
+		mPagerAdapter.invalidateData();
+	}
 
 	@Override
 	public void onStart()
@@ -364,11 +367,7 @@ public class MainActivity extends Activity implements TextWatcher{
 	/**
 	 * Load the tab order and update the tab bars if needed.
 	 */
-	private void loadTabOrder()
-	{
-		if(android.os.Build.VERSION.SDK_INT < 11) { 
-		    requestWindowFeature(Window.FEATURE_NO_TITLE); 
-		} 
+	private void loadTabOrder() {
 		if (mPagerAdapter.loadTabOrder()) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				CompatHoneycomb.addActionBarTabs(this);
