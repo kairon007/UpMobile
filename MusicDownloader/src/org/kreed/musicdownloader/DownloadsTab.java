@@ -114,8 +114,10 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (adapter.getItem(i).getSongTitle().equalsIgnoreCase(currentDownloadingSongTitle) && adapter.getItem(i).getDownloadId() ==  currentDownloadingID) {
 					adapter.getItem(i).setDownloadProgress(progressString);
+					adapter.notifyDataSetChanged();
 					if (progressString.equals("100.0") || progressString.equals("100")) {
 						adapter.getItem(i).setDownloadProgress(SET_VIS);
+						adapter.notifyDataSetChanged();
 					}
 				}
 			}

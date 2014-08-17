@@ -200,12 +200,24 @@ public class SearchTab {
 						long downloaded = cs.getInt(downloadedIndex);
 						currentDownloadingID = downloadId;
 						currentDownloadingSongTitle= cs.getString(cs.getColumnIndex(DownloadManager.COLUMN_TITLE));
-						Log.d("-----------", downloadId + " -- " + downloadId);
+						
 						if (size != -1) {
 							progress = downloaded * 100.0 / size;
 						}
 						cs.close();
 						updateProgress();
+					}
+					Cursor completeCursor = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(
+							DownloadManager.STATUS_SUCCESSFUL));
+					if (completeCursor.moveToFirst()) {
+						if (currentDownloadingSongTitle.equalsIgnoreCase(completeCursor.getString(completeCursor.getColumnIndex(DownloadManager.COLUMN_TITLE)))) {
+							progress = 100;
+							updateProgress();
+						}
+					}
+					completeCursor.close();
+					if (!completeCursor.isClosed()) {
+						completeCursor.close();
 					}
 					if (!cs.isClosed()) {
 						cs.close();
@@ -223,7 +235,7 @@ public class SearchTab {
 					}
 					String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
 					c.close();
-					if(!c.isClosed()) {
+					if (!c.isClosed()) {
 						c.close();
 					}
 					src = new File(path);
@@ -269,7 +281,7 @@ public class SearchTab {
 //						});
 //				}
 			};
-			new Timer().schedule(progresUpdateTask, 1000, 1000);
+			new Timer().schedule(progresUpdateTask, 100, 100);
 		}
 		@SuppressLint("NewApi")
 		@Override
