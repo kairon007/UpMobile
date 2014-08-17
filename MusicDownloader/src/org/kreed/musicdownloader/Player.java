@@ -60,22 +60,6 @@ public class Player {
 		this.from = from;
 	}
 	
-	public String getStrTitle() {
-		return strTitle;
-	}
-
-	public void setStrTitle(String strTitle) {
-		this.strTitle = strTitle;
-	}
-
-	public String getStrDuration() {
-		return strDuration;
-	}
-
-	public void setStrDuration(String strDuration) {
-		this.strDuration = strDuration;
-	}
-
 	public void play() {
 		view = LayoutInflater.from(context).inflate(R.layout.player, null);
 		mediaPlayer = new MediaPlayer();
@@ -91,6 +75,10 @@ public class Player {
 			mediaPlayer.stop();
 			mediaPlayer = null;
 		}
+	}
+	
+	public MediaPlayer getMediaPlayer() {
+		return mediaPlayer;
 	}
 
 	private void releasePlayer() {
@@ -159,7 +147,7 @@ public class Player {
 		return view;
 	}
 
-	public void onPrepared() {
+	private void onPrepared() {
 		int duration = mediaPlayer.getDuration();
 		if (duration == -1) {
 			songProgress.setIndeterminate(true);
@@ -174,15 +162,15 @@ public class Player {
 		}
 	}
 
-	public void onPaused() {
+	private void onPaused() {
 		buttonPlay.setImageResource(R.drawable.play);
 	}
 
-	public void onResumed() {
+	private void onResumed() {
 		buttonPlay.setImageResource(R.drawable.pause);
 	}
 
-	public void onFinished() {
+	private void onFinished() {
 		songProgress.setIndeterminate(false);
 		songProgress.setProgress(100);
 		songProgress.setMax(100);

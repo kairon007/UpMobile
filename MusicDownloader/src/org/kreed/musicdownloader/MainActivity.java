@@ -34,6 +34,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -43,6 +44,8 @@ import android.os.Looper;
 import android.os.Process;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -158,7 +161,7 @@ public class MainActivity extends Activity implements TextWatcher{
 	
 	int lastPage = -1;
 	protected Looper mLooper;
-	
+	private TelephonyManager telephonyManager;
 	private Player player;
 	private FrameLayout footer;
 	//-------------------------------------------------------------------------
@@ -183,6 +186,40 @@ public class MainActivity extends Activity implements TextWatcher{
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
 	
+	PhoneStateListener phoneStateListener = new PhoneStateListener() {
+		
+		private boolean flag = false;
+		
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber) {
+			// TODO
+			switch (state) {
+			case TelephonyManager.CALL_STATE_RINGING:
+				if(MusicDownloaderApp.getService().conteinsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()){
+					MediaPlayer mediaPlayer = MusicDownloaderApp.getService().getPlayer().getMediaPlayer();
+					if (mediaPlayer.isPlaying()) {
+						MusicDownloaderApp.getService().getPlayer().playPause();
+						flag = true;
+					}
+				}
+				break;
+			case TelephonyManager.CALL_STATE_IDLE:
+				if(null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().conteinsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()){
+					MediaPlayer mediaPlayer = MusicDownloaderApp.getService().getPlayer().getMediaPlayer();
+					if (flag) {
+						MusicDownloaderApp.getService().getPlayer().playPause();
+						flag = false;
+					}
+				}
+				break;
+				
+			default:
+				break;
+			}
+			super.onCallStateChanged(state, incomingNumber);
+		}
+		
+	};
 	
 	public static void logToast(Context context, String message) {
 		Log.d("", message);
@@ -198,6 +235,9 @@ public class MainActivity extends Activity implements TextWatcher{
 	
 	@Override
 	public void onDestroy() {
+		if(telephonyManager != null) {
+			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+		}
 		super.onDestroy();
 	}
 
@@ -239,6 +279,10 @@ public class MainActivity extends Activity implements TextWatcher{
 			setTheme(R.style.Library);
 		}
 		setContentView(R.layout.library_content);
+		telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		if (telephonyManager != null) {
+			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		}
 		HandlerThread thread = new HandlerThread(getClass().getName(), Process.THREAD_PRIORITY_LOWEST);
 		thread.start();
 		mLooper = thread.getLooper();
