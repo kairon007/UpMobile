@@ -369,16 +369,13 @@ public class LibraryActivity
 			mTabs = tabs;
 
 			LinearLayout content = (LinearLayout) findViewById(R.id.content);
-			String swichPlace = settings.getString(PrefKeys.SHOW_TAB_POSITION,
+			String switchPlace = settings.getString(PrefKeys.SHOW_TAB_POSITION,
 					"top");
-			switch (swichPlace) {
-			case "top":
+			if (switchPlace.equals("top")) {
 				content.addView(tabs, 0, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				break;
-			case "bottom":
+			} else if (switchPlace.equals("bottom")) { 
 				int i = content.getChildCount();
 				content.addView(tabs, i, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				break;
 			}
 		//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false)) {
 				getLayoutInflater().inflate(R.layout.library_controls, content, true);
