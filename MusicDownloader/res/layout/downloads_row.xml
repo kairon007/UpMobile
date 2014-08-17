@@ -1,72 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:divider="@drawable/layout_divider"
+    android:dividerPadding="4dp"
+    android:minHeight="@dimen/layout_library_height"
+    android:orientation="horizontal"
+    android:showDividers="middle" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/selectable_item_bg"
+        android:paddingLeft="8dp" >
 
-        <ImageView
-            android:id="@+id/cover"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            android:src="@drawable/fallback_cover" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:minHeight="48dp" >
 
             <ImageView
-                android:id="@+id/cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/cancel" />
+                android:id="@+id/cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/fallback_cover" />
+        </FrameLayout>
 
-            <TextView
-                android:id="@+id/songTitle"
-                android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="8dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/cancel"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:layout_weight="1" >
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:id="@+id/songTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left|center_vertical"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:text="title"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/totalTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center"
+                    android:layout_weight="2"
+                    android:gravity="right|center_vertical"
+                    android:text="time"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/songArtist"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/songTitle"
-                android:layout_toLeftOf="@+id/totalTime"
+                android:layout_gravity="center|left"
+                android:layout_weight="2"
                 android:ellipsize="end"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/totalTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/songTitle"
-                android:layout_alignTop="@+id/songArtist"
+                android:gravity="left|center"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="artist"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/songArtist" />
-        </RelativeLayout>
+                android:layout_gravity="bottom"
+                android:layout_weight="2"
+                android:paddingBottom="@dimen/player_pading_side"
+                android:visibility="visible" />
+        </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/cancel" />
+
 </LinearLayout>

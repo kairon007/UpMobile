@@ -12,6 +12,8 @@ import android.os.AsyncTask.Status;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -122,6 +124,7 @@ public class Player {
 			songProgress.post(progressAction);
 		}
 		songTitle.setText(strTitle);
+		songTitle.startAnimation(AnimationUtils.loadAnimation(context, R.anim.move_text));
 		songDuration.setText(strDuration);
 		if (playOrPause) {
 			buttonPlay.setImageResource(R.drawable.play);

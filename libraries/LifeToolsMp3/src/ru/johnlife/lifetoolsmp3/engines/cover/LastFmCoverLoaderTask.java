@@ -97,7 +97,12 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 				e.printStackTrace();
 			}
 		}
-		return list.get(3);
+		String imageUrl = list.get(3);
+		
+		// do not use Last.fm default image
+		//if (imageUrl == null || imageUrl.contains("default_album_")) return null;
+		
+		return imageUrl;
 	}
 
 	@Override

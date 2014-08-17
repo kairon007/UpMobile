@@ -24,8 +24,10 @@
                 android:id="@+id/cover_song"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:scaleType="fitCenter"
                 android:src="@drawable/fallback_cover" />
+
         </FrameLayout>
 
         <LinearLayout
@@ -48,9 +50,8 @@
                 android:gravity="left|center_vertical"
                 android:lines="1"
                 android:maxLines="1"
-                android:paddingBottom="@dimen/pading_min"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/text_library_page_size" />
+                android:text="Title"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <!-- android:textColor="@color/dimmed" -->
 
@@ -67,10 +68,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
                     android:maxLines="2"
-                    android:paddingBottom="@dimen/pading_min"
-                    android:paddingTop="@dimen/pading_min"
                     android:text="Genre"
-                    android:textSize="@dimen/text_library_page_size" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/duration_song"
@@ -78,10 +77,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="right|center_vertical"
                     android:maxLines="2"
-                    android:paddingBottom="@dimen/pading_min"
-                    android:paddingTop="@dimen/pading_min"
                     android:text="3:20"
-                    android:textSize="@dimen/text_library_page_size" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>
@@ -90,6 +87,7 @@
         android:id="@+id/play_song"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:padding="@dimen/pading_button_play"
         android:src="@drawable/play" />
 
