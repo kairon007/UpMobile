@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -53,32 +54,82 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	public void insert(MusicData data) {
-		ContentValues cv = new ContentValues();
-		cv.put("artist", data.getSongArtist());
-		cv.put("title", data.getSongTitle());
-		cv.put("duration", data.getSongDuration());
-		cv.put("fileuri", data.getFileUri());
-		getWritableDatabase().insert(DB_NAME, null, cv);
+		new InsertTask(data).execute();
 	}
 	
 	public void getAll(TaskSuccessListener listener) {
-		ArrayList<MusicData> all = new ArrayList<MusicData>();
-		Cursor c = getReadableDatabase().query(DB_NAME, null, null, null, null, null, null);
-		while (c.moveToFirst()) {
-			MusicData data = new MusicData();
-			data.setSongArtist(c.getString(c.getColumnIndex("artist")));
-			data.setSongTitle(c.getString(c.getColumnIndex("title")));
-			data.setSongDuration(c.getString(c.getColumnIndex("duration")));
-			data.setFileUri(c.getString(c.getColumnIndex("fileuri")));
-			all.add(data);
-		}
-		listener.success(all);
+		new GetAllTask(listener).execute();
 	}
 	
 	public void delete(MusicData data) {
-		getWritableDatabase().delete(DB_NAME, "artist = " + data.getSongArtist()
-				+ "AND title = " + data.getSongTitle()
-				+ "AND duration = " + data.getSongDuration()
-				+ "AND fileuri = " + data.getFileUri(), null);
+		new DeleteTask(data).execute();
+	}
+	
+	private class GetAllTask extends AsyncTask<Void, Void, ArrayList<MusicData>> {
+
+		private TaskSuccessListener listener;
+		
+		public GetAllTask(TaskSuccessListener listener) {
+			this.listener = listener;
+		}
+		
+		@Override
+		protected ArrayList<MusicData> doInBackground(Void... params) {
+			ArrayList<MusicData> all = new ArrayList<MusicData>();
+			Cursor c = getReadableDatabase().query(DB_NAME, null, null, null, null, null, null);
+			while (c.moveToNext()) {
+				MusicData data = new MusicData();
+				data.setSongArtist(c.getString(c.getColumnIndex("artist")));
+				data.setSongTitle(c.getString(c.getColumnIndex("title")));
+				data.setSongDuration(c.getString(c.getColumnIndex("duration")));
+				data.setFileUri(c.getString(c.getColumnIndex("fileuri")));
+				all.add(data);
+			}
+			return all;
+		}
+		
+		@Override
+		protected void onPostExecute(ArrayList<MusicData> data) {
+			listener.success(data);
+		}
+	}
+	
+	private class DeleteTask extends AsyncTask<Void, Void, Void> {
+
+		private MusicData data;
+		
+		public DeleteTask(MusicData data) {
+			this.data = data;
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			getWritableDatabase().delete(DB_NAME, "(artist = " + "'" + data.getSongArtist() + "'"
+					+ ") AND (title = " + "'" + data.getSongTitle() + "'"
+					+ ") AND (duration = " + "'" + data.getSongDuration() + "'"
+					+ ") AND (fileuri = " + "'" + data.getFileUri() + "'" + ")", null); 
+			return null;
+		}
+	}
+	
+	private class InsertTask extends AsyncTask<Void, Void, Void> {
+
+		private MusicData data;
+		
+		public InsertTask(MusicData data) {
+			this.data = data;
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			ContentValues cv = new ContentValues();
+			cv.put("artist", data.getSongArtist());
+			cv.put("title", data.getSongTitle());
+			cv.put("duration", data.getSongDuration());
+			cv.put("fileuri", data.getFileUri());
+			getWritableDatabase().insert(DB_NAME, null, cv);
+			return null;
+		}
+		
 	}
 }

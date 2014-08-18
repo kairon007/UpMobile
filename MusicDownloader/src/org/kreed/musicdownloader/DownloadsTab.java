@@ -2,8 +2,6 @@ package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
 
-import com.soundcloud.api.examples.GetResource;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -22,6 +20,7 @@ import android.widget.TextView;
 
 public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface {
 	private ListView listView;
+	private ProgressBar progress;
 	private DownloadsAdapter adapter;
 	private String progressString = "0";
 	private static DownloadsTab instance;
@@ -35,12 +34,13 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private String currentDownloadingSongTitle;
 	private Long currentDownloadingID;
 
-	private final class DownloadsAdapter extends ArrayAdapter<MusicData> {
+	private final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener {
 		private LayoutInflater inflater;
 
 		public DownloadsAdapter(Context context, int resource) {
 			super(context, resource);
 			this.inflater = LayoutInflater.from(context);
+			DBHelper.getInstance(getContext()).getAll(this);
 		}
 
 		@SuppressLint("NewApi")
@@ -68,6 +68,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 						DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 						cancelledId = adapter.getItem(position).getDownloadId();
 						manager.remove(cancelledId);
+						DBHelper.getInstance(getContext()).delete(getItem(position));
 						adapter.remove(adapter.getItem(position));
 					}
 				});
@@ -81,7 +82,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				} else {
 					holder.cover.setImageResource(R.drawable.fallback_cover);
 				}
-				if (progressString != null) {
+				if (progressString != null && song.getDownloadProgress() != null) {
 					if (song.getDownloadProgress().equals(SET_VIS)) {
 						holder.downloadProgress.setVisibility(View.INVISIBLE);
 						holder.remove.setImageResource(R.drawable.ok);
@@ -90,6 +91,9 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 						holder.remove.setImageResource(R.drawable.cancel);
 						holder.downloadProgress.setProgress((int)Double.parseDouble(song.getDownloadProgress()));
 					}
+				} else {
+					holder.downloadProgress.setVisibility(View.INVISIBLE);
+					holder.remove.setImageResource(R.drawable.ok);
 				}
 				holder.duration.setText(song.getSongDuration());
 			}
@@ -104,6 +108,16 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			ImageView cover;
 			ImageView remove;
 			ProgressBar downloadProgress;
+		}
+
+		@Override
+		public void success(ArrayList<MusicData> result) {
+			progress.setVisibility(View.GONE);
+			for (MusicData data : result) {
+				mData = data;
+				adapter.insert(data, 0);
+			}
+			adapter.notifyDataSetChanged();
 		}
 	}
 
@@ -173,7 +187,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
-
+		progress = (ProgressBar) inflateView.findViewById(R.id.progress);
 	}
 
 	public DownloadsTab() {
