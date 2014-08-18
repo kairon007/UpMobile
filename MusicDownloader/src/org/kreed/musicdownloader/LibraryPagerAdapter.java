@@ -275,7 +275,7 @@ public class LibraryPagerAdapter
 		if (view == null) {
 			MainActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
-			LibraryPageAdapter adapter;
+			LibraryPageAdapter adapter = null;
 			TextView header = null;
 			Typeface font = MusicDownloaderApp.FONT_LIGHT;
 			switch (type) {
@@ -332,6 +332,9 @@ public class LibraryPagerAdapter
 					}
 					adapter = new LibraryPageAdapter(mActivity, 0, arrayMusic,
 							files, activity);
+					view = (ListView) inflater.inflate(R.layout.listview, null);
+					view.setAdapter(adapter);
+				} else {
 					view = (ListView) inflater.inflate(R.layout.listview, null);
 					view.setAdapter(adapter);
 				}
