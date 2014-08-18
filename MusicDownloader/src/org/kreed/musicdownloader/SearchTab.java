@@ -203,6 +203,19 @@ public class SearchTab {
 						cs.close();
 						updateProgress();
 					}
+					
+					Cursor completeCursor = manager.query(new DownloadManager.Query()
+					.setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+					if (completeCursor.moveToFirst()) {
+						if (currentDownloadingSongTitle.equalsIgnoreCase(completeCursor.getString(completeCursor.getColumnIndex(DownloadManager.COLUMN_TITLE)))) {
+							progress = 100;
+							updateProgress();
+						}
+					}
+					completeCursor.close();
+					if (!completeCursor.isClosed()) {
+						completeCursor.close();
+					}
 					if (!cs.isClosed()) {
 						cs.close();
 					}
