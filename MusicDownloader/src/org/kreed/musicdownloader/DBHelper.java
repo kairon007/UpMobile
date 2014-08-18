@@ -104,10 +104,22 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-			getWritableDatabase().delete(DB_NAME, "(artist = " + "'" + data.getSongArtist() + "'"
-					+ ") AND (title = " + "'" + data.getSongTitle() + "'"
-					+ ") AND (duration = " + "'" + data.getSongDuration() + "'"
-					+ ") AND (fileuri = " + "'" + data.getFileUri() + "'" + ")", null); 
+			String s = data.getFileUri();
+			char[] mass = s.toCharArray();
+			StringBuilder s1 = null;
+			for (int i = 0; i < s.length(); i++) {
+				if (mass[i] == '\'') {
+					s1 = new StringBuilder();
+					s1.append(s.substring(0, i));
+					s1.append(mass[i]);
+					s1.append(mass[i]);
+					s1.append(s.substring(i + 1));
+				}
+			}
+			if (null != s1) {
+				s = s1.toString();
+			}
+			getWritableDatabase().delete(DB_NAME,  "fileuri = " + "('" + s + "')", null); 
 			return null;
 		}
 	}
@@ -130,6 +142,5 @@ public class DBHelper extends SQLiteOpenHelper {
 			getWritableDatabase().insert(DB_NAME, null, cv);
 			return null;
 		}
-		
 	}
 }

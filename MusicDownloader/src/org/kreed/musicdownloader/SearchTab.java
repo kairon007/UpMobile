@@ -125,7 +125,7 @@ public class SearchTab {
 		return instanceView;
 	}
 
-	private static class DownloadClickListener implements AlertDialog.OnClickListener, OnBitmapReadyListener,LoadPercentageInterface, MusicDataInterface {
+	private static class DownloadClickListener implements AlertDialog.OnClickListener, OnBitmapReadyListener {
 		private final Context context;
 		private final String songTitle;
 		private String songArtist;
@@ -277,8 +277,9 @@ public class SearchTab {
 						song.setSongArtist(songArtist);
 						song.setSongTitle(songTitle);
 						song.setSongDuration(duration);
-						song.setFileUri(dst.getPath() + dst.getName());
+						song.setFileUri(dst.getPath());
 						DBHelper.getInstance(context).insert(song);
+						downloadsTab.setFileUri(dst.getPath(), downloadId);
 						this.cancel();
 					} catch (IOException e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);
@@ -321,27 +322,6 @@ public class SearchTab {
 		public void onBitmapReady(Bitmap bmp) {
 			this.cover = bmp;
 			this.waitingForCover = false;
-		}
-
-		@Override
-		public void insertProgress(String progress) {
-		}
-
-		@Override
-		public void insertData(ArrayList<MusicData> musicDatas) {
-		}
-
-		@Override
-		public void insertCover(Bitmap cover) {
-		}
-		@Override
-		public void currentDownloadingSongTitle(String currentDownloadingSongTitle) {
-			
-		}
-		@Override
-		public void currentDownloadingID(Long currentDownloadingID) {
-			// TODO Auto-generated method stub
-			
 		}
 	}
 
