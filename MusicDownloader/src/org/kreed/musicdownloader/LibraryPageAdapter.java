@@ -49,10 +49,9 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		final String strTitle = music.getSongTitle();
 		final String strDuration = music.getSongDuration();
 		Bitmap bitmap = music.getSongBitmap();
-		final Drawable cover = new BitmapDrawable(bitmap);
 		songTitle.setText(strArtist + " - " + strTitle);
 		songDuration.setText(strDuration);
-		coverImage.setImageDrawable(cover);
+		coverImage.setImageBitmap(bitmap);
 		songGenre.setText(music.getSongGenre());
 		final File file = files[position];
 		buttonPlay.setOnClickListener(new OnClickListener() {
