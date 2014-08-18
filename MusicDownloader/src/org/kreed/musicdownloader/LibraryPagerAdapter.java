@@ -175,7 +175,9 @@ public class LibraryPagerAdapter
 
 	private int currentType = -1;
 	private Context context;
-	
+	private LibraryPagerAdapter parentAdapter = this;
+	private LibraryPageAdapter adapterLibrary = null;
+	private ArrayList<MusicData> array = new ArrayList<MusicData>();
 	/**
 	 * Create the LibraryPager.
 	 *
@@ -264,6 +266,16 @@ public class LibraryPagerAdapter
 		mDownloadsPosition = downloadsPosition;
 		mLibraryPosition = libraryPosition;
 	}
+	
+	public void changeArrayMusicData(MusicData musicData) {
+		if (null == adapterLibrary) {
+			array.add(musicData);
+			array.clear();
+		} else {
+			adapterLibrary.add(musicData);
+		}
+		
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -275,12 +287,11 @@ public class LibraryPagerAdapter
 		if (view == null) {
 			MainActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
-			LibraryPageAdapter adapter = null;
 			TextView header = null;
 			Typeface font = MusicDownloaderApp.FONT_LIGHT;
 			switch (type) {
 			case MediaUtils.TYPE_SEARCH: 
-				View searchView = SearchTab.getInstanceView(inflater, activity);
+				View searchView = SearchTab.getInstanceView(inflater, activity, parentAdapter);
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					searchView.findViewById(R.id.search_field).setBackgroundDrawable
 						(activity.getResources().getDrawable(R.drawable.search_background_white));
@@ -302,7 +313,9 @@ public class LibraryPagerAdapter
 				File contentFile = new File( Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
 				if (contentFile.length() > 0) {
 					File[] files = contentFile.listFiles();
+					ArrayList<File> list = new ArrayList<File>();
 					for (int i = 0; i < files.length; i++) {
+						list.add(files[i]);
 						try {
 							MusicMetadataSet src_set = new MyID3()
 									.read(files[i]);
@@ -312,7 +325,6 @@ public class LibraryPagerAdapter
 								String strTitle = metadata.getSongTitle();
 								String strDuration = metadata.getComposer2();
 								Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
-								Drawable cover = new BitmapDrawable(bitmap);
 								String strGenre;
 								if (metadata.containsKey("genre_id")) {
 									int genre_id = (Integer) metadata
@@ -324,19 +336,28 @@ public class LibraryPagerAdapter
 								MusicData data = new MusicData(strArtist,
 										strTitle, strDuration, bitmap, strGenre);
 								arrayMusic.add(data);
+
+								if (!array.isEmpty()) {
+									arrayMusic.addAll(array);
+									for (MusicData mData : array) {
+											File file = new File(mData.getFilePathSD());
+											list.add(file);
+									}
+									array.clear();
+								}
 							} else {
 							}
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
-					adapter = new LibraryPageAdapter(mActivity, 0, arrayMusic,
-							files, activity);
+					adapterLibrary = new LibraryPageAdapter(mActivity, 0, arrayMusic,
+							list, activity);
 					view = (ListView) inflater.inflate(R.layout.listview, null);
-					view.setAdapter(adapter);
+					view.setAdapter(adapterLibrary);
 				} else {
 					view = (ListView) inflater.inflate(R.layout.listview, null);
-					view.setAdapter(adapter);
+					view.setAdapter(adapterLibrary);
 				}
 				break;
 			default:

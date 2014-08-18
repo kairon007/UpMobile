@@ -40,32 +40,6 @@ public class PlayerService extends Service {
 		this.player = player;
 	}
 	
-	public final ContentObserver mObserver = new ContentObserver(null) {
-		@Override
-		public void onChange(boolean selfChange) {
-			MediaUtils.onMediaChange();
-			onMediaChange();
-		}
-	};
-	
-	public void onCreate() {
-		getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, mObserver);
-	};
-	
-	public void onMediaChange() {
-		ArrayList<MainActivity> list = sActivities;
-		for (int i = list.size(); --i != -1; )
-			list.get(i).onMediaChange();
-	}
-	
-	public static void addActivity(MainActivity activity) {
-		sActivities.add(activity);
-	}
-	
-	public static void removeActivity(MainActivity activity) {
-		sActivities.remove(activity);
-	}
-	
 	public class PlayerBinder extends Binder {
 		public PlayerService getService() {
 			return PlayerService.this;

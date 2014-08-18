@@ -232,7 +232,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		if(telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
-		PlayerService.removeActivity(this);
+	//	PlayerService.removeActivity(this);
 		super.onDestroy();
 	}
 
@@ -265,7 +265,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		if(android.os.Build.VERSION.SDK_INT < 11) { 
 		    requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		} 
-		PlayerService.addActivity(this);
+		//PlayerService.addActivity(this);
 		File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
 		if (!file.exists()) {
 			file.mkdirs();

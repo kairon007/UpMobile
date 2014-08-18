@@ -80,6 +80,7 @@ public class SearchTab {
 	private static final String KEY_POSITION = "position.song.musicdownloader";//vanilla";
 	private static SearchTab instance;
 	private static List<Class<? extends BaseSearchTask>> engines;
+	private static LibraryPagerAdapter parentAdapter;
 	private Iterator<Class<? extends BaseSearchTask>> taskIterator;
 	private String currentName = null;
 	private SongSearchAdapter resultAdapter;
@@ -87,6 +88,7 @@ public class SearchTab {
 	private String searchString;
 	private View progress;
 	private TextView searchField;
+	
 	private LayoutInflater inflater;
 	private View view;
 	private Activity activity;
@@ -95,9 +97,9 @@ public class SearchTab {
 	private boolean searchStopped = true;
 
 	@SuppressWarnings("unchecked")
-	public static final SearchTab getInstance(LayoutInflater inflater, Activity activity) {
+	public static final SearchTab getInstance(LayoutInflater inflater, Activity activity, LibraryPagerAdapter adapter) {
 		if (null == instance) {
-			instance = new SearchTab(inflater.inflate(R.layout.search, null), inflater, activity);
+			instance = new SearchTab(inflater.inflate(R.layout.search, null), inflater, activity, adapter);
 			Context context = inflater.getContext();
 			if (null == engines) {
 				String[] engineNames = context.getResources().getStringArray(R.array.search_engines);
@@ -116,8 +118,8 @@ public class SearchTab {
 		return instance;
 	}
 
-	public static final View getInstanceView(LayoutInflater inflater, Activity activity) {
-		View instanceView = getInstance(inflater, activity).view;
+	public static final View getInstanceView(LayoutInflater inflater, Activity activity, LibraryPagerAdapter adapter) {
+		View instanceView = getInstance(inflater, activity, adapter).view;
 		ViewGroup parent = (ViewGroup)instanceView.getParent();
 		if (null != parent) {
 			parent.removeView(instanceView);
@@ -129,6 +131,7 @@ public class SearchTab {
 		private final Context context;
 		private final String songTitle;
 		private String songArtist;
+		private String songPathSD;
 		private Bitmap cover;
 		private boolean waitingForCover = true;
 		private String downloadUrl;
@@ -270,7 +273,7 @@ public class SearchTab {
 						File dst = new File(src.getParentFile(), src.getName());
 						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
 						dst.renameTo(src);
-//						notifyMediascanner();
+						notifyMediascanner();
 						progress = 100;
 						updateProgress();
 						MusicData song = new MusicData();
@@ -280,6 +283,7 @@ public class SearchTab {
 						song.setFileUri(dst.getPath());
 						DBHelper.getInstance(context).insert(song);
 						downloadsTab.setFileUri(dst.getPath(), downloadId);
+						songPathSD = dst.getAbsolutePath();
 						this.cancel();
 					} catch (IOException e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);
@@ -293,20 +297,26 @@ public class SearchTab {
 				return s.substring(index - 1);
 			}
 
-//			 private void notifyMediascanner() {
-//				 File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
-//				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
-//						 Uri.parse("file://"+ file));
-//				 context.sendBroadcast(intent);
-//				 MediaScannerConnection.scanFile(context,
-//						 new String[] { file.getAbsolutePath() }, null,
-//						 new MediaScannerConnection.OnScanCompletedListener() {
-//			 
-//			 public void onScanCompleted(String path, Uri uri) {
-//				 Log.i("TAG", "Finished scanning " + path);
-//			 } 
-//			 });
-//			 }
+			 private void notifyMediascanner() {
+				 File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
+				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
+						 Uri.parse("file://"+ file));
+				 context.sendBroadcast(intent);
+				 MediaScannerConnection.scanFile(context,
+						 new String[] { file.getAbsolutePath() }, null,
+						 new MediaScannerConnection.OnScanCompletedListener() {
+			 
+			 public void onScanCompleted(String path, Uri uri) {
+				 MusicData song = new MusicData();
+					song.setSongArtist(songArtist);
+					song.setSongTitle(songTitle);
+					song.setSongDuration(duration);
+					song.setSongBitmap(cover);
+					song.setFilePathSD(songPathSD);
+				 parentAdapter.changeArrayMusicData(song);
+			 } 
+			 });
+			 }
 			};
 			new Timer().schedule(progresUpdateTask, 1000, 1000);
 		}
@@ -485,10 +495,11 @@ public class SearchTab {
 		return isoDateFormat.format(new Date(date));
 	}
 	
-	private SearchTab(final View instanceView, final LayoutInflater inflater, Activity libraryActivity) {
+	private SearchTab(final View instanceView, final LayoutInflater inflater, Activity libraryActivity, LibraryPagerAdapter adapter) {
 		this.view = instanceView;
 		this.inflater = inflater;
 		this.activity = libraryActivity;
+		parentAdapter = adapter;
 		resultAdapter = new SongSearchAdapter(instanceView.getContext(), inflater);
 		message = (TextView) instanceView.findViewById(R.id.message);
 		progress = instanceView.findViewById(R.id.progress);

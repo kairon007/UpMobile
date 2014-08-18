@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +17,7 @@ import android.widget.TextView;
 public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 
 	private ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
-	private File[] files;
+	private ArrayList<File> files = new ArrayList<File>();
 	private MainActivity activity;
 	private LayoutInflater inflater;
 	private ImageButton buttonPlay;
@@ -28,7 +26,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 	private TextView songGenre;
 	private TextView songDuration;
 
-	public LibraryPageAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, File[] files, MainActivity activity) {
+	public LibraryPageAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, ArrayList<File> files, MainActivity activity) {
 		super(context, resource, arrayMusic);
 		this.activity  = activity;
 		this.arrayMusic = arrayMusic;
@@ -53,7 +51,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		songDuration.setText(strDuration);
 		coverImage.setImageBitmap(bitmap);
 		songGenre.setText(music.getSongGenre());
-		final File file = files[position];
+		final File file = files.get(position);
 		buttonPlay.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -63,6 +61,14 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 			
 		});
 		return itemView; 
+	}
+	
+	@Override
+	public void add(MusicData object) {
+		arrayMusic.add(object);
+		File file = new File(object.getFilePathSD());
+		files.add(file);
+		notifyDataSetChanged();
 	}
 	
 }

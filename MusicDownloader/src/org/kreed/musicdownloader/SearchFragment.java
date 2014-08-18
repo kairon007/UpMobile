@@ -12,7 +12,7 @@ public class SearchFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View searchView = SearchTab.getInstanceView(getLayoutInflater(savedInstanceState), getActivity());
+		View searchView = null;
 		return searchView;
 	}
 	
