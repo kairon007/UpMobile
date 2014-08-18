@@ -20,20 +20,20 @@ import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
-import org.kreed.musicdownloader.engines.BaseSearchTask;
-import org.kreed.musicdownloader.engines.FinishedParsingSongs;
-import org.kreed.musicdownloader.engines.cover.CoverLoaderTask;
-import org.kreed.musicdownloader.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import org.kreed.musicdownloader.engines.cover.GrooveSharkCoverLoaderTask;
-import org.kreed.musicdownloader.engines.cover.LastFmCoverLoaderTask;
-import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask;
-import org.kreed.musicdownloader.engines.cover.MuzicBrainzCoverLoaderTask.Size;
-import org.kreed.musicdownloader.song.GrooveSong;
-import org.kreed.musicdownloader.song.RemoteSong;
-import org.kreed.musicdownloader.song.Song;
 import org.kreed.musicdownloader.ui.AdapterHelper;
 import org.kreed.musicdownloader.ui.AdapterHelper.ViewBuilder;
 
+import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
+import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.cover.GrooveSharkCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask.Size;
+import ru.johnlife.lifetoolsmp3.song.GrooveSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -62,15 +62,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.CookieManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SearchTab {
 	private final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
@@ -106,7 +105,7 @@ public class SearchTab {
 				engines = new ArrayList<Class<? extends BaseSearchTask>>(engineNames.length);
 				for (int i=0; i<engineNames.length; i++) {
 					try {
-						engines.add((Class<? extends BaseSearchTask>) Class.forName("org.kreed.musicdownloader.engines."+engineNames[i]));
+						engines.add((Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines."+engineNames[i]));
 					} catch (ClassNotFoundException e) {
 						Log.e("SearchTab", "Unknown engine", e);
 					}

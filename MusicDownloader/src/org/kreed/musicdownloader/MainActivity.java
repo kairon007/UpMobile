@@ -24,8 +24,8 @@ package org.kreed.musicdownloader;
 import java.io.File;
 
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
-import org.kreed.musicdownloader.song.Song;
 
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;

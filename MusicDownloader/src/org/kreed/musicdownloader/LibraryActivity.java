@@ -2,8 +2,7 @@ package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
 
-import org.kreed.musicdownloader.song.Song;
-
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;

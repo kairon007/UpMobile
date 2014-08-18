@@ -28,14 +28,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.kreed.musicdownloader.song.Song;
-
 import junit.framework.Assert;
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 
 /**
