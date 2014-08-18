@@ -2,18 +2,20 @@ package org.kreed.musicdownloader;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -202,6 +204,7 @@ public class Player {
 
 	private class PlaySong extends AsyncTask<String, Void, Boolean> {
 
+		@SuppressLint("NewApi")
 		@Override
 		protected Boolean doInBackground(String... params) {
 			try {
@@ -213,7 +216,9 @@ public class Player {
 					inputStream.close();
 					break;
 				case PrefKeys.CALL_FROM_SERCH:
-					mediaPlayer.setDataSource(path);
+					HashMap<String, String> headers = new HashMap<String,String>();
+					headers.put("User-Agent", "2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
 					break;
 				}
 				mediaPlayer.prepare();
