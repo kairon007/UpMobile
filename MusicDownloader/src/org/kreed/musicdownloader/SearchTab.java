@@ -62,9 +62,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.CookieManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -145,23 +147,27 @@ public class SearchTab {
 			this.duration = duration;
 			this.cover = cover;
 		}
-		@SuppressLint("NewApi") public void downloadFile() {
-			final File musicDir = new File(Environment.getExternalStorageDirectory()
-	                + PrefKeys.DIRECTORY_PREFIX);
+
+		@SuppressLint("NewApi")
+		public void downloadFile() {
+			final File musicDir = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
 			}
+			String cookies = CookieManager.getInstance().getCookie(downloadUrl);
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
-			final String fileName = songTitle+" - "+songArtist+".mp3";
-			request.
-				setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).
-				setAllowedOverRoaming(false).
-				setTitle(songTitle).
-				setDestinationInExternalPublicDir(PrefKeys.DIRECTORY_PREFIX, fileName);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {	
+			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl))
+					.addRequestHeader("cookie", cookies)
+					.addRequestHeader(
+							"User-Agent",
+							"2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+			final String fileName = songTitle + " - " + songArtist + ".mp3";
+			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+					.setAllowedOverRoaming(false).setTitle(songTitle).setDestinationInExternalPublicDir(PrefKeys.DIRECTORY_PREFIX, fileName);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				request.allowScanningByMediaScanner();
 			}
+			Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName.replace(".mp3", "")), Toast.LENGTH_LONG).show();
 			final long downloadId = manager.enqueue(request);
 			downloadsTab = DownloadsTab.getInstance();
 			InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, 
@@ -196,12 +202,24 @@ public class SearchTab {
 						long downloaded = cs.getInt(downloadedIndex);
 						currentDownloadingID = downloadId;
 						currentDownloadingSongTitle= cs.getString(cs.getColumnIndex(DownloadManager.COLUMN_TITLE));
-						Log.d("-----------", downloadId + " -- " + downloadId);
 						if (size != -1) {
 							progress = downloaded * 100.0 / size;
 						}
 						cs.close();
 						updateProgress();
+					}
+					
+					Cursor completeCursor = manager.query(new DownloadManager.Query()
+					.setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+					if (completeCursor.moveToFirst()) {
+						if (currentDownloadingSongTitle.equalsIgnoreCase(completeCursor.getString(completeCursor.getColumnIndex(DownloadManager.COLUMN_TITLE)))) {
+							progress = 100;
+							updateProgress();
+						}
+					}
+					completeCursor.close();
+					if (!completeCursor.isClosed()) {
+						completeCursor.close();
 					}
 					if (!cs.isClosed()) {
 						cs.close();
@@ -254,7 +272,7 @@ public class SearchTab {
 						File dst = new File(src.getParentFile(), src.getName());
 						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
 						dst.renameTo(src);
-						notifyMediascanner();
+//						notifyMediascanner();
 						progress = 100;
 						updateProgress();
 						MusicData song = new MusicData();
@@ -276,20 +294,20 @@ public class SearchTab {
 				return s.substring(index - 1);
 			}
 
-			 private void notifyMediascanner() {
-				 File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
-				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
-						 Uri.parse("file://"+ file));
-				 context.sendBroadcast(intent);
-				 MediaScannerConnection.scanFile(context,
-						 new String[] { file.getAbsolutePath() }, null,
-						 new MediaScannerConnection.OnScanCompletedListener() {
-			 
-			 public void onScanCompleted(String path, Uri uri) {
-				 Log.i("TAG", "Finished scanning " + path);
-			 } 
-			 });
-			 }
+//			 private void notifyMediascanner() {
+//				 File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
+//				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
+//						 Uri.parse("file://"+ file));
+//				 context.sendBroadcast(intent);
+//				 MediaScannerConnection.scanFile(context,
+//						 new String[] { file.getAbsolutePath() }, null,
+//						 new MediaScannerConnection.OnScanCompletedListener() {
+//			 
+//			 public void onScanCompleted(String path, Uri uri) {
+//				 Log.i("TAG", "Finished scanning " + path);
+//			 } 
+//			 });
+//			 }
 			};
 			new Timer().schedule(progresUpdateTask, 1000, 1000);
 		}
