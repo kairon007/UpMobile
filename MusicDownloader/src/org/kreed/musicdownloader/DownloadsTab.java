@@ -68,7 +68,9 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 						DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 						cancelledId = adapter.getItem(position).getDownloadId();
 						manager.remove(cancelledId);
-						DBHelper.getInstance(getContext()).delete(getItem(position));
+						if (getItem(position).getFileUri() != null) {
+							DBHelper.getInstance(getContext()).delete(getItem(position));
+						}
 						adapter.remove(adapter.getItem(position));
 					}
 				});
@@ -206,5 +208,15 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	public void currentDownloadingID(Long currentDownloadingID) {
 		// TODO Auto-generated method stub
 		this.currentDownloadingID = currentDownloadingID;
+	}
+
+	@Override
+	public void setFileUri(String uri, long downloadId) {
+		for (int i = 0; i < adapter.getCount(); i++) {
+			MusicData data = adapter.getItem(i);
+			if (data.getDownloadId() == downloadId) {
+				data.setFileUri(uri);
+			}
+		}
 	}
 }
