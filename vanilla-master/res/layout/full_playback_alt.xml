@@ -21,11 +21,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    
 	<org.kreed.vanilla.CoverView
 		android:id="@+id/cover_view"
 		android:layout_height="350dp"
 		android:layout_gravity="top"
 		android:layout_width="fill_parent" />
+	<ScrollView 
+	    android:id="@+id/lyric_conteiner"
+		android:layout_height="350dp"
+		android:layout_width="fill_parent">
+		<TextView 
+			android:id="@+id/lyric"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/text_size"
+			android:padding="@dimen/padding_20px"
+			android:layout_width="fill_parent"
+			android:shadowColor="@android:color/black"
+			android:shadowRadius="1"
+			android:shadowDx="0"
+			android:shadowDy="0" />
+	</ScrollView>
+	
+	<ImageView 
+	    android:id="@+id/lyric_closer"
+	    android:src="@drawable/close"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_gravity="right"/>
+	
 	<TableLayout
 		android:id="@+id/info_table"
 		android:layout_width="fill_parent"

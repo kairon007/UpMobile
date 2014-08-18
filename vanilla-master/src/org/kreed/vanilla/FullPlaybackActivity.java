@@ -28,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
+import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -50,10 +52,15 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -127,6 +134,10 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private TextView mComposerView;
 	private String mFormat;
 	private TextView mFormatView;
+	private TextView mLyricView;
+	private ScrollView mLyricConteiner;
+	private ImageView mLyricCloser;
+	private boolean isLyricShow = true;
 	private boolean newIntent = false;
 	private boolean intentPending = false;
 
@@ -171,6 +182,17 @@ public class FullPlaybackActivity extends PlaybackActivity
 		coverView.setOnLongClickListener(this);
 		mCoverView = coverView;
 
+		//TODO
+		mLyricView = (TextView) findViewById(R.id.lyric);
+		mLyricConteiner = (ScrollView) findViewById(R.id.lyric_conteiner);
+		mLyricCloser = (ImageView) findViewById(R.id.lyric_closer);
+		mLyricCloser.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View paramView) {
+				mLyricConteiner.setVisibility(View.GONE);
+				mLyricCloser.setVisibility(View.GONE);
+			}
+		});
 		mControlsBottom = findViewById(R.id.controls_bottom);
 		View previousButton = findViewById(R.id.previous);
 		previousButton.setOnClickListener(this);
@@ -470,6 +492,21 @@ public class FullPlaybackActivity extends PlaybackActivity
 				mTitle.setText(song.title);
 				mAlbum.setText(song.album);
 				mArtist.setText(song.artist);
+				//TODO
+				if (mLyricView != null && isLyricShow) {
+					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
+					lyricsFetcher.fetchLyrics(song.title, song.artist);
+					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+						@Override
+						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+							if (foundLyrics) {
+								mLyricView.setText(lyrics.replace("<br />", ""));
+							} else {
+								mLyricView.setText(R.string.lyric_not_found);
+							}
+						}
+					});
+				}
 			}
 			updateQueuePosition();
 		}
@@ -799,9 +836,9 @@ public class FullPlaybackActivity extends PlaybackActivity
 			updateQueuePosition();
 			break;
 		default:
-			return super.handleMessage(message);
+			
+			return super.handleMessage(message);  
 		}
-
 		return true;
 	}
 

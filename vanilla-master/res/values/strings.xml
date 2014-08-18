@@ -27,4 +27,6 @@
 	
 	<string name="disclaimer">Please Read: This app uses SoundCloud.com for all of its search results. SoundCloud.com is a website where independent artists upload their original songs and remixes. This app only displays SoundCloud.com songs which have been made available for download by their creators. Enjoy this legal music app!</string>
 	
+	<string name="lyric_not_found">Lyric not found</string>
+	
 </resources>
