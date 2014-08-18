@@ -154,10 +154,8 @@ public class SearchTab {
 			if (!musicDir.exists()) {
 				musicDir.mkdirs();
 			}
-			String cookies = CookieManager.getInstance().getCookie(downloadUrl);
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl))
-					.addRequestHeader("cookie", cookies)
 					.addRequestHeader(
 							"User-Agent",
 							"2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
