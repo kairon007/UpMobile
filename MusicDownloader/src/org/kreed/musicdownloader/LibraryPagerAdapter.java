@@ -311,7 +311,7 @@ public class LibraryPagerAdapter
 								String strArtist = metadata.getArtist();
 								String strTitle = metadata.getSongTitle();
 								String strDuration = metadata.getComposer2();
-								Bitmap bitmap = getArtworkImage(2, metadata);
+								Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
 								Drawable cover = new BitmapDrawable(bitmap);
 								String strGenre;
 								if (metadata.containsKey("genre_id")) {

@@ -1,12 +1,22 @@
 package org.kreed.musicdownloader;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
+
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -82,7 +92,19 @@ public class DBHelper extends SQLiteOpenHelper {
 				data.setSongArtist(c.getString(c.getColumnIndex("artist")));
 				data.setSongTitle(c.getString(c.getColumnIndex("title")));
 				data.setSongDuration(c.getString(c.getColumnIndex("duration")));
-				data.setFileUri(c.getString(c.getColumnIndex("fileuri")));
+				String fileUriString = c.getString(c.getColumnIndex("fileuri"));
+				data.setFileUri(fileUriString);
+				try {
+					MusicMetadataSet src_set = new MyID3()
+							.read(new File(fileUriString));
+					if (src_set != null) {
+						MusicMetadata metadata = src_set.merged;
+						Bitmap bitmap = getArtworkImage(2, metadata);
+						data.setSongBitmap(bitmap);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				all.add(data);
 			}
 			return all;
@@ -92,6 +114,36 @@ public class DBHelper extends SQLiteOpenHelper {
 		protected void onPostExecute(ArrayList<MusicData> data) {
 			listener.success(data);
 		}
+	}
+	
+	public static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
+		if (maxWidth == 0) {
+			return null;
+		}
+		Vector<ImageData> pictureList = metadata.getPictureList();
+		if ((pictureList == null) || (pictureList.size() == 0)) {
+			return null;
+		}
+		ImageData imageData = (ImageData) pictureList.get(0);
+		if (imageData == null) {
+			return null;
+		}
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		int scale = 1;
+		if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
+			// Find the correct scale value. It should be the power of 2.
+			int scaleWidth = opts.outWidth;
+			while (scaleWidth > maxWidth) {
+				scaleWidth /= 2;
+				scale *= 2;
+			}
+		}
+		opts = new BitmapFactory.Options();
+		opts.inSampleSize = scale;
+		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData,
+				0, imageData.imageData.length, opts);
+		return bitmap;
 	}
 	
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {

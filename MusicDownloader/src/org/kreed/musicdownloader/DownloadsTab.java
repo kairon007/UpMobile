@@ -115,11 +115,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		@Override
 		public void success(ArrayList<MusicData> result) {
 			progress.setVisibility(View.GONE);
-			for (MusicData data : result) {
-				mData = data;
-				adapter.insert(data, 0);
-			}
-			adapter.notifyDataSetChanged();
+			insertData(result);
 		}
 	}
 
