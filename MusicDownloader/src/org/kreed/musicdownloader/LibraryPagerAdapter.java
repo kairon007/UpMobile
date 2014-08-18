@@ -300,36 +300,41 @@ public class LibraryPagerAdapter
 			case MediaUtils.TYPE_LIBRARY:
 				ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
 				File contentFile = new File( Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
-				File[] files = contentFile.listFiles();
-				for (int i = 0; i < files.length; i++) {
-					try {
-						MusicMetadataSet src_set = new MyID3().read(files[i]);
-						if (src_set != null) {
-							MusicMetadata metadata = src_set.merged;
-							String strArtist = metadata.getArtist();
-							String strTitle = metadata.getSongTitle();
-							String strDuration = metadata.getComposer2();
-							Bitmap bitmap = getArtworkImage(2, metadata);
-							Drawable cover = new BitmapDrawable(bitmap);
-							String strGenre;
-							if (metadata.containsKey("genre_id")) {
-								int genre_id = (Integer) metadata
-										.get("genre_id");
-								strGenre = ID3v1Genre.get(genre_id);
+				if (contentFile.length() > 0) {
+					File[] files = contentFile.listFiles();
+					for (int i = 0; i < files.length; i++) {
+						try {
+							MusicMetadataSet src_set = new MyID3()
+									.read(files[i]);
+							if (src_set != null) {
+								MusicMetadata metadata = src_set.merged;
+								String strArtist = metadata.getArtist();
+								String strTitle = metadata.getSongTitle();
+								String strDuration = metadata.getComposer2();
+								Bitmap bitmap = getArtworkImage(2, metadata);
+								Drawable cover = new BitmapDrawable(bitmap);
+								String strGenre;
+								if (metadata.containsKey("genre_id")) {
+									int genre_id = (Integer) metadata
+											.get("genre_id");
+									strGenre = ID3v1Genre.get(genre_id);
+								} else {
+									strGenre = "unknown";
+								}
+								MusicData data = new MusicData(strArtist,
+										strTitle, strDuration, bitmap, strGenre);
+								arrayMusic.add(data);
 							} else {
-								strGenre = "unknown";
 							}
-							MusicData data = new MusicData(strArtist, strTitle, strDuration, bitmap, strGenre);
-							arrayMusic.add(data);
-						} else {
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
+					adapter = new LibraryPageAdapter(mActivity, 0, arrayMusic,
+							files, activity);
+					view = (ListView) inflater.inflate(R.layout.listview, null);
+					view.setAdapter(adapter);
 				}
-				adapter = new LibraryPageAdapter(mActivity, 0, arrayMusic, files, activity);
-				view = (ListView)inflater.inflate(R.layout.listview, null);
-				view.setAdapter(adapter);
 				break;
 			default:
 				break;
