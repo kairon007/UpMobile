@@ -74,6 +74,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -654,6 +655,7 @@ public class SearchTab {
 		private LinearLayout lyricsContainer;
 		private TextView lyricsTextView;
 		private LinearLayout containerPlayer;
+		private RelativeLayout rlCoverProgress;
 		private View view;
 		private int songId;
 		private LinearLayout downloadProgress;
@@ -713,6 +715,7 @@ public class SearchTab {
 			time = (TextView) view.findViewById(R.id.time);
 			coverImage = (ImageView) view.findViewById(R.id.cover);
 			coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
+			rlCoverProgress = (RelativeLayout) view.findViewById(R.id.rlCoverProgress);
 			textPath = (TextView) view.findViewById(R.id.text_path_download);
 			textPath.setText(getDownloadPath(view.getContext()));
 			viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
@@ -808,6 +811,7 @@ public class SearchTab {
 
 		public void setCover(Bitmap bmp) {
 			coverProgress.setVisibility(View.GONE);
+			rlCoverProgress.setVisibility(View.GONE);
 			if (null != bmp) {
 				coverImage.setImageBitmap(bmp);
 			}
@@ -815,6 +819,7 @@ public class SearchTab {
 
 		public void hideCoverProgress() {
 			coverProgress.setVisibility(View.GONE);
+			rlCoverProgress.setVisibility(View.GONE);
 		}
 
 		public View getView() {

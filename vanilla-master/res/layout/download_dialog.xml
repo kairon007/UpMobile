@@ -170,6 +170,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <RelativeLayout
+                        android:id="@+id/rlCoverProgress"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
                         android:layout_alignBottom="@+id/cover"
