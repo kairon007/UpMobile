@@ -258,10 +258,10 @@ public class SearchTab {
 							return;
 						}
 						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-						metadata.setSongTitle(songTitle);
+						metadata.setSongTitle(songTitle + '/' + duration);
 						metadata.setArtist(songArtist);
-						metadata.clearComposer2();
-						metadata.setComposer2(duration);//this is reading duration into metadata
+//						metadata.clearComposer2();
+//						metadata.setComposer2(duration);//this is reading duration into metadata
 						if (null != cover) {
 							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 							cover.compress(CompressFormat.JPEG, 85, out);

@@ -322,8 +322,15 @@ public class LibraryPagerAdapter
 							if (src_set != null) {
 								MusicMetadata metadata = src_set.merged;
 								String strArtist = metadata.getArtist();
-								String strTitle = metadata.getSongTitle();
-								String strDuration = metadata.getComposer2();
+								int index = metadata.getSongTitle().indexOf('/');
+								String strDuration = "";
+								String strTitle = "";
+								if (index != -1) {
+									strTitle = metadata.getSongTitle().substring(0, index);
+									strDuration = metadata.getSongTitle().substring(index + 1);
+								} else {
+									strTitle = metadata.getSongTitle();
+								}
 								Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
 								String strGenre;
 								if (metadata.containsKey("genre_id")) {
