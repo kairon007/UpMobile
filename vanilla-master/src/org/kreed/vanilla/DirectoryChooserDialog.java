@@ -36,6 +36,8 @@ public class DirectoryChooserDialog {
 	private List<String> m_subdirs = null;
 	private ChosenDirectoryListener m_chosenDirectoryListener = null;
 	private ArrayAdapter<String> m_listAdapter = null;
+	
+	private File parent;
 
 	// ////////////////////////////////////////////////////
 	// Callback interface for selected directory
@@ -85,7 +87,14 @@ public class DirectoryChooserDialog {
 
 		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
 			public void onClick(DialogInterface dialog, int item) {
-				m_dir += "/" + ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
+				if(((AlertDialog) dialog).getListView().getAdapter().getItem(item).toString().equals("[..]")) {
+					if (m_dir.equals(m_sdcardDirectory)) {
+						return;
+					}
+					m_dir = parent.getPath();
+				} else {
+					m_dir += "/" + ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
+				}
 				updateDirectory();
 			}
 		}
@@ -138,6 +147,8 @@ public class DirectoryChooserDialog {
 
 	private List<String> getDirectories(String dir) {
 		List<String> dirs = new ArrayList<String>();
+		File system = new File(Environment.getExternalStorageDirectory().getPath() + "/Android");
+		parent = new File(dir).getParentFile();
 
 		try {
 			File dirFile = new File(dir);
@@ -146,7 +157,7 @@ public class DirectoryChooserDialog {
 			}
 
 			for (File file : dirFile.listFiles()) {
-				if (file.isDirectory()) {
+				if (file.isDirectory() && !file.getPath().equals(system.getPath())) {
 					dirs.add(file.getName());
 				}
 			}
@@ -158,6 +169,10 @@ public class DirectoryChooserDialog {
 				return o1.compareTo(o2);
 			}
 		});
+		
+		if (null != parent) {
+			dirs.add(0, "[..]");
+		}
 
 		return dirs;
 	}
@@ -175,7 +190,6 @@ public class DirectoryChooserDialog {
 		m_titleView = new TextView(m_context);
 		m_titleView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		m_titleView.setTextAppearance(m_context, android.R.style.TextAppearance_Large);
-		m_titleView.setTextColor(m_context.getResources().getColor(android.R.color.white));
 		m_titleView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 		m_titleView.setText(title);
 
@@ -226,7 +240,6 @@ public class DirectoryChooserDialog {
 		m_subdirs.clear();
 		m_subdirs.addAll(getDirectories(m_dir));
 		m_titleView.setText(m_dir);
-
 		m_listAdapter.notifyDataSetChanged();
 	}
 
