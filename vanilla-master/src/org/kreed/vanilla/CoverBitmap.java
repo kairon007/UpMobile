@@ -338,8 +338,8 @@ public final class CoverBitmap {
 	public static Bitmap generateDefaultCover(int width, int height)
 	{
 		if (width < 0 && height < 0) {
-			width = 0;
-			height = 0;
+			width = 8;
+			height = 8;
 		}
 		int size = Math.min(width, height);
 		int halfSize = size / 2;
