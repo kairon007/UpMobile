@@ -26,6 +26,8 @@ import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListe
 import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask.Size;
+import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
+import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -110,7 +112,7 @@ public class SearchTab {
 		}
 		return instance;
 	}
-	
+
 	public static void refreshSearchEngines(Context context) { 
 		String[][] engineArray = Settings.GET_SEARCH_ENGINES(context);
 		engines = new ArrayList<Engine>(engineArray.length);
@@ -232,7 +234,7 @@ public class SearchTab {
 							c.close();
 							src = new File(path);
 							MusicMetadataSet src_set = new MyID3().read(src); // read
-																				// metadata
+							// metadata
 							if (src_set == null) {
 								return;
 							}
@@ -246,8 +248,8 @@ public class SearchTab {
 							}
 							File dst = new File(src.getParentFile(), src.getName() + "-1");
 							new MyID3().write(src, dst, src_set, metadata); // write
-																			// updated
-																			// metadata
+							// updated
+							// metadata
 							dst.renameTo(src);
 							this.cancel();
 						} catch (Exception e) {
@@ -302,7 +304,7 @@ public class SearchTab {
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
 			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
 			// .setNumber(String.valueOf(position+1), 0)
-					.setId(position).setIcon(R.drawable.fallback_cover);
+			.setId(position).setIcon(R.drawable.fallback_cover);
 			if (song instanceof SongWithCover) {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
@@ -440,7 +442,7 @@ public class SearchTab {
 	}
 
 	private void trySearch() {
-		
+
 		InputMethodManager imm = (InputMethodManager) searchField.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
 		searchString = searchField.getText().toString();
@@ -453,16 +455,16 @@ public class SearchTab {
 		} else {
 			search(searchString);
 		}
-		
-		
+
+
 		try {
 			if (Advertisement.isOnline(activity)) {
 				Advertisement.searchStart(activity);
 			}
 		} catch(Exception e) {
-			
+
 		}
-		
+
 	}
 
 	public void search(String songName) {
@@ -503,7 +505,7 @@ public class SearchTab {
 		final String artist = song.getArtist();
 
 		if (null == player) {
-			player = new Player(inflater.inflate(R.layout.download_dialog, null));
+			player = new Player(inflater.inflate(R.layout.download_dialog, null), title, artist);
 			if ("AppTheme.Black".equals(Util.getThemeName(activity))) {
 				player.setBlackTheme();
 			}
@@ -513,7 +515,7 @@ public class SearchTab {
 			getUrlTask = new AsyncTask<Void, Void, String>() {
 				@Override
 				protected void onPreExecute() {
-					player.getUrlDownloadComplite(false);
+					player.showProgressDialog(true);
 				}
 
 				@Override
@@ -525,7 +527,7 @@ public class SearchTab {
 				protected void onPostExecute(String downloadUrl) {
 					if (null != player) {
 						player.setDownloadUrl(downloadUrl);
-						player.getUrlDownloadComplite(true);
+						player.showProgressDialog(false);
 						player.execute();
 					}
 				}
@@ -575,17 +577,17 @@ public class SearchTab {
 					player = null;
 				}
 				getUrlTask.cancel(true);
-//				if (Settings.getIsAlbumCoversEnabled(activity))
-//					coverLoader.cancel(true);
+				//				if (Settings.getIsAlbumCoversEnabled(activity))
+				//					coverLoader.cancel(true);
 				activity.removeDialog(STREAM_DIALOG_ID);
-				
+
 			}
 		};
 		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);
-				
+
 				dialogDismisser.run();
 			}
 		};
@@ -648,12 +650,17 @@ public class SearchTab {
 		private TextView textPath;
 		private LinearLayout viewChooser;
 		private LinearLayout spinerPath;
+		private TextView buttonShowLyrics;
+		private LinearLayout lyricsContainer;
+		private TextView lyricsTextView;
+		private LinearLayout containerPlayer;
 		private View view;
 		private int songId;
 		private LinearLayout downloadProgress;
 		private LinearLayout playerLayout;
 		private Button download;
 		private Button cancel;
+		private Button lyricsCancel;
 
 		public void setOnButtonClicListener(View.OnClickListener downloadClickListener, View.OnClickListener cancelClickListener) {
 			if (download != null && downloadClickListener != null)
@@ -667,15 +674,25 @@ public class SearchTab {
 
 		}
 
-		public void getUrlDownloadComplite(boolean result) {
+		private void showProgressDialog(boolean needShow) {
 			if (downloadProgress != null && playerLayout != null)
-				if (result) {
-					downloadProgress.setVisibility(View.GONE);
-					playerLayout.setVisibility(View.VISIBLE);
-				} else {
+				if (needShow) {
 					downloadProgress.setVisibility(View.VISIBLE);
 					playerLayout.setVisibility(View.GONE);
+				} else {
+					downloadProgress.setVisibility(View.GONE);
+					playerLayout.setVisibility(View.VISIBLE);
 				}
+		}
+
+		private void showLyricsDialog(boolean needShow) {
+			if (needShow) {
+				lyricsContainer.setVisibility(View.VISIBLE);
+				containerPlayer.setVisibility(View.GONE);
+			} else {
+				lyricsContainer.setVisibility(View.GONE);
+				containerPlayer.setVisibility(View.VISIBLE);
+			}
 		}
 
 		public void setTitle(String title) {
@@ -684,7 +701,7 @@ public class SearchTab {
 				textView.setText(title);
 		}
 
-		public Player(final View view) {
+		public Player(final View view, final String title, final String artist) {
 			super();
 			this.view = view;
 			songId = -1;
@@ -700,20 +717,22 @@ public class SearchTab {
 			textPath.setText(getDownloadPath(view.getContext()));
 			viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
 			spinerPath = (LinearLayout) view.findViewById(R.id.spiner_path_download);
+			buttonShowLyrics = (TextView) view.findViewById(R.id.button_show_lyrics);
+			lyricsContainer = (LinearLayout) view.findViewById(R.id.lyrics_container);
+			lyricsTextView = (TextView) view.findViewById(R.id.lyrics);
+			containerPlayer = (LinearLayout) view.findViewById(R.id.container_player);
 			downloadProgress = (LinearLayout) view.findViewById(R.id.download_progress);
 			playerLayout = (LinearLayout) view.findViewById(R.id.player_layout);
 			download = (Button) view.findViewById(R.id.b_positiv);
 			cancel = (Button) view.findViewById(R.id.b_negativ);
-
+			lyricsCancel = (Button) view.findViewById(R.id.lyrics_cancel);
 			spinerPath.setOnClickListener(new View.OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					showHideChooser();
 				}
 			});
 			viewChooser.setOnClickListener(new View.OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(v.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
@@ -726,11 +745,40 @@ public class SearchTab {
 					directoryChooserDialog.chooseDirectory(SearchTab.getDownloadPath(view.getContext()));
 				}
 			});
-
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					playPause();
+				}
+			});
+			buttonShowLyrics.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showProgressDialog(true);
+					LyricsFetcher lyricsFetcher = new LyricsFetcher(buttonShowLyrics.getContext());
+					lyricsFetcher.fetchLyrics(title, artist);
+					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+						@Override
+						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+							showProgressDialog(false);
+							String textLyrics;
+							if (foundLyrics) {
+								textLyrics = lyrics.replace("<br />", "");
+							} else {
+								String songName = title + " - " + artist;
+								textLyrics = buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName);
+							}
+							showLyricsDialog(true);
+							lyricsTextView.setText(textLyrics);
+			
+						}
+					});
+				}
+			});
+			lyricsCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showLyricsDialog(false);
 				}
 			});
 		}
@@ -774,7 +822,7 @@ public class SearchTab {
 			}
 			return view;
 		}
-		
+
 		public void setBlackTheme(){
 			LinearLayout ll = (LinearLayout)view.findViewById(R.id.download_dialog);
 			ll.setBackgroundColor(Color.parseColor("#ff101010"));
