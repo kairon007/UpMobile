@@ -68,7 +68,12 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		arrayMusic.add(object);
 		File file = new File(object.getFilePathSD());
 		files.add(file);
-		notifyDataSetChanged();
+		activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	notifyDataSetChanged();
+            }
+        });
 	}
 	
 }
