@@ -656,5 +656,5 @@ public class Settings {
 	public static String LAST_BLACKLISTED_LOCATION_TIME_KEY = "LAST_BLACKLISTED_LOCATION_TIME_KEY"; 
 	public static String LAST_BLACKLISTED_IP_TIME_KEY = "LAST_BLACKLISTED_IP_TIME_KEY";
 	
-	
+	public static boolean ENABLE_LYRICS = false;
 }

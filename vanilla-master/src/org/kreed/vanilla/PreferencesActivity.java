@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Christopher Eby <kreed@kreed.org>
+* Copyright (C) 2012 Christopher Eby <kreed@kreed.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,18 +30,15 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.InflateException;
+import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.LayoutInflater.Factory;
 import android.webkit.WebView;
 import android.webkit.WebViewFragment;
 
@@ -70,6 +67,12 @@ public class PreferencesActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			addPreferencesFromResource(R.xml.preferences);
+			if (!Settings.ENABLE_LYRICS) {
+				CheckBoxPreference mCheckBoxPref = (CheckBoxPreference) findPreference(getString(R.string.lyric_preference));
+//				PreferenceCategory mCategory = (PreferenceCategory) findPreference("category_lyrics");
+				PreferenceScreen screen = getPreferenceScreen();
+				screen.removePreference(mCheckBoxPref);	
+			}
 		}
 	}
 
@@ -77,6 +80,13 @@ public class PreferencesActivity extends PreferenceActivity {
 	@Override
 	public void onBuildHeaders(List<Header> target) {
 		loadHeadersFromResource(R.xml.preference_headers, target);
+		if (!Settings.ENABLE_LYRICS) {
+			for (int i = 0; i < target.size(); i++) {
+				if (target.get(i).fragment != null && target.get(i).fragment.contains(LyricFragment.class.getSimpleName())){// equalsIgnoreCase(getPackageName()+"."+getClass().getSimpleName()+"$"+LyricFragment.class.getSimpleName())){
+					target.remove(i);
+				}
+			}
+		}
 	}
 
 	@Override

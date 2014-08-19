@@ -273,7 +273,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 			}
 		} catch (Exception e) { 
 			 
-		} 
+		}
 		lyricConfigurate();
 	}
 
@@ -407,7 +407,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private void lyricConfigurate() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		isLyricShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-		mLyricConteiner.setVisibility(isLyricShow?View.VISIBLE:View.GONE);
+		mLyricConteiner.setVisibility(isLyricShow && Settings.ENABLE_LYRICS?View.VISIBLE:View.GONE);
 	}
 
 	@Override
@@ -497,7 +497,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 				mAlbum.setText(song.album);
 				mArtist.setText(song.artist);
 				
-				if (mLyricView != null && isLyricShow) {
+				if (mLyricView != null && isLyricShow && Settings.ENABLE_LYRICS) {
 					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
 					lyricsFetcher.fetchLyrics(song.title, song.artist);
 					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {

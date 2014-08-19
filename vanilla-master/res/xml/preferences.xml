@@ -57,10 +57,9 @@ THE SOFTWARE.
 			android:targetPackage="org.kreed.vanilla"
 			android:targetClass="org.kreed.vanilla.PreferencesActivity$MiscActivity" />
 	</PreferenceScreen>
-	<CheckBoxPreference
-		android:key="@string/lyric_preference"
-		android:title="@string/lyric_checkbox"
-		android:summary="@string/lyric_summary" />
+    <CheckBoxPreference
+	android:key="@string/lyric_preference"
+	android:title="@string/lyric_checkbox" />
 	<PreferenceScreen
 		android:title="@string/about">
 		<intent
