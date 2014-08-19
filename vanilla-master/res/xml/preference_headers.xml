@@ -40,6 +40,9 @@ THE SOFTWARE.
 		android:fragment="org.kreed.vanilla.PreferencesActivity$MiscFragment"
 		android:title="@string/misc_features" />
 	<header
+		android:fragment="org.kreed.vanilla.PreferencesActivity$LyricFragment"
+		android:title="@string/lyric_checkbox" />
+	<header
 		android:fragment="org.kreed.vanilla.PreferencesActivity$AboutFragment"
 		android:title="@string/about" />
 	<header

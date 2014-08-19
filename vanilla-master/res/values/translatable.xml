@@ -207,6 +207,9 @@ THE SOFTWARE.
 	<string name="tabs">Tab Order</string>
 	<string name="customize_tab_order">Adjust the order and visibility of library tabs</string>
 	<string name="restore_default">Restore default</string>
+	
+	<string name="lyric_checkbox">Lyrics</string>
+	<string name="lyric_summary">Show lyrics</string>
 
 	<!-- The following are for the list preferences -->
 	<string name="last_used_action">Last used action</string>
@@ -275,4 +278,5 @@ THE SOFTWARE.
 	<string name="show_top">Top</string>
 	<string name="show_bottom">Bottom</string>
 
+	<string name="lyric_not_found">Lyric not found</string>
 </resources>

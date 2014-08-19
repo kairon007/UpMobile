@@ -336,6 +336,31 @@ public class PreferencesActivity extends PreferenceActivity {
 			return view;
 		}
 	}
+	
+	@TargetApi(11)
+	public static class LyricFragment extends PreferenceFragment {
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.preference_lyric);
+		}
+
+		@Override
+		public View onCreateView(final LayoutInflater inflater,
+				ViewGroup container, Bundle savedInstanceState) {
+			Context context = inflater.getContext();
+			View view = (View) super.onCreateView(inflater, container,
+					savedInstanceState);
+			if ("AppTheme.White".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorWhite);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
+				view.setBackgroundColor(colorBlack);
+			} else {
+				view.setBackgroundColor(colorDark);
+			}
+			return view;
+		}
+	}
 
 	public static class AboutActivity extends Activity {
 		@Override
