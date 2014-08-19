@@ -38,6 +38,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -407,7 +409,11 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private void lyricConfigurate() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		isLyricShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-		mLyricConteiner.setVisibility(isLyricShow && Settings.ENABLE_LYRICS?View.VISIBLE:View.GONE);
+		if (isNetworkConnected()) mLyricConteiner.setVisibility(isLyricShow && Settings.ENABLE_LYRICS?View.VISIBLE:View.GONE);
+		else {
+			Toast.makeText(this, getString(R.string.lyric_no_internet), Toast.LENGTH_LONG).show();
+			isLyricShow = false;
+		}
 	}
 
 	@Override
@@ -496,8 +502,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 				mTitle.setText(song.title);
 				mAlbum.setText(song.album);
 				mArtist.setText(song.artist);
-				
-				if (mLyricView != null && isLyricShow && Settings.ENABLE_LYRICS) {
+				if (isLyricShow && mLyricView != null && Settings.ENABLE_LYRICS) {
 					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
 					lyricsFetcher.fetchLyrics(song.title, song.artist);
 					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
@@ -908,5 +913,12 @@ public class FullPlaybackActivity extends PlaybackActivity
 		}
 
 		return true;
+	}
+	
+	private boolean isNetworkConnected() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		if (ni == null) return false;
+		else return true;
 	}
 }

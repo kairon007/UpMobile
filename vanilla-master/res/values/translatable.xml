@@ -279,4 +279,5 @@ THE SOFTWARE.
 	<string name="show_bottom">Bottom</string>
 
 	<string name="lyric_not_found">No Lyrics Found for %1$s</string>
+	<string name="lyric_no_internet">No internet connection.\nLyrics can not be load.</string>
 </resources>
