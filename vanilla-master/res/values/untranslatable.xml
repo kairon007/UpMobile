@@ -110,4 +110,5 @@ THE SOFTWARE.
         <item>@string/show_top</item>
        <item>@string/show_bottom</item>
     </string-array>
+    <string name="lyric_preference">org.kreed.vanilla.pref.lyric</string>
 </resources>

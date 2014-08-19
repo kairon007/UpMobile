@@ -43,6 +43,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.text.format.DateUtils;
@@ -52,15 +53,13 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -135,9 +134,9 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private String mFormat;
 	private TextView mFormatView;
 	private TextView mLyricView;
-	private ScrollView mLyricConteiner;
-	private ImageView mLyricCloser;
-	private boolean isLyricShow = true;
+	private FrameLayout mLyricConteiner;
+	private ImageView mLyricHider;
+	private boolean isLyricShow = false;
 	private boolean newIntent = false;
 	private boolean intentPending = false;
 
@@ -182,15 +181,13 @@ public class FullPlaybackActivity extends PlaybackActivity
 		coverView.setOnLongClickListener(this);
 		mCoverView = coverView;
 
-		//TODO
 		mLyricView = (TextView) findViewById(R.id.lyric);
-		mLyricConteiner = (ScrollView) findViewById(R.id.lyric_conteiner);
-		mLyricCloser = (ImageView) findViewById(R.id.lyric_closer);
-		mLyricCloser.setOnClickListener(new OnClickListener() {
+		mLyricConteiner = (FrameLayout) findViewById(R.id.lyric_conteiner);
+		mLyricHider = (ImageView) findViewById(R.id.lyric_closer);
+		mLyricHider.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View paramView) {
 				mLyricConteiner.setVisibility(View.GONE);
-				mLyricCloser.setVisibility(View.GONE);
 			}
 		});
 		mControlsBottom = findViewById(R.id.controls_bottom);
@@ -277,6 +274,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 		} catch (Exception e) { 
 			 
 		} 
+		lyricConfigurate();
 	}
 
 
@@ -405,6 +403,12 @@ public class FullPlaybackActivity extends PlaybackActivity
 		updateElapsedTime();
 		ActivityCompat.invalidateOptionsMenu(this);
 	}
+	
+	private void lyricConfigurate() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		isLyricShow = settings.getBoolean(getString(R.string.lyric_preference), false);
+		mLyricConteiner.setVisibility(isLyricShow?View.VISIBLE:View.GONE);
+	}
 
 	@Override
 	public void onPause()
@@ -492,7 +496,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 				mTitle.setText(song.title);
 				mAlbum.setText(song.album);
 				mArtist.setText(song.artist);
-				//TODO
+				
 				if (mLyricView != null && isLyricShow) {
 					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
 					lyricsFetcher.fetchLyrics(song.title, song.artist);
