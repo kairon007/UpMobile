@@ -278,5 +278,5 @@ THE SOFTWARE.
 	<string name="show_top">Top</string>
 	<string name="show_bottom">Bottom</string>
 
-	<string name="lyric_not_found">Lyric not found</string>
+	<string name="lyric_not_found">No Lyrics Found for %1$s</string>
 </resources>

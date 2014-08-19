@@ -765,7 +765,7 @@ public class SearchTab {
 							if (foundLyrics) {
 								textLyrics = lyrics.replace("<br />", "");
 							} else {
-								String songName = title + " - " + artist;
+								String songName = artist + " - " + title;
 								textLyrics = buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName);
 							}
 							showLyricsDialog(true);

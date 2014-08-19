@@ -481,7 +481,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 	}
 
 	@Override
-	protected void onSongChange(Song song)
+	protected void onSongChange(final Song song)
 	{
 		super.onSongChange(song);
 
@@ -506,7 +506,8 @@ public class FullPlaybackActivity extends PlaybackActivity
 							if (foundLyrics) {
 								mLyricView.setText(lyrics.replace("<br />", ""));
 							} else {
-								mLyricView.setText(R.string.lyric_not_found);
+								String songName = song.artist + " - " + song.title;
+								mLyricView.setText(getResources().getString(R.string.lyric_not_found, songName));
 							}
 						}
 					});
