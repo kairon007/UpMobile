@@ -241,8 +241,7 @@ public class SearchTab {
 					} else if (columnIndex != -1) {
 						columnIndex = c.getColumnIndex("local_uri");
 					}
-					if (columnIndex == -1)
-						return;
+					if (columnIndex == -1) return;
 					String path = c.getString(columnIndex);
 					c.close();
 					if(!c.isClosed()) {
@@ -269,7 +268,7 @@ public class SearchTab {
 								new ImageData(out.toByteArray(), "image/jpeg", "cover", 3)
 							);
 						}
-						File dst = new File(src.getParentFile(), src.getName());
+						File dst = new File(src.getParentFile(), src.getName()+ "-1");
 						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
 						dst.renameTo(src);
 						notifyMediascanner();
@@ -299,7 +298,7 @@ public class SearchTab {
 			 private void notifyMediascanner() {
 				 File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
 				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
-						 Uri.parse("file://"+ file));
+						 Uri.parse("file:/"+ file));
 				 context.sendBroadcast(intent);
 				 MediaScannerConnection.scanFile(context,
 						 new String[] { file.getAbsolutePath() }, null,
@@ -365,7 +364,6 @@ public class SearchTab {
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			Log.d("-----getDuration", song.getDuration()+" ");
 			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist()).setTime(formatTime(song.getDuration()))
 			// .setNumber(String.valueOf(position+1), 0)
 					.setId(position).setIcon(R.drawable.fallback_cover);
