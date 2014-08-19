@@ -92,7 +92,7 @@ public class SearchTab {
 	private TextView searchField;
 	private LayoutInflater inflater;
 	private View view;
-	private LibraryActivity activity;
+	private static LibraryActivity activity;
 	private Player player;
 	private CoverLoaderTask coverLoader;
 	private AsyncTask<Void, Void, String> getUrlTask;
@@ -754,6 +754,10 @@ public class SearchTab {
 			buttonShowLyrics.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if (isOffline(activity)) {
+						Toast.makeText(activity, activity.getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
+						return;
+					}
 					showProgressDialog(true);
 					LyricsFetcher lyricsFetcher = new LyricsFetcher(buttonShowLyrics.getContext());
 					lyricsFetcher.fetchLyrics(title, artist);

@@ -114,7 +114,8 @@
                     android:shadowDx="0"
                     android:shadowDy="0"
                     android:shadowRadius="1"
-                    android:textSize="@dimen/text_size" />
+                    android:textSize="@dimen/text_size"
+       				android:gravity="center" />
             </ScrollView>
 
             <Button
