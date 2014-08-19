@@ -311,7 +311,11 @@ public class LibraryPagerAdapter
 			case MediaUtils.TYPE_LIBRARY:
 				ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
 				File contentFile = new File( Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
-				if (contentFile.length() > 0) {
+				long contentFileLength = contentFile.length();
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+					contentFileLength = 1;
+				}
+				if (contentFileLength > 0) {
 					File[] files = contentFile.listFiles();
 					ArrayList<File> list = new ArrayList<File>();
 					for (int i = 0; i < files.length; i++) {
