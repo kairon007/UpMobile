@@ -291,7 +291,7 @@ public class LibraryActivity
 		} else {
 			setTheme(R.style.Library);
 		}
-		setContentView(R.layout.library_content);
+		setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
 		
 //		Advertisement.startAppInit(this);
 //		Advertisement.mobileCoreInit(this);
