@@ -191,4 +191,11 @@
 	<string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
 	<string name="download_location">Download location</string>
 	<string name="download">Download</string>
+	
+	<string name="rate_popup_title">Please rate our app 5 stars</string>
+	<string name="rate_popup_message">If you like our app, please help us by rating it 5 stars.\nYour support helps us make this app better. Thank you!</string>
+	<string name="rate_popup_positive_button">Rate Now</string>
+	<string name="rate_popup_negative_button">No</string>
+	<string name="rate_popup_toast">Thank you!</string>
+	<string name="disclaimer">Please Read: This app uses SoundCloud.com for all of its search results. SoundCloud.com is a website where independent artists upload their original songs and remixes. This app only displays SoundCloud.com songs which have been made available for download by their creators. Enjoy this legal music app!</string>
 </resources>
