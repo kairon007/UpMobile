@@ -15,20 +15,19 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class Player {
-
+	
 	private Context context;
 	private MediaPlayer mediaPlayer;
 	private File songFile;
-	private View view;
+	private FrameLayout view;
 	private ProgressBar songProgress;
 	private ImageButton buttonPlay;
 	private TextView songTitle;
@@ -65,7 +64,6 @@ public class Player {
 	}
 	
 	public void play() {
-		view = LayoutInflater.from(context).inflate(R.layout.player, null);
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		PlaySong task = new PlaySong();
@@ -102,8 +100,8 @@ public class Player {
 		}
 	}
 
-	public View getView() {
-		view = LayoutInflater.from(context).inflate(R.layout.player, null);
+	public void getView(FrameLayout footer) {
+		view = footer;
 		buttonPlay = (ImageButton) view.findViewById(R.id.player_play_song);
 		songTitle = (TextView) view.findViewById(R.id.player_title_song);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
@@ -115,10 +113,10 @@ public class Player {
 			songProgress = null;
 			songProgress = (ProgressBar) view.findViewById(R.id.player_progress_song);
 			songProgress.setIndeterminate(false);
-			songProgress.setProgress(0);
 			songProgress.setMax(duration);
 			songProgress.post(progressAction);
 		}
+		songProgress.setProgress(0);
 		songTitle.setText(strTitle);
 		songTitle.startAnimation(AnimationUtils.loadAnimation(context, R.anim.move_text));
 		songDuration.setText(strDuration);
@@ -144,11 +142,6 @@ public class Player {
 			}
 
 		});
-		ViewGroup parent = (ViewGroup) view.getParent();
-		if (null != parent) {
-			parent.removeView(view);
-		}
-		return view;
 	}
 
 	private void onPrepared() {
@@ -217,7 +210,7 @@ public class Player {
 					inputStream.close();
 				} else if (from.equals(PrefKeys.CALL_FROM_SERCH)) {
 					HashMap<String, String> headers = new HashMap<String,String>();
-					headers.put("User-Agent", "2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+					headers.put("User-Agent", "2.0.0.6 ï¿½ Debian GNU/Linux 4.0 ï¿½ Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
 				}
 				mediaPlayer.prepare();
@@ -261,7 +254,7 @@ public class Player {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			if (result) {
+			if (result && mediaPlayer!=null) {
 				mediaPlayer.start();
 				if(path.equals(PrefKeys.CALL_FROM_SERCH)){
 					int duration = mediaPlayer.getDuration();
