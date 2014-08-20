@@ -178,6 +178,7 @@ public class LibraryPagerAdapter
 	private LibraryPagerAdapter parentAdapter = this;
 	private LibraryPageAdapter adapterLibrary = null;
 	private ArrayList<MusicData> array = new ArrayList<MusicData>();
+	private boolean isAdded;
 	/**
 	 * Create the LibraryPager.
 	 *
@@ -268,11 +269,9 @@ public class LibraryPagerAdapter
 	}
 	
 	public void changeArrayMusicData(MusicData musicData) {
-		if (null == adapterLibrary) {
-			array.add(musicData);
-			array.clear();
-		} else {
+		if (null != adapterLibrary) {
 			adapterLibrary.add(musicData);
+			isAdded = true;
 		}
 		
 	}
@@ -322,17 +321,20 @@ public class LibraryPagerAdapter
 							MusicMetadataSet src_set = new MyID3().read(files[i]);
 							if (src_set != null) {
 								MusicMetadata metadata = src_set.merged;
-								if (metadata.isEmpty()) return null;
+								if (metadata.isEmpty()) continue;
 								String strArtist = metadata.getArtist();
-								int index = metadata.getSongTitle().indexOf('/');
 								String strDuration = "";
 								String strTitle = "";
-								String strPath = files[i].getAbsolutePath();
-								if (index != -1) {
-									strTitle = metadata.getSongTitle().substring(0, index);
-									strDuration = metadata.getSongTitle().substring(index + 1);
-								} else {
-									strTitle = metadata.getSongTitle();
+								String strPath = "";
+								if (metadata.getSongTitle() != null) {
+									int index = metadata.getSongTitle().indexOf('/');
+									strPath = files[i].getAbsolutePath();
+									if (index != -1) {
+										strTitle = metadata.getSongTitle().substring(0, index);
+										strDuration = metadata.getSongTitle().substring(index + 1);
+									} else {
+										strTitle = metadata.getSongTitle();
+									}
 								}
 								Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
 								String strGenre;
@@ -343,11 +345,10 @@ public class LibraryPagerAdapter
 								} else {
 									strGenre = "unknown";
 								}
-								MusicData data = new MusicData(strArtist, strTitle, strDuration, bitmap, strGenre);
-								data.setFileUri(strPath);
-								arrayMusic.add(data);
-								if (!array.isEmpty()) {
-									arrayMusic.addAll(array);
+								if (!isAdded) {
+									MusicData data = new MusicData(strArtist, strTitle, strDuration, bitmap, strGenre);
+									data.setFileUri(strPath);
+									arrayMusic.add(data);
 								}
 							} else {
 							}

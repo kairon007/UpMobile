@@ -130,9 +130,8 @@ public class SearchTab {
 		private final Context context;
 		private final String songTitle;
 		private String songArtist;
-		private String songPathSD;
 		private Bitmap cover;
-		private boolean waitingForCover = true;
+		//private boolean waitingForCover = true;
 		private String downloadUrl;
 		private String duration;
 		private DownloadsTab downloadsTab;
@@ -271,17 +270,16 @@ public class SearchTab {
 						File dst = new File(src.getParentFile(), src.getName()+ "-1");
 						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
 						dst.renameTo(src);
-						notifyMediascanner();
 						progress = 100;
 						updateProgress();
 						MusicData song = new MusicData();
 						song.setSongArtist(songArtist);
 						song.setSongTitle(songTitle);
 						song.setSongDuration(duration);
-						song.setFileUri(dst.getPath());
+						song.setFileUri(src.getPath());
+						notifyMediascanner(song);
 						DBHelper.getInstance(context).insert(song);
 						downloadsTab.setFileUri(dst.getPath(), downloadId);
-						songPathSD = dst.getAbsolutePath();
 						this.cancel();
 					} catch (IOException e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);
@@ -295,22 +293,16 @@ public class SearchTab {
 				return s.substring(index - 1);
 			}
 
-			 private void notifyMediascanner() {
+			 private void notifyMediascanner(final MusicData song) {
 				 File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX);
-				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
-						 Uri.parse("file:/"+ file));
-				 context.sendBroadcast(intent);
+//				 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
+//						 Uri.parse("file:/"+ file));
+//				 context.sendBroadcast(intent);
 				 MediaScannerConnection.scanFile(context,
 						 new String[] { file.getAbsolutePath() }, null,
 						 new MediaScannerConnection.OnScanCompletedListener() {
 			 
 			 public void onScanCompleted(String path, Uri uri) {
-				 MusicData song = new MusicData();
-					song.setSongArtist(songArtist);
-					song.setSongTitle(songTitle);
-					song.setSongDuration(duration);
-					song.setSongBitmap(cover);
-					song.setFileUri(songPathSD);
 				 parentAdapter.changeArrayMusicData(song);
 			 } 
 			 });
@@ -329,7 +321,7 @@ public class SearchTab {
 		@Override
 		public void onBitmapReady(Bitmap bmp) {
 			this.cover = bmp;
-			this.waitingForCover = false;
+			//this.waitingForCover = false;
 		}
 	}
 
