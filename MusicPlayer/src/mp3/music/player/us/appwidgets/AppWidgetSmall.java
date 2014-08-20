@@ -73,11 +73,13 @@ public class AppWidgetSmall extends AppWidgetProvider {
 
     private void pushUpdate(final Context context, final int[] appWidgetIds, final RemoteViews views) {
         final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        if (appWidgetIds != null) {
-            appWidgetManager.updateAppWidget(appWidgetIds, views);
-        } else {
-            appWidgetManager.updateAppWidget(new ComponentName(context, getClass()), views);
-        }
+        try {
+	        if (appWidgetIds != null) {
+	            appWidgetManager.updateAppWidget(appWidgetIds, views);
+	        } else {
+	            appWidgetManager.updateAppWidget(new ComponentName(context, getClass()), views);
+	        }
+        } catch(Exception e) {}
     }
 
     /**
