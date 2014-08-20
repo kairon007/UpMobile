@@ -66,7 +66,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 	@Override
 	public void add(MusicData object) {
 		arrayMusic.add(object);
-		File file = new File(object.getFilePathSD());
+		File file = new File(object.getFileUri());
 		files.add(file);
 		activity.runOnUiThread(new Runnable() {
             @Override

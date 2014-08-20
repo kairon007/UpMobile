@@ -325,6 +325,7 @@ public class LibraryPagerAdapter
 									.read(files[i]);
 							if (src_set != null) {
 								MusicMetadata metadata = src_set.merged;
+								if (metadata.isEmpty()) return null;
 								String strArtist = metadata.getArtist();
 								int index = metadata.getSongTitle().indexOf('/');
 								String strDuration = "";
@@ -351,7 +352,7 @@ public class LibraryPagerAdapter
 								if (!array.isEmpty()) {
 									arrayMusic.addAll(array);
 									for (MusicData mData : array) {
-											File file = new File(mData.getFilePathSD());
+											File file = new File(mData.getFileUri());
 											list.add(file);
 									}
 									array.clear();
