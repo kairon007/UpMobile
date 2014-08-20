@@ -598,7 +598,7 @@ public final class MusicUtils {
             }
             mService.open(list, forceShuffle ? -1 : position);
             mService.play();
-        } catch (final RemoteException ignored) {
+        } catch (Exception ignored) {
         }
     }
 
