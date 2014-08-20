@@ -202,6 +202,7 @@ public class Player {
 		@SuppressLint("NewApi")
 		@Override
 		protected Boolean doInBackground(String... params) {
+			Log.d("log", "path = "+path);
 			try {
 				if(from.equals(PrefKeys.CALL_FROM_LIBRARY)){
 					songFile = new File(path);
@@ -221,7 +222,6 @@ public class Player {
 					return true;
 				}
 			} catch (Exception e) {
-				Log.d("log", "e = "+e);
 				if (from == PrefKeys.CALL_FROM_LIBRARY && !songFile.exists()){
 					String str = songFile.getAbsolutePath();
 					path = str.split("-1")[0];
@@ -237,13 +237,7 @@ public class Player {
 						} else {
 							return true;
 						}
-					} catch (FileNotFoundException e1) {
-						e1.printStackTrace();
-					} catch (IllegalArgumentException e1) {
-						e1.printStackTrace();
-					} catch (IllegalStateException e1) {
-						e1.printStackTrace();
-					} catch (IOException e1) {
+					}  catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				}

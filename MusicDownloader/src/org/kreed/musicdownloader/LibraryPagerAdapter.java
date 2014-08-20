@@ -317,12 +317,9 @@ public class LibraryPagerAdapter
 				}
 				if (contentFileLength > 0) {
 					File[] files = contentFile.listFiles();
-					ArrayList<File> list = new ArrayList<File>();
 					for (int i = 0; i < files.length; i++) {
-						list.add(files[i]);
 						try {
-							MusicMetadataSet src_set = new MyID3()
-									.read(files[i]);
+							MusicMetadataSet src_set = new MyID3().read(files[i]);
 							if (src_set != null) {
 								MusicMetadata metadata = src_set.merged;
 								if (metadata.isEmpty()) return null;
@@ -330,6 +327,7 @@ public class LibraryPagerAdapter
 								int index = metadata.getSongTitle().indexOf('/');
 								String strDuration = "";
 								String strTitle = "";
+								String strPath = files[i].getAbsolutePath();
 								if (index != -1) {
 									strTitle = metadata.getSongTitle().substring(0, index);
 									strDuration = metadata.getSongTitle().substring(index + 1);
@@ -345,17 +343,11 @@ public class LibraryPagerAdapter
 								} else {
 									strGenre = "unknown";
 								}
-								MusicData data = new MusicData(strArtist,
-										strTitle, strDuration, bitmap, strGenre);
+								MusicData data = new MusicData(strArtist, strTitle, strDuration, bitmap, strGenre);
+								data.setFileUri(strPath);
 								arrayMusic.add(data);
-
 								if (!array.isEmpty()) {
 									arrayMusic.addAll(array);
-									for (MusicData mData : array) {
-											File file = new File(mData.getFileUri());
-											list.add(file);
-									}
-									array.clear();
 								}
 							} else {
 							}
@@ -363,8 +355,7 @@ public class LibraryPagerAdapter
 							e.printStackTrace();
 						}
 					}
-					adapterLibrary = new LibraryPageAdapter(mActivity, 0, arrayMusic,
-							list, activity);
+					adapterLibrary = new LibraryPageAdapter(mActivity, 0, arrayMusic, activity);
 					view = (ListView) inflater.inflate(R.layout.listview, null);
 					view.setAdapter(adapterLibrary);
 				} else {

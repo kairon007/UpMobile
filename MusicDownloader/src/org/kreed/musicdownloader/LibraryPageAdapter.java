@@ -1,6 +1,5 @@
 package org.kreed.musicdownloader;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -16,64 +15,57 @@ import android.widget.TextView;
 
 public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 
-	private ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
-	private ArrayList<File> files = new ArrayList<File>();
 	private MainActivity activity;
 	private LayoutInflater inflater;
-	private ImageButton buttonPlay;
-	private ImageView coverImage;
-	private TextView songTitle;
-	private TextView songGenre;
-	private TextView songDuration;
 
-	public LibraryPageAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, ArrayList<File> files, MainActivity activity) {
+	public LibraryPageAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
 		super(context, resource, arrayMusic);
 		this.activity  = activity;
-		this.arrayMusic = arrayMusic;
-		this.files = files;
 		inflater = LayoutInflater.from(context);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View itemView = inflater.inflate(R.layout.library_item, null);
-		buttonPlay = (ImageButton) itemView.findViewById(R.id.play_song);
-		songTitle = (TextView) itemView.findViewById(R.id.title_song);
-		songGenre = (TextView) itemView.findViewById(R.id.genre_song);
-		coverImage = (ImageView) itemView.findViewById(R.id.cover_song);
-		songDuration = (TextView) itemView.findViewById(R.id.duration_song);
-		MusicData music = arrayMusic.get(position);
-		final String strArtist =music.getSongArtist();
+		ViewHolderItem holder;
+		if(convertView == null){
+			convertView = inflater.inflate(R.layout.library_item, null);
+			holder = new ViewHolderItem();
+			holder.hButtonPlay = (ImageButton) convertView.findViewById(R.id.play_song);
+			holder.hSongTitle = (TextView) convertView.findViewById(R.id.title_song);
+			holder.hSongGenre = (TextView) convertView.findViewById(R.id.genre_song);
+			holder.hCoverImage = (ImageView) convertView.findViewById(R.id.cover_song);
+			holder.hSongDuration = (TextView) convertView.findViewById(R.id.duration_song);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolderItem) convertView.getTag();
+		}
+		MusicData music = getItem(position);
+		final String strArtist = music.getSongArtist();
 		final String strTitle = music.getSongTitle();
 		final String strDuration = music.getSongDuration();
+		final String strPath = music.getFileUri();
 		Bitmap bitmap = music.getSongBitmap();
-		songTitle.setText(strArtist + " - " + strTitle);
-		songDuration.setText(strDuration);
-		coverImage.setImageBitmap(bitmap);
-		songGenre.setText(music.getSongGenre());
-		final File file = files.get(position);
-		buttonPlay.setOnClickListener(new OnClickListener() {
+		holder.hSongTitle.setText(strArtist + " - " + strTitle);
+		holder.hSongDuration.setText(strDuration);
+		holder.hCoverImage.setImageBitmap(bitmap);
+		holder.hSongGenre.setText(music.getSongGenre());
+		holder.hButtonPlay.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				activity.play(file.getAbsolutePath(), strArtist, strTitle, strDuration, PrefKeys.CALL_FROM_LIBRARY);
+				activity.play(strPath, strArtist, strTitle, strDuration, PrefKeys.CALL_FROM_LIBRARY);
 			}
 			
 		});
-		return itemView; 
+		return convertView; 
 	}
 	
-	@Override
-	public void add(MusicData object) {
-		arrayMusic.add(object);
-		File file = new File(object.getFileUri());
-		files.add(file);
-		activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            	notifyDataSetChanged();
-            }
-        });
+	private class ViewHolderItem {
+		ImageButton hButtonPlay;
+		ImageView hCoverImage;
+		TextView hSongTitle;
+		TextView hSongGenre;
+		TextView hSongDuration;
 	}
 	
 }
