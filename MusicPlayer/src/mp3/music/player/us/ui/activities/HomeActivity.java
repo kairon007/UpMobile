@@ -13,6 +13,9 @@ package mp3.music.player.us.ui.activities;
 
 import java.util.Random;
 
+import mp3.music.player.us.Advertisement;
+import mp3.music.player.us.Settings;
+
 import mp3.music.player.us.R;
 import mp3.music.player.us.ui.OnlineSearchView;
 import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
@@ -30,6 +33,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -52,7 +56,14 @@ public class HomeActivity extends BaseActivity {
 			.replace(R.id.activity_base_content, new MusicBrowserPhoneFragment()).commit();
 		}
 
-
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.mopubShowBanner(this); 
+			}
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.toString());
+		} 
 		start(true);
 	}
 
@@ -191,7 +202,7 @@ public class HomeActivity extends BaseActivity {
 	 */
 	@Override
 	public int setContentView() {
-		return R.layout.activity_base;
+		return mp3.music.player.us.Settings.SHOW_BANNER_ON_TOP ? R.layout.activity_base_top : R.layout.activity_base;
 	}
 
 	@Override

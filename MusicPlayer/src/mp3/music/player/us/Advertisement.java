@@ -1484,22 +1484,22 @@ public class Advertisement {
     
 	
 
-//	public static void mopubShowBanner(Activity activity) {
-//		try {
-//			
-//			MoPubView moPubView = (MoPubView) activity.findViewById(R.id.banner_view);
-//			
-//			
-//			
-//			moPubView.setAdUnitId(Settings.MOPUB_ID_BANNER); // Enter your Ad Unit ID from
-//													// www.mopub.com
-//			moPubView.loadAd();
-//			
-//			 
-//		} catch(Exception e) {
-//			
-//		}
-//	}
+	public static void mopubShowBanner(Activity activity) {
+		try {
+			
+			MoPubView moPubView = (MoPubView) activity.findViewById(R.id.banner_view);
+			
+			
+			
+			moPubView.setAdUnitId(Settings.MOPUB_ID_BANNER); // Enter your Ad Unit ID from
+													// www.mopub.com
+			moPubView.loadAd();
+			
+			 
+		} catch(Exception e) {
+			Log.e("Advertisement", e.toString());
+		}
+	}
 
     
 	public static void mopubShowInterstitial(final Activity activity, String adPositionKey) {
