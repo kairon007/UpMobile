@@ -2,6 +2,8 @@ package org.kreed.musicdownloader;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
@@ -208,18 +210,15 @@ public class Player {
 		@Override
 		protected Boolean doInBackground(String... params) {
 			try {
-				switch (from) {
-				case PrefKeys.CALL_FROM_LIBRARY:
+				if(from.equals(PrefKeys.CALL_FROM_LIBRARY)){
 					songFile = new File(path);
 					FileInputStream inputStream = new FileInputStream(songFile);
 					mediaPlayer.setDataSource(inputStream.getFD());
 					inputStream.close();
-					break;
-				case PrefKeys.CALL_FROM_SERCH:
+				} else if (from.equals(PrefKeys.CALL_FROM_LIBRARY)) {
 					HashMap<String, String> headers = new HashMap<String,String>();
 					headers.put("User-Agent", "2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
-					break;
 				}
 				mediaPlayer.prepare();
 				prepared = true;
@@ -229,6 +228,31 @@ public class Player {
 					return true;
 				}
 			} catch (Exception e) {
+				if (from == PrefKeys.CALL_FROM_LIBRARY && !songFile.exists()){
+					String str = songFile.getAbsolutePath();
+					path = str.split("-1")[0];
+					songFile = new File(path);
+					try {
+						FileInputStream inputStream = new FileInputStream(songFile);
+						mediaPlayer.setDataSource(inputStream.getFD());
+						inputStream.close();
+						mediaPlayer.prepare();
+						prepared = true;
+						if (isCancelled()) {
+							releasePlayer();
+						} else {
+							return true;
+						}
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IllegalArgumentException e1) {
+						e1.printStackTrace();
+					} catch (IllegalStateException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
 			}
 			return false;
 		}
@@ -256,7 +280,6 @@ public class Player {
 					public void onCompletion(MediaPlayer mp) {
 						releasePlayer();
 						onFinished();
-						Log.d("log", "onCompletion");
 						buttonPlay.setImageResource(R.drawable.play);
 						playFinish = true;
 					}
