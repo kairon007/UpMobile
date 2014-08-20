@@ -50,7 +50,7 @@ public class Player {
 				songProgress.setProgress(current);
 				songDuration.setText(formatTime(current) + " / " + formatTime(total));
 				songProgress.postDelayed(this, 1000);
-			} catch (NullPointerException e) {
+			} catch (Exception e) {
 			}
 		}
 		
@@ -215,7 +215,7 @@ public class Player {
 					FileInputStream inputStream = new FileInputStream(songFile);
 					mediaPlayer.setDataSource(inputStream.getFD());
 					inputStream.close();
-				} else if (from.equals(PrefKeys.CALL_FROM_LIBRARY)) {
+				} else if (from.equals(PrefKeys.CALL_FROM_SERCH)) {
 					HashMap<String, String> headers = new HashMap<String,String>();
 					headers.put("User-Agent", "2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
@@ -228,6 +228,7 @@ public class Player {
 					return true;
 				}
 			} catch (Exception e) {
+				Log.d("log", "e = "+e);
 				if (from == PrefKeys.CALL_FROM_LIBRARY && !songFile.exists()){
 					String str = songFile.getAbsolutePath();
 					path = str.split("-1")[0];
