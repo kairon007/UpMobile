@@ -579,9 +579,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 		menu.add(0, MENU_ENQUEUE_ARTIST, 0, R.string.enqueue_current_artist).setIcon(R.drawable.ic_menu_add);
 		menu.add(0, MENU_ENQUEUE_GENRE, 0, R.string.enqueue_current_genre).setIcon(R.drawable.ic_menu_add);
 		menu.add(0, MENU_TOGGLE_CONTROLS, 0, R.string.toggle_controls);
-		SharedPreferences settings = PlaybackService.getSettings(this);
-		boolean equalizer = settings.getBoolean(PrefKeys.EQUALIZER, false);
-		if (equalizer) {
+		if (Settings.ENABLE_EQUALIZER) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.playback_menu, menu);
 		}

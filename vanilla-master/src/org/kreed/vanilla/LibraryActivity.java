@@ -531,9 +531,7 @@ public class LibraryActivity
 	}
 
 	private void updateEqualizerVisibility() {
-		SharedPreferences settings = PlaybackService.getSettings(this);
-		boolean equalizer = settings.getBoolean(PrefKeys.EQUALIZER, false);
-		mEqualizerButton.setVisibility(equalizer ? View.VISIBLE : View.GONE);
+		mEqualizerButton.setVisibility(Settings.ENABLE_EQUALIZER ? View.VISIBLE : View.GONE);
 	}
 	
 	/**

@@ -14,15 +14,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.os.Environment;
 import android.text.Editable;
-import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +29,7 @@ public class DirectoryChooserDialog {
 	private boolean m_isNewFolderEnabled = true;
 	private String m_sdcardDirectory = "";
 	private Context m_context;
-	private TextView m_titleView;
+	private TextView titleText;
 
 	private String m_dir = "";
 	private List<String> m_subdirs = null;
@@ -87,14 +86,7 @@ public class DirectoryChooserDialog {
 
 		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
 			public void onClick(DialogInterface dialog, int item) {
-				if(((AlertDialog) dialog).getListView().getAdapter().getItem(item).toString().equals("[..]")) {
-					if (m_dir.equals(m_sdcardDirectory)) {
-						return;
-					}
-					m_dir = parent.getPath();
-				} else {
-					m_dir += "/" + ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
-				}
+				m_dir += "/" + ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
 				updateDirectory();
 			}
 		}
@@ -169,33 +161,18 @@ public class DirectoryChooserDialog {
 				return o1.compareTo(o2);
 			}
 		});
-		
-		if (null != parent) {
-			dirs.add(0, "[..]");
-		}
 
 		return dirs;
 	}
 
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(m_context);
-
-		// Create custom view for AlertDialog title containing
-		// current directory TextView and possible 'New folder' button.
-		// Current directory TextView allows long directory path to be wrapped
-		// to multiple lines.
-		LinearLayout titleLayout = new LinearLayout(m_context);
-		titleLayout.setOrientation(LinearLayout.VERTICAL);
-
-		m_titleView = new TextView(m_context);
-		m_titleView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-		m_titleView.setTextAppearance(m_context, android.R.style.TextAppearance_Large);
-		m_titleView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		m_titleView.setText(title);
-
-		Button newDirButton = new Button(m_context);
-		newDirButton.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-		newDirButton.setText("New folder");
+		LayoutInflater inflater = (LayoutInflater)m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View titleView = inflater.inflate(R.layout.directory_chooser_dialog, null);
+		titleText = (TextView) titleView.findViewById(R.id.directoryText);
+		titleText.setText(title);
+		ImageButton parentDirectory = (ImageButton) titleView.findViewById(R.id.imageButton1);
+		ImageButton newDirButton = (ImageButton) titleView.findViewById(R.id.imageButton2);
 		newDirButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -218,15 +195,23 @@ public class DirectoryChooserDialog {
 				}).setNegativeButton("Cancel", null).show();
 			}
 		});
+		
+		parentDirectory.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (m_dir.equals(m_sdcardDirectory)) {
+					return;
+				}
+				m_dir = parent.getPath();
+				updateDirectory();
+			}
+		});
 
 		if (!m_isNewFolderEnabled) {
 			newDirButton.setVisibility(View.GONE);
 		}
-
-		titleLayout.addView(m_titleView);
-		titleLayout.addView(newDirButton);
-
-		dialogBuilder.setCustomTitle(titleLayout);
+		
+		dialogBuilder.setCustomTitle(titleView);
 
 		m_listAdapter = createListAdapter(listItems);
 
@@ -239,7 +224,7 @@ public class DirectoryChooserDialog {
 	private void updateDirectory() {
 		m_subdirs.clear();
 		m_subdirs.addAll(getDirectories(m_dir));
-		m_titleView.setText(m_dir);
+		titleText.setText(m_dir);
 		m_listAdapter.notifyDataSetChanged();
 	}
 
