@@ -310,7 +310,7 @@ public class SearchTab {
 					song.setSongTitle(songTitle);
 					song.setSongDuration(duration);
 					song.setSongBitmap(cover);
-					song.setFilePathSD(songPathSD);
+					song.setFileUri(songPathSD);
 				 parentAdapter.changeArrayMusicData(song);
 			 } 
 			 });

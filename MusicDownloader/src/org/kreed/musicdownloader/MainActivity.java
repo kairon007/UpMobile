@@ -329,9 +329,7 @@ public class MainActivity extends Activity implements TextWatcher{
 			pager.setCurrentItem(page);
 		}
 		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().getPlayer() != null) {
-			footer.removeAllViews();
-			View view = MusicDownloaderApp.getService().getPlayer().getView();
-			footer.addView(view);
+			MusicDownloaderApp.getService().getPlayer().getView(footer);
 			if (MusicDownloaderApp.getService().conteinsPlayer()) {
 				player = MusicDownloaderApp.getService().getPlayer();
 			}
@@ -584,11 +582,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		}
 		player = new Player(this, path, strArtist, strTitle, strDuration, from);
 		MusicDownloaderApp.getService().setPlayer(player);
-		View view = player.getView();
+		player.getView(footer);
 		player.play();
-		footer.removeAllViews();
-		footer.invalidate();
-		footer.addView(view);
 	}
-	
 }

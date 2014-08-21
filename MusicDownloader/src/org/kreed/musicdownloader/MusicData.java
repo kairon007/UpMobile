@@ -11,7 +11,6 @@ public class MusicData {
 	private String songGenre;
 	private long downloadId;
 	private String fileUri;
-	private String filePathSD;
 
 	public MusicData() {
 	}
@@ -103,13 +102,4 @@ public class MusicData {
 	public void setFileUri(String fileUri) {
 		this.fileUri = fileUri;
 	}
-
-	public synchronized String getFilePathSD() {
-		return filePathSD;
-	}
-
-	public synchronized void setFilePathSD(String filePathSD) {
-		this.filePathSD = filePathSD;
-	}
-	
 }
