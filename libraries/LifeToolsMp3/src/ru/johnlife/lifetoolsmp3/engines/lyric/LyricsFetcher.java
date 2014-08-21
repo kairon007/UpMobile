@@ -69,8 +69,8 @@ public class LyricsFetcher {
 	public void fetchLyrics(String songName, String artistName) {
 		Locale locale = Locale.getDefault();
 		String urlString = "http://www.azlyrics.com/lyrics/"
-		+ artistName.toLowerCase(locale)
-		+ "/" + songName.toLowerCase(locale) + ".html";
+		+ artistName.toLowerCase(locale).replaceAll(" ", "")
+		+ "/" + songName.toLowerCase(locale).replaceAll(" ", "") + ".html";
 		new FetchLyrics().execute(urlString);
 	}
 	

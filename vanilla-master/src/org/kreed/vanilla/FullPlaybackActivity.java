@@ -48,6 +48,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -135,10 +136,10 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private TextView mComposerView;
 	private String mFormat;
 	private TextView mFormatView;
-	private TextView mLyricView;
-	private FrameLayout mLyricConteiner;
-	private ImageView mLyricHider;
-	private boolean isLyricShow = false;
+	private TextView mLyricsView;
+	private FrameLayout mLyricsConteiner;
+	private ImageView mLyricsHider;
+	private boolean isLyricsShow = false;
 	private boolean newIntent = false;
 	private boolean intentPending = false;
 
@@ -183,13 +184,13 @@ public class FullPlaybackActivity extends PlaybackActivity
 		coverView.setOnLongClickListener(this);
 		mCoverView = coverView;
 
-		mLyricView = (TextView) findViewById(R.id.lyric);
-		mLyricConteiner = (FrameLayout) findViewById(R.id.lyric_conteiner);
-		mLyricHider = (ImageView) findViewById(R.id.lyric_closer);
-		mLyricHider.setOnClickListener(new OnClickListener() {
+		mLyricsView = (TextView) findViewById(R.id.lyric);
+		mLyricsConteiner = (FrameLayout) findViewById(R.id.lyric_conteiner);
+		mLyricsHider = (ImageView) findViewById(R.id.lyric_closer);
+		mLyricsHider.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View paramView) {
-				mLyricConteiner.setVisibility(View.GONE);
+				mLyricsConteiner.setVisibility(View.GONE);
 			}
 		});
 		mControlsBottom = findViewById(R.id.controls_bottom);
@@ -408,11 +409,11 @@ public class FullPlaybackActivity extends PlaybackActivity
 	
 	private void lyricConfigurate() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		isLyricShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-		if (isNetworkConnected()) mLyricConteiner.setVisibility(isLyricShow && Settings.ENABLE_LYRICS?View.VISIBLE:View.GONE);
+		isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
+		if (isNetworkConnected()) mLyricsConteiner.setVisibility(isLyricsShow && Settings.ENABLE_LYRICS?View.VISIBLE:View.GONE);
 		else {
 			Toast.makeText(this, getString(R.string.lyric_no_internet), Toast.LENGTH_LONG).show();
-			isLyricShow = false;
+			isLyricsShow = false;
 		}
 	}
 
@@ -502,17 +503,19 @@ public class FullPlaybackActivity extends PlaybackActivity
 				mTitle.setText(song.title);
 				mAlbum.setText(song.album);
 				mArtist.setText(song.artist);
-				if (isLyricShow && mLyricView != null && Settings.ENABLE_LYRICS) {
+				if (isLyricsShow && mLyricsView != null && Settings.ENABLE_LYRICS) {
 					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
-					lyricsFetcher.fetchLyrics(song.title, song.artist);
+//					lyricsFetcher.fetchLyrics(song.title, song.artist); // led zeppelin stairway to heaven
+					lyricsFetcher.fetchLyrics("stairway to heaven", "led zeppelin");
+					Log.d("ffuu", "find lyric for " + song.artist + " " + song.title);
 					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
 						@Override
 						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
 							if (foundLyrics) {
-								mLyricView.setText(lyrics.replace("<br />", ""));
+								mLyricsView.setText(Html.fromHtml(lyrics));
 							} else {
 								String songName = song.artist + " - " + song.title;
-								mLyricView.setText(getResources().getString(R.string.lyric_not_found, songName));
+								mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
 							}
 						}
 					});

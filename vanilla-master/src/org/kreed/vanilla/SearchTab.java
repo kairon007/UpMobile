@@ -56,6 +56,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -768,16 +769,13 @@ public class SearchTab {
 						@Override
 						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
 							showProgressDialog(false);
-							String textLyrics;
+							showLyricsDialog(true);
 							if (foundLyrics) {
-								textLyrics = lyrics.replace("<br />", "");
+								lyricsTextView.setText(Html.fromHtml(lyrics));
 							} else {
 								String songName = artist + " - " + title;
-								textLyrics = buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName);
+								lyricsTextView.setText(buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName));
 							}
-							showLyricsDialog(true);
-							lyricsTextView.setText(textLyrics);
-			
 						}
 					});
 				}
