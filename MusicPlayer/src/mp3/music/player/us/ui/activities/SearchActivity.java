@@ -15,10 +15,13 @@ import static mp3.music.player.us.utils.MusicUtils.mService;
 
 import android.app.SearchManager;
 import android.app.SearchableInfo;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -29,6 +32,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.view.View;
@@ -39,10 +43,14 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -56,6 +64,9 @@ import mp3.music.player.us.cache.ImageFetcher;
 import mp3.music.player.us.format.PrefixHighlighter;
 import mp3.music.player.us.recycler.RecycleHolder;
 import mp3.music.player.us.ui.MusicHolder;
+import mp3.music.player.us.ui.OnlineSearchView;
+import mp3.music.player.us.ui.fragments.OnlineSearchFragment;
+import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
 import mp3.music.player.us.utils.ApolloUtils;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.MusicUtils.ServiceToken;
@@ -95,7 +106,7 @@ public class SearchActivity extends SherlockFragmentActivity implements LoaderCa
      * List view adapter
      */
     private SearchAdapter mAdapter;
-
+    private PagerAdapter pagerAdapter;
     // Used the filter the user's music
     private SearchView mSearchView;
 
@@ -136,7 +147,6 @@ public class SearchActivity extends SherlockFragmentActivity implements LoaderCa
 
         // Set the layout
         setContentView(R.layout.grid_base);
-
         // Give the background a little UI
         final FrameLayout background = (FrameLayout)findViewById(R.id.grid_base_container);
         background.setBackgroundDrawable(getResources().getDrawable(R.drawable.pager_background));
@@ -272,6 +282,23 @@ public class SearchActivity extends SherlockFragmentActivity implements LoaderCa
      */
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
+        final Button searchButton = (Button)findViewById(R.id.search_online);
+        String nameButton = getResources().getString(R.string.search_online) + " " + mFilterString;
+        searchButton.setText(nameButton);
+        searchButton.setVisibility(View.VISIBLE);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Bundle bundle = new Bundle();
+				bundle.putString("key", mFilterString);
+				Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
+				intent.putExtra("search", mFilterString);
+			    startActivity(intent);
+				
+			}
+		});
         if (data == null || data.isClosed() || data.getCount() <= 0) {
             // Set the empty text
             final TextView empty = (TextView)findViewById(R.id.empty);

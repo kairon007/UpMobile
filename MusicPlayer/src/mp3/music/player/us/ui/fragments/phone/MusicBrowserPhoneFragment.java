@@ -11,10 +11,12 @@
 
 package mp3.music.player.us.ui.fragments.phone;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -31,8 +33,11 @@ import com.actionbarsherlock.view.MenuItem;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.PagerAdapter;
 import mp3.music.player.us.adapters.PagerAdapter.MusicFragments;
+import mp3.music.player.us.ui.OnlineSearchView;
+import mp3.music.player.us.ui.activities.HomeActivity;
 import mp3.music.player.us.ui.fragments.AlbumFragment;
 import mp3.music.player.us.ui.fragments.ArtistFragment;
+import mp3.music.player.us.ui.fragments.OnlineSearchFragment;
 import mp3.music.player.us.ui.fragments.SongFragment;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.NavUtils;
@@ -73,6 +78,9 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
     private ThemeUtils mResources;
 
     private PreferenceUtils mPreferences;
+    
+    private OnlineSearchView onlineSearchView;
+    
 
     /**
      * Empty constructor as per the {@link Fragment} documentation
@@ -102,26 +110,25 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         // Get the preferences
         mPreferences = PreferenceUtils.getInstace(getSherlockActivity());
         IntentFilter filter = new IntentFilter(ACTION_UPDATE);
-        getSherlockActivity().registerReceiver(br, filter);	
+        getSherlockActivity().registerReceiver(br, filter);
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
+    @SuppressLint("NewApi")
+	@Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
             final Bundle savedInstanceState) {
         // The View for the fragment's UI
         final ViewGroup rootView = (ViewGroup)inflater.inflate(
                 R.layout.fragment_music_browser_phone, container, false);
-
         // Initialize the adapter
         mPagerAdapter = new PagerAdapter(getSherlockActivity());
         final MusicFragments[] mFragments = MusicFragments.values();
         for (final MusicFragments mFragment : mFragments) {
             mPagerAdapter.add(mFragment.getFragmentClass(), null);
         }
-
         // Initialize the ViewPager
         mViewPager = (ViewPager)rootView.findViewById(R.id.fragment_home_phone_pager);
         // Attch the adapter
@@ -129,8 +136,14 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         // Offscreen pager loading limit
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
         // Start on the last page the user was on
-        mViewPager.setCurrentItem(mPreferences.getStartPage());
-
+        Bundle args = getArguments();
+        String str = args.getString("key" , null);
+        if(str != null && !str.isEmpty())
+        {	
+        	mViewPager.setCurrentItem(7);
+        }else {
+        	mViewPager.setCurrentItem(mPreferences.getStartPage());
+        }
         // Initialze the TPI
         final TitlePageIndicator pageIndicator = (TitlePageIndicator)rootView
                 .findViewById(R.id.fragment_home_phone_pager_titles);
