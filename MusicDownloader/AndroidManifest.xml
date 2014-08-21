@@ -174,16 +174,8 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="PlaybackService" >
-            <intent-filter>
-                <action android:name="org.kreed.vanilla.action.PLAY" />
-                <action android:name="org.kreed.vanilla.action.PAUSE" />
-                <action android:name="org.kreed.vanilla.action.TOGGLE_PLAYBACK" />
-                <action android:name="org.kreed.vanilla.action.NEXT_SONG" />
-                <action android:name="org.kreed.vanilla.action.PREVIOUS_SONG" />
-            </intent-filter>
-        </service>
-
+        <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
+        
         <activity android:name="PreferencesActivity$AudioActivity" />
         <activity android:name="PreferencesActivity$PlaybackActivity" />
         <activity android:name="PreferencesActivity$LibraryActivity" />
