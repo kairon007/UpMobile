@@ -149,6 +149,8 @@ public class NotificationHelper {
             // FIXME Every so often an ISE is throw reading
             // "can't parcel recycled Bitmap". Figure out and understand why
             // this is happening, then prevent it.
+        } catch (Exception e) {
+        	e.printStackTrace();
         }
     }
 
