@@ -135,6 +135,7 @@
         <!-- Profile phone Activity -->
         <activity
             android:name=".ui.activities.ProfileActivity"
+            android:theme="@style/Apollo.Theme.Light"
             android:excludeFromRecents="true" />
         <!-- Shortcut launcher Activity -->
         <activity
