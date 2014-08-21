@@ -443,7 +443,6 @@ public final class PlaybackService extends Service
 		registerReceiver(mReceiver, filter);
 
 		//TODO
-		//registerReceiver(br, new IntentFilter(BROADCAST_ACTION_UPDATE));	
 		getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, mObserver);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -1522,13 +1521,6 @@ public final class PlaybackService extends Service
 			onMediaChange();
 		}
 	};
-	
-//	private BroadcastReceiver br = new BroadcastReceiver() {
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//			mObserver.onChange(true);
-//		}
-//	};
 
 	/**
 	 * Return the PlaybackService instance, creating one if needed.

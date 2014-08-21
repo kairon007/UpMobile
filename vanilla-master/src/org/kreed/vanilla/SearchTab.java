@@ -50,6 +50,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -232,11 +233,19 @@ public class SearchTab {
 							Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 							if (c == null || !c.moveToFirst())
 								return;
-							int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+							int columnIndex = 0;
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+							} else if (columnIndex != -1) {
+								columnIndex = c.getColumnIndex("local_uri");
+							}
 							if (columnIndex == -1)
 								return;
 							String path = c.getString(columnIndex);
 							c.close();
+							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+								path = cutPath(path);
+							}
 							src = new File(path);
 							MusicMetadataSet src_set = new MyID3().read(src); // read
 							// metadata
@@ -256,25 +265,35 @@ public class SearchTab {
 							// updated
 							// metadata
 							dst.renameTo(src);
+							
+							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+								notifyMediascanner();
+							}
 							this.cancel();
 						} catch (Exception e) {
 							Log.e(getClass().getSimpleName(), "error writing ID3", e);
 						}
 					}
-					// private void notifyMediascanner() {
-					// Uri uri = Uri.fromFile(src.getParentFile());
-					// Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED,
-					// uri);
-					// context.sendBroadcast(intent);
-					// MediaScannerConnection.scanFile(context,
-					// new String[] { dst.getAbsolutePath() }, null,
-					// new MediaScannerConnection.OnScanCompletedListener() {
-					// public void onScanCompleted(String path, Uri uri) {
-					// Log.i("TAG", "Finished scanning " + path);
-					// }
-					// });
-					// }
-				};
+					private String cutPath(String s) {
+						int index = s.indexOf('m');
+						return s.substring(index - 1);
+					}
+				
+					private void notifyMediascanner() {
+						File directoryPath = Environment.getExternalStorageDirectory();
+						Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
+						Uri.parse("file://"+ directoryPath));
+						context.sendBroadcast(intent);
+						MediaScannerConnection.scanFile(context,
+						new String[] { directoryPath.getAbsolutePath() }, null,
+						new MediaScannerConnection.OnScanCompletedListener() {
+											 
+						public void onScanCompleted(String path, Uri uri) {
+							Log.i("TAG", "Finished scanning " + path);
+						} 
+						});					 
+					}
+					};
 				new Timer().schedule(progresUpdateTask, 1000, 1000);
 			}
 		}
@@ -530,14 +549,20 @@ public class SearchTab {
 
 				@Override
 				protected void onPostExecute(String downloadUrl) {
-					if (null != player) {
-						player.setDownloadUrl(downloadUrl);
-						player.showProgressDialog(false);
-						player.execute();
-					}
+					loadSong(downloadUrl);
 				}
 			};
-			getUrlTask.execute(NO_PARAMS);
+			try {
+				RemoteSong remSong = (RemoteSong) song;
+				String url = remSong.getParentUrl();
+				if (url != null) {
+					loadSong(url);
+				} else {
+					getUrlTask.execute(NO_PARAMS);
+				}
+			} catch (ClassCastException ex) {
+				Log.e(getClass().getSimpleName(), ex.getMessage());
+			}
 			if (Settings.getIsAlbumCoversEnabled(activity)) {
 				if (song instanceof SongWithCover) {
 					String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
@@ -550,17 +575,23 @@ public class SearchTab {
 					public void onBitmapReady(Bitmap bmp) {
 						if (bmp == null) {
 							coverLoader.cancel(true);
-							coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
-							coverLoader.addListener(new OnBitmapReadyListener() {
-
-								@Override
-								public void onBitmapReady(Bitmap bmp) {
-									if (null != player) {
-										player.setCover(bmp);
+							if (Settings.ENABLE_MUSICBRAINZ_ALBUM_COVERS) {
+								coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
+								coverLoader.addListener(new OnBitmapReadyListener() {
+	
+									@Override
+									public void onBitmapReady(Bitmap bmp) {
+										if (null != player) {
+											player.setCover(bmp);
+										}
 									}
+								});
+								coverLoader.execute(NO_PARAMS);
+							} else {
+								if (null != player) {
+									player.setCover(bmp);
 								}
-							});
-							coverLoader.execute(NO_PARAMS);
+							}
 						} else {
 							if (null != player) {
 								player.setCover(bmp);
@@ -614,6 +645,14 @@ public class SearchTab {
 			}
 		});
 		return alertDialog;
+	}
+	
+	private void loadSong(String downloadUrl) {
+		if (player != null) {
+			player.setDownloadUrl(downloadUrl);
+			player.showProgressDialog(false);
+			player.execute();
+		}
 	}
 
 	private void showDownloadsList() {
