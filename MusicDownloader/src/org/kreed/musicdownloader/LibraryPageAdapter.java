@@ -2,8 +2,11 @@ package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
 
+import com.google.gson.annotations.Since;
+
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,9 +48,11 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		final String strDuration = music.getSongDuration();
 		final String strPath = music.getFileUri();
 		Bitmap bitmap = music.getSongBitmap();
+		if(null != bitmap){
+			holder.hCoverImage.setImageBitmap(bitmap);
+		}
 		holder.hSongTitle.setText(strArtist + " - " + strTitle);
 		holder.hSongDuration.setText(strDuration);
-		holder.hCoverImage.setImageBitmap(bitmap);
 		holder.hSongGenre.setText(music.getSongGenre());
 		holder.hButtonPlay.setOnClickListener(new OnClickListener() {
 			

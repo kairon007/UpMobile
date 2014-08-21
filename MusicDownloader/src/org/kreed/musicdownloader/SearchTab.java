@@ -276,10 +276,10 @@ public class SearchTab {
 						song.setSongArtist(songArtist);
 						song.setSongTitle(songTitle);
 						song.setSongDuration(duration);
-						song.setFileUri(src.getPath());
+						song.setFileUri(src.getAbsolutePath());
 						notifyMediascanner(song);
 						DBHelper.getInstance(context).insert(song);
-						downloadsTab.setFileUri(dst.getPath(), downloadId);
+						downloadsTab.setFileUri(dst.getAbsolutePath(), downloadId);
 						this.cancel();
 					} catch (IOException e) {
 						Log.e(getClass().getSimpleName(), "error writing ID3", e);

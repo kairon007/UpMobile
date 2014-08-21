@@ -223,7 +223,7 @@ public class Player {
 				}
 			} catch (Exception e) {
 				if (from == PrefKeys.CALL_FROM_LIBRARY && !songFile.exists()){
-					String str = songFile.getAbsolutePath();
+					String str = songFile.getPath();
 					path = str.split("-1")[0];
 					songFile = new File(path);
 					try {
