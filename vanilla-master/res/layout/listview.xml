@@ -27,5 +27,6 @@ THE SOFTWARE.
     android:divider="@color/divider_color"
     android:dividerHeight="1dip"
     android:listSelector="@drawable/selectable_item_bg"
+    android:drawSelectorOnTop="true"
     android:scrollbarStyle="outsideInset" />
 

@@ -25,5 +25,7 @@ THE SOFTWARE.
 	android:id="@+id/list"
 	android:fastScrollEnabled="true"
 	android:divider="@null"
+	android:listSelector="@drawable/selectable_item_bg"
+    android:drawSelectorOnTop="true"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent" />
