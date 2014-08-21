@@ -505,9 +505,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 				mArtist.setText(song.artist);
 				if (isLyricsShow && mLyricsView != null && Settings.ENABLE_LYRICS) {
 					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
-//					lyricsFetcher.fetchLyrics(song.title, song.artist); // led zeppelin stairway to heaven
-					lyricsFetcher.fetchLyrics("stairway to heaven", "led zeppelin");
-					Log.d("ffuu", "find lyric for " + song.artist + " " + song.title);
+					lyricsFetcher.fetchLyrics(song.title, song.artist);
 					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
 						@Override
 						public void onLyricsFetched(boolean foundLyrics, String lyrics) {

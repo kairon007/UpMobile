@@ -97,6 +97,9 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 				e.printStackTrace();
 			}
 		}
+		if (list.get(2).contains("default_album") || list.get(3).contains("default_album") ) {
+			return null;
+		}
 		return list.get(3);
 	}
 
@@ -106,7 +109,7 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 			HttpClient httpclient = new DefaultHttpClient();
 			String urlImage = GetUrlImage();
 			if (urlImage == null) {
-				return null;
+				return null; 
 			}
 			HttpGet httpget = new HttpGet(urlImage);
 			HttpResponse response = httpclient.execute(httpget);
