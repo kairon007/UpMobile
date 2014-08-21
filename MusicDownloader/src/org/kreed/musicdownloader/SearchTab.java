@@ -258,14 +258,10 @@ public class SearchTab {
 						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 						metadata.setSongTitle(songTitle + '/' + duration);
 						metadata.setArtist(songArtist);
-//						metadata.clearComposer2();
-//						metadata.setComposer2(duration);//this is reading duration into metadata
 						if (null != cover) {
 							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 							cover.compress(CompressFormat.JPEG, 85, out);
-							metadata.addPicture(
-								new ImageData(out.toByteArray(), "image/jpeg", "cover", 3)
-							);
+							metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 						}
 						File dst = new File(src.getParentFile(), src.getName()+ "-1");
 						new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
@@ -276,7 +272,7 @@ public class SearchTab {
 						song.setSongArtist(songArtist);
 						song.setSongTitle(songTitle);
 						song.setSongDuration(duration);
-						song.setFileUri(src.getAbsolutePath());
+						song.setFileUri(dst.getAbsolutePath());
 						notifyMediascanner(song);
 						DBHelper.getInstance(context).insert(song);
 						downloadsTab.setFileUri(dst.getAbsolutePath(), downloadId);

@@ -65,6 +65,21 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		return convertView; 
 	}
 	
+	@Override
+	public void add(MusicData musicData) {
+		super.add(musicData);
+		int size = getCount();
+		if (size < 10) {
+			activity.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					notifyDataSetChanged();
+				}
+			});
+		}
+		
+	}
+	
 	private class ViewHolderItem {
 		ImageButton hButtonPlay;
 		ImageView hCoverImage;
