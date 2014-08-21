@@ -2,6 +2,7 @@ package org.kreed.vanilla;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -61,7 +62,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -651,7 +654,7 @@ public class SearchTab {
 		private ProgressBar coverProgress;
 		private TextView textPath;
 		private LinearLayout viewChooser;
-		private LinearLayout spinerPath;
+		private TextView spinerPath;
 		private TextView buttonShowLyrics;
 		private LinearLayout lyricsContainer;
 		private TextView lyricsTextView;
@@ -720,8 +723,36 @@ public class SearchTab {
 			textPath = (TextView) view.findViewById(R.id.text_path_download);
 			textPath.setText(getDownloadPath(view.getContext()));
 			viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
-			spinerPath = (LinearLayout) view.findViewById(R.id.spiner_path_download);
+			spinerPath = (TextView) view.findViewById(R.id.spiner_path_download);
+			spinerPath.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View arg0, MotionEvent arg1Event) {
+					switch (arg1Event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						spinerPath.setBackgroundColor(Color.parseColor("#33777777"));
+						break;
+					default:
+						spinerPath.setBackgroundColor(Color.parseColor("#00000000"));
+						break;
+					}
+					return false;
+				}
+			});
 			buttonShowLyrics = (TextView) view.findViewById(R.id.button_show_lyrics);
+			buttonShowLyrics.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View arg0, MotionEvent arg1Event) {
+					switch (arg1Event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						buttonShowLyrics.setBackgroundColor(Color.parseColor("#33777777"));
+						break;
+					default:
+						buttonShowLyrics.setBackgroundColor(Color.parseColor("#00000000"));
+						break;
+					}
+					return false;
+				}
+			});
 			lyricsContainer = (LinearLayout) view.findViewById(R.id.lyrics_container);
 			lyricsTextView = (TextView) view.findViewById(R.id.lyrics);
 			containerPlayer = (LinearLayout) view.findViewById(R.id.container_player);
@@ -736,7 +767,7 @@ public class SearchTab {
 					showHideChooser();
 				}
 			});
-			viewChooser.setOnClickListener(new View.OnClickListener() {
+			textPath.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(v.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
