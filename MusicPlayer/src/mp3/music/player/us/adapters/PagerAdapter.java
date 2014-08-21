@@ -11,6 +11,9 @@
 
 package mp3.music.player.us.adapters;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -47,6 +50,12 @@ public class PagerAdapter extends FragmentPagerAdapter {
     private final SherlockFragmentActivity mFragmentActivity;
 
     private int mCurrentPage;
+    
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver(){
+		public void onReceive(Context context , Intent intent){
+			
+		}		
+	};
 
     /**
      * Constructor of <code>PagerAdatper<code>
@@ -160,7 +169,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
      * 
      * @param currentPage The current page.
      */
-    protected void setCurrentPage(final int currentPage) {
+    public void setCurrentPage(final int currentPage) {
         mCurrentPage = currentPage;
     }
 

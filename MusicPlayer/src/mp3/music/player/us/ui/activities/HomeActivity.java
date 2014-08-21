@@ -52,8 +52,11 @@ public class HomeActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		// Load the music browser fragment
 		if (savedInstanceState == null) { 
+			Bundle b = new Bundle();
+			b.putString("key", getIntent().getStringExtra("search"));
+			Fragment fr = Fragment.instantiate(this, MusicBrowserPhoneFragment.class.getName(), b);
 			getSupportFragmentManager().beginTransaction()
-			.replace(R.id.activity_base_content, new MusicBrowserPhoneFragment()).commit();
+			.replace(R.id.activity_base_content, fr).commit();
 		}
 
 		// load banner ad

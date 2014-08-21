@@ -35,6 +35,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -100,6 +101,7 @@ public class OnlineSearchView {
 	private boolean searchStopped = true;
 	public static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	public static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
+	public static String SEARCH_ONLINE = "SEARCH_ONLINE";
 
 	@SuppressWarnings("unchecked")
 	public static final OnlineSearchView getInstance(LayoutInflater inflater, HomeActivity activity) {
@@ -444,6 +446,20 @@ public class OnlineSearchView {
 			message.setText(R.string.search_message_nothing);
 		} else {
 			search(searchString);
+		}
+	}
+	
+	
+	public void trySearch(String songName) {
+		if (isOffline(searchField.getContext())) {
+			message.setText(R.string.search_message_no_internet);
+			resultAdapter.clear();
+		} else if ((null == songName) || ("".equals(songName))) {
+			resultAdapter.clear();
+			message.setText(R.string.search_message_nothing);
+		} else {
+			searchField.setText(songName);
+			search(songName);
 		}
 	}
 
