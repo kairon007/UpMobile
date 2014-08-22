@@ -140,7 +140,7 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         String str = args.getString("key" , null);
         if(str != null && !str.isEmpty())
         {	
-        	mViewPager.setCurrentItem(7);
+        	mViewPager.setCurrentItem(0);
         }else {
         	mViewPager.setCurrentItem(mPreferences.getStartPage());
         }
