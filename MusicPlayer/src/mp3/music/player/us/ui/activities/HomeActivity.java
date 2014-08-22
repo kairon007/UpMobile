@@ -43,6 +43,8 @@ import android.widget.Toast;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class HomeActivity extends BaseActivity {
+	private boolean doesTheMopub = false;
+	private final String IS_SHOW = "is.show";
 
 	/**
 	 * {@inheritDoc}
@@ -57,6 +59,9 @@ public class HomeActivity extends BaseActivity {
 			Fragment fr = Fragment.instantiate(this, MusicBrowserPhoneFragment.class.getName(), b);
 			getSupportFragmentManager().beginTransaction()
 			.replace(R.id.activity_base_content, fr).commit();
+		}
+		if (savedInstanceState != null) {
+			doesTheMopub = savedInstanceState.getBoolean(IS_SHOW);
 		}
 
 		// load banner ad
@@ -117,7 +122,7 @@ public class HomeActivity extends BaseActivity {
 			putSharedPrefLong(this, "install_time", System.currentTimeMillis()); // save install time, which is needed
 		}
 
-		if (showRateMePopup && !hasRated()) {
+		if (showRateMePopup && !hasRated() && !doesTheMopub) {
 			showRatePopup(200000); 
 		}
 	}
@@ -139,7 +144,7 @@ public class HomeActivity extends BaseActivity {
 				public void onClick(DialogInterface dialog, int which) { 
 					switch (which) {
 					case DialogInterface.BUTTON_POSITIVE:
-
+						doesTheMopub = true;
 						Intent browserIntent = new Intent(Intent.ACTION_VIEW, 
 								Uri.parse("https://play.google.com/store/apps/details?id=" + getActivity().getPackageName()));
 						startActivity(browserIntent);
@@ -149,10 +154,11 @@ public class HomeActivity extends BaseActivity {
 						editor.putBoolean("rated", true).commit();  
 
 						Toast.makeText(getActivity(), "Thank you so much :) Your support means everything", Toast.LENGTH_LONG).show(); 
-
+						
 						break;
 
 					case DialogInterface.BUTTON_NEGATIVE:
+						doesTheMopub = true;
 						break;
 					}
 				}
@@ -216,4 +222,8 @@ public class HomeActivity extends BaseActivity {
 		return super.onCreateDialog(id, args);
 	}
 	
+	  protected void onSaveInstanceState(Bundle outState) {
+		  	outState.putBoolean(IS_SHOW, doesTheMopub);
+		    super.onSaveInstanceState(outState);
+		  }
 }
