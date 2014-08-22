@@ -79,6 +79,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.musicequalizer.MyEqualizer;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -860,7 +861,8 @@ public class LibraryActivity
 //				mTextFilter.setText("");
 			openSortDialog();
 		} else if (view == mEqualizerButton) {
-			Toast.makeText(getApplicationContext(), "Equalizer", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, MyEqualizer.class);
+			startActivity(intent);
 		} else if (view == mCover || view == mActionControls) {
 			openPlaybackActivity();
 		} else if (view == mEmptyQueue) {

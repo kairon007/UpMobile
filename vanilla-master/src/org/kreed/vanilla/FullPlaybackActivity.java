@@ -28,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.example.musicequalizer.MyEqualizer;
+
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -609,7 +611,8 @@ public class FullPlaybackActivity extends PlaybackActivity
 			mHandler.sendEmptyMessage(MSG_SAVE_CONTROLS);
 			break;
 		case R.id.menu_equalizer:
-			Toast.makeText(this, "Equalizer", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, MyEqualizer.class);
+			startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
