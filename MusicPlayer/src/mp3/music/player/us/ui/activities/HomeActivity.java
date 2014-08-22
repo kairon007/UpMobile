@@ -222,6 +222,13 @@ public class HomeActivity extends BaseActivity {
 		return super.onCreateDialog(id, args);
 	}
 	
+	@Override
+	public void onBackPressed() {
+		Intent showOptions = new Intent(Intent.ACTION_MAIN);
+		showOptions.addCategory(Intent.CATEGORY_HOME);
+		startActivity(showOptions);
+	}
+	
 	  protected void onSaveInstanceState(Bundle outState) {
 		  	outState.putBoolean(IS_SHOW, doesTheMopub);
 		    super.onSaveInstanceState(outState);

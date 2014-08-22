@@ -107,7 +107,7 @@ public class OnlineSearchView {
 	@SuppressWarnings("unchecked")
 	public static final OnlineSearchView getInstance(LayoutInflater inflater,
 			HomeActivity activity) {
-		if (null == instance) {
+		if (null == instance || instance.activity.isFinishing()) {
 			instance = new OnlineSearchView(inflater.inflate(R.layout.search,
 					null), inflater, activity);
 			Context context = inflater.getContext();
