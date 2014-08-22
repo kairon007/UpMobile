@@ -13,6 +13,8 @@ package mp3.music.player.us.ui.activities;
 
 import static mp3.music.player.us.utils.MusicUtils.mService;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.BroadcastReceiver;
@@ -23,6 +25,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -70,7 +73,7 @@ import java.lang.ref.WeakReference;
  * 
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class AudioPlayerActivity extends SherlockFragmentActivity implements ServiceConnection,
+@TargetApi(Build.VERSION_CODES.HONEYCOMB) @SuppressLint("NewApi") public class AudioPlayerActivity extends SherlockFragmentActivity implements ServiceConnection,
         OnSeekBarChangeListener {
 
     // Message to refresh the time
@@ -201,7 +204,7 @@ public class AudioPlayerActivity extends SherlockFragmentActivity implements Ser
     /**
      * {@inheritDoc}
      */
-    @Override
+    @SuppressLint("NewApi") @Override
     public void onServiceConnected(final ComponentName name, final IBinder service) {
         mService = IApolloService.Stub.asInterface(service);
         // Set the playback drawables
@@ -330,7 +333,7 @@ public class AudioPlayerActivity extends SherlockFragmentActivity implements Ser
                 // Shuffle all the songs
                 MusicUtils.shuffleAll(this);
                 // Refresh the queue
-                ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+                ((QueueFragment)mPagerAdapter.getFragment(3)).refreshQueue();
                 return true;
             case R.id.menu_favorite:
                 // Toggle the current track as a favorite and update the menu
@@ -382,7 +385,7 @@ public class AudioPlayerActivity extends SherlockFragmentActivity implements Ser
         // Current info
         updateNowPlayingInfo();
         // Refresh the queue
-        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+        ((QueueFragment)mPagerAdapter.getFragment(3)).refreshQueue();
     }
 
     /**
@@ -812,7 +815,7 @@ public class AudioPlayerActivity extends SherlockFragmentActivity implements Ser
 
         @Override
         public void onClick(final View v) {
-            ((QueueFragment)mPagerAdapter.getFragment(0)).scrollToCurrentSong();
+            ((QueueFragment)mPagerAdapter.getFragment(3)).scrollToCurrentSong();
         }
     };
 
