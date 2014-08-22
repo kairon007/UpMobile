@@ -61,7 +61,9 @@ public class SearchMp3skull extends BaseSearchTask {
 					Log.e(getClass().getSimpleName(), "", e);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					Log.e(getClass().getSimpleName(), "", e);
-				} 
+				} catch (NumberFormatException e) {
+					Log.e(getClass().getSimpleName(), "", e);
+				}
 			}
 		} catch (MalformedURLException e) {
 			Log.e(getClass().getSimpleName(), "", e);
