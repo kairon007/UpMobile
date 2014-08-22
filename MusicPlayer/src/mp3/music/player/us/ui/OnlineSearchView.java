@@ -75,6 +75,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -641,6 +642,7 @@ public class OnlineSearchView {
 		private ProgressBar spinner;
 		private ImageButton button;
 		private ProgressBar progress;
+		private RelativeLayout rlProgress;
 		private TextView time;
 		private ImageView coverImage;
 		private ProgressBar coverProgress;
@@ -654,6 +656,7 @@ public class OnlineSearchView {
 			spinner = (ProgressBar) view.findViewById(R.id.spinner);
 			button = (ImageButton) view.findViewById(R.id.pause);
 			progress = (ProgressBar) view.findViewById(R.id.progress);
+			rlProgress = (RelativeLayout) view.findViewById(R.id.rlCoverProgress);
 			time = (TextView) view.findViewById(R.id.time);
 			coverImage = (ImageView) view.findViewById(R.id.cover);
 			coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
@@ -675,6 +678,7 @@ public class OnlineSearchView {
 
 		public void setCover(Bitmap bmp) {
 			coverProgress.setVisibility(View.GONE);
+			rlProgress.setVisibility(View.GONE);
 			if (null != bmp) {
 				coverImage.setImageBitmap(bmp);
 			}
