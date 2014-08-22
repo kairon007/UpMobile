@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import mp3.music.player.us.Constants;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.AdapterHelper;
 import mp3.music.player.us.adapters.AdapterHelper.ViewBuilder;
@@ -107,7 +108,7 @@ public class OnlineSearchView {
 	@SuppressWarnings("unchecked")
 	public static final OnlineSearchView getInstance(LayoutInflater inflater,
 			HomeActivity activity) {
-		if (null == instance || instance.activity.isFinishing()) {
+		if (null == instance || instance.activity.isFinishing() || activity.getIntent().hasExtra(Constants.EXTRA_SEARCH)) {
 			instance = new OnlineSearchView(inflater.inflate(R.layout.search,
 					null), inflater, activity);
 			Context context = inflater.getContext();

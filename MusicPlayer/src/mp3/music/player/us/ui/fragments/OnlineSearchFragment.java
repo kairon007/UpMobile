@@ -1,13 +1,10 @@
 package mp3.music.player.us.ui.fragments;
 
+import mp3.music.player.us.Constants;
 import mp3.music.player.us.ui.OnlineSearchView;
 import mp3.music.player.us.ui.activities.HomeActivity;
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +20,9 @@ public class OnlineSearchFragment extends SherlockFragment {
 		View searchView = OnlineSearchView.getInstanceView(inflater, (HomeActivity)getActivity());
 		getSherlockActivity().getIntent();
 		Intent intent = getSherlockActivity().getIntent();
-		String str = intent.getStringExtra("search");
+		String str = intent.getStringExtra(Constants.EXTRA_SEARCH);
 		if(str != null && !str.isEmpty()){
+			getActivity().getIntent().removeExtra(Constants.EXTRA_SEARCH);
 			OnlineSearchView.getInstance(inflater, (HomeActivity)getActivity()).trySearch(str);
 		}		
 		return searchView;

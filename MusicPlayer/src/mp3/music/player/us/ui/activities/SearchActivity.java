@@ -15,13 +15,10 @@ import static mp3.music.player.us.utils.MusicUtils.mService;
 
 import android.app.SearchManager;
 import android.app.SearchableInfo;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -47,10 +44,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -58,15 +52,14 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+
+import mp3.music.player.us.Constants;
 import mp3.music.player.us.IApolloService;
 import mp3.music.player.us.R;
 import mp3.music.player.us.cache.ImageFetcher;
 import mp3.music.player.us.format.PrefixHighlighter;
 import mp3.music.player.us.recycler.RecycleHolder;
 import mp3.music.player.us.ui.MusicHolder;
-import mp3.music.player.us.ui.OnlineSearchView;
-import mp3.music.player.us.ui.fragments.OnlineSearchFragment;
-import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
 import mp3.music.player.us.utils.ApolloUtils;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.MusicUtils.ServiceToken;
@@ -294,7 +287,7 @@ public class SearchActivity extends SherlockFragmentActivity implements LoaderCa
 				Bundle bundle = new Bundle();
 				bundle.putString("key", mFilterString);
 				Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
-				intent.putExtra("search", mFilterString);
+				intent.putExtra(Constants.EXTRA_SEARCH, mFilterString);
 			    startActivity(intent);
 				
 			}

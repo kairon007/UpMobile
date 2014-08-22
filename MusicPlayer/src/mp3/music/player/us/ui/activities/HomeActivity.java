@@ -14,6 +14,7 @@ package mp3.music.player.us.ui.activities;
 import java.util.Random;
 
 import mp3.music.player.us.Advertisement;
+import mp3.music.player.us.Constants;
 import mp3.music.player.us.Settings;
 
 import mp3.music.player.us.R;
@@ -55,7 +56,7 @@ public class HomeActivity extends BaseActivity {
 		// Load the music browser fragment
 		if (savedInstanceState == null) { 
 			Bundle b = new Bundle();
-			b.putString("key", getIntent().getStringExtra("search"));
+			b.putString("key", getIntent().getStringExtra(Constants.EXTRA_SEARCH));
 			Fragment fr = Fragment.instantiate(this, MusicBrowserPhoneFragment.class.getName(), b);
 			getSupportFragmentManager().beginTransaction()
 			.replace(R.id.activity_base_content, fr).commit();
