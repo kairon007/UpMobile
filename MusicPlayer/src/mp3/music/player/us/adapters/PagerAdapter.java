@@ -120,9 +120,13 @@ public class PagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public Fragment getItem(final int position) {
-        final Holder mCurrentHolder = mHolderList.get(position);
-        final Fragment mFragment = Fragment.instantiate(mFragmentActivity,
-                mCurrentHolder.mClassName, mCurrentHolder.mParams);
+    	Holder mCurrentHolder;
+		if (mHolderList.size() == 1) {
+			mCurrentHolder = mHolderList.get(0);
+		} else {
+			mCurrentHolder = mHolderList.get(position);
+		}		
+        final Fragment mFragment = Fragment.instantiate(mFragmentActivity, mCurrentHolder.mClassName, mCurrentHolder.mParams);
         return mFragment;
     }
 
