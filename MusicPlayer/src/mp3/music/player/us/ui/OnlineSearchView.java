@@ -15,6 +15,7 @@ import mp3.music.player.us.adapters.AdapterHelper;
 import mp3.music.player.us.adapters.AdapterHelper.ViewBuilder;
 import mp3.music.player.us.ui.activities.HomeActivity;
 import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
+import mp3.music.player.us.utils.MusicUtils;
 
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
@@ -790,6 +791,7 @@ public class OnlineSearchView {
 		};
 
 		public void onPrepared() {
+			if (MusicUtils.isPlaying()) MusicUtils.playOrPause();
 			spinner.setVisibility(View.GONE);
 			button.setVisibility(View.VISIBLE);
 			Intent i = new Intent(ACTION_PAUSE);
