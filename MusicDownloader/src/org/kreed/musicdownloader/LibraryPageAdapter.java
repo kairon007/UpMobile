@@ -20,6 +20,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 
 	private MainActivity activity;
 	private LayoutInflater inflater;
+	private int size;
 
 	public LibraryPageAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
 		super(context, resource, arrayMusic);
@@ -30,6 +31,8 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolderItem holder;
+		size = getCount();
+		Log.d("log", "getView.getCount = "+size);
 		if(convertView == null){
 			convertView = inflater.inflate(R.layout.library_item, null);
 			holder = new ViewHolderItem();
@@ -63,21 +66,6 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 			
 		});
 		return convertView; 
-	}
-	
-	@Override
-	public void add(MusicData musicData) {
-		super.add(musicData);
-		int size = getCount();
-		if (size < 10) {
-			activity.runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					notifyDataSetChanged();
-				}
-			});
-		}
-		
 	}
 	
 	private class ViewHolderItem {
