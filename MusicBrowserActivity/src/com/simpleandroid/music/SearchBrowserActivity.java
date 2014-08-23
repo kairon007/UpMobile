@@ -32,11 +32,14 @@ public class SearchBrowserActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.media_picker_activity_expanding);
+        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_expanding_top:R.layout.media_picker_activity_expanding);
         MusicUtils.updateButtonBar(this, R.id.searchtab);
         FrameLayout layout = (FrameLayout)findViewById(R.id.search);
         View searchView = OnlineSearchView.getInstanceView(getLayoutInflater(), this);
         layout.addView(searchView);
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubShowBanner(this);
+		}
 	}
 	
 	@Override

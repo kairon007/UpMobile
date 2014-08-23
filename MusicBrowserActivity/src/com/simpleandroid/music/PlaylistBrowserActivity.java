@@ -137,7 +137,7 @@ public class PlaylistBrowserActivity extends ListActivity
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
 
-        setContentView(R.layout.media_picker_activity);
+        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
         MusicUtils.updateButtonBar(this, R.id.playlisttab);
         ListView lv = getListView();
         lv.setOnCreateContextMenuListener(this);
@@ -173,6 +173,9 @@ public class PlaylistBrowserActivity extends ListActivity
                 getPlaylistCursor(mAdapter.getQueryHandler(), null);
             }
         }
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubShowBanner(this);
+		}
     }
     
     @Override

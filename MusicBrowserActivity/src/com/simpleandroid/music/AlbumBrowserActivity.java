@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import com.simpleandroid.music.Advertisement;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -100,7 +101,7 @@ public class AlbumBrowserActivity extends ListActivity
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
 
-        setContentView(R.layout.media_picker_activity);
+        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
         MusicUtils.updateButtonBar(this, R.id.albumtab);
         ListView lv = getListView();
         lv.setOnCreateContextMenuListener(this);
@@ -129,6 +130,9 @@ public class AlbumBrowserActivity extends ListActivity
                 getAlbumCursor(mAdapter.getQueryHandler(), null);
             }
         }
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubShowBanner(this);
+		}
     }
 
     @Override

@@ -97,7 +97,7 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
 
-        setContentView(R.layout.media_picker_activity_expanding);
+        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_expanding_top:R.layout.media_picker_activity_expanding);
         MusicUtils.updateButtonBar(this, R.id.artisttab);
         ExpandableListView lv = getExpandableListView();
         lv.setOnCreateContextMenuListener(this);
@@ -129,6 +129,9 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
                 getArtistCursor(mAdapter.getQueryHandler(), null);
             }
         }
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubShowBanner(this);
+		}
     }
 
     @Override

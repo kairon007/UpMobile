@@ -40,6 +40,8 @@
         android:fastScrollEnabled="true"
         android:indicatorLeft="8dip"
         android:indicatorRight="52dip" />
+    
+    <include layout="@layout/banner"/>
 
     <include layout="@layout/nowplaying" />
 

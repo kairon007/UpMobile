@@ -62,6 +62,9 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
         }
         mToken = MusicUtils.bindToService(this);
         init();
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubShowBanner(this);
+		}
     }
 
     @Override
@@ -75,7 +78,7 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
 
     public void init() {
 
-        setContentView(R.layout.media_picker_activity);
+        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
 
         MakeCursor();
         if (null == mCursor || 0 == mCursor.getCount()) {

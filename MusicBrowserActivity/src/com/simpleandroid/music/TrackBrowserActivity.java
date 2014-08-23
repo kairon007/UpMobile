@@ -157,7 +157,7 @@ public class TrackBrowserActivity extends ListActivity
                 MediaStore.Audio.Media.IS_MUSIC
         };
 
-        setContentView(R.layout.media_picker_activity);
+        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
         mUseLastListPos = MusicUtils.updateButtonBar(this, R.id.songtab);
         mTrackList = getListView();
         mTrackList.setOnCreateContextMenuListener(this);
@@ -185,6 +185,9 @@ public class TrackBrowserActivity extends ListActivity
                 setAlbumArtBackground();
             }
         });
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubShowBanner(this);
+		}
     }
 
     public void onServiceConnected(ComponentName name, IBinder service)

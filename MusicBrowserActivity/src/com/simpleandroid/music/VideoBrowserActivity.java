@@ -41,13 +41,16 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
         super.onCreate(icicle);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         init();
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubShowBanner(this);
+		}
     }
 
     public void init() {
 
         // Set the layout for this activity.  You can find it
         // in assets/res/any/layout/media_picker_activity.xml
-        setContentView(R.layout.media_picker_activity);
+        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
 
         MakeCursor();
 

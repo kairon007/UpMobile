@@ -32,6 +32,8 @@
         android:textSize="18sp"
         android:drawSelectorOnTop="false"
         android:fastScrollEnabled="true" /> 
+    
+    <include layout="@layout/banner"/>
 
     <include layout="@layout/nowplaying" />
 

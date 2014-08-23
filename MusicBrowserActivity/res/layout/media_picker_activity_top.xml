@@ -23,6 +23,8 @@
     <include layout="@layout/sd_error" />
 
     <include layout="@layout/buttonbar" />
+    
+    <include layout="@layout/banner"/>
 
     <com.simpleandroid.music.TouchInterceptor
         android:id="@android:id/list"
@@ -32,7 +34,7 @@
         android:textSize="18sp"
         android:drawSelectorOnTop="false"
         android:fastScrollEnabled="true" /> 
-    
-    <include layout="@layout/banner"/>
+
+    <include layout="@layout/nowplaying" />
 
 </LinearLayout>
