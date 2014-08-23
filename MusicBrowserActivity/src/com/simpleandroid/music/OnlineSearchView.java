@@ -513,7 +513,7 @@ public class OnlineSearchView {
 			});
 			coverLoader.execute(NO_PARAMS);
 		}
-		final Context context = view.getContext();
+		final Context context = activity;
 		final Runnable dialogDismisser = new Runnable() {
 			@Override
 			public void run() {
