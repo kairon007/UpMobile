@@ -338,43 +338,43 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
     @Override
     public void onCenterItemClick(final int position) {
         // If on the artist fragment, scrolls to the current artist
-        if (position == 2) {
+        if (position == 1) {
             getArtistFragment().scrollToCurrentArtist();
             // If on the album fragment, scrolls to the current album
-        } else if (position == 3) {
+        } else if (position == 4) {
             getAlbumFragment().scrollToCurrentAlbum();
             // If on the song fragment, scrolls to the current song
-        } else if (position == 4) {
+        } else if (position == 2) {
             getSongFragment().scrollToCurrentSong();
         }
     }
 
     private boolean isArtistPage() {
-        return mViewPager.getCurrentItem() == 2;
+        return mViewPager.getCurrentItem() == 1;
     }
 
     private ArtistFragment getArtistFragment() {
-        return (ArtistFragment)mPagerAdapter.getFragment(2);
+        return (ArtistFragment)mPagerAdapter.getFragment(1);
     }
 
     private boolean isAlbumPage() {
-        return mViewPager.getCurrentItem() == 3;
-    }
-
-    private AlbumFragment getAlbumFragment() {
-        return (AlbumFragment)mPagerAdapter.getFragment(3);
-    }
-
-    private boolean isSongPage() {
         return mViewPager.getCurrentItem() == 4;
     }
 
+    private AlbumFragment getAlbumFragment() {
+        return (AlbumFragment)mPagerAdapter.getFragment(4);
+    }
+
+    private boolean isSongPage() {
+        return mViewPager.getCurrentItem() == 2;
+    }
+
     private SongFragment getSongFragment() {
-        return (SongFragment)mPagerAdapter.getFragment(4);
+        return (SongFragment)mPagerAdapter.getFragment(2);
     }
 
     private boolean isRecentPage() {
-        return mViewPager.getCurrentItem() == 1;
+        return mViewPager.getCurrentItem() == 5;
     }
 
 	@Override

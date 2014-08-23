@@ -205,7 +205,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
          * The genre fragment
          */
         GENRE(GenreFragment.class);
-        
+      
 
         private Class<? extends Fragment> mFragmentClass;
 
