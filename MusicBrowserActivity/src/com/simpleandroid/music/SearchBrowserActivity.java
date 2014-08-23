@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 
 /**
@@ -33,6 +34,8 @@ public class SearchBrowserActivity extends Activity {
 		super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_expanding_top:R.layout.media_picker_activity_expanding);
+        findViewById(android.R.id.list).setVisibility(View.GONE);
+        findViewById(R.id.search).setVisibility(View.VISIBLE);
         MusicUtils.updateButtonBar(this, R.id.searchtab);
         FrameLayout layout = (FrameLayout)findViewById(R.id.search);
         View searchView = OnlineSearchView.getInstanceView(getLayoutInflater(), this);
