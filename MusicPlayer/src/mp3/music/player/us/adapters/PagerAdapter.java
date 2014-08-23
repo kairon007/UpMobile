@@ -177,34 +177,35 @@ public class PagerAdapter extends FragmentPagerAdapter {
      * An enumeration of all the main fragments supported.
      */
     public enum MusicFragments {
-        /**
-         * The playlist fragment
+    	/**
+         * The online search fragment
          */
-        PLAYLIST(PlaylistFragment.class),
-        /**
-         * The recent fragment
-         */
-        RECENT(RecentFragment.class),
+        ONLINE_SEARCH(OnlineSearchFragment.class),
         /**
          * The artist fragment
          */
         ARTIST(ArtistFragment.class),
         /**
-         * The album fragment
-         */
-        ALBUM(AlbumFragment.class),
-        /**
          * The song fragment
          */
         SONG(SongFragment.class),
         /**
-         * The genre fragment
+         * The playlist fragment
          */
-        GENRE(GenreFragment.class),
+        PLAYLIST(PlaylistFragment.class),
+        /**
+         * The album fragment
+         */
+        ALBUM(AlbumFragment.class),
+        /**
+         * The recent fragment
+         */
+        RECENT(RecentFragment.class),                      
         /**
          * The genre fragment
          */
-        ONLINE_SEARCH(OnlineSearchFragment.class);
+        GENRE(GenreFragment.class);
+        
 
         private Class<? extends Fragment> mFragmentClass;
 
