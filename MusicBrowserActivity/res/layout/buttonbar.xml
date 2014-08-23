@@ -27,7 +27,7 @@
         android:focusable="true"
         android:background="@drawable/buttonbarbackground"
         android:drawableTop="@drawable/ic_tab_artists"
-        android:text="@string/browse_menu"
+        android:text="@string/search_title"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/tab_indicator_text"
         android:paddingTop="7dip"
