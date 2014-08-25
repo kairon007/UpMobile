@@ -572,14 +572,14 @@ public class OnlineSearchView {
 
 			@Override
 			public void onClick(View v) {
-				DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(v.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
+				DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(activity, new DirectoryChooserDialog.ChosenDirectoryListener() {
 					@Override
 					public void onChosenDir(String chosenDir) {
 						textPath.setText(chosenDir);
-						OnlineSearchView.setDownloadPath(context, chosenDir);
+						OnlineSearchView.setDownloadPath(activity, chosenDir);
 					}
 				});
-				directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(context));
+				directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(activity));
 			}
 		});
 
