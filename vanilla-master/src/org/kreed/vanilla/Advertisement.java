@@ -155,7 +155,7 @@ public class Advertisement {
 	*/
 	
 	
-	public static void start(Activity activity) {
+	public static void start(Activity activity, boolean switchShowDialog) {
 		
 		if (Settings.ENABLE_ADS) {  
 		
@@ -187,7 +187,7 @@ public class Advertisement {
 					if (isOnline(activity)) {
 						//if (!hasRated(activity) && shouldShowRatePopup(activity) && !Settings.getIsBlacklisted(activity)) {
 						if (!hasRated(activity) && !Settings.getIsBlacklisted(activity)) {
-							boolean didShowPopup = showRatePopupWithInitialDelay(activity, Settings.RATE_ME_POPUP_DELAY_MILLIS);
+							boolean didShowPopup = showRatePopupWithInitialDelay(activity, Settings.RATE_ME_POPUP_DELAY_MILLIS, switchShowDialog);
 							if (!didShowPopup) showStartInterstitial(activity);
 							
 						} else {
@@ -254,7 +254,7 @@ public class Advertisement {
 	
 	
  
-	public static void showRateMePopup(final Activity activity) { 
+	public static void showRateMePopup(final Activity activity, boolean switchShowDialog) { 
 		
 		setLastTimeAskedForRate(activity, System.currentTimeMillis()); 
 		
@@ -284,20 +284,29 @@ public class Advertisement {
 				}
 			}
 		};
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-		builder.setTitle(activity.getString(R.string.rate_popup_title));      
-		builder.setMessage(activity.getString(R.string.rate_popup_message)).setPositiveButton(activity.getString(R.string.rate_popup_positive_button), dialogClickListener).setNegativeButton(activity.getString(R.string.rate_popup_negative_button), dialogClickListener).setCancelable(false).show();
+		if (switchShowDialog) {
+			//TODO
+			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+			builder.setTitle(activity.getString(R.string.rate_popup_title));
+			builder.setMessage(activity.getString(R.string.rate_popup_message))
+					.setPositiveButton(
+							activity.getString(R.string.rate_popup_positive_button),
+							dialogClickListener)
+					.setNegativeButton(
+							activity.getString(R.string.rate_popup_negative_button),
+							dialogClickListener).setCancelable(false).show();
+		}
+	
 	}
 	
 
-	public static boolean showRatePopupWithInitialDelay(final Activity activity, long initialDelayMillis) {
+	public static boolean showRatePopupWithInitialDelay(final Activity activity, long initialDelayMillis,boolean switchShowDialog) {
 		if (activity != null && System.currentTimeMillis() - getInstallTime(activity) > initialDelayMillis) { // if
 																						// x
 																						// seconds
 																						// have
 																						// passed
-			showRateMePopup(activity);
+			showRateMePopup(activity, switchShowDialog);
 			return true;
 		} else {
 			return false;
