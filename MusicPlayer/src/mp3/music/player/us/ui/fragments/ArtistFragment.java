@@ -316,6 +316,7 @@ public class ArtistFragment extends SherlockFragment implements LoaderCallbacks<
         for (final Artist artist : data) {
             mAdapter.add(artist);
         }
+        mAdapter.notifyDataSetChanged();
         // Build the cache
         mAdapter.buildCache();
     }

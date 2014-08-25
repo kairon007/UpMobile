@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -284,6 +285,7 @@ public class SongFragment extends SherlockFragment implements LoaderCallbacks<Li
      */
     @Override
     public Loader<List<Song>> onCreateLoader(final int id, final Bundle args) {
+    	Log.d("log", "SongFragment.onCreateLoader");
         return new SongLoader(getSherlockActivity());
     }
 
@@ -292,6 +294,7 @@ public class SongFragment extends SherlockFragment implements LoaderCallbacks<Li
      */
     @Override
     public void onLoadFinished(final Loader<List<Song>> loader, final List<Song> data) {
+    	Log.d("log", "SongFragment.onLoadFinished/ size data = "+data.size());
         // Check for any errors
         if (data.isEmpty()) {
             // Set the empty text
@@ -307,6 +310,7 @@ public class SongFragment extends SherlockFragment implements LoaderCallbacks<Li
         for (final Song song : data) {
             mAdapter.add(song);
         }
+        mAdapter.notifyDataSetChanged();
         // Build the cache
         mAdapter.buildCache();
     }

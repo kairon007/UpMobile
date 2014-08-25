@@ -311,6 +311,7 @@ public class AlbumFragment extends SherlockFragment implements LoaderCallbacks<L
         for (final Album album : data) {
             mAdapter.add(album);
         }
+        mAdapter.notifyDataSetChanged();
         // Build the cache
         mAdapter.buildCache();
     }

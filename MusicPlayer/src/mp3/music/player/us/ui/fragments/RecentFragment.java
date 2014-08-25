@@ -319,6 +319,7 @@ public class RecentFragment extends SherlockFragment implements LoaderCallbacks<
         for (final Album album : data) {
             mAdapter.add(album);
         }
+        mAdapter.notifyDataSetChanged();
         // Build the cache
         mAdapter.buildCache();
     }

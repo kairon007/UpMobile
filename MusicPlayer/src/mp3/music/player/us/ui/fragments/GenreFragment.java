@@ -222,6 +222,7 @@ public class GenreFragment extends SherlockFragment implements LoaderCallbacks<L
         for (final Genre genre : data) {
             mAdapter.add(genre);
         }
+        mAdapter.notifyDataSetChanged();
         // Build the cache
         mAdapter.buildCache();
     }

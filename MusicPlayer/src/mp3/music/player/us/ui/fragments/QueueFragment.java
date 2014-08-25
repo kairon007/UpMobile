@@ -317,6 +317,7 @@ public class QueueFragment extends SherlockFragment implements LoaderCallbacks<L
         for (final Song song : data) {
             mAdapter.add(song);
         }
+        mAdapter.notifyDataSetChanged();
         // Build the cache
         mAdapter.buildCache();
     }

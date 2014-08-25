@@ -273,6 +273,7 @@ public class PlaylistFragment extends SherlockFragment implements LoaderCallback
         for (final Playlist playlist : data) {
             mAdapter.add(playlist);
         }
+        mAdapter.notifyDataSetChanged();
         // Build the cache
         mAdapter.buildCache();
     }
