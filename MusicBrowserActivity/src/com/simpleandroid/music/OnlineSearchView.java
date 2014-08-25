@@ -601,6 +601,13 @@ public class OnlineSearchView {
 					public void onClick(DialogInterface dialog, int which) {
 
 						aDialogDownLoadOtions.show();
+						aDialogDownLoadOtions.setOnCancelListener(new OnCancelListener() {
+							
+							@Override
+							public void onCancel(DialogInterface dialog) {
+								player.cancel();
+							}
+						});
 					}
 				}).setView(player.getView());
 		return b.create();
