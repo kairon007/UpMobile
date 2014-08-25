@@ -273,6 +273,8 @@ public class SearchTab {
 						song.setSongTitle(songTitle);
 						song.setSongDuration(duration);
 						song.setFileUri(dst.getAbsolutePath());
+						Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
+						song.setSongBitmap(bitmap);
 						notifyMediascanner(song);
 						DBHelper.getInstance(context).insert(song);
 						downloadsTab.setFileUri(dst.getAbsolutePath(), downloadId);
