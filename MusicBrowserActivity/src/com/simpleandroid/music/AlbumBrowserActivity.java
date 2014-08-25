@@ -134,7 +134,7 @@ public class AlbumBrowserActivity extends ListActivity
             Advertisement.mopubShowBanner(this);
 		}
     }
-
+    
     @Override
     public Object onRetainNonConfigurationInstance() {
         mAdapterSent = true;
@@ -175,6 +175,9 @@ public class AlbumBrowserActivity extends ListActivity
         setListAdapter(null);
         mAdapter = null;
         unregisterReceiver(mScanListener);
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubDestroy(this);
+		}
         super.onDestroy();
     }
     

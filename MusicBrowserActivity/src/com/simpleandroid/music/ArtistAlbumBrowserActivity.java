@@ -178,6 +178,9 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         mAdapter = null;
         unregisterReceiver(mScanListener);
         setListAdapter(null);
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubDestroy(this);
+		}
         super.onDestroy();
     }
     

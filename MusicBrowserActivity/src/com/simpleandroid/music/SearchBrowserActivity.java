@@ -52,4 +52,12 @@ public class SearchBrowserActivity extends Activity {
 		}
 		return super.onCreateDialog(id, args);
 	}
+	
+	@Override
+	protected void onDestroy() {
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubDestroy(this);
+		}
+		super.onDestroy();
+	}
 }
