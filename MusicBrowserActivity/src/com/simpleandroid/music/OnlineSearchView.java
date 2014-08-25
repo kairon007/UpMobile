@@ -567,6 +567,12 @@ public class OnlineSearchView {
 
 		showDownLoadOtionsBuilder.setView(downLoadDialog);
 		final AlertDialog aDialogDownLoadOtions = showDownLoadOtionsBuilder.create();
+		aDialogDownLoadOtions.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialogDismisser.run();
+			}
+		});
 		startDownload.setTag(aDialogDownLoadOtions);
 		viewChooser.setOnClickListener(new View.OnClickListener() {
 
@@ -601,12 +607,6 @@ public class OnlineSearchView {
 					public void onClick(DialogInterface dialog, int which) {
 
 						aDialogDownLoadOtions.show();
-						aDialogDownLoadOtions.setOnCancelListener(new OnCancelListener() {
-							@Override
-							public void onCancel(DialogInterface dialog) {
-								dialogDismisser.run();
-							}
-						});
 					}
 				}).setView(player.getView());
 		return b.create();
