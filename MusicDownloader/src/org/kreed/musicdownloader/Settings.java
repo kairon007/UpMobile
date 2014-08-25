@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 
@@ -14,7 +15,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,7 +34,7 @@ public class Settings {
 	
 	
 	
-	public static final String[][] SEARCH_ENGINES = new String[][] { 
+//	public static final String[][] SEARCH_ENGINES = new String[][] { 
 //		{"SearchVmusice", "1"},
 //		{"SearchPleer", "2"},
 //		{"SearchPoisk", "1"}, 
@@ -44,7 +47,23 @@ public class Settings {
 //		{"SearchGrooveshark", "1"}, 
 //		{"SearchTing", "1"}, 
 //		{"SearchZaycev", "3"}
-	};
+//	};
+	
+	// if you need to access SEARCH_ENGINES, call the public static method GET_SEARCH_ENGINES()  
+		private static final String[][] SEARCH_ENGINES = new String[][] { 
+			{"SearchVmusice", "1"}, 
+			{"SearchPleer", "2"},
+			{"SearchPoisk", "1"}, 
+			{"SearchHulkShare", "1"}, 
+			{"SearchMp3skull", "1"},
+			{"SearchMp3World", "1"}, 
+			{"SearchSoundCloud", "1"},  
+			{"SearchSoundCloudV2", "1"}, 
+			{"SearchSogou", "1"},
+			{"SearchGrooveshark", "1"}, 
+			{"SearchTing", "1"}, 
+			{"SearchZaycev", "7"} 
+		};
 	
 	public static final boolean ENABLE_ALBUM_COVERS = true;
 	
@@ -88,16 +107,113 @@ public class Settings {
 	
 
 	
+	public static boolean getIsRemoteSettingsOn() {
+		return REMOTE_SETTINGS_URL != null && !REMOTE_SETTINGS_URL.equals("");
+	}
 	
-	
-	
+	// this method tries to return remote search_engines if it exists, otherwise, it returns the default search egnines (SEARCH_ENGINES)
+		public static String[][] GET_SEARCH_ENGINES(Context context) {
+			String[][] ret = SEARCH_ENGINES;
+			
+			ArrayList<String[]> searchEngineTuples = new ArrayList<String[]>();
+			if (Settings.getIsBlacklisted(context)) {
+				
+				String[] searchEngineTuple = {"SearchSoundCloud", "1"};
+				searchEngineTuples.add(searchEngineTuple); 
+				
+			} else if (getIsRemoteSettingsOn()) {
+				
+				
+				// for remote settings
+				
+			
+				// get search engines from remote settings if it exists
+				ArrayList<String> searchEnginesNames = getSearchEngines(context);
+				 
+				
+				for (String searchEngineName : searchEnginesNames) {
+					try {
+						String[] searchEngineTuple = {"0", "0"};
+						if (searchEngineName != null) {
+							if (searchEngineName.equals("grooveshark")) {
+								searchEngineTuple[0] = "SearchGrooveshark";
+								searchEngineTuple[1] = "1";
+							} else if (searchEngineName.equals("zaycev")) {
+								searchEngineTuple[0] = "SearchZaycev";
+								searchEngineTuple[1] = "7";
+							} else if (searchEngineName.equals("hulkshare")) { 
+								searchEngineTuple[0] = "SearchHulkShare";
+								searchEngineTuple[1] = "1";
+							} else if (searchEngineName.equals("mp3skull")) {
+								searchEngineTuple[0] = "SearchMp3skull";
+								searchEngineTuple[1] = "1";
+							} else if (searchEngineName.equals("mp3world")) {
+								searchEngineTuple[0] = "SearchMp3World";
+								searchEngineTuple[1] = "1"; 
+							} else if (searchEngineName.equals("pleer")) {
+								searchEngineTuple[0] = "SearchPleer";
+								searchEngineTuple[1] = "2";
+							} else if (searchEngineName.equals("poisk")) {
+								searchEngineTuple[0] = "SearchPoisk";
+								searchEngineTuple[1] = "1";
+							} else if (searchEngineName.equals("sogou")) {
+								searchEngineTuple[0] = "SearchSogou";
+								searchEngineTuple[1] = "1";
+							} else if (searchEngineName.equals("soundcloud")) {
+								searchEngineTuple[0] = "SearchSoundCloud";
+								searchEngineTuple[1] = "1";
+							} else if (searchEngineName.equals("soundcloudv2")) {
+								searchEngineTuple[0] = "SearchSoundCloudV2";
+								searchEngineTuple[1] = "1";
+							} else if (searchEngineName.equals("baidu")) {
+								searchEngineTuple[0] = "SearchTing"; 
+								searchEngineTuple[1] = "1";
+							} else if (searchEngineName.equals("vmusice")) { 
+								searchEngineTuple[0] = "SearchVmusice";
+								searchEngineTuple[1] = "1";
+							}
+						}
+						// if search engine is valid
+						if (searchEngineTuple[0] != null && searchEngineTuple[1] != null && !searchEngineTuple[0].equals("0") && !searchEngineTuple[1].equals("0")) {
+							searchEngineTuples.add(searchEngineTuple);
+						}
+					} catch(Exception e) {
+						
+					}
+				}
+			}
+			
+			try {
+				if (searchEngineTuples != null && searchEngineTuples.size() > 0) {
+					ret = searchEngineTuples.toArray(new String[searchEngineTuples.size()][2]);
+					
+				}
+			} catch(Exception e) {
+				
+			}
+		
+			return ret;
+		}
+		
+		
+
+		// paradise / maniac
+		public static ArrayList<String> getSearchEngines(Context context) {
+			return getEngines(context, Settings.KEY_REMOTE_SETTING_SEARCH_ENGINES);
+		}
+		public static ArrayList<String> getExternalSearchEngines(Context context) {
+			return getEngines(context, Settings.KEY_REMOTE_SETTING_EXTERNAL_SEARCH_ENGINES);
+		}
 	
 
+		
+		
 	public static String getDefaultValueForRemoteSettingIfSet(String property) {
 		String value = null;
 		// test values
 		if (property.equals(KEY_REMOTE_SETTING_IS_ARTIST_SEARCH_ENABLED)) {  
 			return "true"; 
+			
 			
 			
 		// mp3 search engine settings
@@ -173,6 +289,25 @@ public class Settings {
 	}
 	
 	
+	public static ArrayList<String> getEngines(Context context, String remoteSetting) {
+		ArrayList<String> searchEngines = new ArrayList<String>();
+		try {
+			String remoteSettingSearchEngines = Settings.getRemoteSetting(context, remoteSetting, null);
+			JSONArray jsonArray = new JSONArray(remoteSettingSearchEngines);
+			for (int i = 0; i < jsonArray.length(); i++) {
+				try {
+					String searchEngine = jsonArray.getString(i);
+					searchEngines.add(searchEngine); 
+				}catch(Exception e) { 
+					
+				}
+			}
+		}catch(Exception e) {
+			
+		}
+		
+		return searchEngines;
+	}
 	
 	
 	

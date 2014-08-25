@@ -23,8 +23,11 @@ import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.ui.AdapterHelper;
 import org.kreed.musicdownloader.ui.AdapterHelper.ViewBuilder;
 
+
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
+import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
+import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.cover.GrooveSharkCoverLoaderTask;
@@ -78,9 +81,10 @@ public class SearchTab {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.musicdownloader";//vanilla";
 	private static SearchTab instance;
-	private static List<Class<? extends BaseSearchTask>> engines;
+	private static List<Engine> engines;
+	
 	private static LibraryPagerAdapter parentAdapter;
-	private Iterator<Class<? extends BaseSearchTask>> taskIterator;
+	private Iterator<Engine> taskIterator;
 	private String currentName = null;
 	private SongSearchAdapter resultAdapter;
 	private TextView message;
@@ -95,21 +99,11 @@ public class SearchTab {
 	private AsyncTask<Void, Void, String> getUrlTask;
 	private boolean searchStopped = true;
 
-	@SuppressWarnings("unchecked")
-	public static final SearchTab getInstance(LayoutInflater inflater, Activity activity, LibraryPagerAdapter adapter) {
+	public static final SearchTab getInstance(LayoutInflater inflater, Activity activity,  LibraryPagerAdapter adapter) {
 		if (null == instance) {
 			instance = new SearchTab(inflater.inflate(R.layout.search, null), inflater, activity, adapter);
-			Context context = inflater.getContext();
 			if (null == engines) {
-				String[] engineNames = context.getResources().getStringArray(R.array.search_engines);
-				engines = new ArrayList<Class<? extends BaseSearchTask>>(engineNames.length);
-				for (int i=0; i<engineNames.length; i++) {
-					try {
-						engines.add((Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines."+engineNames[i]));
-					} catch (ClassNotFoundException e) {
-						Log.e("SearchTab", "Unknown engine", e);
-					}
-				}
+				refreshSearchEngines(activity);
 			}
 		} else {
 			instance.activity = activity;
@@ -117,7 +111,23 @@ public class SearchTab {
 		return instance;
 	}
 
-	public static final View getInstanceView(LayoutInflater inflater, Activity activity, LibraryPagerAdapter adapter) {
+	public static void refreshSearchEngines(Context context) { 
+		String[][] engineArray = Settings.GET_SEARCH_ENGINES(context);
+		engines = new ArrayList<Engine>(engineArray.length);
+		for (int i=0; i<engineArray.length; i++) {
+			try {
+				Class<? extends BaseSearchTask> engineClass = 
+						(Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineArray[i][0]);
+				int maxPages = Integer.parseInt(engineArray[i][1]);
+				for(int page=1; page<=maxPages; page++) {
+					engines.add(new Engine(engineClass, page));
+				}
+			} catch (ClassNotFoundException e) {
+				Log.e("SearchTab", "Unknown engine", e);
+			}
+		}
+	}
+	public static final View getInstanceView(LayoutInflater inflater, MainActivity activity, LibraryPagerAdapter adapter) {
 		View instanceView = getInstance(inflater, activity, adapter).view;
 		ViewGroup parent = (ViewGroup)instanceView.getParent();
 		if (null != parent) {
@@ -593,15 +603,18 @@ public class SearchTab {
 			resultAdapter.hideProgress();
 			return;
 		}
-		Class<? extends BaseSearchTask> engineClass = taskIterator.next();
-		BaseSearchTask engine;
 		try {
-			engine = engineClass.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[]{resultsListener, currentName});
+			Engine engine = taskIterator.next();
+			BaseSearchTask searchTask = engine.getEngineClass()
+					.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName});
+			if (searchTask instanceof SearchWithPages) {
+				int page = engine.getPage();
+				((SearchWithPages) searchTask).setPage(page);
+			}
+			searchTask.execute(NO_PARAMS);
 		} catch (Exception e) {
 			getNextResults();
-			return;
 		}
-		engine.execute(NO_PARAMS);
 	}
 	
 	private static class InsertDownloadItem {
