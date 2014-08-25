@@ -602,12 +602,9 @@ public class OnlineSearchView {
 
 						aDialogDownLoadOtions.show();
 						aDialogDownLoadOtions.setOnCancelListener(new OnCancelListener() {
-							
 							@Override
 							public void onCancel(DialogInterface dialog) {
-								if (null != player) {
-									dialogDismisser.run();
-								}
+								dialogDismisser.run();
 							}
 						});
 					}
