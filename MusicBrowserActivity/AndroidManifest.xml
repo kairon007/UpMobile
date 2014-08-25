@@ -35,7 +35,7 @@
         android:allowTaskReparenting="true">
         <meta-data
             android:name="android.app.default_searchable"
-            android:value="com.android.music.QueryBrowserActivity"
+            android:value="com.simpleandroid.music.QueryBrowserActivity"
         />
         <activity android:name="com.simpleandroid.music.MusicBrowserActivity"
             android:theme="@android:style/Theme.NoTitleBar"
@@ -86,7 +86,7 @@
                 <data android:mimeType="application/itunes"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.android.music.PLAYBACK_VIEWER" />
+                <action android:name="com.simpleandroid.music.PLAYBACK_VIEWER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -189,7 +189,7 @@
                 <data android:mimeType="vnd.android.cursor.dir/playlist"/>
             </intent-filter>
         </activity>
-        <activity-alias android:name="com.android.music.PlaylistShortcutActivity"
+        <activity-alias android:name="com.simpleandroid.music.PlaylistShortcutActivity"
             android:targetActivity="com.simpleandroid.music.PlaylistBrowserActivity"
             android:label="@string/musicshortcutlabel"
             android:icon="@drawable/ic_launcher_shortcut_music_playlist"
