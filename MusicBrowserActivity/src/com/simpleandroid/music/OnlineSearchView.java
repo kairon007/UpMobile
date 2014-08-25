@@ -29,8 +29,10 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.ServiceConnection;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -50,6 +52,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -71,6 +75,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.simpleandroid.music.MusicUtils.ServiceToken;
 import com.simpleandroid.music.adapters.AdapterHelper;
 import com.simpleandroid.music.adapters.AdapterHelper.ViewBuilder;
 
@@ -94,6 +99,7 @@ public class OnlineSearchView {
 	private Player player;
 	private CoverLoaderTask coverLoader;
 	private AsyncTask<Void, Void, String> getUrlTask;
+    private static IMediaPlaybackService mService = null;
 	private boolean searchStopped = true;
 	public static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	public static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
@@ -117,6 +123,16 @@ public class OnlineSearchView {
 		} else {
 			instance.activity = activity;
 		}
+		ServiceConnection connection = new ServiceConnection() {
+	        public void onServiceConnected(ComponentName classname, IBinder obj) {
+	            mService = IMediaPlaybackService.Stub.asInterface(obj);
+	        }
+	        
+	        public void onServiceDisconnected(ComponentName classname) {
+	            mService = null;
+	        }
+		};
+		MusicUtils.bindToService(activity, connection);
 		return instance;
 	}
 
@@ -688,6 +704,8 @@ public class OnlineSearchView {
 		};
 
 		public void onPrepared() {
+            try { if (mService != null && mService.isPlaying()) mService.pause();
+            } catch (RemoteException e) { e.printStackTrace(); }			
 			spinner.setVisibility(View.GONE);
 			button.setVisibility(View.VISIBLE);
 			Intent i = new Intent(ACTION_PAUSE);
