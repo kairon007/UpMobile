@@ -104,11 +104,11 @@ public class OnlineSearchView {
 			instance = new OnlineSearchView(inflater.inflate(R.layout.search, null), inflater, activity);
 			Context context = inflater.getContext();
 			if (null == engines) {
-				String[] engineNames = context.getResources().getStringArray(R.array.search_engines);
+				String[][] engineNames = Settings.GET_SEARCH_ENGINES(context);
 				engines = new ArrayList<Class<? extends BaseSearchTask>>(engineNames.length);
 				for (int i = 0; i < engineNames.length; i++) {
 					try {
-						engines.add((Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineNames[i]));
+						engines.add((Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineNames[i][0]));
 					} catch (ClassNotFoundException e) {
 						Log.e("SearchTab", "Unknown engine", e);
 					}

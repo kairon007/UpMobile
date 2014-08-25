@@ -312,20 +312,6 @@
     <!-- Menu text for the item controlling the audio effects panel [CHAR LIMIT=15] -->
     <string name="effectspanel">Sound effects</string>
     
-    <string-array name="search_engines">
-	    <item>SearchVmusice</item>
-	    <item>SearchPleer</item>
-	    <item>SearchPoisk</item>
-	    <item>SearchHulkShare</item>
-	    <item>SearchMp3skull</item>
-	    <item>SearchMp3World</item>
-	    <item>SearchSoundCloud</item>
-	    <item>SearchSogou</item>
-	    <item>SearchGrooveshark</item>
-	    <item>SearchTing</item>
-	    <item>SearchZaycev</item>
-	</string-array>
-    
     <string name="search_message_default">No results yet.\nSearch for something.</string>
     
 	<string name="download_error">Please wait while song loads.</string>
