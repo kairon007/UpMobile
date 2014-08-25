@@ -606,7 +606,7 @@ public class OnlineSearchView {
 							@Override
 							public void onCancel(DialogInterface dialog) {
 								if (null != player) {
-									player.cancel();
+									dialogDismisser.run();
 								}
 							}
 						});
