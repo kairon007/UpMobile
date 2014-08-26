@@ -290,7 +290,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
 		}
-		setContentView(R.layout.library_content);
+		setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.library_content_top:R.layout.library_content);
 		mTextFilter = (TextView)findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
 		mClearFilterEditText = (ImageButton)findViewById(R.id.clear_filter);
@@ -333,6 +333,9 @@ public class MainActivity extends Activity implements TextWatcher{
 			if (MusicDownloaderApp.getService().conteinsPlayer()) {
 				player = MusicDownloaderApp.getService().getPlayer();
 			}
+		}
+		if (Settings.ENABLE_ADS) {
+            Advertisement.mopubShowBanner(this);
 		}
 	}
 	
