@@ -111,6 +111,9 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
         if (mCursor != null) {
             mCursor.close();
         }
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubDestroy(this);
+		}
         super.onDestroy();
     }
 

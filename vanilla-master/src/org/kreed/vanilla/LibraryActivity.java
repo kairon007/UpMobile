@@ -132,12 +132,14 @@ public class LibraryActivity
 		  SongTimeline.MODE_PLAY_ID_FIRST, SongTimeline.MODE_ENQUEUE_ID_FIRST };
 
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
-
+	private static final String SWICH_SHOW_DIALOG_RATE = "swich_show_dialog_rate";
+	
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
 
 	private View mSearchBox;
 	private boolean mSearchBoxVisible;
+	private boolean swichShowDialogRate = true;
 
 	private TextView mTextFilter;
 	private View mSortButton;
@@ -284,6 +286,9 @@ public class LibraryActivity
 		this.state = state;
 		if (state == null) {
 			checkForLaunch(getIntent());
+			
+		} else {
+			swichShowDialogRate = state.getBoolean(SWICH_SHOW_DIALOG_RATE);
 		}
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			setTheme(R.style.Library_White);
@@ -478,8 +483,10 @@ public class LibraryActivity
 		
 		// initialize ad networks
 		try {
+			//TODO dialog
 			if (!Settings.getIsBlacklisted(this)) {	
-				Advertisement.start(this);
+				Advertisement.start(this, swichShowDialogRate);
+				swichShowDialogRate = false;
 			} else {
 				Advertisement.showDisclaimer(this); 
 			}
@@ -596,6 +603,7 @@ public class LibraryActivity
 	{
 		if (in.getBoolean(SEARCH_BOX_VISIBLE))
 			setSearchBoxVisible(true);
+		swichShowDialogRate = in.getBoolean(SWICH_SHOW_DIALOG_RATE);
 		super.onRestoreInstanceState(in);
 	}
 
@@ -604,6 +612,7 @@ public class LibraryActivity
 	{
 		super.onSaveInstanceState(out);
 		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
+		out.putBoolean(SWICH_SHOW_DIALOG_RATE, swichShowDialogRate);
 	}
 
 	@Override

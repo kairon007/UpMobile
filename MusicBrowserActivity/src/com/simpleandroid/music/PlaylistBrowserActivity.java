@@ -209,6 +209,9 @@ public class PlaylistBrowserActivity extends ListActivity
         setListAdapter(null);
         mAdapter = null;
         unregisterReceiver(mScanListener);
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubDestroy(this);
+		}
         super.onDestroy();
     }
     

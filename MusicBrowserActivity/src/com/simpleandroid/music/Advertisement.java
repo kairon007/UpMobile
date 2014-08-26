@@ -1501,7 +1501,15 @@ public class Advertisement {
 		}
 	}
 
-    
+	public static void mopubDestroy(Activity activity) {
+		try {
+			MoPubView moPubView = (MoPubView) activity.findViewById(R.id.banner_view);			
+			moPubView.destroy();
+		} catch(Exception e) {
+			
+		}
+	}
+	
 	public static void mopubShowInterstitial(final Activity activity, String adPositionKey) {
 		
 		mopubShowInterstitial(activity, adPositionKey, false);

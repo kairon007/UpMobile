@@ -137,7 +137,7 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
         // Start on the last page the user was on
         Bundle args = getArguments();
-        String str = args.getString("key" , null);
+    	String str = args.getString("key");        
         if(str != null && !str.isEmpty())
         {	
         	mViewPager.setCurrentItem(0);

@@ -74,6 +74,9 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
         if (mCursor != null) {
             mCursor.close();
         }
+        if (Settings.ENABLE_ADS) {
+            Advertisement.mopubDestroy(this);
+		}
     }
 
     public void init() {

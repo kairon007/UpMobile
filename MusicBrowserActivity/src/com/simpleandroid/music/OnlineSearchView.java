@@ -103,6 +103,8 @@ public class OnlineSearchView {
 	private boolean searchStopped = true;
 	public static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	public static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
+	private boolean dialogIsShow = false;
+	private boolean chooseDirIsShow = false;
 
 	@SuppressWarnings("unchecked")
 	public static final OnlineSearchView getInstance(LayoutInflater inflater, SearchBrowserActivity activity) {
@@ -564,34 +566,64 @@ public class OnlineSearchView {
 		Button startDownload = (Button) downLoadDialog.findViewById(R.id.b_download);
 		startDownload.setOnClickListener(downloadClickListener);
 		AlertDialog.Builder showDownLoadOtionsBuilder = new AlertDialog.Builder(context);
-
 		showDownLoadOtionsBuilder.setView(downLoadDialog);
 		final AlertDialog aDialogDownLoadOtions = showDownLoadOtionsBuilder.create();
+		aDialogDownLoadOtions.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialogDismisser.run();
+				dialogIsShow = false;
+				chooseDirIsShow = false;
+			}
+		});
 		startDownload.setTag(aDialogDownLoadOtions);
 		viewChooser.setOnClickListener(new View.OnClickListener() {
-
+			
 			@Override
 			public void onClick(View v) {
-				DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(v.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
+				DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(activity, new DirectoryChooserDialog.ChosenDirectoryListener() {
 					@Override
 					public void onChosenDir(String chosenDir) {
 						textPath.setText(chosenDir);
-						OnlineSearchView.setDownloadPath(context, chosenDir);
+						OnlineSearchView.setDownloadPath(activity, chosenDir);
+						dialogIsShow = false;
+						chooseDirIsShow = false;
 					}
 				});
-				directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(context));
+				directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(activity));
+				chooseDirIsShow = true;
 			}
 		});
+		
+		if (dialogIsShow) {
+			aDialogDownLoadOtions.show();
+		}
+		if(chooseDirIsShow) {
+			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(activity, new DirectoryChooserDialog.ChosenDirectoryListener() {
+				@Override
+				public void onChosenDir(String chosenDir) {
+					textPath.setText(chosenDir);
+					OnlineSearchView.setDownloadPath(activity, chosenDir);
+					dialogIsShow = false;
+				}
+			});
+			directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(activity));
+		}
 
-		AlertDialog.Builder b = new AlertDialog.Builder(context).setTitle(title + " - " + artist).setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
+		AlertDialog.Builder b = new AlertDialog.Builder(context).setTitle(title + " - " + artist)
+				.setNegativeButton(R.string.cancel, new AlertDialog.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialogDismisser.run();
+				chooseDirIsShow = false;
+				dialogIsShow = false;
 			}
 		}).setOnCancelListener(new OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				dialogDismisser.run();
+				chooseDirIsShow = false;
+				dialogIsShow = false;
 			}
 		}).setPositiveButton(R.string.download,
 		//
@@ -599,15 +631,8 @@ public class OnlineSearchView {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-
 						aDialogDownLoadOtions.show();
-						aDialogDownLoadOtions.setOnCancelListener(new OnCancelListener() {
-							
-							@Override
-							public void onCancel(DialogInterface dialog) {
-								player.cancel();
-							}
-						});
+						dialogIsShow = true;
 					}
 				}).setView(player.getView());
 		return b.create();
