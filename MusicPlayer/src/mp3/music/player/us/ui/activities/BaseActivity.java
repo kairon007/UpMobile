@@ -12,7 +12,7 @@
 package mp3.music.player.us.ui.activities;
 
 import static mp3.music.player.us.utils.MusicUtils.mService;
-
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.BroadcastReceiver;
@@ -29,7 +29,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -48,7 +47,6 @@ import mp3.music.player.us.utils.ThemeUtils;
 import mp3.music.player.us.widgets.PlayPauseButton;
 import mp3.music.player.us.widgets.RepeatButton;
 import mp3.music.player.us.widgets.ShuffleButton;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -122,11 +120,18 @@ public abstract class BaseActivity extends SherlockFragmentActivity implements S
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+    	if (android.os.Build.VERSION.SDK_INT < 11) {
+    		if (!ApolloUtils.hasHoneycomb()) {
+                requestWindowFeature(Window.FEATURE_NO_TITLE);
+    		}
+    	}
         super.onCreate(savedInstanceState);
         // Title bar shows up in gingerbread, I'm too tired to figure out why.
-        if (!ApolloUtils.hasHoneycomb()) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
+    	if (android.os.Build.VERSION.SDK_INT >= 11) {
+    		if (!ApolloUtils.hasHoneycomb()) {
+                requestWindowFeature(Window.FEATURE_NO_TITLE);
+    		}
+    	}
 
         // Initialze the theme resources
         mResources = new ThemeUtils(this);
@@ -159,7 +164,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity implements S
     /**
      * {@inheritDoc}
      */
-    @Override
+    @SuppressLint("NewApi") @Override
     public void onServiceConnected(final ComponentName name, final IBinder service) {
         mService = IApolloService.Stub.asInterface(service);
         // Set the playback drawables
@@ -417,7 +422,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity implements S
         /**
          * {@inheritDoc}
          */
-        @Override
+        @SuppressLint("NewApi") @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
             if (action.equals(MusicPlaybackService.META_CHANGED)) {
