@@ -28,6 +28,11 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.kreed.vanilla.equalizer.ProgressClass;
+import org.kreed.vanilla.equalizer.ProgressDataSource;
+import org.kreed.vanilla.equalizer.widget.Utils;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Notification;
@@ -51,6 +56,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.audiofx.BassBoost;
+import android.media.audiofx.Equalizer;
+import android.media.audiofx.Virtualizer;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -390,6 +398,8 @@ public final class PlaybackService extends Service
 		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		mMediaPlayer.setOnCompletionListener(this);
 		mMediaPlayer.setOnErrorListener(this);
+		
+		setEqualizer(getApplicationContext());
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			try {
@@ -1888,5 +1898,45 @@ public final class PlaybackService extends Service
 	public int getTimelineLength()
 	{
 		return mTimeline.getLength();
+	}
+	
+	public Equalizer getEqualizer() {
+		return new Equalizer(1, mMediaPlayer.getAudioSessionId());
+	}
+	
+	public BassBoost getBassBoost() {
+		return new BassBoost(2, mMediaPlayer.getAudioSessionId());
+	}
+	
+	public Virtualizer getVirtualizer() {
+		return new Virtualizer(3, mMediaPlayer.getAudioSessionId());
+	}
+	
+	public void setEqualizer(Context context) {
+		if (Utils.getEqPrefs(context)) {
+			Equalizer equalizer = getEqualizer();
+			BassBoost bassBoost = getBassBoost();
+			Virtualizer virtualizer = getVirtualizer();
+			equalizer.setEnabled(true);
+			bassBoost.setEnabled(true);
+			virtualizer.setEnabled(true);
+			ProgressDataSource myProgressDataSource = new ProgressDataSource(getApplicationContext());
+			myProgressDataSource.open();
+			List<ProgressClass> values = myProgressDataSource.getAllPgs();
+			if (values.size() == 0)
+				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
+			else {
+				//Set equalizer
+				Utils.changeAtBand(equalizer, (short)0, values.get(0).getProgress(1) - 15);
+				Utils.changeAtBand(equalizer, (short)1, values.get(0).getProgress(2) - 15);
+				Utils.changeAtBand(equalizer, (short)2, values.get(0).getProgress(3) - 15);
+				Utils.changeAtBand(equalizer, (short)3, values.get(0).getProgress(4) - 15);
+				Utils.changeAtBand(equalizer, (short)4, values.get(0).getProgress(5) - 15);
+				//Set bassboost
+				bassBoost.setStrength((short)(values.get(0).getArc(1) * 10));
+				//Set virtualizer
+				virtualizer.setStrength((short)(values.get(0).getArc(2) * 10));
+			}
+		}
 	}
 }

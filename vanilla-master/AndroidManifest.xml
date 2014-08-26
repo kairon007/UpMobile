@@ -128,7 +128,7 @@ THE SOFTWARE.
             android:name="TabOrderActivity" />
         
         <activity
-            android:name="com.example.musicequalizer.MyEqualizer" />
+            android:name="org.kreed.vanilla.equalizer.MyEqualizer" />
         
         <activity
             android:name="com.mopub.mobileads.MoPubActivity"

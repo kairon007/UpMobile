@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/normal"
+        android:title="@string/normal"/>
+    <item
+        android:id="@+id/classical"
+        android:title="@string/classical"/>
+    <item
+        android:id="@+id/dance"
+        android:title="@string/dance"/>
+    <item
+        android:id="@+id/flat"
+        android:title="@string/flat"/>
+    <item
+        android:id="@+id/folk"
+        android:title="@string/folk"/>
+    <item
+        android:id="@+id/metal"
+        android:title="@string/metal"/>
+    <item
+        android:id="@+id/hiphop"
+        android:title="@string/hiphop"/>
+    <item
+        android:id="@+id/jazz"
+        android:title="@string/jazz"/>
+    <item
+        android:id="@+id/pop"
+        android:title="@string/pop"/>
+    <item
+        android:id="@+id/rock"
+        android:title="@string/rock"/>
+
+</menu>
