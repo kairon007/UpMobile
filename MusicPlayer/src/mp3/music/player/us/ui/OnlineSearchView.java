@@ -104,7 +104,9 @@ public class OnlineSearchView {
 	public static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	public static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	public static String SEARCH_ONLINE = "SEARCH_ONLINE";
-
+	private boolean dialogIsShow = false;
+	private boolean chooseDirIsShow = false;
+	
 	@SuppressWarnings("unchecked")
 	public static final OnlineSearchView getInstance(LayoutInflater inflater,
 			HomeActivity activity) {
@@ -173,8 +175,7 @@ public class OnlineSearchView {
 		return instanceView;
 	}
 
-	private static class DownloadClickListener implements View.OnClickListener,
-			OnBitmapReadyListener {
+	private static class DownloadClickListener implements View.OnClickListener,OnBitmapReadyListener {
 		private final Context context;
 		private final String songTitle;
 		private final Player player;
@@ -182,8 +183,7 @@ public class OnlineSearchView {
 		private Bitmap cover;
 		private boolean waitingForCover = true;
 
-		private DownloadClickListener(Context context, String songTitle,
-				String songArtist, Player player) {
+		private DownloadClickListener(Context context, String songTitle,String songArtist, Player player) {
 			this.context = context;
 			this.songTitle = songTitle;
 			this.songArtist = songArtist;
@@ -238,14 +238,12 @@ public class OnlineSearchView {
 						if (waitingForCover)
 							return;
 						Cursor c = manager.query(new DownloadManager.Query()
-								.setFilterById(downloadId).setFilterByStatus(
-										DownloadManager.STATUS_SUCCESSFUL));
+								.setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 						if (c == null || !c.moveToFirst())
 							return;
 						int columnIndex = 0;
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-							columnIndex = c
-									.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+							columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
 						} else if (columnIndex != -1) {
 							columnIndex = c.getColumnIndex("local_uri");
 						}
@@ -267,14 +265,12 @@ public class OnlineSearchView {
 						metadata.setSongTitle(songTitle);
 						metadata.setArtist(songArtist);
 						if (null != cover) {
-							ByteArrayOutputStream out = new ByteArrayOutputStream(
-									80000);
+							ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 							cover.compress(CompressFormat.JPEG, 85, out);
 							metadata.addPicture(new ImageData(
 									out.toByteArray(), "image/jpeg", "cover", 3));
 						}
-						File dst = new File(src.getParentFile(), src.getName()
-								+ "-1");
+						File dst = new File(src.getParentFile(), src.getName()+ "-1");
 						new MyID3().write(src, dst, src_set, metadata); // write
 																		// updated
 																		// metadata
@@ -306,12 +302,9 @@ public class OnlineSearchView {
 									null,
 									new MediaScannerConnection.OnScanCompletedListener() {
 
-										public void onScanCompleted(
-												String path, Uri uri) {
-											Log.i("TAG", "Finished scanning "
-													+ path);
-											Intent intent = new Intent(
-													MusicBrowserPhoneFragment.ACTION_UPDATE);
+										public void onScanCompleted(String path, Uri uri) {
+											Log.i("TAG", "Finished scanning "+ path);
+											Intent intent = new Intent(MusicBrowserPhoneFragment.ACTION_UPDATE);
 											context.sendBroadcast(intent);
 										}
 									});
@@ -409,8 +402,7 @@ public class OnlineSearchView {
 				getNextResults();
 				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
 					message.setText(String.format(message.getContext()
-							.getString(R.string.search_message_empty),
-							searchString));
+							.getString(R.string.search_message_empty),searchString));
 					progress.setVisibility(View.GONE);
 				}
 			} else {
@@ -428,8 +420,7 @@ public class OnlineSearchView {
 		this.inflater = inflater;
 		this.activity = homeActivity;
 
-		resultAdapter = new SongSearchAdapter(instanceView.getContext(),
-				inflater);
+		resultAdapter = new SongSearchAdapter(instanceView.getContext(),inflater);
 		message = (TextView) instanceView.findViewById(R.id.message);
 		progress = instanceView.findViewById(R.id.progress);
 		progress.setVisibility(View.GONE);
@@ -440,10 +431,8 @@ public class OnlineSearchView {
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if (position == resultAdapter.getCount())
-					return; // progress click
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if (position == resultAdapter.getCount()) return; // progress click
 				Bundle bundle = new Bundle(0);
 				bundle.putInt(KEY_POSITION, position);
 				if (activity != null) {
@@ -452,11 +441,9 @@ public class OnlineSearchView {
 			}
 		});
 		searchField = (TextView) instanceView.findViewById(R.id.text);
-		searchField
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
+					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 						if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 							trySearch();
 							return true;
@@ -613,8 +600,7 @@ public class OnlineSearchView {
 				activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
-		DownloadClickListener downloadClickListener = new DownloadClickListener(
-				context, title, artist, player) {
+		DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);
@@ -639,12 +625,17 @@ public class OnlineSearchView {
 		Button startDownload = (Button) downLoadDialog
 				.findViewById(R.id.b_download);
 		startDownload.setOnClickListener(downloadClickListener);
-		AlertDialog.Builder showDownLoadOtionsBuilder = new AlertDialog.Builder(
-				context);
-
+		AlertDialog.Builder showDownLoadOtionsBuilder = new AlertDialog.Builder(context);
 		showDownLoadOtionsBuilder.setView(downLoadDialog);
-		final AlertDialog aDialogDownLoadOtions = showDownLoadOtionsBuilder
-				.create();
+		final AlertDialog aDialogDownLoadOtions = showDownLoadOtionsBuilder.create();
+		aDialogDownLoadOtions.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialogDismisser.run();
+				dialogIsShow = false;
+				chooseDirIsShow = false;
+			}
+		});
 		startDownload.setTag(aDialogDownLoadOtions);
 		viewChooser.setOnClickListener(new View.OnClickListener() {
 
@@ -656,38 +647,56 @@ public class OnlineSearchView {
 							@Override
 							public void onChosenDir(String chosenDir) {
 								textPath.setText(chosenDir);
-								OnlineSearchView.setDownloadPath(context,
-										chosenDir);
+								OnlineSearchView.setDownloadPath(context,chosenDir);
+								dialogIsShow = false;
+								chooseDirIsShow = false;
 							}
 						});
-				directoryChooserDialog.chooseDirectory(OnlineSearchView
-						.getDownloadPath(context));
+				directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(context));
+				chooseDirIsShow = true;
 			}
 		});
 
+		if (dialogIsShow) {
+			aDialogDownLoadOtions.show();
+		}
+		if(chooseDirIsShow) {
+			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(activity, new DirectoryChooserDialog.ChosenDirectoryListener() {
+				@Override
+				public void onChosenDir(String chosenDir) {
+					textPath.setText(chosenDir);
+					OnlineSearchView.setDownloadPath(activity, chosenDir);
+					dialogIsShow = false;
+				}
+			});
+			directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(activity));
+		}
+		
 		AlertDialog.Builder b = new AlertDialog.Builder(context)
 				.setTitle(title + " - " + artist)
 				.setNegativeButton(R.string.cancel,
 						new AlertDialog.OnClickListener() {
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
+							public void onClick(DialogInterface dialog,int which) {
 								dialogDismisser.run();
+								chooseDirIsShow = false;
+								dialogIsShow = false;
 							}
 						}).setOnCancelListener(new OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
 						dialogDismisser.run();
+						chooseDirIsShow = false;
+						dialogIsShow = false;
 					}
 				}).setPositiveButton(R.string.download,
 				//
 						new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-
+							public void onClick(DialogInterface dialog,int which) {
 								aDialogDownLoadOtions.show();
+								dialogIsShow = true;
 							}
 						}).setView(player.getView());
 		return b.create();
@@ -782,8 +791,7 @@ public class OnlineSearchView {
 					int current = mediaPlayer.getCurrentPosition();
 					int total = mediaPlayer.getDuration();
 					progress.setProgress(current);
-					time.setText(formatTime(current) + " / "
-							+ formatTime(total));
+					time.setText(formatTime(current) + " / " + formatTime(total));
 					progress.postDelayed(this, 1000);
 				} catch (NullPointerException e) {
 					// terminate
@@ -832,7 +840,7 @@ public class OnlineSearchView {
 			progress.removeCallbacks(progressAction);
 		}
 
-		@Override
+		@SuppressLint("NewApi") @Override
 		protected Boolean doInBackground(String... params) {
 			try {
 				HashMap<String, String> headers = new HashMap<String, String>();
