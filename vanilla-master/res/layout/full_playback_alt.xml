@@ -37,6 +37,7 @@ THE SOFTWARE.
 	<ScrollView 
 		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
+		android:background="@color/light_gray"
 		>
 		<TextView 
 			android:id="@+id/lyric"
@@ -45,6 +46,7 @@ THE SOFTWARE.
 			android:padding="@dimen/padding_20px"
 			android:layout_width="fill_parent"
 			android:shadowColor="@android:color/black"
+			android:textColor="#333333"
 			android:shadowRadius="1"
 			android:shadowDx="0"
 			android:shadowDy="0"
@@ -72,6 +74,9 @@ THE SOFTWARE.
 			<TextView
 				android:text="@string/_title"
 				android:paddingRight="5dip"
+				android:paddingEnd="5dip"
+				android:paddingStart="0dip"
+				android:paddingLeft="0dip"
 				android:gravity="right" />
 			<TextView
 				android:id="@+id/title"
@@ -87,6 +92,9 @@ THE SOFTWARE.
 			<TextView
 				android:text="@string/_artist"
 				android:paddingRight="5dip"
+				android:paddingEnd="5dip"
+				android:paddingStart="0dip"
+				android:paddingLeft="0dip"
 				android:gravity="right" />
 			<TextView android:id="@+id/artist" />
 		</TableRow>
@@ -94,6 +102,9 @@ THE SOFTWARE.
 			<TextView
 				android:text="@string/_album"
 				android:paddingRight="5dip"
+				android:paddingEnd="5dip"
+				android:paddingStart="0dip"
+				android:paddingLeft="0dip"
 				android:gravity="right" />
 			<TextView android:id="@+id/album" />
 		</TableRow>
@@ -101,6 +112,9 @@ THE SOFTWARE.
 			<TextView
 				android:text="@string/_genre"
 				android:paddingRight="5dip"
+				android:paddingEnd="5dip"
+				android:paddingStart="0dip"
+				android:paddingLeft="0dip"
 				android:gravity="right" />
 			<TextView android:id="@+id/genre" />
 		</TableRow>
@@ -108,6 +122,9 @@ THE SOFTWARE.
 			<TextView
 				android:text="@string/_track"
 				android:paddingRight="5dip"
+				android:paddingEnd="5dip"
+				android:paddingStart="0dip"
+				android:paddingLeft="0dip"
 				android:gravity="right" />
 			<TextView android:id="@+id/track" />
 		</TableRow>
@@ -115,6 +132,9 @@ THE SOFTWARE.
 			<TextView
 				android:text="@string/_year"
 				android:paddingRight="5dip"
+				android:paddingEnd="5dip"
+				android:paddingStart="0dip"
+				android:paddingLeft="0dip"
 				android:gravity="right" />
 			<TextView android:id="@+id/year" />
 		</TableRow>
@@ -122,6 +142,9 @@ THE SOFTWARE.
 			<TextView
 				android:text="@string/_composer"
 				android:paddingRight="5dip"
+				android:paddingEnd="5dip"
+				android:paddingStart="0dip"
+				android:paddingLeft="0dip"
 				android:gravity="right" />
 			<TextView android:id="@+id/composer" />
 		</TableRow>
@@ -129,6 +152,9 @@ THE SOFTWARE.
 			<TextView
 				android:text="@string/_format"
 				android:paddingRight="5dip"
+				android:paddingEnd="5dip"
+				android:paddingStart="0dip"
+				android:paddingLeft="0dip"
 				android:gravity="right" />
 			<TextView android:id="@+id/format" />
 		</TableRow>

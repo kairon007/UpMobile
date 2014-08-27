@@ -13,4 +13,6 @@
     <color name="window_background_black">#000</color>
     <color name="window_background_light">#fff</color>
     <color name="dimmed">#3fff</color>
+    
+    <color name="light_gray">#80e6e6e6</color>
 </resources>
