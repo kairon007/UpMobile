@@ -28,6 +28,7 @@ import java.io.File;
 import junit.framework.Assert;
 
 import org.kreed.vanilla.app.VanillaApp;
+import org.kreed.vanilla.equalizer.MyEqualizer;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.AlertDialog;
@@ -79,7 +80,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.musicequalizer.MyEqualizer;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
