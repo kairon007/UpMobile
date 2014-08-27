@@ -21,18 +21,17 @@
     android:layout_height="match_parent"
     android:padding="@dimen/list_preferred_item_padding" >
 
-    <Button
-        android:id="@+id/search_online"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:visibility="invisible" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
         android:layout_gravity="center_vertical|start"
         android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/search_online"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/empty"
@@ -56,6 +55,7 @@
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
             android:verticalSpacing="@dimen/grid_item_spacing" />
+
     </LinearLayout>
 
 </FrameLayout>
