@@ -31,43 +31,43 @@ import android.widget.BaseAdapter;
 /**
  * CursorAdapter backed by MediaStore playlists.
  */
-public class TabOrderAdapter extends BaseAdapter implements
-		DragListView.DragAdapter {
+public class TabOrderAdapter extends BaseAdapter implements DragListView.DragAdapter {
 	private final TabOrderActivity mActivity;
 	private final LayoutInflater mInflater;
 	private int[] mTabIds;
 
 	/**
 	 * Create a tab order adapter.
-	 * 
-	 * @param activity
-	 *            The activity that will own this adapter. The activity will be
-	 *            notified when items have been moved.
+	 *
+	 * @param activity The activity that will own this adapter. The activity
+	 * will be notified when items have been moved.
 	 */
-	public TabOrderAdapter(TabOrderActivity activity) {
+	public TabOrderAdapter(TabOrderActivity activity)
+	{
 		mActivity = activity;
-		mInflater = (LayoutInflater) activity
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/**
 	 * Set the array containing the order of tab ids.
 	 */
-	public void setTabIds(int[] ids) {
+	public void setTabIds(int[] ids)
+	{
 		mTabIds = ids;
 		notifyDataSetChanged();
 	}
 
 	/**
-	 * Returns the array containing the order of tab ids. Do not modify the
-	 * array.
+	 * Returns the array containing the order of tab ids. Do not modify the array.
 	 */
-	public int[] getTabIds() {
+	public int[] getTabIds()
+	{
 		return mTabIds;
 	}
 
 	@Override
-	public void move(int from, int to) {
+	public void move(int from, int to)
+	{
 		if (from == to)
 			return;
 
@@ -86,40 +86,45 @@ public class TabOrderAdapter extends BaseAdapter implements
 	}
 
 	@Override
-	public void remove(int position) {
+	public void remove(int position)
+	{
 		// not implemented
 	}
 
 	@Override
-	public int getCount() {
+	public int getCount()
+	{
 		return LibraryPagerAdapter.MAX_ADAPTER_COUNT;
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public Object getItem(int position)
+	{
 		return null;
 	}
 
 	@Override
-	public long getItemId(int position) {
+	public long getItemId(int position)
+	{
 		return mTabIds[position];
 	}
 
 	@Override
-	public View getView(int position, View convert, ViewGroup parent) {
+	public View getView(int position, View convert, ViewGroup parent)
+	{
 		DragTextView text;
 		if (convert == null) {
-			text = (DragTextView) mInflater.inflate(R.layout.tab_order_row,
-					null);
+			text = (DragTextView)mInflater.inflate(R.layout.tab_order_row, null);
 		} else {
-			text = (DragTextView) convert;
+			text = (DragTextView)convert;
 		}
 		text.setText(LibraryPagerAdapter.TITLES[mTabIds[position]]);
 		return text;
 	}
 
 	@Override
-	public boolean hasStableIds() {
+	public boolean hasStableIds()
+	{
 		return true;
 	}
 }

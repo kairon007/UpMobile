@@ -65,11 +65,6 @@ public class LibraryPagerAdapter
 	 * smaller.
 	 */
 	public static final int MAX_ADAPTER_COUNT = 6;//7;
-	
-	public static final int START_ADAPTER_COUNT = 4;
-	public static final int[] START_ORDER = { MediaUtils.TYPE_SEARCH, MediaUtils.TYPE_ARTIST, 
-			// MediaUtils.TYPE_ALBUM, 
-			MediaUtils.TYPE_SONG, MediaUtils.TYPE_PLAYLIST};
 	/**
 	 * The human-readable title for each list. The positions correspond to the
 	 * MediaUtils ids, so e.g. TITLES[MediaUtils.TYPE_SONG] = R.string.songs
@@ -83,6 +78,18 @@ public class LibraryPagerAdapter
 	public static final int[] DEFAULT_ORDER = { MediaUtils.TYPE_SEARCH, MediaUtils.TYPE_ARTIST, 
 		// MediaUtils.TYPE_ALBUM, 
 		MediaUtils.TYPE_SONG, MediaUtils.TYPE_PLAYLIST, MediaUtils.TYPE_GENRE, MediaUtils.TYPE_FILE };
+	
+	public static final int[] DEFAULT_ORDER_WITHOUT_GENRE = { MediaUtils.TYPE_SEARCH, MediaUtils.TYPE_ARTIST, 
+		// MediaUtils.TYPE_ALBUM, 
+		MediaUtils.TYPE_SONG, MediaUtils.TYPE_PLAYLIST, MediaUtils.TYPE_FILE};
+	
+	public static final int[] DEFAULT_ORDER_WITHOUT_FILE = { MediaUtils.TYPE_SEARCH, MediaUtils.TYPE_ARTIST, 
+		// MediaUtils.TYPE_ALBUM, 
+		MediaUtils.TYPE_SONG, MediaUtils.TYPE_PLAYLIST, MediaUtils.TYPE_GENRE};
+	
+	public static final int[] DEFAULT_ORDER_WITHOUT_FILE_AND_GENRE = { MediaUtils.TYPE_SEARCH, MediaUtils.TYPE_ARTIST, 
+		// MediaUtils.TYPE_ALBUM, 
+		MediaUtils.TYPE_SONG, MediaUtils.TYPE_PLAYLIST};
 	/**
 	 * The user-chosen tab order.
 	 */
@@ -228,19 +235,25 @@ public class LibraryPagerAdapter
 	 *
 	 * @return True if order has changed.
 	 */
-	public boolean loadTabOrder() {
-		//TODO
+	public boolean loadTabOrder()
+	{
 		String in = PlaybackService.getSettings(mActivity).getString(PrefKeys.TAB_ORDER, null);
-		boolean showFile = PlaybackService.getSettings(mActivity).getBoolean(PrefKeys.ENABLE_FILES_TAB, false);
-		boolean showGenre = PlaybackService.getSettings(mActivity).getBoolean(PrefKeys.ENABLE_GENRES_TAB, false);
-		int[] order;
-		int count;
-		if (in == null) {
-			order = START_ORDER;
-			count = START_ADAPTER_COUNT;
-		} else if (in.length() != MAX_ADAPTER_COUNT){
-			order = DEFAULT_ORDER;
-			count = MAX_ADAPTER_COUNT;
+		int[] order = null;
+		int count = 0;
+		if (in == null || in.length() != MAX_ADAPTER_COUNT) {
+			if(Settings.ENABLE_FILES_TAB_BY_DEFAULT && Settings.ENABLE_GENRES_TAB_BY_DEFAULT){
+				order = DEFAULT_ORDER;
+				count = MAX_ADAPTER_COUNT;
+			} else if (!Settings.ENABLE_FILES_TAB_BY_DEFAULT && Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
+				order = DEFAULT_ORDER_WITHOUT_FILE;
+				count = MAX_ADAPTER_COUNT - 1;
+			} else if (Settings.ENABLE_FILES_TAB_BY_DEFAULT && !Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
+				order = DEFAULT_ORDER_WITHOUT_GENRE;
+				count = MAX_ADAPTER_COUNT - 1;
+			} else if (!Settings.ENABLE_FILES_TAB_BY_DEFAULT && !Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
+				order = DEFAULT_ORDER_WITHOUT_FILE_AND_GENRE;
+				count = MAX_ADAPTER_COUNT - 2;
+			}
 		} else {
 			char[] chars = in.toCharArray();
 			order = new int[MAX_ADAPTER_COUNT];
@@ -255,21 +268,10 @@ public class LibraryPagerAdapter
 						count = MAX_ADAPTER_COUNT;
 						break;
 					}
-					if (showGenre && i == MediaUtils.TYPE_GENRE) {
-						order[count++] = v;
-						showGenre = false;
-						continue;
-					} else if (showFile && i == MediaUtils.TYPE_FILE) {
-						order[count++] = v;
-						showFile = false;
-						continue;
-					} else if (i != MediaUtils.TYPE_GENRE && i != MediaUtils.TYPE_FILE){
-						order[count++] = v;
-					}
+					order[count++] = v;
 				}
 			}
 		}
-
 		if (count != mTabCount || !Arrays.equals(order, mTabOrder)) {
 			mTabOrder = order;
 			mTabCount = count;
@@ -277,7 +279,6 @@ public class LibraryPagerAdapter
 			computeExpansions();
 			return true;
 		}
-
 		return false;
 	}
 
