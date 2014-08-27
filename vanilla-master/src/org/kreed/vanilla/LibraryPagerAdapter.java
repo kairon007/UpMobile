@@ -741,7 +741,7 @@ public class LibraryPagerAdapter
 	private void postRunQuery(LibraryAdapter adapter)
 	{
 		mRequeryNeeded[adapter.getMediaType()] = false;
-		Handler handler = mWorkerHandler;
+		Handler handler = new Handler(this);
 		handler.removeMessages(MSG_RUN_QUERY, adapter);
 		handler.sendMessage(handler.obtainMessage(MSG_RUN_QUERY, adapter));
 	}
