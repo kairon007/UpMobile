@@ -25,6 +25,7 @@ package org.kreed.vanilla;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +34,8 @@ import android.widget.AdapterView.OnItemClickListener;
 /**
  * The preferences activity in which one can change application preferences.
  */
-public class TabOrderActivity extends Activity implements View.OnClickListener, OnItemClickListener {
+public class TabOrderActivity extends Activity implements View.OnClickListener,
+		OnItemClickListener {
 	private TabOrderAdapter mAdapter;
 	private DragListView mList;
 
@@ -41,14 +43,13 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 	 * Initialize the activity, loading the preference specifications.
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.tabs);
 		setContentView(R.layout.tab_order);
 
 		mAdapter = new TabOrderAdapter(this);
-		DragListView list = (DragListView)findViewById(R.id.list);
+		DragListView list = (DragListView) findViewById(R.id.list);
 		list.setAdapter(mAdapter);
 		list.setEditable(true);
 		list.setOnItemClickListener(this);
@@ -60,8 +61,7 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
@@ -71,8 +71,7 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 	}
 
 	@Override
-	public void onClick(View view)
-	{
+	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.done:
 			finish();
@@ -86,12 +85,21 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 	/**
 	 * Restore the default tab order and visibility.
 	 */
-	public void restoreDefault()
-	{
+	public void restoreDefault() {
+		boolean showFile = PlaybackService.getSettings(this).getBoolean(PrefKeys.ENABLE_FILES_TAB, false);
+		boolean showGenre = PlaybackService.getSettings(this).getBoolean(PrefKeys.ENABLE_GENRES_TAB, false);
 		mAdapter.setTabIds(LibraryPagerAdapter.DEFAULT_ORDER.clone());
 		DragListView list = mList;
 		for (int i = 0; i != LibraryPagerAdapter.MAX_ADAPTER_COUNT; ++i) {
-			list.setItemChecked(i, true);
+			if (showGenre && i == MediaUtils.TYPE_GENRE) {
+				list.setItemChecked(i, false);
+				showGenre = false;
+			} else if(showFile && i == MediaUtils.TYPE_FILE){
+				list.setItemChecked(i, false);
+				showFile = false;
+			} else if (i != MediaUtils.TYPE_GENRE && i != MediaUtils.TYPE_FILE){
+				list.setItemChecked(i, true);
+			}
 		}
 		save();
 	}
@@ -99,17 +107,16 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 	/**
 	 * Save tab order and visibility to SharedPreferences as a string.
 	 */
-	public void save()
-	{
+	public void save() {
 		int[] ids = mAdapter.getTabIds();
 		DragListView list = mList;
 		char[] out = new char[LibraryPagerAdapter.MAX_ADAPTER_COUNT];
 		for (int i = 0; i != LibraryPagerAdapter.MAX_ADAPTER_COUNT; ++i) {
-			out[i] = (char)(list.isItemChecked(i) ? 128 + ids[i] : 127 - ids[i]);
+			out[i] = (char) (list.isItemChecked(i) ? 128 + ids[i] : 127 - ids[i]);
 		}
-
 		SharedPreferences.Editor editor = PlaybackService.getSettings(this).edit();
-		editor.putString("tab_order", new String(out));
+		String string = new String(out);
+		editor.putString(PrefKeys.TAB_ORDER, new String(out));
 		editor.commit();
 	}
 
@@ -117,9 +124,10 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 	 * Load tab order settings from SharedPreferences and apply it to the
 	 * activity.
 	 */
-	public void load()
-	{
+	public void load() {
 		String in = PlaybackService.getSettings(this).getString(PrefKeys.TAB_ORDER, null);
+		boolean showFile = PlaybackService.getSettings(this).getBoolean(PrefKeys.ENABLE_FILES_TAB, false);
+		boolean showGenre = PlaybackService.getSettings(this).getBoolean(PrefKeys.ENABLE_GENRES_TAB, false);
 		if (in != null && in.length() == LibraryPagerAdapter.MAX_ADAPTER_COUNT) {
 			char[] chars = in.toCharArray();
 			int[] ids = new int[LibraryPagerAdapter.MAX_ADAPTER_COUNT];
@@ -137,7 +145,15 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 				mAdapter.setTabIds(ids);
 				DragListView list = mList;
 				for (int i = 0; i != LibraryPagerAdapter.MAX_ADAPTER_COUNT; ++i) {
-					list.setItemChecked(i, chars[i] >= 128);
+					if (showGenre && i == MediaUtils.TYPE_GENRE) {
+						list.setItemChecked(i, chars[i] >= 128);
+						showGenre = false;
+					} else if(showFile && i == MediaUtils.TYPE_FILE){
+						list.setItemChecked(i, chars[i] >= 128);
+						showFile = false;
+					} else if (i != MediaUtils.TYPE_GENRE && i != MediaUtils.TYPE_FILE){
+						list.setItemChecked(i, chars[i] >= 128);
+					}
 				}
 			}
 
@@ -148,8 +164,24 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-	{
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		SharedPreferences.Editor editor = PlaybackService.getSettings(this).edit();
+		if (position == MediaUtils.TYPE_GENRE) {
+			boolean b = PlaybackService.getSettings(this).getBoolean(PrefKeys.ENABLE_GENRES_TAB, false);
+			if (b) {
+				editor.putBoolean(PrefKeys.ENABLE_GENRES_TAB, false);
+			} else {
+				editor.putBoolean(PrefKeys.ENABLE_GENRES_TAB, true);
+			}
+		} else if (position == MediaUtils.TYPE_FILE) {
+			boolean b = PlaybackService.getSettings(this).getBoolean(PrefKeys.ENABLE_FILES_TAB, false);
+			if (b) {
+				editor.putBoolean(PrefKeys.ENABLE_FILES_TAB, false);
+			} else {
+				editor.putBoolean(PrefKeys.ENABLE_FILES_TAB, true);
+			}
+		}
+		editor.commit();
 		save();
 	}
 }
