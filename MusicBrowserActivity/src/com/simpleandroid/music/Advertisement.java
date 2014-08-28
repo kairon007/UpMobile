@@ -47,7 +47,7 @@ import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
 import com.startapp.android.publish.StartAppAd;
 import com.startapp.android.publish.StartAppSDK;
-import com.vungle.sdk.VunglePub;
+//import com.vungle.sdk.VunglePub;
 
 
 
@@ -944,10 +944,10 @@ public class Advertisement {
 										airpushShowInterstitial(activity, adPositionKey); 
 										isShowInterstitialRun = true;
 								
-									} else if (adNetworkName.equals("vungle")) {
+									/*} else if (adNetworkName.equals("vungle")) {
 										
 										vungleShowInterstitial(activity, adPositionKey); 
-										isShowInterstitialRun = true;
+										isShowInterstitialRun = true;*/
 										
 										/*
 									} else if (adNetworkName.equals("chartboost")) {
@@ -1376,10 +1376,10 @@ public class Advertisement {
 	
 
 	
-	public static void initializeVungle(Activity activity) { 
+/*	public static void initializeVungle(Activity activity) { 
 		VunglePub.init(activity, Settings.VUNGLE_ID); // only needs to be run on first :)
 		VunglePub.setAutoRotation(true); 
-	}
+	}*/
 	
 	
 	public static void initializeAirpush(Activity activity) {
@@ -1852,35 +1852,35 @@ public class Advertisement {
 	
 	
 	
-	public static void vungleShowInterstitial(final Activity activity, String adPositionKey) {
+/*	public static void vungleShowInterstitial(final Activity activity, String adPositionKey) {
 		
 		 
 		
 		VunglePub.setEventListener(new VunglePub.EventListener() {
-		    /**
+		    *//**
 		     * Called when an ad starts.
-		     */
+		     *//*
 		    @Override
 		    public void onVungleAdStart() {
 		    	
 		        
 		    }
 		 
-		    /**
+		    *//**
 		     * Called when the user exits ad unit completely (usually the post-roll).
-		     */
+		     *//*
 		    @Override
 		    public void onVungleAdEnd() {
 		    	
 		    }
 		 
-		    /**
+		    *//**
 		     * Called when the user exits the ad unit completely - but only if the user 
 		     * watched at least some portion of the ad.
 		     * 
 		     * @param watchedSeconds the number of seconds of video that were watched.
 		     * @param totalAdSeconds the total length of the ad in seconds.
-		     */
+		     *//*
 		    @Override
 		    public void onVungleView(double watchedSeconds, double totalAdSeconds) {
 		    	
@@ -1911,7 +1911,7 @@ public class Advertisement {
 		
 		if (!wasVungleAdPlayed) showDefaultInterstitial(activity, adPositionKey); 
 		
-	}
+	}*/
 	
 	
 	

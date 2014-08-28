@@ -17,7 +17,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.simpleandroid.music">
 
-    <original-package android:name="com.android.music" />
+    <original-package android:name="com.simpleandroid.music" />
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="9"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
