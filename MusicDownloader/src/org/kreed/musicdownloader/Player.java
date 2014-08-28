@@ -118,7 +118,6 @@ public class Player {
 		}
 		songProgress.setProgress(0);
 		songTitle.setText(strTitle);
-		songTitle.startAnimation(AnimationUtils.loadAnimation(context, R.anim.move_text));
 		songDuration.setText(strDuration);
 		if (playOrPause) {
 			buttonPlay.setImageResource(R.drawable.play);
