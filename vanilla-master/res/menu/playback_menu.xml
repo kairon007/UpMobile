@@ -3,7 +3,7 @@
  
     <item
         android:id="@+id/menu_equalizer"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:showAsAction="always|withText"
         android:title="@string/menu_equalizer"
         android:icon="@drawable/ic_menu_equalizer"/>

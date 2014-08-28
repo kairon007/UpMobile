@@ -95,6 +95,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private TextView mTitle;
 	private TextView mAlbum;
 	private TextView mArtist;
+	private CharSequence mLyrics;
 
 	/**
 	 * True if the controls are visible (play, next, seek bar, etc).
@@ -513,9 +514,11 @@ public class FullPlaybackActivity extends PlaybackActivity
 						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
 							if (foundLyrics) {
 								mLyricsView.setText(Html.fromHtml(lyrics));
+								mLyrics = Html.fromHtml(lyrics);
 							} else {
 								String songName = song.artist + " - " + song.title;
 								mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
+								mLyrics = getResources().getString(R.string.lyric_not_found);
 							}
 						}
 					});
@@ -583,6 +586,10 @@ public class FullPlaybackActivity extends PlaybackActivity
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.playback_menu, menu);
 		}
+		if (Settings.ENABLE_LYRICS) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.playback_menu_lyrics, menu);
+		}
 		return true;
 	}
 	
@@ -613,6 +620,13 @@ public class FullPlaybackActivity extends PlaybackActivity
 		case R.id.menu_equalizer:
 			Intent intent = new Intent(this, MyEqualizer.class);
 			startActivity(intent);
+			break;
+		case R.id.menu_lyrics:
+			CharSequence nLyrics = mLyricsView.getText();		
+				if (nLyrics.equals(""))
+					mLyricsView.setText(mLyrics);
+				else
+					mLyricsView.setText("");
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
