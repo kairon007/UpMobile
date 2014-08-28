@@ -1960,30 +1960,30 @@ public class Advertisement {
 	
 	
 	public static void mobilecoreShowInterstitial(final Activity activity, String adPositionKey) {
-		
+        Log.e("nulldroid", "mobile core show interstitial");
 
-		
-		
-		try {
-			if (adPositionKey != null && (adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
-				initializeMobileCore(activity, AD_UNITS.OFFERWALL);
-				MobileCore.showOfferWall(activity, 
-						new CallbackResponse() {
-					@Override 
-					public void onConfirmation(TYPE type) {
-						activity.finish();
-					}
-				});
-			} else {
-	
-				initializeMobileCore(activity, AD_UNITS.OFFERWALL);
-				MobileCore.showOfferWall(activity, null);
-				  
-			}
-		} catch(Exception e) {
-			
-		}
-	}
+        try {
+                if (adPositionKey != null && (adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
+                        initializeMobileCore(activity, AD_UNITS.INTERSTITIAL);
+                        MobileCore.showInterstitial(activity,
+                                        new CallbackResponse() {
+                                @Override
+                                public void onConfirmation(TYPE type) {
+                                        activity.finish();
+                                       
+                                }
+                        });
+                } else {
+
+                        initializeMobileCore(activity, AD_UNITS.INTERSTITIAL);
+                        MobileCore.showInterstitial(activity, null);
+                         
+                }
+        } catch(Exception e) {
+               
+        }
+       
+}
 	
 	public static void mobilecoreDirectShowInterstitial(final Activity activity, String adPositionKey) {
 		try {
