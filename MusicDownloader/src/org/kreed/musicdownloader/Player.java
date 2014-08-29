@@ -20,15 +20,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class Player {
+public class Player implements SeekBar.OnSeekBarChangeListener {
 	
 	private Context context;
 	private MediaPlayer mediaPlayer;
 	private File songFile;
 	private FrameLayout view;
-	private ProgressBar songProgress;
+	private SeekBar songProgress;
 	private ImageButton buttonPlay;
 	private TextView songTitle;
 	private TextView songDuration;
@@ -40,6 +42,8 @@ public class Player {
 	private boolean playFinish = false;
 	private boolean prepared = false;
 	private boolean playOrPause = true; // if false buttonPlay == R.drawable.pause, else buttonPlay ==  R.drawable.play
+	private int currentProgress = 0;
+	
 	private Runnable progressAction = new Runnable() {
 		
 		@Override
@@ -115,6 +119,7 @@ public class Player {
 			mediaPlayer.reset();
 			mediaPlayer.release();
 			mediaPlayer = null;
+			setCurrentProgress(0);
 			prepared = false;
 		}
 	}
@@ -125,17 +130,18 @@ public class Player {
 		songTitle = (TextView) view.findViewById(R.id.player_title_song);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
 		if (songProgress == null) {
-			songProgress = (ProgressBar) view.findViewById(R.id.player_progress_song);
+			songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
+			songProgress.setOnSeekBarChangeListener(this);
 		} else {
 			int duration = mediaPlayer.getDuration();
 			songProgress.removeCallbacks(progressAction);
 			songProgress = null;
-			songProgress = (ProgressBar) view.findViewById(R.id.player_progress_song);
+			songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
+			songProgress.setOnSeekBarChangeListener(this);
 			songProgress.setIndeterminate(false);
 			songProgress.setMax(duration);
 			songProgress.post(progressAction);
 		}
-		songProgress.setProgress(0);
 		songTitle.setText(strTitle);
 		songDuration.setText(strDuration);
 		if (playOrPause) {
@@ -171,7 +177,6 @@ public class Player {
 			songProgress.setVisibility(View.VISIBLE);
 			songDuration.setText(formatTime(duration));
 			songProgress.setIndeterminate(false);
-			songProgress.setProgress(0);
 			songProgress.setMax(duration);
 			songProgress.postDelayed(progressAction, 1000);
 		}
@@ -187,8 +192,6 @@ public class Player {
 
 	private void onFinished() {
 		songProgress.setIndeterminate(false);
-		songProgress.setProgress(100);
-		songProgress.setMax(100);
 		songProgress.removeCallbacks(progressAction);
 	}
 
@@ -267,14 +270,16 @@ public class Player {
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			if (result && mediaPlayer!=null) {
+				mediaPlayer.seekTo(getCurrentProgress());
 				mediaPlayer.start();
 				if(path.equals(PrefKeys.CALL_FROM_SERCH)){
 					int duration = mediaPlayer.getDuration();
 					songProgress.removeCallbacks(progressAction);
 					songProgress = null;
-					songProgress = (ProgressBar) view.findViewById(R.id.player_progress_song);
+					songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
+					songProgress.setOnSeekBarChangeListener((OnSeekBarChangeListener) this);
+					songProgress.setProgress(getCurrentProgress());
 					songProgress.setIndeterminate(false);
-					songProgress.setProgress(0);
 					songProgress.setMax(duration);
 					songProgress.post(progressAction);
 				}
@@ -295,5 +300,34 @@ public class Player {
 			}
 		}
 	}
-	
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		if (fromUser) {
+			setCurrentProgress(progress);
+		if (mediaPlayer != null) {
+			if (mediaPlayer.isPlaying() || !mediaPlayer.isPlaying()) {
+				mediaPlayer.seekTo(progress);
+			}
+		}
+		}
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		
+	}
+	public int getCurrentProgress() {
+		return currentProgress;
+	}
+
+	public void setCurrentProgress(int currentProgress) {
+		this.currentProgress = currentProgress;
+	}
 }
