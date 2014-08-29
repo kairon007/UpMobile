@@ -27,9 +27,9 @@ THE SOFTWARE.
     android:orientation="vertical" >
     <include layout="@layout/banner" />
 
-    <LinearLayout
+<LinearLayout
         android:id="@+id/search_box"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/search_background"
@@ -37,29 +37,44 @@ THE SOFTWARE.
         android:paddingTop="4dip" >
 
         <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="gone" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
             <EditText
                 android:id="@+id/filter_text"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
+                android:hint="@string/search_hint"
                 android:imeOptions="actionSearch"
-                android:inputType="textFilter"
+                android:inputType="text"
                 android:lines="1"
-                android:paddingRight="50dp"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:paddingRight="50dp" />
 
-            <ImageButton
-                android:id="@+id/clear_filter"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_vertical|right"
-                android:background="@drawable/selectable_item_bg"
-                android:src="@drawable/close" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|center_vertical" >
+
+                <ImageButton
+                    android:id="@+id/search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:background="@drawable/clear_clickable"
+                    android:src="@drawable/ic_menu_search"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/clear_filter"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/selectable_item_bg"
+                    android:src="@drawable/close" />
+
+            </LinearLayout>
+
         </FrameLayout>
+
     </LinearLayout>
 
     <android.support.v4.view.ViewPager

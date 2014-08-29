@@ -114,6 +114,7 @@ public class MainActivity extends Activity implements TextWatcher{
 	private boolean mSearchBoxVisible;
 
 	private TextView mTextFilter;
+	private LinearLayout searchLayout;
 
 	private ImageButton mClearFilterEditText;
 
@@ -311,7 +312,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		ViewPager pager = (ViewPager)findViewById(R.id.pager);
 		pager.setAdapter(pagerAdapter);
 		mViewPager = pager;
-
+		searchLayout = (LinearLayout)findViewById(R.id.search_box);
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			pager.setOnPageChangeListener(pagerAdapter);
@@ -327,6 +328,9 @@ public class MainActivity extends Activity implements TextWatcher{
 		page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);   
 		if (page != 0) {
 			pager.setCurrentItem(page);
+		}
+		if (pager.getCurrentItem() == 0) {
+			searchLayout.setVisibility(View.GONE);
 		}
 		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().getPlayer() != null) {
 			MusicDownloaderApp.getService().getPlayer().getView(footer);
@@ -599,5 +603,9 @@ public class MainActivity extends Activity implements TextWatcher{
 				setActivatedPlayButton(false);
 			}
 			player.play();
+	}
+	
+	public LinearLayout getSearchLayout() {
+		return searchLayout;
 	}
 }

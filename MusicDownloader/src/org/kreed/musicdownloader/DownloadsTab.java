@@ -1,18 +1,22 @@
 package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -33,6 +37,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private long cancelledId;
 	private String currentDownloadingSongTitle;
 	private Long currentDownloadingID;
+	private EditText filter;
 
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener {
 		private LayoutInflater inflater;
@@ -46,7 +51,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		@SuppressLint("NewApi")
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			ViewHolder holder = null;
-
+		//	return null;/*
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.downloads_row, parent, false);
 				holder = new ViewHolder();
@@ -100,6 +105,11 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				holder.duration.setText(song.getSongDuration());
 			}
 			convertView.setTag(holder);
+			String fil = filter.getText().toString().toLowerCase(Locale.ENGLISH);
+			String name = song.getSongArtist().toString().toLowerCase(Locale.ENGLISH) + " - " 
+					+ song.getSongTitle().toString().toLowerCase(Locale.ENGLISH);
+			boolean unvisible = !name.contains(fil) && !fil.isEmpty();
+			convertView.setVisibility(unvisible ? View.GONE : View.VISIBLE);
 			return convertView;
 		}
 
@@ -186,6 +196,25 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
 		progress = (ProgressBar) inflateView.findViewById(R.id.progress);
+		filter = (EditText)activity.findViewById(R.id.filter_text);
+		filter.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				adapter.notifyDataSetChanged();
+				Log.d("logd", "filter");
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+			}
+		});
 	}
 
 	public DownloadsTab() {

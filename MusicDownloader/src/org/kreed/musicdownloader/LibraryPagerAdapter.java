@@ -291,15 +291,6 @@ public class LibraryPagerAdapter
 			switch (type) {
 			case MediaUtils.TYPE_SEARCH: 
 				View searchView = SearchTab.getInstanceView(inflater, activity, parentAdapter);
-				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					searchView.findViewById(R.id.search_field).setBackgroundDrawable
-						(activity.getResources().getDrawable(R.drawable.search_background_white));
-					((ListView)searchView.findViewById(R.id.list)).setDivider(new ColorDrawable
-							(activity.getResources().getColor(R.color.divider_color_light)));
-					((ListView)searchView.findViewById(R.id.list)).setDividerHeight(1);
-					searchView.findViewById(R.id.search_field).setBackgroundDrawable
-						(activity.getResources().getDrawable(R.drawable.search_background_black));
-				}
 				container.addView(searchView);
 				return searchView;
 			case MediaUtils.TYPE_DOWNLOADS:
@@ -819,6 +810,7 @@ public class LibraryPagerAdapter
 		//   makes tab bar and limiter updates look bad
 		// So we use both.
 		setPrimaryItem(null, position, null);
+		mActivity.getSearchLayout().setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 	}
 
 	/**
