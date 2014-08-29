@@ -37,9 +37,9 @@ public class AdapterHelper {
 			this.view = view; 
 			view.setLongClickable(true);
 			time = (TextView)view.findViewById(R.id.time);
-			text = (TextView)view.findViewById(R.id.text);
+			text = (TextView)view.findViewById(R.id.firstLine);
 			text.setTypeface(MusicDownloaderApp.FONT_LIGHT);
-			line2 = (TextView)view.findViewById(R.id.line2);
+			line2 = (TextView)view.findViewById(R.id.secondLine);
 			line2.setTypeface(MusicDownloaderApp.FONT_REGULAR);
 			number = (TextView)view.findViewById(R.id.number);
 			number.setTypeface(MusicDownloaderApp.FONT_LIGHT);

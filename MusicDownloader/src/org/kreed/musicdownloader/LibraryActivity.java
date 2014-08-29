@@ -42,9 +42,9 @@ public class LibraryActivity extends Activity {
 				convertView = inflater.inflate(R.layout.library_row_expandable, parent, false);
 				holder = new ViewHolder();
 				holder.artist = (TextView) convertView
-						.findViewById(R.id.text);
+						.findViewById(R.id.firstLine);
 				holder.title = (TextView) convertView
-						.findViewById(R.id.line2);
+						.findViewById(R.id.secondLine);
 				holder.cover = (ImageView) convertView
 						.findViewById(R.id.cover);
 			} else {

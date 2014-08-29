@@ -98,7 +98,7 @@ THE SOFTWARE.-->
             android:layout_height="match_parent" >
 
              <TextView
-                 android:id="@+id/text"
+                 android:id="@+id/secondLine"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:layout_alignParentLeft="true"
@@ -129,7 +129,7 @@ THE SOFTWARE.-->
             <!-- android:textColor="@color/dimmed" -->
 
             <TextView
-                android:id="@+id/line2"
+                android:id="@+id/firstLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left|center_vertical"
