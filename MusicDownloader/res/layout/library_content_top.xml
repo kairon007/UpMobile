@@ -37,8 +37,9 @@ THE SOFTWARE.
         android:paddingTop="4dip" >
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
 
             <EditText
                 android:id="@+id/filter_text"
@@ -57,14 +58,6 @@ THE SOFTWARE.
                 android:layout_gravity="right|center_vertical" >
 
                 <ImageButton
-                    android:id="@+id/search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:background="@drawable/clear_clickable"
-                    android:src="@drawable/ic_menu_search"
-                    android:visibility="gone" />
-
-                <ImageButton
                     android:id="@+id/clear_filter"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -74,6 +67,13 @@ THE SOFTWARE.
             </LinearLayout>
 
         </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/clear_all_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/cancel" />
 
     </LinearLayout>
 
