@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		if(convertView == null){
 			convertView = inflater.inflate(R.layout.library_item, null);
 			holder = new ViewHolderItem();
+			holder.hThreedot = (Button) convertView.findViewById(R.id.threedotButton);
 			holder.hButtonPlay = (ImageButton) convertView.findViewById(R.id.play_song);
 			holder.hSongTitle = (TextView) convertView.findViewById(R.id.title_song);
 			holder.hSongGenre = (TextView) convertView.findViewById(R.id.genre_song);
@@ -58,6 +60,14 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		holder.hSongDuration.setText(strDuration);
 		holder.hSongGenre.setText(music.getSongGenre());
 		final int pos = position;
+		activity.registerForContextMenu(convertView);
+		holder.hThreedot.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				arg0.performLongClick();
+			}
+		});
 		holder.hButtonPlay.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -76,6 +86,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		TextView hSongTitle;
 		TextView hSongGenre;
 		TextView hSongDuration;
+		Button hThreedot;
 	}
 	
 }

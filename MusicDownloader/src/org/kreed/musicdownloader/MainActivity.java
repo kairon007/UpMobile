@@ -46,9 +46,12 @@ import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -615,4 +618,21 @@ public class MainActivity extends Activity implements TextWatcher{
 	public LinearLayout getSearchLayout() {
 		return searchLayout;
 	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		return super.onContextItemSelected(item);
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		// TODO Auto-generated method stub
+		Log.d("context menu", "created");
+				menu.setHeaderTitle("Title");
+				menu.add("Delete song");
+				menu.add("Edit mp3 tags");
+		super.onCreateContextMenu(menu, v, menuInfo);
+	}
+	
 }
