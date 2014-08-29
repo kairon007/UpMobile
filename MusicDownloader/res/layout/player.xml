@@ -15,7 +15,7 @@
         android:paddingLeft="@dimen/player_pading_side"
         android:paddingRight="@dimen/player_pading_side" >
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent" >
 
@@ -23,10 +23,22 @@
                 android:id="@+id/player_play_song"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_gravity="center"
+                android:layout_marginTop="16dp"
                 android:padding="@dimen/pading_button_play"
                 android:src="@drawable/play" />
-        </FrameLayout>
+
+            <ProgressBar
+                android:id="@+id/player_progress_play"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -52,9 +64,9 @@
                         android:id="@+id/player_title_song"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
                         android:gravity="left|center_vertical"
                         android:singleLine="true"
-                        android:ellipsize="end"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </FrameLayout>
 
@@ -66,10 +78,7 @@
                     android:layout_weight="3"
                     android:gravity="right|center_vertical"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
-
             </LinearLayout>
-            
-            
 
             <SeekBar
                 android:id="@+id/player_progress_song"

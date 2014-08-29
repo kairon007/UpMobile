@@ -578,6 +578,12 @@ public class MainActivity extends Activity implements TextWatcher{
 		startActivity(showOptions);
 	}
 	
+	public void setActivatedPlayButton(boolean value) {
+		if (null != player) {
+			player.setActivatedButton(value);
+		}
+	}
+	
 	public void play(String path, String strArtist, String strTitle, String strDuration, String from, int position) {
 		if (player != null && player.getPosition() == position) {
 			player.restart();
@@ -589,6 +595,9 @@ public class MainActivity extends Activity implements TextWatcher{
 			player = new Player(this, path, strArtist, strTitle, strDuration, from, position);
 			MusicDownloaderApp.getService().setPlayer(player);
 			player.getView(footer);
+			if (from.equals(PrefKeys.CALL_FROM_SERCH)){
+				setActivatedPlayButton(false);
+			}
 			player.play();
 	}
 }

@@ -31,6 +31,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private File songFile;
 	private FrameLayout view;
 	private SeekBar songProgress;
+	private ProgressBar buttonProgress;
 	private ImageButton buttonPlay;
 	private TextView songTitle;
 	private TextView songDuration;
@@ -87,11 +88,24 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		}
 	}
 	
+	public void setActivatedButton(boolean value) {
+		if (value) {
+			buttonPlay.setVisibility(View.VISIBLE);
+			buttonProgress.setVisibility(View.GONE);
+		} else {
+			buttonPlay.setVisibility(View.GONE);
+			buttonProgress.setVisibility(View.VISIBLE);
+		}
+		buttonPlay.setEnabled(value);
+	}
+	
 	public void restart() {
 		if( null != mediaPlayer){
 			mediaPlayer.seekTo(0);
 			mediaPlayer.start();
 			playOrPause = false;
+			buttonPlay.setVisibility(View.VISIBLE);
+			buttonProgress.setVisibility(View.GONE);
 			onResumed();
 		} else {
 			Log.i("log", "player is null");
@@ -126,9 +140,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 
 	public void getView(FrameLayout footer) {
 		view = footer;
-		buttonPlay = (ImageButton) view.findViewById(R.id.player_play_song);
-		songTitle = (TextView) view.findViewById(R.id.player_title_song);
-		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
+		init(view);
 		if (songProgress == null) {
 			songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
 			songProgress.setOnSeekBarChangeListener(this);
@@ -137,10 +149,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			songProgress.removeCallbacks(progressAction);
 			songProgress = null;
 			songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
-			songProgress.setOnSeekBarChangeListener(this);
 			songProgress.setIndeterminate(false);
 			songProgress.setMax(duration);
 			songProgress.post(progressAction);
+			songProgress.setOnSeekBarChangeListener(this);
 		}
 		songTitle.setText(strTitle);
 		songDuration.setText(strDuration);
@@ -166,6 +178,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			}
 
 		});
+	}
+	
+	private void init(FrameLayout view) {
+		buttonProgress = (ProgressBar) view.findViewById(R.id.player_progress_play);
+		buttonPlay = (ImageButton) view.findViewById(R.id.player_play_song);
+		songTitle = (TextView) view.findViewById(R.id.player_title_song);
+		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
 	}
 
 	private void onPrepared() {
@@ -270,6 +289,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			if (result && mediaPlayer!=null) {
+				setActivatedButton(true);
 				mediaPlayer.seekTo(getCurrentProgress());
 				mediaPlayer.start();
 				if(path.equals(PrefKeys.CALL_FROM_SERCH)){
@@ -300,6 +320,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			}
 		}
 	}
+	
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (fromUser) {
@@ -314,15 +335,12 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
 	}
+	
 	public int getCurrentProgress() {
 		return currentProgress;
 	}

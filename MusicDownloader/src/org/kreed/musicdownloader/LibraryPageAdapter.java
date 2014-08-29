@@ -62,6 +62,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 			
 			@Override
 			public void onClick(View v) {
+				((MainActivity) activity).setActivatedPlayButton(false);
 				activity.play(strPath, strArtist, strTitle, strDuration, PrefKeys.CALL_FROM_LIBRARY, pos);
 			}
 			

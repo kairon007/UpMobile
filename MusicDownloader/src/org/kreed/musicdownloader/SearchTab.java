@@ -509,6 +509,8 @@ public class SearchTab {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Toast.makeText(activity, R.string.toast_loading, 2000).show();
+				((MainActivity) activity).setActivatedPlayButton(false);
 				if (position == resultAdapter.getCount()) return; //progress click
 				final Song song = resultAdapter.getItem(position);
 				final String artist = song.getTitle();
@@ -528,7 +530,6 @@ public class SearchTab {
 					}
 				};
 				getUrlTask.execute(NO_PARAMS);
-
 			}
 			
 		});
