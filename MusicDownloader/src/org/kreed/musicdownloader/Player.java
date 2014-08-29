@@ -29,6 +29,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private Context context;
 	private MediaPlayer mediaPlayer;
 	private File songFile;
+	private PlaySong downloadSong;
 	private FrameLayout view;
 	private SeekBar songProgress;
 	private ProgressBar buttonProgress;
@@ -73,10 +74,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	public void play() {
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		PlaySong task = new PlaySong();
-		if (task.getStatus() == Status.PENDING) {
-			task.execute("");
-		}
+		downloadSong = new PlaySong();
+		downloadSong.execute("");
 	}
 	
 	public void remove(){
@@ -86,6 +85,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		} else {
 			Log.i("log", "player is null");
 		}
+	}
+	
+	public void stopTask() {
+		if (downloadSong == null || downloadSong.getStatus() == Status.PENDING){
+			return;
+		}
+		downloadSong.cancel(true);
 	}
 	
 	public void setActivatedButton(boolean value) {
@@ -104,8 +110,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			mediaPlayer.seekTo(0);
 			mediaPlayer.start();
 			playOrPause = false;
-			buttonPlay.setVisibility(View.VISIBLE);
-			buttonProgress.setVisibility(View.GONE);
+			setActivatedButton(true);
 			onResumed();
 		} else {
 			Log.i("log", "player is null");
@@ -138,6 +143,19 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		}
 	}
 
+	public void stopDownloadSong() {
+		if (downloadSong != null) {
+			downloadSong.cancel(true);
+		}
+	}
+
+	public boolean isTaskExecute() {
+		if (downloadSong == null) {
+			return false;
+		}
+		return downloadSong.getStatus() != Status.PENDING;
+	}
+
 	public void getView(FrameLayout footer) {
 		view = footer;
 		init(view);
@@ -168,10 +186,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 				if (playFinish) {
 					mediaPlayer = new MediaPlayer();
 					mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-					PlaySong task = new PlaySong();
+					downloadSong = new PlaySong();
 					playFinish = false;
-					if (task.getStatus() == Status.PENDING) {
-						task.execute("");
+					if (downloadSong.getStatus() == Status.PENDING) {
+						downloadSong.execute("");
 					}
 				}
 				playPause();

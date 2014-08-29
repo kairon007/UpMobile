@@ -82,6 +82,7 @@ public class SearchTab {
 	private static final String KEY_POSITION = "position.song.musicdownloader";//vanilla";
 	private static SearchTab instance;
 	private static List<Engine> engines;
+	private static int playingPosition = -1;
 	
 	private static LibraryPagerAdapter parentAdapter;
 	private Iterator<Engine> taskIterator;
@@ -97,7 +98,16 @@ public class SearchTab {
 	private Activity activity;
 	private CoverLoaderTask coverLoader;
 	private AsyncTask<Void, Void, String> getUrlTask;
+	private AsyncTask<Void, Void, String> getUrlTaskForPlayer;
 	private boolean searchStopped = true;
+
+	public static int getPlayingPosition() {
+		return playingPosition;
+	}
+
+	public static void setPlayingPosition(int playingPosition) {
+		SearchTab.playingPosition = playingPosition;
+	}
 
 	public static final SearchTab getInstance(LayoutInflater inflater, Activity activity,  LibraryPagerAdapter adapter) {
 		if (null == instance) {
@@ -509,27 +519,43 @@ public class SearchTab {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				//TODO
+				if(!((MainActivity)activity).hasConnection()){
+					Toast.makeText(activity, R.string.check_intertet_access, 2000).show();
+				}
+				if(playingPosition != -1) {
+					if (playingPosition == position) return;
+				} else {// enter here first time
+					Log.d("log", "()()()()()()()()()()()()()()()(");
+					playingPosition = position;
+					Toast.makeText(activity, R.string.toast_loading, 2000).show();
+					((MainActivity) activity).setActivatedPlayButton(false);
+					final Song song = resultAdapter.getItem(position);
+					final String artist = song.getTitle();
+					final String title = song.getArtist();
+					final String duration = formatTime((int)song.getDuration());
+					((MainActivity) activity).setFooterView(artist + "-" + title);
+					initTask(song, artist, title, duration, position);
+					getUrlTaskForPlayer.execute(NO_PARAMS);
+					return;
+				}
+				if (position == resultAdapter.getCount()) return; //progress click
 				Toast.makeText(activity, R.string.toast_loading, 2000).show();
 				((MainActivity) activity).setActivatedPlayButton(false);
-				if (position == resultAdapter.getCount()) return; //progress click
 				final Song song = resultAdapter.getItem(position);
 				final String artist = song.getTitle();
 				final String title = song.getArtist();
 				final String duration = formatTime((int)song.getDuration());
-				final  String key = PrefKeys.CALL_FROM_SERCH;
-				final int pos = position;
-				getUrlTask = new AsyncTask<Void, Void, String>() {
-					@Override
-					protected String doInBackground(Void... params) {
-						return ((RemoteSong) song).getDownloadUrl();
-					}
-
-					@Override
-					protected void onPostExecute(String downloadUrl) {
-						((MainActivity) activity).play(downloadUrl, artist, title, duration, key, pos);
-					}
-				};
-				getUrlTask.execute(NO_PARAMS);
+				((MainActivity) activity).setFooterView(artist + "-" + title);
+				if(getUrlTaskForPlayer.getStatus() == Status.PENDING){
+					initTask(song, artist, title, duration, position);
+					getUrlTaskForPlayer.execute(NO_PARAMS);
+				} else {
+					getUrlTaskForPlayer.cancel(true); 
+					initTask(song, artist, title, duration, position);
+					((MainActivity) activity).resetPlayer();
+					getUrlTaskForPlayer.execute(NO_PARAMS);
+				}
 			}
 			
 		});
@@ -560,6 +586,24 @@ public class SearchTab {
 				searchStopped = true;
 			}
 		});
+	}
+	
+	private void initTask(final Song song, final String artist, final String title, final String duration, final int pos) {
+		final  String key = PrefKeys.CALL_FROM_SERCH;
+		getUrlTaskForPlayer = new AsyncTask<Void, Void, String>() {
+
+			@Override
+			protected String doInBackground(Void... params) {
+				return ((RemoteSong) song).getDownloadUrl();
+			}
+
+			@Override
+			protected void onPostExecute(final String downloadUrl) {
+				playingPosition = pos;
+				((MainActivity) activity).play(downloadUrl, artist, title, duration, key, pos);
+			}
+			
+		};
 	}
 	
 	private String formatTime(int duration) {

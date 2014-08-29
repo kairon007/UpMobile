@@ -33,6 +33,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,17 +49,19 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,6 +113,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		  SongTimeline.MODE_PLAY_ID_FIRST, SongTimeline.MODE_ENQUEUE_ID_FIRST };
 
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
+	private static final String PLAY_ROW_NUMBER = "search_play_row";
 
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
@@ -396,6 +401,7 @@ public class MainActivity extends Activity implements TextWatcher{
 	@Override
 	public void onRestoreInstanceState(Bundle in)
 	{
+		SearchTab.setPlayingPosition(in.getInt(PLAY_ROW_NUMBER,-1));
 		if (in.getBoolean(SEARCH_BOX_VISIBLE))
 //			setSearchBoxVisible(true);
 		super.onRestoreInstanceState(in);
@@ -406,6 +412,10 @@ public class MainActivity extends Activity implements TextWatcher{
 	{
 		super.onSaveInstanceState(out);
 		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
+		int i = SearchTab.getPlayingPosition();
+		if (i != -1) {
+			out.putInt(PLAY_ROW_NUMBER, i);
+		}
 	}
 
 	/**
@@ -598,21 +608,54 @@ public class MainActivity extends Activity implements TextWatcher{
 		}
 	}
 	
+	public boolean hasConnection() {
+		ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		if (wifiInfo != null && wifiInfo.isConnected()) {
+			return true;
+		}
+		wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if (wifiInfo != null && wifiInfo.isConnected()) {
+			return true;
+		}
+		wifiInfo = cm.getActiveNetworkInfo();
+		if (wifiInfo != null && wifiInfo.isConnected()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void setFooterView(String strTitle) {
+		TextView tv = (TextView) findViewById(R.id.player_title_song);
+		tv.setText(strTitle);
+		SeekBar sb = (SeekBar) findViewById(R.id.player_progress_song);
+		sb.setProgress(0);
+		ImageButton ib = (ImageButton) findViewById(R.id.player_play_song);
+		ib.setVisibility(View.GONE);
+		ProgressBar pb = (ProgressBar) findViewById(R.id.player_progress_play);
+		pb.setVisibility(View.VISIBLE);
+	}
+	
+	public void resetPlayer() {
+		if(player != null) {
+			player.stopTask();
+			player.remove();
+			player = null;
+		}
+	}
+	
 	public void play(String path, String strArtist, String strTitle, String strDuration, String from, int position) {
 		if (player != null && player.getPosition() == position) {
 			player.restart();
 			return;
-		} else if (player != null && player.getPosition() != position){
+		} else if (player != null && player.getPosition() != position) {
 			player.remove();
 			player = null;
 		}
-			player = new Player(this, path, strArtist, strTitle, strDuration, from, position);
-			MusicDownloaderApp.getService().setPlayer(player);
-			player.getView(footer);
-			if (from.equals(PrefKeys.CALL_FROM_SERCH)){
-				setActivatedPlayButton(false);
-			}
-			player.play();
+		player = new Player(this, path, strArtist, strTitle, strDuration, from, position);
+		MusicDownloaderApp.getService().setPlayer(player);
+		player.getView(footer);
+		player.play();
 	}
 	
 	public LinearLayout getSearchLayout() {
