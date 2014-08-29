@@ -24,13 +24,16 @@ package org.kreed.vanilla;
 
 
 import java.io.File;
+import java.io.IOException;
 
 import junit.framework.Assert;
 
+import org.cmc.music.common.ID3WriteException;
 import org.kreed.vanilla.app.VanillaApp;
 import org.kreed.vanilla.equalizer.MyEqualizer;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -404,12 +407,6 @@ public class LibraryActivity
 				View previous = mControls.findViewById(R.id.previous);
 				mPlayPauseButton = (ImageButton)mControls.findViewById(R.id.play_pause);
 				View next = mControls.findViewById(R.id.next);
-
-				
-				
-				
-				
-				
 				Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/ProximaNova-Bold.otf");
 			
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {	
@@ -419,10 +416,6 @@ public class LibraryActivity
 				mTitle.setTypeface(font);
 				
 				}
-				
-				
-				
-				
 				mCover.setOnClickListener(this);
 				previous.setOnClickListener(this);
 				mPlayPauseButton.setOnClickListener(this);
@@ -982,6 +975,7 @@ public class LibraryActivity
 	private static final int MENU_ENQUEUE_ALL = 10;
 	private static final int MENU_MORE_FROM_ALBUM = 11;
 	private static final int MENU_MORE_FROM_ARTIST = 12;
+	private static final int MENU_EDIT_MP3_TAG = 13;
 
 	/**
 	 * Creates a context menu for an adapter row.
@@ -991,6 +985,7 @@ public class LibraryActivity
 	 */
 	public void onCreateContextMenu(ContextMenu menu, Intent rowData)
 	{
+		Log.d("log", "onCreateContextMenu");
 		if (rowData.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID) == LibraryAdapter.HEADER_ID) {
 			menu.setHeaderTitle(getString(R.string.all_songs));
 			menu.add(0, MENU_PLAY_ALL, 0, R.string.play_all).setIntent(rowData);
@@ -1015,8 +1010,10 @@ public class LibraryActivity
 			}
 			if (type == MediaUtils.TYPE_ALBUM || type == MediaUtils.TYPE_SONG)
 				menu.add(0, MENU_MORE_FROM_ARTIST, 0, R.string.more_from_artist).setIntent(rowData);
-			if (type == MediaUtils.TYPE_SONG)
+			if (type == MediaUtils.TYPE_SONG){
 				menu.add(0, MENU_MORE_FROM_ALBUM, 0, R.string.more_from_album).setIntent(rowData);
+				menu.add(0, MENU_EDIT_MP3_TAG, 0, R.string.edit_mp3_tag).setIntent(rowData);
+				}
 			menu.addSubMenu(0, MENU_ADD_TO_PLAYLIST, 0, R.string.add_to_playlist).getItem().setIntent(rowData);
 			menu.add(0, MENU_DELETE, 0, R.string.delete).setIntent(rowData);
 		}
@@ -1085,8 +1082,7 @@ public class LibraryActivity
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem item)
-	{
+	public boolean onContextItemSelected(MenuItem item)	{
 		if (item.getGroupId() != 0)
 			return super.onContextItemSelected(item);
 
@@ -1164,11 +1160,42 @@ public class LibraryActivity
 			setLimiter(MediaUtils.TYPE_ALBUM, "_id=" + intent.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID));
 			updateLimiterViews();
 			break;
+
+		case MENU_EDIT_MP3_TAG: {
+			// TODO
+			String path = intent.getStringExtra(LibraryAdapter.DATA_FILE_PATH);
+			final File file = new File(path);
+			final MP3Editor editor = new MP3Editor(this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
+			builder.setPositiveButton(android.R.string.ok,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							try {
+								editor.changeFileMetaData(file);
+							} catch (ID3WriteException | IOException e) {
+								e.printStackTrace();
+							}
+						}
+
+					});
+			builder.setNegativeButton(android.R.string.cancel,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+			AlertDialog alertDialog = builder.create();
+			alertDialog.show();
+			break;
+		}
 		}
 
 		return true;
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
