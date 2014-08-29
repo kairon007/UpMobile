@@ -63,7 +63,7 @@ THE SOFTWARE.
 				android:text="@string/_album"
 				android:paddingRight="5dip"
 				android:gravity="right" />
-			<TextView android:id="@+id/album" />
+			<TextView android:id="@+id/header" />
 		</TableRow>
 		<TableRow>
 			<TextView

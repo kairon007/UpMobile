@@ -2,4 +2,11 @@
 
     <string name="app_name">LifeToolsMp3</string>
 
+    <!-- string resources for editor dialog -->
+    <string name="dialog_title">Edit MP3 Tags</string>
+    <string name="title">Title:</string>
+    <string name="artist">Artist:</string>
+    <string name="album">Album:</string>
+    <string name="cb_text">Use Album Cover</string>
+    
 </resources>

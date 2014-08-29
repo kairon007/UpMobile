@@ -33,6 +33,7 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.song.SongWithCover;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -105,6 +106,9 @@ public class SearchTab {
 	private boolean searchStopped = true;
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
+	private static String newArtistName;
+	private static String newAlbumTitle;
+	private static String newSongTitle;
 
 	@SuppressWarnings("unchecked")
 	public static final SearchTab getInstance(LayoutInflater inflater, LibraryActivity activity) {
@@ -175,8 +179,8 @@ public class SearchTab {
 
 	private static class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
 		private final Context context;
-		private final String songTitle;
-		private final Player player;
+		private String songTitle;
+		private Player player;
 		private String songArtist;
 		private Bitmap cover;
 		private boolean waitingForCover = true;
@@ -224,10 +228,12 @@ public class SearchTab {
 				Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
 				final TimerTask progresUpdateTask = new TimerTask() {
 					private File src;
+					private String directoryPath;
 
 					@Override
 					public void run() {
 						try {
+							//TODO
 							if (waitingForCover)
 								return;
 							Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
@@ -253,18 +259,24 @@ public class SearchTab {
 								return;
 							}
 							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-							metadata.setSongTitle(songTitle);
-							metadata.setArtist(songArtist);
+							if (null != newSongTitle) {
+								songTitle = newSongTitle;
+							}
+							if (null != newArtistName) {
+								songArtist = newArtistName;
+							} 
+							if (null != newAlbumTitle){
+								metadata.setAlbum(newAlbumTitle);
+							}
 							if (null != cover) {
 								ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 								cover.compress(CompressFormat.JPEG, 85, out);
 								metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 							}
-							File dst = new File(src.getParentFile(), src.getName() + "-1");
-							new MyID3().write(src, dst, src_set, metadata); // write
-							// updated
-							// metadata
-							dst.renameTo(src);
+							metadata.setSongTitle(songTitle);
+							metadata.setArtist(songArtist);
+							MP3Editor editor = new MP3Editor();
+							editor.changeFile(src_set, metadata, src, songArtist, songTitle);
 							
 							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 								notifyMediascanner();
@@ -695,6 +707,7 @@ public class SearchTab {
 		private LinearLayout viewChooser;
 		private TextView spinerPath;
 		private TextView buttonShowLyrics;
+		private TextView buttonEditMp3Tag;
 		private LinearLayout lyricsContainer;
 		private TextView lyricsTextView;
 		private LinearLayout containerPlayer;
@@ -792,6 +805,22 @@ public class SearchTab {
 					return false;
 				}
 			});
+			buttonEditMp3Tag = (TextView) view.findViewById(R.id.button_edit_mp3_tag);
+			buttonEditMp3Tag.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View arg0, MotionEvent arg1Event) {
+					switch (arg1Event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						buttonEditMp3Tag.setBackgroundColor(Color.parseColor("#33777777"));
+						break;
+					default:
+						buttonEditMp3Tag.setBackgroundColor(Color.parseColor("#00000000"));
+						break;
+					}
+					return false;
+				}
+			});
+			
 			lyricsContainer = (LinearLayout) view.findViewById(R.id.lyrics_container);
 			lyricsTextView = (TextView) view.findViewById(R.id.lyrics);
 			containerPlayer = (LinearLayout) view.findViewById(R.id.container_player);
@@ -823,6 +852,38 @@ public class SearchTab {
 				@Override
 				public void onClick(View v) {
 					playPause();
+				}
+			});
+			buttonEditMp3Tag.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//TODO
+					Context context = v.getContext();
+					final MP3Editor editor = new MP3Editor(context);
+					AlertDialog.Builder builder = new AlertDialog.Builder(context).setView(editor.getView());
+					builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Log.d("log", "setPositiveButton");
+							newArtistName = null;
+							newAlbumTitle = null;
+							newSongTitle = null;
+							newArtistName = editor.getNewArtistName();
+							newAlbumTitle = editor.getNewAlbumTitle();
+							newSongTitle = editor.getNewSongTitle();
+						}
+					});
+					builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Log.d("log", "setNegativeButton");
+						}
+					});
+					AlertDialog alertDialog = builder.create();  
+					alertDialog.show();
 				}
 			});
 			buttonShowLyrics.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- dimen resources for editor dialog -->
+	<dimen name="font_size_normal">16dp</dimen>
+	<dimen name="font_size_title">20dp</dimen>
+	<dimen name="hight_divider">2dp</dimen>
+	<dimen name="padding_text_element">5dp</dimen>
+	<dimen name="padding_title">5dp</dimen>
+	<dimen name="padding_layout">3dp</dimen>
+</resources>
