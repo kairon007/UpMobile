@@ -2,21 +2,16 @@ package org.kreed.musicdownloader;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -26,7 +21,6 @@ import android.widget.TextView;
 
 public class Player implements SeekBar.OnSeekBarChangeListener {
 	
-	private Context context;
 	private MediaPlayer mediaPlayer;
 	private File songFile;
 	private PlaySong downloadSong;
@@ -43,7 +37,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private int position;
 	private boolean playFinish = false;
 	private boolean prepared = false;
-	private boolean playOrPause = true; // if false buttonPlay == R.drawable.pause, else buttonPlay ==  R.drawable.play
 	private int currentProgress = 0;
 	
 	private Runnable progressAction = new Runnable() {
@@ -62,8 +55,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		
 	};
 	
-	public Player(Context context, String path, String strArtist, String strTitle, String strDuration, String from, int position) {
-		this.context = context;
+	public Player(String path, String strArtist, String strTitle, String strDuration, String from, int position) {
 		this.path = path;
 		this.strTitle = strArtist + " - " + strTitle;
 		this.strDuration = strDuration;
@@ -82,8 +74,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		if (null != mediaPlayer) {
 			mediaPlayer.stop();
 			mediaPlayer = null;
-		} else {
-			Log.i("log", "player is null");
 		}
 	}
 	
@@ -109,12 +99,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		if( null != mediaPlayer){
 			mediaPlayer.seekTo(0);
 			mediaPlayer.start();
-			playOrPause = false;
 			setActivatedButton(true);
-			onResumed();
-		} else {
-			Log.i("log", "player is null");
-		}
+			setImageOnButton();
+		} 
 	}
 	
 	public MediaPlayer getMediaPlayer() {
@@ -131,14 +118,12 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			try {
 				if (mediaPlayer.isPlaying()) {
 					mediaPlayer.stop();
-					playOrPause = true;
 				}
 			} catch (IllegalStateException e) {
 			}
 			mediaPlayer.reset();
 			mediaPlayer.release();
-			mediaPlayer = null;
-			setCurrentProgress(0);
+			setCurrentProgress(100);
 			prepared = false;
 		}
 	}
@@ -159,26 +144,17 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	public void getView(FrameLayout footer) {
 		view = footer;
 		init(view);
-		if (songProgress == null) {
-			songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
-			songProgress.setOnSeekBarChangeListener(this);
-		} else {
+		if (prepared){
 			int duration = mediaPlayer.getDuration();
 			songProgress.removeCallbacks(progressAction);
-			songProgress = null;
-			songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
 			songProgress.setIndeterminate(false);
 			songProgress.setMax(duration);
 			songProgress.post(progressAction);
-			songProgress.setOnSeekBarChangeListener(this);
 		}
+		songProgress.setOnSeekBarChangeListener(this);
 		songTitle.setText(strTitle);
 		songDuration.setText(strDuration);
-		if (playOrPause) {
-			buttonPlay.setImageResource(R.drawable.play);
-		} else {
-			buttonPlay.setImageResource(R.drawable.pause);
-		}
+		setImageOnButton();
 		buttonPlay.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -198,7 +174,19 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		});
 	}
 	
+	private void setImageOnButton() {
+		if (mediaPlayer == null || !prepared) {
+			return;
+		}
+		if (mediaPlayer.isPlaying()) {
+			buttonPlay.setImageResource(R.drawable.pause);
+		} else {
+			buttonPlay.setImageResource(R.drawable.play);
+		}
+	}
+	
 	private void init(FrameLayout view) {
+		songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
 		buttonProgress = (ProgressBar) view.findViewById(R.id.player_progress_play);
 		buttonPlay = (ImageButton) view.findViewById(R.id.player_play_song);
 		songTitle = (TextView) view.findViewById(R.id.player_title_song);
@@ -219,14 +207,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		}
 	}
 
-	private void onPaused() {
-		buttonPlay.setImageResource(R.drawable.play);
-	}
-
-	private void onResumed() {
-		buttonPlay.setImageResource(R.drawable.pause);
-	}
-
 	private void onFinished() {
 		songProgress.setIndeterminate(false);
 		songProgress.removeCallbacks(progressAction);
@@ -238,14 +218,11 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		}
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
-			playOrPause = true;
-			onPaused();
 		} else {
 			songProgress.setVisibility(View.VISIBLE);
 			mediaPlayer.start();
-			playOrPause = false;
-			onResumed();
 		}
+		setImageOnButton();
 	}
 
 	private String formatTime(int duration) {
@@ -260,7 +237,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		@SuppressLint("NewApi")
 		@Override
 		protected Boolean doInBackground(String... params) {
-			Log.d("log", "path = "+path);
 			try {
 				if(from.equals(PrefKeys.CALL_FROM_LIBRARY)){
 					songFile = new File(path);
@@ -321,8 +297,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 					songProgress.setMax(duration);
 					songProgress.post(progressAction);
 				}
-				playOrPause = false;
-				onResumed();
+				setImageOnButton();
 				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 					
 					@Override
@@ -343,11 +318,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (fromUser) {
 			setCurrentProgress(progress);
-		if (mediaPlayer != null) {
-			if (mediaPlayer.isPlaying() || !mediaPlayer.isPlaying()) {
+			if (mediaPlayer != null && prepared) {
 				mediaPlayer.seekTo(progress);
 			}
-		}
 		}
 	}
 

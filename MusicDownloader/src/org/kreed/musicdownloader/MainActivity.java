@@ -652,7 +652,7 @@ public class MainActivity extends Activity implements TextWatcher{
 			player.remove();
 			player = null;
 		}
-		player = new Player(this, path, strArtist, strTitle, strDuration, from, position);
+		player = new Player(path, strArtist, strTitle, strDuration, from, position);
 		MusicDownloaderApp.getService().setPlayer(player);
 		player.getView(footer);
 		player.play();
