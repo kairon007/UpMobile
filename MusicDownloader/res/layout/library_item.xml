@@ -28,14 +28,13 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/fallback_cover"
                 android:visibility="visible" />
-
         </FrameLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:padding="8dp" >
@@ -71,16 +70,33 @@
                     android:maxLines="2"
                     android:text="Genre"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <TextView
-                    android:id="@+id/duration_song"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
-                    android:maxLines="2"
-                    android:text="3:20"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/threedotButton"
+                android:layout_width="30dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center|right"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/threedot" />
+
+            <TextView
+                android:id="@+id/duration_song"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:maxLines="1"
+                android:text="3:20"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </LinearLayout>
 
