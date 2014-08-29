@@ -44,9 +44,9 @@ public class SearchSoundCloud extends BaseSearchTask {
 					song.setArtistName(getArtistName(getTitle(songString)));
 					song.setDuration(Long.valueOf(duration));
 					
-					if (titlu != null && (titlu.toLowerCase().contains("remix") || titlu.toLowerCase().contains("mash up") || titlu.toLowerCase().contains("cover") || titlu.toLowerCase().contains(" mix") || titlu.toLowerCase().contains(" mashup"))) {
+					//if (titlu != null && (titlu.toLowerCase().contains("remix") || titlu.toLowerCase().contains("mash up") || titlu.toLowerCase().contains("cover") || titlu.toLowerCase().contains(" mix") || titlu.toLowerCase().contains(" mashup"))) {
 						addSong(song); 
-					}
+					//}
 				}
 			} while (songString != null);
 		} catch (UnsupportedEncodingException e) {
