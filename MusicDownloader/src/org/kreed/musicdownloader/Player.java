@@ -36,6 +36,7 @@ public class Player {
 	private String strTitle;
 	private String strDuration;
 	private String from;
+	private int position;
 	private boolean playFinish = false;
 	private boolean prepared = false;
 	private boolean playOrPause = true; // if false buttonPlay == R.drawable.pause, else buttonPlay ==  R.drawable.play
@@ -55,12 +56,13 @@ public class Player {
 		
 	};
 	
-	public Player(Context context, String path, String strArtist, String strTitle, String strDuration, String from) {
+	public Player(Context context, String path, String strArtist, String strTitle, String strDuration, String from, int position) {
 		this.context = context;
 		this.path = path;
 		this.strTitle = strArtist + " - " + strTitle;
 		this.strDuration = strDuration;
 		this.from = from;
+		this.position = position;
 	}
 	
 	public void play() {
@@ -76,13 +78,30 @@ public class Player {
 		if (null != mediaPlayer) {
 			mediaPlayer.stop();
 			mediaPlayer = null;
+		} else {
+			Log.i("log", "player is null");
+		}
+	}
+	
+	public void restart() {
+		if( null != mediaPlayer){
+			mediaPlayer.seekTo(0);
+			mediaPlayer.start();
+			playOrPause = false;
+			onResumed();
+		} else {
+			Log.i("log", "player is null");
 		}
 	}
 	
 	public MediaPlayer getMediaPlayer() {
 		return mediaPlayer;
 	}
-
+	
+	public int getPosition() {
+		return position;
+	}
+	
 	private void releasePlayer() {
 		if (null != mediaPlayer) {
 			songProgress.removeCallbacks(progressAction);

@@ -515,6 +515,7 @@ public class SearchTab {
 				final String title = song.getArtist();
 				final String duration = formatTime((int)song.getDuration());
 				final  String key = PrefKeys.CALL_FROM_SERCH;
+				final int pos = position;
 				getUrlTask = new AsyncTask<Void, Void, String>() {
 					@Override
 					protected String doInBackground(Void... params) {
@@ -523,7 +524,7 @@ public class SearchTab {
 
 					@Override
 					protected void onPostExecute(String downloadUrl) {
-						((MainActivity) activity).play(downloadUrl, artist, title, duration, key);
+						((MainActivity) activity).play(downloadUrl, artist, title, duration, key, pos);
 					}
 				};
 				getUrlTask.execute(NO_PARAMS);

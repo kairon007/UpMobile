@@ -578,14 +578,17 @@ public class MainActivity extends Activity implements TextWatcher{
 		startActivity(showOptions);
 	}
 	
-	public void play(String path, String strArtist, String strTitle, String strDuration, String from) {
-		if (player!= null){
+	public void play(String path, String strArtist, String strTitle, String strDuration, String from, int position) {
+		if (player != null && player.getPosition() == position) {
+			player.restart();
+			return;
+		} else if (player != null && player.getPosition() != position){
 			player.remove();
 			player = null;
 		}
-		player = new Player(this, path, strArtist, strTitle, strDuration, from);
-		MusicDownloaderApp.getService().setPlayer(player);
-		player.getView(footer);
-		player.play();
+			player = new Player(this, path, strArtist, strTitle, strDuration, from, position);
+			MusicDownloaderApp.getService().setPlayer(player);
+			player.getView(footer);
+			player.play();
 	}
 }

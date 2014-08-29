@@ -57,11 +57,12 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		holder.hSongTitle.setText(strArtist + " - " + strTitle);
 		holder.hSongDuration.setText(strDuration);
 		holder.hSongGenre.setText(music.getSongGenre());
+		final int pos = position;
 		holder.hButtonPlay.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				activity.play(strPath, strArtist, strTitle, strDuration, PrefKeys.CALL_FROM_LIBRARY);
+				activity.play(strPath, strArtist, strTitle, strDuration, PrefKeys.CALL_FROM_LIBRARY, pos);
 			}
 			
 		});
