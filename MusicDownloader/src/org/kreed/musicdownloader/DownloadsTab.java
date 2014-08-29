@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -38,6 +39,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private String currentDownloadingSongTitle;
 	private Long currentDownloadingID;
 	private EditText filter;
+	private ImageButton clearAll;
 
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener {
 		private LayoutInflater inflater;
@@ -192,6 +194,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		this.view = inflateView;
 		this.inflater = layoutInflater;
 		this.activity = activity;
+		clearAll = (ImageButton) activity.findViewById(R.id.clear_all_button);
 		adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
@@ -213,6 +216,15 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			@Override
 			public void afterTextChanged(Editable s) {
 				
+			}
+		});
+		clearAll.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				adapter.clear();
+				adapter.notifyDataSetChanged();
+				DBHelper.getInstance().deleteAll();
 			}
 		});
 	}

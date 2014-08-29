@@ -313,6 +313,7 @@ public class MainActivity extends Activity implements TextWatcher{
 		pager.setAdapter(pagerAdapter);
 		mViewPager = pager;
 		searchLayout = (LinearLayout)findViewById(R.id.search_box);
+		ImageButton clearAllButton = (ImageButton) getSearchLayout().findViewById(R.id.clear_all_button);
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			pager.setOnPageChangeListener(pagerAdapter);
@@ -331,6 +332,12 @@ public class MainActivity extends Activity implements TextWatcher{
 		}
 		if (pager.getCurrentItem() == 0) {
 			searchLayout.setVisibility(View.GONE);
+		}
+		if (pager.getCurrentItem() == 1) {
+			clearAllButton.setVisibility(View.VISIBLE);
+		}
+		if (pager.getCurrentItem() == 2) {
+			clearAllButton.setVisibility(View.GONE);
 		}
 		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().getPlayer() != null) {
 			MusicDownloaderApp.getService().getPlayer().getView(footer);

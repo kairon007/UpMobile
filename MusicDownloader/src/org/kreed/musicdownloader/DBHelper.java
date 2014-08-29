@@ -71,6 +71,10 @@ public class DBHelper extends SQLiteOpenHelper {
 		new GetAllTask(listener).execute();
 	}
 	
+	public void deleteAll() {
+		new DeleteAllTask().execute();
+	}
+	
 	public void delete(MusicData data) {
 		new DeleteTask(data).execute();
 	}
@@ -192,6 +196,15 @@ public class DBHelper extends SQLiteOpenHelper {
 			cv.put("duration", data.getSongDuration());
 			cv.put("fileuri", data.getFileUri());
 			getWritableDatabase().insert(DB_NAME, null, cv);
+			return null;
+		}
+	}
+
+	private class DeleteAllTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			getWritableDatabase().execSQL("DELETE FROM " + DB_NAME);
 			return null;
 		}
 	}

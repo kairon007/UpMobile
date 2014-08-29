@@ -811,6 +811,7 @@ public class LibraryPagerAdapter
 		// So we use both.
 		setPrimaryItem(null, position, null);
 		mActivity.getSearchLayout().setVisibility(position == 0 ? View.GONE : View.VISIBLE);
+		mActivity.getSearchLayout().findViewById(R.id.clear_all_button).setVisibility(position == 0 || position == 2 ? View.GONE : View.VISIBLE);
 	}
 
 	/**
