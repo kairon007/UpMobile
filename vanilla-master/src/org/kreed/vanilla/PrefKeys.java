@@ -59,4 +59,7 @@ public class PrefKeys {
 	public static final String VISIBLE_EXTRA_INFO = "visible_extra_info";
 	public static final String VOLUME = "volume_int";
 	public static final String SHOW_TAB_POSITION = "show_tab_position";
+	public static final String EDIT_ALBUM_TITLE = "edit_album_title";
+	public static final String EDIT_SONG_TITLE = "edit_song_title";
+	public static final String EDIT_ARTIST_NAME = "edit_artist_name";
 }
