@@ -1,11 +1,12 @@
 package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
-
-import com.google.gson.annotations.Since;
+import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,20 +14,24 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
+public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextWatcher {
 
 	private MainActivity activity;
 	private LayoutInflater inflater;
 	private int size;
+	private EditText filter;
 
 	public LibraryPageAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
 		super(context, resource, arrayMusic);
 		this.activity  = activity;
 		inflater = LayoutInflater.from(context);
+		filter = (EditText)activity.findViewById(R.id.filter_text);
+		filter.addTextChangedListener(this);
 	}
 
 	@Override
@@ -88,5 +93,19 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> {
 		TextView hSongDuration;
 		Button hThreedot;
 	}
-	
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		getFilter().filter(filter.getText().toString().toLowerCase(Locale.ENGLISH));
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		
+	}
 }

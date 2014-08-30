@@ -107,11 +107,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				holder.duration.setText(song.getSongDuration());
 			}
 			convertView.setTag(holder);
-			String fil = filter.getText().toString().toLowerCase(Locale.ENGLISH);
-			String name = song.getSongArtist().toString().toLowerCase(Locale.ENGLISH) + " - " 
-					+ song.getSongTitle().toString().toLowerCase(Locale.ENGLISH);
-			boolean unvisible = !name.contains(fil) && !fil.isEmpty();
-			convertView.setVisibility(unvisible ? View.GONE : View.VISIBLE);
 			return convertView;
 		}
 
@@ -204,8 +199,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				adapter.notifyDataSetChanged();
-				Log.d("logd", "filter");
+				String filterText = filter.getText().toString().toLowerCase(Locale.ENGLISH);
+				adapter.getFilter().filter(filterText);
 			}
 			
 			@Override

@@ -1,5 +1,7 @@
 package org.kreed.musicdownloader;
 
+import java.util.Locale;
+
 import android.graphics.Bitmap;
 
 public class MusicData {
@@ -101,5 +103,10 @@ public class MusicData {
 
 	public void setFileUri(String fileUri) {
 		this.fileUri = fileUri;
+	}
+	
+	@Override
+	public String toString() {
+		return getSongArtist().toLowerCase(Locale.ENGLISH) + " - " + getSongTitle().toLowerCase(Locale.ENGLISH);
 	}
 }
