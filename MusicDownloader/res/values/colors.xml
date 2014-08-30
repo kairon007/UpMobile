@@ -14,4 +14,5 @@
     <color name="window_background_light">#fff</color>
     <color name="dimmed">#3fff</color>
     <color name="white">#FFFFFF</color>
+    <color name="holo_blue_light">#ff33b5e5</color>
 </resources>

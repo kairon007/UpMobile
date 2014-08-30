@@ -24,6 +24,7 @@ import org.kreed.musicdownloader.ui.AdapterHelper;
 import org.kreed.musicdownloader.ui.AdapterHelper.ViewBuilder;
 
 
+
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
 import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
@@ -37,6 +38,7 @@ import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import android.R.color;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -343,7 +345,17 @@ public class SearchTab {
 		}
 	}
 
-	private final class SongSearchAdapter extends ArrayAdapter<Song> {
+	private class SongSearchItem {
+		
+		public Song song;
+		public boolean isHighlight = false;
+		
+		public SongSearchItem(Song song) {
+			this.song = song;
+		}
+	}
+	
+	private final class SongSearchAdapter extends ArrayAdapter<SongSearchItem> {
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
@@ -352,7 +364,7 @@ public class SearchTab {
 		private Map<Integer, Bitmap> bitmaps = new HashMap<Integer, Bitmap>(0);
 
 		private SongSearchAdapter(Context context, LayoutInflater inflater) {
-			super(context, -1, new ArrayList<Song>());
+			super(context, -1, new ArrayList<SongSearchItem>());
 			this.inflater = inflater;
 			this.context = context;
 			this.footer = new FrameLayout(context);
@@ -372,7 +384,7 @@ public class SearchTab {
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			final Song song = getItem(position);
+			final Song song = getItem(position).song;
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
 			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist()).setTime(formatTime(song.getDuration()))
 			// .setNumber(String.valueOf(position+1), 0)
@@ -383,7 +395,8 @@ public class SearchTab {
 				public void onClick(View v) {
 					Bundle bundle = new Bundle(0);
 					bundle.putInt(KEY_POSITION, position);
-					final Song song = resultAdapter.getItem(position);
+					final Song song = resultAdapter.getItem(position).song;
+					getItem(position).isHighlight = true;
 					Log.d("name", song.getArtist());
 					getUrlTask = new AsyncTask<Void, Void, String>() {
 						@Override
@@ -431,7 +444,6 @@ public class SearchTab {
 				
 			});
 					
-
 			if (bitmaps.containsKey(position) && bitmaps.get(position) != null) {
 				builder.setIcon(bitmaps.get(position));
 			} else {
@@ -460,7 +472,11 @@ public class SearchTab {
 				refreshSpinner.setVisibility(View.VISIBLE);
 				getNextResults();
 			}
-			return builder.build();
+			View v = builder.build();
+			v.setBackgroundColor(getItem(position).isHighlight ? activity.getResources()
+					.getColor(R.color.holo_blue_light)
+					: activity.getResources().getColor(android.R.color.transparent));
+			return v;
 		}
 
 		public View getProgress() {
@@ -492,7 +508,7 @@ public class SearchTab {
 			} else {
 	    		progress.setVisibility(View.GONE);
 				for (Song song : songsList) {
-					resultAdapter.add(song);
+					resultAdapter.add(new SongSearchItem(song));
 				}
 			}
 		}
@@ -511,10 +527,11 @@ public class SearchTab {
 		message = (TextView) instanceView.findViewById(R.id.message);
 		progress = instanceView.findViewById(R.id.progress);
 		progress.setVisibility(View.GONE);
-		ListView listView = (ListView) instanceView.findViewById(R.id.list);
+		final ListView listView = (ListView) instanceView.findViewById(R.id.list);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setEmptyView(message);
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -530,19 +547,31 @@ public class SearchTab {
 					playingPosition = position;
 					Toast.makeText(activity, R.string.toast_loading, 2000).show();
 					((MainActivity) activity).setActivatedPlayButton(false);
-					final Song song = resultAdapter.getItem(position);
+					final Song song = resultAdapter.getItem(position).song;
 					final String artist = song.getTitle();
 					final String title = song.getArtist();
 					final String duration = formatTime((int)song.getDuration());
 					((MainActivity) activity).setFooterView(artist + "-" + title);
 					initTask(song, artist, title, duration, position);
 					getUrlTaskForPlayer.execute(NO_PARAMS);
+					for (int i = 0; i < resultAdapter.getCount(); i++) {
+						resultAdapter.getItem(i).isHighlight = false;
+						resultAdapter.notifyDataSetInvalidated();
+					}
+					resultAdapter.getItem(position).isHighlight = true;
+					view.setBackgroundColor(activity.getResources().getColor(R.color.holo_blue_light));
 					return;
 				}
 				if (position == resultAdapter.getCount()) return; //progress click
 				Toast.makeText(activity, R.string.toast_loading, 2000).show();
 				((MainActivity) activity).setActivatedPlayButton(false);
-				final Song song = resultAdapter.getItem(position);
+				for (int i = 0; i < resultAdapter.getCount(); i++) {
+					resultAdapter.getItem(i).isHighlight = false;
+					resultAdapter.notifyDataSetInvalidated();
+				}
+				resultAdapter.getItem(position).isHighlight = true;
+				view.setBackgroundColor(activity.getResources().getColor(R.color.holo_blue_light));
+				final Song song = resultAdapter.getItem(position).song;
 				final String artist = song.getTitle();
 				final String title = song.getArtist();
 				final String duration = formatTime((int)song.getDuration());
