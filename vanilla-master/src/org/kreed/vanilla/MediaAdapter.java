@@ -22,7 +22,6 @@
 
 package org.kreed.vanilla;
 
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.kreed.vanilla.ui.AdapterHelper;
@@ -35,7 +34,6 @@ import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -139,8 +137,6 @@ public class MediaAdapter
 	 * If true, show the expander button on each row.
 	 */
 	private boolean mExpandable;
-	
-	private HashMap<String, String> arrayFilePath = new HashMap<String, String>();
 
 	/**
 	 * Construct a MediaAdapter representing the given <code>type</code> of
@@ -181,7 +177,7 @@ public class MediaAdapter
 			break;
 		case MediaUtils.TYPE_SONG: 
 			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DATA };
+			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST };
 			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
 			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };
 			mSortValues = new String[] { "title_key %1$s", "artist_key %1$s,album_key %1$s,track %1$s", "artist_key %1$s,album_key %1$s,title_key %1$s", "artist_key %1$s,year %1$s,track %1$s", "year %1$s,title_key %1$s" };
@@ -450,9 +446,7 @@ public class MediaAdapter
 		cursor.moveToPosition(position);
 		int count = cursor.getColumnCount();
 		String zaycevTag = "(zaycev.net)";
-		String title = cursor.getString(1);
-		String data = cursor.getString(3);
-		arrayFilePath.put(title, data);
+		String title =cursor.getString(1);
 		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase())) title = title.replace(zaycevTag, "");
 		builder
 			.setArrowClickListener(this)
@@ -526,13 +520,10 @@ public class MediaAdapter
 	@Override
 	public Intent createData(View view) {
 		ViewBuilder holder = (ViewBuilder)view.getTag();
-		String title = holder.getTitle();
-		String path = arrayFilePath.get(title);
 		Intent intent = new Intent();
 		intent.putExtra(LibraryAdapter.DATA_TYPE, mType);
 		intent.putExtra(LibraryAdapter.DATA_ID, holder.getId());
-		intent.putExtra(LibraryAdapter.DATA_TITLE, title);
-		intent.putExtra(LibraryAdapter.DATA_FILE_PATH, path);
+		intent.putExtra(LibraryAdapter.DATA_TITLE, holder.getTitle());
 		intent.putExtra(LibraryAdapter.DATA_EXPANDABLE, mExpandable);
 		return intent;
 	}
@@ -583,10 +574,10 @@ public class MediaAdapter
 		} catch (Exception e) {		}
 		return 0;
 	}
-	
+
 	@Override
-	public boolean hasStableIds() {
+	public boolean hasStableIds()
+	{
 		return true;
 	}
-	
 }
