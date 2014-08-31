@@ -18,6 +18,8 @@ import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.ui.AdapterHelper;
 import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
 
+import com.google.android.gms.internal.db;
+
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
 import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
@@ -59,6 +61,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -102,13 +105,10 @@ public class SearchTab {
 	private static LibraryActivity activity;
 	private Player player;
 	private CoverLoaderTask coverLoader;
-	private AsyncTask<Void, Void, String> getUrlTask;
+	private AsyncTask<Song, Void, String> getUrlTask;
 	private boolean searchStopped = true;
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
-	private static String newArtistName;
-	private static String newAlbumTitle;
-	private static String newSongTitle;
 
 	@SuppressWarnings("unchecked")
 	public static final SearchTab getInstance(LayoutInflater inflater, LibraryActivity activity) {
@@ -181,15 +181,17 @@ public class SearchTab {
 		private final Context context;
 		private String songTitle;
 		private Player player;
+		private Song songDownload;
 		private String songArtist;
 		private Bitmap cover;
 		private boolean waitingForCover = true;
 
-		private DownloadClickListener(Context context, String songTitle, String songArtist, Player player) {
+		private DownloadClickListener(Context context, String songTitle, String songArtist, Player player,  Song songDownload) {
 			this.context = context;
 			this.songTitle = songTitle;
 			this.songArtist = songArtist;
 			this.player = player;
+			this.songDownload = songDownload;
 		}
 
 		@SuppressLint("NewApi")
@@ -252,6 +254,19 @@ public class SearchTab {
 							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 								path = cutPath(path);
 							}
+							SharedPreferences settings = PlaybackService.getSettings(context);
+							String artist = settings.getString(PrefKeys.EDIT_ARTIST_NAME, "");
+							String album =  settings.getString(PrefKeys.EDIT_ALBUM_TITLE, "");
+							String song = settings.getString(PrefKeys.EDIT_SONG_TITLE, "");
+							if (!song.equals("")) {
+								songTitle = song;
+							}
+							if (!artist.equals("")) {
+								songArtist = artist;
+							}
+							int i = path.lastIndexOf("/");
+							String buff = path.substring(0, i);
+							String newPath = buff + "/"+ songArtist + " - " + songTitle + ".mp3";
 							src = new File(path);
 							MusicMetadataSet src_set = new MyID3().read(src); // read
 							// metadata
@@ -259,28 +274,24 @@ public class SearchTab {
 								return;
 							}
 							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-							if (null != newSongTitle) {
-								songTitle = newSongTitle;
-							}
-							if (null != newArtistName) {
-								songArtist = newArtistName;
-							} 
-							if (null != newAlbumTitle){
-								metadata.setAlbum(newAlbumTitle);
+							if (!album.equals("")){
+								metadata.clearAlbum();
+								metadata.setAlbum(album);
 							}
 							if (null != cover) {
 								ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 								cover.compress(CompressFormat.JPEG, 85, out);
 								metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 							}
+							metadata.clearSongTitle();
 							metadata.setSongTitle(songTitle);
+							metadata.clearArtist();
 							metadata.setArtist(songArtist);
-							MP3Editor editor = new MP3Editor();
-							editor.changeFile(src_set, metadata, src, songArtist, songTitle);
-							
-							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-								notifyMediascanner();
-							}
+							File dst = new File(src.getParentFile(), src.getName()+ "-1");
+							File file = new File(newPath);
+							src.renameTo(file);
+							new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
+							dst.renameTo(src);
 							this.cancel();
 						} catch (Exception e) {
 							Log.e(getClass().getSimpleName(), "error writing ID3", e);
@@ -536,7 +547,7 @@ public class SearchTab {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return null;
 		}
-		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
+		Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
 		final String title = song.getTitle();
 		final String artist = song.getArtist();
 
@@ -548,14 +559,15 @@ public class SearchTab {
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());
 			}
-			getUrlTask = new AsyncTask<Void, Void, String>() {
+			getUrlTask = new AsyncTask<Song, Void, String>() {
 				@Override
 				protected void onPreExecute() {
 					player.showProgressDialog(true);
 				}
 
 				@Override
-				protected String doInBackground(Void... params) {
+				protected String doInBackground(Song... params) {
+					Song song = params[0];
 					return ((RemoteSong) song).getDownloadUrl();
 				}
 
@@ -570,7 +582,7 @@ public class SearchTab {
 				if (url != null) {
 					loadSong(url);
 				} else {
-					getUrlTask.execute(NO_PARAMS);
+					getUrlTask.execute(song);
 				}
 			} catch (ClassCastException ex) {
 				Log.e(getClass().getSimpleName(), ex.getMessage());
@@ -631,7 +643,7 @@ public class SearchTab {
 
 			}
 		};
-		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
+		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player, song) {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);
@@ -859,7 +871,7 @@ public class SearchTab {
 				@Override
 				public void onClick(View v) {
 					//TODO
-					Context context = v.getContext();
+					final Context context = v.getContext();
 					final MP3Editor editor = new MP3Editor(context);
 					AlertDialog.Builder builder = new AlertDialog.Builder(context).setView(editor.getView());
 					builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -867,12 +879,14 @@ public class SearchTab {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							Log.d("log", "setPositiveButton");
-							newArtistName = null;
-							newAlbumTitle = null;
-							newSongTitle = null;
-							newArtistName = editor.getNewArtistName();
-							newAlbumTitle = editor.getNewAlbumTitle();
-							newSongTitle = editor.getNewSongTitle();
+							SharedPreferences.Editor settingsEditor = PlaybackService.getSettings(context).edit();
+							String artistName = editor.getNewArtistName();
+							String albumTitle =  editor.getNewAlbumTitle();
+							String songTitle = editor.getNewSongTitle();
+							settingsEditor.putString(PrefKeys.EDIT_ARTIST_NAME, artistName);
+							settingsEditor.putString(PrefKeys.EDIT_ALBUM_TITLE, albumTitle);
+							settingsEditor.putString(PrefKeys.EDIT_SONG_TITLE, songTitle);
+							settingsEditor.commit();
 						}
 					});
 					builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
