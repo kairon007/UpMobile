@@ -95,7 +95,6 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private TextView mTitle;
 	private TextView mAlbum;
 	private TextView mArtist;
-	private CharSequence mLyrics;
 
 	/**
 	 * True if the controls are visible (play, next, seek bar, etc).
@@ -413,7 +412,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private void lyricConfigurate() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-		if (isNetworkConnected()) mLyricsConteiner.setVisibility(isLyricsShow && Settings.ENABLE_LYRICS?View.VISIBLE:View.GONE);
+		if (isNetworkConnected()) mLyricsConteiner.setVisibility(Settings.ENABLE_LYRICS?View.VISIBLE:View.GONE);
 		else {
 			Toast.makeText(this, getString(R.string.lyric_no_internet), Toast.LENGTH_LONG).show();
 			isLyricsShow = false;
@@ -506,7 +505,9 @@ public class FullPlaybackActivity extends PlaybackActivity
 				mTitle.setText(song.title);
 				mAlbum.setText(song.album);
 				mArtist.setText(song.artist);
-				if (isLyricsShow && mLyricsView != null && Settings.ENABLE_LYRICS) {
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+				isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
+				if (mLyricsView != null && Settings.ENABLE_LYRICS && isLyricsShow == true) {
 					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
 					lyricsFetcher.fetchLyrics(song.title, song.artist);
 					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
@@ -514,14 +515,15 @@ public class FullPlaybackActivity extends PlaybackActivity
 						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
 							if (foundLyrics) {
 								mLyricsView.setText(Html.fromHtml(lyrics));
-								mLyrics = Html.fromHtml(lyrics);
 							} else {
 								String songName = song.artist + " - " + song.title;
 								mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
-								mLyrics = getResources().getString(R.string.lyric_not_found);
 							}
 						}
 					});
+				} else if (mLyricsView != null) {
+					mLyricsView.setText("");
+
 				}
 			}
 			updateQueuePosition();
@@ -535,6 +537,24 @@ public class FullPlaybackActivity extends PlaybackActivity
 		}
 	}
 
+	public void loadLyrics(final Song song) {
+		if (mLyricsView != null && Settings.ENABLE_LYRICS) {
+			LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
+			lyricsFetcher.fetchLyrics(song.title, song.artist);
+			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+						@Override
+						public void onLyricsFetched(boolean foundLyrics,String lyrics) {
+							if (foundLyrics) {
+								mLyricsView.setText(Html.fromHtml(lyrics));
+							} else {
+								String songName = song.artist + " - " + song.title;
+								mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
+							}
+						}
+					});
+		}
+
+	}
 	/**
 	 * Update the queue position display. mQueuePos must not be null.
 	 */
@@ -622,9 +642,9 @@ public class FullPlaybackActivity extends PlaybackActivity
 			startActivity(intent);
 			break;
 		case R.id.menu_lyrics:
-			CharSequence nLyrics = mLyricsView.getText();		
-				if (nLyrics.equals(""))
-					mLyricsView.setText(mLyrics);
+				CharSequence nLyrics = mLyricsView.getText();
+				if (nLyrics == "")
+					loadLyrics(mCurrentSong);
 				else
 					mLyricsView.setText("");
 			break;
