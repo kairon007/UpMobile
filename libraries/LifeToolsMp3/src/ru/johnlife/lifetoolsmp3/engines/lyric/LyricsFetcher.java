@@ -32,7 +32,7 @@ public class LyricsFetcher {
 				HttpResponse responseGet = client.execute(get);  
 				HttpEntity resEntityGet = responseGet.getEntity();  
 				if (resEntityGet != null) {  
-					String response = EntityUtils.toString(resEntityGet);
+					String response = EntityUtils.toString(resEntityGet, "UTF-8");
 					Pattern p = Pattern.compile(
 							"<!-- start of lyrics -->(.*)<!-- end of lyrics -->",
 							Pattern.DOTALL
