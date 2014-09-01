@@ -38,7 +38,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private long cancelledId;
 	private String currentDownloadingSongTitle;
 	private Long currentDownloadingID;
-	private EditText filter;
 	private ImageButton clearAll;
 
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener {
@@ -53,7 +52,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		@SuppressLint("NewApi")
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			ViewHolder holder = null;
-		//	return null;/*
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.downloads_row, parent, false);
 				holder = new ViewHolder();
@@ -79,6 +77,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 							DBHelper.getInstance(getContext()).delete(getItem(position));
 						}
 						adapter.remove(adapter.getItem(position));
+						recreateAdaper();
 					}
 				});
 			}
@@ -194,32 +193,13 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
 		progress = (ProgressBar) inflateView.findViewById(R.id.progress);
-		filter = (EditText)activity.findViewById(R.id.filter_text);
-		filter.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				String filterText = filter.getText().toString().toLowerCase(Locale.ENGLISH);
-				adapter.getFilter().filter(filterText);
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				
-			}
-		});
 		clearAll.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				adapter.clear();
-				adapter.notifyDataSetChanged();
 				DBHelper.getInstance().deleteAll();
+				recreateAdaper();
 			}
 		});
 	}
@@ -250,5 +230,14 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				data.setFileUri(uri);
 			}
 		}
+	}
+	
+	public void setFilter(String text) {
+		adapter.getFilter().filter(text);
+	}
+	
+	private void recreateAdaper() {
+		adapter = new DownloadsAdapter(activity, R.layout.downloads_row);
+		listView.setAdapter(adapter);
 	}
 }

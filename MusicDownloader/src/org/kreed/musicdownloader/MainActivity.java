@@ -24,6 +24,7 @@ package org.kreed.musicdownloader;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 
 import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.MusicMetadata;
@@ -82,7 +83,7 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * The library activity where songs to play can be selected from the library.
  */
-public class MainActivity extends Activity implements TextWatcher{
+public class MainActivity extends Activity {
 	/**
 	 * Action for row click: play the row.
 	 */
@@ -137,7 +138,8 @@ public class MainActivity extends Activity implements TextWatcher{
 	private View mSearchBox;
 	private boolean mSearchBoxVisible;
 
-	private TextView mTextFilter;
+	private EditText mTextFilter;
+	private CustomTextWatcher textWatcher;
 	private LinearLayout searchLayout;
 
 	private ImageButton mClearFilterEditText;
@@ -325,13 +327,15 @@ public class MainActivity extends Activity implements TextWatcher{
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
 		}
 		setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.library_content_top:R.layout.library_content);
-		mTextFilter = (TextView)findViewById(R.id.filter_text);
-		mTextFilter.addTextChangedListener(this);
+		mTextFilter = (EditText)findViewById(R.id.filter_text);
+		textWatcher = new CustomTextWatcher();
 		mClearFilterEditText = (ImageButton)findViewById(R.id.clear_filter);
 		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				mTextFilter.setText(null);
+				mTextFilter.removeTextChangedListener(textWatcher);
+				mTextFilter.setText("");
+				mTextFilter.addTextChangedListener(textWatcher);
 			}
 		});
 		footer = (FrameLayout) findViewById(R.id.footer);
@@ -523,22 +527,6 @@ public class MainActivity extends Activity implements TextWatcher{
 		}
 	}
 
-	@Override
-	public void afterTextChanged(Editable editable)
-	{
-	}
-
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count, int after)
-	{
-	}
-
-	@Override
-	public void onTextChanged(CharSequence text, int start, int before, int count)
-	{
-		mPagerAdapter.setFilter(text.toString());
-	}
-
 	/**
 	 * Create or recreate the limiter breadcrumbs.
 	 */
@@ -598,11 +586,17 @@ public class MainActivity extends Activity implements TextWatcher{
 			CompatHoneycomb.selectTab(this, position);
 		}
 		if (lastPage != position && lastPage != -1) {
+			mTextFilter.removeTextChangedListener(textWatcher);
 			mTextFilter.setText("");
+			mTextFilter.addTextChangedListener(textWatcher);
 		}
 		lastPage = position;
 	}
 
+	public EditText getTextFilter() {
+		return mTextFilter;
+	}
+	
 	@Override
 	public ApplicationInfo getApplicationInfo()
 	{
@@ -826,5 +820,24 @@ public class MainActivity extends Activity implements TextWatcher{
 			}
 
 		});
+	}	
+	
+	public class CustomTextWatcher implements TextWatcher {
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			String text = mTextFilter.getText().toString().toLowerCase(Locale.ENGLISH);
+			DownloadsTab.getInstance().setFilter(text);
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			
+		}
 	}
 }
