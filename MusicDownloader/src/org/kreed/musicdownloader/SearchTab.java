@@ -396,7 +396,6 @@ public class SearchTab {
 					Bundle bundle = new Bundle(0);
 					bundle.putInt(KEY_POSITION, position);
 					final Song song = resultAdapter.getItem(position).song;
-					getItem(position).isHighlight = true;
 					Log.d("name", song.getArtist());
 					getUrlTask = new AsyncTask<Void, Void, String>() {
 						@Override
