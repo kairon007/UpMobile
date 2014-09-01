@@ -22,19 +22,25 @@ package org.kreed.musicdownloader;
  */
 
 import java.io.File;
+import java.io.IOException;
 
+import org.cmc.music.common.ID3WriteException;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -161,6 +167,14 @@ public class MainActivity extends Activity implements TextWatcher{
 	 * ApplicationInfo with targetSdkVersion set to Gingerbread.
 	 */
 	private ApplicationInfo mFakeInfo;
+	private int itemPosition;
+	private String songArtist;
+	private String songTitle;
+	private final static int DELETE = 1;
+	private final static int EDIT_TAG = 2;
+	private final static String DELETE_SONG = "Delete";
+	private final static String EDIT_TAG_SONG = "Edit mp3 tag";
+	public ContextMenu menu;
 	
 	int lastPage = -1;
 	protected Looper mLooper;
@@ -664,18 +678,106 @@ public class MainActivity extends Activity implements TextWatcher{
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
+		String fileName = getSongTitle() + " - " +getSongArtist()+ ".mp3";
+		switch (item.getItemId()) {
+		case DELETE:
+			new DeleteTask(fileName).execute();
+			break;
+		case EDIT_TAG:
+			rename(fileName);
+			break;
+		}
 		return super.onContextItemSelected(item);
 	}
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		// TODO Auto-generated method stub
-		Log.d("context menu", "created");
-				menu.setHeaderTitle("Title");
-				menu.add("Delete song");
-				menu.add("Edit mp3 tags");
+				menu.setHeaderTitle(getSongArtist() + " - " + getSongTitle());															
+				menu.add(0,DELETE,0,getResources().getString(R.string.delete_song));
+				menu.add(0,EDIT_TAG,0,getResources().getString(R.string.edit_mp3_tags));
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
+
+	public int getItemPosition() {
+		return itemPosition;
+	}
+
+	public void setItemPosition(int itemPosition) {
+		this.itemPosition = itemPosition;
+	}
+	
+	public String getSongArtist() {
+		return songArtist;
+	}
+
+	public void setSongArtist(String songArtist) {
+		this.songArtist = songArtist;
+	}
+
+	public String getSongTitle() {
+		return songTitle;
+	}
+
+	public void setSongTitle(String songTitle) {
+		this.songTitle = songTitle;
+	}
+	
+	private class DeleteTask extends AsyncTask<Void, Void, Void> {
+		String fileName;
+		public DeleteTask(String fileName) {
+			this.fileName = fileName;
+		}
+		@Override
+		protected void onCancelled() {
+			Toast.makeText(getApplicationContext(), "File " + fileName+ " do not exists", Toast.LENGTH_LONG).show();
+			super.onCancelled();
+		}
+		@Override
+		protected Void doInBackground(Void... params) {
+			File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX + fileName);
+			if(!file.exists()) {
+				Log.d("file do not", "exists");
+				cancel(true);
+			} else {
+				file.delete();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			Toast.makeText(getApplicationContext(), fileName + " has been removed", Toast.LENGTH_LONG).show();
+			mPagerAdapter.adapterLibrary.notifyDataSetChanged();
+			super.onPostExecute(result);
+		}
+		
+	}
+	 public void rename(String fileName) {
+			final File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX + fileName);
+			final MP3Editor editor = new MP3Editor(this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
+			builder.setPositiveButton(android.R.string.ok,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						/*	try {
+//								editor.changeFileMetaData(file);
+							} catch (ID3WriteException | IOException e) {
+								e.printStackTrace();
+							}*/
+						}
+
+					});
+			builder.setNegativeButton(android.R.string.cancel,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+			AlertDialog alertDialog = builder.create();
+			alertDialog.show();
+	 }
 	
 }

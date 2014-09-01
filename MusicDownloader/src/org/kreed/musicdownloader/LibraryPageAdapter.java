@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -52,7 +53,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextW
 		} else {
 			holder = (ViewHolderItem) convertView.getTag();
 		}
-		MusicData music = getItem(position);
+		final MusicData music = getItem(position);
 		final String strArtist = music.getSongArtist();
 		final String strTitle = music.getSongTitle();
 		final String strDuration = music.getSongDuration();
@@ -66,10 +67,23 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextW
 		holder.hSongGenre.setText(music.getSongGenre());
 		final int pos = position;
 		activity.registerForContextMenu(convertView);
+		convertView.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View arg0) {
+				activity.setItemPosition(pos);
+				activity.setSongArtist(music.getSongArtist());
+				activity.setSongTitle(music.getSongTitle());
+				return false;
+			}
+		});
 		holder.hThreedot.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
+				activity.setItemPosition(pos);
+				activity.setSongArtist(music.getSongArtist());
+				activity.setSongTitle(music.getSongTitle());
 				arg0.performLongClick();
 			}
 		});

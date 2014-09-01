@@ -178,7 +178,7 @@ public class LibraryPagerAdapter
 	private int currentType = -1;
 	private Context context;
 	private LibraryPagerAdapter parentAdapter = this;
-	private LibraryPageAdapter adapterLibrary = null;
+	public LibraryPageAdapter adapterLibrary = null;
 	private ArrayList<MusicData> array = new ArrayList<MusicData>();
 	private boolean isAdded;
 	/**
@@ -352,15 +352,6 @@ public class LibraryPagerAdapter
 					adapterLibrary = new LibraryPageAdapter(mActivity, 0, arrayMusic, activity);
 					view = (ListView) inflater.inflate(R.layout.listview, null);
 					view.setAdapter(adapterLibrary);
-					view.setOnLongClickListener(new OnLongClickListener() {
-						
-						@Override
-						public boolean onLongClick(View v) {
-							mActivity.registerForContextMenu(v);
-							Log.d("long click", "true");
-							return false;
-						}
-					});
 				} else {
 					view = (ListView) inflater.inflate(R.layout.listview, null);
 					view.setAdapter(adapterLibrary);
