@@ -1169,7 +1169,7 @@ public class LibraryActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-			setMenuBackgroundBlack();
+//			setMenuBackgroundBlack();
 		}
 		Log.d("log", "onCreateOptionsMenu");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1188,27 +1188,27 @@ public class LibraryActivity
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-	protected void setMenuBackgroundBlack() {
-		Log.d("log", "setMenuBackgroundBlack");
-		getLayoutInflater().setFactory(new Factory() {
-			public View onCreateView(String name, Context context,
-					AttributeSet attrs) {
-					try {
-						LayoutInflater f = getLayoutInflater();
-						final View view = f.createView(name, null, attrs);
-						new Handler().post(new Runnable() {
-							public void run() {
-								view.setBackgroundResource(R.color.window_background_black);
-							}
-						});
-						return view;
-					} catch (InflateException e) {
-					} catch (ClassNotFoundException e) {
-					}
-				return null;
-			}
-		});
-	}
+//	protected void setMenuBackgroundBlack() {
+//		Log.d("log", "setMenuBackgroundBlack");
+//		getLayoutInflater().setFactory(new Factory() {
+//			public View onCreateView(String name, Context context,
+//					AttributeSet attrs) {
+//					try {
+//						LayoutInflater f = getLayoutInflater();
+//						final View view = f.createView(name, null, attrs);
+//						new Handler().post(new Runnable() {
+//							public void run() {
+//								view.setBackgroundResource(R.color.window_background_black);
+//							}
+//						});
+//						return view;
+//					} catch (InflateException e) {
+//					} catch (ClassNotFoundException e) {
+//					}
+//				return null;
+//			}
+//		});
+//	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
