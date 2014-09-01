@@ -23,14 +23,23 @@
 package org.kreed.vanilla;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import junit.framework.Assert;
 
+import org.cmc.music.common.ID3WriteException;
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
 import org.kreed.vanilla.equalizer.MyEqualizer;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -43,9 +52,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.PaintDrawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -80,6 +93,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.soundcloud.api.examples.GetResource;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -483,7 +497,6 @@ public class LibraryActivity
 		
 		// initialize ad networks
 		try {
-			//TODO dialog
 			if (!Settings.getIsBlacklisted(this)) {	
 				Advertisement.start(this, swichShowDialogRate);
 				swichShowDialogRate = false;
@@ -862,7 +875,7 @@ public class LibraryActivity
 
 	@Override
 	public void onClick(View view)
-	{//TODO
+	{
 		if (view == mSortButton) {//mClearButton
 //			if (mTextFilter.getText().length() == 0)
 //				setSearchBoxVisible(false);
@@ -982,6 +995,8 @@ public class LibraryActivity
 	private static final int MENU_ENQUEUE_ALL = 10;
 	private static final int MENU_MORE_FROM_ALBUM = 11;
 	private static final int MENU_MORE_FROM_ARTIST = 12;
+	private static final int MENU_EDIT_MP3_TAG = 13;
+	private static final int MENU_REMOVE_ALBUM_COVER = 14;
 
 	/**
 	 * Creates a context menu for an adapter row.
@@ -990,7 +1005,7 @@ public class LibraryActivity
 	 * @param rowData Data for the adapter row.
 	 */
 	public void onCreateContextMenu(ContextMenu menu, Intent rowData)
-	{
+	{//TODO
 		if (rowData.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID) == LibraryAdapter.HEADER_ID) {
 			menu.setHeaderTitle(getString(R.string.all_songs));
 			menu.add(0, MENU_PLAY_ALL, 0, R.string.play_all).setIntent(rowData);
@@ -1015,8 +1030,11 @@ public class LibraryActivity
 			}
 			if (type == MediaUtils.TYPE_ALBUM || type == MediaUtils.TYPE_SONG)
 				menu.add(0, MENU_MORE_FROM_ARTIST, 0, R.string.more_from_artist).setIntent(rowData);
-			if (type == MediaUtils.TYPE_SONG)
+			if (type == MediaUtils.TYPE_SONG){
 				menu.add(0, MENU_MORE_FROM_ALBUM, 0, R.string.more_from_album).setIntent(rowData);
+				menu.add(0, MENU_EDIT_MP3_TAG, 0, R.string.edit_mp3_tag).setIntent(rowData);
+				menu.add(0, MENU_REMOVE_ALBUM_COVER, 0, R.string.remove_album_cover).setIntent(rowData);
+				}
 			menu.addSubMenu(0, MENU_ADD_TO_PLAYLIST, 0, R.string.add_to_playlist).getItem().setIntent(rowData);
 			menu.add(0, MENU_DELETE, 0, R.string.delete).setIntent(rowData);
 		}
@@ -1074,6 +1092,7 @@ public class LibraryActivity
 			Playlist.deletePlaylist(getContentResolver(), id);
 		} else {
 			int count = PlaybackService.get(this).deleteMedia(type, id);
+			Log.d("log", "count = "+count);
 			message = res.getQuantityString(R.plurals.deleted, count, count);
 		}
 
@@ -1160,16 +1179,144 @@ public class LibraryActivity
 			setLimiter(MediaUtils.TYPE_ALBUM, "_id=" + intent.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID));
 			updateLimiterViews();
 			break;
+		case MENU_EDIT_MP3_TAG:
+			int type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
+			long id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
+			final File file = PlaybackService.get(this).getFilePath(type, id);
+			final MP3Editor editor = new MP3Editor(this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
+			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							final String artistName = editor.getNewArtistName();
+							final String albumTitle =  editor.getNewAlbumTitle();
+							final String songTitle = editor.getNewSongTitle();
+							rename(file, artistName, albumTitle, songTitle);
+							
+						}
+					});
+			builder.setNegativeButton(android.R.string.cancel,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+						
+					});
+			AlertDialog alertDialog = builder.create();
+			alertDialog.show();
+			break;
+		case MENU_REMOVE_ALBUM_COVER:
+			int typeRAC = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
+			long idRAC = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
+			final File fileRAC = PlaybackService.get(this).getFilePath(typeRAC, idRAC);
+			AlertDialog.Builder builderRAC = new AlertDialog.Builder(this);
+			builderRAC.setTitle(R.string.remove_album_cover_title);
+			builderRAC.setMessage(R.string.remove_album_cover_complete);
+			builderRAC.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Log.d("log", "pdth file = " + fileRAC.getAbsolutePath());
+							deleteCover(fileRAC);
+							
+						}
+						
+					});
+			builderRAC.setNegativeButton(android.R.string.cancel,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+						
+					});
+			AlertDialog alertDialogRAC = builderRAC.create();
+			alertDialogRAC.show();
+			break;
 		}
 
 		return true;
 	}
+	
+	private void deleteCover(File file) {
+		Log.d("log", "deleteCover start ");
+		try {
+			Log.d("log", "pdth file = ");
+			MusicMetadataSet src_set = new MyID3().read(file);
+			if (src_set == null) {
+				Log.d("log", "src_sec null");
+				return;
+			}
+			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			Bitmap cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
+			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+			cover.compress(CompressFormat.JPEG, 85, out);
+			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+			new MyID3().update(file, src_set, metadata);
+			notifyMediascanner(file.getAbsolutePath());
+		} catch (UnsupportedEncodingException e) {
+			Log.d("log", "1 = "+e);
+			e.printStackTrace();
+		} catch (ID3WriteException e) {
+			Log.d("log", "2 = "+e);
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.d("log", "3 = "+e);
+			e.printStackTrace();
+		}
+	}
 
+	 private void rename(File file, String artist, String album, String song) {
+		 Log.d("log", "rename start");
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			if (src_set == null) {
+				return;
+			}
+			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			if (!album.equals("")) {
+				metadata.clearAlbum();
+				metadata.setAlbum(album);
+			}
+			if (!song.equals("")) {
+				metadata.clearSongTitle();
+				metadata.setSongTitle(song);
+			}
+			if (!artist.equals("")) {
+				metadata.clearArtist();
+				metadata.setArtist(artist);
+			}
+			new MyID3().update(file, src_set, metadata);
+			notifyMediascanner(file.getAbsolutePath());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ID3WriteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	 
+	 private void notifyMediascanner(String path) {
+			File file = new File(path);
+			MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+				public void onScanCompleted(String path, Uri uri) {
+				}
+
+			});
+		}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-//			setMenuBackgroundBlack();
+			setMenuBackgroundBlack();
 		}
 		Log.d("log", "onCreateOptionsMenu");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1188,27 +1335,27 @@ public class LibraryActivity
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-//	protected void setMenuBackgroundBlack() {
-//		Log.d("log", "setMenuBackgroundBlack");
-//		getLayoutInflater().setFactory(new Factory() {
-//			public View onCreateView(String name, Context context,
-//					AttributeSet attrs) {
-//					try {
-//						LayoutInflater f = getLayoutInflater();
-//						final View view = f.createView(name, null, attrs);
-//						new Handler().post(new Runnable() {
-//							public void run() {
-//								view.setBackgroundResource(R.color.window_background_black);
-//							}
-//						});
-//						return view;
-//					} catch (InflateException e) {
-//					} catch (ClassNotFoundException e) {
-//					}
-//				return null;
-//			}
-//		});
-//	}
+	protected void setMenuBackgroundBlack() {
+		Log.d("log", "setMenuBackgroundBlack");
+		getLayoutInflater().setFactory(new Factory() {
+			public View onCreateView(String name, Context context,
+					AttributeSet attrs) {
+					try {
+						LayoutInflater f = getLayoutInflater();
+						final View view = f.createView(name, null, attrs);
+						new Handler().post(new Runnable() {
+							public void run() {
+								view.setBackgroundResource(R.color.window_background_black);
+							}
+						});
+						return view;
+					} catch (InflateException e) {
+					} catch (ClassNotFoundException e) {
+					}
+				return null;
+			}
+		});
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)

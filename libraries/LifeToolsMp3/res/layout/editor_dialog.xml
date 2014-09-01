@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/editor_dialog"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content" >
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/editor_dialog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/padding_title"
-            android:paddingLeft="@dimen/padding_title"
-            android:paddingTop="@dimen/padding_title"
-            android:text="@string/dialog_title"
-            android:textSize="@dimen/font_size_title" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-    </FrameLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/padding_title"
+                android:paddingLeft="@dimen/padding_title"
+                android:paddingTop="@dimen/padding_title"
+                android:text="@string/dialog_title"
+                android:textSize="@dimen/font_size_title" />
+        </FrameLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/hight_divider"
-        android:layout_margin="@dimen/padding_layout"
-        android:background="@android:color/white"
-        android:clickable="true"
-        android:visibility="visible" />
-
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/hight_divider"
+            android:layout_margin="@dimen/padding_layout"
+            android:background="@android:color/white"
+            android:clickable="true"
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/edit"
@@ -91,16 +90,15 @@
                 android:layout_height="wrap_content"
                 android:inputType="textNoSuggestions" />
         </LinearLayout>
-    </ScrollView>
 
-    <CheckBox
-        android:id="@+id/isShowCover"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding_text_element"
-        android:onClick="onClick"
-        android:checked="true"
-        android:text="@string/cb_text"
-        android:textSize="@dimen/font_size_normal" />
+        <CheckBox
+            android:id="@+id/isShowCover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_text_element"
+            android:checked="true"
+            android:text="@string/cb_text"
+            android:textSize="@dimen/font_size_normal" />
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

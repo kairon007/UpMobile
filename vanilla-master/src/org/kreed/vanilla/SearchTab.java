@@ -2,7 +2,12 @@ package org.kreed.vanilla;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.text.BreakIterator;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,14 +16,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.ui.AdapterHelper;
 import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
-
-import com.google.android.gms.internal.db;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
 import ru.johnlife.lifetoolsmp3.engines.Engine;
@@ -183,6 +187,7 @@ public class SearchTab {
 		private Player player;
 		private Song songDownload;
 		private String songArtist;
+		
 		private Bitmap cover;
 		private boolean waitingForCover = true;
 
@@ -234,11 +239,11 @@ public class SearchTab {
 
 					@Override
 					public void run() {
-						try {
-							//TODO
+							// TODO
 							if (waitingForCover)
 								return;
-							Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+							Cursor c = manager
+									.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 							if (c == null || !c.moveToFirst())
 								return;
 							int columnIndex = 0;
@@ -254,31 +259,42 @@ public class SearchTab {
 							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 								path = cutPath(path);
 							}
-							SharedPreferences settings = PlaybackService.getSettings(context);
+							SharedPreferences settings = PlaybackService
+									.getSettings(context);
 							String artist = settings.getString(PrefKeys.EDIT_ARTIST_NAME, "");
-							String album =  settings.getString(PrefKeys.EDIT_ALBUM_TITLE, "");
+							String album = settings.getString(PrefKeys.EDIT_ALBUM_TITLE, "");
 							String song = settings.getString(PrefKeys.EDIT_SONG_TITLE, "");
+							boolean useAlbumCover = settings.getBoolean(PrefKeys.USE_ALBUM_COVER, true);
+							Log.d("log", "useAlbumCover = "+useAlbumCover);
+							boolean useNewPath = false;
 							if (!song.equals("")) {
 								songTitle = song;
+								useNewPath = true;
 							}
 							if (!artist.equals("")) {
 								songArtist = artist;
+								useNewPath = true;
 							}
 							int i = path.lastIndexOf("/");
-							String buff = path.substring(0, i);
-							String newPath = buff + "/"+ songArtist + " - " + songTitle + ".mp3";
+							String fileName = songArtist + " - " + songTitle + ".mp3";
+							String folder_name = path.substring(0, i);
+							final String newPath = folder_name + "/" + fileName;
 							src = new File(path);
-							MusicMetadataSet src_set = new MyID3().read(src); // read
-							// metadata
+							MusicMetadataSet src_set = null;
+							try {
+								src_set = new MyID3().read(src);
+							} catch (IOException e) {
+								e.printStackTrace();
+							} // read metadata
 							if (src_set == null) {
 								return;
 							}
 							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-							if (!album.equals("")){
+							if (!album.equals("")) {
 								metadata.clearAlbum();
 								metadata.setAlbum(album);
 							}
-							if (null != cover) {
+							if (null != cover && useAlbumCover) {
 								ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 								cover.compress(CompressFormat.JPEG, 85, out);
 								metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
@@ -287,40 +303,76 @@ public class SearchTab {
 							metadata.setSongTitle(songTitle);
 							metadata.clearArtist();
 							metadata.setArtist(songArtist);
-							File dst = new File(src.getParentFile(), src.getName()+ "-1");
-							File file = new File(newPath);
-							src.renameTo(file);
-							new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
-							dst.renameTo(src);
-							this.cancel();
-						} catch (Exception e) {
-							Log.e(getClass().getSimpleName(), "error writing ID3", e);
-						}
+							if (useNewPath) {
+								File file = new File(newPath);
+								try {
+									copy(src, file);
+									new MyID3().update(file, src_set, metadata);
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (ID3WriteException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} finally {
+									src.delete();
+								}
+								notifyMediascanner(newPath);
+							} else {
+								File dst = null ;
+								try {
+									dst = new File(src.getParentFile(), src.getName()+ "-1");
+									new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
+								} catch (UnsupportedEncodingException e) {
+									dst.renameTo(src);
+								} catch (ID3WriteException e) {
+									dst.renameTo(src);
+								} catch (IOException e) {
+									dst.renameTo(src);
+								} finally {
+									dst.renameTo(src);
+								}
+							}
 					}
+					
 					private String cutPath(String s) {
 						int index = s.indexOf('m');
 						return s.substring(index - 1);
 					}
-				
-					private void notifyMediascanner() {
-						File directoryPath = Environment.getExternalStorageDirectory();
-						Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, 
-						Uri.parse("file://"+ directoryPath));
-						context.sendBroadcast(intent);
-						MediaScannerConnection.scanFile(context,
-						new String[] { directoryPath.getAbsolutePath() }, null,
-						new MediaScannerConnection.OnScanCompletedListener() {
-											 
-						public void onScanCompleted(String path, Uri uri) {
-							Log.i("TAG", "Finished scanning " + path);
-						} 
-						});					 
+					
+					private void notifyMediascanner(String path) {
+						File file = new File(path);
+						MediaScannerConnection.scanFile( context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+							public void onScanCompleted(String path, Uri uri) {
+								SharedPreferences.Editor settingsEditor = PlaybackService.getSettings(context).edit();
+								settingsEditor.putString(PrefKeys.EDIT_ARTIST_NAME, "");
+								settingsEditor.putString(PrefKeys.EDIT_ALBUM_TITLE, "");
+								settingsEditor.putString(PrefKeys.EDIT_SONG_TITLE, "");
+								settingsEditor.putBoolean(PrefKeys.USE_ALBUM_COVER, true);
+								settingsEditor.commit();
+							}
+							
+						});
 					}
-					};
+				};
 				new Timer().schedule(progresUpdateTask, 1000, 1000);
+				
 			}
 		}
-
+		
+		void copy(File source, File target) throws IOException {
+		    InputStream in = new FileInputStream(source);
+		    OutputStream out = new FileOutputStream(target);
+		    byte[] buf = new byte[1024];
+		    int len;
+		    while ((len = in.read(buf)) > 0) {
+		        out.write(buf, 0, len);
+		    }
+		    in.close();
+		    out.close();
+		}
+		
 		@Override
 		public void onBitmapReady(Bitmap bmp) {
 			this.cover = bmp;
@@ -328,6 +380,7 @@ public class SearchTab {
 		}
 
 	}
+	
 
 	private final class SongSearchAdapter extends ArrayAdapter<Song> {
 		private LayoutInflater inflater;
@@ -870,7 +923,6 @@ public class SearchTab {
 				
 				@Override
 				public void onClick(View v) {
-					//TODO
 					final Context context = v.getContext();
 					final MP3Editor editor = new MP3Editor(context);
 					AlertDialog.Builder builder = new AlertDialog.Builder(context).setView(editor.getView());
@@ -878,14 +930,15 @@ public class SearchTab {
 						
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Log.d("log", "setPositiveButton");
 							SharedPreferences.Editor settingsEditor = PlaybackService.getSettings(context).edit();
 							String artistName = editor.getNewArtistName();
 							String albumTitle =  editor.getNewAlbumTitle();
 							String songTitle = editor.getNewSongTitle();
+							boolean useAlbumCover = editor.useAlbumCover();
 							settingsEditor.putString(PrefKeys.EDIT_ARTIST_NAME, artistName);
 							settingsEditor.putString(PrefKeys.EDIT_ALBUM_TITLE, albumTitle);
 							settingsEditor.putString(PrefKeys.EDIT_SONG_TITLE, songTitle);
+							settingsEditor.putBoolean(PrefKeys.USE_ALBUM_COVER, useAlbumCover);
 							settingsEditor.commit();
 						}
 					});
@@ -893,7 +946,6 @@ public class SearchTab {
 						
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Log.d("log", "setNegativeButton");
 						}
 					});
 					AlertDialog alertDialog = builder.create();  

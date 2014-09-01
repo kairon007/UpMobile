@@ -62,4 +62,6 @@ public class PrefKeys {
 	public static final String EDIT_ALBUM_TITLE = "edit_album_title";
 	public static final String EDIT_SONG_TITLE = "edit_song_title";
 	public static final String EDIT_ARTIST_NAME = "edit_artist_name";
+	public static final String USE_ALBUM_COVER = "use_album_cover";
+	
 }

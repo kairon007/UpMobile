@@ -121,6 +121,8 @@ public interface LibraryAdapter extends ListAdapter {
 	 * Extra for row data: media title. type: String.
 	 */
 	public static final String DATA_TITLE = "title";
+	
+	public static final String DATA_FILE_PATH = "selected_file_path";
 	/**
 	 * Extra for row data: media type. type: int. One of MediaUtils.TYPE_*.
 	 */

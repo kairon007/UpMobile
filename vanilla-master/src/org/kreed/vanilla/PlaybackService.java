@@ -1373,6 +1373,22 @@ public final class PlaybackService extends Service
 
 		return count;
 	}
+	
+	public File getFilePath(int type, long id) {
+		File file = null;
+		ContentResolver resolver = getContentResolver();
+		String[] projection = new String [] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA };
+		Cursor cursor = MediaUtils.buildQuery(type, id, projection, null).runQuery(resolver);
+		if (cursor != null) {
+			while (cursor.moveToNext()) {
+				file = new File(cursor.getString(1));
+			}
+			cursor.close();
+		}
+		return file;
+	}
+	
+	
 
 	/**
 	 * Move to next or previous song or album in the queue.
