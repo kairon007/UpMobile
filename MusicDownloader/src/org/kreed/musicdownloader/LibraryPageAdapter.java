@@ -71,9 +71,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextW
 			
 			@Override
 			public boolean onLongClick(View arg0) {
-				activity.setItemPosition(pos);
-				activity.setSongArtist(music.getSongArtist());
-				activity.setSongTitle(music.getSongTitle());
+				activity.setMusic(music);
 				return false;
 			}
 		});
@@ -81,9 +79,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextW
 			
 			@Override
 			public void onClick(View arg0) {
-				activity.setItemPosition(pos);
-				activity.setSongArtist(music.getSongArtist());
-				activity.setSongTitle(music.getSongTitle());
+				activity.setMusic(music);
 				arg0.performLongClick();
 			}
 		});

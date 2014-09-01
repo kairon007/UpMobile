@@ -277,8 +277,15 @@ public class LibraryPagerAdapter
 		}
 		
 	}
+	public void removeMusicData(MusicData musicData) {
+		if (null != adapterLibrary) {
+			adapterLibrary.remove(musicData);
+			adapterLibrary.notifyDataSetChanged();
+//			isAdded = true;
+		}
+		
+	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{ 

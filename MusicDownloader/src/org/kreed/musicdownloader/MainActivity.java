@@ -22,9 +22,7 @@ package org.kreed.musicdownloader;
  */
 
 import java.io.File;
-import java.io.IOException;
 
-import org.cmc.music.common.ID3WriteException;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -170,11 +168,11 @@ public class MainActivity extends Activity implements TextWatcher{
 	private int itemPosition;
 	private String songArtist;
 	private String songTitle;
+	private String songDuration;
+	private MusicData music;
 	private final static int DELETE = 1;
 	private final static int EDIT_TAG = 2;
-	private final static String DELETE_SONG = "Delete";
-	private final static String EDIT_TAG_SONG = "Edit mp3 tag";
-	public ContextMenu menu;
+	
 	
 	int lastPage = -1;
 	protected Looper mLooper;
@@ -678,13 +676,12 @@ public class MainActivity extends Activity implements TextWatcher{
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		String fileName = getSongTitle() + " - " +getSongArtist()+ ".mp3";
 		switch (item.getItemId()) {
 		case DELETE:
-			new DeleteTask(fileName).execute();
+			new DeleteTask().execute();
 			break;
 		case EDIT_TAG:
-			rename(fileName);
+			rename();
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -692,49 +689,32 @@ public class MainActivity extends Activity implements TextWatcher{
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-				menu.setHeaderTitle(getSongArtist() + " - " + getSongTitle());															
+				menu.setHeaderTitle(music.getSongArtist() + " - " + music.getSongTitle());															
 				menu.add(0,DELETE,0,getResources().getString(R.string.delete_song));
 				menu.add(0,EDIT_TAG,0,getResources().getString(R.string.edit_mp3_tags));
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
-
-	public int getItemPosition() {
-		return itemPosition;
-	}
-
-	public void setItemPosition(int itemPosition) {
-		this.itemPosition = itemPosition;
-	}
 	
-	public String getSongArtist() {
-		return songArtist;
+	public MusicData getMusic() {
+		return music;
 	}
 
-	public void setSongArtist(String songArtist) {
-		this.songArtist = songArtist;
+	public void setMusic(MusicData music) {
+		this.music = music;
 	}
 
-	public String getSongTitle() {
-		return songTitle;
-	}
 
-	public void setSongTitle(String songTitle) {
-		this.songTitle = songTitle;
-	}
 	
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {
-		String fileName;
-		public DeleteTask(String fileName) {
-			this.fileName = fileName;
-		}
+
 		@Override
 		protected void onCancelled() {
-			Toast.makeText(getApplicationContext(), "File " + fileName+ " do not exists", Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "File " + music.getSongArtist() + " - " + music.getSongTitle() + " do not exists", Toast.LENGTH_LONG).show();
 			super.onCancelled();
 		}
 		@Override
 		protected Void doInBackground(Void... params) {
-			File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX + fileName);
+			File file = new File(music.getFileUri());
 			if(!file.exists()) {
 				Log.d("file do not", "exists");
 				cancel(true);
@@ -746,14 +726,14 @@ public class MainActivity extends Activity implements TextWatcher{
 
 		@Override
 		protected void onPostExecute(Void result) {
-			Toast.makeText(getApplicationContext(), fileName + " has been removed", Toast.LENGTH_LONG).show();
-			mPagerAdapter.adapterLibrary.notifyDataSetChanged();
+			Toast.makeText(getApplicationContext(), music.getSongArtist() + " - " + music.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
+			mPagerAdapter.removeMusicData(music);
 			super.onPostExecute(result);
 		}
 		
 	}
-	 public void rename(String fileName) {
-			final File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX + fileName);
+	 public void rename() {
+			final File file = new File(music.getFileUri());
 			final MP3Editor editor = new MP3Editor(this);
 			AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 			builder.setPositiveButton(android.R.string.ok,
