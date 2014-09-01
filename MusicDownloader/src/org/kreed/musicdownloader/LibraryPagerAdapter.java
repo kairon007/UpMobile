@@ -293,7 +293,6 @@ public class LibraryPagerAdapter
 				@Override
 				public void run() {
 					adapterLibrary.remove(musicData);
-					isAdded = true;
 				}
 			});
 		}
