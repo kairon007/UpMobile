@@ -270,20 +270,48 @@ public class LibraryPagerAdapter
 		mLibraryPosition = libraryPosition;
 	}
 	
-	public void changeArrayMusicData(MusicData musicData) {
+	public void changeArrayMusicData(final MusicData musicData) {
 		if (null != adapterLibrary) {
-			adapterLibrary.add(musicData);
-			isAdded = true;
+			
+			mActivity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					adapterLibrary.add(musicData);
+					isAdded = true;
+				}
+			});
+			
 		}
 		
 	}
-	public void removeMusicData(MusicData musicData) {
+	
+	public void removeMusicData(final MusicData musicData) {
 		if (null != adapterLibrary) {
-			adapterLibrary.remove(musicData);
-			adapterLibrary.notifyDataSetChanged();
-//			isAdded = true;
+			mActivity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					adapterLibrary.add(musicData);
+					isAdded = true;
+				}
+			});
 		}
-		
+	}
+	
+	public void updateMusicData(final int i, final String artist, final String title) {
+		if (null != adapterLibrary) {
+			mActivity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					adapterLibrary.updateItem(i, artist, title);
+					adapterLibrary.setNotifyOnChange(true);
+					Log.d("log", ";;;;;");
+				}
+				
+			});
+		}
 	}
 
 	@Override

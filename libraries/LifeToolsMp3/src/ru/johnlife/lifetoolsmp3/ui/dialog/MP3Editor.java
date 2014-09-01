@@ -154,20 +154,20 @@ public class MP3Editor{
 		if (setArtistName()) {
 			return newArtistName;
 		}
-		return null;
+		return "";
 	}
 
 	public String getNewSongTitle() {
 		if (setSongTitle()) {
 			return newSongTitle;
 		}
-		return null;
+		return "";
 	}
 
 	public String getNewAlbumTitle() {
 		if (setAlbumTitle()) {
 			return newAlbumTitle;
 		}
-		return null;
+		return "";
 	}
 }

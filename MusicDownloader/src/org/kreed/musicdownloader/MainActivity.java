@@ -22,7 +22,13 @@ package org.kreed.musicdownloader;
  */
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
+import org.cmc.music.common.ID3WriteException;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -36,8 +42,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.media.MediaPlayer;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -109,6 +117,10 @@ public class MainActivity extends Activity implements TextWatcher{
 	 * Action for row click: play if paused or enqueue if playing.
 	 */
 	public static final int ACTION_PLAY_OR_ENQUEUE = 7;
+	
+	public static final String EDIT_ALBUM_TITLE = "edit_album_title";
+	public static final String EDIT_SONG_TITLE = "edit_song_title";
+	public static final String EDIT_ARTIST_NAME = "edit_artist_name";
 	/**
 	 * The SongTimeline add song modes corresponding to each relevant action.
 	 */
@@ -170,6 +182,7 @@ public class MainActivity extends Activity implements TextWatcher{
 	private String songTitle;
 	private String songDuration;
 	private MusicData music;
+	private int selectedItem;
 	private final static int DELETE = 1;
 	private final static int EDIT_TAG = 2;
 	
@@ -681,7 +694,7 @@ public class MainActivity extends Activity implements TextWatcher{
 			new DeleteTask().execute();
 			break;
 		case EDIT_TAG:
-			rename();
+			showEditDialog();
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -702,9 +715,15 @@ public class MainActivity extends Activity implements TextWatcher{
 	public void setMusic(MusicData music) {
 		this.music = music;
 	}
-
-
 	
+	public int getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(int selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -732,20 +751,20 @@ public class MainActivity extends Activity implements TextWatcher{
 		}
 		
 	}
-	 public void rename() {
+	 public void showEditDialog() {
 			final File file = new File(music.getFileUri());
 			final MP3Editor editor = new MP3Editor(this);
 			AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
-			builder.setPositiveButton(android.R.string.ok,
-					new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-						/*	try {
-//								editor.changeFileMetaData(file);
-							} catch (ID3WriteException | IOException e) {
-								e.printStackTrace();
-							}*/
+							Log.d("log", "on start");
+							final String artistName = editor.getNewArtistName();
+							final String albumTitle =  editor.getNewAlbumTitle();
+							final String songTitle = editor.getNewSongTitle();
+							rename(file, artistName, albumTitle, songTitle);
+							
 						}
 
 					});
@@ -755,9 +774,57 @@ public class MainActivity extends Activity implements TextWatcher{
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 						}
+						
 					});
+			
 			AlertDialog alertDialog = builder.create();
 			alertDialog.show();
 	 }
-	
+	 
+	 private void rename(File file, String artist, String album, String song) {
+		 Log.d("log", "rename start");
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			if (src_set == null) {
+				return;
+			}
+			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			if (!album.equals("")) {
+				metadata.clearAlbum();
+				metadata.setAlbum(album);
+			}
+			if (!song.equals("")) {
+				metadata.clearSongTitle();
+				metadata.setSongTitle(song);
+			}
+			if (!artist.equals("")) {
+				metadata.clearArtist();
+				metadata.setArtist(artist);
+			}
+			new MyID3().update(file, src_set, metadata);
+			notifyMediascanner(file.getAbsolutePath(), artist, song);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ID3WriteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.d("log", "rename finish");
+	}
+	 
+	private void notifyMediascanner(String path, final String artist, final String title) {
+		File file = new File(path);
+		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+			public void onScanCompleted(String path, Uri uri) {
+				int i = getSelectedItem();
+				mPagerAdapter.updateMusicData(i, artist, title);
+			}
+
+		});
+	}
 }
