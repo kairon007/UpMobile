@@ -770,8 +770,8 @@ public class MainActivity extends Activity {
 	 }
 	 
 	 private void rename(File file, String artist, String album, String song, boolean useAlbumCover) {
-		 Log.d("log", "rename start");
-		try {
+	     Bitmap cover = null;
+	     try {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (src_set == null) {
 				return;
@@ -791,33 +791,26 @@ public class MainActivity extends Activity {
 			}
 			if (!useAlbumCover) {
 				metadata.clearPictureList();
-				Bitmap cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
+				cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
 				ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 				cover.compress(CompressFormat.JPEG, 85, out);
 				metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 			}
 			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file.getAbsolutePath(), artist, song);
+			notifyMediascanner(file.getAbsolutePath(), artist, song, cover);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (ID3WriteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		Log.d("log", "rename finish");
 	}
 	 
-	private void notifyMediascanner(String path, final String artist, final String title) {
+	private void notifyMediascanner(String path, final String artist, final String title, final Bitmap cover) {
 		File file = new File(path);
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
 				int i = getSelectedItem();
-				mPagerAdapter.updateMusicData(i, artist, title);
+				mPagerAdapter.updateMusicData(i, artist, title, cover);
 			}
 
 		});

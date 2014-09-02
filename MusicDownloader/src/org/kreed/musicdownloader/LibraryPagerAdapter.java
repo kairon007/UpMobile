@@ -42,9 +42,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -55,10 +52,8 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -300,13 +295,13 @@ public class LibraryPagerAdapter
 		}
 	}
 	
-	public void updateMusicData(final int i, final String artist, final String title) {
+	public void updateMusicData(final int i, final String artist, final String title, final Bitmap cover) {
 		if (null != adapterLibrary) {
 			mActivity.runOnUiThread(new Runnable() {
 				
 				@Override
 				public void run() {
-					adapterLibrary.updateItem(i, artist, title);
+					adapterLibrary.updateItem(i, artist, title, cover);
 					adapterLibrary.setNotifyOnChange(true);
 				}
 				
@@ -331,6 +326,32 @@ public class LibraryPagerAdapter
 				container.addView(searchView);
 				return searchView;
 			case MediaUtils.TYPE_DOWNLOADS:
+//			    ImageButton clearAll;
+//			    ProgressBar progress;
+//			    View view2 = inflater.inflate(R.layout.layout_download,  null);
+//			    clearAll = (ImageButton) activity.findViewById(R.id.clear_all_button);
+//				adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
+//				Log.d("log", "adapter in condtructor id = "+ adapter.hashCode());
+//				listView = (ListView) inflateView.findViewById(R.id.list_downloads);
+//				listView.setAdapter(adapter);
+//				progress = (ProgressBar) inflateView.findViewById(R.id.progress);
+//				clearAll.setOnClickListener(new OnClickListener() {
+//					
+//					@Override
+//					public void onClick(View v) {
+//						adapter.clear();
+//						DBHelper.getInstance().deleteAll();
+//						DownloadsTab.this.activity.runOnUiThread(new Runnable() {
+//							
+//							@Override
+//							public void run() {
+//								recreateAdaper();
+//							}
+//						});
+//					}
+//				});
+			    
+			    
 				View downloadView = DownloadsTab.getInstanceView(inflater, activity);
 				container.addView(downloadView);
 //				mLists[type] = (ListView) downloadView;
@@ -395,18 +416,13 @@ public class LibraryPagerAdapter
 			default:
 				break;
 			} 
-			if ("AppTheme.White".equals(Util.getThemeName(mActivity))) {
-				view.setDivider(new ColorDrawable
-						(activity.getResources().getColor(R.color.divider_color_light)));
-				view.setDividerHeight(1);
-			}
 			view.setOnItemClickListener(this);
 			view.setTag(type);
 			enableFastScroll(view);
 			mLists[type] = view;
-			mRequeryNeeded[type] = true;
+//			mRequeryNeeded[type] = true;
 		}
-		requeryIfNeeded(type);
+//		requeryIfNeeded(type);
 		container.addView(view);
 		return view;
 	}
@@ -436,8 +452,7 @@ public class LibraryPagerAdapter
 		}
 		opts = new BitmapFactory.Options();
 		opts.inSampleSize = scale;
-		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData,
-				0, imageData.imageData.length, opts);
+		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
 		return bitmap;
 	}
 
@@ -516,102 +531,6 @@ public class LibraryPagerAdapter
 		return out;
 	}
 
-
-//	/**
-//	 * Clear a limiter.
-//	 * 
-//	 * @param type
-//	 *            Which type of limiter to clear.
-//	 */
-//	public void clearLimiter(int type) {
-//		if (mLibraryAdapter == null) {
-//			mPendingLibraryLimiter = null;
-//		} else {
-//			mLibraryAdapter.setLimiter(null);
-//			loadSortOrder(mLibraryAdapter);
-//			requestRequery(mLibraryAdapter);
-//		}
-//		if (mSongAdapter == null) {
-//			mPendingSongLimiter = null;
-//		} else {
-//			mSongAdapter.setLimiter(null);
-//			loadSortOrder(mSongAdapter);
-//			requestRequery(mSongAdapter);
-//		}
-//	}
-
-	/**
-	 * Update the adapters with the given limiter.
-	 *
-	 * @param limiter The limiter to set.
-	 * @return The tab type that should be switched to to expand the row.
-	 */
-//	public int setLimiter(Limiter limiter)
-//	{
-//		int tab;
-//
-//		switch (limiter.type) {
-//		case MediaUtils.TYPE_ALBUM: 
-//			if (mSongAdapter == null) {
-//				mPendingSongLimiter = limiter;
-//			} else {
-//				mSongAdapter.setLimiter(limiter);
-//				loadSortOrder(mSongAdapter);
-//				requestRequery(mSongAdapter);
-//			}
-//			tab = mSongsPosition;
-//			break;
-//		case MediaUtils.TYPE_ARTIST: 
-//			if (mLibraryAdapter == null) {
-//				mPendingLibraryLimiter = limiter;
-//			} else {
-//				mLibraryAdapter.setLimiter(limiter);
-//				loadSortOrder(mLibraryAdapter);
-//				requestRequery(mLibraryAdapter);
-//			}
-//			if (mSongAdapter == null) {
-//				mPendingSongLimiter = limiter;
-//			} else {
-//				mSongAdapter.setLimiter(limiter);
-//				loadSortOrder(mSongAdapter);
-//				requestRequery(mSongAdapter);
-//			}
-//			tab = mDownloadsPosition;
-//			if (tab == -1)
-//				tab = mSongsPosition;
-//			break;
-//		case MediaUtils.TYPE_LIBRARY: 
-//			if (mLibraryAdapter == null) {
-//				mPendingLibraryLimiter = limiter;
-//			} else {
-//				mLibraryAdapter.setLimiter(limiter);
-//				loadSortOrder(mLibraryAdapter);
-//				requestRequery(mLibraryAdapter);
-//			}
-//			if (mSongAdapter == null) {
-//				mPendingSongLimiter = null;
-//			} else {
-//				mSongAdapter.setLimiter(limiter);
-//				loadSortOrder(mSongAdapter);
-//				requestRequery(mSongAdapter);
-//			}
-//			tab = mSongsPosition;
-//			break;
-//		case MediaUtils.TYPE_FILE: 
-//			if (mFilesAdapter == null) {
-//				mPendingFileLimiter = limiter;
-//			} else {
-//				mFilesAdapter.setLimiter(limiter);
-//				requestRequery(mFilesAdapter);
-//			}
-//			tab = -1;
-//			break;
-//		default:
-//			throw new IllegalArgumentException("Unsupported limiter type: " + limiter.type);
-//		}
-//
-//		return tab;
-//	}
 
 	/**
 	 * Returns the limiter set on the current adapter or null if there is none.
