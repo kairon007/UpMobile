@@ -308,7 +308,6 @@ public class LibraryPagerAdapter
 				public void run() {
 					adapterLibrary.updateItem(i, artist, title);
 					adapterLibrary.setNotifyOnChange(true);
-					Log.d("log", ";;;;;");
 				}
 				
 			});

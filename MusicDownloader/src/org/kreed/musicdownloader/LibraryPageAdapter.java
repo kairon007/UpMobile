@@ -39,7 +39,6 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextW
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolderItem holder;
 		size = getCount();
-		Log.d("log", "getView.getCount = "+size);
 		if(convertView == null){
 			convertView = inflater.inflate(R.layout.library_item, null);
 			holder = new ViewHolderItem();

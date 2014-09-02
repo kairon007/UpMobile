@@ -311,13 +311,6 @@ public class MainActivity extends Activity {
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-			setTheme(R.style.Library_White);
-		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-			setTheme(R.style.Library_Black);
-		} else {
-			setTheme(R.style.Library);
-		}
 		telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -326,11 +319,6 @@ public class MainActivity extends Activity {
 		thread.start();
 		mLooper = thread.getLooper();
 		mSearchBox = findViewById(R.id.search_box);
-		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_white));
-		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
-		}
 		setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.library_content_top:R.layout.library_content);
 		mTextFilter = (EditText)findViewById(R.id.filter_text);
 		textWatcher = new CustomTextWatcher();
