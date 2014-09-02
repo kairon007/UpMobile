@@ -21,12 +21,14 @@ package org.kreed.musicdownloader;
  * THE SOFTWARE.
  */
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import org.cmc.music.common.ID3WriteException;
+import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
@@ -42,6 +44,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
@@ -727,7 +732,7 @@ public class MainActivity extends Activity {
 		}
 		@Override
 		protected Void doInBackground(Void... params) {
-			File file = new File(music.getFileUri());
+			File file = new File(Environment.getExternalStorageDirectory() + PrefKeys.DIRECTORY_PREFIX + music.getSongTitle() + " - " + music.getSongArtist() + ".mp3" );
 			if(!file.exists()) {
 				Log.d("file do not", "exists");
 				cancel(true);
@@ -754,10 +759,11 @@ public class MainActivity extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							Log.d("log", "on start");
-							final String artistName = editor.getNewArtistName();
-							final String albumTitle =  editor.getNewAlbumTitle();
-							final String songTitle = editor.getNewSongTitle();
-							rename(file, artistName, albumTitle, songTitle);
+							String artistName = editor.getNewArtistName();
+							String albumTitle =  editor.getNewAlbumTitle();
+							String songTitle = editor.getNewSongTitle();
+							boolean useAlbumCover = editor.useAlbumCover();
+							rename(file, artistName, albumTitle, songTitle, useAlbumCover);
 							
 						}
 
@@ -775,7 +781,7 @@ public class MainActivity extends Activity {
 			alertDialog.show();
 	 }
 	 
-	 private void rename(File file, String artist, String album, String song) {
+	 private void rename(File file, String artist, String album, String song, boolean useAlbumCover) {
 		 Log.d("log", "rename start");
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
@@ -794,6 +800,13 @@ public class MainActivity extends Activity {
 			if (!artist.equals("")) {
 				metadata.clearArtist();
 				metadata.setArtist(artist);
+			}
+			if (!useAlbumCover) {
+				metadata.clearPictureList();
+				Bitmap cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
+				ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+				cover.compress(CompressFormat.JPEG, 85, out);
+				metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 			}
 			new MyID3().update(file, src_set, metadata);
 			notifyMediascanner(file.getAbsolutePath(), artist, song);

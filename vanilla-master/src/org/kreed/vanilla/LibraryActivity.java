@@ -1241,7 +1241,6 @@ public class LibraryActivity
 	}
 	
 	private void deleteCover(File file) {
-		Log.d("log", "deleteCover start ");
 		try {
 			Log.d("log", "pdth file = ");
 			MusicMetadataSet src_set = new MyID3().read(file);
@@ -1250,6 +1249,7 @@ public class LibraryActivity
 				return;
 			}
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			metadata.clearPictureList();
 			Bitmap cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);
