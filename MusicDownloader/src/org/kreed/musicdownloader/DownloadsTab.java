@@ -1,22 +1,18 @@
 package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -69,7 +65,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				holder.remove.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						activity.runOnUiThread(new Runnable() {
+						Runnable work = new Runnable() {
 							
 							@Override
 							public void run() {
@@ -81,8 +77,10 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 								}
 								remove(getItem(position));
 							}
-							
-						});
+						};
+						Thread thread = new Thread(work);
+						thread.setPriority(Thread.MAX_PRIORITY);
+						activity.runOnUiThread(thread);
 					}
 				});
 			}
@@ -137,10 +135,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (adapter.getItem(i).getSongTitle().equalsIgnoreCase(currentDownloadingSongTitle) && adapter.getItem(i).getDownloadId() ==  currentDownloadingID) {
 					adapter.getItem(i).setDownloadProgress(progressString);
-					adapter.notifyDataSetChanged();
 					if (progressString.equals("100.0") || progressString.equals("100")) {
 						adapter.getItem(i).setDownloadProgress(SET_VIS);
-						adapter.notifyDataSetChanged();
 					}
 				}
 			}
@@ -195,6 +191,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		this.activity = activity;
 		clearAll = (ImageButton) activity.findViewById(R.id.clear_all_button);
 		adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
+		Log.d("log", "adapter in condtructor id = "+ adapter.hashCode());
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
 		progress = (ProgressBar) inflateView.findViewById(R.id.progress);
@@ -244,6 +241,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	}
 	
 	public void setFilter(String text) {
+		Log.d("log", "adapter in setFilter id = "+ adapter.hashCode());
 		adapter.getFilter().filter(text);
 	}
 	
