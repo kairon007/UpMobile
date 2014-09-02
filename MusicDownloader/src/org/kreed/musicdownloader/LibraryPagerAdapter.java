@@ -279,6 +279,7 @@ public class LibraryPagerAdapter
 				public void run() {
 					adapterLibrary.add(musicData);
 					isAdded = true;
+					adapterLibrary.notifyDataSetChanged();
 				}
 			});
 			
@@ -293,6 +294,7 @@ public class LibraryPagerAdapter
 				@Override
 				public void run() {
 					adapterLibrary.remove(musicData);
+					adapterLibrary.notifyDataSetChanged();
 				}
 			});
 		}
