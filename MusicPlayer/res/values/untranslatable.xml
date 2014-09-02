@@ -21,17 +21,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <resources>
-	<string-array name="search_engines">
-	    <item>SearchVmusice</item>
-	    <item>SearchPleer</item>
-	    <item>SearchPoisk</item>
-	    <item>SearchHulkShare</item>
-	    <item>SearchMp3skull</item>
-	    <item>SearchMp3World</item>
-	    <item>SearchSoundCloud</item>
-	    <item>SearchSogou</item>
-	    <item>SearchGrooveshark</item>
-	    <item>SearchTing</item>
-	    <item>SearchZaycev</item>
-	</string-array>
+
 </resources>
