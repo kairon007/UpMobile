@@ -9,8 +9,6 @@ import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.gson.JsonObject;
-
 import android.util.Log;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
@@ -39,7 +37,7 @@ public class SearchSoundCloudV3 extends BaseSearchTask {
 				if (arr.getJSONObject(i) != null) {
 					JSONObject nameObject = arr.getJSONObject(i);
 					String name = nameObject.getString("title").substring((nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1), nameObject.getString("title").length() - 1);
-					String author = nameObject.getString("title").substring(0, (nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1));
+					String author = nameObject.getString("title").substring(0, (nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1));					Log.d("logd", nameObject.getString("title"));
 					String id = nameObject.getString("id");
 					long duration = nameObject.getLong("duration");
 					String downloadUrl = "http://api.soundcloud.com/tracks/" + id + "/stream?client_id=2Kf29hhC5mgWf62708A";
@@ -56,20 +54,13 @@ public class SearchSoundCloudV3 extends BaseSearchTask {
 		URL url = new URL(urlString);
 		InputStreamReader inp = new InputStreamReader(url.openStream());
 		Scanner sc = new Scanner(inp);
-		int count = 0;
 		String jsonString = "";
-		String[] partOfJson = new String[3500];
 		while (sc.hasNext()) {
-			jsonString = sc.next();
-			partOfJson[count] = jsonString;
-			count++;
-		}
-		jsonString = "";
-		for (int j = 0; j < partOfJson.length; j++) {
-			jsonString = jsonString + partOfJson[j];
+			String part = sc.nextLine();
+			jsonString = jsonString.concat(part);
 		}
 		inp.close();
-		jsonString = jsonString.substring(0, (jsonString.indexOf("}]") + 2));
+		sc.close();
 		return jsonString;
 	}
 
