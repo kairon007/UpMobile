@@ -9,6 +9,9 @@ import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.gson.JsonObject;
+
+import android.util.Log;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
 public class SearchSoundCloudV3 extends BaseSearchTask {
@@ -35,8 +38,8 @@ public class SearchSoundCloudV3 extends BaseSearchTask {
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.getJSONObject(i) != null) {
 					JSONObject nameObject = arr.getJSONObject(i);
-					String name = nameObject.getString("title").substring(nameObject.getString("title").indexOf("-") + 1, nameObject.getString("title").length() - 1);
-					String author = nameObject.getString("title").substring(0, nameObject.getString("title").indexOf("-"));
+					String name = nameObject.getString("title").substring((nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1), nameObject.getString("title").length() - 1);
+					String author = nameObject.getString("title").substring(0, (nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1));
 					String id = nameObject.getString("id");
 					long duration = nameObject.getLong("duration");
 					String downloadUrl = "http://api.soundcloud.com/tracks/" + id + "/stream?client_id=2Kf29hhC5mgWf62708A";

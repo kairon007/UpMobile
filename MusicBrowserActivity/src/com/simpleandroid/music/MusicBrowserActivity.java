@@ -16,12 +16,14 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 
 import com.simpleandroid.music.MusicUtils.ServiceToken;
 
@@ -47,7 +49,7 @@ public class MusicBrowserActivity extends Activity
             activeTab = R.id.artisttab;
         }
         MusicUtils.activateTab(this, activeTab);
-        
+        MusicApp.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
         String shuf = getIntent().getStringExtra("autoshuffle");
         if ("true".equals(shuf)) {
             mToken = MusicUtils.bindToService(this, autoshuffle);

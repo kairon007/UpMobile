@@ -5,6 +5,8 @@ import java.io.FileDescriptor;
 import org.kreed.musicdownloader.PlayerService;
 
 
+
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -101,6 +103,7 @@ public class MusicDownloaderApp extends Application {
 //		FONT_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Regular.otf");
 //		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		MusicApp.setSharedPreferences(prefs);
 		bindService(new Intent(this, PlayerService.class), serviceConnection, BIND_AUTO_CREATE);
 	}
 	
