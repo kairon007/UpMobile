@@ -531,6 +531,7 @@ public class SearchTab {
 				message.setText(R.string.search_message_default);
 				resultAdapter.clear();
 				searchStopped = true;
+				progress.setVisibility(View.GONE);
 			}
 		});
 	}
