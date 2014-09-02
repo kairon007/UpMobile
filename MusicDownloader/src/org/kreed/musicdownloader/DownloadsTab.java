@@ -69,15 +69,20 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				holder.remove.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Log.d("logd", "dismiss clicked");
-						DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-						cancelledId = adapter.getItem(position).getDownloadId();
-						manager.remove(cancelledId);
-						if (getItem(position).getFileUri() != null) {
-							DBHelper.getInstance(getContext()).delete(getItem(position));
-						}
-						adapter.remove(adapter.getItem(position));
-						recreateAdaper();
+						activity.runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+								cancelledId = adapter.getItem(position).getDownloadId();
+								manager.remove(cancelledId);
+								if (getItem(position).getFileUri() != null) {
+									DBHelper.getInstance(getContext()).delete(getItem(position));
+								}
+								remove(getItem(position));
+							}
+							
+						});
 					}
 				});
 			}
@@ -199,7 +204,13 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			public void onClick(View v) {
 				adapter.clear();
 				DBHelper.getInstance().deleteAll();
-				recreateAdaper();
+				DownloadsTab.this.activity.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						recreateAdaper();
+					}
+				});
 			}
 		});
 	}
