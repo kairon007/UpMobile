@@ -12,11 +12,12 @@
 package mp3.music.player.us.ui.activities;
 
 import java.util.Random;
+import java.util.prefs.Preferences;
 
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import mp3.music.player.us.Advertisement;
 import mp3.music.player.us.Constants;
 import mp3.music.player.us.Settings;
-
 import mp3.music.player.us.R;
 import mp3.music.player.us.ui.OnlineSearchView;
 import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
@@ -64,7 +65,7 @@ public class HomeActivity extends BaseActivity {
 		if (savedInstanceState != null) {
 			doesTheMopub = savedInstanceState.getBoolean(IS_SHOW);
 		}
-
+		MusicApp.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
 		// load banner ad
 		try {
 			if (Settings.ENABLE_ADS) {

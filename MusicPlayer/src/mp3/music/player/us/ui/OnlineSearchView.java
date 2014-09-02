@@ -12,6 +12,7 @@ import java.util.TimerTask;
 
 import mp3.music.player.us.Constants;
 import mp3.music.player.us.R;
+import mp3.music.player.us.Settings;
 import mp3.music.player.us.adapters.AdapterHelper;
 import mp3.music.player.us.adapters.AdapterHelper.ViewBuilder;
 import mp3.music.player.us.ui.activities.HomeActivity;
@@ -115,15 +116,14 @@ public class OnlineSearchView {
 					null), inflater, activity);
 			Context context = inflater.getContext();
 			if (null == engines) {
-				String[] engineNames = context.getResources().getStringArray(
-						R.array.search_engines);
+				String[][] engineNames = Settings.GET_SEARCH_ENGINES(context);
 				engines = new ArrayList<Class<? extends BaseSearchTask>>(
 						engineNames.length);
 				for (int i = 0; i < engineNames.length; i++) {
 					try {
 						engines.add((Class<? extends BaseSearchTask>) Class
 								.forName("ru.johnlife.lifetoolsmp3.engines."
-										+ engineNames[i]));
+										+ engineNames[i][0]));
 					} catch (ClassNotFoundException e) {
 						Log.e("SearchTab", "Unknown engine", e);
 					}
