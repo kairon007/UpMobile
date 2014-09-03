@@ -11,6 +11,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -72,8 +73,12 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	
 	public void remove(){
 		if (null != mediaPlayer) {
+			try {
 			mediaPlayer.stop();
 			mediaPlayer = null;
+			} catch (IllegalStateException e) {
+				
+			}
 		}
 	}
 	
