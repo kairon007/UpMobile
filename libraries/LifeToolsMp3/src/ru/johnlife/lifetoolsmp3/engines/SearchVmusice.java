@@ -24,20 +24,20 @@ public class SearchVmusice extends BaseSearchTask {
 		try {
 			// Connect to the web site
 			Document document = Jsoup.connect(url).get();
-			for (Element songTag : document.select("div.main2")) {
+			for (Element songItem : document.select("li.x-track")) {
 				try {
-					Element victim = songTag.select("div.clear").first();
-					victim.html(((Comment)songTag.select("a.play").first().nextSibling().nextSibling()).getData());
-					String author = victim.select("span#autor").first().text();  
-					String name = victim.select("span#title").first().text();  
-					String downloadUrl = songTag.select("a.download").first().attr("href");
-					addSong(new RemoteSong(downloadUrl).setTitle(name).setArtistName(author));
+					String author = songItem.select("strong").text();  
+					String name = songItem.select("span").last().text().replace(author, "");  
+					String duration = songItem.select("em").text();
+					String downloadUrl = songItem.select("a.download").first().attr("href");
+					addSong(new RemoteSong(downloadUrl).setTitle(name.replace(" –- ", "")).setArtistName(author));
 				} catch (Exception e) {
-					Log.e(getClass().getSimpleName(), "Error parsing song: "+songTag, e);
+					Log.e(getClass().getSimpleName(), "Error parsing song", e);
 				}
 			} 
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.d("error", "vmusic");
 		}
 		return null;
 	}
