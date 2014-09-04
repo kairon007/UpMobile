@@ -14,10 +14,10 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.util.Log;
 
 
-public class SearchPoisk extends BaseSearchTask {
+public class SearchPoisk extends SearchWithPages {
 	
 	private String Tag = SearchPoisk.class.getSimpleName();
-	private static String POISK_URL = "http://www.mp3poisk.net/";
+	private static String POISK_URL = "http://www.mp3poisk.net/%s?page=%s";
 	
 	public SearchPoisk(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -25,13 +25,13 @@ public class SearchPoisk extends BaseSearchTask {
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
-		String songName = "";
+		String urlMp3poisk = null;
 		try {
-			songName = URLEncoder.encode(getSongName(), "UTF-8");
+			urlMp3poisk = String.format(POISK_URL, URLEncoder.encode(getSongName(), "UTF-8"), page);
 		} catch (UnsupportedEncodingException e) {
-			Log.e(getClass().getSimpleName(), "", e);
-		}
-		String urlMp3poisk = POISK_URL + songName;
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
 		downloadAndParseMp3poisk(urlMp3poisk);
 		return null;
 	}

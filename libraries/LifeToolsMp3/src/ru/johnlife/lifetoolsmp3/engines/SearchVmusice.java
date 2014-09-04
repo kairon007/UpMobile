@@ -27,10 +27,11 @@ public class SearchVmusice extends BaseSearchTask {
 			for (Element songItem : document.select("li.x-track")) {
 				try {
 					String author = songItem.select("strong").text();  
-					String name = songItem.select("span").last().text().replace(author, "");  
+					String name = songItem.select("span").last().text().replace(author, "").replace(" – ", "");  
 					String duration = songItem.select("em").text();
 					String downloadUrl = songItem.select("a.download").first().attr("href");
-					addSong(new RemoteSong(downloadUrl).setTitle(name.replace(" –- ", "")).setArtistName(author));
+					Log.d("tag download", downloadUrl);
+					addSong(new RemoteSong(downloadUrl).setTitle(name).setArtistName(author).setDuration(formatTime(duration)));
 				} catch (Exception e) {
 					Log.e(getClass().getSimpleName(), "Error parsing song", e);
 				}
@@ -41,4 +42,14 @@ public class SearchVmusice extends BaseSearchTask {
 		}
 		return null;
 	}
+	
+	public long formatTime(String duration) {
+		duration = duration.replace("(", "0").replace(")", "");
+		long durationLong;
+		int min = Integer.valueOf(duration.substring(0, 2));
+		int sec = Integer.valueOf(duration.substring(3, 5));
+		durationLong = (min * 60 * 1000) +  (sec * 1000);
+		return durationLong;
+	}
+
 }

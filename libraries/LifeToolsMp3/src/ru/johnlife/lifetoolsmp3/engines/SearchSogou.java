@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,10 +22,10 @@ import android.util.Log;
  * @author Cristi
  *
  */
-public class SearchSogou extends BaseSearchTask {
+public class SearchSogou extends SearchWithPages {
 
 	/* CONSTANTS */
-	private static String basicUrl = "http://mp3.sogou.com/music.so?query=";
+	private static String basicUrl = "http://mp3.sogou.com/music.so?query=%s&xiamipage=1&dt=other&page=%s";
 	private static int MIN_CHINESE = 13312;
 	
 	/* CONSTRUCTOR */
@@ -40,7 +41,8 @@ public class SearchSogou extends BaseSearchTask {
 	@Override
 	protected Void doInBackground(Void... params) {
 		try {
-			Document doc = Jsoup.connect(basicUrl + getSongName())
+			String link = String.format(basicUrl, URLEncoder.encode(getSongName(), "UTF-8"), page);
+			Document doc = Jsoup.connect(link)
 					.userAgent("Mozilla/5.0 (iPad; CPU OS 6_1 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B141 Safari/8536.25")
 					.get();
 			

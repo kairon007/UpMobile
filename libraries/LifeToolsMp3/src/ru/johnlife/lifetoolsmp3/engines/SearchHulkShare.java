@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
 
-public class SearchHulkShare extends BaseSearchTask {
+public class SearchHulkShare extends SearchWithPages {
 	private static final Pattern SONG_TITLE_PATTERN = Pattern.compile("<b>([^<]*).*<a href[^>]*>([^<]*)");
 	private static String hulkshareBaseUrl = "https://www.hulkshare.com/dl/";
 	private static String hulkshareSuffix = "/hulkshare.mp3?d=1";
@@ -25,7 +25,7 @@ public class SearchHulkShare extends BaseSearchTask {
 			String duration = "";
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
 			songName = songName.replace("%20", "+");
-			String link = hulkshareSearchUrl + songName + "&p=1&per_page=20";
+			String link = hulkshareSearchUrl + songName + "&p=" + page + "&per_page=20";
 			StringBuffer sb = readLink(link);
 			String[] searchRI = sb.toString().split("<div class=\"searchResultsItem\">");
 			for (int i = 1; i < searchRI.length; i++) {
