@@ -294,7 +294,7 @@ public class MyEqualizer extends Activity implements
 		Log.e("valSize", Integer.toString(values.size()));
 
 		if (values.size() == 0)
-			myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
+			myProgressDataSource.createProgress(15, 15, 15, 15, 15, "Custom", 0, 0);
 		else {
 			Log.e("valuesPgs", Integer.toString(values.get(0).getProgress(1)));
 			int progress;
