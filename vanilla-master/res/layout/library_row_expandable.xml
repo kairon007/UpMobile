@@ -33,6 +33,8 @@ THE SOFTWARE.-->
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/selectable_item_bg"
+        android:clickable="true"
+        android:longClickable="true"
         android:paddingLeft="8dp" >
 
         <FrameLayout
