@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3.engines;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import android.util.Log;
 import ru.johnlife.lifetoolsmp3.song.SoundCloudV2Song;
 import de.voidplus.soundcloud.SoundCloud;
 import de.voidplus.soundcloud.Track;
@@ -31,11 +32,7 @@ public class SearchSoundCloudV2 extends BaseSearchTask {
 				    	long duration = (long) track.getDuration();
 				    	String songArtist = pair[0].trim();
 				    	String songTitle = pair[1].trim();
-				    	SoundCloudV2Song song = new SoundCloudV2Song(downloadUrl, largeCoverUrl);
-						song.setArtistName(songArtist);
-						song.setTitle(songTitle);
-						song.setDuration(duration);
-						addSong(song);
+						addSong(new SoundCloudV2Song(downloadUrl, largeCoverUrl).setArtistName(songArtist).setDuration(duration).setTitle(songTitle));
 			    	}
 			    }
 			}

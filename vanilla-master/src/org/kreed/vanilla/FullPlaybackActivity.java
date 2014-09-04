@@ -408,11 +408,12 @@ public class FullPlaybackActivity extends PlaybackActivity
 		updateElapsedTime();
 		ActivityCompat.invalidateOptionsMenu(this);
 	}
-	
+
 	private void lyricConfigurate() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-		if (isNetworkConnected()) mLyricsConteiner.setVisibility(Settings.ENABLE_LYRICS?View.VISIBLE:View.GONE);
+		if (isNetworkConnected())
+			mLyricsConteiner.setVisibility(isLyricsShow ? View.VISIBLE : View.GONE);
 		else {
 			Toast.makeText(this, getString(R.string.lyric_no_internet), Toast.LENGTH_LONG).show();
 			isLyricsShow = false;
@@ -647,6 +648,11 @@ public class FullPlaybackActivity extends PlaybackActivity
 					loadLyrics(mCurrentSong);
 				else
 					mLyricsView.setText("");
+				if (mLyricsConteiner.getVisibility() == View.GONE) {
+					mLyricsConteiner.setVisibility(View.VISIBLE);
+					mLyricsView.setVisibility(View.VISIBLE);
+					loadLyrics(mCurrentSong);
+				}
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

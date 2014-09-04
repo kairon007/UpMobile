@@ -12,12 +12,17 @@ import org.json.JSONObject;
 import android.util.Log;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
-public class SearchSoundCloudV3 extends BaseSearchTask {
-	private final static String URL_PATTERN = "http://m.soundcloud.com/_api/tracks/?q=%s&client_id=2Kf29hhC5mgWf62708A&format=json";
-
+public class SearchSoundCloudV3 extends SearchWithPages  {
+	private final static String URL_PATTERN = "http://m.soundcloud.com/_api/tracks/?q=%s&offset=%s&client_id=2Kf29hhC5mgWf62708A&format=json";
+	private int pag;
 	public SearchSoundCloudV3(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 
+	}
+	
+	private int getPage() {
+		this.pag = page;
+		return (pag - 1) * 50;
 	}
 
 	@Override
@@ -25,7 +30,7 @@ public class SearchSoundCloudV3 extends BaseSearchTask {
 
 		String link = null;
 		try {
-			link = String.format(URL_PATTERN, URLEncoder.encode(getSongName(), "UTF-8"));
+			link = String.format(URL_PATTERN, URLEncoder.encode(getSongName(), "UTF-8"), getPage());
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}

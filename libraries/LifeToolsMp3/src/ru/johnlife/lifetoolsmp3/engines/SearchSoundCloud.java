@@ -8,8 +8,9 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.util.Log;
 
 
-public class SearchSoundCloud extends BaseSearchTask { 
+public class SearchSoundCloud extends SearchWithPages { 
 	private int specialIndex = 0;
+	private int pag;
 	
 	public SearchSoundCloud(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -18,13 +19,19 @@ public class SearchSoundCloud extends BaseSearchTask {
 	private static String SOUNDCLOUD_URL = "http://api.soundcloud.com/tracks.json?client_id=2fd7fa3d5ed2be9ac17c538f644fc4c6&filter=downloadable&q=";
 	private static String CLIENT_ID = "2fd7fa3d5ed2be9ac17c538f644fc4c6";
 	
+	private int getPage() {
+		this.pag = page;
+		return (pag - 1) * 50;
+	}
+	
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
 			specialIndex=0;
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
 			songName = songName.replace("%20", "_");
-			String link=SOUNDCLOUD_URL+songName;
+			String offset = "&offset=" + getPage();
+			String link = SOUNDCLOUD_URL + songName + offset;
 			StringBuffer sb = readLinkApacheHttp(link); 
 			int i=1;
 			String songString;
