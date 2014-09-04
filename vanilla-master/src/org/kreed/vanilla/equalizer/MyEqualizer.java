@@ -54,6 +54,7 @@ public class MyEqualizer extends Activity implements
 	public static final String CMDPAUSE = "pause";
 	public static final String CMDPREVIOUS = "previous";
 	public static final String CMDNEXT = "next";
+	private final int DEF = 15;
 
 	private VerticalSeekBar sb1, sb2, sb3, sb4, sb5;
 	private TextView sbP1, sbP2, sbP3, sbP4, sbP5;
@@ -294,7 +295,7 @@ public class MyEqualizer extends Activity implements
 		Log.e("valSize", Integer.toString(values.size()));
 
 		if (values.size() == 0)
-			myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
+			myProgressDataSource.createProgress(DEF, DEF, DEF, DEF, DEF, "Custom", 0, 0);
 		else {
 			Log.e("valuesPgs", Integer.toString(values.get(0).getProgress(1)));
 			int progress;
