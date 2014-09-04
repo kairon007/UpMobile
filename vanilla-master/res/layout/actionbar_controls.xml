@@ -25,7 +25,8 @@ THE SOFTWARE.
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
         android:clickable="true"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:layout_gravity="bottom" >
 
     <LinearLayout
         android:id="@+id/LinearLayout1"
@@ -46,6 +47,7 @@ THE SOFTWARE.
 
         <LinearLayout
             android:layout_width="fill_parent"
+            android:minWidth="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="5dip"
