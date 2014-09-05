@@ -52,11 +52,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -69,14 +68,10 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
-import android.view.InflateException;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.LayoutInflater.Factory;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -93,7 +88,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.soundcloud.api.examples.GetResource;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -147,6 +141,12 @@ public class LibraryActivity
 
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
 	private static final String SWICH_SHOW_DIALOG_RATE = "swich_show_dialog_rate";
+	private static final String ID3_IS_SHOW = "id3_edit_dialog_visibility";
+	private static final String ID3_IS_SHOW_SEARCH = "id3_edit_dialog_search_visibility";
+	private static final String ID3_TYPE = "id3_edit_dialog_type";
+	private static final String ID3_ID = "id3_edit_dialog_id";
+	private static final String ID3_STRINGS = "id3_edit_dialog_strings";
+	private static final String ID3_COVER = "id3_edit_dialog_cover";
 	
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
@@ -154,6 +154,8 @@ public class LibraryActivity
 	private View mSearchBox;
 	private boolean mSearchBoxVisible;
 	private boolean swichShowDialogRate = true;
+	private boolean isShowID3Dialog = false;
+	private boolean isShowID3DialogSearch = false;
 
 	private TextView mTextFilter;
 	private View mSortButton;
@@ -168,6 +170,9 @@ public class LibraryActivity
 	private ImageView mCover;
 	private View mEmptyQueue;
 	private ImageButton mClearFilterEditText;
+	private MP3Editor editor;
+	private int type;
+	private long id;
 
 	private HorizontalScrollView mLimiterScroller;
 	private ViewGroup mLimiterViews;
@@ -291,6 +296,9 @@ public class LibraryActivity
 		super.onResume();
 		Advertisement.onResume(this);
 		updateEqualizerVisibility();
+		if (isShowID3DialogSearch) {
+			SearchTab.getInstance(getLayoutInflater(), this).createId3Dialog();
+		}
 	}
 	
 	
@@ -532,7 +540,7 @@ public class LibraryActivity
 		mPagerAdapter.notifyDataSetChanged();
 		loadTabOrder();
 	}
-
+	
 	@Override
 	public void onStart()
 	{
@@ -617,6 +625,21 @@ public class LibraryActivity
 		if (in.getBoolean(SEARCH_BOX_VISIBLE))
 			setSearchBoxVisible(true);
 		swichShowDialogRate = in.getBoolean(SWICH_SHOW_DIALOG_RATE);
+		// load ID3 edit dialog, if needed
+		if (null != in && in.getBoolean(ID3_IS_SHOW)) {
+			isShowID3Dialog = true;
+			editor = new MP3Editor(this);
+			editor.setStrings(in.getStringArray(ID3_STRINGS));
+			editor.setShowCover(in.getBoolean(ID3_COVER));
+			type = in.getInt(ID3_TYPE);
+			id = in.getLong(ID3_ID);
+			createEditID3Dialog(type, id, editor);
+		} else if (null != in && in.getBoolean(ID3_IS_SHOW_SEARCH)) {
+			isShowID3DialogSearch = true;
+			MP3Editor searchEditor = SearchTab.getInstance(getLayoutInflater(), this).getMp3Editor();
+			searchEditor.setStrings(in.getStringArray(ID3_STRINGS));
+			searchEditor.setShowCover(in.getBoolean(ID3_COVER));
+		}
 		super.onRestoreInstanceState(in);
 	}
 
@@ -626,6 +649,20 @@ public class LibraryActivity
 		super.onSaveInstanceState(out);
 		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		out.putBoolean(SWICH_SHOW_DIALOG_RATE, swichShowDialogRate);
+		if (isShowID3Dialog) {
+			out.putBoolean(ID3_IS_SHOW, isShowID3Dialog);
+			out.putInt(ID3_TYPE, type);
+			out.putLong(ID3_ID, id);
+			out.putStringArray(ID3_STRINGS, new String[] {editor.getNewArtistName(), editor.getNewSongTitle(),
+				editor.getNewAlbumTitle()});
+			out.putBoolean(ID3_COVER, editor.isShowCover());
+		} else if (SearchTab.getInstance(getLayoutInflater(), this).isId3Show()) {
+			out.putBoolean(ID3_IS_SHOW_SEARCH, true);
+			MP3Editor searchEditor = SearchTab.getInstance(getLayoutInflater(), this).getMp3Editor();
+			out.putStringArray(ID3_STRINGS, new String[] {searchEditor.getNewArtistName(), 
+					searchEditor.getNewSongTitle(), searchEditor.getNewAlbumTitle()});
+			out.putBoolean(ID3_COVER, searchEditor.isShowCover());
+		}
 	}
 
 	@Override
@@ -1180,32 +1217,10 @@ public class LibraryActivity
 			updateLimiterViews();
 			break;
 		case MENU_EDIT_MP3_TAG:
-			int type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
-			long id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			final File file = PlaybackService.get(this).getFilePath(type, id);
-			final MP3Editor editor = new MP3Editor(this);
-			AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
-			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							final String artistName = editor.getNewArtistName();
-							final String albumTitle =  editor.getNewAlbumTitle();
-							final String songTitle = editor.getNewSongTitle();
-							rename(file, artistName, albumTitle, songTitle);
-							
-						}
-					});
-			builder.setNegativeButton(android.R.string.cancel,
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-						
-					});
-			AlertDialog alertDialog = builder.create();
-			alertDialog.show();
+			isShowID3Dialog = true;
+			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
+			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
+			createEditID3Dialog(type, id, null);
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
 			int typeRAC = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
@@ -1238,6 +1253,36 @@ public class LibraryActivity
 		}
 
 		return true;
+	}
+	
+	private void createEditID3Dialog(int type, long id, MP3Editor view) {
+		final File file = PlaybackService.get(this).getFilePath(type, id);
+		if (null == view) {
+			editor = new MP3Editor(this);
+		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						final String artistName = editor.getNewArtistName();
+						final String albumTitle = editor.getNewAlbumTitle();
+						final String songTitle = editor.getNewSongTitle();
+						rename(file, artistName, albumTitle, songTitle);
+						isShowID3Dialog = false;
+					}
+				});
+		builder.setNegativeButton(android.R.string.cancel,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						isShowID3Dialog = false;
+					}
+					
+				});
+		AlertDialog alertDialog = builder.create();
+		alertDialog.show();
 	}
 	
 	private void deleteCover(File file) {

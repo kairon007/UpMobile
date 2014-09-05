@@ -65,7 +65,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -73,6 +72,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -91,7 +91,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SearchTab {
+public class SearchTab implements View.OnClickListener {
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
@@ -113,6 +113,8 @@ public class SearchTab {
 	private boolean searchStopped = true;
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
+	private ListView listView;
+	private static MP3Editor editor;
 
 	@SuppressWarnings("unchecked")
 	public static final SearchTab getInstance(LayoutInflater inflater, LibraryActivity activity) {
@@ -399,12 +401,12 @@ public class SearchTab {
 		}
 
 		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, final View convertView, ViewGroup parent) {
 			Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
 			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
 			// .setNumber(String.valueOf(position+1), 0)
-			.setId(position).setIcon(R.drawable.fallback_cover);
+			.setId(position).setIcon(R.drawable.fallback_cover).setClickRedirect();
 			if (song instanceof SongWithCover) {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
@@ -429,7 +431,15 @@ public class SearchTab {
 				refreshSpinner.setVisibility(View.VISIBLE);
 				getNextResults();
 			}
-			return builder.build();
+			View v = builder.build();
+			v.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					listView.performItemClick(v, position, v.getId());
+				}
+			});
+			return v;
 		}
 
 		public View getProgress() {
@@ -478,7 +488,7 @@ public class SearchTab {
 		message = (TextView) instanceView.findViewById(R.id.message);
 		progress = instanceView.findViewById(R.id.progress);
 		progress.setVisibility(View.GONE);
-		ListView listView = (ListView) instanceView.findViewById(R.id.list);
+		listView = (ListView) instanceView.findViewById(R.id.list);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setEmptyView(message);
@@ -758,6 +768,20 @@ public class SearchTab {
 		dm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(dm);
 	}
+	
+	public boolean isId3Show() {
+		if (null == player) return false;
+		return player.isId3Show;
+	}
+	
+	public MP3Editor getMp3Editor() {
+		return editor;
+	}
+	
+	public void createId3Dialog() {
+		if (null == player) return;
+		player.createId3dialog(false);
+	}
 
 	private final static class Player extends AsyncTask<String, Void, Boolean> {
 		private String url = null;
@@ -785,6 +809,7 @@ public class SearchTab {
 		private Button download;
 		private Button cancel;
 		private Button lyricsCancel;
+		private boolean isId3Show = false;
 
 		public void setOnButtonClicListener(View.OnClickListener downloadClickListener, View.OnClickListener cancelClickListener) {
 			if (download != null && downloadClickListener != null)
@@ -924,33 +949,7 @@ public class SearchTab {
 				
 				@Override
 				public void onClick(View v) {
-					final Context context = v.getContext();
-					final MP3Editor editor = new MP3Editor(context);
-					AlertDialog.Builder builder = new AlertDialog.Builder(context).setView(editor.getView());
-					builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							SharedPreferences.Editor settingsEditor = PlaybackService.getSettings(context).edit();
-							String artistName = editor.getNewArtistName();
-							String albumTitle =  editor.getNewAlbumTitle();
-							String songTitle = editor.getNewSongTitle();
-							boolean useAlbumCover = editor.useAlbumCover();
-							settingsEditor.putString(PrefKeys.EDIT_ARTIST_NAME, artistName);
-							settingsEditor.putString(PrefKeys.EDIT_ALBUM_TITLE, albumTitle);
-							settingsEditor.putString(PrefKeys.EDIT_SONG_TITLE, songTitle);
-							settingsEditor.putBoolean(PrefKeys.USE_ALBUM_COVER, useAlbumCover);
-							settingsEditor.commit();
-						}
-					});
-					builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					});
-					AlertDialog alertDialog = builder.create();  
-					alertDialog.show();
+					createId3dialog(true);
 				}
 			});
 			buttonShowLyrics.setOnClickListener(new View.OnClickListener() {
@@ -986,6 +985,46 @@ public class SearchTab {
 			});
 		}
 
+		public void createId3dialog(boolean force) {
+			isId3Show = true;
+			if (null == editor || force) {
+				editor = new MP3Editor(activity);
+			}
+			AlertDialog.Builder builder = new AlertDialog.Builder(activity).setView(editor.getView());
+			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					SharedPreferences.Editor settingsEditor = PlaybackService.getSettings(activity).edit();
+					String artistName = editor.getNewArtistName();
+					String albumTitle =  editor.getNewAlbumTitle();
+					String songTitle = editor.getNewSongTitle();
+					boolean useAlbumCover = editor.useAlbumCover();
+					settingsEditor.putString(PrefKeys.EDIT_ARTIST_NAME, artistName);
+					settingsEditor.putString(PrefKeys.EDIT_ALBUM_TITLE, albumTitle);
+					settingsEditor.putString(PrefKeys.EDIT_SONG_TITLE, songTitle);
+					settingsEditor.putBoolean(PrefKeys.USE_ALBUM_COVER, useAlbumCover);
+					settingsEditor.commit();
+					isId3Show = false;
+				}
+			});
+			builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					SharedPreferences.Editor settingsEditor = PlaybackService.getSettings(activity).edit();
+					settingsEditor.putString(PrefKeys.EDIT_ARTIST_NAME, "");
+					settingsEditor.putString(PrefKeys.EDIT_ALBUM_TITLE, "");
+					settingsEditor.putString(PrefKeys.EDIT_SONG_TITLE, "");
+					settingsEditor.putBoolean(PrefKeys.USE_ALBUM_COVER, true);
+					settingsEditor.commit();
+					isId3Show = false;
+				}
+			});
+			AlertDialog alertDialog = builder.create();  
+			alertDialog.show();
+		}
+		
 		public Integer getSongId() {
 			return songId;
 		}
@@ -1169,6 +1208,12 @@ public class SearchTab {
 			}
 		}
 
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

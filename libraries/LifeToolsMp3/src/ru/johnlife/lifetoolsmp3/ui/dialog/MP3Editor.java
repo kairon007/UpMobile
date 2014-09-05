@@ -20,9 +20,6 @@ public class MP3Editor{
 	private String newSongTitle;
 	private String newAlbumTitle;
 	private boolean showCover = true;
-	
-	public MP3Editor(){
-	}
 
 	public MP3Editor(Context context){
 		this.context = context;
@@ -40,6 +37,10 @@ public class MP3Editor{
 		etSongTitle = (EditText) view.findViewById(R.id.editTextTitle);
 		etAlbumTitle = (EditText) view.findViewById(R.id.editTextAlbum);
 		checkBox = (CheckBox) view.findViewById(R.id.isShowCover);
+		etArtistName.setText(newArtistName);
+		etSongTitle.setText(newSongTitle);
+		etAlbumTitle.setText(newAlbumTitle);
+		checkBox.setChecked(showCover);
 	}
 	
 	public void hideCheckBox(boolean isHide) {
@@ -103,4 +104,17 @@ public class MP3Editor{
 		return false;
 	}
 
+	public boolean isShowCover() {
+		return checkBox.isChecked();
+	}
+
+	public void setShowCover(boolean showCover) {
+		this.showCover = showCover;
+	}
+
+	public void setStrings(String[] strings) {
+		newArtistName = strings[0];
+		newSongTitle = strings[1];
+		newAlbumTitle = strings[2];
+	}
 }

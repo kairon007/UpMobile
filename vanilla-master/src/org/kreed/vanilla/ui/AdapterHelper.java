@@ -71,6 +71,11 @@ public class AdapterHelper {
 		
 		public ViewBuilder setMainClickListener(OnClickListener listener) {
 			view.setOnClickListener(listener);
+			setClickRedirect();
+			return this;
+		}
+		
+		public void setClickRedirect() {
 			view.findViewById(R.id.main_layout).setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -78,7 +83,6 @@ public class AdapterHelper {
 					view.performClick();
 				}
 			});
-			return this;
 		}
 		
 		public ViewBuilder setId(long value) {
