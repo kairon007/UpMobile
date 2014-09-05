@@ -83,22 +83,13 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				holder.remove.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Runnable work = new Runnable() {
-
-							@Override
-							public void run() {
-								DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-								cancelledId = adapter.getItem(position).getDownloadId();
-								manager.remove(cancelledId);
-								if (getItem(position).getFileUri() != null) {
-									DBHelper.getInstance(getContext()).delete(getItem(position));
-								}
-								remove(getItem(position));
-							}
-						};
-						Thread thread = new Thread(work);
-						thread.setPriority(Thread.MAX_PRIORITY);
-						activity.runOnUiThread(thread);
+						DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+						cancelledId = adapter.getItem(position).getDownloadId();
+						manager.remove(cancelledId);
+						if (getItem(position).getFileUri() != null) {
+							DBHelper.getInstance(getContext()).delete(getItem(position));
+						}
+						remove(getItem(position));
 					}
 				});
 			}
@@ -144,13 +135,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			progress.setVisibility(View.GONE);
 			insertData(result);
 		}
-
-		@Override
-		public void add(MusicData object) {
-			if (mOriginalValues != null) {
-				mOriginalValues.add(object);
-			}
-			mObjects.add(object);
+		
+		private void redraw() {
 			activity.runOnUiThread(new Runnable() {
 
 				@Override
@@ -162,19 +148,21 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		}
 
 		@Override
+		public void add(MusicData object) {
+			if (mOriginalValues != null) {
+				mOriginalValues.add(object);
+			}
+			mObjects.add(object);
+			redraw();
+		}
+
+		@Override
 		public void insert(MusicData object, int index) {
 			if (mOriginalValues != null) {
 				mOriginalValues.add(index, object);
 			}
 			mObjects.add(index, object);
-			activity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					notifyDataSetChanged();
-				}
-
-			});
+			redraw();
 		}
 
 		@SuppressLint("NewApi")
@@ -184,14 +172,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				mOriginalValues.addAll(collection);
 			}
 			mObjects.addAll(collection);
-			activity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					notifyDataSetChanged();
-				}
-
-			});
+			redraw();
 		}
 
 		@Override
@@ -200,13 +181,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				mOriginalValues.clear();
 			}
 			mObjects.clear();
-			activity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					notifyDataSetChanged();
-				}
-			});
+			redraw();
 		}
 		
 		@Override
@@ -215,14 +190,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				mOriginalValues.remove(object);
 			}
 			mObjects.remove(object);
-			activity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					notifyDataSetChanged();
-				}
-
-			});
+			redraw();
 		}
 
 		@Override
@@ -285,14 +253,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			@Override
 			protected void publishResults(CharSequence constraint, final FilterResults results) {
 				mObjects = (ArrayList<MusicData>) results.values;
-				activity.runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						notifyDataSetChanged();
-					}
-
-				});
+				redraw();
 			}
 		}
 	}
@@ -406,7 +367,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	
 	public void recreateAdaper() {
 		ArrayList<MusicData> dataMusic = new ArrayList<MusicData>();
-		Log.d("log", "ggg");
 		for (int i = 0; i < adapter.getCount(); i++) {
 			MusicData data = adapter.getItem(i);
 			if ((progressString != null && data.getDownloadProgress() != null && data.getDownloadProgress().equals(SET_VIS))  || data.getFileUri() != null) {
