@@ -9,6 +9,8 @@ import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
+import org.kreed.musicdownloader.data.MusicData;
+import org.kreed.musicdownloader.interfaces.TaskSuccessListener;
 
 import android.content.ContentValues;
 import android.content.Context;

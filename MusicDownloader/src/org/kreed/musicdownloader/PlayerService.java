@@ -2,6 +2,9 @@ package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
 
+import org.kreed.musicdownloader.ui.Player;
+import org.kreed.musicdownloader.ui.activity.MainActivity;
+
 import android.app.Service;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -10,10 +13,10 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 
 public class PlayerService extends Service {
-
-	private Player player;
-	private final PlayerBinder binder = new PlayerBinder();
+	
 	private static final ArrayList<MainActivity> sActivities = new ArrayList<MainActivity>(3);
+	private final PlayerBinder binder = new PlayerBinder();
+	private Player player;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {

@@ -18,7 +18,7 @@
 package com.viewpagerindicator;
 
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.Util;
+import org.kreed.musicdownloader.ballast.Util;
 
 import android.content.Context;
 import android.graphics.Typeface;
