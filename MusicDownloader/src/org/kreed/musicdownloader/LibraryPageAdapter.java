@@ -42,7 +42,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextW
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.library_item, null);
 			holder = new ViewHolderItem();
-			holder.hThreedot = (Button) convertView.findViewById(R.id.threedotButton);
+			holder.hThreedot = (ImageButton) convertView.findViewById(R.id.threedotButton);
 			holder.hButtonPlay = (ImageButton) convertView.findViewById(R.id.play_song);
 			holder.hSongTitle = (TextView) convertView.findViewById(R.id.title_song);
 			holder.hSongGenre = (TextView) convertView.findViewById(R.id.genre_song);
@@ -102,7 +102,7 @@ public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextW
 		TextView hSongTitle;
 		TextView hSongGenre;
 		TextView hSongDuration;
-		Button hThreedot;
+		ImageButton hThreedot;
 	}
 
 	public void updateItem(int position, String artist, String title, Bitmap cover) {
