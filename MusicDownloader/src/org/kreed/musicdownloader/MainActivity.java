@@ -38,6 +38,7 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -337,15 +338,6 @@ public class MainActivity extends Activity {
 			
 		});
 		clearAll = (ImageButton) findViewById(R.id.clear_all_button);
-		clearAll.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				DownloadsTab.getInstance().recreateAdaper();
-				DBHelper.getInstance().deleteAll();
-			}
-			
-		});
 		footer = (FrameLayout) findViewById(R.id.footer);
 
 		mLimiterScroller = (HorizontalScrollView)findViewById(R.id.limiter_scroller);
