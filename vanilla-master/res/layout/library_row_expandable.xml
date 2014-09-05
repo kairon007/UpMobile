@@ -29,6 +29,7 @@ THE SOFTWARE.-->
     android:showDividers="middle" >
 
     <LinearLayout
+        android:id="@+id/main_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

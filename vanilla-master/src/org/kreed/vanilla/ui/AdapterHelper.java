@@ -71,6 +71,13 @@ public class AdapterHelper {
 		
 		public ViewBuilder setMainClickListener(OnClickListener listener) {
 			view.setOnClickListener(listener);
+			view.findViewById(R.id.main_layout).setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					view.performClick();
+				}
+			});
 			return this;
 		}
 		
