@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 import junit.framework.Assert;
@@ -38,6 +39,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 /**
  * Contains the list of currently playing songs, implements repeat and shuffle
@@ -677,12 +679,13 @@ public final class SongTimeline {
 				MediaUtils.shuffle(timeline.subList(start, timeline.size()), mShuffleMode == SHUFFLE_ALBUMS);
 
 			if (jumpSong != null) {
+				
 				int jumpPos = timeline.indexOf(jumpSong);
 				if (jumpPos != start) {
-					// Get the sublist twice to avoid a ConcurrentModificationException.
-					timeline.addAll(timeline.subList(start, jumpPos));
-					timeline.subList(start, jumpPos).clear();
-				}
+					int size = timeline.size();
+					timeline.addAll(timeline.subList(0, size));
+					timeline.subList(0, size).clear();
+					}
 			}
 
 			broadcastChangedSongs();
