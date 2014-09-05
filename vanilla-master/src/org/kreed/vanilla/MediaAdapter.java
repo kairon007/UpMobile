@@ -28,10 +28,13 @@ import java.util.regex.Pattern;
 import org.kreed.vanilla.ui.AdapterHelper;
 import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
 
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
@@ -40,7 +43,6 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
 /**
@@ -59,6 +61,7 @@ public class MediaAdapter
 	implements SectionIndexer
 	         , LibraryAdapter
 	         , View.OnClickListener
+//	          ,CoverView.Callback
 {
 	private static final Pattern SPACE_SPLIT = Pattern.compile("\\s+");
 	private static final SparseIntArray stringCaptions = new SparseIntArray() {{
@@ -93,6 +96,7 @@ public class MediaAdapter
 	 * The URI of the content provider backing this adapter.
 	 */
 	private Uri mStore;
+	private Bitmap songCover; 
 	/**
 	 * The fields to use from the content provider. The last field will be
 	 * displayed in the MediaView, as will the first field if there are
@@ -464,7 +468,23 @@ public class MediaAdapter
 			.setLine1(title)
 			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
 			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
+		if (mType == MediaUtils.TYPE_SONG) {
+			builder.setIcon(getCoverSong());
+		}
 		return builder.build();
+	}
+	
+	private Bitmap getCoverSong() {
+		Song song = PlaybackService.get(mActivity).shiftCurrentSong(0);
+		if (songCover == null) {
+			return songCover = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.fallback_cover);
+		} else {
+			return songCover;
+		}
+	}
+
+	protected void setSong(final Song song)	{
+		Bitmap bitmap = song.getCover(mActivity);
 	}
 
 	/**
@@ -594,4 +614,16 @@ public class MediaAdapter
 		return true;
 	}
 	
+//	@Override
+//	public void shiftCurrentSong(int delta) {
+//		setSong(PlaybackService.get(mActivity).shiftCurrentSong(delta));
+//	}
+
+//	@Override
+//	public void upSwipe() {
+//	}
+//
+//	@Override
+//	public void downSwipe() {
+//	}
 }
