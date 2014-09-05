@@ -65,6 +65,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -95,6 +96,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private TextView mTitle;
 	private TextView mAlbum;
 	private TextView mArtist;
+	
 
 	/**
 	 * True if the controls are visible (play, next, seek bar, etc).
@@ -144,6 +146,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 	private boolean isLyricsShow = false;
 	private boolean newIntent = false;
 	private boolean intentPending = false;
+	private ProgressBar progressLyric;
 
 	@Override
 	public void onCreate(Bundle icicle)
@@ -155,7 +158,6 @@ public class FullPlaybackActivity extends PlaybackActivity
 			setTheme(R.style.Playback);
 		}
 		setTitle(R.string.playback_view);
-
 		SharedPreferences settings = PlaybackService.getSettings(this);
 		int displayMode = Integer.parseInt(settings.getString(PrefKeys.DISPLAY_MODE, "2"));
 		mDisplayMode = displayMode;
@@ -413,7 +415,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
 		if (isNetworkConnected())
-			mLyricsConteiner.setVisibility(isLyricsShow ? View.VISIBLE : View.GONE);
+			mLyricsConteiner.setVisibility(isLyricsShow ? View.VISIBLE: View.GONE);
 		else {
 			Toast.makeText(this, getString(R.string.lyric_no_internet), Toast.LENGTH_LONG).show();
 			isLyricsShow = false;
@@ -489,7 +491,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 		if (mQueuePosView != null)
 			updateQueuePosition();
 	}
-
+	
 	@Override
 	protected void onSongChange(final Song song)
 	{
@@ -509,11 +511,14 @@ public class FullPlaybackActivity extends PlaybackActivity
 				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 				isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
 				if (mLyricsView != null && Settings.ENABLE_LYRICS && isLyricsShow == true) {
+					progressLyric = (ProgressBar) findViewById(R.id.progressLyric);
+					enableProgress();
 					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
 					lyricsFetcher.fetchLyrics(song.title, song.artist);
 					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
 						@Override
 						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+							disableProgress();
 							if (foundLyrics) {
 								mLyricsView.setText(Html.fromHtml(lyrics));
 							} else {
@@ -538,13 +543,28 @@ public class FullPlaybackActivity extends PlaybackActivity
 		}
 	}
 
+	public void enableProgress() {
+		if (progressLyric != null)
+			progressLyric.setVisibility(View.VISIBLE);
+
+	}
+
+	public void disableProgress() {
+		if (progressLyric != null)
+			progressLyric.setVisibility(View.GONE);
+
+	}
+	
 	public void loadLyrics(final Song song) {
 		if (mLyricsView != null && Settings.ENABLE_LYRICS) {
+			progressLyric = (ProgressBar) findViewById(R.id.progressLyric);
+			enableProgress();
 			LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
 			lyricsFetcher.fetchLyrics(song.title, song.artist);
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
 						@Override
 						public void onLyricsFetched(boolean foundLyrics,String lyrics) {
+							disableProgress();
 							if (foundLyrics) {
 								mLyricsView.setText(Html.fromHtml(lyrics));
 							} else {
