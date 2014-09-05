@@ -1,18 +1,24 @@
 package org.kreed.musicdownloader;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,13 +42,33 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private Long currentDownloadingID;
 	private ImageButton clearAll;
 
-	private final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener {
+	private final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener
+//	, TextWatcher 
+	{
+
+		private ArrayList<MusicData> mObjects;
+		private ArrayList<MusicData> mOriginalValues;
 		private LayoutInflater inflater;
+		private Filter filter;
+//		private EditText mTextFilter;
+//		private ImageButton mClearFilterEditText;
 
 		public DownloadsAdapter(Context context, int resource) {
 			super(context, resource);
 			this.inflater = LayoutInflater.from(context);
+			mObjects = new ArrayList<MusicData>();
 			DBHelper.getInstance(getContext()).getAll(this);
+//			mTextFilter = (EditText) activity.findViewById(R.id.filter_text);
+//			mTextFilter.addTextChangedListener(this);
+//			mClearFilterEditText = (ImageButton) activity.findViewById(R.id.clear_filter);
+//			mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
+//
+//				@Override
+//				public void onClick(View arg0) {
+//					mTextFilter.setText("");
+//				}
+//
+//			});
 		}
 
 		@SuppressLint("NewApi")
@@ -56,7 +82,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				holder.cover = (ImageView) convertView.findViewById(R.id.cover);
 				holder.duration = (TextView) convertView.findViewById(R.id.totalTime);
 				holder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.progressBar);
-				holder.remove = (ImageView) convertView.findViewById(R.id.cancel);
+				holder.remove = (ImageButton) convertView.findViewById(R.id.cancel);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -66,7 +92,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 					@Override
 					public void onClick(View v) {
 						Runnable work = new Runnable() {
-							
+
 							@Override
 							public void run() {
 								DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
@@ -100,7 +126,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 					} else {
 						holder.downloadProgress.setVisibility(View.VISIBLE);
 						holder.remove.setImageResource(R.drawable.cancel);
-						holder.downloadProgress.setProgress((int)Double.parseDouble(song.getDownloadProgress()));
+						holder.downloadProgress.setProgress((int) Double.parseDouble(song.getDownloadProgress()));
 					}
 				} else {
 					holder.downloadProgress.setVisibility(View.INVISIBLE);
@@ -117,7 +143,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			TextView artist;
 			TextView duration;
 			ImageView cover;
-			ImageView remove;
+			ImageButton remove;
 			ProgressBar downloadProgress;
 		}
 
@@ -126,6 +152,171 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			progress.setVisibility(View.GONE);
 			insertData(result);
 		}
+
+		@Override
+		public void add(MusicData object) {
+			if (mOriginalValues != null) {
+				mOriginalValues.add(object);
+			}
+			mObjects.add(object);
+			activity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					notifyDataSetChanged();
+				}
+
+			});
+		}
+
+		@Override
+		public void insert(MusicData object, int index) {
+			if (mOriginalValues != null) {
+				mOriginalValues.add(index, object);
+			}
+			mObjects.add(index, object);
+			activity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					notifyDataSetChanged();
+				}
+
+			});
+		}
+
+		@SuppressLint("NewApi")
+		@Override
+		public void addAll(Collection<? extends MusicData> collection) {
+			if (mOriginalValues != null) {
+				mOriginalValues.addAll(collection);
+			}
+			mObjects.addAll(collection);
+			activity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					notifyDataSetChanged();
+				}
+
+			});
+		}
+
+		@Override
+		public void clear() {
+			if (mOriginalValues != null) {
+				mOriginalValues.clear();
+			}
+			mObjects.clear();
+			activity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					notifyDataSetChanged();
+				}
+			});
+		}
+
+		@Override
+		public void remove(MusicData object) {
+			if (mOriginalValues != null) {
+				mOriginalValues.remove(object);
+			}
+			mObjects.remove(object);
+			activity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					notifyDataSetChanged();
+				}
+
+			});
+		}
+
+		@Override
+		public int getCount() {
+			if (mObjects == null) {
+				return 0;
+			}
+			return mObjects.size();
+		}
+
+		@Override
+		public MusicData getItem(int position) {
+			return mObjects.get(position);
+		}
+
+		@Override
+		public int getPosition(MusicData item) {
+			return mObjects.indexOf(item);
+		}
+
+		@Override
+		public Filter getFilter() {
+			if (filter == null) {
+				filter = new ResultFilter();
+			}
+			return filter;
+		}
+
+//		@Override
+//		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//		}
+//
+//		@Override
+//		public void onTextChanged(CharSequence s, int start, int before, int count) {
+//			getFilter().filter(mTextFilter.getText().toString().toLowerCase(Locale.ENGLISH));
+//		}
+//
+//		@Override
+//		public void afterTextChanged(Editable s) {
+//
+//		}
+
+		private class ResultFilter extends Filter {
+
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+				FilterResults results = new FilterResults();
+				String prefix = constraint.toString().toLowerCase();
+				if (mOriginalValues == null) {
+					mOriginalValues = new ArrayList<MusicData>(mObjects);
+				}
+				if (prefix == null || prefix.length() == 0) {
+					ArrayList<MusicData> list = new ArrayList<MusicData>(mOriginalValues);
+					results.values = list;
+					results.count = list.size();
+				} else {
+					ArrayList<MusicData> list = new ArrayList<MusicData>(mOriginalValues);
+					ArrayList<MusicData> nlist = new ArrayList<MusicData>();
+					int count = list.size();
+					for (int i = 0; i < count; i++) {
+						MusicData data = list.get(i);
+						String value = data.toString();
+						if (value.contains(prefix)) {
+							nlist.add(data);
+						}
+						results.values = nlist;
+						results.count = nlist.size();
+					}
+				}
+				return results;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint, final FilterResults results) {
+				mObjects = (ArrayList<MusicData>) results.values;
+				activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						notifyDataSetChanged();
+					}
+
+				});
+			}
+		}
 	}
 
 	@Override
@@ -133,7 +324,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		this.progressString = progressString;
 		if (currentDownloadingSongTitle != null) {
 			for (int i = 0; i < adapter.getCount(); i++) {
-				if (adapter.getItem(i).getSongTitle().equalsIgnoreCase(currentDownloadingSongTitle) && adapter.getItem(i).getDownloadId() ==  currentDownloadingID) {
+				if (adapter.getItem(i).getSongTitle().equalsIgnoreCase(currentDownloadingSongTitle) && adapter.getItem(i).getDownloadId() == currentDownloadingID) {
 					adapter.getItem(i).setDownloadProgress(progressString);
 					if (progressString.equals("100.0") || progressString.equals("100")) {
 						adapter.getItem(i).setDownloadProgress(SET_VIS);
@@ -191,18 +382,18 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		this.activity = activity;
 		clearAll = (ImageButton) activity.findViewById(R.id.clear_all_button);
 		adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
-		Log.d("log", "adapter in condtructor id = "+ adapter.hashCode());
+		Log.d("log", "adapter in condtructor id = " + adapter.hashCode());
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
 		progress = (ProgressBar) inflateView.findViewById(R.id.progress);
 		clearAll.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				adapter.clear();
 				DBHelper.getInstance().deleteAll();
 				DownloadsTab.this.activity.runOnUiThread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						recreateAdaper();
@@ -215,10 +406,11 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	public DownloadsTab() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public long getCancelledId() {
 		return cancelledId;
 	}
+
 	@Override
 	public void currentDownloadingSongTitle(String currentDownloadingSongTitle) {
 		this.currentDownloadingSongTitle = currentDownloadingSongTitle;
@@ -239,14 +431,13 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			}
 		}
 	}
-	
+
 	public void setFilter(String text) {
-		Log.d("log", "adapter in setFilter id = "+ adapter.hashCode());
+		Log.d("log", "adapter in setFilter id = " + adapter.hashCode());
 		adapter.getFilter().filter(text);
 	}
-	
-	private void recreateAdaper() {
-		adapter = new DownloadsAdapter(activity, R.layout.downloads_row);
-		listView.setAdapter(adapter);
+
+	public void recreateAdaper() {
+		adapter.clear();
 	}
 }

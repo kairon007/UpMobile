@@ -71,7 +71,7 @@ THE SOFTWARE.
             android:id="@+id/clear_all_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@android:color/transparent"
+            android:background="@drawable/selectable_item_bg"
             android:src="@drawable/cancel" />
 
     </LinearLayout>

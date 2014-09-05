@@ -70,6 +70,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -146,6 +147,9 @@ public class MainActivity extends Activity {
 	private EditText mTextFilter;
 	private CustomTextWatcher textWatcher;
 	private LinearLayout searchLayout;
+	
+	private ImageButton clearAll;
+
 
 	private ImageButton mClearFilterEditText;
 
@@ -322,14 +326,25 @@ public class MainActivity extends Activity {
 		setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.library_content_top:R.layout.library_content);
 		mTextFilter = (EditText)findViewById(R.id.filter_text);
 		textWatcher = new CustomTextWatcher();
+		mTextFilter.addTextChangedListener(textWatcher);
 		mClearFilterEditText = (ImageButton)findViewById(R.id.clear_filter);
 		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
+			
 			@Override
 			public void onClick(View arg0) {
-				mTextFilter.removeTextChangedListener(textWatcher);
 				mTextFilter.setText("");
-				mTextFilter.addTextChangedListener(textWatcher);
 			}
+			
+		});
+		clearAll = (ImageButton) findViewById(R.id.clear_all_button);
+		clearAll.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				DownloadsTab.getInstance().recreateAdaper();
+				DBHelper.getInstance().deleteAll();
+			}
+			
 		});
 		footer = (FrameLayout) findViewById(R.id.footer);
 
@@ -343,7 +358,6 @@ public class MainActivity extends Activity {
 		pager.setAdapter(pagerAdapter);
 		mViewPager = pager;
 		searchLayout = (LinearLayout)findViewById(R.id.search_box);
-		ImageButton clearAllButton = (ImageButton) getSearchLayout().findViewById(R.id.clear_all_button);
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			pager.setOnPageChangeListener(pagerAdapter);
@@ -364,10 +378,10 @@ public class MainActivity extends Activity {
 			searchLayout.setVisibility(View.GONE);
 		}
 		if (pager.getCurrentItem() == 1) {
-			clearAllButton.setVisibility(View.VISIBLE);
+			clearAll.setVisibility(View.VISIBLE);
 		}
 		if (pager.getCurrentItem() == 2) {
-			clearAllButton.setVisibility(View.GONE);
+			clearAll.setVisibility(View.GONE);
 		}
 		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().getPlayer() != null) {
 			MusicDownloaderApp.getService().getPlayer().getView(footer);
@@ -570,8 +584,7 @@ public class MainActivity extends Activity {
 	 * @param position The position of the new page.
 	 * @param adapter The new visible adapter.
 	 */
-	public void onPageChanged(int position, LibraryAdapter adapter)
-	{ 
+	public void onPageChanged(int position, LibraryAdapter adapter) {
 		mCurrentAdapter = adapter;
 		mLastActedId = LibraryAdapter.INVALID_ID;
 		updateLimiterViews();
@@ -586,9 +599,9 @@ public class MainActivity extends Activity {
 		lastPage = position;
 	}
 
-	public EditText getTextFilter() {
-		return mTextFilter;
-	}
+//	public EditText getTextFilter() {
+//		return mTextFilter;
+//	}
 	
 	@Override
 	public ApplicationInfo getApplicationInfo()
