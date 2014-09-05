@@ -37,7 +37,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private String currentDownloadingSongTitle;
 	private Long currentDownloadingID;
 	private ImageButton clearAll;
-
+	
 	private final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener	{
 
 		private ArrayList<MusicData> mObjects;
@@ -407,7 +407,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		ArrayList<MusicData> dataMusic = new ArrayList<MusicData>();
 		for (int i = 0; i < adapter.getCount(); i++) {
 			MusicData data = adapter.getItem(i);
-			if (data.getDownloadProgress() != null && data.getDownloadProgress().equals(SET_VIS)) {
+			if ((progressString != null && data.getDownloadProgress() != null && data.getDownloadProgress().equals(SET_VIS))  || data.getFileUri() != null) {
 				DBHelper.getInstance().delete(data);
 				dataMusic.add(data);
 			}

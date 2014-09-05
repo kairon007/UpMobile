@@ -472,9 +472,7 @@ public class SearchTab {
 				getNextResults();
 			}
 			View v = builder.build();
-			v.setBackgroundColor(getItem(position).isHighlight ? activity.getResources()
-					.getColor(R.color.holo_blue_light)
-					: activity.getResources().getColor(android.R.color.transparent));
+			v.setBackgroundColor(getItem(position).isHighlight ? activity.getResources().getColor(R.color.holo_blue_light) : activity.getResources().getColor(android.R.color.transparent));
 			return v;
 		}
 
