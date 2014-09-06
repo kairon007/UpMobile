@@ -164,7 +164,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	private int currentType = -1;
 	private Context context;
 	private LibraryPagerAdapter parentAdapter = this;
-	public LibraryPageAdapter adapterLibrary = null;
+	public LibraryTabAdapter adapterLibrary = null;
 	private ArrayList<MusicData> array = new ArrayList<MusicData>();
 	private boolean isAdded;
 
@@ -363,7 +363,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 							e.printStackTrace();
 						}
 					}
-					adapterLibrary = new LibraryPageAdapter(mActivity, 0, arrayMusic, activity);
+					adapterLibrary = new LibraryTabAdapter(mActivity, 0, arrayMusic, activity);
 					view = (ListView) inflater.inflate(R.layout.listview, null);
 					view.setAdapter(adapterLibrary);
 				} else {

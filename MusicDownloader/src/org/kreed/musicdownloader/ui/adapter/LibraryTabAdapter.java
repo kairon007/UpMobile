@@ -28,14 +28,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class LibraryPageAdapter extends ArrayAdapter<MusicData> implements TextWatcher {
+public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWatcher {
 
 	private MainActivity activity;
 	private LayoutInflater inflater;
 	private int size;
 	private EditText filter;
 
-	public LibraryPageAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
+	public LibraryTabAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
 		super(context, resource, arrayMusic);
 		this.activity = activity;
 		inflater = LayoutInflater.from(context);
