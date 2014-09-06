@@ -80,8 +80,6 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public class MainActivity extends Activity {
 
-	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
-	private static final String PLAY_ROW_NUMBER = "search_play_row";
 	private final static int DELETE = 1;
 	private final static int EDIT_TAG = 2;
 	
@@ -108,6 +106,7 @@ public class MainActivity extends Activity {
 	private String songArtist;
 	private String songTitle;
 	private String songDuration;
+	private String textFilter = "";
 	private long mLastActedId;
 	private int page;
 	private int mDefaultAction;
@@ -195,6 +194,9 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		if(null != textFilter && !textFilter.equals("")){
+			mTextFilter.setText(textFilter);
+		}
 	}
 
 	@Override
@@ -324,19 +326,21 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
-		SearchTab.setPlayingPosition(in.getInt(PLAY_ROW_NUMBER, -1));
-		if (in.getBoolean(SEARCH_BOX_VISIBLE))
+		SearchTab.setPlayingPosition(in.getInt(Constans.PLAY_ROW_NUMBER, -1));
+		textFilter = in.getString(Constans.SAVE_FILTER_TEXT);
+		if (in.getBoolean(Constans.SEARCH_BOX_VISIBLE))
 			super.onRestoreInstanceState(in);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
-		super.onSaveInstanceState(out);
-		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
+		out.putString(Constans.SAVE_FILTER_TEXT, textFilter);
+		out.putBoolean(Constans.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		int i = SearchTab.getPlayingPosition();
 		if (i != -1) {
-			out.putInt(PLAY_ROW_NUMBER, i);
+			out.putInt(Constans.PLAY_ROW_NUMBER, i);
 		}
+		super.onSaveInstanceState(out);
 	}
 
 	/**
@@ -606,8 +610,8 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			String text = mTextFilter.getText().toString().toLowerCase(Locale.ENGLISH);
-			DownloadsTab.getInstance().setFilter(text);
+			textFilter = mTextFilter.getText().toString().toLowerCase(Locale.ENGLISH);
+			DownloadsTab.getInstance().setFilter(textFilter);
 		}
 
 		@Override
