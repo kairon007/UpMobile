@@ -82,14 +82,13 @@ public class MainActivity extends Activity {
 
 	private final static int DELETE = 1;
 	private final static int EDIT_TAG = 2;
-	
-	private Intent serviceIntent;
+
 	public LibraryPagerAdapter mPagerAdapter;
 	private ApplicationInfo mFakeInfo;
 	protected Looper mLooper;
 	private MusicData music;
 	private TelephonyManager telephonyManager;
-	
+
 	private ViewGroup mLimiterViews;
 	private Player player;
 	private HorizontalScrollView mLimiterScroller;
@@ -102,20 +101,17 @@ public class MainActivity extends Activity {
 	private LinearLayout searchLayout;
 	private ImageButton clearAll;
 	private ImageButton mClearFilterEditText;
-	
-	private String songArtist;
-	private String songTitle;
-	private String songDuration;
-	private String textFilter = "";
+
+	private String textFilterDownload = "";
+	private String textFilterLibrary = "";
 	private long mLastActedId;
 	private int page;
 	private int mDefaultAction;
-	private int itemPosition;
 	private int selectedItem;
 	private int lastPage = -1;
 	private boolean mSearchBoxVisible;
 	public boolean mFakeTarget;
-	
+
 	// -------------------------------------------------------------------------
 
 	public static void validateAdUnitId(String adUnitId) throws IllegalArgumentException {
@@ -140,7 +136,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
-			// TODO
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
 				if (MusicDownloaderApp.getService().conteinsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
@@ -160,7 +155,6 @@ public class MainActivity extends Activity {
 					}
 				}
 				break;
-
 			default:
 				break;
 			}
@@ -188,15 +182,16 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onPause() {
+		textFilterLibrary = mTextFilter.getText().toString();
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(null != textFilter && !textFilter.equals("")){
-			mTextFilter.setText(textFilter);
-		}
+		if (page == 1 && null != textFilterDownload && !textFilterDownload.equals("")) {
+			mTextFilter.setText(textFilterDownload);
+		} 
 	}
 
 	@Override
@@ -242,7 +237,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				DownloadsTab.getInstance().recreateAdaper();
 			}
-			
+
 		});
 		footer = (FrameLayout) findViewById(R.id.footer);
 
@@ -327,15 +322,20 @@ public class MainActivity extends Activity {
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
 		SearchTab.setPlayingPosition(in.getInt(Constans.PLAY_ROW_NUMBER, -1));
-		textFilter = in.getString(Constans.SAVE_FILTER_TEXT);
+		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
+		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
 		if (in.getBoolean(Constans.SEARCH_BOX_VISIBLE))
 			super.onRestoreInstanceState(in);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
-		out.putString(Constans.SAVE_FILTER_TEXT, textFilter);
 		out.putBoolean(Constans.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
+		if (page == 1) {
+			out.putString(Constans.FILTER_TEXT_DOWNLOAD, textFilterDownload);
+		} else if (page == 2) {
+			out.putString(Constans.FILTER_TEXT_LIBRARY, textFilterLibrary);
+		}
 		int i = SearchTab.getPlayingPosition();
 		if (i != -1) {
 			out.putInt(Constans.PLAY_ROW_NUMBER, i);
@@ -350,7 +350,6 @@ public class MainActivity extends Activity {
 		mLimiterViews.removeAllViews();
 		mLimiterScroller.setVisibility(View.VISIBLE);
 	}
-
 
 	/**
 	 * Called when a new page becomes visible.
@@ -396,6 +395,13 @@ public class MainActivity extends Activity {
 		Intent showOptions = new Intent(Intent.ACTION_MAIN);
 		showOptions.addCategory(Intent.CATEGORY_HOME);
 		startActivity(showOptions);
+	}
+	
+	public String getTextFilterLibrary() {
+		if (null == textFilterLibrary || textFilterLibrary.equals("")) {
+			return "";
+		}
+		return textFilterLibrary;
 	}
 
 	public void setActivatedPlayButton(boolean value) {
@@ -610,8 +616,8 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			textFilter = mTextFilter.getText().toString().toLowerCase(Locale.ENGLISH);
-			DownloadsTab.getInstance().setFilter(textFilter);
+			textFilterDownload = mTextFilter.getText().toString().toLowerCase(Locale.ENGLISH);
+			DownloadsTab.getInstance().setFilter(textFilterDownload);
 		}
 
 		@Override

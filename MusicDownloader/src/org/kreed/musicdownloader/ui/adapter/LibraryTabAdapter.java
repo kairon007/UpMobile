@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.kreed.musicdownloader.Constans;
-import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.R.id;
-import org.kreed.musicdownloader.R.layout;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 
@@ -15,14 +12,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,8 +27,8 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 	private MainActivity activity;
 	private LayoutInflater inflater;
-	private int size;
 	private EditText filter;
+	private int size;
 
 	public LibraryTabAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
 		super(context, resource, arrayMusic);
@@ -41,6 +36,10 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		inflater = LayoutInflater.from(context);
 		filter = (EditText) activity.findViewById(R.id.filter_text);
 		filter.addTextChangedListener(this);
+		String str = activity.getTextFilterLibrary();
+		if (!str.equals("")) {
+			filter.setText(str);
+		}
 	}
 
 	@Override
