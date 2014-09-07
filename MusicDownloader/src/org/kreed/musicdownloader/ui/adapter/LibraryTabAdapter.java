@@ -19,27 +19,65 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWatcher {
 
+	private ArrayList<MusicData> mObjects;
+	private ArrayList<MusicData> mOriginalValues;
+	private Filter filter;
 	private MainActivity activity;
 	private LayoutInflater inflater;
-	private EditText filter;
+	private EditText textFilter;
 	private int size;
 
 	public LibraryTabAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
-		super(context, resource, arrayMusic);
+		super(context, resource);
+		mObjects = arrayMusic;
 		this.activity = activity;
 		inflater = LayoutInflater.from(context);
-		filter = (EditText) activity.findViewById(R.id.filter_text);
-		filter.addTextChangedListener(this);
+		textFilter = (EditText) activity.findViewById(R.id.filter_text);
+		textFilter.addTextChangedListener(this);
 		String str = activity.getTextFilterLibrary();
 		if (!str.equals("")) {
-			filter.setText(str);
+			textFilter.setText(str);
 		}
+	}
+	
+	@Override
+	public void add(MusicData object) {
+		if (mOriginalValues != null) {
+			mOriginalValues.add(object);
+		}
+		mObjects.add(object);
+		redraw();
+	}
+	
+	@Override
+	public void remove(MusicData object) {
+		if (mOriginalValues != null) {
+			mOriginalValues.remove(object);
+		}
+		mObjects.remove(object);
+		redraw();
+	}
+
+	@Override
+	public int getCount() {
+		return mObjects.size();
+	}
+
+	@Override
+	public MusicData getItem(int position) {
+		return mObjects.get(position);
+	}
+
+	@Override
+	public int getPosition(MusicData item) {
+		return mObjects.indexOf(item);
 	}
 
 	@Override
@@ -81,6 +119,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 				activity.setSelectedItem(pos);
 				return false;
 			}
+			
 		});
 		holder.hThreedot.setOnClickListener(new OnClickListener() {
 
@@ -90,6 +129,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 				activity.setSelectedItem(pos);
 				arg0.performLongClick();
 			}
+			
 		});
 		holder.hButtonPlay.setOnClickListener(new OnClickListener() {
 
@@ -122,6 +162,64 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		if (null != cover) {
 			getItem(position).setSongBitmap(cover);
 		}
+		redraw();
+	}
+	
+	private void redraw() {
+		activity.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				notifyDataSetChanged();
+			}
+
+		});
+	}
+	
+	@Override
+	public Filter getFilter() {
+		if (filter == null) {
+			filter = new ResultFilter();
+		}
+		return filter;
+	}
+	
+	private class ResultFilter extends Filter {
+
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
+			FilterResults results = new FilterResults();
+			String prefix = constraint.toString().toLowerCase();
+			if (mOriginalValues == null) {
+				mOriginalValues = new ArrayList<MusicData>(mObjects);
+			}
+			if (prefix == null || prefix.length() == 0) {
+				ArrayList<MusicData> list = new ArrayList<MusicData>(mOriginalValues);
+				results.values = list;
+				results.count = list.size();
+			} else {
+				ArrayList<MusicData> list = new ArrayList<MusicData>(mOriginalValues);
+				ArrayList<MusicData> nlist = new ArrayList<MusicData>();
+				int count = list.size();
+				for (int i = 0; i < count; i++) {
+					MusicData data = list.get(i);
+					String value = data.toString();
+					if (value.contains(prefix)) {
+						nlist.add(data);
+					}
+					results.values = nlist;
+					results.count = nlist.size();
+				}
+			}
+			return results;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(CharSequence constraint, final FilterResults results) {
+			mObjects = (ArrayList<MusicData>) results.values;
+			redraw();
+		}
 	}
 
 	@Override
@@ -131,7 +229,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		getFilter().filter(filter.getText().toString().toLowerCase(Locale.ENGLISH));
+		getFilter().filter(textFilter.getText().toString().toLowerCase(Locale.ENGLISH));
 	}
 
 	@Override

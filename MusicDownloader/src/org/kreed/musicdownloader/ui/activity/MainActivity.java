@@ -36,6 +36,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.FeatureInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -511,9 +512,12 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			File file = new File(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX + music.getSongTitle() + " - " + music.getSongArtist() + ".mp3");
+			File file = new File(music.getFileUri());
 			if (!file.exists()) {
-				Log.d("file do not", "exists");
+				File file2 = new File(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX + music.getSongTitle() + " - " + music.getSongArtist() + ".mp3");
+				file.renameTo(file2);
+			}
+			if (!file.exists()) {
 				cancel(true);
 			} else {
 				file.delete();
@@ -538,13 +542,14 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				Log.d("log", "on start");
 				String artistName = editor.getNewArtistName();
 				String albumTitle = editor.getNewAlbumTitle();
 				String songTitle = editor.getNewSongTitle();
 				boolean useAlbumCover = editor.useAlbumCover();
-				rename(file, artistName, albumTitle, songTitle, useAlbumCover);
-
+				rename(file, artistName, albumTitle, songTitle);
+				if (!useAlbumCover) {
+					removeAlbumCover(file);
+				}
 			}
 
 		});
@@ -555,43 +560,76 @@ public class MainActivity extends Activity {
 			}
 
 		});
-
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
 	}
-
-	private void rename(File file, String artist, String album, String song, boolean useAlbumCover) {
+	
+	private void removeAlbumCover(File file) {
 		Bitmap cover = null;
+		MusicMetadataSet src_set;
+		try {
+			src_set = new MyID3().read(file);
+		if (src_set == null) {
+			return;
+		}
+		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+		metadata.clearPictureList();
+		cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
+		ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+		cover.compress(CompressFormat.JPEG, 85, out);
+		metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+		new MyID3().update(file, src_set, metadata);
+		notifyMediascanner(file.getAbsolutePath(), "", "", null);
+		} catch (Exception e) {
+		}
+	}
+
+	private void rename(File file, String artist, String album, String song) {
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (src_set == null) {
 				return;
 			}
+			boolean isChange = false;
+			String partSong = file.getName().split("-")[0];
+			String partArtist = file.getName().split("-")[1];
+			Log.d("log", partArtist);
+			Log.d("log", partSong);
+			String newName = "";
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			if (!album.equals("")) {
 				metadata.clearAlbum();
 				metadata.setAlbum(album);
+				isChange = true;
 			}
-			if (!song.equals("")) {
+			if (!song.equals("") && !artist.equals("")) {
 				metadata.clearSongTitle();
 				metadata.setSongTitle(song);
-			}
-			if (!artist.equals("")) {
 				metadata.clearArtist();
 				metadata.setArtist(artist);
+				newName = song + " - " + artist + ".mp3";
+				isChange = true;
+			} else if (!artist.equals("")) {
+				metadata.clearArtist();
+				metadata.setArtist(artist);
+				newName = partSong + "- " + artist + ".mp3";
+				isChange = true;
+			} else if (!song.equals("")) {
+				metadata.clearSongTitle();
+				metadata.setSongTitle(song);
+				newName = song + " -" + partArtist;
+				isChange = true;
 			}
-			if (!useAlbumCover) {
-				metadata.clearPictureList();
-				cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
-				ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-				cover.compress(CompressFormat.JPEG, 85, out);
-				metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+			if (!isChange) {
+				Log.d("log", "return");
+				return;
 			}
+			File newFile = new File(file.getParentFile(), newName);
+			music.setFileUri(newFile.getAbsolutePath());
 			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file.getAbsolutePath(), artist, song, cover);
-		} catch (UnsupportedEncodingException e) {
-		} catch (ID3WriteException e) {
-		} catch (IOException e) {
+			file.renameTo(newFile);
+			notifyMediascanner(file.getAbsolutePath(), artist, song, null);
+		} catch (Exception e) {
 		}
 	}
 

@@ -252,45 +252,21 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 
 	public void changeArrayMusicData(final MusicData musicData) {
 		if (null != adapterLibrary) {
-
-			mActivity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					adapterLibrary.add(musicData);
-					isAdded = true;
-					adapterLibrary.notifyDataSetChanged();
-				}
-			});
-
+			adapterLibrary.add(musicData);
+			isAdded = true;
 		}
 
 	}
 
 	public void removeMusicData(final MusicData musicData) {
 		if (null != adapterLibrary) {
-			mActivity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					adapterLibrary.remove(musicData);
-					adapterLibrary.notifyDataSetChanged();
-				}
-			});
+			adapterLibrary.remove(musicData);
 		}
 	}
 
 	public void updateMusicData(final int i, final String artist, final String title, final Bitmap cover) {
 		if (null != adapterLibrary) {
-			mActivity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					adapterLibrary.updateItem(i, artist, title, cover);
-					adapterLibrary.setNotifyOnChange(true);
-				}
-
-			});
+			adapterLibrary.updateItem(i, artist, title, cover);
 		}
 	}
 
