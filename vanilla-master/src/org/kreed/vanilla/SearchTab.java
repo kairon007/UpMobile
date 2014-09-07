@@ -91,7 +91,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SearchTab implements View.OnClickListener {
+public class SearchTab {
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
@@ -1209,11 +1209,4 @@ public class SearchTab implements View.OnClickListener {
 		}
 
 	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
