@@ -1,8 +1,11 @@
 package ru.johnlife.lifetoolsmp3.song;
 
+import java.util.ArrayList;
+
 
 public class RemoteSong extends Song {
 	protected String downloadUrl;
+	public ArrayList<String []> headers;
 
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
@@ -37,6 +40,11 @@ public class RemoteSong extends Song {
 		return downloadUrl;
 	}
 	
-	
-
+	public RemoteSong setHeader(ArrayList<String []> headers) {
+		this.headers = headers;
+		return this;
+	}
+	public ArrayList<String []> getHeaders() {
+		return headers;
+	}	
 }

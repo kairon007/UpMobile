@@ -1,7 +1,11 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
+import org.jsoup.Connection.Method;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
@@ -23,15 +27,25 @@ public class SearchVmusice extends BaseSearchTask {
 		String url = VMUSIC_URL + getSongName();
 		try {
 			// Connect to the web site
-			Document document = Jsoup.connect(url).get();
+			Response res = Jsoup.connect(url)
+					.method(Method.GET)
+					.timeout(10000)
+					.execute();
+			Document document = res.parse();
+			Map<String, String> cookies = res.cookies();
 			for (Element songItem : document.select("li.x-track")) {
 				try {
 					String author = songItem.select("strong").text();  
 					String name = songItem.select("span").last().text().replace(author, "").replace(" – ", "");  
 					String duration = songItem.select("em").text();
 					String downloadUrl = songItem.select("a.download").first().attr("href");
-					Log.d("tag download", downloadUrl);
-					addSong(new RemoteSong(downloadUrl).setTitle(name).setArtistName(author).setDuration(formatTime(duration)));
+					String playUrl = songItem.select("a").attr("data-url");
+					Log.d("tag play", playUrl);
+					Log.d("tag download - 2", songItem.select("x-play play").text());
+					ArrayList<String[]> headers = new ArrayList<String[]>();
+			    	headers.add(new String[] {"Referer","http://vmusice.net/"});
+			    	headers.add(new String[] {"Range", "bytes=0-"});
+					addSong(new RemoteSong(downloadUrl).setTitle(name).setArtistName(author).setDuration(formatTime(duration)).setHeader(headers));
 				} catch (Exception e) {
 					Log.e(getClass().getSimpleName(), "Error parsing song", e);
 				}

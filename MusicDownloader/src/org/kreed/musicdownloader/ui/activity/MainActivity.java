@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import org.cmc.music.common.ID3WriteException;
@@ -447,7 +448,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void play(String path, String strArtist, String strTitle, String strDuration, String from, int position) {
+	public void play(String path, ArrayList<String[]> headers, String strArtist, String strTitle, String strDuration, String from, int position) {
 		if (player != null && player.getPosition() == position) {
 			player.restart();
 			return;
@@ -455,7 +456,7 @@ public class MainActivity extends Activity {
 			player.remove();
 			player = null;
 		}
-		player = new Player(path, strArtist, strTitle, strDuration, from, position);
+		player = new Player(path, headers, strArtist, strTitle, strDuration, from, position);
 		MusicDownloaderApp.getService().setPlayer(player);
 		player.getView(footer);
 		player.play();

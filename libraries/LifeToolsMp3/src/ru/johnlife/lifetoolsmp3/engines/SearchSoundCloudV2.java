@@ -2,6 +2,7 @@ package ru.johnlife.lifetoolsmp3.engines;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Map;
 
 import android.util.Log;
 import ru.johnlife.lifetoolsmp3.song.SoundCloudV2Song;
@@ -25,15 +26,13 @@ public class SearchSoundCloudV2 extends BaseSearchTask {
 			ArrayList<Track> result = soundcloud.findTrack(songName);
 			if(result != null) {
 			    for(Track track : result) {
-			    	if (track.isStreamable()) {
-				    	String downloadUrl = track.getStreamUrl();
+			    		String downloadUrl = "http://api.soundcloud.com/tracks/" + track.getId() + "/stream?client_id=2Kf29hhC5mgWf62708A";
 				    	String largeCoverUrl = track.getArtworkUrl();
 				    	String[] pair = getPair(track.getTitle());
 				    	long duration = (long) track.getDuration();
 				    	String songArtist = pair[0].trim();
 				    	String songTitle = pair[1].trim();
 						addSong(new SoundCloudV2Song(downloadUrl, largeCoverUrl).setArtistName(songArtist).setDuration(duration).setTitle(songTitle));
-			    	}
 			    }
 			}
 		} catch (Exception e) {

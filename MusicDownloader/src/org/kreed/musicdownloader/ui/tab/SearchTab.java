@@ -98,8 +98,8 @@ public class SearchTab {
 	private static LibraryPagerAdapter parentAdapter;
 
 	private Iterator<Engine> taskIterator;
-	private AsyncTask<Void, Void, String> getUrlTask;
-	private AsyncTask<Void, Void, String> getUrlTaskForPlayer;
+	private AsyncTask<Void, Void, CustomStructure> getUrlTask;
+	private AsyncTask<Void, Void, CustomStructure> getUrlTaskForPlayer;
 	private SongSearchAdapter resultAdapter;
 	private CoverLoaderTask coverLoader;
 
@@ -170,14 +170,16 @@ public class SearchTab {
 		private double progress = 0.0;
 		private String currentDownloadingSongTitle;
 		private Long currentDownloadingID;
+		private ArrayList<String[]> headers;
 
-		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration, Bitmap cover) {
+		private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration, Bitmap cover, ArrayList<String[]> headers) {
 			this.context = context;
 			this.songTitle = songTitle;
 			this.songArtist = songArtist;
 			this.downloadUrl = downloadUrl;
 			this.duration = duration;
 			this.cover = cover;
+			this.headers = headers;
 		}
 
 		@SuppressLint("NewApi")
@@ -187,8 +189,19 @@ public class SearchTab {
 				musicDir.mkdirs();
 			}
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl)).addRequestHeader("User-Agent",
-					"2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+			DownloadManager.Request request;
+			if (headers != null && headers.get(0) != null) {
+				request = new DownloadManager.Request(Uri.parse(downloadUrl))
+						.addRequestHeader(headers.get(0)[0],headers.get(0)[1])
+						.addRequestHeader(
+								"User-Agent",
+								"2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+			} else {
+				request = new DownloadManager.Request(Uri.parse(downloadUrl))
+						.addRequestHeader(
+								"User-Agent",
+								"2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+			}
 			final String fileName = songTitle + " - " + songArtist + ".mp3";
 			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(songTitle)
 					.setDestinationInExternalPublicDir(Constans.DIRECTORY_PREFIX, fileName);
@@ -360,6 +373,11 @@ public class SearchTab {
 		}
 	}
 
+	private class CustomStructure {
+		public String downloadUrl;
+		public ArrayList<String[]> headers;
+	}
+	
 	private final class SongSearchAdapter extends ArrayAdapter<SongSearchItem> {
 		private LayoutInflater inflater;
 		private FrameLayout footer;
@@ -402,22 +420,25 @@ public class SearchTab {
 					bundle.putInt(KEY_POSITION, position);
 					final Song song = resultAdapter.getItem(position).song;
 					Log.d("name", song.getArtist());
-					getUrlTask = new AsyncTask<Void, Void, String>() {
+					getUrlTask = new AsyncTask<Void, Void, CustomStructure>() {
 						@Override
-						protected String doInBackground(Void... params) {
-							return ((RemoteSong) song).getDownloadUrl();
+						protected CustomStructure doInBackground(Void... params) {
+							CustomStructure struct = new CustomStructure();
+							struct.headers = ((RemoteSong) song).getHeaders();
+							struct.downloadUrl = ((RemoteSong) song).getDownloadUrl();
+							return struct;
 						}
 
 						@Override
-						protected void onPostExecute(String downloadUrl) {
-							loadSong(downloadUrl);
+						protected void onPostExecute(CustomStructure struct) {
+							loadSong(struct.downloadUrl, struct.headers);
 						}
 					};
 					try {
 						RemoteSong remSong = (RemoteSong) song;
 						String url = remSong.getParentUrl();
 						if (url != null) {
-							loadSong(url);
+							loadSong(url, remSong.getHeaders());
 						} else {
 							getUrlTask.execute(NO_PARAMS);
 						}
@@ -426,12 +447,12 @@ public class SearchTab {
 					}
 				}
 
-				private void loadSong(String url) {
+				private void loadSong(String url, ArrayList<String[]> headers) {
 					Bitmap bmp = bitmaps.get(position);
 					if (bmp != null) {
-						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, formatDate(song.getDuration()), bitmaps.get(position));
+						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, formatDate(song.getDuration()), bitmaps.get(position), headers);
 					} else {
-						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, formatDate(song.getDuration()), null);
+						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, formatDate(song.getDuration()), null, headers);
 						if (song instanceof GrooveSong) {
 							String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
 							coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
@@ -622,19 +643,22 @@ public class SearchTab {
 
 	private void initTask(final Song song, final String artist, final String title, final String duration, final int pos) {
 		final String key = Constans.CALL_FROM_SERCH;
-		getUrlTaskForPlayer = new AsyncTask<Void, Void, String>() {
+		getUrlTaskForPlayer = new AsyncTask<Void, Void, CustomStructure>() {
 
 			@Override
-			protected String doInBackground(Void... params) {
-				return ((RemoteSong) song).getDownloadUrl();
+			protected CustomStructure doInBackground(Void... params) {
+				CustomStructure structure = new CustomStructure();
+				structure.headers = ((RemoteSong) song).getHeaders();
+				structure.downloadUrl = ((RemoteSong) song).getDownloadUrl();
+				return structure;
 			}
 
 			@Override
-			protected void onPostExecute(final String downloadUrl) {
+			protected void onPostExecute(CustomStructure structure) {
 				playingPosition = pos;
-				((MainActivity) activity).play(downloadUrl, artist, title, duration, key, pos);
+				((MainActivity) activity).play(structure.downloadUrl, structure.headers, artist, title, duration, key, pos);
 			}
-
+			
 		};
 	}
 

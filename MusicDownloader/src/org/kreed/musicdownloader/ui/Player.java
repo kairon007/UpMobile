@@ -2,6 +2,7 @@ package org.kreed.musicdownloader.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.kreed.musicdownloader.Constans;
@@ -13,6 +14,7 @@ import org.kreed.musicdownloader.R.id;
 import android.annotation.SuppressLint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -47,6 +49,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private int currentProgress = 0;
 	private boolean playFinish = false;
 	private boolean prepared = false;
+	private ArrayList<String[]> header;
 	
 	private Runnable progressAction = new Runnable() {
 		
@@ -64,12 +67,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		
 	};
 	
-	public Player(String path, String strArtist, String strTitle, String strDuration, String from, int position) {
+	public Player(String path, ArrayList<String[]> header, String strArtist, String strTitle, String strDuration, String from, int position) {
 		this.path = path;
 		this.strTitle = strArtist + " - " + strTitle;
 		this.strDuration = strDuration;
 		this.from = from;
 		this.position = position;
+		this.header = header;
 	}
 	
 	public void play() {
@@ -244,21 +248,29 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		return String.format("%d:%02d", min, sec);
 	}
 
-	private class PlaySong extends AsyncTask<String, Void, Boolean> {
+	private class PlaySong extends AsyncTask<String, Void, Boolean> implements OnBufferingUpdateListener {
 
 		@SuppressLint("NewApi")
 		@Override
 		protected Boolean doInBackground(String... params) {
 			try {
-				if(from.equals(Constans.CALL_FROM_LIBRARY)){
+				if (from.equals(Constans.CALL_FROM_LIBRARY)) {
 					songFile = new File(path);
 					FileInputStream inputStream = new FileInputStream(songFile);
 					mediaPlayer.setDataSource(inputStream.getFD());
 					inputStream.close();
 				} else if (from.equals(Constans.CALL_FROM_SERCH)) {
-					HashMap<String, String> headers = new HashMap<String,String>();
-					headers.put("User-Agent", "2.0.0.6 � Debian GNU/Linux 4.0 � Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
-					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
+					HashMap<String, String> headers = new HashMap<String, String>();
+					headers.put(
+							"User-Agent",
+							"2.0.0.6 � Debian GNU/Linux 4.0 � Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+					if (header != null && header.get(0) != null) {
+						for (int i = 0; i< header.size(); i++) {
+							headers.put(header.get(i)[0], header.get(i)[1]);
+						}
+					}
+					mediaPlayer.setDataSource(view.getContext(), Uri.parse(header.get(1)[1]), headers);
+					mediaPlayer.setOnBufferingUpdateListener(this);
 				}
 				mediaPlayer.prepare();
 				prepared = true;
@@ -323,6 +335,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 				});
 				onPrepared();
 			}
+		}
+		@Override
+		public void onBufferingUpdate(MediaPlayer arg0, int percent) {
+			Log.d("percent", percent + " ");
 		}
 	}
 	
