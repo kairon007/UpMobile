@@ -22,9 +22,12 @@
 
 package org.kreed.vanilla;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.vanilla.app.VanillaApp;
+
+import ru.johnlife.lifetoolsmp3.song.Song;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

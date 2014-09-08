@@ -22,11 +22,22 @@
 
 package org.kreed.vanilla;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
+import org.cmc.music.common.ID3WriteException;
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.ui.AdapterHelper;
 import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
+
+import com.startapp.android.publish.model.MetaDataStyle;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
@@ -35,6 +46,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
@@ -453,13 +465,16 @@ public class MediaAdapter
 		Cursor cursor = mCursor;	
 		cursor.moveToPosition(position);
 		int count = cursor.getColumnCount();
+		String data = null;
 		String zaycevTag = "(zaycev.net)";
 		String title = cursor.getString(1);
 		if (mType == MediaUtils.TYPE_SONG) {
-			String data = cursor.getString(2);
+			data = cursor.getString(2);
 			arrayFilePath.put(title, data);
 		}
-		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase())) title = title.replace(zaycevTag, "");
+		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase())) {
+			title = title.replace(zaycevTag, "");
+		}
 		builder
 			.setArrowClickListener(this)
 			.setMainClickListener(this)
@@ -469,22 +484,40 @@ public class MediaAdapter
 			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
 			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
 		if (mType == MediaUtils.TYPE_SONG) {
-			builder.setIcon(getCoverSong());
+			long id = cursor.getLong(0);
+			builder.setIcon(getCoverSong(id, 2));
 		}
 		return builder.build();
 	}
-	
-	private Bitmap getCoverSong() {
-		Song song = PlaybackService.get(mActivity).shiftCurrentSong(0);
-		if (songCover == null) {
-			return songCover = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.fallback_cover);
-		} else {
-			return songCover;
-		}
-	}
 
-	protected void setSong(final Song song)	{
-		Bitmap bitmap = song.getCover(mActivity);
+	private Bitmap getCoverSong(long id, int maxWidth) {
+		File file = PlaybackService.get(mActivity).getFilePath(mType, id);
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			Vector<ImageData> pictureList = metadata.getPictureList();
+			if ((pictureList == null) || (pictureList.size() == 0)) {
+				return  songCover = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.fallback_cover);
+			}
+			ImageData imageData = (ImageData) pictureList.get(0);
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			int scale = 1;
+			if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
+				int scaleWidth = opts.outWidth;
+				while (scaleWidth > maxWidth) {
+					scaleWidth /= 2;
+					scale *= 2;
+				}
+			}
+			opts = new BitmapFactory.Options();
+			opts.inSampleSize = scale;
+			Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
+			return bitmap;
+		}
+		catch (Exception e) {
+		}
+		return songCover = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.fallback_cover);
 	}
 
 	/**
@@ -550,9 +583,6 @@ public class MediaAdapter
 		ViewBuilder holder = (ViewBuilder)view.getTag();
 		String title = holder.getTitle();
 		String path = arrayFilePath.get(title);
-		if (mType == MediaUtils.TYPE_SONG) {
-			Log.d("log", "path = "+path);
-		}
 		Intent intent = new Intent();
 		intent.putExtra(LibraryAdapter.DATA_TYPE, mType);
 		intent.putExtra(LibraryAdapter.DATA_ID, holder.getId());

@@ -166,7 +166,6 @@ public class AdapterHelper {
 				cover.getVisibility() == View.GONE ?
 					View.INVISIBLE : View.VISIBLE
 			);
-			
 		}
 
 		public long getId() {

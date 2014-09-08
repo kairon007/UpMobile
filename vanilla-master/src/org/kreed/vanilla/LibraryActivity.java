@@ -1287,10 +1287,8 @@ public class LibraryActivity
 	
 	private void deleteCover(File file) {
 		try {
-			Log.d("log", "pdth file = ");
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (src_set == null) {
-				Log.d("log", "src_sec null");
 				return;
 			}
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
