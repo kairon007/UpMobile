@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package org.kreed.musicdownloader.ballast;
+package org.kreed.musicdownloader;
 
 import android.annotation.TargetApi;
 import android.app.backup.BackupAgentHelper;
