@@ -566,7 +566,6 @@ public class SearchTab {
 					if (playingPosition == position)
 						return;
 				} else {// enter here first time
-					Log.d("log", "()()()()()()()()()()()()()()()(");
 					playingPosition = position;
 					Toast.makeText(activity, R.string.toast_loading, 2000).show();
 					((MainActivity) activity).setActivatedPlayButton(false);

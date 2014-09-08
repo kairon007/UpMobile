@@ -32,7 +32,13 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	private MainActivity activity;
 	private LayoutInflater inflater;
 	private EditText textFilter;
-	private int size;
+	private Runnable reDraw = new Runnable() {
+
+		@Override
+		public void run() {
+			notifyDataSetChanged();
+		}
+	};
 
 	public LibraryTabAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
 		super(context, resource);
@@ -53,7 +59,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			mOriginalValues.add(object);
 		}
 		mObjects.add(object);
-		redraw();
+		activity.runOnUiThread(reDraw);
 	}
 	
 	@Override
@@ -62,7 +68,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			mOriginalValues.remove(object);
 		}
 		mObjects.remove(object);
-		redraw();
+		activity.runOnUiThread(reDraw);
 	}
 
 	@Override
@@ -83,7 +89,6 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolderItem holder;
-		size = getCount();
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.library_item, null);
 			holder = new ViewHolderItem();
@@ -162,18 +167,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		if (null != cover) {
 			getItem(position).setSongBitmap(cover);
 		}
-		redraw();
-	}
-	
-	private void redraw() {
-		activity.runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				notifyDataSetChanged();
-			}
-
-		});
+		activity.runOnUiThread(reDraw);
 	}
 	
 	@Override
@@ -218,7 +212,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		@Override
 		protected void publishResults(CharSequence constraint, final FilterResults results) {
 			mObjects = (ArrayList<MusicData>) results.values;
-			redraw();
+			activity.runOnUiThread(reDraw);
 		}
 	}
 
