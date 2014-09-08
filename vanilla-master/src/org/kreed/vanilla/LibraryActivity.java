@@ -22,7 +22,6 @@
 
 package org.kreed.vanilla;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +58,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.PaintDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -93,11 +93,7 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * The library activity where songs to play can be selected from the library.
  */
-public class LibraryActivity
-	extends PlaybackActivity
-	implements TextWatcher
-	         , DialogInterface.OnClickListener
-	         , DialogInterface.OnDismissListener {
+public class LibraryActivity extends PlaybackActivity implements TextWatcher, DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
 	/**
 	 * Action for row click: play the row.
 	 */
@@ -135,9 +131,7 @@ public class LibraryActivity
 	/**
 	 * The SongTimeline add song modes corresponding to each relevant action.
 	 */
-	private static final int[] modeForAction =
-		{ SongTimeline.MODE_PLAY, SongTimeline.MODE_ENQUEUE, -1,
-		  SongTimeline.MODE_PLAY_ID_FIRST, SongTimeline.MODE_ENQUEUE_ID_FIRST };
+	private static final int[] modeForAction = { SongTimeline.MODE_PLAY, SongTimeline.MODE_ENQUEUE, -1, SongTimeline.MODE_PLAY_ID_FIRST, SongTimeline.MODE_ENQUEUE_ID_FIRST };
 
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
 	private static final String SWICH_SHOW_DIALOG_RATE = "swich_show_dialog_rate";
@@ -147,7 +141,7 @@ public class LibraryActivity
 	private static final String ID3_ID = "id3_edit_dialog_id";
 	private static final String ID3_STRINGS = "id3_edit_dialog_strings";
 	private static final String ID3_COVER = "id3_edit_dialog_cover";
-	
+
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
 
@@ -176,7 +170,7 @@ public class LibraryActivity
 
 	private HorizontalScrollView mLimiterScroller;
 	private ViewGroup mLimiterViews;
-	
+
 	private int page;
 
 	/**
@@ -208,69 +202,59 @@ public class LibraryActivity
 	 * ApplicationInfo with targetSdkVersion set to Gingerbread.
 	 */
 	private ApplicationInfo mFakeInfo;
-	
+
 	int lastPage = -1;
 	private Bundle state;
 
-	//-------------------------------------------------------------------------
-	
+	// -------------------------------------------------------------------------
+
 	public static void validateAdUnitId(String adUnitId) throws IllegalArgumentException {
 		if (adUnitId == null) {
-			throw new IllegalArgumentException(
-					"Invalid Ad Unit ID: null ad unit.");
+			throw new IllegalArgumentException("Invalid Ad Unit ID: null ad unit.");
 		} else if (adUnitId.length() == 0) {
-			throw new IllegalArgumentException(
-					"Invalid Ad Unit Id: empty ad unit.");
+			throw new IllegalArgumentException("Invalid Ad Unit Id: empty ad unit.");
 		} else if (adUnitId.length() > 256) {
-			throw new IllegalArgumentException(
-					"Invalid Ad Unit Id: length too long.");
+			throw new IllegalArgumentException("Invalid Ad Unit Id: length too long.");
 		} else if (!isAlphaNumeric(adUnitId)) {
-			throw new IllegalArgumentException(
-					"Invalid Ad Unit Id: contains non-alphanumeric characters.");
+			throw new IllegalArgumentException("Invalid Ad Unit Id: contains non-alphanumeric characters.");
 		}
 	}
-	
+
 	public static boolean isAlphaNumeric(String input) {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
-	
-	
+
 	public static void logToast(Context context, String message) {
 		Log.d("", message);
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	public static void hideSoftKeyboard(final EditText editText) {
-		InputMethodManager inputMethodManager = (InputMethodManager) editText
-				.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager
-				.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+		InputMethodManager inputMethodManager = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 	}
-	
-	
-	
-	
-//	protected void loadMoPubView(MoPubView moPubView, String adUnitId, String keywords) {
-//		//TODO
-//		if (moPubView == null) {
-//			logToast(this, "Unable to inflate MoPubView from xml.");
-//			return;
-//		}
-//
-//		try {
-//			validateAdUnitId(adUnitId);
-//		} catch (IllegalArgumentException exception) {
-//			//logToast(BaseActivity.this, exception.getMessage());
-//			return;
-//		}
-//
-//	//	moPubView.setBannerAdListener(this);
-//		moPubView.setAdUnitId(adUnitId);
-//		moPubView.setKeywords(keywords);
-//		moPubView.loadAd();
-//	}
-	
-	
+
+	// protected void loadMoPubView(MoPubView moPubView, String adUnitId, String
+	// keywords) {
+	// //TODO
+	// if (moPubView == null) {
+	// logToast(this, "Unable to inflate MoPubView from xml.");
+	// return;
+	// }
+	//
+	// try {
+	// validateAdUnitId(adUnitId);
+	// } catch (IllegalArgumentException exception) {
+	// //logToast(BaseActivity.this, exception.getMessage());
+	// return;
+	// }
+	//
+	// // moPubView.setBannerAdListener(this);
+	// moPubView.setAdUnitId(adUnitId);
+	// moPubView.setKeywords(keywords);
+	// moPubView.loadAd();
+	// }
+
 	@Override
 	public void onDestroy() {
 		Advertisement.onDestroy(this);
@@ -278,20 +262,20 @@ public class LibraryActivity
 	}
 
 	private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-        	Intent intent1 = getIntent();
-        	pickSongs(intent1,ACTION_PLAY);
-        }
-    };
-	
-    @Override
-    protected void onPause() {
-    	super.onPause();
-    	Advertisement.onPause(this);
-    }
-    
-    @Override
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Intent intent1 = getIntent();
+			pickSongs(intent1, ACTION_PLAY);
+		}
+	};
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Advertisement.onPause(this);
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 		Advertisement.onResume(this);
@@ -300,15 +284,14 @@ public class LibraryActivity
 			SearchTab.getInstance(getLayoutInflater(), this).createId3Dialog();
 		}
 	}
-	
-	
+
 	@Override
 	public void onCreate(Bundle state) {
-		super.onCreate(state);		
+		super.onCreate(state);
 		this.state = state;
 		if (state == null) {
 			checkForLaunch(getIntent());
-			
+
 		} else {
 			swichShowDialogRate = state.getBoolean(SWICH_SHOW_DIALOG_RATE);
 		}
@@ -320,51 +303,52 @@ public class LibraryActivity
 			setTheme(R.style.Library);
 		}
 		setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
-		
-//		Advertisement.startAppInit(this);
-//		Advertisement.mobileCoreInit(this);
-//		Advertisement.moPubInit(this);
-//		Advertisement.airPushShow(this);
-				
+
+		// Advertisement.startAppInit(this);
+		// Advertisement.mobileCoreInit(this);
+		// Advertisement.moPubInit(this);
+		// Advertisement.airPushShow(this);
+
 		mSearchBox = findViewById(R.id.search_box);
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_white));
 		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
 		}
-		mTextFilter = (TextView)findViewById(R.id.filter_text);
+		mTextFilter = (TextView) findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
-		mClearFilterEditText = (ImageButton)findViewById(R.id.clear_filter);
+		mClearFilterEditText = (ImageButton) findViewById(R.id.clear_filter);
 		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				mTextFilter.setText(null);
 			}
 		});
-		//Intent intent = getIntent();
-	//	if (intent.getAction().equals(Intent.ACTION_VIEW)){//startActivity(new Intent(this, FullPlaybackActivity.class)); 
-	//		Uri playUri = Uri.parse("file:///sdcard/music/Cassie - Alex.mp3");
-	//		 intent = new Intent(Intent.ACTION_VIEW, playUri); 
-	//		startActivity(intent);
-			// intent = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
-			//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	//		startActivity(intent);
-	//	}
-		
-		
+		// Intent intent = getIntent();
+		// if
+		// (intent.getAction().equals(Intent.ACTION_VIEW)){//startActivity(new
+		// Intent(this, FullPlaybackActivity.class));
+		// Uri playUri = Uri.parse("file:///sdcard/music/Cassie - Alex.mp3");
+		// intent = new Intent(Intent.ACTION_VIEW, playUri);
+		// startActivity(intent);
+		// intent = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
+		// intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		// startActivity(intent);
+		// }
+
 		mSortButton = findViewById(R.id.sort_button);
 		mSortButton.setOnClickListener(this);
-		
+
 		mEqualizerButton = findViewById(R.id.equalizer_button);
 		mEqualizerButton.setOnClickListener(this);
 
-		mLimiterScroller = (HorizontalScrollView)findViewById(R.id.limiter_scroller);
-		mLimiterViews = (ViewGroup)findViewById(R.id.limiter_layout);
+		mLimiterScroller = (HorizontalScrollView) findViewById(R.id.limiter_scroller);
+		mLimiterViews = (ViewGroup) findViewById(R.id.limiter_layout);
 
 		LibraryPagerAdapter pagerAdapter = new LibraryPagerAdapter(this, mLooper);
 		mPagerAdapter = pagerAdapter;
 
-		ViewPager pager = (ViewPager)findViewById(R.id.pager);
+		ViewPager pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(pagerAdapter);
 		mViewPager = pager;
 
@@ -372,22 +356,19 @@ public class LibraryActivity
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			pager.setOnPageChangeListener(pagerAdapter);
 			View controls = getLayoutInflater().inflate(R.layout.actionbar_controls, null);
-			mTitle = (TextView)controls.findViewById(R.id.title);
-			mArtist = (TextView)controls.findViewById(R.id.artist);
-			mAlbum = (TextView)controls.findViewById(R.id.album);
-			mCover = (ImageView)controls.findViewById(R.id.cover);
-			
-			//mAlbum.setTypeface(font);
+			mTitle = (TextView) controls.findViewById(R.id.title);
+			mArtist = (TextView) controls.findViewById(R.id.artist);
+			mAlbum = (TextView) controls.findViewById(R.id.album);
+			mCover = (ImageView) controls.findViewById(R.id.cover);
+
+			// mAlbum.setTypeface(font);
 			mArtist.setTypeface(VanillaApp.FONT_LIGHT);
 			mTitle.setTypeface(VanillaApp.FONT_REGULAR);
-			
-//			mTitle.setTextColor(Color.WHITE);
+
+			// mTitle.setTextColor(Color.WHITE);
 			mTitle.setTextSize(20);
 			mArtist.setTextSize(15);
-			
-			
-			
-			
+
 			controls.setOnClickListener(this);
 			mActionControls = controls;
 		} else {
@@ -397,162 +378,135 @@ public class LibraryActivity
 			mTabs = tabs;
 
 			LinearLayout content = (LinearLayout) findViewById(R.id.content);
-			String switchPlace = settings.getString(PrefKeys.SHOW_TAB_POSITION,
-					"top");
+			String switchPlace = settings.getString(PrefKeys.SHOW_TAB_POSITION, "top");
 			if (switchPlace.equals("top")) {
-				content.addView(tabs, 0, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-			} else if (switchPlace.equals("bottom")) { 
+				content.addView(tabs, 0, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+			} else if (switchPlace.equals("bottom")) {
 				int i = content.getChildCount();
-				content.addView(tabs, i, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+				content.addView(tabs, i, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 			}
-		//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false)) {
-				getLayoutInflater().inflate(R.layout.library_controls, content, true);
+			// if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false)) {
+			getLayoutInflater().inflate(R.layout.library_controls, content, true);
 
-				mControls = findViewById(R.id.controls);
-				if ("AppTheme.White".equals(Util.getThemeName(this))) {
-					mControls.setBackgroundResource
-						(R.drawable.music_bottom_playback_bg_light);
-				} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-					mControls.setBackgroundResource
-					(R.drawable.music_bottom_playback_bg_black);
-				} else {
-					mControls.setBackgroundResource
-						(R.drawable.music_bottom_playback_bg);
-				}
-				mTitle = (TextView)mControls.findViewById(R.id.title);
-				mArtist = (TextView)mControls.findViewById(R.id.artist);
-				mAlbum = (TextView)mControls.findViewById(R.id.album);
-				mCover = (ImageView)mControls.findViewById(R.id.cover);
-				View previous = mControls.findViewById(R.id.previous);
-				mPlayPauseButton = (ImageButton)mControls.findViewById(R.id.play_pause);
-				View next = mControls.findViewById(R.id.next);
+			mControls = findViewById(R.id.controls);
+			if ("AppTheme.White".equals(Util.getThemeName(this))) {
+				mControls.setBackgroundResource(R.drawable.music_bottom_playback_bg_light);
+			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+				mControls.setBackgroundResource(R.drawable.music_bottom_playback_bg_black);
+			} else {
+				mControls.setBackgroundResource(R.drawable.music_bottom_playback_bg);
+			}
+			mTitle = (TextView) mControls.findViewById(R.id.title);
+			mArtist = (TextView) mControls.findViewById(R.id.artist);
+			mAlbum = (TextView) mControls.findViewById(R.id.album);
+			mCover = (ImageView) mControls.findViewById(R.id.cover);
+			View previous = mControls.findViewById(R.id.previous);
+			mPlayPauseButton = (ImageButton) mControls.findViewById(R.id.play_pause);
+			View next = mControls.findViewById(R.id.next);
 
-				
-				
-				
-				
-				
-				Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/ProximaNova-Bold.otf");
-			
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {	
-				
+			Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/ProximaNova-Bold.otf");
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
 				mAlbum.setTypeface(font);
-		    	mArtist.setTypeface(font);
+				mArtist.setTypeface(font);
 				mTitle.setTypeface(font);
-				
-				}
-				
-				
-				
-				
-				mCover.setOnClickListener(this);
-				previous.setOnClickListener(this);
-				mPlayPauseButton.setOnClickListener(this);
-				next.setOnClickListener(this);
 
-				mShuffleButton = (ImageButton)findViewById(R.id.shuffle);
-				mShuffleButton.setOnClickListener(this);
-				registerForContextMenu(mShuffleButton);
-				mEndButton = (ImageButton)findViewById(R.id.end_action);
-				mEndButton.setOnClickListener(this);
-				registerForContextMenu(mEndButton);
+			}
 
-				mEmptyQueue = findViewById(R.id.empty_queue);
-				mEmptyQueue.setOnClickListener(this);
-			//}
+			mCover.setOnClickListener(this);
+			previous.setOnClickListener(this);
+			mPlayPauseButton.setOnClickListener(this);
+			next.setOnClickListener(this);
+
+			mShuffleButton = (ImageButton) findViewById(R.id.shuffle);
+			mShuffleButton.setOnClickListener(this);
+			registerForContextMenu(mShuffleButton);
+			mEndButton = (ImageButton) findViewById(R.id.end_action);
+			mEndButton.setOnClickListener(this);
+			registerForContextMenu(mEndButton);
+
+			mEmptyQueue = findViewById(R.id.empty_queue);
+			mEmptyQueue.setOnClickListener(this);
+			// }
 		}
 
 		loadTabOrder();
-		page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);   
+		page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);
 		if (page != 0) {
 			pager.setCurrentItem(page);
 		}
 
-	//	loadAlbumIntent(getIntent());
-		
-		
-		
-		
-		
-		
-		
 		// show cross promo box
-		try{
-			LinearLayout downloadsLayout = (LinearLayout)findViewById(R.id.content);
-			if (downloadsLayout != null) {  
+		try {
+			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
+			if (downloadsLayout != null) {
 				if (Settings.getIsBlacklisted(this)) {
 					Advertisement.hideCrossPromoBox(this, downloadsLayout);
 				} else {
 					Advertisement.showCrossPromoBox(this, downloadsLayout);
-				} 
+				}
 			}
-		} catch(Exception e) {
-			
+		} catch (Exception e) {
+
 		}
-		
+
 		// show or hide disclaimer
 		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
 		if (editTextDisclaimer != null) {
 			if (Settings.getIsBlacklisted(this)) {
-				editTextDisclaimer.setVisibility(View.VISIBLE); 
+				editTextDisclaimer.setVisibility(View.VISIBLE);
 			} else {
 				editTextDisclaimer.setVisibility(View.GONE);
 			}
 		}
-		
-		
-		
-		
+
 		// initialize ad networks
 		try {
-			if (!Settings.getIsBlacklisted(this)) {	
+			if (!Settings.getIsBlacklisted(this)) {
 				Advertisement.start(this, swichShowDialogRate);
 				swichShowDialogRate = false;
 			} else {
-				Advertisement.showDisclaimer(this); 
+				Advertisement.showDisclaimer(this);
 			}
-		} catch (Exception e) { 
- 
-		} 
-		
-		
+		} catch (Exception e) {
+
+		}
+
 		// load banner ad
 		try {
 			if (Settings.ENABLE_ADS) {
-				Advertisement.mopubShowBanner(this); 
+				Advertisement.mopubShowBanner(this);
 			}
-		} catch (Exception e) { 
-			 
-		} 
+		} catch (Exception e) {
+
+		}
 	}
 
-	public void setFilterHint(int type){
-		int[] hintResIds = new int[] {R.string.filter_artists_hint, 
-				R.string.filter_songs_hint, R.string.filter_playlists_hint,
-				R.string.filter_genres_hint, R.string.filter_files_hint};
+	public void setFilterHint(int type) {
+		int[] hintResIds = new int[] { R.string.filter_artists_hint, R.string.filter_songs_hint, R.string.filter_playlists_hint, R.string.filter_genres_hint, R.string.filter_files_hint };
 		mTextFilter.setHint(hintResIds[type - 1]);
 	}
-	
+
 	@Override
-	public void onRestart()
-	{
+	public void onRestart() {
 		super.onRestart();
 		mPagerAdapter.notifyDataSetChanged();
 		loadTabOrder();
 	}
-	
+
 	@Override
-	public void onStart()
-	{
+	public void onStart() {
 		super.onStart();
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			onCreate(state);
 		}
 		SharedPreferences settings = PlaybackService.getSettings(this);
-		//	if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false) != (mControls != null)) {
-	//		finish();
-	//		startActivity(new Intent(this, LibraryActivity.class));
-	//	}
+		// if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false) !=
+		// (mControls != null)) {
+		// finish();
+		// startActivity(new Intent(this, LibraryActivity.class));
+		// }
 		mDefaultAction = Integer.parseInt(settings.getString(PrefKeys.DEFAULT_ACTION_INT, "7"));
 		mLastActedId = LibraryAdapter.INVALID_ID;
 		updateHeaders();
@@ -562,12 +516,11 @@ public class LibraryActivity
 	private void updateEqualizerVisibility() {
 		mEqualizerButton.setVisibility(Settings.ENABLE_EQUALIZER ? View.VISIBLE : View.GONE);
 	}
-	
+
 	/**
 	 * Load the tab order and update the tab bars if needed.
 	 */
-	private void loadTabOrder()
-	{
+	private void loadTabOrder() {
 		if (mPagerAdapter.loadTabOrder()) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				CompatHoneycomb.addActionBarTabs(this);
@@ -578,11 +531,10 @@ public class LibraryActivity
 	}
 
 	/**
-	 * If this intent looks like a launch from icon/widget/etc, perform
-	 * launch actions.
+	 * If this intent looks like a launch from icon/widget/etc, perform launch
+	 * actions.
 	 */
-	private void checkForLaunch(Intent intent)
-	{
+	private void checkForLaunch(Intent intent) {
 		SharedPreferences settings = PlaybackService.getSettings(this);
 		if (settings.getBoolean(PrefKeys.PLAYBACK_ON_STARTUP, false) && Intent.ACTION_MAIN.equals(intent.getAction())) {
 			startActivity(new Intent(this, FullPlaybackActivity.class));
@@ -590,11 +542,9 @@ public class LibraryActivity
 	}
 
 	/**
-	 * If the given intent has album data, set a limiter built from that
-	 * data.
+	 * If the given intent has album data, set a limiter built from that data.
 	 */
-	private void loadAlbumIntent(Intent intent)
-	{
+	private void loadAlbumIntent(Intent intent) {
 		long albumId = intent.getLongExtra("albumId", -1);
 		if (albumId != -1) {
 			String[] fields = { intent.getStringExtra("artist"), intent.getStringExtra("album") };
@@ -610,8 +560,7 @@ public class LibraryActivity
 	}
 
 	@Override
-	public void onNewIntent(Intent intent)
-	{
+	public void onNewIntent(Intent intent) {
 		if (intent == null)
 			return;
 
@@ -620,8 +569,7 @@ public class LibraryActivity
 	}
 
 	@Override
-	public void onRestoreInstanceState(Bundle in)
-	{
+	public void onRestoreInstanceState(Bundle in) {
 		if (in.getBoolean(SEARCH_BOX_VISIBLE))
 			setSearchBoxVisible(true);
 		swichShowDialogRate = in.getBoolean(SWICH_SHOW_DIALOG_RATE);
@@ -644,8 +592,7 @@ public class LibraryActivity
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle out)
-	{
+	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
 		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		out.putBoolean(SWICH_SHOW_DIALOG_RATE, swichShowDialogRate);
@@ -653,58 +600,55 @@ public class LibraryActivity
 			out.putBoolean(ID3_IS_SHOW, isShowID3Dialog);
 			out.putInt(ID3_TYPE, type);
 			out.putLong(ID3_ID, id);
-			out.putStringArray(ID3_STRINGS, new String[] {editor.getNewArtistName(), editor.getNewSongTitle(),
-				editor.getNewAlbumTitle()});
+			out.putStringArray(ID3_STRINGS, new String[] { editor.getNewArtistName(), editor.getNewSongTitle(), editor.getNewAlbumTitle() });
 			out.putBoolean(ID3_COVER, editor.isShowCover());
 		} else if (SearchTab.getInstance(getLayoutInflater(), this).isId3Show()) {
 			out.putBoolean(ID3_IS_SHOW_SEARCH, true);
 			MP3Editor searchEditor = SearchTab.getInstance(getLayoutInflater(), this).getMp3Editor();
-			out.putStringArray(ID3_STRINGS, new String[] {searchEditor.getNewArtistName(), 
-					searchEditor.getNewSongTitle(), searchEditor.getNewAlbumTitle()});
+			out.putStringArray(ID3_STRINGS, new String[] { searchEditor.getNewArtistName(), searchEditor.getNewSongTitle(), searchEditor.getNewAlbumTitle() });
 			out.putBoolean(ID3_COVER, searchEditor.isShowCover());
 		}
 	}
 
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event)
-	{ 
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
 			mTextFilter.setText("");
 			onBackPressed();
 			break;
-//		case KeyEvent.KEYCODE_BACK: 
-//			if (mSearchBoxVisible) { 
-//				mTextFilter.setText("");
-//				setSearchBoxVisible(false);
-//			} else { 
-//				Limiter limiter = mPagerAdapter.getCurrentLimiter();
-//				if (limiter != null && limiter.type != MediaUtils.TYPE_FILE) {
-//					int pos = -1;
-//					switch (limiter.type) {
-//					case MediaUtils.TYPE_ALBUM: 
-//						setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
-//						pos = mPagerAdapter.mAlbumsPosition;
-//						break;
-//					case MediaUtils.TYPE_ARTIST: 
-//						mPagerAdapter.clearLimiter(MediaUtils.TYPE_ARTIST);
-//						pos = mPagerAdapter.mArtistsPosition;
-//						break;
-//					case MediaUtils.TYPE_GENRE: 
-//						mPagerAdapter.clearLimiter(MediaUtils.TYPE_GENRE);
-//						pos = mPagerAdapter.mGenresPosition;
-//						break;
-//					}
-//					if (pos == -1) {
-//						updateLimiterViews();
-//					} else {
-//						mViewPager.setCurrentItem(pos);
-//					}
-//				} else {
-//					finish();
-//				}
-//			}
-//			break;
+		// case KeyEvent.KEYCODE_BACK:
+		// if (mSearchBoxVisible) {
+		// mTextFilter.setText("");
+		// setSearchBoxVisible(false);
+		// } else {
+		// Limiter limiter = mPagerAdapter.getCurrentLimiter();
+		// if (limiter != null && limiter.type != MediaUtils.TYPE_FILE) {
+		// int pos = -1;
+		// switch (limiter.type) {
+		// case MediaUtils.TYPE_ALBUM:
+		// setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
+		// pos = mPagerAdapter.mAlbumsPosition;
+		// break;
+		// case MediaUtils.TYPE_ARTIST:
+		// mPagerAdapter.clearLimiter(MediaUtils.TYPE_ARTIST);
+		// pos = mPagerAdapter.mArtistsPosition;
+		// break;
+		// case MediaUtils.TYPE_GENRE:
+		// mPagerAdapter.clearLimiter(MediaUtils.TYPE_GENRE);
+		// pos = mPagerAdapter.mGenresPosition;
+		// break;
+		// }
+		// if (pos == -1) {
+		// updateLimiterViews();
+		// } else {
+		// mViewPager.setCurrentItem(pos);
+		// }
+		// } else {
+		// finish();
+		// }
+		// }
+		// break;
 		case KeyEvent.KEYCODE_SEARCH:
 			setSearchBoxVisible(!mSearchBoxVisible);
 			break;
@@ -716,8 +660,7 @@ public class LibraryActivity
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_FORWARD_DEL)
 			// On ICS, EditText reports backspace events as unhandled despite
 			// actually handling them. To workaround, just assume the event was
@@ -742,8 +685,7 @@ public class LibraryActivity
 	 * Update the first row of the lists with the appropriate action (play all
 	 * or enqueue all).
 	 */
-	private void updateHeaders()
-	{ 
+	private void updateHeaders() {
 		int action = mDefaultAction;
 		if (action == ACTION_LAST_USED)
 			action = mLastAction;
@@ -754,13 +696,14 @@ public class LibraryActivity
 
 	/**
 	 * Adds songs matching the data from the given intent to the song timelime.
-	 *
-	 * @param intent An intent created with
-	 * {@link LibraryAdapter#createData(View)}.
-	 * @param action One of LibraryActivity.ACTION_*
+	 * 
+	 * @param intent
+	 *            An intent created with {@link LibraryAdapter#createData(View)}
+	 *            .
+	 * @param action
+	 *            One of LibraryActivity.ACTION_*
 	 */
-	private void pickSongs(Intent intent, int action)
-	{ 
+	private void pickSongs(Intent intent, int action) {
 		long id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
 
 		boolean all = false;
@@ -772,11 +715,11 @@ public class LibraryActivity
 				mode = ACTION_ENQUEUE;
 			} else if (mode == ACTION_PLAY_ALL && notPlayAllAdapter) {
 				mode = ACTION_PLAY;
-			} else { 
+			} else {
 				all = true;
 			}
 		}
-		
+
 		QueryTask query = buildQueryFromIntent(intent, false, all);
 		query.mode = modeForAction[mode];
 		PlaybackService.get(this).addSongs(query);
@@ -792,12 +735,12 @@ public class LibraryActivity
 	/**
 	 * "Expand" the view represented by the given intent by setting the limiter
 	 * from the view and switching to the appropriate tab.
-	 *
-	 * @param intent An intent created with
-	 * {@link LibraryAdapter#createData(View)}.
+	 * 
+	 * @param intent
+	 *            An intent created with {@link LibraryAdapter#createData(View)}
+	 *            .
 	 */
-	private void expand(Intent intent)
-	{
+	private void expand(Intent intent) {
 		int type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 		long id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
 		int tab = mPagerAdapter.setLimiter(mPagerAdapter.mAdapters[type].buildLimiter(id));
@@ -811,21 +754,21 @@ public class LibraryActivity
 	 * Open the playback activity and close any activities above it in the
 	 * stack.
 	 */
-	public void openPlaybackActivity()
-	{
+	public void openPlaybackActivity() {
 		startActivity(new Intent(this, FullPlaybackActivity.class));
 	}
 
 	/**
 	 * Called by LibraryAdapters when a row has been clicked.
-	 *
-	 * @param rowData The data for the row that was clicked.
+	 * 
+	 * @param rowData
+	 *            The data for the row that was clicked.
 	 */
-	public void onItemClicked(Intent rowData)
-	{ 
+	public void onItemClicked(Intent rowData) {
 		int action = mDefaultAction;
-		if (action == ACTION_LAST_USED){
-			action = mLastAction;}
+		if (action == ACTION_LAST_USED) {
+			action = mLastAction;
+		}
 
 		if (action == ACTION_EXPAND && rowData.getBooleanExtra(LibraryAdapter.DATA_EXPANDABLE, false)) {
 			onItemExpanded(rowData);
@@ -837,8 +780,9 @@ public class LibraryActivity
 				// be expanded
 				action = ACTION_PLAY;
 			} else if (action == ACTION_PLAY_OR_ENQUEUE) {
-				//action = (mState & PlaybackService.FLAG_PLAYING) == 0 ? ACTION_PLAY : ACTION_ENQUEUE;
-			   action = ACTION_PLAY;
+				// action = (mState & PlaybackService.FLAG_PLAYING) == 0 ?
+				// ACTION_PLAY : ACTION_ENQUEUE;
+				action = ACTION_PLAY;
 			}
 			pickSongs(rowData, action);
 		}
@@ -846,11 +790,11 @@ public class LibraryActivity
 
 	/**
 	 * Called by LibraryAdapters when a row's expand arrow has been clicked.
-	 *
-	 * @param rowData The data for the row that was clicked.
+	 * 
+	 * @param rowData
+	 *            The data for the row that was clicked.
 	 */
-	public void onItemExpanded(Intent rowData)
-	{
+	public void onItemExpanded(Intent rowData) {
 		int type = rowData.getIntExtra(LibraryAdapter.DATA_TYPE, MediaUtils.TYPE_INVALID);
 		if (type == MediaUtils.TYPE_PLAYLIST)
 			editPlaylist(rowData);
@@ -859,26 +803,22 @@ public class LibraryActivity
 	}
 
 	@Override
-	public void afterTextChanged(Editable editable)
-	{
+	public void afterTextChanged(Editable editable) {
 	}
 
 	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count, int after)
-	{
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 	}
 
 	@Override
-	public void onTextChanged(CharSequence text, int start, int before, int count)
-	{
+	public void onTextChanged(CharSequence text, int start, int before, int count) {
 		mPagerAdapter.setFilter(text.toString());
 	}
 
 	/**
 	 * Create or recreate the limiter breadcrumbs.
 	 */
-	public void updateLimiterViews()
-	{
+	public void updateLimiterViews() {
 		mLimiterViews.removeAllViews();
 
 		Limiter limiterData = mPagerAdapter.getCurrentLimiter();
@@ -911,13 +851,12 @@ public class LibraryActivity
 	}
 
 	@Override
-	public void onClick(View view)
-	{
-		if (view == mSortButton) {//mClearButton
-//			if (mTextFilter.getText().length() == 0)
-//				setSearchBoxVisible(false);
-//			else
-//				mTextFilter.setText("");
+	public void onClick(View view) {
+		if (view == mSortButton) {// mClearButton
+		// if (mTextFilter.getText().length() == 0)
+		// setSearchBoxVisible(false);
+		// else
+		// mTextFilter.setText("");
 			openSortDialog();
 		} else if (view == mEqualizerButton) {
 			Intent intent = new Intent(this, MyEqualizer.class);
@@ -928,7 +867,7 @@ public class LibraryActivity
 			setState(PlaybackService.get(this).setFinishAction(SongTimeline.FINISH_RANDOM));
 		} else if (view.getTag() != null) {
 			// a limiter view was clicked
-			int i = (Integer)view.getTag();
+			int i = (Integer) view.getTag();
 
 			Limiter limiter = mPagerAdapter.getCurrentLimiter();
 			int type = limiter.type;
@@ -936,7 +875,7 @@ public class LibraryActivity
 				setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
 			} else if (i > 0) {
 				Assert.assertEquals(MediaUtils.TYPE_FILE, limiter.type);
-				File file = (File)limiter.data;
+				File file = (File) limiter.data;
 				int diff = limiter.names.length - i;
 				while (--diff != -1) {
 					file = file.getParentFile();
@@ -954,13 +893,14 @@ public class LibraryActivity
 	/**
 	 * Set a new limiter of the given type built from the first
 	 * MediaStore.Audio.Media row that matches the selection.
-	 *
-	 * @param limiterType The type of limiter to create. Must be either
-	 * MediaUtils.TYPE_ARTIST or MediaUtils.TYPE_ALBUM.
-	 * @param selection Selection to pass to the query.
+	 * 
+	 * @param limiterType
+	 *            The type of limiter to create. Must be either
+	 *            MediaUtils.TYPE_ARTIST or MediaUtils.TYPE_ALBUM.
+	 * @param selection
+	 *            Selection to pass to the query.
 	 */
-	private void setLimiter(int limiterType, String selection)
-	{
+	private void setLimiter(int limiterType, String selection) {
 		ContentResolver resolver = getContentResolver();
 		Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 		String[] projection = new String[] { MediaStore.Audio.Media.ARTIST_ID, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM };
@@ -989,15 +929,17 @@ public class LibraryActivity
 
 	/**
 	 * Builds a media query based off the data stored in the given intent.
-	 *
-	 * @param intent An intent created with
-	 * {@link LibraryAdapter#createData(View)}.
-	 * @param empty If true, use the empty projection (only query id).
-	 * @param all If true query all songs in the adapter; otherwise query based
-	 * on the row selected.
+	 * 
+	 * @param intent
+	 *            An intent created with {@link LibraryAdapter#createData(View)}
+	 *            .
+	 * @param empty
+	 *            If true, use the empty projection (only query id).
+	 * @param all
+	 *            If true query all songs in the adapter; otherwise query based
+	 *            on the row selected.
 	 */
-	private QueryTask buildQueryFromIntent(Intent intent, boolean empty, boolean all)
-	{
+	private QueryTask buildQueryFromIntent(Intent intent, boolean empty, boolean all) {
 		int type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 
 		String[] projection;
@@ -1011,7 +953,7 @@ public class LibraryActivity
 		if (type == MediaUtils.TYPE_FILE) {
 			query = MediaUtils.buildFileQuery(intent.getStringExtra("file"), projection);
 		} else if (all || id == LibraryAdapter.HEADER_ID) {
-			query = ((MediaAdapter)mPagerAdapter.mAdapters[type]).buildSongQuery(projection);
+			query = ((MediaAdapter) mPagerAdapter.mAdapters[type]).buildSongQuery(projection);
 			query.data = id;
 		} else {
 			query = MediaUtils.buildQuery(type, id, projection, null);
@@ -1037,12 +979,13 @@ public class LibraryActivity
 
 	/**
 	 * Creates a context menu for an adapter row.
-	 *
-	 * @param menu The menu to create.
-	 * @param rowData Data for the adapter row.
+	 * 
+	 * @param menu
+	 *            The menu to create.
+	 * @param rowData
+	 *            Data for the adapter row.
 	 */
-	public void onCreateContextMenu(ContextMenu menu, Intent rowData)
-	{//TODO
+	public void onCreateContextMenu(ContextMenu menu, Intent rowData) {// TODO
 		if (rowData.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID) == LibraryAdapter.HEADER_ID) {
 			menu.setHeaderTitle(getString(R.string.all_songs));
 			menu.add(0, MENU_PLAY_ALL, 0, R.string.play_all).setIntent(rowData);
@@ -1067,11 +1010,11 @@ public class LibraryActivity
 			}
 			if (type == MediaUtils.TYPE_ALBUM || type == MediaUtils.TYPE_SONG)
 				menu.add(0, MENU_MORE_FROM_ARTIST, 0, R.string.more_from_artist).setIntent(rowData);
-			if (type == MediaUtils.TYPE_SONG){
+			if (type == MediaUtils.TYPE_SONG) {
 				menu.add(0, MENU_MORE_FROM_ALBUM, 0, R.string.more_from_album).setIntent(rowData);
 				menu.add(0, MENU_EDIT_MP3_TAG, 0, R.string.edit_mp3_tag).setIntent(rowData);
 				menu.add(0, MENU_REMOVE_ALBUM_COVER, 0, R.string.remove_album_cover).setIntent(rowData);
-				}
+			}
 			menu.addSubMenu(0, MENU_ADD_TO_PLAYLIST, 0, R.string.add_to_playlist).getItem().setIntent(rowData);
 			menu.add(0, MENU_DELETE, 0, R.string.delete).setIntent(rowData);
 		}
@@ -1080,13 +1023,14 @@ public class LibraryActivity
 	/**
 	 * Add a set of songs represented by the intent to a playlist. Displays a
 	 * Toast notifying of success.
-	 *
-	 * @param playlistId The id of the playlist to add to.
-	 * @param intent An intent created with
-	 * {@link LibraryAdapter#createData(View)}.
+	 * 
+	 * @param playlistId
+	 *            The id of the playlist to add to.
+	 * @param intent
+	 *            An intent created with {@link LibraryAdapter#createData(View)}
+	 *            .
 	 */
-	private void addToPlaylist(long playlistId, Intent intent)
-	{
+	private void addToPlaylist(long playlistId, Intent intent) {
 		QueryTask query = buildQueryFromIntent(intent, true, false);
 		int count = Playlist.addToPlaylist(getContentResolver(), playlistId, query);
 
@@ -1097,8 +1041,7 @@ public class LibraryActivity
 	/**
 	 * Open the playlist editor for the playlist with the given id.
 	 */
-	private void editPlaylist(Intent rowData)
-	{
+	private void editPlaylist(Intent rowData) {
 		Intent launch = new Intent(this, PlaylistActivity.class);
 		launch.putExtra("playlist", rowData.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID));
 		launch.putExtra("title", rowData.getStringExtra(LibraryAdapter.DATA_TITLE));
@@ -1108,12 +1051,12 @@ public class LibraryActivity
 	/**
 	 * Delete the media represented by the given intent and show a Toast
 	 * informing the user of this.
-	 *
-	 * @param intent An intent created with
-	 * {@link LibraryAdapter#createData(View)}.
+	 * 
+	 * @param intent
+	 *            An intent created with {@link LibraryAdapter#createData(View)}
+	 *            .
 	 */
-	private void delete(Intent intent)
-	{
+	private void delete(Intent intent) {
 		int type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 		long id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
 		String message = null;
@@ -1129,7 +1072,7 @@ public class LibraryActivity
 			Playlist.deletePlaylist(getContentResolver(), id);
 		} else {
 			int count = PlaybackService.get(this).deleteMedia(type, id);
-			Log.d("log", "count = "+count);
+			Log.d("log", "count = " + count);
 			message = res.getQuantityString(R.plurals.deleted, count, count);
 		}
 
@@ -1141,8 +1084,7 @@ public class LibraryActivity
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem item)
-	{
+	public boolean onContextItemSelected(MenuItem item) {
 		if (item.getGroupId() != 0)
 			return super.onContextItemSelected(item);
 
@@ -1224,29 +1166,35 @@ public class LibraryActivity
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
 			int typeRAC = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
-			long idRAC = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
+			final long idRAC = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
 			final File fileRAC = PlaybackService.get(this).getFilePath(typeRAC, idRAC);
 			AlertDialog.Builder builderRAC = new AlertDialog.Builder(this);
 			builderRAC.setTitle(R.string.remove_album_cover_title);
 			builderRAC.setMessage(R.string.remove_album_cover_complete);
 			builderRAC.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							Log.d("log", "pdth file = " + fileRAC.getAbsolutePath());
-							deleteCover(fileRAC);
-							
-						}
-						
-					});
-			builderRAC.setNegativeButton(android.R.string.cancel,
-					new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					new AsyncTask<Void, Void, Void>() {
 
 						@Override
-						public void onClick(DialogInterface dialog, int which) {
+						protected Void doInBackground(Void... params) {
+							deleteCover(fileRAC, idRAC);
+							return null;
 						}
-						
-					});
+
+					}.execute();
+					
+				}
+
+			});
+			builderRAC.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+
+			});
 			AlertDialog alertDialogRAC = builderRAC.create();
 			alertDialogRAC.show();
 			break;
@@ -1254,38 +1202,48 @@ public class LibraryActivity
 
 		return true;
 	}
-	
+
 	private void createEditID3Dialog(int type, long id, MP3Editor view) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		if (null == view) {
 			editor = new MP3Editor(this);
+			editor.initView();
+			editor.hideCheckBox(true);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						final String artistName = editor.getNewArtistName();
-						final String albumTitle = editor.getNewAlbumTitle();
-						final String songTitle = editor.getNewSongTitle();
-						rename(file, artistName, albumTitle, songTitle);
-						isShowID3Dialog = false;
-					}
-				});
-		builder.setNegativeButton(android.R.string.cancel,
-				new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				final String artistName = editor.getNewArtistName();
+				final String albumTitle = editor.getNewAlbumTitle();
+				final String songTitle = editor.getNewSongTitle();
+				new AsyncTask<Void, Void, Void>() {
 
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						isShowID3Dialog = false;
+					protected Void doInBackground(Void... params) {
+						rename(file, artistName, albumTitle, songTitle);
+						return null;
 					}
-					
-				});
+
+				}.execute();
+				isShowID3Dialog = false;
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				isShowID3Dialog = false;
+			}
+
+		});
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
 	}
-	
-	private void deleteCover(File file) {
+
+	private void deleteCover(File f, long idRAC) {
+		File file = new File(f.getParentFile(), f.getName());
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (src_set == null) {
@@ -1298,21 +1256,15 @@ public class LibraryActivity
 			cover.compress(CompressFormat.JPEG, 85, out);
 			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file.getAbsolutePath());
-		} catch (UnsupportedEncodingException e) {
-			Log.d("log", "1 = "+e);
-			e.printStackTrace();
-		} catch (ID3WriteException e) {
-			Log.d("log", "2 = "+e);
-			e.printStackTrace();
-		} catch (IOException e) {
-			Log.d("log", "3 = "+e);
+			notifyMediascanner(file);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	 private void rename(File file, String artist, String album, String song) {
-		 Log.d("log", "rename start");
+	private void rename(File f, String artist, String album, String song) {
+		File file = new File(f.getParentFile(), f.getName());
+		boolean isChange = false;
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (src_set == null) {
@@ -1320,115 +1272,109 @@ public class LibraryActivity
 			}
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			if (!album.equals("")) {
-				metadata.clearAlbum();
+				isChange = true;
 				metadata.setAlbum(album);
 			}
 			if (!song.equals("")) {
-				metadata.clearSongTitle();
+				isChange = true;
 				metadata.setSongTitle(song);
 			}
 			if (!artist.equals("")) {
-				metadata.clearArtist();
+				isChange = true;
 				metadata.setArtist(artist);
 			}
+			if(!isChange) {
+				return;
+			}
 			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file.getAbsolutePath());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ID3WriteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			notifyMediascanner(file);
+		} catch (Exception e) {
 		}
 	}
-	 
-	 private void notifyMediascanner(String path) {
-			File file = new File(path);
-			MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
-				public void onScanCompleted(String path, Uri uri) {
-				}
+	private void notifyMediascanner(File file) {
+		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
-			});
-		}
-	
+			public void onScanCompleted(String path, Uri uri) {
+			}
+
+		});
+	}
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-//		if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-//			setMenuBackgroundBlack();
-//		}
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// if ("AppTheme.Black".equals(Util.getThemeName(this))) {
+		// setMenuBackgroundBlack();
+		// }
 		Log.d("log", "onCreateOptionsMenu");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			MenuItem controls = menu.add(null);
 			CompatHoneycomb.setActionView(controls, mActionControls);
 			CompatHoneycomb.setShowAsAction(controls, MenuItem.SHOW_AS_ACTION_ALWAYS);
-//			removed
-//			MenuItem search = menu.add(0, MENU_SEARCH, 0, R.string.search).setIcon(R.drawable.ic_menu_search);
-//			CompatHoneycomb.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			// removed
+			// MenuItem search = menu.add(0, MENU_SEARCH, 0,
+			// R.string.search).setIcon(R.drawable.ic_menu_search);
+			// CompatHoneycomb.setShowAsAction(search,
+			// MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		} else {
-//			removed
-//			menu.add(0, MENU_SEARCH, 0, R.string.search).setIcon(R.drawable.ic_menu_search);
+			// removed
+			// menu.add(0, MENU_SEARCH, 0,
+			// R.string.search).setIcon(R.drawable.ic_menu_search);
 			menu.add(0, MENU_PLAYBACK, 0, R.string.playback_view).setIcon(R.drawable.ic_menu_gallery);
 		}
 		menu.add(0, MENU_SORT, 0, R.string.sort_by).setIcon(R.drawable.ic_menu_sort_alphabetically);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
-//	protected void setMenuBackgroundBlack() {
-//		Log.d("log", "setMenuBackgroundBlack");
-//		getLayoutInflater().setFactory(new Factory() {
-//			public View onCreateView(String name, Context context,
-//					AttributeSet attrs) {
-//					try {
-//						LayoutInflater f = getLayoutInflater();
-//						final View view = f.createView(name, null, attrs);
-//						new Handler().post(new Runnable() {
-//							public void run() {
-//								view.setBackgroundResource(R.color.window_background_black);
-//							}
-//						});
-//						return view;
-//					} catch (InflateException e) {
-//					} catch (ClassNotFoundException e) {
-//					}
-//				return null;
-//			}
-//		});
-//	}
+
+	// protected void setMenuBackgroundBlack() {
+	// Log.d("log", "setMenuBackgroundBlack");
+	// getLayoutInflater().setFactory(new Factory() {
+	// public View onCreateView(String name, Context context,
+	// AttributeSet attrs) {
+	// try {
+	// LayoutInflater f = getLayoutInflater();
+	// final View view = f.createView(name, null, attrs);
+	// new Handler().post(new Runnable() {
+	// public void run() {
+	// view.setBackgroundResource(R.color.window_background_black);
+	// }
+	// });
+	// return view;
+	// } catch (InflateException e) {
+	// } catch (ClassNotFoundException e) {
+	// }
+	// return null;
+	// }
+	// });
+	// }
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu)
-	{
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		Log.d("log", "onPrepareOptionsMenu");
 		LibraryAdapter adapter = mCurrentAdapter;
 		menu.findItem(MENU_SORT).setEnabled(adapter != null);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-//	removed
-//	public boolean isSearchBoxVisible() {
-//		return mSearchBoxVisible;
-//	}
-	
+	// removed
+	// public boolean isSearchBoxVisible() {
+	// return mSearchBoxVisible;
+	// }
+
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.d("log", "onOptionsItemSelected");
 		switch (item.getItemId()) {
-//		removed
-//		case MENU_SEARCH:
-//			int position = mPagerAdapter.getCurrentType();
-//			if (position == -1) {
-//				position = page;
-//			}
-//			if (position != 0) {
-//				setSearchBoxVisible(!mSearchBoxVisible);
-//			}
-//			return true;
+		// removed
+		// case MENU_SEARCH:
+		// int position = mPagerAdapter.getCurrentType();
+		// if (position == -1) {
+		// position = page;
+		// }
+		// if (position != 0) {
+		// setSearchBoxVisible(!mSearchBoxVisible);
+		// }
+		// return true;
 		case MENU_PLAYBACK:
 			openPlaybackActivity();
 			return true;
@@ -1443,10 +1389,10 @@ public class LibraryActivity
 	}
 
 	public void openSortDialog() {
-		SortAdapter adapter = (SortAdapter)mCurrentAdapter;
+		SortAdapter adapter = (SortAdapter) mCurrentAdapter;
 		int mode = adapter.getSortMode();
 		int[] itemIds = adapter.getSortEntries();
-		
+
 		int check;
 		if (mode < 0) {
 			check = R.id.descending;
@@ -1457,22 +1403,22 @@ public class LibraryActivity
 
 		String[] items = new String[itemIds.length];
 		Resources res = getResources();
-		for (int i = itemIds.length; --i != -1; ) {
+		for (int i = itemIds.length; --i != -1;) {
 			items[i] = res.getString(itemIds[i]);
 		}
 
-		RadioGroup header = (RadioGroup)getLayoutInflater().inflate(R.layout.sort_dialog, null);
+		RadioGroup header = (RadioGroup) getLayoutInflater().inflate(R.layout.sort_dialog, null);
 		header.check(check);
 
 		AlertDialog.Builder builder;
-		
+
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			Log.d("log", "a");
 			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog_White));
-		} else if("AppTheme.Black".equals(Util.getThemeName(this))){ 
+		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
 			Log.d("log", "b");
 			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog_Black));
-		}else{
+		} else {
 			Log.d("log", "c");
 			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog));
 		}
@@ -1480,8 +1426,7 @@ public class LibraryActivity
 		if (position == -1) {
 			position = page;
 		}
-		builder.setTitle(getResources().getString(R.string.sort_by) + " \""
-				+ mPagerAdapter.getPageTitle(position)+"\"");
+		builder.setTitle(getResources().getString(R.string.sort_by) + " \"" + mPagerAdapter.getPageTitle(position) + "\"");
 		builder.setSingleChoiceItems(items, mode + 1, this); // add 1 for header
 		builder.setNeutralButton(R.string.done, null);
 
@@ -1490,7 +1435,7 @@ public class LibraryActivity
 		dialog.setOnDismissListener(this);
 		dialog.show();
 	}
-	
+
 	/**
 	 * Call addToPlaylist with the results from a NewPlaylistDialog stored in
 	 * obj.
@@ -1515,16 +1460,15 @@ public class LibraryActivity
 	private static final int MSG_SAVE_PAGE = 16;
 
 	@Override
-	public boolean handleMessage(Message message)
-	{
+	public boolean handleMessage(Message message) {
 		switch (message.what) {
 		case MSG_ADD_TO_PLAYLIST: {
-			Intent intent = (Intent)message.obj;
+			Intent intent = (Intent) message.obj;
 			addToPlaylist(intent.getLongExtra("playlist", -1), intent);
 			break;
 		}
 		case MSG_NEW_PLAYLIST: {
-			NewPlaylistDialog dialog = (NewPlaylistDialog)message.obj;
+			NewPlaylistDialog dialog = (NewPlaylistDialog) message.obj;
 			if (dialog.isAccepted()) {
 				String name = dialog.getText();
 				long playlistId = Playlist.createPlaylist(getContentResolver(), name);
@@ -1535,10 +1479,10 @@ public class LibraryActivity
 			break;
 		}
 		case MSG_DELETE:
-			delete((Intent)message.obj);
+			delete((Intent) message.obj);
 			break;
 		case MSG_RENAME_PLAYLIST: {
-			NewPlaylistDialog dialog = (NewPlaylistDialog)message.obj;
+			NewPlaylistDialog dialog = (NewPlaylistDialog) message.obj;
 			if (dialog.isAccepted()) {
 				long playlistId = dialog.getIntent().getLongExtra("id", -1);
 				Playlist.renamePlaylist(getContentResolver(), playlistId, dialog.getText());
@@ -1559,40 +1503,39 @@ public class LibraryActivity
 	}
 
 	@Override
-	public void onMediaChange()
-	{
+	public void onMediaChange() {
 		mPagerAdapter.invalidateData();
 	}
 
-	protected void setSearchBoxVisible(boolean visible)
-	{
+	protected void setSearchBoxVisible(boolean visible) {
 		mSearchBoxVisible = visible;
 		mSearchBox.setVisibility(visible ? View.VISIBLE : View.GONE);
-//		if (mControls != null) {
-//			mControls.setVisibility(visible || (mState & PlaybackService.FLAG_NO_MEDIA) != 0 ? View.GONE : View.VISIBLE);
-//		} else if (mActionControls != null) {
-//			// try to hide the bottom action bar
-//			ViewParent parent = mActionControls.getParent();
-//			if (parent != null)
-//				parent = parent.getParent();
-//			if (parent != null && parent instanceof ViewGroup) {
-//				ViewGroup ab = (ViewGroup)parent;
-//				if (ab.getChildCount() == 1) {
-//					ab.setVisibility(visible ? View.GONE : View.VISIBLE);
-//				}
-//			}
-//		}
+		// if (mControls != null) {
+		// mControls.setVisibility(visible || (mState &
+		// PlaybackService.FLAG_NO_MEDIA) != 0 ? View.GONE : View.VISIBLE);
+		// } else if (mActionControls != null) {
+		// // try to hide the bottom action bar
+		// ViewParent parent = mActionControls.getParent();
+		// if (parent != null)
+		// parent = parent.getParent();
+		// if (parent != null && parent instanceof ViewGroup) {
+		// ViewGroup ab = (ViewGroup)parent;
+		// if (ab.getChildCount() == 1) {
+		// ab.setVisibility(visible ? View.GONE : View.VISIBLE);
+		// }
+		// }
+		// }
 
-//		removed
-//		if (visible) {
-//			mTextFilter.requestFocus();
-//			((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(mTextFilter, 0);
-//		}
+		// removed
+		// if (visible) {
+		// mTextFilter.requestFocus();
+		// ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(mTextFilter,
+		// 0);
+		// }
 	}
 
 	@Override
-	protected void onStateChange(int state, int toggled)
-	{
+	protected void onStateChange(int state, int toggled) {
 		super.onStateChange(state, toggled);
 
 		if ((toggled & PlaybackService.FLAG_NO_MEDIA) != 0) {
@@ -1605,10 +1548,9 @@ public class LibraryActivity
 	}
 
 	@Override
-	protected void onSongChange(Song song)
-	{
+	protected void onSongChange(Song song) {
 		super.onSongChange(song);
-        
+
 		if (mTitle != null) {
 			Bitmap cover = null;
 
@@ -1616,11 +1558,11 @@ public class LibraryActivity
 				if (mActionControls == null) {
 					mTitle.setText(R.string.none);
 					mArtist.setText(null);
-			//		mAlbum.setText(null);
+					// mAlbum.setText(null);
 				} else {
 					mTitle.setText(null);
 					mArtist.setText(null);
-			//		mAlbum.setText(null);
+					// mAlbum.setText(null);
 					mCover.setImageDrawable(null);
 					return;
 				}
@@ -1628,10 +1570,11 @@ public class LibraryActivity
 				Resources res = getResources();
 				String title = song.title == null ? res.getString(R.string.unknown) : song.title;
 				String artist = song.artist == null ? res.getString(R.string.unknown) : song.artist;
-			//	String album = song.album  == null? res.getString(R.string.unknown): song.album; 
+				// String album = song.album == null?
+				// res.getString(R.string.unknown): song.album;
 				mTitle.setText(title);
 				mArtist.setText(artist);
-			//	mAlbum.setText(album);
+				// mAlbum.setText(album);
 				cover = song.getCover(this);
 			}
 
@@ -1645,19 +1588,17 @@ public class LibraryActivity
 	}
 
 	@Override
-	public void onClick(DialogInterface dialog, int which)
-	{
+	public void onClick(DialogInterface dialog, int which) {
 		dialog.dismiss();
 	}
 
 	@Override
-	public void onDismiss(DialogInterface dialog)
-	{
-		ListView list = ((AlertDialog)dialog).getListView();
+	public void onDismiss(DialogInterface dialog) {
+		ListView list = ((AlertDialog) dialog).getListView();
 		// subtract 1 for header
 		int which = list.getCheckedItemPosition() - 1;
 
-		RadioGroup group = (RadioGroup)list.findViewById(R.id.sort_direction);
+		RadioGroup group = (RadioGroup) list.findViewById(R.id.sort_direction);
 		if (group.getCheckedRadioButtonId() == R.id.descending)
 			which = ~which;
 
@@ -1666,12 +1607,13 @@ public class LibraryActivity
 
 	/**
 	 * Called when a new page becomes visible.
-	 *
-	 * @param position The position of the new page.
-	 * @param adapter The new visible adapter.
+	 * 
+	 * @param position
+	 *            The position of the new page.
+	 * @param adapter
+	 *            The new visible adapter.
 	 */
-	public void onPageChanged(int position, LibraryAdapter adapter)
-	{ 
+	public void onPageChanged(int position, LibraryAdapter adapter) {
 		mCurrentAdapter = adapter;
 		mLastActedId = LibraryAdapter.INVALID_ID;
 		updateLimiterViews();
@@ -1692,8 +1634,7 @@ public class LibraryActivity
 	}
 
 	@Override
-	public ApplicationInfo getApplicationInfo()
-	{
+	public ApplicationInfo getApplicationInfo() {
 		ApplicationInfo info;
 		if (mFakeTarget) {
 			info = mFakeInfo;
@@ -1715,7 +1656,7 @@ public class LibraryActivity
 		}
 		return super.onCreateDialog(id, args);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		Intent showOptions = new Intent(Intent.ACTION_MAIN);
