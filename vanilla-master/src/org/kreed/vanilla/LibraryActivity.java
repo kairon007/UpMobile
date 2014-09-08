@@ -360,15 +360,12 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			mArtist = (TextView) controls.findViewById(R.id.artist);
 			mAlbum = (TextView) controls.findViewById(R.id.album);
 			mCover = (ImageView) controls.findViewById(R.id.cover);
-
 			// mAlbum.setTypeface(font);
 			mArtist.setTypeface(VanillaApp.FONT_LIGHT);
 			mTitle.setTypeface(VanillaApp.FONT_REGULAR);
-
 			// mTitle.setTextColor(Color.WHITE);
-			mTitle.setTextSize(20);
-			mArtist.setTextSize(15);
-
+			mTitle.setTextSize(16);
+			mArtist.setTextSize(14);
 			controls.setOnClickListener(this);
 			mActionControls = controls;
 		} else {
@@ -1072,7 +1069,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			Playlist.deletePlaylist(getContentResolver(), id);
 		} else {
 			int count = PlaybackService.get(this).deleteMedia(type, id);
-			Log.d("log", "count = " + count);
 			message = res.getQuantityString(R.plurals.deleted, count, count);
 		}
 
@@ -1165,9 +1161,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			createEditID3Dialog(type, id, null);
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
-			int typeRAC = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
-			final long idRAC = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			final File fileRAC = PlaybackService.get(this).getFilePath(typeRAC, idRAC);
+			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
+			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
+			final File fileRAC = PlaybackService.get(this).getFilePath(type, type);
 			AlertDialog.Builder builderRAC = new AlertDialog.Builder(this);
 			builderRAC.setTitle(R.string.remove_album_cover_title);
 			builderRAC.setMessage(R.string.remove_album_cover_complete);
@@ -1179,7 +1175,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 						@Override
 						protected Void doInBackground(Void... params) {
-							deleteCover(fileRAC, idRAC);
+							deleteCover(fileRAC);
 							return null;
 						}
 
@@ -1242,7 +1238,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		alertDialog.show();
 	}
 
-	private void deleteCover(File f, long idRAC) {
+	private void deleteCover(File f) {
 		File file = new File(f.getParentFile(), f.getName());
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
@@ -1256,9 +1252,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			cover.compress(CompressFormat.JPEG, 85, out);
 			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file);
+			notifyMediascanner(file, null, null);
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -1287,15 +1282,24 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				return;
 			}
 			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file);
+			notifyMediascanner(file, artist, song);
 		} catch (Exception e) {
 		}
 	}
 
-	private void notifyMediascanner(File file) {
+	private void notifyMediascanner(File file, final String artist, final String title) {
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
+				Song song = new Song(id);
+				if(null != artist || artist.equals("")) {
+					song.artist = artist;
+				}
+				if (null != title || title.equals("")){
+					song.title = title;
+				}
+				onMediaChange();
+				onSongChange(song);
 			}
 
 		});
