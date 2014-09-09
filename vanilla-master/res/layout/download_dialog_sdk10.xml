@@ -271,7 +271,7 @@
                         android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
                         android:gravity="left"
-                        android:text="@string/edit_mp3_tag"
+                        android:text="@string/edit_mp3_tags"
                         android:textSize="20sp" />
 
                     <ProgressBar

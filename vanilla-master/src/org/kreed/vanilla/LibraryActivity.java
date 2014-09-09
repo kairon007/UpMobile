@@ -971,7 +971,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private static final int MENU_ENQUEUE_ALL = 10;
 	private static final int MENU_MORE_FROM_ALBUM = 11;
 	private static final int MENU_MORE_FROM_ARTIST = 12;
-	private static final int MENU_EDIT_MP3_TAG = 13;
+	private static final int MENU_EDIT_MP3_TAGS = 13;
 	private static final int MENU_REMOVE_ALBUM_COVER = 14;
 
 	/**
@@ -1009,7 +1009,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				menu.add(0, MENU_MORE_FROM_ARTIST, 0, R.string.more_from_artist).setIntent(rowData);
 			if (type == MediaUtils.TYPE_SONG) {
 				menu.add(0, MENU_MORE_FROM_ALBUM, 0, R.string.more_from_album).setIntent(rowData);
-				menu.add(0, MENU_EDIT_MP3_TAG, 0, R.string.edit_mp3_tag).setIntent(rowData);
+				menu.add(0, MENU_EDIT_MP3_TAGS, 0, R.string.edit_mp3_tags).setIntent(rowData);
 				menu.add(0, MENU_REMOVE_ALBUM_COVER, 0, R.string.remove_album_cover).setIntent(rowData);
 			}
 			menu.addSubMenu(0, MENU_ADD_TO_PLAYLIST, 0, R.string.add_to_playlist).getItem().setIntent(rowData);
@@ -1154,7 +1154,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			setLimiter(MediaUtils.TYPE_ALBUM, "_id=" + intent.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID));
 			updateLimiterViews();
 			break;
-		case MENU_EDIT_MP3_TAG:
+		case MENU_EDIT_MP3_TAGS:
 			isShowID3Dialog = true;
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
