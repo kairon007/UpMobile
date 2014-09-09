@@ -73,6 +73,9 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 	@Override
 	public int getCount() {
+		if (null == mObjects){
+			return 0;
+		}
 		return mObjects.size();
 	}
 

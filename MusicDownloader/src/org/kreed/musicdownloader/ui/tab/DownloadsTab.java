@@ -370,13 +370,10 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		for (int i = 0; i < adapter.getCount(); i++) {
 			MusicData data = adapter.getItem(i);
 			if ((progressString != null && data.getDownloadProgress() != null && data.getDownloadProgress().equals(SET_VIS))  || data.getFileUri() != null) {
-				DBHelper.getInstance().delete(data);
-				dataMusic.add(data);
+				adapter.remove(data);
 			}
 		}
-		for (MusicData musicData : dataMusic) {
-			adapter.remove(musicData);
-		}
+		DBHelper.getInstance().deleteAll();
 	}
 	
 }
