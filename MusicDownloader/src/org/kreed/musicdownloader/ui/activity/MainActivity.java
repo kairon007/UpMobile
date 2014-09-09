@@ -2,12 +2,9 @@ package org.kreed.musicdownloader.ui.activity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
@@ -19,8 +16,6 @@ import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.ballast.CompatHoneycomb;
 import org.kreed.musicdownloader.ballast.LibraryAdapter;
-import org.kreed.musicdownloader.ballast.MediaUtils;
-import org.kreed.musicdownloader.ballast.QueryTask;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.ui.Player;
@@ -28,7 +23,6 @@ import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchTab;
 
-import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,7 +31,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.FeatureInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -59,12 +52,11 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -543,14 +535,27 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				String artistName = editor.getNewArtistName();
-				String albumTitle = editor.getNewAlbumTitle();
-				String songTitle = editor.getNewSongTitle();
-				boolean useAlbumCover = editor.useAlbumCover();
-				rename(file, artistName, albumTitle, songTitle);
-				if (!useAlbumCover) {
-					removeAlbumCover(file);
-				}
+				new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... params) {
+						MusicData musicData = new MusicData(file);
+						String artistName = editor.getNewArtistName();
+						String albumTitle = editor.getNewAlbumTitle();
+						String songTitle = editor.getNewSongTitle();
+						MusicData data = new MusicData(artistName, songTitle, null, null);
+						data.setSongAlbum(albumTitle);
+						data.setUseCover(editor.useAlbumCover());
+						musicData.rename(data);
+//						 if (!useAlbumCover) {
+//						 removeAlbumCover(file);
+//						 }
+						notifyMediascanner(musicData.getFileUri(), musicData);
+						return null;
+					}
+
+				}.execute();
+
 			}
 
 		});
@@ -580,67 +585,18 @@ public class MainActivity extends Activity {
 		cover.compress(CompressFormat.JPEG, 85, out);
 		metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 		new MyID3().update(file, src_set, metadata);
-		notifyMediascanner(file.getAbsolutePath(), "", "", null);
+//		notifyMediascanner(file.getAbsolutePath(), "", "", null);
 		} catch (Exception e) {
 		}
 	}
 
-	private void rename(File file, String artist, String album, String song) {
-		try {
-			MusicMetadataSet src_set = new MyID3().read(file);
-			if (src_set == null) {
-				return;
-			}
-			boolean isChange = false;
-			String partSong = file.getName().split("-")[0];
-			String partArtist = file.getName().split("-")[1];
-			Log.d("log", partArtist);
-			Log.d("log", partSong);
-			String newName = "";
-			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-			if (!album.equals("")) {
-				metadata.clearAlbum();
-				metadata.setAlbum(album);
-				isChange = true;
-			}
-			if (!song.equals("") && !artist.equals("")) {
-				metadata.clearSongTitle();
-				metadata.setSongTitle(song);
-				metadata.clearArtist();
-				metadata.setArtist(artist);
-				newName = song + " - " + artist + ".mp3";
-				isChange = true;
-			} else if (!artist.equals("")) {
-				metadata.clearArtist();
-				metadata.setArtist(artist);
-				newName = partSong + "- " + artist + ".mp3";
-				isChange = true;
-			} else if (!song.equals("")) {
-				metadata.clearSongTitle();
-				metadata.setSongTitle(song);
-				newName = song + " -" + partArtist;
-				isChange = true;
-			}
-			if (!isChange) {
-				Log.d("log", "return");
-				return;
-			}
-			File newFile = new File(file.getParentFile(), newName);
-			music.setFileUri(newFile.getAbsolutePath());
-			new MyID3().update(file, src_set, metadata);
-			file.renameTo(newFile);
-			notifyMediascanner(file.getAbsolutePath(), artist, song, null);
-		} catch (Exception e) {
-		}
-	}
-
-	private void notifyMediascanner(String path, final String artist, final String title, final Bitmap cover) {
+	private void notifyMediascanner(String path, final MusicData musicData) {
 		File file = new File(path);
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
 				int i = getSelectedItem();
-				mPagerAdapter.updateMusicData(i, artist, title, cover);
+				mPagerAdapter.updateMusicData(i, musicData);
 			}
 
 		});

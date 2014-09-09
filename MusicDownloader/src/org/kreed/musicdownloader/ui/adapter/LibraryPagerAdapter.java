@@ -264,9 +264,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		}
 	}
 
-	public void updateMusicData(final int i, final String artist, final String title, final Bitmap cover) {
+	public void updateMusicData(final int i, MusicData musicData) {
 		if (null != adapterLibrary) {
-			adapterLibrary.updateItem(i, artist, title, cover);
+			adapterLibrary.updateItem(i, musicData);
 		}
 	}
 
@@ -300,44 +300,8 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				if (contentFileLength > 0) {
 					File[] files = contentFile.listFiles();
 					for (int i = 0; i < files.length; i++) {
-						try {
-							MusicMetadataSet src_set = new MyID3().read(files[i]);
-							if (src_set != null) {
-								MusicMetadata metadata = src_set.merged;
-								if (metadata.isEmpty())
-									continue;
-								String strArtist = metadata.getArtist();
-								String strDuration = "";
-								String strTitle = "";
-								String strPath = "";
-								if (metadata.getSongTitle() != null) {
-									int index = metadata.getSongTitle().indexOf('/');
-									strPath = files[i].getAbsolutePath();
-									if (index != -1) {
-										strTitle = metadata.getSongTitle().substring(0, index);
-										strDuration = metadata.getSongTitle().substring(index + 1);
-									} else {
-										strTitle = metadata.getSongTitle();
-									}
-								}
-								Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
-								String strGenre;
-								if (metadata.containsKey("genre_id")) {
-									int genre_id = (Integer) metadata.get("genre_id");
-									strGenre = ID3v1Genre.get(genre_id);
-								} else {
-									strGenre = "unknown";
-								}
-								if (!isAdded) {
-									MusicData data = new MusicData(strArtist, strTitle, strDuration, bitmap, strGenre);
-									data.setFileUri(strPath);
-									arrayMusic.add(data);
-								}
-							} else {
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						MusicData musicData = new MusicData(files[i]);
+						arrayMusic.add(musicData);
 					}
 					adapterLibrary = new LibraryTabAdapter(mActivity, 0, arrayMusic, activity);
 					view = (ListView) inflater.inflate(R.layout.listview, null);
@@ -354,40 +318,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			view.setTag(type);
 			enableFastScroll(view);
 			mLists[type] = view;
-			// mRequeryNeeded[type] = true;
 		}
-		// requeryIfNeeded(type);
 		container.addView(view);
 		return view;
-	}
-
-	public Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
-		if (maxWidth == 0) {
-			return null;
-		}
-		Vector<ImageData> pictureList = metadata.getPictureList();
-		if ((pictureList == null) || (pictureList.size() == 0)) {
-			return null;
-		}
-		ImageData imageData = (ImageData) pictureList.get(0);
-		if (imageData == null) {
-			return null;
-		}
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inJustDecodeBounds = true;
-		int scale = 1;
-		if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
-			// Find the correct scale value. It should be the power of 2.
-			int scaleWidth = opts.outWidth;
-			while (scaleWidth > maxWidth) {
-				scaleWidth /= 2;
-				scale *= 2;
-			}
-		}
-		opts = new BitmapFactory.Options();
-		opts.inSampleSize = scale;
-		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
-		return bitmap;
 	}
 
 	@Override
@@ -447,7 +380,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		out.putIntArray("pos", savedPositions);
 		return out;
 	}
-
 
 	/**
 	 * Run on query on the adapter passed in obj.

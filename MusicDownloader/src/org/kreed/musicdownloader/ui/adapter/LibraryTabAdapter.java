@@ -141,7 +141,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			@Override
 			public void onClick(View v) {
 				((MainActivity) activity).setActivatedPlayButton(false);
-				activity.play(strPath, null,strArtist, strTitle, strDuration, Constans.CALL_FROM_LIBRARY, pos);
+				activity.play(strPath, null, strArtist, strTitle, strDuration, Constans.CALL_FROM_LIBRARY, pos);
 			}
 
 		});
@@ -157,16 +157,8 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		ImageButton hThreedot;
 	}
 
-	public void updateItem(int position, String artist, String title, Bitmap cover) {
-		if (!artist.equals("")) {
-			getItem(position).setSongArtist(artist);
-		}
-		if (!title.equals("")) {
-			getItem(position).setSongTitle(title);
-		}
-		if (null != cover) {
-			getItem(position).setSongBitmap(cover);
-		}
+	public void updateItem(int position, MusicData musicData) {
+		getItem(position).update(musicData);
 		activity.runOnUiThread(reDraw);
 	}
 	
