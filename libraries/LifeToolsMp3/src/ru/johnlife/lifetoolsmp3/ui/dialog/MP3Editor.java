@@ -26,15 +26,12 @@ public class MP3Editor{
 	}
 
 	public View getView() {
-		return view;
-	}
-	
-	public void initView() {
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.view = inflater.inflate(R.layout.editor_dialog, null);
 		init();
+		return view;
 	}
-
+	
 	private void init() {
 		etArtistName = (EditText) view.findViewById(R.id.editTextArtist);
 		etSongTitle = (EditText) view.findViewById(R.id.editTextTitle);
