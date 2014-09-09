@@ -783,9 +783,9 @@ public class SearchTab {
 		return editor;
 	}
 	
-	public void createId3Dialog() {
+	public void createId3Dialog(String[] fields) {
 		if (null == player) return;
-		player.createId3dialog(false);
+		player.createId3dialog(false, fields);
 	}
 
 	private final static class Player extends AsyncTask<String, Void, Boolean> {
@@ -859,6 +859,7 @@ public class SearchTab {
 		public Player(final View view, final String title, final String artist) {
 			super();
 			this.view = view;
+			final String[] arrayField = {artist, title, ""};
 			songId = -1;
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -956,7 +957,7 @@ public class SearchTab {
 				
 				@Override
 				public void onClick(View v) {
-					createId3dialog(true);
+					createId3dialog(true, arrayField);
 				}
 			});
 			cancelLoadLyrics.setOnClickListener(new OnClickListener() {
@@ -999,10 +1000,12 @@ public class SearchTab {
 			});
 		}
 
-		public void createId3dialog(boolean force) {
+		public void createId3dialog(boolean force, String[] fields) {
 			isId3Show = true;
+			
 			if (null == editor || force) {
 				editor = new MP3Editor(activity);
+				editor.setStrings(fields);
 			}
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity).setView(editor.getView());
 			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -1013,6 +1016,7 @@ public class SearchTab {
 					String artistName = editor.getNewArtistName();
 					String albumTitle =  editor.getNewAlbumTitle();
 					String songTitle = editor.getNewSongTitle();
+					
 					boolean useAlbumCover = editor.useAlbumCover();
 					settingsEditor.putString(PrefKeys.EDIT_ARTIST_NAME, artistName);
 					settingsEditor.putString(PrefKeys.EDIT_ALBUM_TITLE, albumTitle);

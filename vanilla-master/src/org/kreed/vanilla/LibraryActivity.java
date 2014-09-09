@@ -141,7 +141,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private static final String ID3_ID = "id3_edit_dialog_id";
 	private static final String ID3_STRINGS = "id3_edit_dialog_strings";
 	private static final String ID3_COVER = "id3_edit_dialog_cover";
-
+	private String[] arrayField;
+	
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
 
@@ -167,6 +168,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private MP3Editor editor;
 	private int type;
 	private long id;
+	
 
 	private HorizontalScrollView mLimiterScroller;
 	private ViewGroup mLimiterViews;
@@ -281,7 +283,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		Advertisement.onResume(this);
 		updateEqualizerVisibility();
 		if (isShowID3DialogSearch) {
-			SearchTab.getInstance(getLayoutInflater(), this).createId3Dialog();
+			SearchTab.getInstance(getLayoutInflater(), this).createId3Dialog(arrayField);
 		}
 	}
 
@@ -574,7 +576,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		if (null != in && in.getBoolean(ID3_IS_SHOW)) {
 			isShowID3Dialog = true;
 			editor = new MP3Editor(this);
-			editor.setStrings(in.getStringArray(ID3_STRINGS));
+			arrayField = in.getStringArray(ID3_STRINGS);
+			editor.setStrings(arrayField);
 			editor.setShowCover(in.getBoolean(ID3_COVER));
 			type = in.getInt(ID3_TYPE);
 			id = in.getLong(ID3_ID);
@@ -982,7 +985,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	 * @param rowData
 	 *            Data for the adapter row.
 	 */
-	public void onCreateContextMenu(ContextMenu menu, Intent rowData) {// TODO
+	public void onCreateContextMenu(ContextMenu menu, Intent rowData) {
 		if (rowData.getLongExtra(LibraryAdapter.DATA_ID, LibraryAdapter.INVALID_ID) == LibraryAdapter.HEADER_ID) {
 			menu.setHeaderTitle(getString(R.string.all_songs));
 			menu.add(0, MENU_PLAY_ALL, 0, R.string.play_all).setIntent(rowData);
@@ -1155,10 +1158,14 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			updateLimiterViews();
 			break;
 		case MENU_EDIT_MP3_TAGS:
+			//TODO
 			isShowID3Dialog = true;
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			createEditID3Dialog(type, id, null);
+			String[] fields = {intent.getStringExtra("selected_file_path"), intent.getStringExtra("title"), ""};
+			editor = new MP3Editor(this);
+			editor.setStrings(fields);
+			createEditID3Dialog(type, id, editor);
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
@@ -1213,6 +1220,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				final String artistName = editor.getNewArtistName();
 				final String albumTitle = editor.getNewAlbumTitle();
 				final String songTitle = editor.getNewSongTitle();
+				if (!editor.manipulateText()) {
+					return;
+				}
 				new AsyncTask<Void, Void, Void>() {
 
 					@Override
