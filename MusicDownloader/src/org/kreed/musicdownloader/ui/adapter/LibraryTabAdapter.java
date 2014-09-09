@@ -73,6 +73,9 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 	@Override
 	public int getCount() {
+		if (null == mObjects){
+			return 0;
+		}
 		return mObjects.size();
 	}
 
@@ -107,9 +110,12 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		final String strTitle = music.getSongTitle();
 		final String strDuration = music.getSongDuration();
 		final String strPath = music.getFileUri();
+		
 		Bitmap bitmap = music.getSongBitmap();
 		if (null != bitmap) {
 			holder.hCoverImage.setImageBitmap(bitmap);
+		} else {
+			holder.hCoverImage.setImageResource(R.drawable.fallback_cover);
 		}
 		holder.hSongTitle.setText(strArtist + " - " + strTitle);
 		holder.hSongDuration.setText(strDuration);

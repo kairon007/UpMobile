@@ -19,6 +19,9 @@ public class MP3Editor{
 	private String newArtistName;
 	private String newSongTitle;
 	private String newAlbumTitle;
+	private String oldArtistName;
+	private String oldSongTitle;
+	private String oldAlbumTitle;
 	private boolean showCover = true;
 
 	public MP3Editor(Context context){
@@ -76,7 +79,6 @@ public class MP3Editor{
 	
 	private boolean setArtistName() {
 		String str = etArtistName.getText().toString();
-		Log.d("log", "artist edit text = " + str);
 		if (!str.equals("")) {
 			newArtistName = str;
 			return true;
@@ -86,7 +88,6 @@ public class MP3Editor{
 	
 	private boolean setSongTitle() {
 		String str = etSongTitle.getText().toString();
-		Log.d("log", "song edit text = " + str);
 		if (!str.equals("")) {
 			newSongTitle = str;
 			return true;
@@ -94,9 +95,21 @@ public class MP3Editor{
 		return false;
 	}
 	
+	public boolean manipulateText() {
+		if (!oldAlbumTitle.equals(newAlbumTitle)) {
+			return true;
+		}
+		if (!oldArtistName.equals(newArtistName)){
+			return true;
+		}
+		if (!oldSongTitle.equals(newSongTitle)) {
+			return true;
+		}
+		return false;
+	}
+	
 	private boolean setAlbumTitle() {
 		String str = etAlbumTitle.getText().toString();
-		Log.d("log", "album edit text = " + str);
 		if (!str.equals("")) {
 			newAlbumTitle = str;
 			return true;
@@ -113,8 +126,8 @@ public class MP3Editor{
 	}
 
 	public void setStrings(String[] strings) {
-		newArtistName = strings[0];
-		newSongTitle = strings[1];
-		newAlbumTitle = strings[2];
+		oldArtistName = newArtistName = strings[0];
+		oldSongTitle = newSongTitle = strings[1];
+		oldAlbumTitle = newAlbumTitle = strings[2];
 	}
 }

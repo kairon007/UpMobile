@@ -292,12 +292,17 @@ public class SearchTab {
 					}
 					src = new File(path);
 					try {
-						MusicMetadataSet src_set = new MyID3().read(src); // read
-																			// metadata
+						MusicData song = new MusicData();
+						song.setSongArtist(songArtist);
+						song.setSongTitle(songTitle);
+						song.setSongDuration(duration);
+						song.setSongBitmap(cover);
+						MusicMetadataSet src_set = new MyID3().read(src); 
 						if (src_set == null) {
 							return;
 						}
 						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+						metadata.clearPictureList();
 						metadata.setSongTitle(songTitle + '/' + duration);
 						metadata.setArtist(songArtist);
 						if (null != cover) {
@@ -306,19 +311,11 @@ public class SearchTab {
 							metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 						}
 						File dst = new File(src.getParentFile(), src.getName() + "-1");
-						new MyID3().write(src, dst, src_set, metadata); // write
-																		// updated
-																		// metadata
+						new MyID3().write(src, dst, src_set, metadata); 
 						dst.renameTo(src);
 						progress = 100;
 						updateProgress();
-						MusicData song = new MusicData();
-						song.setSongArtist(songArtist);
-						song.setSongTitle(songTitle);
-						song.setSongDuration(duration);
-						song.setFileUri(dst.getAbsolutePath());
-						Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
-						song.setSongBitmap(bitmap);
+						song.setFileUri(src.getAbsolutePath());
 						notifyMediascanner(song);
 						DBHelper.getInstance(context).insert(song);
 						downloadsTab.setFileUri(dst.getAbsolutePath(), downloadId);

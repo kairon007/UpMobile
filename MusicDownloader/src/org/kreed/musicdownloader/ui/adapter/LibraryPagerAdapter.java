@@ -300,8 +300,11 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				if (contentFileLength > 0) {
 					File[] files = contentFile.listFiles();
 					for (int i = 0; i < files.length; i++) {
-						MusicData musicData = new MusicData(files[i]);
-						arrayMusic.add(musicData);
+						String string = files[i].getName();
+						if (string.endsWith(".mp3")) {
+							MusicData musicData = new MusicData(files[i]);
+							arrayMusic.add(musicData);
+						}
 					}
 					adapterLibrary = new LibraryTabAdapter(mActivity, 0, arrayMusic, activity);
 					view = (ListView) inflater.inflate(R.layout.listview, null);
