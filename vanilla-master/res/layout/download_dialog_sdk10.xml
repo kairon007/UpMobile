@@ -58,7 +58,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cancel" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -116,9 +115,9 @@
                     android:id="@+id/lyrics"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:padding="@dimen/padding_20px"
-                    android:textSize="@dimen/text_size"
-       				android:gravity="center" />
+                    android:textSize="@dimen/text_size" />
             </ScrollView>
 
             <Button
@@ -259,33 +258,33 @@
                         android:id="@+id/button_show_lyrics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
                         android:gravity="left"
-                        android:layout_marginBottom="5dp"
                         android:text="@string/show_lyrics"
                         android:textSize="20sp" />
-                    
-                     <TextView
+
+                    <TextView
                         android:id="@+id/button_edit_mp3_tag"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
                         android:gravity="left"
-                        android:layout_marginBottom="5dp"
                         android:text="@string/edit_mp3_tag"
                         android:textSize="20sp" />
-                    
+
                     <ProgressBar
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="1px"
+                        android:layout_margin="5dp"
                         android:indeterminate="false"
-                        android:progress="0"
                         android:max="1"
-                        android:layout_margin="5dp" />
-                    
+                        android:progress="0" />
+
                     <TextView
-                    	android:id="@+id/spiner_path_download"
+                        android:id="@+id/spiner_path_download"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
@@ -293,7 +292,6 @@
                         android:gravity="left"
                         android:text="@string/hader_download"
                         android:textSize="20sp" />
-                    
                 </LinearLayout>
 
                 <LinearLayout
@@ -303,29 +301,29 @@
                     android:orientation="vertical"
                     android:visibility="gone" >
 
-                    <FrameLayout 
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
-                    
-	                    <Spinner
-	                        android:layout_width="match_parent"
-	                        android:layout_height="wrap_content"
-	                        android:layout_gravity="bottom"
-	                        android:clickable="false" />
-	                    
-	                    <TextView 
-	                        android:id="@+id/text_path_download"
-	                        android:layout_width="match_parent"
-	                        android:layout_height="wrap_content"
-	                        android:layout_marginLeft="10dp"
-	                        android:layout_marginTop="10dp"
-	                        android:layout_marginBottom="5dp"
-	                        android:layout_marginRight="20dp"
-	                        android:gravity="left"
-	                        android:text="@string/hader_download"
-	                        android:textAppearance="?android:attr/textAppearanceMedium" />
-					</FrameLayout>
-					
+
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:clickable="false" />
+
+                        <TextView
+                            android:id="@+id/text_path_download"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginTop="10dp"
+                            android:gravity="left"
+                            android:text="@string/hader_download"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                    </FrameLayout>
+
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
@@ -337,27 +335,29 @@
                 </LinearLayout>
             </LinearLayout>
 
-			<View
-			    android:layout_width="fill_parent"
-			    android:layout_height="1dp"
-			    android:layout_marginBottom="5dp"
-			    android:layout_marginLeft="5dp"
-			    android:layout_marginRight="5dp"
-			    android:layout_marginTop="3dp"
-			    android:background="@android:color/darker_gray" />
-            
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="3dp"
+                android:background="@android:color/darker_gray" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginBottom="3dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginTop="3dp"
                 android:orientation="horizontal" >
 
                 <Button
                     android:id="@+id/b_negativ"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="@string/cancel" />
@@ -370,7 +370,7 @@
                 <Button
                     android:id="@+id/b_positiv"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="@string/download" />

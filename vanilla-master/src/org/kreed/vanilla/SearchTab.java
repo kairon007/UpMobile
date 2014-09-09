@@ -616,7 +616,12 @@ public class SearchTab {
 		final String artist = song.getArtist();
 
 		if (null == player) {
-			player = new Player(inflater.inflate(R.layout.download_dialog, null), title, artist);
+			Log.d("---------", String.valueOf(android.os.Build.VERSION.SDK_INT < 11));
+			if (android.os.Build.VERSION.SDK_INT < 11) {
+				player = new Player(inflater.inflate(R.layout.download_dialog_sdk10, null), title, artist);
+			} else {
+				player = new Player(inflater.inflate(R.layout.download_dialog, null), title, artist);
+			}
 			if ("AppTheme.Black".equals(Util.getThemeName(activity))) {
 				player.setBlackTheme();
 			}
@@ -809,6 +814,7 @@ public class SearchTab {
 		private Button download;
 		private Button cancel;
 		private Button lyricsCancel;
+		private Button cancelLoadLyrics;
 		private boolean isId3Show = false;
 
 		public void setOnButtonClicListener(View.OnClickListener downloadClickListener, View.OnClickListener cancelClickListener) {
@@ -920,6 +926,7 @@ public class SearchTab {
 			download = (Button) view.findViewById(R.id.b_positiv);
 			cancel = (Button) view.findViewById(R.id.b_negativ);
 			lyricsCancel = (Button) view.findViewById(R.id.lyrics_cancel);
+			cancelLoadLyrics = (Button) view.findViewById(R.id.cancelLoadLyrics);
 			spinerPath.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -950,6 +957,13 @@ public class SearchTab {
 				@Override
 				public void onClick(View v) {
 					createId3dialog(true);
+				}
+			});
+			cancelLoadLyrics.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					showProgressDialog(false);	
 				}
 			});
 			buttonShowLyrics.setOnClickListener(new View.OnClickListener() {
