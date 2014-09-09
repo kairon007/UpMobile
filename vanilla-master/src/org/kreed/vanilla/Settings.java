@@ -58,6 +58,7 @@ public class Settings {
 	public static int REMOTE_SETTINGS_MIN_UPDATE_INTERVAL_MILLIS = 9999999;//30000; //28800000;    
 	public static int RATE_ME_POPUP_DELAY_MILLIS = 9999999;//30000; 
 	private static final boolean ENABLE_ALBUM_COVERS = true;	 
+	public static final boolean ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB = true;
 
 	// AD NETWORK ID'S
 	public static String APPNEXT_ID = "85acb334-cdb4-4a5b-b434-4dc722c6a97f"; 
