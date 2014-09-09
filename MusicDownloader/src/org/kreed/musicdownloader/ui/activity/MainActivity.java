@@ -1,14 +1,9 @@
 package org.kreed.musicdownloader.ui.activity;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.cmc.music.metadata.ImageData;
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.Advertisement;
 import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.PrefKeys;
@@ -31,9 +26,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
@@ -52,6 +44,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -530,6 +523,9 @@ public class MainActivity extends Activity {
 	public void showEditDialog() {
 		final File file = new File(music.getFileUri());
 		final MP3Editor editor = new MP3Editor(this);
+		MusicData data = MusicData.getFromFile(file);
+		String[] filds = {data.getSongArtist(), data.getSongTitle(), ""};
+		editor.setStrings(filds);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
@@ -543,13 +539,25 @@ public class MainActivity extends Activity {
 						String artistName = editor.getNewArtistName();
 						String albumTitle = editor.getNewAlbumTitle();
 						String songTitle = editor.getNewSongTitle();
+						boolean useAlbumCover = editor.isShowCover();
+						musicData.setUseCover(useAlbumCover);
+						Log.d("log", "1");
+						if (!editor.manipulateText() && !useAlbumCover){
+							Log.d("log", "2");
+							musicData.deleteCover(musicData);
+							notifyMediascanner(musicData.getFileUri(), musicData);
+							cancel(true);
+							return null;
+						} else if (!editor.manipulateText() && useAlbumCover) {
+							Log.d("log", "3");
+							cancel(true);
+							return null;
+						}
+						Log.d("log", "5");
 						MusicData data = new MusicData(artistName, songTitle, null, null);
 						data.setSongAlbum(albumTitle);
 						data.setUseCover(editor.useAlbumCover());
 						musicData.rename(data);
-//						 if (!useAlbumCover) {
-//						 removeAlbumCover(file);
-//						 }
 						notifyMediascanner(musicData.getFileUri(), musicData);
 						return null;
 					}
@@ -570,31 +578,12 @@ public class MainActivity extends Activity {
 		alertDialog.show();
 	}
 	
-	private void removeAlbumCover(File file) {
-		Bitmap cover = null;
-		MusicMetadataSet src_set;
-		try {
-			src_set = new MyID3().read(file);
-		if (src_set == null) {
-			return;
-		}
-		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-		metadata.clearPictureList();
-		cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
-		ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-		cover.compress(CompressFormat.JPEG, 85, out);
-		metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-		new MyID3().update(file, src_set, metadata);
-//		notifyMediascanner(file.getAbsolutePath(), "", "", null);
-		} catch (Exception e) {
-		}
-	}
-
 	private void notifyMediascanner(String path, final MusicData musicData) {
 		File file = new File(path);
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
+				Log.d("log", "onScanCompleted");
 				int i = getSelectedItem();
 				mPagerAdapter.updateMusicData(i, musicData);
 			}

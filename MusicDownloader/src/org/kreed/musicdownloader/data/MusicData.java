@@ -85,12 +85,57 @@ public class MusicData {
 		}
 	}
 	
+	public static MusicData getFromFile(File file) {
+		MusicData temp = new MusicData();
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			if (src_set != null) {
+				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+				if (metadata.isEmpty()) {
+					return temp;
+				}
+				temp.setSongArtist(metadata.getArtist());
+				Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
+				temp.setSongBitmap(bitmap);
+				if(null != metadata.getAlbum()) {
+					temp.setSongAlbum(metadata.getAlbum());
+				}
+				if (metadata.getSongTitle() != null) {
+					int index = metadata.getSongTitle().indexOf('/');
+					temp.setFileUri(file.getAbsolutePath());
+					if (index != -1) {
+						String title = metadata.getSongTitle().substring(0, index);
+						String duration = metadata.getSongTitle().substring(index + 1);
+						temp.setSongTitle(title);
+						temp.setSongDuration(duration);
+					} else {
+						temp.setSongTitle(metadata.getSongTitle());
+					}
+				}
+				if (metadata.containsKey("genre_id")) {
+					int genre_id = (Integer) metadata.get("genre_id");
+					temp.setSongGenre(ID3v1Genre.get(genre_id));
+				} else {
+					temp.setSongGenre("unknown");
+				}
+			} else {
+			}
+		} catch (IOException e) {
+		}
+		return temp;
+	}
+	
 	public void update(MusicData newTag) {
 		rename(newTag, false);
 	}
 	
 	public void rename(MusicData newTag) {
 		rename(newTag, true);
+	}
+	
+	public void deleteCover(MusicData newTag) {
+		File file = new File(newTag.fileUri);
+		deleteCover(file);
 	}
 
 	private void rename(MusicData newTag, boolean flag) {
@@ -102,8 +147,25 @@ public class MusicData {
 		}
 	}
 	
+	private void deleteCover(File file) {
+		this.songBitmap = null;
+		MusicMetadataSet src_set;
+		try {
+			src_set = new MyID3().read(file);
+			if (src_set != null) {
+				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+				metadata.clearPictureList();
+				new MyID3().update(file, src_set, metadata);
+			}
+		} catch (Exception e) {
+		}
+	}
+	
 	private void renameBoundFile(String path) {
 		File file = new File(path);
+		if (!useCover && null != this.songBitmap) {
+			deleteCover(file);
+		}
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (src_set == null) {
