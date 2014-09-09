@@ -28,7 +28,6 @@ import java.util.Arrays;
 import org.kreed.vanilla.app.VanillaApp;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -44,6 +43,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -472,7 +472,6 @@ public class LibraryPagerAdapter
 		int type = mTabOrder[position];
 		LibraryAdapter adapter = mAdapters[type];
 		if (position != mCurrentPage || adapter != mCurrentAdapter) {
-			requeryIfNeeded(type);
 			mCurrentAdapter = adapter;
 			mCurrentPage = position;
 			mActivity.onPageChanged(position, adapter);
@@ -738,7 +737,7 @@ public class LibraryPagerAdapter
 		if (adapter == mCurrentAdapter) {
 			postRunQuery(adapter);
 		} else {
-			mRequeryNeeded[adapter.getMediaType()] = true;
+//			mRequeryNeeded[adapter.getMediaType()] = true;
 			// Clear the data for non-visible adapters (so we don't show the old
 			// data briefly when we later switch to that adapter)
 			adapter.clear();

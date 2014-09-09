@@ -42,12 +42,14 @@ import com.startapp.android.publish.model.MetaDataStyle;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -482,47 +484,13 @@ public class MediaAdapter
 			.setExpandable(mExpandable)
 			.setLine1(title)
 			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
-			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
-		if (mType == MediaUtils.TYPE_SONG) {
-			if (Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
+			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0))
+			.setIcon(R.drawable.fallback_cover);
+		if (mType == MediaUtils.TYPE_SONG && Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
 				long id = cursor.getLong(0);
-				builder.setIcon(getCoverSong(id, 2));
-			} else {
-				builder.setIcon(R.drawable.fallback_cover);
-			}
+				builder.startLoadCover(2, mType, id, mActivity);
 		}
 		return builder.build();
-	}
-
-	private Bitmap getCoverSong(long id, int maxWidth) {
-		File file = PlaybackService.get(mActivity).getFilePath(mType, id);
-		try {
-			MusicMetadataSet src_set = new MyID3().read(file);
-			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-			Vector<ImageData> pictureList = metadata.getPictureList();
-			if ((pictureList == null) || (pictureList.size() == 0)) {
-				return  songCover = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.fallback_cover);
-			}
-			ImageData imageData = (ImageData) pictureList.get(0);
-			BitmapFactory.Options opts = new BitmapFactory.Options();
-			opts.inJustDecodeBounds = true;
-			int scale = 1;
-			if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
-				int scaleWidth = opts.outWidth;
-				while (scaleWidth > maxWidth) {
-					scaleWidth /= 2;
-					scale *= 2;
-				}
-			}
-			opts = new BitmapFactory.Options();
-			opts.inPurgeable = true;
-			opts.inSampleSize = scale;
-			Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
-			return bitmap;
-		}
-		catch (Exception e) {
-		}
-		return songCover = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.fallback_cover);
 	}
 
 	/**

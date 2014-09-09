@@ -1,11 +1,22 @@
 package org.kreed.vanilla.ui;
 
+import java.io.File;
+import java.util.Vector;
+
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+import org.kreed.vanilla.LibraryActivity;
+import org.kreed.vanilla.PlaybackService;
 import org.kreed.vanilla.R;
 import org.kreed.vanilla.app.VanillaApp;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +38,7 @@ public class AdapterHelper {
 		private View view;
 		private View left;
 		private TextView caption;
+		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
 		
 		private ViewBuilder(View view) {
 			view.setTag(this);
@@ -153,6 +165,53 @@ public class AdapterHelper {
 			}
 			determineLeftVisibility();
 			return this;
+		}
+		
+		public void startLoadCover(final int maxWidth, final int type, final long id,
+				final LibraryActivity activity) {
+			if (null != loadCoverTask) {
+				loadCoverTask.cancel(true);
+			}
+			loadCoverTask = new AsyncTask<Void, Void, Bitmap> () {
+				
+				@Override
+				protected Bitmap doInBackground(Void... params) {
+					File file = PlaybackService.get(activity).getFilePath(type, id);
+					Resources res = activity.getResources();
+					try {
+						MusicMetadataSet src_set = new MyID3().read(file);
+						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+						Vector<ImageData> pictureList = metadata.getPictureList();
+						if ((pictureList == null) || (pictureList.size() == 0)) {
+							return  BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
+						}
+						ImageData imageData = (ImageData) pictureList.get(0);
+						BitmapFactory.Options opts = new BitmapFactory.Options();
+						opts.inJustDecodeBounds = true;
+						int scale = 1;
+						if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
+							int scaleWidth = opts.outWidth;
+							while (scaleWidth > maxWidth) {
+								scaleWidth /= 2;
+								scale *= 2;
+							}
+						}
+						opts = new BitmapFactory.Options();
+						opts.inPurgeable = true;
+						opts.inSampleSize = scale;
+						Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
+						return bitmap;
+					}
+					catch (Exception e) {
+					}
+					return BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
+				}
+				
+				@Override
+				protected void onPostExecute(Bitmap result) {
+					setIcon(result);
+				}
+			}.execute();
 		}
 		
 		private void setVisibility(View view, String value) {
