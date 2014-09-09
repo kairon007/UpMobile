@@ -315,7 +315,7 @@ public class SearchTab {
 						dst.renameTo(src);
 						progress = 100;
 						updateProgress();
-						song.setFileUri(dst.getAbsolutePath());
+						song.setFileUri(src.getAbsolutePath());
 						notifyMediascanner(song);
 						DBHelper.getInstance(context).insert(song);
 						downloadsTab.setFileUri(dst.getAbsolutePath(), downloadId);
