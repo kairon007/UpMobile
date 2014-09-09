@@ -1203,10 +1203,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		if (null == view) {
 			editor = new MP3Editor(this);
-			editor.initView();
-			editor.hideCheckBox(true);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
+		editor.hideCheckBox(true);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
