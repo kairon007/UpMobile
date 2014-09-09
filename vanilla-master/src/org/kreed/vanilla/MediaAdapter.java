@@ -515,6 +515,7 @@ public class MediaAdapter
 				}
 			}
 			opts = new BitmapFactory.Options();
+			opts.inPurgeable = true;
 			opts.inSampleSize = scale;
 			Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
 			return bitmap;
