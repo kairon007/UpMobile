@@ -101,10 +101,9 @@ public class DBHelper extends SQLiteOpenHelper {
 				String fileUriString = c.getString(c.getColumnIndex("fileuri"));
 				data.setFileUri(fileUriString);
 				try {
-					MusicMetadataSet src_set = new MyID3()
-							.read(new File(fileUriString));
+					MusicMetadataSet src_set = new MyID3().read(new File(fileUriString));
 					if (src_set != null) {
-						MusicMetadata metadata = src_set.merged;
+						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 						Bitmap bitmap = getArtworkImage(2, metadata);
 						data.setSongBitmap(bitmap);
 					}
@@ -136,6 +135,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
+		opts.inPurgeable = true;
 		int scale = 1;
 		if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
 			// Find the correct scale value. It should be the power of 2.
@@ -147,8 +147,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		opts = new BitmapFactory.Options();
 		opts.inSampleSize = scale;
-		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData,
-				0, imageData.imageData.length, opts);
+		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
 		return bitmap;
 	}
 	

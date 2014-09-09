@@ -54,7 +54,7 @@ public class MusicData {
 		try {
 			MusicMetadataSet src_set = new MyID3().read(musicFile);
 			if (src_set != null) {
-				MusicMetadata metadata = src_set.merged;
+				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 				if (metadata.isEmpty()) {
 					return;
 				}
