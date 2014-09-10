@@ -11,6 +11,7 @@ import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.DBHelper;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 public class MusicData {
 	
@@ -182,7 +183,7 @@ public class MusicData {
 			newName = this.songTitle + " - " + this.songArtist + ".mp3";
 			File newFile = new File(file.getParentFile(), newName);
 			fileUri = newFile.getAbsolutePath();
-			new MyID3().update(file, src_set, metadata);
+			new MyID3().update(newFile, src_set, metadata);
 			file.renameTo(newFile);
 		} catch (Exception e) {
 		}
