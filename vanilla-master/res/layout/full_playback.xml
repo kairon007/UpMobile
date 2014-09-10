@@ -23,9 +23,47 @@ THE SOFTWARE.
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 	<org.kreed.vanilla.CoverView
 		android:id="@+id/cover_view"
-		android:layout_height="fill_parent"
-		
+		android:layout_height="350dp"
+		android:layout_gravity="top"
 		android:layout_width="fill_parent" />
+	<FrameLayout 
+	    android:id="@+id/lyric_conteiner"
+		android:layout_height="450dp"
+		android:layout_width="fill_parent"
+		android:paddingTop="@dimen/padding_45dp"
+		android:visibility="gone">
+		<ProgressBar
+            android:id="@+id/progressLyric"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+	<ScrollView 
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:background="@color/light_gray"
+		>
+		<TextView 
+			android:id="@+id/lyric"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/text_size"
+			android:padding="@dimen/padding_20px"
+			android:layout_width="fill_parent"
+			android:shadowColor="@android:color/black"
+			android:textColor="#333333"
+			android:shadowRadius="1"
+			android:shadowDx="0"
+			android:shadowDy="0"
+			android:gravity="center_horizontal"  />
+	</ScrollView>
+	
+	<ImageView 
+	    android:id="@+id/lyric_closer"
+	    android:src="@drawable/close"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_gravity="right"/>
+	</FrameLayout>
 	<LinearLayout
 		android:id="@+id/controls_top"
 		android:layout_height="wrap_content"

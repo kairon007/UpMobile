@@ -3,5 +3,6 @@
     <dimen name="xhdmi">450dp</dimen>
     <dimen name="hdmi">32dp</dimen>
     <dimen name="padding_20px">20px</dimen>
+    <dimen name="padding_45dp">45dp</dimen>
     <dimen name="text_size">18dp</dimen>
 </resources>
