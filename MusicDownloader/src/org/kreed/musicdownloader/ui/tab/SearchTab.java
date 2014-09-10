@@ -194,7 +194,7 @@ public class SearchTab {
 								"User-Agent",
 								"2.0.0.6 â Debian GNU/Linux 4.0 — Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 			}
-			final String fileName = songTitle + " - " + songArtist + ".mp3";
+			final String fileName = songArtist + " - " + songTitle + ".mp3";
 			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(songTitle)
 					.setDestinationInExternalPublicDir(Constans.DIRECTORY_PREFIX, fileName);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -613,7 +613,7 @@ public class SearchTab {
 			}
 
 		});
-		searchField = (TextView) instanceView.findViewById(R.id.firstLine);
+		searchField = (TextView) instanceView.findViewById(R.id.titleLine);
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

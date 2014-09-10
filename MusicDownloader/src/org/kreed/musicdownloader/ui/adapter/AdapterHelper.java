@@ -21,9 +21,9 @@ public class AdapterHelper {
 	public static class ViewBuilder {
 		private long id;
 		private String title;
-		private TextView text;
+		private TextView titleLine;
 		private TextView number;
-		private TextView line2;
+		private TextView artistLine;
 		private ImageView arrow;
 		private ImageView cover;
 		private View view;
@@ -37,10 +37,10 @@ public class AdapterHelper {
 			this.view = view; 
 			view.setLongClickable(true);
 			time = (TextView)view.findViewById(R.id.time);
-			text = (TextView)view.findViewById(R.id.firstLine);
-			text.setTypeface(MusicDownloaderApp.FONT_LIGHT);
-			line2 = (TextView)view.findViewById(R.id.secondLine);
-			line2.setTypeface(MusicDownloaderApp.FONT_REGULAR);
+			titleLine = (TextView)view.findViewById(R.id.titleLine);
+			titleLine.setTypeface(MusicDownloaderApp.FONT_LIGHT);
+			artistLine = (TextView)view.findViewById(R.id.artistLine);
+			artistLine.setTypeface(MusicDownloaderApp.FONT_REGULAR);
 			number = (TextView)view.findViewById(R.id.number);
 			number.setTypeface(MusicDownloaderApp.FONT_LIGHT);
 			caption = (TextView)view.findViewById(R.id.caption);
@@ -86,14 +86,14 @@ public class AdapterHelper {
 		}
 		
 		public ViewBuilder setLine1(String value) {
-			text.setText(value);
+			titleLine.setText(value);
 			title = value;
 			return this;
 		}
 		
 		public ViewBuilder setLine2(String value) {
-			line2.setText(value);
-			setVisibility(line2, value);
+			artistLine.setText(value);
+			setVisibility(artistLine, value);
 			return this;
 		}
 		

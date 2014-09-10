@@ -5,9 +5,6 @@ import java.util.Collection;
 
 import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.R.drawable;
-import org.kreed.musicdownloader.R.id;
-import org.kreed.musicdownloader.R.layout;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.interfaces.LoadPercentageInterface;
 import org.kreed.musicdownloader.interfaces.MusicDataInterface;
@@ -18,7 +15,6 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -105,15 +101,15 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				if (progressString != null && song.getDownloadProgress() != null) {
 					if (song.getDownloadProgress().equals(SET_VIS)) {
 						holder.downloadProgress.setVisibility(View.INVISIBLE);
-						holder.remove.setImageResource(R.drawable.ok);
+						holder.remove.setImageResource(R.drawable.icon_ok);
 					} else {
 						holder.downloadProgress.setVisibility(View.VISIBLE);
-						holder.remove.setImageResource(R.drawable.cancel);
+						holder.remove.setImageResource(R.drawable.icon_cancel);
 						holder.downloadProgress.setProgress((int) Double.parseDouble(song.getDownloadProgress()));
 					}
 				} else {
 					holder.downloadProgress.setVisibility(View.INVISIBLE);
-					holder.remove.setImageResource(R.drawable.ok);
+					holder.remove.setImageResource(R.drawable.icon_ok);
 				}
 				holder.duration.setText(song.getSongDuration());
 			}
