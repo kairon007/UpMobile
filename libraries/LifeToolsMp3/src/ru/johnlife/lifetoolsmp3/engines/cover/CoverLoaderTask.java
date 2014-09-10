@@ -38,6 +38,10 @@ public class CoverLoaderTask extends AsyncTask<Void, Void, Bitmap> {
 	protected Bitmap doInBackground(Void... params) {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
+			if (coverUrl == null || coverUrl.equals("NOT_FOUND")) {
+				Log.e(getClass().getSimpleName(), "Error, cover not found from engines");
+				return null;
+			}
 			HttpGet httpget = new HttpGet(coverUrl);
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();

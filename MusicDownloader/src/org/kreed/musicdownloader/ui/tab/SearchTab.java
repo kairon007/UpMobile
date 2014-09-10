@@ -22,19 +22,14 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.DBHelper;
-import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.R.drawable;
-import org.kreed.musicdownloader.R.id;
-import org.kreed.musicdownloader.R.layout;
-import org.kreed.musicdownloader.R.string;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.interfaces.MusicDataInterface;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.adapter.AdapterHelper;
-import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
 import org.kreed.musicdownloader.ui.adapter.AdapterHelper.ViewBuilder;
+import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
 import ru.johnlife.lifetoolsmp3.engines.Engine;
@@ -42,21 +37,18 @@ import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.cover.GrooveSharkCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask.Size;
-import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import android.R.color;
+import ru.johnlife.lifetoolsmp3.song.SongWithCover;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -450,9 +442,9 @@ public class SearchTab {
 						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, formatDate(song.getDuration()), bitmaps.get(position), headers);
 					} else {
 						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, formatDate(song.getDuration()), null, headers);
-						if (song instanceof GrooveSong) {
-							String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
-							coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+						if (song instanceof SongWithCover) {
+							String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
+							coverLoader = new CoverLoaderTask(largeCoverUrl);
 						} else {
 							coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.small);
 						}
@@ -467,18 +459,32 @@ public class SearchTab {
 			if (bitmaps.containsKey(position) && bitmaps.get(position) != null) {
 				builder.setIcon(bitmaps.get(position));
 			} else {
-				if (song instanceof GrooveSong) {
-					String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
-					coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+				if (song instanceof SongWithCover) {
+					String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
+					coverLoader = new CoverLoaderTask(largeCoverUrl);
 				} else {
 					coverLoader = new LastFmCoverLoaderTask(song.getArtist(), song.getTitle());
 				}
 				coverLoader.addListener(new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
-						bitmaps.put(position, bmp);
-						if (builder != null && builder.getId() == position && bmp != null) {
-							builder.setIcon(bmp);
+						if (bmp == null) {
+							coverLoader.cancel(true);
+							coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.large);
+							coverLoader.addListener(new OnBitmapReadyListener() {
+								@Override
+								public void onBitmapReady(Bitmap bmp) {
+									bitmaps.put(position, bmp);
+									if (builder != null && builder.getId() == position && bmp != null) {
+										builder.setIcon(bmp);
+									}
+								}
+							});
+						} else {
+							bitmaps.put(position, bmp);
+							if (builder != null && builder.getId() == position && bmp != null) {
+								builder.setIcon(bmp);
+							}
 						}
 					}
 				});
@@ -487,7 +493,6 @@ public class SearchTab {
 			if (coverLoader.getStatus() == Status.PENDING) {
 				coverLoader.execute(NO_PARAMS);
 			}
-
 			if (position == getCount() - 1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
 				getNextResults();

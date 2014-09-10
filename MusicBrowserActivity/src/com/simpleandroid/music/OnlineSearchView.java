@@ -19,12 +19,13 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.cover.GrooveSharkCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask.Size;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.song.SongWithCover;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -32,10 +33,10 @@ import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.ServiceConnection;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -75,7 +76,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.simpleandroid.music.MusicUtils.ServiceToken;
 import com.simpleandroid.music.adapters.AdapterHelper;
 import com.simpleandroid.music.adapters.AdapterHelper.ViewBuilder;
 
@@ -315,7 +315,7 @@ public class OnlineSearchView {
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			Song song = getItem(position);
+			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
 			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
 			// .setNumber(String.valueOf(position+1), 0)
@@ -323,15 +323,32 @@ public class OnlineSearchView {
 			if (song instanceof GrooveSong) {
 				if (bitmaps.containsKey(position)) {
 					builder.setIcon(bitmaps.get(position));
-				} else {
-					String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
-					CoverLoaderTask coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
+					if (song instanceof SongWithCover) {
+						String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
+						coverLoader = new CoverLoaderTask(largeCoverUrl);
+					} else {
+						coverLoader = new LastFmCoverLoaderTask(song.getArtist(), song.getTitle());
+					}
 					coverLoader.addListener(new OnBitmapReadyListener() {
 						@Override
 						public void onBitmapReady(Bitmap bmp) {
-							bitmaps.put(position, bmp);
-							if (builder != null && builder.getId() == position) {
-								builder.setIcon(bmp);
+							if (bmp == null) {
+								coverLoader.cancel(true);
+								coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.large);
+								coverLoader.addListener(new OnBitmapReadyListener() {
+									@Override
+									public void onBitmapReady(Bitmap bmp) {
+										bitmaps.put(position, bmp);
+										if (builder != null && builder.getId() == position && bmp != null) {
+											builder.setIcon(bmp);
+										}
+									}
+								});
+							} else {
+								bitmaps.put(position, bmp);
+								if (builder != null && builder.getId() == position && bmp != null) {
+									builder.setIcon(bmp);
+								}
 							}
 						}
 					});
@@ -515,17 +532,32 @@ public class OnlineSearchView {
 				}
 			};
 			getUrlTask.execute(NO_PARAMS);
-			if (song instanceof GrooveSong) {
-				String urlLargeImage = ((GrooveSong) song).getLargeCoverUrl();
-				coverLoader = new GrooveSharkCoverLoaderTask(urlLargeImage);
+			if (song instanceof SongWithCover) {
+				String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
+				coverLoader = new CoverLoaderTask(largeCoverUrl);
 			} else {
-				coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
+				coverLoader = new LastFmCoverLoaderTask(artist, title);
 			}
 			coverLoader.addListener(new OnBitmapReadyListener() {
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (null != player) {
-						player.setCover(bmp);
+					if (bmp == null) {
+						coverLoader.cancel(true);
+							coverLoader = new MuzicBrainzCoverLoaderTask(artist, title, Size.large);
+							coverLoader.addListener(new OnBitmapReadyListener() {
+
+								@Override
+								public void onBitmapReady(Bitmap bmp) {
+									if (null != player) {
+										player.setCover(bmp);
+									}
+								}
+							});
+							coverLoader.execute(NO_PARAMS);
+					} else {
+						if (null != player) {
+							player.setCover(bmp);
+						}
 					}
 				}
 			});
