@@ -33,7 +33,7 @@ public class Settings {
 	
 	// if you need to access SEARCH_ENGINES, call the public static method GET_SEARCH_ENGINES()  
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
-		{"SearchVmusice", "1"}, 
+		//{"SearchVmusice", "1"}, 
 		{"SearchPleer", "2"},
 		{"SearchPoisk", "1"}, 
 		{"SearchHulkShare", "1"}, 
