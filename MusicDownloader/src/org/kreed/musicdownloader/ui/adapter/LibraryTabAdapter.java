@@ -148,7 +148,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			public void onClick(View v) {
 				((MainActivity) activity).setActivatedPlayButton(false);
 				MusicData musicData = getItem(pos);
-				activity.play(null, musicData);
+				activity.play(null, musicData, null);
 			}
 
 		});

@@ -91,7 +91,7 @@ public class SearchTab {
 
 	private Iterator<Engine> taskIterator;
 	private AsyncTask<Void, Void, CustomStructure> getUrlTask;
-	private AsyncTask<Void, Void, CustomStructure> getUrlTaskForPlayer;
+	private static AsyncTask<Void, Void, CustomStructure> getUrlTaskForPlayer;
 	private SongSearchAdapter resultAdapter;
 	private CoverLoaderTask coverLoader;
 
@@ -635,10 +635,17 @@ public class SearchTab {
 			@Override
 			protected void onPostExecute(CustomStructure structure) {
 				data.setFileUri(structure.downloadUrl);
-				((MainActivity) activity).play( structure.headers, data);
+				Log.d("logd", "Start from SearchTab");
+				((MainActivity) activity).play(structure.headers, data, Constans.CALL_FROM_SEARCH);
 			}
 			
 		};
+	}
+	
+	public static void stopPlayerTask() {
+		if (null != getUrlTaskForPlayer) {
+			getUrlTaskForPlayer.cancel(true);
+		}
 	}
 
 	private String formatTime(int duration) {

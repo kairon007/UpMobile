@@ -16,6 +16,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -67,11 +68,15 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		this.header = header;
 	}
 	
-	public void play() {
+	@SuppressLint("NewApi") public void play() {
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		downloadSong = new PlaySong();
-		downloadSong.execute("");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			downloadSong.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+		} else {
+			downloadSong.execute("");
+		}
 	}
 	
 	public void remove(){

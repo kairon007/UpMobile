@@ -433,7 +433,7 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void play( ArrayList<String[]> headers, MusicData musicData) {
+	public void play(ArrayList<String[]> headers, MusicData musicData, String from) {
 		music = musicData;
 		if (player != null && player.getData().equals(musicData)) {
 			player.restart();
@@ -441,6 +441,11 @@ public class MainActivity extends Activity {
 		} else if (player != null && !player.getData().equals(musicData)) {
 			player.remove();
 			player = null;
+		}
+		if (!Constans.CALL_FROM_SEARCH.equals(from)) {
+			Log.d("logd", "stopPlayerTask");
+			SearchTab.stopPlayerTask();
+			resetPlayer();
 		}
 		player = new Player(headers, musicData);
 		MusicDownloaderApp.getService().setPlayer(player);
