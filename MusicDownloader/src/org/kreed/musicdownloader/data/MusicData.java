@@ -13,6 +13,7 @@ import org.kreed.musicdownloader.DBHelper;
 import android.graphics.Bitmap;
 
 public class MusicData {
+	
 	private Bitmap songBitmap;
 	private String songArtist;
 	private String songTitle;
@@ -271,4 +272,26 @@ public class MusicData {
 	public String toString() {
 		return getSongArtist().toLowerCase(Locale.ENGLISH) + " - " + getSongTitle().toLowerCase(Locale.ENGLISH);
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (null == o) {
+			return false;
+		}
+		if (this.getClass() != o.getClass()) {
+			return false;
+		}
+		MusicData another = (MusicData) o;
+		if (this.songArtist != another.songArtist) {
+			return false;
+		}
+		if (this.songTitle != another.songTitle) {
+			return false;
+		}
+		return true;
+	}
+
 }

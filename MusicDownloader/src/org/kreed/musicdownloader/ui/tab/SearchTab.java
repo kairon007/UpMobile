@@ -37,12 +37,13 @@ import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.cover.GrooveSharkCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask.Size;
+import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.song.SongWithCover;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -86,7 +87,6 @@ public class SearchTab {
 	private static final String KEY_POSITION = "position.song.musicdownloader";// vanilla";
 	private static SearchTab instance;
 	private static List<Engine> engines;
-	private static int playingPosition = -1;
 	private static LibraryPagerAdapter parentAdapter;
 
 	private Iterator<Engine> taskIterator;
@@ -105,14 +105,6 @@ public class SearchTab {
 	private String currentName = null;
 	private String searchString;
 	private boolean searchStopped = true;
-
-	public static int getPlayingPosition() {
-		return playingPosition;
-	}
-
-	public static void setPlayingPosition(int playingPosition) {
-		SearchTab.playingPosition = playingPosition;
-	}
 
 	public static final SearchTab getInstance(LayoutInflater inflater, Activity activity, LibraryPagerAdapter adapter) {
 		if (null == instance) {
@@ -442,9 +434,9 @@ public class SearchTab {
 						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, formatDate(song.getDuration()), bitmaps.get(position), headers);
 					} else {
 						downloadClick = new DownloadClickListener(context, song.getTitle(), song.getArtist(), url, formatDate(song.getDuration()), null, headers);
-						if (song instanceof SongWithCover) {
-							String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
-							coverLoader = new CoverLoaderTask(largeCoverUrl);
+						if (song instanceof GrooveSong) {
+							String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
+							coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
 						} else {
 							coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.small);
 						}
@@ -459,32 +451,18 @@ public class SearchTab {
 			if (bitmaps.containsKey(position) && bitmaps.get(position) != null) {
 				builder.setIcon(bitmaps.get(position));
 			} else {
-				if (song instanceof SongWithCover) {
-					String largeCoverUrl = ((SongWithCover) song).getLargeCoverUrl();
-					coverLoader = new CoverLoaderTask(largeCoverUrl);
+				if (song instanceof GrooveSong) {
+					String urlSmallImage = ((GrooveSong) song).getSmallCoverUrl();
+					coverLoader = new GrooveSharkCoverLoaderTask(urlSmallImage);
 				} else {
 					coverLoader = new LastFmCoverLoaderTask(song.getArtist(), song.getTitle());
 				}
 				coverLoader.addListener(new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
-						if (bmp == null) {
-							coverLoader.cancel(true);
-							coverLoader = new MuzicBrainzCoverLoaderTask(song.getArtist(), song.getTitle(), Size.large);
-							coverLoader.addListener(new OnBitmapReadyListener() {
-								@Override
-								public void onBitmapReady(Bitmap bmp) {
-									bitmaps.put(position, bmp);
-									if (builder != null && builder.getId() == position && bmp != null) {
-										builder.setIcon(bmp);
-									}
-								}
-							});
-						} else {
-							bitmaps.put(position, bmp);
-							if (builder != null && builder.getId() == position && bmp != null) {
-								builder.setIcon(bmp);
-							}
+						bitmaps.put(position, bmp);
+						if (builder != null && builder.getId() == position && bmp != null) {
+							builder.setIcon(bmp);
 						}
 					}
 				});
@@ -493,6 +471,7 @@ public class SearchTab {
 			if (coverLoader.getStatus() == Status.PENDING) {
 				coverLoader.execute(NO_PARAMS);
 			}
+
 			if (position == getCount() - 1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
 				getNextResults();
@@ -562,21 +541,24 @@ public class SearchTab {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO
 				if (!((MainActivity) activity).hasConnection()) {
-					Toast.makeText(activity, R.string.check_intertet_access, 2000).show();
+					Toast.makeText(activity, R.string.check_intertet_access, Toast.LENGTH_SHORT).show();
 				}
-				if (playingPosition != -1) {
-					if (playingPosition == position)
+				Song song = resultAdapter.getItem(position).song;
+				String artist = song.getTitle();
+				String title = song.getArtist();
+				String duration = formatTime((int) song.getDuration());
+				MusicData data = new MusicData(artist, title, duration, null);
+				MusicData currentData = ((MainActivity)activity).getMusic();
+				if (null != currentData && null != getUrlTaskForPlayer){
+					if (data.equals(currentData)){
+						Toast.makeText(activity, R.string.toast_playing, Toast.LENGTH_SHORT).show();
 						return;
+					}
 				} else {// enter here first time
-					playingPosition = position;
-					Toast.makeText(activity, R.string.toast_loading, 2000).show();
+					Toast.makeText(activity, R.string.toast_loading, Toast.LENGTH_SHORT).show();
 					((MainActivity) activity).setActivatedPlayButton(false);
-					final Song song = resultAdapter.getItem(position).song;
-					final String artist = song.getTitle();
-					final String title = song.getArtist();
-					final String duration = formatTime((int) song.getDuration());
 					((MainActivity) activity).setFooterView(artist + "-" + title);
-					initTask(song, artist, title, duration, position);
+					initTask(song, data);
 					getUrlTaskForPlayer.execute(NO_PARAMS);
 					for (int i = 0; i < resultAdapter.getCount(); i++) {
 						resultAdapter.getItem(i).isHighlight = false;
@@ -586,8 +568,9 @@ public class SearchTab {
 					view.setBackgroundColor(activity.getResources().getColor(R.color.holo_blue_light));
 					return;
 				}
-				if (position == resultAdapter.getCount())
+				if (position == resultAdapter.getCount()){
 					return; // progress click
+				}
 				Toast.makeText(activity, R.string.toast_loading, 2000).show();
 				((MainActivity) activity).setActivatedPlayButton(false);
 				for (int i = 0; i < resultAdapter.getCount(); i++) {
@@ -596,17 +579,13 @@ public class SearchTab {
 				}
 				resultAdapter.getItem(position).isHighlight = true;
 				view.setBackgroundColor(activity.getResources().getColor(R.color.holo_blue_light));
-				final Song song = resultAdapter.getItem(position).song;
-				final String artist = song.getTitle();
-				final String title = song.getArtist();
-				final String duration = formatTime((int) song.getDuration());
 				((MainActivity) activity).setFooterView(artist + "-" + title);
 				if (getUrlTaskForPlayer.getStatus() == Status.PENDING) {
-					initTask(song, artist, title, duration, position);
+					initTask(song, data);
 					getUrlTaskForPlayer.execute(NO_PARAMS);
 				} else {
 					getUrlTaskForPlayer.cancel(true);
-					initTask(song, artist, title, duration, position);
+					initTask(song, data);
 					((MainActivity) activity).resetPlayer();
 					getUrlTaskForPlayer.execute(NO_PARAMS);
 				}
@@ -642,8 +621,7 @@ public class SearchTab {
 		});
 	}
 
-	private void initTask(final Song song, final String artist, final String title, final String duration, final int pos) {
-		final String key = Constans.CALL_FROM_SERCH;
+	private void initTask( final Song song, final MusicData data) {
 		getUrlTaskForPlayer = new AsyncTask<Void, Void, CustomStructure>() {
 
 			@Override
@@ -656,8 +634,8 @@ public class SearchTab {
 
 			@Override
 			protected void onPostExecute(CustomStructure structure) {
-				playingPosition = pos;
-				((MainActivity) activity).play(structure.downloadUrl, structure.headers, artist, title, duration, key, pos);
+				data.setFileUri(structure.downloadUrl);
+				((MainActivity) activity).play( structure.headers, data);
 			}
 			
 		};

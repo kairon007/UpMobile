@@ -5,11 +5,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.kreed.musicdownloader.Constans;
-import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.R.drawable;
-import org.kreed.musicdownloader.R.id;
+import org.kreed.musicdownloader.data.MusicData;
 
 import android.annotation.SuppressLint;
 import android.media.AudioManager;
@@ -25,14 +22,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class Player implements SeekBar.OnSeekBarChangeListener {
 	
 	private MediaPlayer mediaPlayer;
-	private File songFile;
 	private PlaySong downloadSong;
+	private MusicData data;
 	
 	private FrameLayout view;
 	private SeekBar songProgress;
@@ -41,11 +37,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private TextView songTitle;
 	private TextView songDuration;
 	
-	private String path;
-	private String strTitle;
-	private String strDuration;
-	private String from;
-	private int position;
+	private String title;
+	private String duration;
 	private int currentProgress = 0;
 	private boolean playFinish = false;
 	private boolean prepared = false;
@@ -67,12 +60,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		
 	};
 	
-	public Player(String path, ArrayList<String[]> header, String strArtist, String strTitle, String strDuration, String from, int position) {
-		this.path = path;
-		this.strTitle = strArtist + " - " + strTitle;
-		this.strDuration = strDuration;
-		this.from = from;
-		this.position = position;
+	public Player(ArrayList<String[]> header, MusicData data) {
+		title = data.getSongArtist() + " - " + data.getSongTitle();
+		duration = data.getSongDuration();
+		this.data = data;
 		this.header = header;
 	}
 	
@@ -124,8 +115,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		return mediaPlayer;
 	}
 	
-	public int getPosition() {
-		return position;
+	public MusicData getData() {
+		return data;
 	}
 	
 	private void releasePlayer() {
@@ -168,8 +159,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			songProgress.post(progressAction);
 		}
 		songProgress.setOnSeekBarChangeListener(this);
-		songTitle.setText(strTitle);
-		songDuration.setText(strDuration);
+		songTitle.setText(title);
+		songDuration.setText(duration);
 		setImageOnButton();
 		buttonPlay.setOnClickListener(new View.OnClickListener() {
 
@@ -254,12 +245,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		@Override
 		protected Boolean doInBackground(String... params) {
 			try {
-				if (from.equals(Constans.CALL_FROM_LIBRARY)) {
-					songFile = new File(path);
+				String path = data.getFileUri();
+				File songFile = new File(path);
+				if (songFile.exists()) {
 					FileInputStream inputStream = new FileInputStream(songFile);
 					mediaPlayer.setDataSource(inputStream.getFD());
 					inputStream.close();
-				} else if (from.equals(Constans.CALL_FROM_SERCH)) {
+				} else  {
 					HashMap<String, String> headers = new HashMap<String, String>();
 					headers.put(
 							"User-Agent",
@@ -280,25 +272,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 					return true;
 				}
 			} catch (Exception e) {
-				if (from == Constans.CALL_FROM_LIBRARY && !songFile.exists()){
-					String str = songFile.getPath();
-					path = str.split("-1")[0];
-					songFile = new File(path);
-					try {
-						FileInputStream inputStream = new FileInputStream(songFile);
-						mediaPlayer.setDataSource(inputStream.getFD());
-						inputStream.close();
-						mediaPlayer.prepare();
-						prepared = true;
-						if (isCancelled()) {
-							releasePlayer();
-						} else {
-							return true;
-						}
-					}  catch (Exception e1) {
-						e1.printStackTrace();
-					}
-				}
 			}
 			return false;
 		}
@@ -310,17 +283,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 				setActivatedButton(true);
 				mediaPlayer.seekTo(getCurrentProgress());
 				mediaPlayer.start();
-				if(path.equals(Constans.CALL_FROM_SERCH)){
-					int duration = mediaPlayer.getDuration();
-					songProgress.removeCallbacks(progressAction);
-					songProgress = null;
-					songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
-					songProgress.setOnSeekBarChangeListener((OnSeekBarChangeListener) this);
-					songProgress.setProgress(getCurrentProgress());
-					songProgress.setIndeterminate(false);
-					songProgress.setMax(duration);
-					songProgress.post(progressAction);
-				}
 				setImageOnButton();
 				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 					

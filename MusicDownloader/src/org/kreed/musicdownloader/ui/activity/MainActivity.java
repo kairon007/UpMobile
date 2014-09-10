@@ -308,7 +308,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
-		SearchTab.setPlayingPosition(in.getInt(Constans.PLAY_ROW_NUMBER, -1));
+//		SearchTab.setPlayingPosition(in.getInt(Constans.PLAY_ROW_NUMBER, -1));
 		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
 		if (in.getBoolean(Constans.SEARCH_BOX_VISIBLE))
@@ -323,10 +323,10 @@ public class MainActivity extends Activity {
 		} else if (page == 2) {
 			out.putString(Constans.FILTER_TEXT_LIBRARY, textFilterLibrary);
 		}
-		int i = SearchTab.getPlayingPosition();
-		if (i != -1) {
-			out.putInt(Constans.PLAY_ROW_NUMBER, i);
-		}
+//		int i = SearchTab.getPlayingPosition();
+//		if (i != -1) {
+//			out.putInt(Constans.PLAY_ROW_NUMBER, i);
+//		}
 		super.onSaveInstanceState(out);
 	}
 
@@ -432,16 +432,17 @@ public class MainActivity extends Activity {
 			player = null;
 		}
 	}
-
-	public void play(String path, ArrayList<String[]> headers, String strArtist, String strTitle, String strDuration, String from, int position) {
-		if (player != null && player.getPosition() == position) {
+	
+	public void play( ArrayList<String[]> headers, MusicData musicData) {
+		music = musicData;
+		if (player != null && player.getData().equals(musicData)) {
 			player.restart();
 			return;
-		} else if (player != null && player.getPosition() != position) {
+		} else if (player != null && !player.getData().equals(musicData)) {
 			player.remove();
 			player = null;
 		}
-		player = new Player(path, headers, strArtist, strTitle, strDuration, from, position);
+		player = new Player(headers, musicData);
 		MusicDownloaderApp.getService().setPlayer(player);
 		player.getView(footer);
 		player.play();
