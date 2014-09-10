@@ -269,7 +269,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 							headers.put(header.get(i)[0], header.get(i)[1]);
 						}
 					}
-					mediaPlayer.setDataSource(view.getContext(), Uri.parse(header.get(1)[1]), headers);
+					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
 					mediaPlayer.setOnBufferingUpdateListener(this);
 				}
 				mediaPlayer.prepare();
