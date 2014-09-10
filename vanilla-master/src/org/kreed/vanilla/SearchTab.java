@@ -616,12 +616,7 @@ public class SearchTab {
 		final String artist = song.getArtist();
 
 		if (null == player) {
-			Log.d("---------", String.valueOf(android.os.Build.VERSION.SDK_INT < 11));
-			if (android.os.Build.VERSION.SDK_INT < 11) {
-				player = new Player(inflater.inflate(R.layout.download_dialog_sdk10, null), title, artist);
-			} else {
 				player = new Player(inflater.inflate(R.layout.download_dialog, null), title, artist);
-			}
 			if ("AppTheme.Black".equals(Util.getThemeName(activity))) {
 				player.setBlackTheme();
 			}
