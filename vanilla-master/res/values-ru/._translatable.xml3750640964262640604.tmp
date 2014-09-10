@@ -131,31 +131,31 @@
   <string name="clear_queue">Очистить очередь</string>
   <string name="toggle_controls">Элементы управления</string>
   <plurals name="playing">
-    <item quantity="one">играет %d песня.</item>
+    <item quantity="one">играет 1 песня.</item>
     <item quantity="other">%d песен играет.</item>
   </plurals>
   <plurals name="enqueued">
-    <item quantity="one">%d песня в очереди.</item>
+    <item quantity="one">1 песня в очереди.</item>
     <item quantity="other">%d песен в очереди.</item>
   </plurals>
   <plurals name="added_to_playlist">
-    <item quantity="one">%1$d песня добавлена в плейлист %2$s.</item>
+    <item quantity="one">1 песня добавлена в плейлист% 2 $ s.</item>
     <item quantity="other">%1$d добавлено в плей-лист %2$s.</item>
   </plurals>
   <plurals name="deleted">
-    <item quantity="one">%d песня удалена.</item>
+    <item quantity="one">1 песня удалена.</item>
     <item quantity="other">% песен удалено.</item>
   </plurals>
   <plurals name="seconds">
-    <item quantity="one">%d секунда</item>
+    <item quantity="one">1 секунда</item>
     <item quantity="other">%d секунд</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d минута</item>
+    <item quantity="one">1 минута</item>
     <item quantity="other">%d минут</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="one">%d час</item>
+    <item quantity="one">1 час</item>
     <item quantity="other">%d часов</item>
   </plurals>
   <string name="search_hint">что искать</string>
