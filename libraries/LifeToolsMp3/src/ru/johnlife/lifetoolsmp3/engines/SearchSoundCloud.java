@@ -16,7 +16,7 @@ public class SearchSoundCloud extends SearchWithPages {
 	}
 
 	private static String SOUNDCLOUD_URL = "http://api.soundcloud.com/tracks.json?client_id=2fd7fa3d5ed2be9ac17c538f644fc4c6&filter=downloadable&q=";
-	private static String CLIENT_ID = "2fd7fa3d5ed2be9ac17c538f644fc4c6";
+	private static String CLIENT_ID = "b28035537c669e1d5f232dcbf2b32dc4";
 
 	private int getPage() {
 		this.pag = page;
