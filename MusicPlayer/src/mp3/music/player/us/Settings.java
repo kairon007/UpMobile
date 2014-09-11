@@ -658,4 +658,5 @@ public class Settings {
 	
 	public static boolean ENABLE_LYRICS = true;
 	public static boolean SHOW_BANNER_ON_TOP = false;
+	public static final boolean ENABLE_MUSICBRAINZ_ALBUM_COVERS = true;
 }

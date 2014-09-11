@@ -1,12 +1,10 @@
 package mp3.music.player.us;
 
-import java.util.ArrayList;
 import java.util.Random;
-
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,25 +24,18 @@ import android.os.Build.VERSION;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
 import com.appnext.appnextsdk.Appnext;
 import com.appnext.appnextsdk.NoAdsInterface;
 import com.appnext.appnextsdk.PopupClosedInterface;
 import com.ekejuifky.wxfvksrhp191084.MA;
-import com.ironsource.mobilcore.CallbackResponse;
-import com.ironsource.mobilcore.MobileCore;
-import com.ironsource.mobilcore.MobileCore.AD_UNITS;
-import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.mm1373232377.android.MiniMob1373232377;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
-import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
+import com.mopub.mobileads.MoPubView;
 import com.startapp.android.publish.StartAppAd;
 import com.startapp.android.publish.StartAppSDK;
 //import com.vungle.sdk.VunglePub; 
@@ -164,7 +155,7 @@ public class Advertisement {
 	
 				
 				//initializeAppbrain(activity);
-				initializeMobileCore(activity, AD_UNITS.ALL_UNITS);
+//				initializeMobileCore(activity, AD_UNITS.ALL_UNITS);
 //				initializeVungle(activity);
 				initializeAirpush(activity);
 				//initializeStartapp(activity);
@@ -1419,12 +1410,12 @@ public class Advertisement {
 	}
 	
 
-    public static void initializeMobileCore(Activity activity, MobileCore.AD_UNITS adUnitType) {
-    	if (!isMobileCoreInitialized) { 
-    		MobileCore.init(activity, Settings.MOBILECORE_ID, LOG_TYPE.PRODUCTION, adUnitType); // AD_UNITS.OFFERWALL, AD_UNITS.STICKEEZ);
-    		isMobileCoreInitialized = true;
-    	}
-    }
+//    public static void initializeMobileCore(Activity activity, MobileCore.AD_UNITS adUnitType) {
+//    	if (!isMobileCoreInitialized) { 
+//    		MobileCore.init(activity, Settings.MOBILECORE_ID, LOG_TYPE.PRODUCTION, adUnitType); // AD_UNITS.OFFERWALL, AD_UNITS.STICKEEZ);
+//    		isMobileCoreInitialized = true;
+//    	}
+//    }
     
     /*
     public static void initializeApplovin(Activity activity) { 
@@ -1952,47 +1943,47 @@ public class Advertisement {
 	
 	
 	public static void mobilecoreShowInterstitial(final Activity activity, String adPositionKey) {
-        Log.e("nulldroid", "mobile core show interstitial");
-
-        try {
-                if (adPositionKey != null && (adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
-                        initializeMobileCore(activity, AD_UNITS.OFFERWALL);
-                        MobileCore.showOfferWall(activity,
-                                        new CallbackResponse() {
-                                @Override
-                                public void onConfirmation(TYPE type) {
-                                        activity.finish();
-                                       
-                                }
-                        });
-                } else {
-
-                        initializeMobileCore(activity, AD_UNITS.OFFERWALL);
-                        MobileCore.showOfferWall(activity, null);
-                         
-                }
-        } catch(Exception e) {
-               
-        }
+//        Log.e("nulldroid", "mobile core show interstitial");
+//
+//        try {
+//                if (adPositionKey != null && (adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
+//                        initializeMobileCore(activity, AD_UNITS.OFFERWALL);
+//                        MobileCore.showOfferWall(activity,
+//                                        new CallbackResponse() {
+//                                @Override
+//                                public void onConfirmation(TYPE type) {
+//                                        activity.finish();
+//                                       
+//                                }
+//                        });
+//                } else {
+//
+//                        initializeMobileCore(activity, AD_UNITS.OFFERWALL);
+//                        MobileCore.showOfferWall(activity, null);
+//                         
+//                }
+//        } catch(Exception e) {
+//               
+//        }
        
 }
 	
 	public static void mobilecoreDirectShowInterstitial(final Activity activity, String adPositionKey) {
-		try {
-			MobileCore.directToMarket(activity);
-		} catch(Exception e) {
-			
-		}
+//		try {
+//			MobileCore.directToMarket(activity);
+//		} catch(Exception e) {
+//			
+//		}
 	}
 	
 	
 	public static void mobilecoreStickeezShowInterstitial(final Activity activity, String adPositionKey) {
-		try {
-			initializeMobileCore(activity, AD_UNITS.STICKEEZ);
-			MobileCore.showStickee(activity);
-		} catch(Exception e) {
-			 
-		}
+//		try {
+//			initializeMobileCore(activity, AD_UNITS.STICKEEZ);
+//			MobileCore.showStickee(activity);
+//		} catch(Exception e) {
+//			 
+//		}
 	} 	
 	
 /*

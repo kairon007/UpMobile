@@ -199,4 +199,11 @@
 	<string name="rate_popup_negative_button">No</string>
 	<string name="rate_popup_toast">Thank you!</string>
 	<string name="disclaimer">Please Read: This app uses SoundCloud.com for all of its search results. SoundCloud.com is a website where independent artists upload their original songs and remixes. This app only displays SoundCloud.com songs which have been made available for download by their creators. Enjoy this legal music app!</string>
+	<string name="loading_download_url_title">Please Wait...</string>
+	<string name="loading_download_url_message">Loading...</string>
+	<string name="show_lyrics">Show Lyrics</string>
+	<string name="edit_mp3_tags">Edit Mp3 Tags</string>
+	<string name="hader_download">Download Location</string>
+	<string name="lyric_not_found">No Lyrics Found for %1$s</string>
+	<string name="selected_folder_label">Selected folder:</string>
 </resources>
