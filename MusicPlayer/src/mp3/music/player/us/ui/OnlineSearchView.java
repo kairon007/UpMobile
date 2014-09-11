@@ -48,6 +48,7 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.song.SongWithCover;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -616,7 +617,7 @@ public class OnlineSearchView {
 		}
 	}
 	@SuppressLint("NewApi")
-	public Dialog createStreamDialog(Bundle args) {
+	public Dialog createStreamDialog(Bundle args, final Activity activity) {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return null;
 		}
@@ -730,7 +731,7 @@ public class OnlineSearchView {
 				dialogDismisser.run();
 			}
 		});
-		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
+		AlertDialog.Builder b = new AlertDialog.Builder(activity).setView(player.getView());
 		AlertDialog alertDialog = b.create();
 		alertDialog.setOnCancelListener(new OnCancelListener() {
 			@Override

@@ -219,7 +219,7 @@ public class HomeActivity extends BaseActivity {
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		if (id == OnlineSearchView.STREAM_DIALOG_ID) {
-			return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args);
+			return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args, this);
 		}
 		return super.onCreateDialog(id, args);
 	}
