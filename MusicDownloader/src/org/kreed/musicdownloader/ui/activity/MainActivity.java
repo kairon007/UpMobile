@@ -308,7 +308,6 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
-//		SearchTab.setPlayingPosition(in.getInt(Constans.PLAY_ROW_NUMBER, -1));
 		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
 		if (in.getBoolean(Constans.SEARCH_BOX_VISIBLE))
@@ -323,10 +322,6 @@ public class MainActivity extends Activity {
 		} else if (page == 2) {
 			out.putString(Constans.FILTER_TEXT_LIBRARY, textFilterLibrary);
 		}
-//		int i = SearchTab.getPlayingPosition();
-//		if (i != -1) {
-//			out.putInt(Constans.PLAY_ROW_NUMBER, i);
-//		}
 		super.onSaveInstanceState(out);
 	}
 
@@ -531,6 +526,9 @@ public class MainActivity extends Activity {
 		final MP3Editor editor = new MP3Editor(this);
 		MusicData data = MusicData.getFromFile(file);
 		String[] filds = {data.getSongArtist(), data.getSongTitle(), ""};
+		if(null == data.getSongBitmap()) {
+			editor.setShowCover(false);
+		}
 		editor.setStrings(filds);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -559,7 +557,6 @@ public class MainActivity extends Activity {
 					}
 
 				}.execute();
-
 			}
 
 		});
