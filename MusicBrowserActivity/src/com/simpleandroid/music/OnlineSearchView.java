@@ -614,7 +614,7 @@ public class OnlineSearchView {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return null;
 		}
-		Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
+		final Song song = resultAdapter.getItem(args.getInt(KEY_POSITION));
 		final String title = song.getTitle();
 		final String artist = song.getArtist();
 
@@ -718,13 +718,22 @@ public class OnlineSearchView {
 		if (Settings.getIsAlbumCoversEnabled(activity))
 			coverLoader.addListener(downloadClickListener);
 		player.setTitle(artist + " - " + title);
-		player.setOnButtonClicListener(downloadClickListener, new View.OnClickListener() {
+		//TODO
+		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
+		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			
 			@Override
-			public void onClick(View v) {
+			public void onClick(DialogInterface dialog, int which) {
 				dialogDismisser.run();
 			}
 		});
-		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
+		b.setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				downloadClickListener.onClick(new View(activity));
+			}
+		});
 		AlertDialog alertDialog = b.create();
 		alertDialog.setOnCancelListener(new OnCancelListener() {
 			@Override
@@ -806,18 +815,10 @@ public class OnlineSearchView {
 		private int songId;
 		private LinearLayout downloadProgress;
 		private LinearLayout playerLayout;
-		private Button download;
-		private Button cancel;
 		private Button lyricsCancel;
 		private Button cancelLoadLyrics;
 		private boolean isId3Show = false;
 
-		public void setOnButtonClicListener(View.OnClickListener downloadClickListener, View.OnClickListener cancelClickListener) {
-			if (download != null && downloadClickListener != null)
-				download.setOnClickListener(downloadClickListener);
-			if (cancel != null && cancelClickListener != null)
-				cancel.setOnClickListener(cancelClickListener);
-		}
 
 		public void setSongId(Integer songId) {
 			this.songId = songId;
@@ -919,8 +920,6 @@ public class OnlineSearchView {
 			containerPlayer = (LinearLayout) view.findViewById(R.id.container_player);
 			downloadProgress = (LinearLayout) view.findViewById(R.id.download_progress);
 			playerLayout = (LinearLayout) view.findViewById(R.id.player_layout);
-			download = (Button) view.findViewById(R.id.b_positiv);
-			cancel = (Button) view.findViewById(R.id.b_negativ);
 			lyricsCancel = (Button) view.findViewById(R.id.lyrics_cancel);
 			cancelLoadLyrics = (Button) view.findViewById(R.id.cancelLoadLyrics);
 			spinerPath.setOnClickListener(new View.OnClickListener() {
@@ -1083,10 +1082,6 @@ public class OnlineSearchView {
 		public void setBlackTheme(){
 			LinearLayout ll = (LinearLayout)view.findViewById(R.id.download_dialog);
 			ll.setBackgroundColor(Color.parseColor("#ff101010"));
-			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-				download.setTextColor(Color.LTGRAY);
-				cancel.setTextColor(Color.LTGRAY);
-			}
 		}
 
 		private Runnable progressAction = new Runnable() {
@@ -1104,22 +1099,22 @@ public class OnlineSearchView {
 			}
 		};
 
-//		public void onPrepared() {
-//			spinner.setVisibility(View.GONE);
-//			button.setVisibility(View.VISIBLE);
+		public void onPrepared() {
+			spinner.setVisibility(View.GONE);
+			button.setVisibility(View.VISIBLE);
 //			Intent i = new Intent(PlaybackService.ACTION_PAUSE);
 //			spinner.getContext().startService(i);
-//			int duration = mediaPlayer.getDuration();
-//			if (duration == -1) {
-//				progress.setIndeterminate(true);
-//			} else {
-//				time.setText(formatTime(duration));
-//				progress.setIndeterminate(false);
-//				progress.setProgress(0);
-//				progress.setMax(duration);
-//				progress.postDelayed(progressAction, 1000);
-//			}
-//		}
+			int duration = mediaPlayer.getDuration();
+			if (duration == -1) {
+				progress.setIndeterminate(true);
+			} else {
+				time.setText(formatTime(duration));
+				progress.setIndeterminate(false);
+				progress.setProgress(0);
+				progress.setMax(duration);
+				progress.postDelayed(progressAction, 1000);
+			}
+		}
 
 		private String formatTime(int duration) {
 			duration /= 1000;
@@ -1194,7 +1189,7 @@ public class OnlineSearchView {
 						onFinished();
 					}
 				});
-//				onPrepared();
+				onPrepared();
 			}
 		}
 
