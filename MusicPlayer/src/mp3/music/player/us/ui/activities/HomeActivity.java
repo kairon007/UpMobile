@@ -47,7 +47,8 @@ import android.widget.Toast;
 public class HomeActivity extends BaseActivity {
 	private boolean doesTheMopub = false;
 	private final String IS_SHOW = "is.show";
-
+	private Fragment fr;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -58,7 +59,7 @@ public class HomeActivity extends BaseActivity {
 		if (savedInstanceState == null) { 
 			Bundle b = new Bundle();
 			b.putString("key", getIntent().getStringExtra(Constants.EXTRA_SEARCH));
-			Fragment fr = Fragment.instantiate(this, MusicBrowserPhoneFragment.class.getName(), b);
+			fr = Fragment.instantiate(this, MusicBrowserPhoneFragment.class.getName(), b);
 			getSupportFragmentManager().beginTransaction()
 			.replace(R.id.activity_base_content, fr).commit();
 		}
@@ -77,7 +78,11 @@ public class HomeActivity extends BaseActivity {
 		start(true);
 	}
 
-
+	public void refreshLibrary() {
+		if (fr != null) {
+			((MusicBrowserPhoneFragment)fr).refreshAdapters();
+		}
+	}
 
 	public static boolean isOnline(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -275,7 +275,6 @@ public class OnlineSearchView {
 							String album = settings.getString(Constants.EDIT_ALBUM_TITLE, "");
 							String song = settings.getString(Constants.EDIT_SONG_TITLE, "");
 							boolean useAlbumCover = settings.getBoolean(Constants.USE_ALBUM_COVER, true);
-							Log.d("log", "useAlbumCover = "+useAlbumCover);
 							boolean useNewPath = false;
 							if (!song.equals("")) {
 								songTitle = song;
@@ -334,15 +333,14 @@ public class OnlineSearchView {
 									dst = new File(src.getParentFile(), src.getName()+ "-1");
 									new MyID3().write(src, dst, src_set, metadata);  // write updated metadata
 								} catch (UnsupportedEncodingException e) {
-									dst.renameTo(src);
 								} catch (ID3WriteException e) {
-									dst.renameTo(src);
 								} catch (IOException e) {
-									dst.renameTo(src);
 								} finally {
 									dst.renameTo(src);
+									notifyMediascanner(dst.getPath());
 								}
 							}
+							this.cancel();
 					}
 					
 					private String cutPath(String s) {
@@ -361,13 +359,12 @@ public class OnlineSearchView {
 								settingsEditor.putString(Constants.EDIT_SONG_TITLE, "");
 								settingsEditor.putBoolean(Constants.USE_ALBUM_COVER, true);
 								settingsEditor.commit();
+								((HomeActivity)activity).refreshLibrary();
 							}
-							
 						});
 					}
 				};
 				new Timer().schedule(progresUpdateTask, 1000, 1000);
-				
 			}
 		}
 		

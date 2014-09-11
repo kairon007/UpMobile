@@ -352,6 +352,12 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         }
     }
 
+    public void refreshAdapters() {
+    	getSongFragment().refresh();
+    	getArtistFragment().refresh();
+    	getAlbumFragment().refresh();
+    }
+    
     private boolean isArtistPage() {
         return mViewPager.getCurrentItem() == 1;
     }
