@@ -545,26 +545,16 @@ public class MainActivity extends Activity {
 						String artistName = editor.getNewArtistName();
 						String albumTitle = editor.getNewAlbumTitle();
 						String songTitle = editor.getNewSongTitle();
-						boolean useAlbumCover = editor.isShowCover();
-						musicData.setUseCover(useAlbumCover);
-						Log.d("log", "1");
-						if (!editor.manipulateText() && !useAlbumCover){
-							Log.d("log", "2");
-							musicData.deleteCover(musicData);
-							notifyMediascanner(musicData.getFileUri(), musicData);
-							cancel(true);
-							return null;
-						} else if (!editor.manipulateText() && useAlbumCover) {
-							Log.d("log", "3");
+						boolean showCover = editor.useAlbumCover();
+						musicData.setUseCover(showCover);
+						if (!editor.manipulateText() && showCover) {
 							cancel(true);
 							return null;
 						}
-						Log.d("log", "5");
 						MusicData data = new MusicData(artistName, songTitle, null, null);
 						data.setSongAlbum(albumTitle);
-						data.setUseCover(editor.useAlbumCover());
 						musicData.rename(data);
-						notifyMediascanner(musicData.getFileUri(), musicData);
+						notifyMediascanner(musicData);
 						return null;
 					}
 
@@ -584,19 +574,18 @@ public class MainActivity extends Activity {
 		alertDialog.show();
 	}
 	
-	private void notifyMediascanner(String path, final MusicData musicData) {
-		File file = new File(path);
+	private void notifyMediascanner(final MusicData musicData) {
+		File file = new File(musicData.getFileUri());
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
-				Log.d("log", "onScanCompleted");
 				int i = getSelectedItem();
 				mPagerAdapter.updateMusicData(i, musicData);
 			}
 
 		});
 	}
-
+	
 	public class CustomTextWatcher implements TextWatcher {
 
 		@Override
