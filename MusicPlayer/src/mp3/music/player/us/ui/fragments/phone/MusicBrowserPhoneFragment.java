@@ -134,29 +134,32 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         // Attch the adapter
         mViewPager.setAdapter(mPagerAdapter);
         // Offscreen pager loading limit
-        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
-        // Start on the last page the user was on
-        Bundle args = getArguments();
-    	String str = args.getString("key");        
-        if(str != null && !str.isEmpty())
-        {	
-        	mViewPager.setCurrentItem(0);
-        }else {
-        	mViewPager.setCurrentItem(mPreferences.getStartPage());
-        }
-        // Initialze the TPI
-        final TitlePageIndicator pageIndicator = (TitlePageIndicator)rootView
-                .findViewById(R.id.fragment_home_phone_pager_titles);
-        // Attach the ViewPager
-        pageIndicator.setViewPager(mViewPager);
-        // Scroll to the current artist, album, or song
-        pageIndicator.setOnCenterItemClickListener(this);
-        return rootView;
-    }
+		mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
+		// Start on the last page the user was on
+		Bundle args = getArguments();
+		String str = args.getString("key");
+		if (str != null && !str.isEmpty()) {
+			mViewPager.setCurrentItem(0);
+			OnlineSearchView search = OnlineSearchView.getInstance();
+			search.searchField.setText(null);
+			search.searchField.setText(str);
+			search.search(str);
+			
+		} else {
+			mViewPager.setCurrentItem(mPreferences.getStartPage());
+		}
+		// Initialze the TPI
+		final TitlePageIndicator pageIndicator = (TitlePageIndicator) rootView.findViewById(R.id.fragment_home_phone_pager_titles);
+		// Attach the ViewPager
+		pageIndicator.setViewPager(mViewPager);
+		// Scroll to the current artist, album, or song
+		pageIndicator.setOnCenterItemClickListener(this);
+		return rootView;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * {@inheritDoc}
+	 */
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

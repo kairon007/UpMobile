@@ -1,20 +1,29 @@
 package org.kreed.musicdownloader.data;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Locale;
+import java.util.Vector;
 
+import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.common.ID3v1Genre;
+import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
+import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.DBHelper;
 
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
 
 public class MusicData {
-	
+
 	private Bitmap songBitmap;
 	private String songArtist;
 	private String songTitle;
@@ -25,7 +34,7 @@ public class MusicData {
 	private String fileUri;
 	private long downloadId;
 	private boolean useCover = true;
-	
+
 	public MusicData() {
 	}
 
@@ -62,7 +71,7 @@ public class MusicData {
 				}
 				songArtist = metadata.getArtist();
 				songBitmap = DBHelper.getArtworkImage(2, metadata);
-				if(null != metadata.getAlbum()) {
+				if (null != metadata.getAlbum()) {
 					songAlbum = metadata.getAlbum();
 				}
 				if (metadata.getSongTitle() != null) {
@@ -86,7 +95,7 @@ public class MusicData {
 		} catch (IOException e) {
 		}
 	}
-	
+
 	public static MusicData getFromFile(File file) {
 		MusicData temp = new MusicData();
 		try {
@@ -99,7 +108,7 @@ public class MusicData {
 				temp.setSongArtist(metadata.getArtist());
 				Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
 				temp.setSongBitmap(bitmap);
-				if(null != metadata.getAlbum()) {
+				if (null != metadata.getAlbum()) {
 					temp.setSongAlbum(metadata.getAlbum());
 				}
 				if (metadata.getSongTitle() != null) {
@@ -126,69 +135,100 @@ public class MusicData {
 		}
 		return temp;
 	}
-	
+
 	public void update(MusicData newTag) {
-		rename(newTag, false);
-	}
-	
-	public void rename(MusicData newTag) {
-		rename(newTag, true);
-	}
-	
-	public void deleteCover(MusicData newTag) {
-		File file = new File(newTag.fileUri);
-		deleteCover(file);
+		update(newTag, false);
 	}
 
-	private void rename(MusicData newTag, boolean flag) {
-		this.songArtist = newTag.getSongArtist().equals(this.songArtist) ? this.songArtist : newTag.getSongArtist();
-		this.songTitle = newTag.getSongTitle().equals(this.songTitle) ? this.songTitle : newTag.getSongTitle();
-		this.songAlbum = newTag.getSongAlbum().equals(this.songAlbum) ? this.songAlbum : newTag.getSongAlbum();
+	public void rename(MusicData newTag) {
+		update(newTag, true);
+	}
+
+	private void update(MusicData newTag, boolean flag) {
+		boolean switcher = false;
+		if (null != newTag.fileUri) {
+			fileUri = newTag.fileUri;
+		}
+		if (!newTag.useCover || !useCover) {
+			if (null != songBitmap) {
+				switcher = true;
+			}
+			songBitmap = null;
+		}
+		if(null != newTag.songGenre && !newTag.songGenre.equals(songGenre)){
+			songGenre  = newTag.songGenre;
+		}
+		int i = 0;
+		if (!newTag.songArtist.equals(songArtist)) {
+			songArtist = newTag.songArtist;
+		} else {
+			++i;
+		}
+		if (!newTag.songTitle.equals(songTitle)) {
+			songTitle = newTag.songTitle;
+		} else {
+			++i;
+		}
+		if (i == 2) {
+			flag = false;
+		}
+
+		if (switcher) {
+			deleteCoverFromFile();
+		}
 		if (flag) {
-			renameBoundFile(this.fileUri);
+			renameBoundFile();
 		}
 	}
-	
-	private void deleteCover(File file) {
-		this.songBitmap = null;
-		MusicMetadataSet src_set;
+
+	private void deleteCoverFromFile() {
+		File file = new File(fileUri);
 		try {
-			src_set = new MyID3().read(file);
-			if (src_set != null) {
-				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-				metadata.clearPictureList();
-				new MyID3().update(file, src_set, metadata);
+			MusicMetadataSet src_set = new MyID3().read(file);
+			if (null == src_set) {
+				return;
 			}
+			MusicMetadata m = (MusicMetadata) src_set.merged;
+			m.clearPictureList();
+			MusicMetadata metadata = new MusicMetadata("");
+			metadata.setArtist(m.getArtist());
+			metadata.setSongTitle(m.getSongTitle());
+			metadata.setGenre(m.getGenre());
+			metadata.setAlbum(m.getAlbum());
+			File temp = new File(file.getParent(), file.getName() + ".temp");
+			new MyID3().removeTags(file, temp);
+			temp.renameTo(file);
+			MusicMetadataSet src = new MyID3().read(file);
+			File temp1 = new File(file.getParent(), file.getName() + ".temp1");
+			new MyID3().write(file, temp1, src, metadata);
+			temp1.renameTo(file);
 		} catch (Exception e) {
 		}
 	}
-	
-	private void renameBoundFile(String path) {
-		File file = new File(path);
-		if (!useCover && null != this.songBitmap) {
-			deleteCover(file);
-		}
+
+	private void renameBoundFile() {
+		File file = new File(fileUri);
+		File newFile = null;
+		MusicMetadataSet src_set = null;
 		try {
-			MusicMetadataSet src_set = new MyID3().read(file);
-			if (src_set == null) {
-				return;
-			}
+			src_set = new MyID3().read(file);
 			String newName = "";
-			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			MusicMetadata metadata = src_set.merged;
 			if (null != this.songAlbum && !this.songAlbum.equals("")) {
 				metadata.setAlbum(this.songAlbum);
 			}
 			metadata.setSongTitle(this.songTitle);
 			metadata.setArtist(this.songArtist);
 			newName = this.songTitle + " - " + this.songArtist + ".mp3";
-			File newFile = new File(file.getParentFile(), newName);
+			newFile = new File(file.getParentFile(), newName);
 			fileUri = newFile.getAbsolutePath();
-			new MyID3().update(newFile, src_set, metadata);
-			file.renameTo(newFile);
+			new MyID3().write(file, newFile, src_set, metadata);
 		} catch (Exception e) {
+		} finally {
+			file.delete();
 		}
 	}
-	
+
 	public boolean isUseCover() {
 		return useCover;
 	}
@@ -273,7 +313,7 @@ public class MusicData {
 	public String toString() {
 		return getSongArtist().toLowerCase(Locale.ENGLISH) + " - " + getSongTitle().toLowerCase(Locale.ENGLISH);
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
