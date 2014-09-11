@@ -24,6 +24,7 @@ import mp3.music.player.us.Settings;
 import mp3.music.player.us.adapters.AdapterHelper;
 import mp3.music.player.us.adapters.AdapterHelper.ViewBuilder;
 import mp3.music.player.us.ui.activities.HomeActivity;
+import mp3.music.player.us.utils.MusicUtils;
 
 import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.ImageData;
@@ -1193,6 +1194,7 @@ public class OnlineSearchView {
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			if (result && prepared) {
+				MusicUtils.pause();
 				mediaPlayer.start();
 				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 					@Override

@@ -261,6 +261,16 @@ public final class MusicUtils {
         }
     }
 
+    public static void pause() {
+    	try {
+			if (mService != null && mService.isPlaying()) {
+                mService.pause();
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+    }
+    
     /**
      * Cycles through the repeat options.
      */
