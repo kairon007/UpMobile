@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -105,12 +106,10 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		} else {
 			holder = (ViewHolderItem) convertView.getTag();
 		}
-		final MusicData music = getItem(position);
-		final String strArtist = music.getSongArtist();
-		final String strTitle = music.getSongTitle();
-		final String strDuration = music.getSongDuration();
-		final String strPath = music.getFileUri();
-		
+		MusicData music = getItem(position);
+		String strArtist = music.getSongArtist();
+		String strTitle = music.getSongTitle();
+		String strDuration = music.getSongDuration();
 		Bitmap bitmap = music.getSongBitmap();
 		if (null != bitmap) {
 			holder.hCoverImage.setImageBitmap(bitmap);
@@ -126,6 +125,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 			@Override
 			public boolean onLongClick(View arg0) {
+				MusicData music = getItem(pos);
 				activity.setMusic(music);
 				activity.setSelectedItem(pos);
 				return false;
@@ -136,6 +136,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 			@Override
 			public void onClick(View arg0) {
+				MusicData music = getItem(pos);
 				activity.setMusic(music);
 				activity.setSelectedItem(pos);
 				arg0.performLongClick();
