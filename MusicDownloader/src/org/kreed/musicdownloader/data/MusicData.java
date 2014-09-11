@@ -155,8 +155,8 @@ public class MusicData {
 			}
 			songBitmap = null;
 		}
-		if(null != newTag.songGenre && !newTag.songGenre.equals(songGenre)){
-			songGenre  = newTag.songGenre;
+		if (null != newTag.songGenre && !newTag.songGenre.equals(songGenre)) {
+			songGenre = newTag.songGenre;
 		}
 		int i = 0;
 		if (!newTag.songArtist.equals(songArtist)) {
@@ -192,7 +192,7 @@ public class MusicData {
 			m.clearPictureList();
 			MusicMetadata metadata = new MusicMetadata("");
 			metadata.setArtist(m.getArtist());
-			metadata.setSongTitle(m.getSongTitle());
+			metadata.setSongTitle(m.getSongTitle() + "/" + songDuration);
 			metadata.setGenre(m.getGenre());
 			metadata.setAlbum(m.getAlbum());
 			File temp = new File(file.getParent(), file.getName() + ".temp");
@@ -214,12 +214,12 @@ public class MusicData {
 			src_set = new MyID3().read(file);
 			String newName = "";
 			MusicMetadata metadata = src_set.merged;
-			if (null != this.songAlbum && !this.songAlbum.equals("")) {
-				metadata.setAlbum(this.songAlbum);
+			if (null != songAlbum && !songAlbum.equals("")) {
+				metadata.setAlbum(songAlbum);
 			}
-			metadata.setSongTitle(this.songTitle);
-			metadata.setArtist(this.songArtist);
-			newName = this.songTitle + " - " + this.songArtist + ".mp3";
+			metadata.setSongTitle(songTitle + "/" + songDuration);
+			metadata.setArtist(songArtist);
+			newName = songTitle + " - " + songArtist + ".mp3";
 			newFile = new File(file.getParentFile(), newName);
 			fileUri = newFile.getAbsolutePath();
 			new MyID3().write(file, newFile, src_set, metadata);
