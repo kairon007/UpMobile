@@ -1116,22 +1116,22 @@ public class OnlineSearchView {
 			}
 		};
 
-//		public void onPrepared() {
-//			spinner.setVisibility(View.GONE);
-//			button.setVisibility(View.VISIBLE);
+		public void onPrepared() {
+			spinner.setVisibility(View.GONE);
+			button.setVisibility(View.VISIBLE);
 //			Intent i = new Intent(PlaybackService.ACTION_PAUSE);
 //			spinner.getContext().startService(i);
-//			int duration = mediaPlayer.getDuration();
-//			if (duration == -1) {
-//				progress.setIndeterminate(true);
-//			} else {
-//				time.setText(formatTime(duration));
-//				progress.setIndeterminate(false);
-//				progress.setProgress(0);
-//				progress.setMax(duration);
-//				progress.postDelayed(progressAction, 1000);
-//			}
-//		}
+			int duration = mediaPlayer.getDuration();
+			if (duration == -1) {
+				progress.setIndeterminate(true);
+			} else {
+				time.setText(formatTime(duration));
+				progress.setIndeterminate(false);
+				progress.setProgress(0);
+				progress.setMax(duration);
+				progress.postDelayed(progressAction, 1000);
+			}
+		}
 
 		private String formatTime(int duration) {
 			duration /= 1000;
@@ -1207,7 +1207,7 @@ public class OnlineSearchView {
 						onFinished();
 					}
 				});
-//				onPrepared();
+				onPrepared();
 			}
 		}
 
