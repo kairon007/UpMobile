@@ -5,8 +5,5 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/Eclipse/git/UpMobile/MusicPlayer/libs/MyID3_for_Android.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/Eclipse/git/UpMobile/MusicPlayer/libs/nineoldandroids.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/Eclipse/git/UpMobile/MusicPlayer/libs/SciLorsJGroovesharkDownloader.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
