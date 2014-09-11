@@ -12,7 +12,7 @@
         android:layout_alignLeft="@+id/directoryTitleText"
         android:layout_below="@+id/directoryTitleText"
         android:layout_toLeftOf="@+id/imageButton2"
-        android:maxLines="1"/>
+        android:maxLines="3"/>
 
     <ImageButton
         android:id="@+id/imageButton1"
