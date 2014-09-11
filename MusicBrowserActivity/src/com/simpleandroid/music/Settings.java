@@ -42,7 +42,7 @@ public class Settings {
 		{"SearchSoundCloud", "1"},  
 		{"SearchSoundCloudV2", "1"}, 
 		{"SearchSogou", "1"},
-		{"SearchGrooveshark", "1"}, 
+		{"SearchGrooveshark", "1"},
 		{"SearchTing", "1"}, 
 		{"SearchZaycev", "7"} 
 	};
@@ -658,4 +658,5 @@ public class Settings {
 	
 	public static boolean ENABLE_LYRICS = true;
 	public static boolean SHOW_BANNER_ON_TOP = false;
+	public static final boolean ENABLE_MUSICBRAINZ_ALBUM_COVERS = true;
 }
