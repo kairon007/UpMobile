@@ -111,7 +111,7 @@ public class OnlineSearchView {
 	private TextView message;
 	private String searchString;
 	private View progress;
-	private TextView searchField;
+	public TextView searchField;
 	private LayoutInflater inflater;
 	private View view;
 	private static HomeActivity activity;
@@ -554,6 +554,10 @@ public class OnlineSearchView {
 				progress.setVisibility(View.GONE);
 			}
 		});
+	}
+
+	public OnlineSearchView() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public static boolean isOffline(Context context) {
@@ -1228,5 +1232,11 @@ public class OnlineSearchView {
 			}
 		}
 
+	}
+	public static OnlineSearchView getInstance() {
+		if (null == instance) {
+			instance = new OnlineSearchView();
+		}
+		return instance;
 	}
 }
