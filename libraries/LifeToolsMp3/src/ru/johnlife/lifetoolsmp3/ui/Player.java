@@ -195,7 +195,7 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 				
 				@Override
 				public void onClick(View v) {
-					createId3dialog(true, arrayField);
+					createId3dialog(arrayField);
 				}
 			});
 			cancelLoadLyrics.setOnClickListener(new OnClickListener() {

@@ -84,7 +84,7 @@ public abstract class OnlineSearchView extends View {
 	
 	public void initSearchEngines(Context context) {
 		if (null != engines) return;
-		String[][] engineArray = getSettings().getSearchEngines(context);
+		String[][] engineArray = getSettings().getSearchEnginesArray(context);
 		engines = new ArrayList<Engine>(engineArray.length);
 		for (int i=0; i<engineArray.length; i++) {
 			try {
@@ -377,7 +377,7 @@ public abstract class OnlineSearchView extends View {
 			} catch (ClassCastException ex) {
 				Log.e(getClass().getSimpleName(), ex.getMessage());
 			}
-			if (getSettings().getIsAlbumCoversEnabled(context)) {
+			if (getSettings().getIsCoversEnabled(context)) {
 				song.getCover(new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
@@ -398,7 +398,8 @@ public abstract class OnlineSearchView extends View {
 					player = null;
 				}
 				urlTask.cancel(true);
-				activity.removeDialog(STREAM_DIALOG_ID);
+				//TODO: dismiss dialog here!
+//				activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
 		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
@@ -408,7 +409,7 @@ public abstract class OnlineSearchView extends View {
 				dialogDismisser.run();
 			}
 		};
-		if (getSettings().getIsAlbumCoversEnabled(context)) {
+		if (getSettings().getIsCoversEnabled(context)) {
 			coverLoader.addListener(downloadClickListener);
 		}
 		player.setTitle(artist + " - " + title);

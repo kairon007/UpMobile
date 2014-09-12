@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -31,13 +32,13 @@ public class AdapterHelper {
 			this.view = view; 
 			view.setLongClickable(true);
 			text = (TextView)view.findViewById(R.id.text);
-			text.setTypeface(MusicPlayerApp.FONT_LIGHT);
+			text.setTypeface(MusicApp.FONT_LIGHT);
 			line2 = (TextView)view.findViewById(R.id.line2);
-			line2.setTypeface(MusicPlayerApp.FONT_REGULAR);
+			line2.setTypeface(MusicApp.FONT_REGULAR);
 			number = (TextView)view.findViewById(R.id.number);
-			number.setTypeface(MusicPlayerApp.FONT_LIGHT);
+			number.setTypeface(MusicApp.FONT_LIGHT);
 			caption = (TextView)view.findViewById(R.id.caption);
-			caption.setTypeface(MusicPlayerApp.FONT_LIGHT);
+			caption.setTypeface(MusicApp.FONT_LIGHT);
 			arrow = (ImageView)view.findViewById(R.id.arrow);
 			cover = (ImageView)view.findViewById(R.id.cover);
 			left = (View) number.getParent();

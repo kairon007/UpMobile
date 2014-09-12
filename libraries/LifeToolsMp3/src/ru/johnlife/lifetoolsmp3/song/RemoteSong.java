@@ -13,7 +13,7 @@ import android.graphics.Bitmap;
 
 public class RemoteSong extends Song {
 	private final class WrapperCoverListener implements OnBitmapReadyListener {
-		List<OnBitmapReadyListener> listeners = new ArrayList<>();
+		List<OnBitmapReadyListener> listeners = new ArrayList<OnBitmapReadyListener>();
 		@Override
 		public void onBitmapReady(Bitmap bmp) {
 			if (null != bmp) {

@@ -5,6 +5,6 @@ import android.content.Context;
 
 
 public interface BaseSettings {
-	String[][] getSearchEngines(Context context);
-	boolean getIsAlbumCoversEnabled(Context context);
+	String[][] getSearchEnginesArray(Context context);
+	boolean getIsCoversEnabled(Context context);
 }
