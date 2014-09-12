@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 /**
  * This class is used to display the {@link ViewPager} used to swipe between the
@@ -41,7 +42,7 @@ public class SearchBrowserActivity extends Activity {
         findViewById(R.id.search).setVisibility(View.VISIBLE);
         MusicUtils.updateButtonBar(this, R.id.searchtab);
         FrameLayout layout = (FrameLayout)findViewById(R.id.search);
-        View searchView = new SearchView(getLayoutInflater());
+        View searchView = new SearchView(getLayoutInflater()).getView();
         layout.addView(searchView);
         if (Settings.ENABLE_ADS) {
             Advertisement.mopubShowBanner(this);

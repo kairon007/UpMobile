@@ -115,6 +115,10 @@ public abstract class OnlineSearchView extends View {
 		} 
 		return downloadPath; 
 	}
+	
+	public View getView() {
+		return this.view;
+	}
 
 	public static String getSimpleDownloadPath(String absPath) {
 		return absPath.replace(Environment.getExternalStorageDirectory().getAbsolutePath(), "");
@@ -291,7 +295,6 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public void trySearch() {
-
 		InputMethodManager imm = (InputMethodManager) searchField.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
 		String searchString = searchField.getText().toString();
