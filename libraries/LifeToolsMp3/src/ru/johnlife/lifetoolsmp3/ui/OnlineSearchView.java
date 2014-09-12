@@ -77,11 +77,66 @@ public abstract class OnlineSearchView extends View {
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private ListView listView;
-
-
 	protected abstract BaseSettings getSettings();
 	protected abstract Advertisment getAdvertisment();
 	
+	public OnlineSearchView(final LayoutInflater inflater) {
+		super(inflater.getContext());
+		this.view = inflater.inflate(R.layout.search, null);
+		resultAdapter = new SongSearchAdapter(getContext(), inflater);
+		initSearchEngines(getContext());
+		message = (TextView) view.findViewById(R.id.message);
+		progress = view.findViewById(R.id.progress);
+		progress.setVisibility(View.GONE);
+		listView = (ListView) view.findViewById(R.id.list);
+		listView.addFooterView(resultAdapter.getProgress());
+		listView.setAdapter(resultAdapter);
+		listView.setEmptyView(message);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+				if (position == resultAdapter.getCount()) return; // progress click
+				Bundle bundle = new Bundle(0);
+				bundle.putInt(KEY_POSITION, position);
+				createStreamDialog(bundle).show();
+			}
+		});
+		searchField = (TextView) view.findViewById(R.id.text);
+		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					trySearch();
+					return true;
+				}
+				return false;
+			}
+		});
+		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				trySearch();
+			}
+
+		});
+		view.findViewById(R.id.downloads).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showDownloadsList();
+			}
+		});
+		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				searchField.setText(null);
+				message.setText(R.string.search_message_default);
+				resultAdapter.clear();
+				searchStopped = true;
+				progress.setVisibility(View.GONE);
+			}
+		});
+	}
 	public void initSearchEngines(Context context) {
 		if (null != engines) return;
 		String[][] engineArray = getSettings().getSearchEnginesArray(context);
@@ -230,64 +285,6 @@ public abstract class OnlineSearchView extends View {
 		}
 	};
 
-	public OnlineSearchView(final LayoutInflater inflater) {
-		super(inflater.getContext());
-		this.view = inflater.inflate(R.layout.search, null);
-
-		resultAdapter = new SongSearchAdapter(getContext(), inflater);
-		message = (TextView) view.findViewById(R.id.message);
-		progress = view.findViewById(R.id.progress);
-		progress.setVisibility(View.GONE);
-		listView = (ListView) view.findViewById(R.id.list);
-		listView.addFooterView(resultAdapter.getProgress());
-		listView.setAdapter(resultAdapter);
-		listView.setEmptyView(message);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				if (position == resultAdapter.getCount()) return; // progress click
-				Bundle bundle = new Bundle(0);
-				bundle.putInt(KEY_POSITION, position);
-				createStreamDialog(bundle).show();
-			}
-		});
-		searchField = (TextView) view.findViewById(R.id.text);
-		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					trySearch();
-					return true;
-				}
-				return false;
-			}
-		});
-		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				trySearch();
-			}
-
-		});
-		view.findViewById(R.id.downloads).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showDownloadsList();
-			}
-		});
-		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				searchField.setText(null);
-				message.setText(R.string.search_message_default);
-				resultAdapter.clear();
-				searchStopped = true;
-				progress.setVisibility(View.GONE);
-			}
-		});
-	}
-
 	public static boolean isOffline(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -324,7 +321,7 @@ public abstract class OnlineSearchView extends View {
 		taskIterator = engines.iterator();
 		resultAdapter.clear();
 		currentName = songName;
-		message.setText(null);
+		message.setText("");
 		progress.setVisibility(View.VISIBLE);
 		getNextResults();
 	}
@@ -412,11 +409,13 @@ public abstract class OnlineSearchView extends View {
 				dialogDismisser.run();
 			}
 		};
+//		String coverUrl = ((RemoteSong) song).getLargeCoverUrl();
+//		coverLoader = new CoverLoaderTask(coverUrl);
 		if (getSettings().getIsCoversEnabled(context)) {
-			coverLoader.addListener(downloadClickListener);
+			((RemoteSong) song).getCover(downloadClickListener);
+//			coverLoader.addListener(downloadClickListener);
 		}
 		player.setTitle(artist + " - " + title);
-		//TODO
 		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 			

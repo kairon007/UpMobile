@@ -18,7 +18,7 @@ public class DownloadGrooveshark extends AsyncTask<Void, Void, Integer> {
 	private String downloadURL;
 	private String fileName;
 	private Integer songId;
-	File outputFile;
+	private File outputFile;
 	private static int ID = 1;
 	private NotificationManager notifyManager;
 	private Notification.Builder builder;
