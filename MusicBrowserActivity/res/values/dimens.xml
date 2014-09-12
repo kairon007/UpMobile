@@ -19,6 +19,4 @@
     <dimen name="normal_height">66dip</dimen>
     <!-- height of an expanded list item in edit playlist mode -->
     <dimen name="expanded_height">132dip</dimen>
-    <dimen name="padding_20px">20px</dimen>
-    <dimen name="text_size">18dp</dimen>
 </resources>

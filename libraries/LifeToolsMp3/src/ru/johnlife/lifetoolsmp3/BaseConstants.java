@@ -1,6 +1,6 @@
-package com.simpleandroid.music;
+package ru.johnlife.lifetoolsmp3;
 
-public interface Constants {
+public interface BaseConstants {
 	public static final String DEFAULT_PREFERENCES = "default_preferences";
 	public static final String EDIT_ARTIST_NAME = "edit_artist_name";
 	public static final String EDIT_ALBUM_TITLE = "edit_album_title";

@@ -1,6 +1,6 @@
 package ru.johnlife.lifetoolsmp3.song;
 
-public class SoundCloudV2Song extends RemoteSong implements SongWithCover {
+public class SoundCloudV2Song extends SongWithCover {
 
 	private String largeCoverUrl;
 	//private String smallCoverUrl;
@@ -9,11 +9,6 @@ public class SoundCloudV2Song extends RemoteSong implements SongWithCover {
 		super(downloadUrl);
 		this.largeCoverUrl = largeCoverUrl;
 		//smallCoverUrl = largeCoverUrl != null ? largeCoverUrl.replace("large", "small") : null;
-	}
-	
-	@Override
-	public String getSmallCoverUrl() {
-		return largeCoverUrl;
 	}
 	
 	@Override

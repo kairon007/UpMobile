@@ -1,4 +1,4 @@
-package com.simpleandroid.music;
+package ru.johnlife.lifetoolsmp3.ui;
 
 import android.content.Context;
 import android.graphics.Rect;

@@ -1,5 +1,6 @@
-package com.simpleandroid.music.adapters;
+package ru.johnlife.lifetoolsmp3.adapter;
 
+import ru.johnlife.lifetoolsmp3.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -9,9 +10,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
-
-import com.simpleandroid.music.MusicPlayerApp;
-import com.simpleandroid.music.R;
 
 public class AdapterHelper {
 	private final static Bitmap[] cache = new Bitmap[2];

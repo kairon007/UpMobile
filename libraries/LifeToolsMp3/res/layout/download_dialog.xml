@@ -57,7 +57,7 @@
             android:id="@+id/cancelLoadLyrics"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cancel" />
+            android:text="@android:string/cancel" />
 
     </LinearLayout>
 
@@ -75,7 +75,7 @@
 
             <!-- android:textColor="@android:color/black" -->
 
-            <com.simpleandroid.music.ScrollingTextView
+            <ru.johnlife.lifetoolsmp3.ui.ScrollingTextView
                 android:id="@+id/download_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
                     android:id="@+id/lyrics"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_20px"
+                    android:padding="@dimen/default_text_padding"
                     android:textSize="@dimen/text_size"
        				android:gravity="center" />
             </ScrollView>
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
-                android:text="@string/cancel" />
+                android:text="@android:string/cancel" />
         </LinearLayout>
 
         <LinearLayout

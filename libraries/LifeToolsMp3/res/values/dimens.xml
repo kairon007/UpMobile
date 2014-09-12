@@ -8,4 +8,7 @@
 	<dimen name="padding_text_element">5dp</dimen>
 	<dimen name="padding_title">5dp</dimen>
 	<dimen name="padding_layout">3dp</dimen>
+	<dimen name="default_text_padding">4dp</dimen>
+    <dimen name="text_size">18dp</dimen> <!-- TODO: set in sp -->
+		
 </resources>

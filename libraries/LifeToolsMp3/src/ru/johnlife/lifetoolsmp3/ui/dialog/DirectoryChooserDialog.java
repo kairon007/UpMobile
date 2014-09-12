@@ -1,4 +1,4 @@
-package com.simpleandroid.music;
+package ru.johnlife.lifetoolsmp3.ui.dialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.R;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
