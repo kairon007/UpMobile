@@ -1,16 +1,13 @@
 package com.simpleandroid.music;
 
-import java.util.ArrayList;
 import java.util.Random;
-
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,12 +23,9 @@ import android.os.Build.VERSION;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
 import com.appnext.appnextsdk.Appnext;
 import com.appnext.appnextsdk.NoAdsInterface;
 import com.appnext.appnextsdk.PopupClosedInterface;
@@ -43,8 +37,8 @@ import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.mm1373232377.android.MiniMob1373232377;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
-import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
+import com.mopub.mobileads.MoPubView;
 import com.startapp.android.publish.StartAppAd;
 import com.startapp.android.publish.StartAppSDK;
 //import com.vungle.sdk.VunglePub;

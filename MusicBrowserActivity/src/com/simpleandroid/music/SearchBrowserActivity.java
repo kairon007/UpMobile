@@ -11,11 +11,15 @@
 package com.simpleandroid.music;
 
 //import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
+import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
@@ -37,7 +41,7 @@ public class SearchBrowserActivity extends Activity {
         findViewById(R.id.search).setVisibility(View.VISIBLE);
         MusicUtils.updateButtonBar(this, R.id.searchtab);
         FrameLayout layout = (FrameLayout)findViewById(R.id.search);
-        View searchView = OnlineSearchView.getInstanceView(getLayoutInflater(), this);
+        View searchView = new SearchView(getLayoutInflater());
         layout.addView(searchView);
         if (Settings.ENABLE_ADS) {
             Advertisement.mopubShowBanner(this);
@@ -47,7 +51,7 @@ public class SearchBrowserActivity extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		if (id == OnlineSearchView.STREAM_DIALOG_ID) {
-			return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args);
+//			return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args);
 		}
 		return super.onCreateDialog(id, args);
 	}
@@ -58,5 +62,23 @@ public class SearchBrowserActivity extends Activity {
             Advertisement.mopubDestroy(this);
 		}
 		super.onDestroy();
+	}
+	
+	public class SearchView extends OnlineSearchView {
+
+		public SearchView(LayoutInflater inflater) {
+			super(inflater);
+		}
+
+		@Override
+		protected BaseSettings getSettings() {
+			return new Settings();
+		}
+
+		@Override
+		protected Advertisment getAdvertisment() {
+			return null;
+		}
+		
 	}
 }

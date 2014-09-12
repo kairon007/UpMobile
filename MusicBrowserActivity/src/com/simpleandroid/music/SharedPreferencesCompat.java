@@ -16,10 +16,10 @@
 
 package com.simpleandroid.music;
 
-import android.content.SharedPreferences;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import android.content.SharedPreferences;
 
 /**
  * Reflection utils to call SharedPreferences$Editor.apply when possible,
