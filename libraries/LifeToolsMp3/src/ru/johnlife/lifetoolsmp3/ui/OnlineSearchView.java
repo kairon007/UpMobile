@@ -1,10 +1,8 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
@@ -17,14 +15,10 @@ import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
-import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadUrlGetterTask;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.song.SongWithCover;
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -38,7 +32,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -47,7 +40,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -63,7 +55,7 @@ public abstract class OnlineSearchView extends View {
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
-	private static List<Engine> engines = null;
+	public static List<Engine> engines = null;
 	private Iterator<Engine> taskIterator;
 	private String currentName = null;
 	private SongSearchAdapter resultAdapter;
@@ -72,7 +64,6 @@ public abstract class OnlineSearchView extends View {
 	private TextView searchField;
 	private View view;
 	private Player player;
-	private CoverLoaderTask coverLoader;
 	private boolean searchStopped = true;
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
@@ -174,6 +165,22 @@ public abstract class OnlineSearchView extends View {
 	public View getView() {
 		return this.view;
 	}
+	
+	public SongSearchAdapter getResultAdapter() {
+		return resultAdapter;
+	}
+	
+	public Iterator<Engine> getTaskIterator() {
+		return taskIterator;
+	}
+	
+	public void setTaskIterator(Iterator<Engine> taskIterator) {
+		this.taskIterator = taskIterator;
+	}
+	
+	public void setResultAdapter(SongSearchAdapter resultAdapter) {
+		this.resultAdapter = resultAdapter;
+	}
 
 	public static String getSimpleDownloadPath(String absPath) {
 		return absPath.replace(Environment.getExternalStorageDirectory().getAbsolutePath(), "");
@@ -196,7 +203,7 @@ public abstract class OnlineSearchView extends View {
 //		return instanceView;
 //	}
 
-	private final class SongSearchAdapter extends ArrayAdapter<Song> {
+	public final class SongSearchAdapter extends ArrayAdapter<Song> {
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;

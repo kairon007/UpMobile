@@ -26,13 +26,15 @@ import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 
 /**
  * Represents a Song backed by the MediaStore. Includes basic metadata and
  * utilities to retrieve songs from the MediaStore.
  */
-public class Song implements Comparable<Song> {
+public class Song implements Comparable<Song>, Parcelable {
 	/**
 	 * Indicates that this song was randomly selected from all songs.
 	 */
@@ -240,6 +242,38 @@ public class Song implements Comparable<Song> {
 	
 	public long getDuration() {
 		return duration;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel parcel, int arg1) {
+		parcel.writeLong(id);
+		parcel.writeString(path);
+		parcel.writeString(title);
+		parcel.writeString(album);
+		parcel.writeLong(albumId);
+		parcel.writeString(artist);
+		parcel.writeLong(artistId);
+		parcel.writeLong(duration);
+		parcel.writeInt(trackNumber);
+	
+	}
+	 
+	private Song (Parcel parcel) {
+		id = parcel.readLong();
+		path = parcel.readString();
+		title = parcel.readString();
+		album = parcel.readString();
+		albumId = parcel.readLong();
+		artist = parcel.readString();
+		artistId = parcel.readLong();
+		duration= parcel.readLong();
+		trackNumber= parcel.readInt();
 	}
 
 }
