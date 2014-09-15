@@ -220,6 +220,7 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
 							showProgressDialog(false);
 							showLyricsDialog(true);
+							lyricsCancel.setVisibility(View.GONE);
 							if (foundLyrics) {
 								lyricsTextView.setText(Html.fromHtml(lyrics));
 							} else {
