@@ -68,9 +68,10 @@ public abstract class OnlineSearchView extends View {
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private ListView listView;
+
 	protected abstract BaseSettings getSettings();
 	protected abstract Advertisment getAdvertisment();
-	
+
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
 		this.view = inflater.inflate(R.layout.search, null);
@@ -87,10 +88,13 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				if (position == resultAdapter.getCount()) return; // progress click
+				if (position == resultAdapter.getCount())
+					return; // progress click
 				Bundle bundle = new Bundle(0);
 				bundle.putInt(KEY_POSITION, position);
-				createStreamDialog(bundle).show();
+				if (showDownloadDialog()) {
+					createStreamDialog(bundle).show();
+				}
 			}
 		});
 		searchField = (TextView) view.findViewById(R.id.text);
@@ -128,16 +132,21 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 	}
+	
+	protected View biuldCustomView() {
+		return null;
+	}
+
 	public void initSearchEngines(Context context) {
-		if (null != engines) return;
+		if (null != engines)
+			return;
 		String[][] engineArray = getSettings().getSearchEnginesArray(context);
 		engines = new ArrayList<Engine>(engineArray.length);
-		for (int i=0; i<engineArray.length; i++) {
+		for (int i = 0; i < engineArray.length; i++) {
 			try {
-				Class<? extends BaseSearchTask> engineClass = 
-						(Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineArray[i][0]);
+				Class<? extends BaseSearchTask> engineClass = (Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineArray[i][0]);
 				int maxPages = Integer.parseInt(engineArray[i][1]);
-				for(int page=1; page<=maxPages; page++) {
+				for (int page = 1; page <= maxPages; page++) {
 					engines.add(new Engine(engineClass, page));
 				}
 			} catch (ClassNotFoundException e) {
@@ -145,7 +154,12 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	}
-
+	
+	protected boolean showDownloadDialog() {
+		return true;
+	}
+	
+	
 	public static String getDownloadPath(Context context) {
 		String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
 		if (context != null) {
@@ -158,26 +172,26 @@ public abstract class OnlineSearchView extends View {
 				edit.commit();
 			} else
 				return sharedDownloadPath;
-		} 
-		return downloadPath; 
+		}
+		return downloadPath;
 	}
-	
+
 	public View getView() {
 		return this.view;
 	}
-	
+
 	public SongSearchAdapter getResultAdapter() {
 		return resultAdapter;
 	}
-	
+
 	public Iterator<Engine> getTaskIterator() {
 		return taskIterator;
 	}
-	
+
 	public void setTaskIterator(Iterator<Engine> taskIterator) {
 		this.taskIterator = taskIterator;
 	}
-	
+
 	public void setResultAdapter(SongSearchAdapter resultAdapter) {
 		this.resultAdapter = resultAdapter;
 	}
@@ -194,14 +208,15 @@ public abstract class OnlineSearchView extends View {
 		edit.commit();
 	}
 
-//	public static final View getInstanceView(LayoutInflater inflater, SearchBrowserActivity activity) {
-//		View instanceView = getInstance(inflater, activity).view;
-//		ViewGroup parent = (ViewGroup) instanceView.getParent();
-//		if (null != parent) {
-//			parent.removeView(instanceView);
-//		}
-//		return instanceView;
-//	}
+	// public static final View getInstanceView(LayoutInflater inflater,
+	// SearchBrowserActivity activity) {
+	// View instanceView = getInstance(inflater, activity).view;
+	// ViewGroup parent = (ViewGroup) instanceView.getParent();
+	// if (null != parent) {
+	// parent.removeView(instanceView);
+	// }
+	// return instanceView;
+	// }
 
 	public final class SongSearchAdapter extends ArrayAdapter<Song> {
 		private LayoutInflater inflater;
@@ -223,14 +238,13 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
-			.setId(position).setIcon(R.drawable.fallback_cover);
-			//TODO: remove double-cacheing
-			Bitmap cover = bitmaps.get(position); 
+			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist()).setId(position).setIcon(R.drawable.fallback_cover);
+			// TODO: remove double-cacheing
+			Bitmap cover = bitmaps.get(position);
 			if (cover != null) {
 				builder.setIcon(bitmaps.get(position));
 			} else {
-				((RemoteSong)song).getCover(new OnBitmapReadyListener() {
+				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						bitmaps.put(position, bmp);
@@ -246,7 +260,7 @@ public abstract class OnlineSearchView extends View {
 			}
 			View v = builder.build();
 			v.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					listView.performItemClick(v, position, v.getId());
@@ -312,12 +326,11 @@ public abstract class OnlineSearchView extends View {
 			search(searchString);
 		}
 
-
 		try {
 			if (getAdvertisment().isOnline(getContext())) {
 				getAdvertisment().searchStart(getContext());
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 
 		}
 
@@ -340,8 +353,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		try {
 			Engine engine = taskIterator.next();
-			BaseSearchTask searchTask = engine.getEngineClass()
-					.getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName});
+			BaseSearchTask searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName });
 			if (searchTask instanceof SearchWithPages) {
 				int page = engine.getPage();
 				((SearchWithPages) searchTask).setPage(page);
@@ -351,7 +363,7 @@ public abstract class OnlineSearchView extends View {
 			getNextResults();
 		}
 	}
-	
+
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args) {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
@@ -361,7 +373,7 @@ public abstract class OnlineSearchView extends View {
 		final String title = song.getTitle();
 		final String artist = song.getArtist();
 		final Context context = view.getContext();
-		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask(){
+		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask() {
 			@Override
 			protected void onPostExecute(String downloadUrl) {
 				loadSong(downloadUrl);
@@ -392,7 +404,7 @@ public abstract class OnlineSearchView extends View {
 							player.setCover(bmp);
 						}
 					}
-				}); 
+				});
 			} else {
 				player.hideCoverProgress();
 			}
@@ -405,8 +417,8 @@ public abstract class OnlineSearchView extends View {
 					player = null;
 				}
 				urlTask.cancel(true);
-				//TODO: dismiss dialog here!
-//				activity.removeDialog(STREAM_DIALOG_ID);
+				// TODO: dismiss dialog here!
+				// activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
 		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
@@ -418,12 +430,13 @@ public abstract class OnlineSearchView extends View {
 		};
 		if (getSettings().getIsCoversEnabled(context)) {
 			boolean hasCover = ((RemoteSong) song).getCover(downloadClickListener);
-			if (!hasCover) player.setCover(null);
+			if (!hasCover)
+				player.setCover(null);
 		}
 		player.setTitle(artist + " - " + title);
 		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-			
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialogDismisser.run();
@@ -444,7 +457,7 @@ public abstract class OnlineSearchView extends View {
 		});
 		return alertDialog;
 	}
-	
+
 	private void loadSong(String downloadUrl) {
 		if (player != null) {
 			player.setDownloadUrl(downloadUrl);
@@ -459,12 +472,12 @@ public abstract class OnlineSearchView extends View {
 		dm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(dm);
 	}
-	
+
 	public boolean isId3Show() {
-		if (null == player) return false;
+		if (null == player)	return false;
 		return player.isId3Show;
 	}
-	
+
 	public void createId3Dialog(String[] fields) {
 		if (null == player) return;
 		player.createId3dialog(fields);
