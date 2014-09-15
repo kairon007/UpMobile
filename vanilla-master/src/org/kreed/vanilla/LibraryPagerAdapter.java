@@ -22,12 +22,10 @@
 
 package org.kreed.vanilla;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.vanilla.app.VanillaApp;
 
-import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -43,7 +41,6 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -381,7 +378,7 @@ public class LibraryPagerAdapter
 				mPendingFileLimiter = null;
 				break;
 			case MediaUtils.TYPE_SEARCH:
-				View searchView = SearchTab.getInstanceView(inflater, activity);
+				View searchView = new SearchView(inflater).getView();
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					searchView.findViewById(R.id.search_field).setBackgroundDrawable
 						(activity.getResources().getDrawable(R.drawable.search_background_white));

@@ -17,6 +17,7 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +28,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 
-public class Settings {
+public class Settings implements BaseSettings {
 	
 	
 	
@@ -663,4 +664,19 @@ public class Settings {
 	public static boolean ENABLE_GENRES_TAB_BY_DEFAULT = true;
 	public static boolean ENABLE_FILES_TAB_BY_DEFAULT = true;
 	public static final boolean ENABLE_MUSICBRAINZ_ALBUM_COVERS = true;
+	
+	
+	@Override
+	public String[][] getSearchEnginesArray(Context context) {
+		return GET_SEARCH_ENGINES(context);
+	}
+
+
+
+
+	@Override
+	public boolean getIsCoversEnabled(Context context) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

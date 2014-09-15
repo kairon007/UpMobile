@@ -282,9 +282,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		super.onResume();
 		Advertisement.onResume(this);
 		updateEqualizerVisibility();
-		if (isShowID3DialogSearch) {
+		/*if (isShowID3DialogSearch) {
 			SearchTab.getInstance(getLayoutInflater(), this).createId3Dialog(arrayField);
-		}
+		}*/
 	}
 
 	@Override
@@ -571,7 +571,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	public void onRestoreInstanceState(Bundle in) {
 		if (in.getBoolean(SEARCH_BOX_VISIBLE))
 			setSearchBoxVisible(true);
-		swichShowDialogRate = in.getBoolean(SWICH_SHOW_DIALOG_RATE);
+		/*swichShowDialogRate = in.getBoolean(SWICH_SHOW_DIALOG_RATE);
 		// load ID3 edit dialog, if needed
 		if (null != in && in.getBoolean(ID3_IS_SHOW)) {
 			isShowID3Dialog = true;
@@ -587,14 +587,14 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			MP3Editor searchEditor = SearchTab.getInstance(getLayoutInflater(), this).getMp3Editor();
 			searchEditor.setStrings(in.getStringArray(ID3_STRINGS));
 			searchEditor.setShowCover(in.getBoolean(ID3_COVER));
-		}
+		}*/
 		super.onRestoreInstanceState(in);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
-		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
+/*		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		out.putBoolean(SWICH_SHOW_DIALOG_RATE, swichShowDialogRate);
 		if (isShowID3Dialog) {
 			out.putBoolean(ID3_IS_SHOW, isShowID3Dialog);
@@ -607,7 +607,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			MP3Editor searchEditor = SearchTab.getInstance(getLayoutInflater(), this).getMp3Editor();
 			out.putStringArray(ID3_STRINGS, new String[] { searchEditor.getNewArtistName(), searchEditor.getNewSongTitle(), searchEditor.getNewAlbumTitle() });
 			out.putBoolean(ID3_COVER, searchEditor.isShowCover());
-		}
+		}*/
 	}
 
 	@Override
@@ -1664,9 +1664,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
-		if (id == SearchTab.STREAM_DIALOG_ID) {
-			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
-		}
+//		if (id == SearchTab.STREAM_DIALOG_ID) {
+//			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
+//		}
 		return super.onCreateDialog(id, args);
 	}
 
