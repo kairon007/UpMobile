@@ -149,6 +149,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 					}
 					notifyMediascanner(song, path);
+					return;
 				}
 
 				private String cutPath(String s) {
