@@ -134,6 +134,7 @@ public class AdapterHelper {
 		}
 		
 		public ViewBuilder setIcon(Bitmap value) {
+			android.util.Log.d("log", "setIcon");
 			if (null == value) {
 				cover.setVisibility(View.GONE);
 			} else {
@@ -167,8 +168,7 @@ public class AdapterHelper {
 			return this;
 		}
 		
-		public void startLoadCover(final int maxWidth, final int type, final long id,
-				final LibraryActivity activity) {
+		public void startLoadCover(final int maxWidth, final int type, final long id, final LibraryActivity activity) {
 			if (null != loadCoverTask) {
 				loadCoverTask.cancel(true);
 			}
@@ -185,7 +185,7 @@ public class AdapterHelper {
 						if ((pictureList == null) || (pictureList.size() == 0)) {
 							return  BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
 						}
-						ImageData imageData = (ImageData) pictureList.get(0);
+						ImageData imageData = (ImageData) pictureList.get(pictureList.size()-1);
 						BitmapFactory.Options opts = new BitmapFactory.Options();
 						opts.inJustDecodeBounds = true;
 						int scale = 1;
@@ -209,6 +209,7 @@ public class AdapterHelper {
 				
 				@Override
 				protected void onPostExecute(Bitmap result) {
+					android.util.Log.d("log", "get result" + result.describeContents());
 					setIcon(result);
 				}
 			}.execute();

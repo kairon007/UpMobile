@@ -489,6 +489,7 @@ public class MediaAdapter
 		if (mType == MediaUtils.TYPE_SONG && Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
 				long id = cursor.getLong(0);
 				builder.setIcon(R.drawable.fallback_cover);
+//				Bitmap b = builder.startLoadCover(2, mType, id, mActivity); 
 				builder.startLoadCover(2, mType, id, mActivity);
 		}
 		return builder.build();
