@@ -35,6 +35,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -47,7 +48,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private ArrayList<String[]> headers = new ArrayList<>();
 	private Context context;
 	private RemoteSong song;
-	private Player player;
 	private Bitmap cover;
 	private String songTitle = "";
 	private String songArtist = "";
@@ -55,24 +55,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private String duration = "";
 	public Integer songId;
 	private boolean waitingForCover = true;
-
-//	DownloadClickListener(Context context, String songTitle, String songArtist, Player player) {
-//		this.context = context;
-//		this.songTitle = songTitle;
-//		this.songArtist = songArtist;
-//		this.player = player;
-//	}
-//
-//	private DownloadClickListener(Context context, String songTitle, String songArtist, String downloadUrl, String duration, Bitmap cover, ArrayList<String[]> headers) {
-//		this.context = context;
-//		this.songTitle = songTitle;
-//		this.songArtist = songArtist;
-//		this.cover = cover;
-//		this.URL = downloadUrl;
-//		this.duration = duration;
-//		this.headers = headers;
-//
-//	}
 
 	protected DownloadClickListener(Context context, RemoteSong song, Bitmap bitmap) {
 		this.context = context;
@@ -89,16 +71,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
-		// if (player == null)
-		// return;
-		String downloadUrl = URL.equals("") ? player.getDownloadUrl() : URL;
-//		Integer songId = player.getSongId();
-		if (downloadUrl == null || downloadUrl.equals("")) {
+		if (URL == null || URL.equals("")) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
 		}
-		// player.cancel();
-
 		File musicDir = new File(BaseConstants.DOWNLOAD_DIR);
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
@@ -110,7 +86,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			manager.execute();
 		} else {
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(URL));
 			final String fileName = sb.toString();
 			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(fileName);
 			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(OnlineSearchView.getDownloadPath(context)), sb.append(".mp3").toString());
@@ -166,7 +142,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					} catch (Exception e) {
 						android.util.Log.d("log", "don't write music metadata from file. " + e);
 					} finally {
-						dst.renameTo(src);
+						if(dst.delete()){
+							android.util.Log.d("log", "1, delete" );
+						} else {
+							android.util.Log.d("log", "1, don't delete");
+						}
 					}
 					notifyMediascanner(song, path);
 				}
@@ -192,12 +172,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 	}
 	
+	
+	
 	protected void prepare(final File src, RemoteSong song) {
 		final String title = song.getTitle();
-		new Thread(new Runnable() {
+		new AsyncTask<Void, Void, Void>() {
 			
 			@Override
-			public void run() {
+			protected Void doInBackground(Void... params) {
 				MusicMetadataSet src_set = null;
 				try {
 					src_set = new MyID3().read(src);
@@ -212,11 +194,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				} catch (Exception e) {
 					android.util.Log.d("log", "don't write music metadata from file. " + e);
 				} finally {
-					dst.renameTo(src);
+					if(dst.delete()){
+						android.util.Log.d("log", "2, delete" );
+					} else {
+						android.util.Log.d("log", "2, don't delete");
+					}
 				}
+				return null;
 			}
 			
-		}).start();
+		}.execute();
 	}
 
 	private final String formatTime(long date) {
