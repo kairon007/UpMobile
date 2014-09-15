@@ -12,26 +12,17 @@ package com.simpleandroid.music;
 
 //import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import ru.johnlife.lifetoolsmp3.Advertisment;
-import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
 /**
  * This class is used to display the {@link ViewPager} used to swipe between the

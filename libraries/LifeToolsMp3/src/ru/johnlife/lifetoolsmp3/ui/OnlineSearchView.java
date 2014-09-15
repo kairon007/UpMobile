@@ -421,10 +421,11 @@ public abstract class OnlineSearchView extends View {
 				// activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
-		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, title, artist, player) {
+		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, (RemoteSong) song, null) {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);
+				player.cancel();
 				dialogDismisser.run();
 			}
 		};
