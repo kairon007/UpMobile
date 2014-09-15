@@ -53,6 +53,7 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -388,10 +389,12 @@ public class SearchTab {
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
+		private Context context;
 		private Map<Integer, Bitmap> bitmaps = new HashMap<Integer, Bitmap>(0);
 
 		private SongSearchAdapter(Context context, LayoutInflater inflater) {
 			super(context, -1, new ArrayList<Song>());
+			this.context = context;
 			this.inflater = inflater;
 			this.footer = new FrameLayout(context);
 			this.refreshSpinner = new ProgressBar(context);
@@ -402,7 +405,7 @@ public class SearchTab {
 
 		@Override
 		public View getView(final int position, final View convertView, ViewGroup parent) {
-			Song song = getItem(position);
+			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
 			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist())
 			// .setNumber(String.valueOf(position+1), 0)
@@ -419,8 +422,14 @@ public class SearchTab {
 							public void onBitmapReady(Bitmap bmp) {
 								bitmaps.put(position, bmp);
 								if (builder != null && builder.getId() == position) {
-									builder.setIcon(bmp);
-								}
+									if (bmp != null) {
+										builder.setIcon(bmp);
+									} else {
+										builder.setIcon(R.drawable.fallback_cover);
+										bitmaps.put(position, BitmapFactory.decodeResource(context.getResources(), R.drawable.fallback_cover)); // temporary solution, in new searchtab (in lifetoolsmp3) it's fixed
+									}	
+								} 
+							
 							}
 						});
 						coverLoader.execute(NO_PARAMS);
@@ -436,6 +445,7 @@ public class SearchTab {
 				
 				@Override
 				public void onClick(View v) {
+					Log.d("------------", String.valueOf(position));
 					listView.performItemClick(v, position, v.getId());
 				}
 			});
