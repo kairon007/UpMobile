@@ -101,8 +101,11 @@ public class RemoteSong extends Song {
 		coverLoaderIndex = 0;
 	}
 	
-	public void getCover(OnBitmapReadyListener listener) {
-		if (null != cover && null != cover.get()) listener.onBitmapReady(cover.get());
+	public boolean getCover(OnBitmapReadyListener listener) {
+		if (null != cover && null != cover.get()) {
+			listener.onBitmapReady(cover.get());
+			return true;
+		}
 		if (null != listener) {
 			coverListener.addListener(listener);
 		}
@@ -110,6 +113,8 @@ public class RemoteSong extends Song {
 		if (null != loader) {
 			loader.addListener(coverListener);
 			loader.execute();
+			return true;
 		}
+		return false;
 	}
 }

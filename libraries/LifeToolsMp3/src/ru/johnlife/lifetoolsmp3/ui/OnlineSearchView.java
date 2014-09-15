@@ -409,11 +409,9 @@ public abstract class OnlineSearchView extends View {
 				dialogDismisser.run();
 			}
 		};
-//		String coverUrl = ((RemoteSong) song).getLargeCoverUrl();
-//		coverLoader = new CoverLoaderTask(coverUrl);
 		if (getSettings().getIsCoversEnabled(context)) {
-			((RemoteSong) song).getCover(downloadClickListener);
-//			coverLoader.addListener(downloadClickListener);
+			boolean hasCover = ((RemoteSong) song).getCover(downloadClickListener);
+			if (!hasCover) player.setCover(null);
 		}
 		player.setTitle(artist + " - " + title);
 		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
