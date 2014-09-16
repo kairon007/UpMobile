@@ -10,10 +10,7 @@
  */
 package com.simpleandroid.music;
 
-//import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
-import java.util.ArrayList;
-
-import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.app.Dialog;
@@ -31,10 +28,8 @@ import android.widget.FrameLayout;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class SearchBrowserActivity extends Activity {
-	private View searchView;
-	private SearchView sv;
-	private ArrayList<Song> arrayListSong;
-	private final String ADAPTER_LIST_VIEW = "ADAPTER.LIST.VIEW";
+	private View viewSearchActivity;
+	private SearchView searchView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +40,10 @@ public class SearchBrowserActivity extends Activity {
 		findViewById(R.id.search).setVisibility(View.VISIBLE);
 		MusicUtils.updateButtonBar(this, R.id.searchtab);
 		FrameLayout layout = (FrameLayout) findViewById(R.id.search);
-		sv = new SearchView(getLayoutInflater());
-		searchView = sv.getView();
-		layout.addView(searchView);
-		arrayListSong = new ArrayList<Song>();
+		searchView = new SearchView(getLayoutInflater());
+		viewSearchActivity = searchView.getView();
+		layout.addView(viewSearchActivity);
+		SongArrayHolder.getInstance().setResultsToAdapter(searchView);
 		if (Settings.ENABLE_ADS) {
 			Advertisement.mopubShowBanner(this);
 		}
@@ -57,8 +52,7 @@ public class SearchBrowserActivity extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		if (id == OnlineSearchView.STREAM_DIALOG_ID) {
-			// return OnlineSearchView.getInstance(getLayoutInflater(),
-			// this).createStreamDialog(args);
+			// return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args);
 		}
 		return super.onCreateDialog(id, args);
 	}
@@ -70,30 +64,11 @@ public class SearchBrowserActivity extends Activity {
 		}
 		super.onDestroy();
 	}
-
+	
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		if (savedInstanceState != null && savedInstanceState.containsKey(ADAPTER_LIST_VIEW)) {
-			arrayListSong = savedInstanceState.getParcelableArrayList(ADAPTER_LIST_VIEW);
-			if (sv.getResultAdapter() != null) {
-				for (int i = 0; i < arrayListSong.size(); i++) {
-					sv.getResultAdapter().add(arrayListSong.get(i));
-				}
-				sv.getResultAdapter().notifyDataSetChanged();
-				sv.setTaskIterator(sv.engines.iterator());
-			}
-			super.onRestoreInstanceState(savedInstanceState);
-		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		for (int i = 0; i < sv.getResultAdapter().getCount(); i++) {
-			Song song =sv.getResultAdapter().getItem(i);
-			arrayListSong.add(song);
-		}
-		outState.putParcelableArrayList(ADAPTER_LIST_VIEW, arrayListSong);
-		super.onSaveInstanceState(outState);
-	}
-
+	protected void onPause() {
+		SongArrayHolder.getInstance().getResultsFromAdapter(searchView);
+		super.onPause();
+	}	
+	
 }

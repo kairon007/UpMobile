@@ -37,6 +37,7 @@ import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
 import org.kreed.vanilla.equalizer.MyEqualizer;
 
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.AlertDialog;
@@ -273,6 +274,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	protected void onPause() {
+		SongArrayHolder.getInstance().getResultsFromAdapter(mPagerAdapter.getSearchView());
 		super.onPause();
 		Advertisement.onPause(this);
 	}
@@ -305,7 +307,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			setTheme(R.style.Library);
 		}
 		setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
-
 		// Advertisement.startAppInit(this);
 		// Advertisement.mobileCoreInit(this);
 		// Advertisement.moPubInit(this);
@@ -412,7 +413,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				mTitle.setTypeface(font);
 
 			}
-
+			
+			SongArrayHolder.getInstance().setResultsToAdapter(mPagerAdapter.getSearchView());
 			mCover.setOnClickListener(this);
 			previous.setOnClickListener(this);
 			mPlayPauseButton.setOnClickListener(this);

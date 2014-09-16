@@ -486,4 +486,21 @@ public abstract class OnlineSearchView extends View {
 	public void setSearchField(String str) {
 		searchField.setText(str);
 	}
+	
+	public TextView getSearchField() {
+		return searchField;
+	}
+
+	public String getCurrentName() {
+		return currentName;
+	}
+	public void setCurrentName(String currentName) {
+		this.currentName = currentName;
+	}
+	public boolean isSearchStopped() {
+		return searchStopped;
+	}
+	public void setSearchStopped(boolean searchStopped) {
+		this.searchStopped = searchStopped;
+	}
 }
