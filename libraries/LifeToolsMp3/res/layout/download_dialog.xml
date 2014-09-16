@@ -6,62 +6,6 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/download_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:orientation="vertical"
-        android:visibility="visible" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/loading_download_url_title"
-            android:textSize="20sp" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="3dp"
-            android:background="@android:color/darker_gray" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp" >
-
-            <ProgressBar
-                style="?android:attr/progressBarStyleSmallInverse"
-                android:layout_width="40dp"
-                android:layout_height="40dp" >
-            </ProgressBar>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/loading_download_url_message" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/cancelLoadLyrics"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@android:string/cancel" />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/player_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -96,38 +40,6 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="3dp"
                 android:background="@android:color/darker_gray" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lyrics_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:visibility="gone" >
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fillViewport="true" >
-
-                <TextView
-                    android:id="@+id/lyrics"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/default_text_padding"
-                    android:textSize="@dimen/text_size"
-       				android:gravity="center" />
-            </ScrollView>
-
-            <Button
-                android:id="@+id/lyrics_cancel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:textColor="@android:color/white"
-                android:text="@android:string/cancel" />
         </LinearLayout>
 
         <LinearLayout
@@ -337,15 +249,6 @@
                         android:background="@android:color/transparent" />
                 </LinearLayout>
             </LinearLayout>
-
-			<View
-			    android:layout_width="fill_parent"
-			    android:layout_height="1dp"
-			    android:layout_marginBottom="5dp"
-			    android:layout_marginLeft="5dp"
-			    android:layout_marginRight="5dp"
-			    android:layout_marginTop="3dp"
-			    android:background="@android:color/darker_gray" />
         </LinearLayout>
     </LinearLayout>
 

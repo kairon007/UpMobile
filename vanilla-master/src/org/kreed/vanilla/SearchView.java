@@ -20,5 +20,4 @@ public class SearchView extends OnlineSearchView {
 	protected Advertisment getAdvertisment() {
 		return null;
 	}
-
 }

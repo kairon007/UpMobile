@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -101,7 +102,14 @@ public class DirectoryChooserDialog {
 					m_chosenDirectoryListener.onChosenDir(m_dir);
 				}
 			}
-		}).setNegativeButton("Cancel", null);
+		}).setNegativeButton("Cancel", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
+				SongArrayHolder.getInstance().setDirectoryChooserPath(null);
+			}
+		});
 
 		final AlertDialog dirsDialog = dialogBuilder.create();
 
@@ -127,6 +135,7 @@ public class DirectoryChooserDialog {
 
 		// Show directory chooser dialog
 		dirsDialog.show();
+		SongArrayHolder.getInstance().setDirectoryChooserOpened(true);
 	}
 
 	private boolean createSubDir(String newDir) {
@@ -227,6 +236,7 @@ public class DirectoryChooserDialog {
 		m_subdirs.addAll(getDirectories(m_dir));
 		titleText.setText(m_dir);
 		m_listAdapter.notifyDataSetChanged();
+		SongArrayHolder.getInstance().setDirectoryChooserPath(m_dir);
 	}
 
 	private ArrayAdapter<String> createListAdapter(List<String> items) {

@@ -24,12 +24,9 @@ package org.kreed.vanilla;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import junit.framework.Assert;
 
-import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
@@ -41,8 +38,6 @@ import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -136,13 +131,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
 	private static final String SWICH_SHOW_DIALOG_RATE = "swich_show_dialog_rate";
-	private static final String ID3_IS_SHOW = "id3_edit_dialog_visibility";
-	private static final String ID3_IS_SHOW_SEARCH = "id3_edit_dialog_search_visibility";
-	private static final String ID3_TYPE = "id3_edit_dialog_type";
-	private static final String ID3_ID = "id3_edit_dialog_id";
-	private static final String ID3_STRINGS = "id3_edit_dialog_strings";
-	private static final String ID3_COVER = "id3_edit_dialog_cover";
-	private String[] arrayField;
 	
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
@@ -150,14 +138,11 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private View mSearchBox;
 	private boolean mSearchBoxVisible;
 	private boolean swichShowDialogRate = true;
-	private boolean isShowID3Dialog = false;
-	private boolean isShowID3DialogSearch = false;
 
 	private TextView mTextFilter;
 	private View mSortButton;
 	private View mEqualizerButton;
 
-	private Song song;
 	private View mActionControls;
 	private View mControls;
 	private TextView mTitle;
@@ -264,17 +249,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		super.onDestroy();
 	}
 
-	private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Intent intent1 = getIntent();
-			pickSongs(intent1, ACTION_PLAY);
-		}
-	};
-
 	@Override
 	protected void onPause() {
-		SongArrayHolder.getInstance().getResultsFromAdapter(mPagerAdapter.getSearchView());
 		super.onPause();
 		Advertisement.onPause(this);
 	}
@@ -284,9 +260,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		super.onResume();
 		Advertisement.onResume(this);
 		updateEqualizerVisibility();
-		/*if (isShowID3DialogSearch) {
-			SearchTab.getInstance(getLayoutInflater(), this).createId3Dialog(arrayField);
-		}*/
 	}
 
 	@Override
@@ -414,7 +387,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 			}
 			
-			SongArrayHolder.getInstance().setResultsToAdapter(mPagerAdapter.getSearchView());
 			mCover.setOnClickListener(this);
 			previous.setOnClickListener(this);
 			mPlayPauseButton.setOnClickListener(this);
@@ -573,43 +545,13 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	public void onRestoreInstanceState(Bundle in) {
 		if (in.getBoolean(SEARCH_BOX_VISIBLE))
 			setSearchBoxVisible(true);
-		/*swichShowDialogRate = in.getBoolean(SWICH_SHOW_DIALOG_RATE);
-		// load ID3 edit dialog, if needed
-		if (null != in && in.getBoolean(ID3_IS_SHOW)) {
-			isShowID3Dialog = true;
-			editor = new MP3Editor(this);
-			arrayField = in.getStringArray(ID3_STRINGS);
-			editor.setStrings(arrayField);
-			editor.setShowCover(in.getBoolean(ID3_COVER));
-			type = in.getInt(ID3_TYPE);
-			id = in.getLong(ID3_ID);
-			createEditID3Dialog(type, id, editor);
-		} else if (null != in && in.getBoolean(ID3_IS_SHOW_SEARCH)) {
-			isShowID3DialogSearch = true;
-			MP3Editor searchEditor = SearchTab.getInstance(getLayoutInflater(), this).getMp3Editor();
-			searchEditor.setStrings(in.getStringArray(ID3_STRINGS));
-			searchEditor.setShowCover(in.getBoolean(ID3_COVER));
-		}*/
 		super.onRestoreInstanceState(in);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
-/*		out.putBoolean(SEARCH_BOX_VISIBLE, mSearchBoxVisible);
-		out.putBoolean(SWICH_SHOW_DIALOG_RATE, swichShowDialogRate);
-		if (isShowID3Dialog) {
-			out.putBoolean(ID3_IS_SHOW, isShowID3Dialog);
-			out.putInt(ID3_TYPE, type);
-			out.putLong(ID3_ID, id);
-			out.putStringArray(ID3_STRINGS, new String[] { editor.getNewArtistName(), editor.getNewSongTitle(), editor.getNewAlbumTitle() });
-			out.putBoolean(ID3_COVER, editor.isShowCover());
-		} else if (SearchTab.getInstance(getLayoutInflater(), this).isId3Show()) {
-			out.putBoolean(ID3_IS_SHOW_SEARCH, true);
-			MP3Editor searchEditor = SearchTab.getInstance(getLayoutInflater(), this).getMp3Editor();
-			out.putStringArray(ID3_STRINGS, new String[] { searchEditor.getNewArtistName(), searchEditor.getNewSongTitle(), searchEditor.getNewAlbumTitle() });
-			out.putBoolean(ID3_COVER, searchEditor.isShowCover());
-		}*/
+		SongArrayHolder.getInstance().getResultsFromAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
 	}
 
 	@Override
@@ -679,7 +621,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				mTextFilter.requestFocus();
 			return true;
 		}
-
 		return false;
 	}
 
@@ -1161,11 +1102,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			break;
 		case MENU_EDIT_MP3_TAGS:
 			//TODO
-			isShowID3Dialog = true;
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
 			String[] fields = {intent.getStringExtra("selected_file_path"), intent.getStringExtra("title"), ""};
-			editor = new MP3Editor(this);
+			editor = new MP3Editor(this, true);
 			editor.setStrings(fields);
 			createEditID3Dialog(type, id, editor);
 			break;
@@ -1211,7 +1151,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private void createEditID3Dialog(int type, long id, MP3Editor view) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		if (null == view) {
-			editor = new MP3Editor(this);
+			editor = new MP3Editor(this, true);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		editor.hideCheckBox(true);
@@ -1234,14 +1174,13 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					}
 
 				}.execute();
-				isShowID3Dialog = false;
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				isShowID3Dialog = false;
+				dialog.dismiss();
 			}
 
 		});
@@ -1645,6 +1584,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		if (lastPage != position && lastPage != -1) {
 			mTextFilter.setText("");
 		}
+		if (lastPage == 0) {
+			SongArrayHolder.getInstance().getResultsFromAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
+		}
 		lastPage = position;
 	}
 
@@ -1662,20 +1604,5 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			info = super.getApplicationInfo();
 		}
 		return info;
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-//		if (id == SearchTab.STREAM_DIALOG_ID) {
-//			return SearchTab.getInstance(getLayoutInflater(), this).createStreamDialog(args);
-//		}
-		return super.onCreateDialog(id, args);
-	}
-
-	@Override
-	public void onBackPressed() {
-		Intent showOptions = new Intent(Intent.ACTION_MAIN);
-		showOptions.addCategory(Intent.CATEGORY_HOME);
-		startActivity(showOptions);
 	}
 }

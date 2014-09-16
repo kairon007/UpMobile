@@ -1,17 +1,19 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -24,12 +26,11 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,7 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-final class Player extends AsyncTask<String, Void, Boolean> {
+public final class Player extends AsyncTask<String, Void, Boolean> {
 		private String url = null;
 		private MediaPlayer mediaPlayer;
 		private boolean prepared = false;
@@ -53,16 +54,9 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 		private TextView spinerPath;
 		private TextView buttonShowLyrics;
 		private TextView buttonEditMp3Tag;
-		private LinearLayout lyricsContainer;
-		private TextView lyricsTextView;
-		private LinearLayout containerPlayer;
 		private RelativeLayout rlCoverProgress;
 		private View view;
 		private int songId;
-		private LinearLayout downloadProgress;
-		private LinearLayout playerLayout;
-		private Button lyricsCancel;
-		private Button cancelLoadLyrics;
 		boolean isId3Show = false;
 		private ArrayList <String> sFields;
 
@@ -70,27 +64,6 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 		public void setSongId(Integer songId) {
 			this.songId = songId;
 
-		}
-
-		void showProgressDialog(boolean needShow) {
-			if (downloadProgress != null && playerLayout != null)
-				if (needShow) {
-					downloadProgress.setVisibility(View.VISIBLE);
-					playerLayout.setVisibility(View.GONE);
-				} else {
-					downloadProgress.setVisibility(View.GONE);
-					playerLayout.setVisibility(View.VISIBLE);
-				}
-		}
-
-		private void showLyricsDialog(boolean needShow) {
-			if (needShow) {
-				lyricsContainer.setVisibility(View.VISIBLE);
-				containerPlayer.setVisibility(View.GONE);
-			} else {
-				lyricsContainer.setVisibility(View.GONE);
-				containerPlayer.setVisibility(View.VISIBLE);
-			}
 		}
 
 		public void setTitle(String title) {
@@ -161,14 +134,6 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 					return false;
 				}
 			});
-			
-			lyricsContainer = (LinearLayout) view.findViewById(R.id.lyrics_container);
-			lyricsTextView = (TextView) view.findViewById(R.id.lyrics);
-			containerPlayer = (LinearLayout) view.findViewById(R.id.container_player);
-			downloadProgress = (LinearLayout) view.findViewById(R.id.download_progress);
-			playerLayout = (LinearLayout) view.findViewById(R.id.player_layout);
-			lyricsCancel = (Button) view.findViewById(R.id.lyrics_cancel);
-			cancelLoadLyrics = (Button) view.findViewById(R.id.cancelLoadLyrics);
 			spinerPath.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -178,14 +143,7 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 			textPath.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(v.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
-						@Override
-						public void onChosenDir(String chosenDir) {
-							textPath.setText(chosenDir);
-							OnlineSearchView.setDownloadPath(view.getContext(), chosenDir);
-						}
-					});
-					directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(view.getContext()));
+					createDirectoryChooserDialog();
 				}
 			});
 			button.setOnClickListener(new View.OnClickListener() {
@@ -198,61 +156,103 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 				
 				@Override
 				public void onClick(View v) {
-					createId3dialog(arrayField);
-				}
-			});
-			cancelLoadLyrics.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					showProgressDialog(false);	
+					createId3dialog(arrayField, true);
 				}
 			});
 			buttonShowLyrics.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (OnlineSearchView.isOffline(view.getContext())) {
-						Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
-						return;
-					}
-					showProgressDialog(true);
-					LyricsFetcher lyricsFetcher = new LyricsFetcher(buttonShowLyrics.getContext());
-					lyricsFetcher.fetchLyrics(title, artist);
-					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
-						@Override
-						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-							showProgressDialog(false);
-							showLyricsDialog(true);
-							lyricsCancel.setVisibility(View.GONE);
-							if (foundLyrics) {
-								lyricsTextView.setText(Html.fromHtml(lyrics));
-							} else {
-								String songName = artist + " - " + title;
-								lyricsTextView.setText(buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName));
-							}
-						}
-					});
-				}
-			});
-			lyricsCancel.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showLyricsDialog(false);
+					createLyricsDialog(title, artist, null);
 				}
 			});
 		}
 
-		public void createId3dialog(String[] fields) {
-			isId3Show = true;
-			final MP3Editor editor = new MP3Editor(view.getContext());
+		public void createDirectoryChooserDialog() {
+			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
+				@Override
+				public void onChosenDir(String chosenDir) {
+					textPath.setText(chosenDir);
+					OnlineSearchView.setDownloadPath(view.getContext(), chosenDir);
+				}
+			});
+			if (null != SongArrayHolder.getInstance().getDirectoryChooserPath()) {
+				directoryChooserDialog.chooseDirectory(SongArrayHolder.getInstance().getDirectoryChooserPath());
+			} else {
+				directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(view.getContext()));
+			}
+		}
+		
+		public void createLyricsDialog(final String title, final String artist, String lyrics) {
+			SongArrayHolder.getInstance().setLyricsOpened(true, new String[] {title, artist});
+			LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+			if (OnlineSearchView.isOffline(view.getContext())) {
+				Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
+				return;
+			}
+			final View lyricsView = inflater.inflate(R.layout.lyrics_view, null);
+			AlertDialog.Builder b = new Builder(view.getContext());
+			b.setView(lyricsView);
+			b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					SongArrayHolder.getInstance().setLyricsOpened(false, null);
+					SongArrayHolder.getInstance().setLyricsString(null);
+				}
+			});
+			b.create().show();
+			LyricsFetcher lyricsFetcher = new LyricsFetcher(buttonShowLyrics.getContext());
+			lyricsFetcher.fetchLyrics(title, artist);
+			final TextView lyricsTextView = (TextView)lyricsView.findViewById(R.id.lyrics);
+			final LinearLayout progressLayout = (LinearLayout)lyricsView.findViewById(R.id.download_progress);
+			if (null == lyrics) {
+				lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+					@Override
+					public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+						progressLayout.setVisibility(View.GONE);
+						if (foundLyrics) {
+							lyricsTextView.setText(Html.fromHtml(lyrics));
+							SongArrayHolder.getInstance().setLyricsString(lyrics);
+						} else {
+							String songName = artist + " - " + title;
+							lyricsTextView.setText(buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName));
+						}
+					}
+				});
+			} else {
+				if (lyrics.equals("")) {
+					String songName = artist + " - " + title;
+					lyricsTextView.setText(buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName));
+				} else {
+					lyricsTextView.setText(Html.fromHtml(lyrics));
+				}
+				progressLayout.setVisibility(View.GONE);
+			}
+		}
+
+		public void createId3dialog(String[] fields, boolean enableCover) {
+			//TODO: bug here!!!
+			SongArrayHolder.getInstance().setID3DialogOpened(true, fields, 
+					SongArrayHolder.getInstance().isCoverEnabled());
+			final MP3Editor editor = new MP3Editor(view.getContext(), enableCover);
 			editor.setStrings(fields);
 			AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editor.getView());
 			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					sFields = new ArrayList<String>(Arrays.asList(editor.getNewArtistName(), editor.getNewAlbumTitle(), editor.getNewSongTitle(), String.valueOf(editor.useAlbumCover())));
-					isId3Show = false;
+					SharedPreferences.Editor settingsEditor = PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit();
+					String artistName = editor.getNewArtistName();
+					String albumTitle =  editor.getNewAlbumTitle();
+					String songTitle = editor.getNewSongTitle();
+					
+					boolean useAlbumCover = editor.useAlbumCover();
+					settingsEditor.putString(BaseConstants.EDIT_ARTIST_NAME, artistName);
+					settingsEditor.putString(BaseConstants.EDIT_ALBUM_TITLE, albumTitle);
+					settingsEditor.putString(BaseConstants.EDIT_SONG_TITLE, songTitle);
+					settingsEditor.putBoolean(BaseConstants.USE_ALBUM_COVER, useAlbumCover);
+					settingsEditor.commit();
+					SongArrayHolder.getInstance().setID3DialogOpened(false, null, useAlbumCover);
 				}
 			});
 			builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -265,7 +265,7 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 					settingsEditor.putString(BaseConstants.EDIT_SONG_TITLE, "");
 					settingsEditor.putBoolean(BaseConstants.USE_ALBUM_COVER, true);
 					settingsEditor.commit();
-					isId3Show = false;
+					SongArrayHolder.getInstance().setID3DialogOpened(false, null, true);
 				}
 			});
 			AlertDialog alertDialog = builder.create();  

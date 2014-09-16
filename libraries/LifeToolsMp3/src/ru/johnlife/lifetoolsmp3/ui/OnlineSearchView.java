@@ -6,6 +6,7 @@ import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
@@ -94,13 +95,12 @@ public abstract class OnlineSearchView extends View {
 				Bundle bundle = new Bundle(0);
 				bundle.putInt(KEY_POSITION, position);
 				if (fullAction) {
-					createStreamDialog(bundle).show();
+					createStreamDialog(bundle, false).show();
 				} else {
 					view.findViewById(R.id.downloads).setVisibility(View.GONE);
 					click(view);
 				}
 			}
-
 		});
 		searchField = (TextView) view.findViewById(R.id.text);
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -136,6 +136,26 @@ public abstract class OnlineSearchView extends View {
 				progress.setVisibility(View.GONE);
 			}
 		});
+		SongArrayHolder.getInstance().setResultsToAdapter(this);
+		if (SongArrayHolder.getInstance().isStreamDialogOpened()) {
+			Bundle args = SongArrayHolder.getInstance().getStreamDialogArgs();
+			createStreamDialog(args, true).show();
+		}
+		if (SongArrayHolder.getInstance().isID3DialogOpened()) {
+			createId3Dialog(SongArrayHolder.getInstance().getID3Fields(),
+					SongArrayHolder.getInstance().isCoverEnabled());
+		}
+		if (SongArrayHolder.getInstance().isLyricsOpened()) {
+			createLyricsDialog(SongArrayHolder.getInstance().getTitleArtistLyrics(), 
+					SongArrayHolder.getInstance().getLyrics());
+		}
+		if (SongArrayHolder.getInstance().isDirectoryChooserOpened()) {
+			player.createDirectoryChooserDialog();
+		}
+	}
+	
+	protected View biuldCustomView() {
+		return null;
 	}
 
 	public void initSearchEngines(Context context) {
@@ -216,16 +236,6 @@ public abstract class OnlineSearchView extends View {
 		edit.putString(OnlineSearchView.DOWNLOAD_DIR, downloadPath);
 		edit.commit();
 	}
-
-	// public static final View getInstanceView(LayoutInflater inflater,
-	// SearchBrowserActivity activity) {
-	// View instanceView = getInstance(inflater, activity).view;
-	// ViewGroup parent = (ViewGroup) instanceView.getParent();
-	// if (null != parent) {
-	// parent.removeView(instanceView);
-	// }
-	// return instanceView;
-	// }
 
 	public final class SongSearchAdapter extends ArrayAdapter<Song> {
 		private LayoutInflater inflater;
@@ -383,7 +393,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	@SuppressLint("NewApi")
-	public Dialog createStreamDialog(Bundle args) {
+	public Dialog createStreamDialog(Bundle args, boolean force) {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return null;
 		}
@@ -397,6 +407,9 @@ public abstract class OnlineSearchView extends View {
 				loadSong(downloadUrl);
 			}
 		};
+		if (force) {
+			player = SongArrayHolder.getInstance().getPlayerInstance();
+		}
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			player = new Player(inflater.inflate(R.layout.download_dialog, null), title, artist);
@@ -408,7 +421,6 @@ public abstract class OnlineSearchView extends View {
 				if (url != null) {
 					loadSong(url);
 				} else {
-					player.showProgressDialog(true);
 					urlTask.execute(song);
 				}
 			} catch (ClassCastException ex) {
@@ -430,13 +442,12 @@ public abstract class OnlineSearchView extends View {
 		final Runnable dialogDismisser = new Runnable() {
 			@Override
 			public void run() {
+				SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
 				if (player != null) {
 					player.cancel();
 					player = null;
 				}
 				urlTask.cancel(true);
-				// TODO: dismiss dialog here!
-				// activity.removeDialog(STREAM_DIALOG_ID);
 			}
 		};
 		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, (RemoteSong) song, null) {
@@ -479,13 +490,13 @@ public abstract class OnlineSearchView extends View {
 				dialogDismisser.run();
 			}
 		});
+		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);
 		return alertDialog;
 	}
 
 	private void loadSong(String downloadUrl) {
 		if (player != null) {
 			player.setDownloadUrl(downloadUrl);
-			player.showProgressDialog(false);
 			player.execute();
 		}
 	}
@@ -497,10 +508,9 @@ public abstract class OnlineSearchView extends View {
 		context.startActivity(dm);
 	}
 
-	public boolean isId3Show() {
-		if (null == player)
-			return false;
-		return player.isId3Show;
+	private void createId3Dialog(String[] fields, boolean enableCover) {
+		if (null == player) return;
+		player.createId3dialog(fields, enableCover);
 	}
 	
 	private String formatTime(int duration) {
@@ -510,10 +520,9 @@ public abstract class OnlineSearchView extends View {
 		return String.format("%d:%02d", min, sec);
 	}
 
-	public void createId3Dialog(String[] fields) {
-		if (null == player)
-			return;
-		player.createId3dialog(fields);
+	private void createLyricsDialog(String[] titleArtist, String lyrics) {
+		if (null == player) return;
+		player.createLyricsDialog(titleArtist[0], titleArtist[1], lyrics);
 	}
 
 	public void setSearchField(String str) {

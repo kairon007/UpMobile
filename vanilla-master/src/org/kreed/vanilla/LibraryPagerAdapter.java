@@ -26,7 +26,6 @@ import java.util.Arrays;
 
 import org.kreed.vanilla.app.VanillaApp;
 
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -203,6 +202,8 @@ public class LibraryPagerAdapter
 	 * The position of the genres page, or -1 if it is hidden.
 	 */
 	public int mGenresPosition = -1;
+	
+	private SearchView searchView;
 
 	private final ContentObserver mPlaylistObserver = new ContentObserver(null) {
 		@Override
@@ -215,9 +216,7 @@ public class LibraryPagerAdapter
 	};
 	
 	private int currentType = -1;
-	
-	private SearchView searchView;
-	
+		
 	/**
 	 * Create the LibraryPager.
 	 *
@@ -338,7 +337,6 @@ public class LibraryPagerAdapter
 			LibraryAdapter adapter;
 			TextView header = null;
 			Typeface font = VanillaApp.FONT_LIGHT;
-			searchView = new SearchView(inflater);
 			switch (type) {
 			case MediaUtils.TYPE_ARTIST: 
 				adapter = mArtistAdapter = new MediaAdapter(activity, MediaUtils.TYPE_ARTIST, null);
@@ -381,6 +379,7 @@ public class LibraryPagerAdapter
 				mPendingFileLimiter = null;
 				break;
 			case MediaUtils.TYPE_SEARCH:
+				searchView = new SearchView(inflater);
 				View viewSearchTab = searchView.getView();
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					viewSearchTab.findViewById(R.id.search_field).setBackgroundDrawable
@@ -392,7 +391,6 @@ public class LibraryPagerAdapter
 					viewSearchTab.findViewById(R.id.search_field).setBackgroundDrawable
 						(activity.getResources().getDrawable(R.drawable.search_background_black));
 				}
-				SongArrayHolder.getInstance().setResultsToAdapter(searchView);
 				container.addView(viewSearchTab);
 				return viewSearchTab;
 			default:
@@ -877,15 +875,6 @@ public class LibraryPagerAdapter
 		// - setPrimaryItem isn't called until scrolling is complete, which
 		//   makes tab bar and limiter updates look bad
 		// So we use both.
-		if (position == 0) {
-			if (searchView != null && searchView.getResultAdapter().getCount() == 0 && SongArrayHolder.getInstance().getResults() != null) {
-				SongArrayHolder.getInstance().setResultsToAdapter(searchView);
-			}
-		} else {
-			if (searchView != null && searchView.getResultAdapter().getCount() != 0) {
-				SongArrayHolder.getInstance().getResultsFromAdapter(searchView);
-			}
-		}
 		setPrimaryItem(null, position, null);
 	}
 
@@ -933,12 +922,8 @@ public class LibraryPagerAdapter
 		}
 		mActivity.mFakeTarget = false;
 	}
-
+	
 	public SearchView getSearchView() {
 		return searchView;
-	}
-
-	public void setSearchView(SearchView searchView) {
-		this.searchView = searchView;
 	}
 }
