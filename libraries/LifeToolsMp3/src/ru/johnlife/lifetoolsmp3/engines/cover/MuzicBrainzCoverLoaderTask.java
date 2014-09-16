@@ -119,8 +119,6 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 		int Offset = releaseIdTag.length();
 		for (int i = 0; i < arrayString2.length; i++)
 			if (arrayString2[i] != null) {
-				Log.e("i=" + i, arrayString2[i].indexOf(releaseIdTag) + "<-");
-
 				indexOfReleaseId = arrayString2[i].indexOf(releaseIdTag);
 				indexOfReleaseIdEnd = arrayString2[i].indexOf(releaseIdEnd,
 						indexOfReleaseId);
@@ -161,7 +159,6 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 					String line;
 					while ((line = reader.readLine()) != null) {
 						sb.append(line);
-						Log.e("!!!", line + "\n");
 					}
 					reader.close();
 				} catch (IOException e) {
