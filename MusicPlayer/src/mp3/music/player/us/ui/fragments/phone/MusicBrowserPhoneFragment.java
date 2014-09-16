@@ -33,7 +33,7 @@ import com.actionbarsherlock.view.MenuItem;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.PagerAdapter;
 import mp3.music.player.us.adapters.PagerAdapter.MusicFragments;
-import mp3.music.player.us.ui.OnlineSearchView;
+import mp3.music.player.us.ui.SearchView;
 import mp3.music.player.us.ui.activities.HomeActivity;
 import mp3.music.player.us.ui.fragments.AlbumFragment;
 import mp3.music.player.us.ui.fragments.ArtistFragment;
@@ -79,7 +79,7 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
 
     private PreferenceUtils mPreferences;
     
-    private OnlineSearchView onlineSearchView;
+    private SearchView onlineSearchView;
     
 
     /**
@@ -140,9 +140,9 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
 		String str = args.getString("key");
 		if (str != null && !str.isEmpty()) {
 			mViewPager.setCurrentItem(0);
-			OnlineSearchView search = OnlineSearchView.getInstance();
-			search.searchField.setText(null);
-			search.searchField.setText(str);
+			//TODO: ???
+			SearchView search = new SearchView(inflater);
+			search.setSearchField(str);
 			search.search(str);
 			
 		} else {

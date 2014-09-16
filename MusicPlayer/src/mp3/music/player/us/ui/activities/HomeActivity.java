@@ -12,15 +12,13 @@
 package mp3.music.player.us.ui.activities;
 
 import java.util.Random;
-import java.util.prefs.Preferences;
 
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import mp3.music.player.us.Advertisement;
 import mp3.music.player.us.Constants;
-import mp3.music.player.us.Settings;
 import mp3.music.player.us.R;
-import mp3.music.player.us.ui.OnlineSearchView;
+import mp3.music.player.us.Settings;
 import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -223,9 +221,9 @@ public class HomeActivity extends BaseActivity {
 
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
-		if (id == OnlineSearchView.STREAM_DIALOG_ID) {
-			return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args, this);
-		}
+//		if (id == SearchView.STREAM_DIALOG_ID) {
+//			return SearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args, this);
+//		}
 		return super.onCreateDialog(id, args);
 	}
 	
