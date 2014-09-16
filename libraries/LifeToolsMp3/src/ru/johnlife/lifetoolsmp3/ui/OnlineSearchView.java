@@ -69,12 +69,14 @@ public abstract class OnlineSearchView extends View {
 	private ListView listView;
 
 	protected abstract BaseSettings getSettings();
+
 	protected abstract Advertisment getAdvertisment();
 
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
 		this.view = inflater.inflate(R.layout.search, null);
-		resultAdapter = new SongSearchAdapter(getContext(), inflater);
+		final boolean fullAction = showElement();
+		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
 		initSearchEngines(getContext());
 		message = (TextView) view.findViewById(R.id.message);
 		progress = view.findViewById(R.id.progress);
@@ -91,10 +93,14 @@ public abstract class OnlineSearchView extends View {
 					return; // progress click
 				Bundle bundle = new Bundle(0);
 				bundle.putInt(KEY_POSITION, position);
-				if (showDownloadDialog()) {
+				if (fullAction) {
 					createStreamDialog(bundle).show();
+				} else {
+					view.findViewById(R.id.downloads).setVisibility(View.GONE);
+					click(view);
 				}
 			}
+
 		});
 		searchField = (TextView) view.findViewById(R.id.text);
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -131,10 +137,6 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 	}
-	
-	protected View biuldCustomView() {
-		return null;
-	}
 
 	public void initSearchEngines(Context context) {
 		if (null != engines)
@@ -153,12 +155,20 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	}
-	
-	protected boolean showDownloadDialog() {
+
+	protected boolean showElement() {
 		return true;
 	}
-	
-	
+
+	protected void click(View view) {
+		// TODO в данлоадере вернуть false и в этом методе реализовать передачу
+		// песни в плеер
+	}
+
+	protected DownloadClickListener createListener(RemoteSong song, Bitmap bitmap) {
+		return new DownloadClickListener(getContext(), song, bitmap);
+	}
+
 	public static String getDownloadPath(Context context) {
 		String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
 		if (context != null) {
@@ -222,12 +232,14 @@ public abstract class OnlineSearchView extends View {
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
 		private SparseArray<Bitmap> bitmaps = new SparseArray<Bitmap>(0);
+		private boolean fullAction;
 
-		private SongSearchAdapter(Context context, LayoutInflater inflater) {
+		private SongSearchAdapter(Context context, LayoutInflater inflater, boolean fullAction) {
 			super(context, -1, new ArrayList<Song>());
 			this.inflater = inflater;
 			this.footer = new FrameLayout(context);
 			this.refreshSpinner = new ProgressBar(context);
+			this.fullAction = fullAction;
 			refreshSpinner.setIndeterminate(true);
 			footer.addView(refreshSpinner, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
 			refreshSpinner.setVisibility(View.GONE);
@@ -237,7 +249,14 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setButtonVisible(false).setLongClickable(false).setExpandable(false).setLine1(song.getTitle()).setLine2(song.getArtist()).setId(position).setIcon(R.drawable.fallback_cover);
+			builder.setButtonVisible(false)
+				.setLongClickable(false)
+				.setExpandable(false)
+				.setLine2(song.getArtist())
+				.setId(position)
+				.setIcon(R.drawable.fallback_cover)
+				.setButtonVisible(fullAction ? false : true)
+				.setLine1(song.getTitle(), fullAction ? null : formatTime((int)song.getDuration()));
 			// TODO: remove double-cacheing
 			Bitmap cover = bitmaps.get(position);
 			if (cover != null) {
@@ -474,19 +493,28 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public boolean isId3Show() {
-		if (null == player)	return false;
+		if (null == player)
+			return false;
 		return player.isId3Show;
+	}
+	
+	private String formatTime(int duration) {
+		duration /= 1000;
+		int min = duration / 60;
+		int sec = duration % 60;
+		return String.format("%d:%02d", min, sec);
 	}
 
 	public void createId3Dialog(String[] fields) {
-		if (null == player) return;
+		if (null == player)
+			return;
 		player.createId3dialog(fields);
 	}
-	
+
 	public void setSearchField(String str) {
 		searchField.setText(str);
 	}
-	
+
 	public TextView getSearchField() {
 		return searchField;
 	}
@@ -494,12 +522,15 @@ public abstract class OnlineSearchView extends View {
 	public String getCurrentName() {
 		return currentName;
 	}
+
 	public void setCurrentName(String currentName) {
 		this.currentName = currentName;
 	}
+
 	public boolean isSearchStopped() {
 		return searchStopped;
 	}
+
 	public void setSearchStopped(boolean searchStopped) {
 		this.searchStopped = searchStopped;
 	}

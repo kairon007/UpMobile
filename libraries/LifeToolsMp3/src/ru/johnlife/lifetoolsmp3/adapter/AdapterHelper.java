@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
@@ -18,9 +19,10 @@ public class AdapterHelper {
 	public static class ViewBuilder {
 		private long id;
 		private String title;
-		private TextView text;
+		private TextView artistLine;
 		private TextView number;
-		private TextView line2;
+		private TextView titleLine;
+		private TextView chunkTime;
 		private ImageView arrow;
 		private ImageView cover;
 		private View view;
@@ -31,14 +33,20 @@ public class AdapterHelper {
 			view.setTag(this);
 			this.view = view; 
 			view.setLongClickable(true);
-			text = (TextView)view.findViewById(R.id.text);
-			text.setTypeface(MusicApp.FONT_LIGHT);
-			line2 = (TextView)view.findViewById(R.id.line2);
-			line2.setTypeface(MusicApp.FONT_REGULAR);
-			number = (TextView)view.findViewById(R.id.number);
+			init(view);
+			titleLine.setTypeface(MusicApp.FONT_REGULAR);
+			artistLine.setTypeface(MusicApp.FONT_LIGHT);
+			chunkTime.setTypeface(MusicApp.FONT_REGULAR);
 			number.setTypeface(MusicApp.FONT_LIGHT);
-			caption = (TextView)view.findViewById(R.id.caption);
 			caption.setTypeface(MusicApp.FONT_LIGHT);
+		}
+
+		private void init(View view) {
+			artistLine = (TextView)view.findViewById(R.id.artistLine);
+			titleLine = (TextView)view.findViewById(R.id.titleLine);
+			chunkTime = (TextView) view.findViewById(R.id.chunkTime);
+			number = (TextView)view.findViewById(R.id.number);
+			caption = (TextView)view.findViewById(R.id.caption);
 			arrow = (ImageView)view.findViewById(R.id.arrow);
 			cover = (ImageView)view.findViewById(R.id.cover);
 			left = (View) number.getParent();
@@ -78,15 +86,17 @@ public class AdapterHelper {
 			return this;
 		}
 		
-		public ViewBuilder setLine1(String value) {
-			text.setText(value);
-			title = value;
+		public ViewBuilder setLine1(String valueTitle, String valueTime) {
+			setVisibility(chunkTime, valueTime);
+			setVisibility(titleLine, valueTitle);
+			artistLine.setText(valueTitle);
+			title = valueTitle;
 			return this;
 		}
 		
 		public ViewBuilder setLine2(String value) {
-			line2.setText(value);
-			setVisibility(line2, value);
+			titleLine.setText(value);
+			setVisibility(titleLine, value);
 			return this;
 		}
 		
