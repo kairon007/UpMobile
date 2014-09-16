@@ -1,5 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
@@ -62,6 +64,7 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 		private Button lyricsCancel;
 		private Button cancelLoadLyrics;
 		boolean isId3Show = false;
+		private ArrayList <String> sFields;
 
 
 		public void setSongId(Integer songId) {
@@ -248,17 +251,7 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					SharedPreferences.Editor settingsEditor = PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit();
-					String artistName = editor.getNewArtistName();
-					String albumTitle =  editor.getNewAlbumTitle();
-					String songTitle = editor.getNewSongTitle();
-					
-					boolean useAlbumCover = editor.useAlbumCover();
-					settingsEditor.putString(BaseConstants.EDIT_ARTIST_NAME, artistName);
-					settingsEditor.putString(BaseConstants.EDIT_ALBUM_TITLE, albumTitle);
-					settingsEditor.putString(BaseConstants.EDIT_SONG_TITLE, songTitle);
-					settingsEditor.putBoolean(BaseConstants.USE_ALBUM_COVER, useAlbumCover);
-					settingsEditor.commit();
+					sFields = new ArrayList<String>(Arrays.asList(editor.getNewArtistName(), editor.getNewAlbumTitle(), editor.getNewSongTitle(), String.valueOf(editor.useAlbumCover())));
 					isId3Show = false;
 				}
 			});
@@ -277,6 +270,10 @@ final class Player extends AsyncTask<String, Void, Boolean> {
 			});
 			AlertDialog alertDialog = builder.create();  
 			alertDialog.show();
+		}
+		
+		public ArrayList <String> getFields () {
+			return sFields;
 		}
 		
 		public Integer getSongId() {

@@ -48,6 +48,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private String duration = "";
 	public Integer songId;
 	private boolean waitingForCover = true;
+	private String album;
+	private boolean useAlbumCover = true;
 
 	protected DownloadClickListener(Context context, RemoteSong song, Bitmap bitmap) {
 		this.context = context;
@@ -59,6 +61,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		URL = song.getDownloadUrl();
 		duration = formatTime(song.getDuration());
 		headers = song.getHeaders();
+	}
+	
+	public void setSong ( ArrayList <String> sFields){
+		songArtist = sFields.get(0);
+		album = sFields.get(1);
+		songTitle = sFields.get(2);
+		useAlbumCover = (Boolean.getBoolean(sFields.get(3))) ;
 	}
 
 	@SuppressLint("NewApi")
@@ -127,7 +136,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					if (null != cover) {
 						ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 						cover.compress(CompressFormat.JPEG, 85, out);
-						metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+						if (useAlbumCover) {
+							metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+						}
+						metadata.setAlbum(album);
 					}
 					File dst = new File(src.getParentFile(), src.getName() + "-1");
 					try {

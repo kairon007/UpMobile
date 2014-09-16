@@ -464,6 +464,11 @@ public abstract class OnlineSearchView extends View {
 		b.setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				ArrayList<String> sFields = player.getFields();
+				if (null != sFields) {
+					downloadClickListener.setSong(sFields);
+				}
+
 				downloadClickListener.onClick(new View(getContext()));
 			}
 		});
