@@ -13,7 +13,6 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadUrlGetterTask;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
@@ -482,5 +481,9 @@ public abstract class OnlineSearchView extends View {
 	public void createId3Dialog(String[] fields) {
 		if (null == player) return;
 		player.createId3dialog(fields);
+	}
+	
+	public void setSearchField(String str) {
+		searchField.setText(str);
 	}
 }
