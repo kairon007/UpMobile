@@ -2,11 +2,6 @@ package ru.johnlife.lifetoolsmp3.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +24,6 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -37,7 +31,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -45,7 +38,7 @@ import android.widget.Toast;
 public class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
 
 	private final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
-	private ArrayList<String[]> headers = new ArrayList<>();
+	private ArrayList<String[]> headers = new ArrayList<String[]>();
 	private Context context;
 	private RemoteSong song;
 	private Bitmap cover;
