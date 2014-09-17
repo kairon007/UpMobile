@@ -60,6 +60,20 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		boolean isId3Show = false;
 		private ArrayList <String> sFields;
 		private String title, artist;
+		private Bitmap coverBitmap;
+		private boolean coverProgressVisible = true;
+		private String timeText;
+		private boolean rlCoverProgressVisible = true;
+		int current;
+		Runnable action;
+		boolean indeterminate;
+		int duration;
+		int imagePause;
+		boolean buttonVisible = false;
+		boolean spinnerVisible = true;
+		private SharedPreferences.Editor settingsEditor;
+		private DirectoryChooserDialog directoryChooserDialog;
+		private String chosenDir;
 
 
 		public void setSongId(Integer songId) {
@@ -86,12 +100,31 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			final String[] arrayField = {artist, title, ""};
 			songId = -1;
 			spinner = (ProgressBar) view.findViewById(R.id.spinner);
+			if (!spinnerVisible) {
+				spinner.setVisibility(View.GONE);
+			}
 			button = (ImageButton) view.findViewById(R.id.pause);
+			button.setImageResource(imagePause);
+			if (buttonVisible) {
+				button.setVisibility(View.VISIBLE);
+			}
 			progress = (ProgressBar) view.findViewById(R.id.progress);
+			progress.setProgress(current);
+			progress.postDelayed(action, 1000);
+			progress.setIndeterminate(indeterminate);
+			progress.setMax(duration);
 			time = (TextView) view.findViewById(R.id.time);
+			time.setText(timeText);
 			coverImage = (ImageView) view.findViewById(R.id.cover);
+			coverImage.setImageBitmap(coverBitmap);
 			coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
+			if (!coverProgressVisible) {
+				coverProgress.setVisibility(View.GONE);
+			}
 			rlCoverProgress = (RelativeLayout) view.findViewById(R.id.rlCoverProgress);
+			if (!rlCoverProgressVisible) {
+				rlCoverProgress.setVisibility(View.GONE);
+			}
 			textPath = (TextView) view.findViewById(R.id.text_path_download);
 			textPath.setText(OnlineSearchView.getDownloadPath(view.getContext()));
 			viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
@@ -159,7 +192,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				}
 			});
 			buttonEditMp3Tag.setOnClickListener(new View.OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					createId3dialog(arrayField, true);
@@ -171,12 +204,17 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 					createLyricsDialog(title, artist, null);
 				}
 			});
+		if (null != chosenDir) {
+			OnlineSearchView.setDownloadPath(view.getContext(), chosenDir);
 		}
+		
+	}
 
 		public void createDirectoryChooserDialog() {
-			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
+			directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
 				@Override
-				public void onChosenDir(String chosenDir) {
+				public void onChosenDir(String chDir) {
+					chosenDir = chDir;
 					textPath.setText(chosenDir);
 					OnlineSearchView.setDownloadPath(view.getContext(), chosenDir);
 				}
@@ -247,7 +285,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					SharedPreferences.Editor settingsEditor = PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit();
+					settingsEditor = PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit();
 					String artistName = editor.getNewArtistName();
 					String albumTitle =  editor.getNewAlbumTitle();
 					String songTitle = editor.getNewSongTitle();
@@ -265,7 +303,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					SharedPreferences.Editor settingsEditor = PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit();
+					settingsEditor = PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit();
 					settingsEditor.putString(BaseConstants.EDIT_ARTIST_NAME, "");
 					settingsEditor.putString(BaseConstants.EDIT_ALBUM_TITLE, "");
 					settingsEditor.putString(BaseConstants.EDIT_SONG_TITLE, "");
@@ -303,9 +341,12 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 		public void setCover(Bitmap bmp) {
 			coverProgress.setVisibility(View.GONE);
+			coverProgressVisible = false;
+			rlCoverProgressVisible = false;
 			rlCoverProgress.setVisibility(View.GONE);
 			if (null != bmp) {
 				coverImage.setImageBitmap(bmp);
+				coverBitmap = bmp;
 			}
 		}
 
@@ -333,11 +374,13 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			@Override
 			public void run() {
 				try {
-					int current = mediaPlayer.getCurrentPosition();
+					current = mediaPlayer.getCurrentPosition();
 					int total = mediaPlayer.getDuration();
 					progress.setProgress(current);
-					time.setText(formatTime(current) + " / " + formatTime(total));
-					progress.postDelayed(this, 1000);
+					timeText = formatTime(current) + " / " + formatTime(total);
+					time.setText(timeText);
+					action = this;
+					progress.postDelayed(action, 1000);
 				} catch (NullPointerException e) {
 					// terminate
 				}
@@ -345,19 +388,23 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		};
 
 		public void onPrepared() {
+			spinnerVisible = false;
 			spinner.setVisibility(View.GONE);
+			buttonVisible = true;
 			button.setVisibility(View.VISIBLE);
 //			Intent i = new Intent(PlaybackService.ACTION_PAUSE);
 //			spinner.getContext().startService(i);
-			int duration = mediaPlayer.getDuration();
+			duration = mediaPlayer.getDuration();
 			if (duration == -1) {
 				progress.setIndeterminate(true);
 			} else {
 				time.setText(formatTime(duration));
 				progress.setIndeterminate(false);
-				progress.setProgress(0);
+				current = 0;
+				progress.setProgress(current);
 				progress.setMax(duration);
-				progress.postDelayed(progressAction, 1000);
+				action = progressAction;
+				progress.postDelayed(action, 1000);
 			}
 		}
 
@@ -369,18 +416,24 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		}
 
 		public void onPaused() {
+			imagePause = R.drawable.play;
 			button.setImageResource(R.drawable.play);
 		}
 
 		public void onResumed() {
+			imagePause = R.drawable.pause;
 			button.setImageResource(R.drawable.pause);
 		}
 
 		public void onFinished() {
+			buttonVisible = false;
 			button.setVisibility(View.INVISIBLE);
-			progress.setIndeterminate(false);
-			progress.setProgress(100);
-			progress.setMax(100);
+			indeterminate = false;
+			progress.setIndeterminate(indeterminate);
+			current = 100;
+			progress.setProgress(current);
+			duration = 100;
+			progress.setMax(duration);
 			progress.removeCallbacks(progressAction);
 		}
 
