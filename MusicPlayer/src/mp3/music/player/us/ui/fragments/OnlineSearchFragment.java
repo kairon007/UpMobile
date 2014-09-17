@@ -1,5 +1,6 @@
 package mp3.music.player.us.ui.fragments;
 
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import mp3.music.player.us.Constants;
 import mp3.music.player.us.ui.SearchView;
 import android.annotation.SuppressLint;
@@ -13,10 +14,12 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class OnlineSearchFragment extends SherlockFragment {
 	
+	private SearchView searchView;
+
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		SearchView searchView = new SearchView(inflater);
+		searchView = new SearchView(inflater);
 		getSherlockActivity().getIntent();
 		Intent intent = getSherlockActivity().getIntent();
 		String str = intent.getStringExtra(Constants.EXTRA_SEARCH);
@@ -25,5 +28,11 @@ public class OnlineSearchFragment extends SherlockFragment {
 			searchView.trySearch();
 		}		
 		return searchView.getView();
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		SongArrayHolder.getInstance().getResultsFromAdapter(searchView);
+		super.onSaveInstanceState(outState);
 	}
 }

@@ -43,7 +43,6 @@ public class SearchBrowserActivity extends Activity {
 		searchView = new SearchView(getLayoutInflater());
 		viewSearchActivity = searchView.getView();
 		layout.addView(viewSearchActivity);
-		SongArrayHolder.getInstance().setResultsToAdapter(searchView);
 		if (Settings.ENABLE_ADS) {
 			Advertisement.mopubShowBanner(this);
 		}
