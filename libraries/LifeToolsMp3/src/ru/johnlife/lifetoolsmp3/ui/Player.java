@@ -59,11 +59,11 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		private int songId;
 		boolean isId3Show = false;
 		private ArrayList <String> sFields;
+		private String title, artist;
 
 
 		public void setSongId(Integer songId) {
 			this.songId = songId;
-
 		}
 
 		public void setTitle(String title) {
@@ -71,9 +71,15 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			if (textView != null)
 				textView.setText(title);
 		}
-
+		
 		public Player(final View view, final String title, final String artist) {
 			super();
+			this.artist = artist;
+			this.title = title;
+			initView(view);
+		}
+		
+		public void initView(final View view) {
 			this.view = view;
 			final String[] arrayField = {artist, title, ""};
 			songId = -1;

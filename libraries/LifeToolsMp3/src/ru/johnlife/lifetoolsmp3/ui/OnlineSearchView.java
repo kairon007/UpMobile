@@ -433,6 +433,7 @@ public abstract class OnlineSearchView extends View {
 		};
 		if (force) {
 			player = SongArrayHolder.getInstance().getPlayerInstance();
+			player.initView(inflate(context, R.layout.download_dialog, null));
 		}
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
