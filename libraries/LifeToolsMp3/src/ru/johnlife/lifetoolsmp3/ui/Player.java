@@ -76,6 +76,8 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			super();
 			this.artist = artist;
 			this.title = title;
+			mediaPlayer = new MediaPlayer();
+			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			initView(view);
 		}
 		
@@ -83,8 +85,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			this.view = view;
 			final String[] arrayField = {artist, title, ""};
 			songId = -1;
-			mediaPlayer = new MediaPlayer();
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			spinner = (ProgressBar) view.findViewById(R.id.spinner);
 			button = (ImageButton) view.findViewById(R.id.pause);
 			progress = (ProgressBar) view.findViewById(R.id.progress);
