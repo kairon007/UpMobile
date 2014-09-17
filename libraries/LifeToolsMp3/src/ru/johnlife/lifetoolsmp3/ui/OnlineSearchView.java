@@ -7,6 +7,7 @@ import java.util.List;
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
@@ -271,7 +272,7 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setLine1(song.getTitle(), fullAction ? null : formatTime((int)song.getDuration()))
+			builder.setLine1(song.getTitle(), fullAction ? null : Util.formatTimeSimple((int)song.getDuration()))
 					.setLongClickable(false)
 					.setExpandable(false)
 					.setLine2(song.getArtist())
@@ -534,13 +535,6 @@ public abstract class OnlineSearchView extends View {
 		player.createId3dialog(fields, enableCover);
 	}
 	
-	private String formatTime(int duration) {
-		duration /= 1000;
-		int min = duration / 60;
-		int sec = duration % 60;
-		return String.format("%d:%02d", min, sec);
-	}
-
 	private void createLyricsDialog(String[] titleArtist, String lyrics) {
 		if (null == player) return;
 		player.createLyricsDialog(titleArtist[0], titleArtist[1], lyrics);

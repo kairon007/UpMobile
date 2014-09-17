@@ -1,18 +1,23 @@
 package org.kreed.musicdownloader.ui.tab;
 
+import java.util.ArrayList;
+
+import org.kreed.musicdownloader.Constans;
+import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.engines.task.DownloadListener;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
 
-import android.view.LayoutInflater;
-import android.view.View;
-
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Toast;
 
 public class SearchView  extends OnlineSearchView {
 	
@@ -30,15 +35,23 @@ public class SearchView  extends OnlineSearchView {
 	}
 
 	protected void click(View view, int position) {
+		RemoteSong song = (RemoteSong) getResultAdapter().getItem(position);
 		if (view.getId() == R.id.btnDownload) {
-			android.util.Log.d("log", "download");
-			RemoteSong song = (RemoteSong) getResultAdapter().getItem(position);
+			
 			DownloadListener listener = new DownloadListener(getContext(),song , null, parentAdapter, activity);
 			song.getCover(listener);
 			listener.onClick(view);
 			return;
 		}
-		android.util.Log.d("log", "play");
+		String path = song.getDownloadUrl(); 
+		MusicData data = new MusicData();
+		data.setSongArtist(song.getArtist());
+		data.setSongTitle(song.getTitle());
+		data.setSongDuration(Util.formatTimeIsoDate(song.getDuration()));
+		data.setFileUri(path);
+		ArrayList<String[]> headers = song.getHeaders();
+		Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
+		((MainActivity) activity).play(headers, data, Constans.CALL_FROM_SEARCH);
 	}
 
 	@Override

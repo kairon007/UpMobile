@@ -16,7 +16,6 @@ import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.ui.Player;
 import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
-import org.kreed.musicdownloader.ui.tab.SearchView;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
@@ -36,7 +35,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;

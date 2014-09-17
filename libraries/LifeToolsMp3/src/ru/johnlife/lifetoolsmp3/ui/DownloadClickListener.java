@@ -2,11 +2,7 @@ package ru.johnlife.lifetoolsmp3.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,6 +13,7 @@ import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
@@ -37,7 +34,6 @@ import android.widget.Toast;
 
 public class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
 
-	private final DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
 	private ArrayList<String[]> headers = new ArrayList<String[]>();
 	private Context context;
 	private RemoteSong song;
@@ -52,8 +48,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private boolean interruptDownload = false;
 	private boolean waitingForCover = true;
 	private double progress = 0.0;
-  private String album;
-private boolean useAlbumCover;
+	private String album;
+	private boolean useAlbumCover;
 
 	protected DownloadClickListener(Context context, RemoteSong song, Bitmap bitmap) {
 		this.context = context;
@@ -63,7 +59,7 @@ private boolean useAlbumCover;
 		songTitle = song.getTitle();
 		songArtist = song.getArtist();
 		URL = song.getDownloadUrl();
-		duration = formatTime(song.getDuration());
+		duration = Util.formatTimeIsoDate(song.getDuration());
 		headers = song.getHeaders();
 	}
 	
@@ -255,10 +251,6 @@ private boolean useAlbumCover;
 			}
 			
 		}.execute();
-	}
-
-	private final String formatTime(long date) {
-		return isoDateFormat.format(new Date(date));
 	}
 
 	@Override
