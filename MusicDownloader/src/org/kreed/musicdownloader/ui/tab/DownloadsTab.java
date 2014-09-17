@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface {
 	
-//	private final Double SET_VIS = 100.0;
 	private ListView listView;
 	private ProgressBar progress;
 	private DownloadsAdapter adapter;
@@ -257,9 +256,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (adapter.getItem(i).getSongTitle().equalsIgnoreCase(currentDownloadingSongTitle) && adapter.getItem(i).getDownloadId() == currentDownloadingID) {
 					adapter.getItem(i).setDownloadProgress(progressDownload);
-//					if (progressDownload > 99.9) {
-//						adapter.getItem(i).setDownloadProgress(SET_VIS);
-//					}
 				}
 			}
 		}

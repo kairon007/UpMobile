@@ -18,9 +18,9 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 
 public class DownloadListener extends DownloadClickListener {
-	
+
 	private DownloadsTab downloadsTab;
-	private  LibraryPagerAdapter adapter;
+	private LibraryPagerAdapter adapter;
 	private MainActivity activity;
 	private Context context;
 
@@ -38,40 +38,40 @@ public class DownloadListener extends DownloadClickListener {
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(duration);
-		data.setSongBitmap(song.getCover(context));	
-		adapter.changeArrayMusicData(data);
+		data.setSongBitmap(cover);
 		DBHelper.getInstance(context).insert(data);
+		adapter.changeArrayMusicData(data);
 	}
-	
+
 	@Override
 	protected String getDirectory() {
 		return Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX;
 	}
-	
+
 	@Override
 	protected void notifyAboutDownload(long downloadId) {
 		InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, songArtist, duration, downloadsTab, downloadId, cover);
 		insertDownloadItem.insertData();
 	}
-	
+
 	@Override
-	protected void notifyDuringDownload(final long currentDownloadId, final String currentDownloadTitle, final  double currentProgress) {
-		if (downloadsTab.getCancelledId() == currentDownloadId) {
-			interruptDownload(true);
-		}
-		if (downloadsTab.getCancelledId() == currentDownloadId) {
-			interruptDownload(true);
-		}
+	protected void notifyDuringDownload(final long currentDownloadId, final String currentDownloadTitle, final double currentProgress) {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				downloadsTab.currentDownloadingID(currentDownloadId);
 				downloadsTab.currentDownloadingSongTitle(currentDownloadTitle);
 				downloadsTab.insertProgress(currentProgress);
+				downloadsTab.insertCover(cover);
 			}
 		});
 	}
-	
+
+	@Override
+	protected boolean isFullAction() {
+		return false;
+	}
+
 	private static class InsertDownloadItem {
 		private MusicDataInterface musicDataInterface;
 		private String songTitle;
@@ -100,6 +100,7 @@ public class DownloadListener extends DownloadClickListener {
 			mItem.setDownloadProgress(0.0);
 			mData.add(mItem);
 			musicDataInterface.insertData(mData);
+
 		}
 	}
 }
