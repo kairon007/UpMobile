@@ -39,6 +39,7 @@ import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -265,16 +266,15 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	public Object instantiateItem(ViewGroup container, int position) {
 		int type = mTabOrder[position];
 		ListView view = mLists[type];
-
 		if (view == null) {
 			MainActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
-			TextView header = null;
-			Typeface font = MusicDownloaderApp.FONT_LIGHT;
 			switch (type) {
 			case MediaUtils.TYPE_SEARCH:
-				searchView = new SearchView(inflater, this, mActivity);
-				View viewSearchActivity = searchView.getView();
+				if (searchView == null) {
+					searchView = new SearchView(inflater, this, mActivity);
+					viewSearchActivity = searchView.getView();	
+				}
 				container.addView(viewSearchActivity);
 				return viewSearchActivity;
 			case MediaUtils.TYPE_DOWNLOADS:
@@ -403,6 +403,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	 */
 	private static final int MSG_COMMIT_QUERY = 3;
 	private SearchView searchView;
+	private View viewSearchActivity;
 
 	@Override
 	public boolean handleMessage(Message message) {
