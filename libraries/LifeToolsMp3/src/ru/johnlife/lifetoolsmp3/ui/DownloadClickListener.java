@@ -45,7 +45,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private String currentDownloadingSongTitle;
 	protected Long currentDownloadId;
 	public Integer songId;
-	private boolean interruptDownload = false;
 	private boolean waitingForCover = true;
 	private double progress = 0.0;
 	private String album;
@@ -62,12 +61,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		duration = Util.formatTimeIsoDate(song.getDuration());
 		headers = song.getHeaders();
 	}
-	
-	public void setSong ( ArrayList <String> sFields){
+
+	public void setSong(ArrayList<String> sFields) {
 		songArtist = sFields.get(0);
 		album = sFields.get(1);
 		songTitle = sFields.get(2);
-		useAlbumCover = (Boolean.getBoolean(sFields.get(3))) ;
+		useAlbumCover = (Boolean.getBoolean(sFields.get(3)));
 	}
 
 	@SuppressLint("NewApi")
@@ -104,7 +103,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 				@Override
 				public void run() {
-					Cursor cs  = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
+					if(isFullAction() && waitingForCover) {
+						return;
+					}
+					Cursor cs = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
 					if (cs.moveToFirst()) {
 						int sizeIndex = cs.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
 						int downloadedIndex = cs.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
@@ -115,77 +117,66 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						if (size != -1) {
 							progress = downloaded * 100.0 / size;
 						}
-						cs.close();
 						notifyDuringDownload(currentDownloadId, currentDownloadingSongTitle, progress);
 					}
-
+					cs.close();
 					Cursor completeCursor = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 					if (completeCursor.moveToFirst()) {
 						if (currentDownloadingSongTitle.equalsIgnoreCase(completeCursor.getString(completeCursor.getColumnIndex(DownloadManager.COLUMN_TITLE)))) {
 							progress = 100;
 							notifyDuringDownload(currentDownloadId, currentDownloadingSongTitle, progress);
+							int columnIndex = 0;
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								columnIndex = completeCursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+							} else if (columnIndex != -1) {
+								columnIndex = completeCursor.getColumnIndex("local_uri");
+							}
+							if (columnIndex == -1)
+								return;
+							String path = completeCursor.getString(columnIndex);
+							completeCursor.close();
+							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+								path = cutPath(path);
+							}
+							src = new File(path);
+							song.path = path;
+							MusicMetadataSet src_set = null;
+							try {
+								src_set = new MyID3().read(src);
+							} catch (Exception exception) {
+								android.util.Log.d("log", "don't read music metadata from file. " + exception);
+							}
+							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+							metadata.clearPictureList();
+							if (isFullAction()) {
+								metadata.setSongTitle(songTitle);
+							} else {
+								metadata.setSongTitle(songTitle + '/' + duration);
+							}
+							metadata.setArtist(songArtist);
+							if (null != cover) {
+								ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+								cover.compress(CompressFormat.JPEG, 85, out);
+								metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+							}
+							File dst = new File(src.getParentFile(), src.getName() + "-1");
+							try {
+								new MyID3().write(src, dst, src_set, metadata);
+								dst.renameTo(src);
+							} catch (Exception e) {
+								android.util.Log.d("log", "don't write music metadata from file. " + e);
+							} finally {
+								if (dst.exists())
+									dst.delete();
+							}
+							notifyMediascanner(song);
 							this.cancel();
 						}
 					}
 					completeCursor.close();
-					if (!completeCursor.isClosed()) {
-						completeCursor.close();
-					}
-					if (!cs.isClosed()) {
-						cs.close();
-					}
-					 if (waitingForCover) {
-					 return;
-					 }
-					Cursor c = null;
-					c = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-					if (c == null || !c.moveToFirst()) {
-						if (c != null) {
-							c.close();
-						}
+					if (waitingForCover) {
 						return;
 					}
-					int columnIndex = 0;
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-					} else if (columnIndex != -1) {
-						columnIndex = c.getColumnIndex("local_uri");
-					}
-					if (columnIndex == -1)
-						return;
-					String path = c.getString(columnIndex);
-					c.close();
-					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-						path = cutPath(path);
-					}
-					src = new File(path);
-					song.path = path;
-					MusicMetadataSet src_set = null;
-					try {
-						src_set = new MyID3().read(src);
-					} catch (Exception exception) {
-						android.util.Log.d("log", "don't read music metadata from file. " + exception);
-					}
-					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-					metadata.clearPictureList();
-					metadata.setSongTitle(songTitle + '/' + duration);
-					metadata.setArtist(songArtist);
-					if (null != cover) {
-						ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-						cover.compress(CompressFormat.JPEG, 85, out);
-						metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-					}
-					File dst = new File(src.getParentFile(), src.getName() + "-1");
-					try {
-						new MyID3().write(src, dst, src_set, metadata);
-						dst.renameTo(src);
-					} catch (Exception e) {
-						android.util.Log.d("log", "don't write music metadata from file. " + e);
-					} finally {
-						if (dst.exists()) dst.delete();
-					}
-					android.util.Log.d("log", "8");
-					notifyMediascanner(song, path);
 				}
 
 				private String cutPath(String s) {
@@ -193,7 +184,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					return s.substring(index - 1);
 				}
 
-				private void notifyMediascanner(final RemoteSong song, String path) {
+				private void notifyMediascanner(final RemoteSong song) {
+					String path = song.path;
 					final File file = new File(path);
 					MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
@@ -208,51 +200,25 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		}
 	}
-	
-	protected void notifyDuringDownload(final long currentDownloadId, final String currentDownloadTitle, final  double currentProgress) {
+
+	protected void notifyDuringDownload(final long currentDownloadId, final String currentDownloadTitle, final double currentProgress) {
 	}
-	
+
 	protected void notifyAboutDownload(long downloadId) {
-		
+
 	}
 
 	protected String getDirectory() {
 		return BaseConstants.DOWNLOAD_DIR;
 	}
-	
-	protected void interruptDownload(boolean interruptDownload) {
-		this.interruptDownload = interruptDownload;
-	}
 
 	protected void prepare(final File src, RemoteSong song) {
-		final String title = song.getTitle();
-		new AsyncTask<Void, Void, Void>() {
-			
-			@Override
-			protected Void doInBackground(Void... params) {
-				MusicMetadataSet src_set = null;
-				try {
-					src_set = new MyID3().read(src);
-				} catch (Exception exception) {
-					android.util.Log.d("log", "don't read music metadata from file. " + exception);
-				}
-				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-				metadata.setSongTitle(title);
-				File dst = new File(src.getParentFile(), src.getName() + "-1");
-				try {
-					new MyID3().write(src, dst, src_set, metadata);
-					dst.renameTo(src);
-				} catch (Exception e) {
-					android.util.Log.d("log", "don't write music metadata from file. " + e);
-				} finally {
-					if (dst.exists()) dst.delete();
-				}
-				return null;
-			}
-			
-		}.execute();
 	}
 
+	protected boolean isFullAction() {
+		return true;
+	}
+	
 	@Override
 	public void onBitmapReady(Bitmap bmp) {
 		this.cover = bmp;
