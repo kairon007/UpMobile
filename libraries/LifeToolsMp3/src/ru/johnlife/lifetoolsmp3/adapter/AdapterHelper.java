@@ -38,6 +38,7 @@ public class AdapterHelper {
 		private View view;
 		private View left;
 		private TextView caption;
+		private boolean fullAction = true;
 		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
 		
 		private ViewBuilder(View view) {
@@ -68,7 +69,9 @@ public class AdapterHelper {
 			if (null == cache[idx]) {
 				cache[idx] = BitmapFactory.decodeResource(view.getContext().getResources(), value ? R.drawable.arrow : R.drawable.threedot);
 			}
-//			btnDownload.setImageBitmap(cache[idx]);
+			if (fullAction) {
+				btnDownload.setImageBitmap(cache[idx]);
+			}
 			return this;
 		}
 		
@@ -102,6 +105,7 @@ public class AdapterHelper {
 			setVisibility(titleLine, valueTitle);
 			artistLine.setText(valueTitle);
 			if (null != valueTime) {
+				fullAction = false;
 				chunkTime.setText(valueTime);
 			}
 			title = valueTitle;
