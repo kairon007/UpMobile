@@ -45,6 +45,8 @@ public class RemoteSong extends Song {
 	protected String downloadUrl;
 	public ArrayList<String []> headers;
 	private WeakReference<Bitmap> cover;
+
+	private Bitmap songCover;
 	
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
@@ -77,6 +79,11 @@ public class RemoteSong extends Song {
 
 	public String getParentUrl() {
 		return downloadUrl;
+	}
+	
+	public RemoteSong setSongCover (Bitmap songCover) {
+		songBmp = songCover;
+		return this;
 	}
 	
 	public RemoteSong setHeader(ArrayList<String []> headers) {

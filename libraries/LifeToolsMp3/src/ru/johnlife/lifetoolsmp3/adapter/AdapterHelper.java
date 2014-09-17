@@ -5,6 +5,7 @@ import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.renderscript.Sampler.Value;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -118,36 +119,26 @@ public class AdapterHelper {
 			determineLeftVisibility();
 			return this;
 		}
+			/**
+			 * switch - case - will not work for this case because of the restriction of this operator
+			**/
 		
-		public ViewBuilder setIcon(Bitmap value) {
-			if (null == value) {
+		public ViewBuilder setIcon(Object value) {
+			if (null == value || value.equals(0)) {
 				cover.setVisibility(View.GONE);
 			} else {
 				cover.setVisibility(View.VISIBLE);
-				cover.setImageBitmap(value);
-			}
-			determineLeftVisibility();
-			return this;
-		}
-		
-		public ViewBuilder setIcon(Drawable value) {
-			if (null == value) {
-				cover.setVisibility(View.GONE);
-			} else {
-				cover.setVisibility(View.VISIBLE);
-				cover.setImageDrawable(value);
-				cover.setScaleType(ScaleType.CENTER_INSIDE);
-			}
-			determineLeftVisibility();
-			return this;
-		}
-		
-		public ViewBuilder setIcon(int resourceId) {
-			if (0 == resourceId) {
-				cover.setVisibility(View.GONE);
-			} else {
-				cover.setVisibility(View.VISIBLE);
-				cover.setImageResource(resourceId);
+				if (value.getClass().equals(Integer.class)) {
+					cover.setVisibility(View.VISIBLE);
+					cover.setImageResource((int) value);
+				} else if (value.getClass().equals(Drawable.class)) {
+					cover.setVisibility(View.VISIBLE);
+					cover.setImageDrawable((Drawable) value);
+					cover.setScaleType(ScaleType.CENTER_INSIDE);
+				} else if  (value.getClass().equals(Bitmap.class)) {
+					cover.setVisibility(View.VISIBLE);
+					cover.setImageBitmap((Bitmap) value);
+				}
 			}
 			determineLeftVisibility();
 			return this;

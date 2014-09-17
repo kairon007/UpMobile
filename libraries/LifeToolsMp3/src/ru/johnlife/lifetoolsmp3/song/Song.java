@@ -137,6 +137,9 @@ public class Song implements Comparable<Song>, Parcelable {
 	 * Initialize the song with the specified id. Call populate to fill fields
 	 * in the song.
 	 */
+	
+	public Bitmap songBmp;
+	
 	public Song(long id)
 	{
 		this.id = id;
@@ -244,9 +247,13 @@ public class Song implements Comparable<Song>, Parcelable {
 		return duration;
 	}
 
+	public Bitmap getSongCover() {
+		return songBmp;
+	}
+	
+	
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	

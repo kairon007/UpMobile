@@ -257,16 +257,16 @@ public abstract class OnlineSearchView extends View {
 
 		@Override
 		public View getView(final int position, final View convertView, ViewGroup parent) {
-			Song song = getItem(position);
+			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
 			builder.setButtonVisible(false)
-				.setLongClickable(false)
-				.setExpandable(false)
-				.setLine2(song.getArtist())
-				.setId(position)
-				.setIcon(R.drawable.fallback_cover)
-				.setButtonVisible(fullAction ? false : true)
-				.setLine1(song.getTitle(), fullAction ? null : formatTime((int)song.getDuration()));
+					.setLongClickable(false)
+					.setExpandable(false)
+					.setLine2(song.getArtist())
+					.setId(position)
+					.setIcon(song.getSongCover() == null ? (Integer) R.drawable.fallback_cover : song.getSongCover())
+					.setButtonVisible(fullAction ? false : true)
+					.setLine1(song.getTitle(), fullAction ? null : formatTime((int)song.getDuration()));
 			// TODO: remove double-cacheing
 			Bitmap cover = bitmaps.get(position);
 			if (cover != null) {
@@ -278,6 +278,7 @@ public abstract class OnlineSearchView extends View {
 						bitmaps.put(position, bmp);
 						if (builder != null && builder.getId() == position) {
 							builder.setIcon(bmp);
+							((RemoteSong) song).setSongCover(bmp);
 						}
 					}
 				});
