@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui;
+ package ru.johnlife.lifetoolsmp3.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,6 +56,7 @@ public abstract class OnlineSearchView extends View {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
 	public static List<Engine> engines = null;
+	private LayoutInflater inflater;
 	private Iterator<Engine> taskIterator;
 	private String currentName = null;
 	private SongSearchAdapter resultAdapter;
@@ -75,8 +76,23 @@ public abstract class OnlineSearchView extends View {
 
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
+		this.inflater = inflater;
 		this.view = inflater.inflate(R.layout.search, null);
-		final boolean fullAction = showElement();
+	}
+
+	public View getView() {
+		final boolean fullAction = showFullElement();
+		if (!fullAction) {
+			android.util.Log.d("log", "gone");
+			view.findViewById(R.id.downloads).setVisibility(View.GONE);
+		} else {
+			view.findViewById(R.id.downloads).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showDownloadsList();
+				}
+			});
+		}
 		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
 		initSearchEngines(getContext());
 		message = (TextView) view.findViewById(R.id.message);
@@ -97,10 +113,10 @@ public abstract class OnlineSearchView extends View {
 				if (fullAction) {
 					createStreamDialog(bundle, false).show();
 				} else {
-					view.findViewById(R.id.downloads).setVisibility(View.GONE);
-					click(view);
+					click(view, position);
 				}
 			}
+
 		});
 		searchField = (TextView) view.findViewById(R.id.text);
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -152,6 +168,7 @@ public abstract class OnlineSearchView extends View {
 		if (SongArrayHolder.getInstance().isDirectoryChooserOpened()) {
 			player.createDirectoryChooserDialog();
 		}
+		return view;
 	}
 	
 	protected View biuldCustomView() {
@@ -176,14 +193,13 @@ public abstract class OnlineSearchView extends View {
 		}
 	}
 
-	protected boolean showElement() {
+	protected boolean showFullElement() {
 		return true;
 	}
 
-	protected void click(View view) {
-		// TODO в данлоадере вернуть false и в этом методе реализовать передачу
-		// песни в плеер
-	}
+	protected void click(View view, int position) {
+	
+  }
 
 	protected DownloadClickListener createListener(RemoteSong song, Bitmap bitmap) {
 		return new DownloadClickListener(getContext(), song, bitmap);
@@ -203,10 +219,6 @@ public abstract class OnlineSearchView extends View {
 				return sharedDownloadPath;
 		}
 		return downloadPath;
-	}
-
-	public View getView() {
-		return this.view;
 	}
 
 	public SongSearchAdapter getResultAdapter() {
@@ -259,12 +271,11 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setButtonVisible(false)
-					.setLongClickable(false)
+			builder.setLongClickable(false)
 					.setExpandable(false)
 					.setLine2(song.getArtist())
 					.setId(position)
-					.setIcon(song.getSongCover() == null ? (Integer) R.drawable.fallback_cover : song.getSongCover())
+					.setIcon(song.getSongCover() == null ? R.drawable.fallback_cover : song.getSongCover())
 					.setButtonVisible(fullAction ? false : true)
 					.setLine1(song.getTitle(), fullAction ? null : formatTime((int)song.getDuration()));
 			// TODO: remove double-cacheing
@@ -288,13 +299,22 @@ public abstract class OnlineSearchView extends View {
 				getNextResults();
 			}
 			View v = builder.build();
-			v.setOnClickListener(new OnClickListener() {
+			v.findViewById(R.id.boxInfoItem).setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					listView.performItemClick(v, position, v.getId());
 				}
 			});
+			if (!fullAction) {
+				v.findViewById(R.id.btnDownload).setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						listView.performItemClick(v, position, v.getId());
+					}
+				});
+			}
 			return v;
 		}
 

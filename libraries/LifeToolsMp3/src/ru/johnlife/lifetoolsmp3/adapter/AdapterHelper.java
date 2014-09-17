@@ -33,7 +33,7 @@ public class AdapterHelper {
 		private TextView number;
 		private TextView titleLine;
 		private TextView chunkTime;
-		private ImageView arrow;
+		private ImageView btnDownload;
 		private ImageView cover;
 		private View view;
 		private View left;
@@ -58,7 +58,7 @@ public class AdapterHelper {
 			chunkTime = (TextView) view.findViewById(R.id.chunkTime);
 			number = (TextView)view.findViewById(R.id.number);
 			caption = (TextView)view.findViewById(R.id.caption);
-			arrow = (ImageView)view.findViewById(R.id.arrow);
+			btnDownload = (ImageView)view.findViewById(R.id.btnDownload);
 			cover = (ImageView)view.findViewById(R.id.cover);
 			left = (View) number.getParent();
 		}
@@ -68,12 +68,12 @@ public class AdapterHelper {
 			if (null == cache[idx]) {
 				cache[idx] = BitmapFactory.decodeResource(view.getContext().getResources(), value ? R.drawable.arrow : R.drawable.threedot);
 			}
-			arrow.setImageBitmap(cache[idx]);
+//			btnDownload.setImageBitmap(cache[idx]);
 			return this;
 		}
 		
 		public ViewBuilder setButtonVisible(boolean value) {
-			arrow.setVisibility(value ? View.VISIBLE : View.GONE);
+			btnDownload.setVisibility(value ? View.VISIBLE : View.GONE);
 			return this;
 		}
 
@@ -83,7 +83,7 @@ public class AdapterHelper {
 		}
 
 		public ViewBuilder setArrowClickListener(OnClickListener listener) {
-			arrow.setOnClickListener(listener);
+			btnDownload.setOnClickListener(listener);
 			return this;
 		}
 		
@@ -101,6 +101,9 @@ public class AdapterHelper {
 			setVisibility(chunkTime, valueTime);
 			setVisibility(titleLine, valueTitle);
 			artistLine.setText(valueTitle);
+			if (null != valueTime) {
+				chunkTime.setText(valueTime);
+			}
 			title = valueTitle;
 			return this;
 		}
@@ -153,6 +156,7 @@ public class AdapterHelper {
 			determineLeftVisibility();
 			return this;
 		}
+		
 		public void startLoadCover(final int maxWidth, final Activity activity, final File file) {
 			if (null != loadCoverTask) {
 				loadCoverTask.cancel(true);
@@ -204,12 +208,8 @@ public class AdapterHelper {
 		}
 
 		private void determineLeftVisibility() {
-			left.setVisibility(
-				number.getVisibility() == View.GONE &&
-				cover.getVisibility() == View.GONE ?
-					View.INVISIBLE : View.VISIBLE
-			);
-			
+			left.setVisibility(number.getVisibility() == View.GONE && cover.getVisibility() == View.GONE ?
+					View.INVISIBLE : View.VISIBLE);
 		}
 
 		public long getId() {
