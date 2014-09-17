@@ -61,12 +61,14 @@ public class SongArrayHolder {
 
 	public void getResultsFromAdapter(OnlineSearchView searchView) {
 		results = new ArrayList<Song>();
-		for (int i = 0; i < searchView.getResultAdapter().getCount(); i++) {
-			Song song = searchView.getResultAdapter().getItem(i);
-			results.add(song);
+		if (searchView != null && searchView.getResultAdapter() != null) {
+			for (int i = 0; i < searchView.getResultAdapter().getCount(); i++) {
+				Song song = searchView.getResultAdapter().getItem(i);
+				results.add(song);
+			}
+			SongArrayHolder.getInstance().setSongName(searchView.getSearchField().getText().toString());
+			SongArrayHolder.getInstance().setTaskIterator(searchView.getTaskIterator());
 		}
-		SongArrayHolder.getInstance().setSongName(searchView.getSearchField().getText().toString());
-		SongArrayHolder.getInstance().setTaskIterator(searchView.getTaskIterator());
 	}
 
 	public void setResultsToAdapter(OnlineSearchView searchView) {

@@ -22,37 +22,20 @@
 
 package org.kreed.vanilla;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.regex.Pattern;
 
-import org.cmc.music.common.ID3WriteException;
-import org.cmc.music.metadata.ImageData;
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-import org.kreed.vanilla.ui.AdapterHelper;
-import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
-
-import com.startapp.android.publish.model.MetaDataStyle;
-
-import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
+import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -482,13 +465,14 @@ public class MediaAdapter
 			.setMainClickListener(this)
 			.setId(cursor.getLong(0))
 			.setExpandable(mExpandable)
-			.setLine1(title)
+			.setLine1(title, null)
 			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
 			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0))
 			.setIcon(R.drawable.fallback_cover);
 		if (mType == MediaUtils.TYPE_SONG && Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
 				long id = cursor.getLong(0);
-				builder.startLoadCover(2, mType, id, mActivity);
+				File file = PlaybackService.get(mActivity).getFilePath(mType, id);
+				builder.startLoadCover(2, mActivity, file);
 		}
 		return builder.build();
 	}
