@@ -19,6 +19,7 @@ import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -171,6 +172,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		textFilterLibrary = mTextFilter.getText().toString();
+		SongArrayHolder.getInstance().getResultsFromAdapter(mPagerAdapter.getSearchView());
 		super.onPause();
 	}
 

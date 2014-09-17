@@ -260,6 +260,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		}
 	}
 
+	
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		int type = mTabOrder[position];
@@ -272,7 +273,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			Typeface font = MusicDownloaderApp.FONT_LIGHT;
 			switch (type) {
 			case MediaUtils.TYPE_SEARCH:
-				SearchView searchView = new SearchView(inflater, this, mActivity);
+				searchView = new SearchView(inflater, this, mActivity);
 				View viewSearchActivity = searchView.getView();
 				container.addView(viewSearchActivity);
 				return viewSearchActivity;
@@ -401,6 +402,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	 * Runs on UI thread.
 	 */
 	private static final int MSG_COMMIT_QUERY = 3;
+	private SearchView searchView;
 
 	@Override
 	public boolean handleMessage(Message message) {
@@ -629,5 +631,13 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			// CompatHoneycomb.setFastScrollAlwaysVisible(list);
 		}
 		mActivity.mFakeTarget = false;
+	}
+
+	public SearchView getSearchView() {
+		return searchView;
+	}
+
+	public void setSearchView(SearchView searchView) {
+		this.searchView = searchView;
 	}
 }
