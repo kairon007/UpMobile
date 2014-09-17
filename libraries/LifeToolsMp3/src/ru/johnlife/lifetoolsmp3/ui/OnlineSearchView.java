@@ -53,10 +53,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public abstract class OnlineSearchView extends View {
+	
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
 	public static List<Engine> engines = null;
+	private RemoteSong downloadSong;
 	private LayoutInflater inflater;
 	private Iterator<Engine> taskIterator;
 	private String currentName = null;
@@ -71,6 +73,7 @@ public abstract class OnlineSearchView extends View {
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private ListView listView;
 
+	
 	protected abstract BaseSettings getSettings();
 
 	protected abstract Advertisment getAdvertisment();
@@ -202,9 +205,9 @@ public abstract class OnlineSearchView extends View {
 	
   }
 
-	protected DownloadClickListener createListener(RemoteSong song, Bitmap bitmap) {
-		return new DownloadClickListener(getContext(), song, bitmap);
-	}
+//	protected DownloadClickListener createListener(RemoteSong song, Bitmap bitmap) {
+//		return new DownloadClickListener(getContext(), song, bitmap);
+//	}
 
 	public static String getDownloadPath(Context context) {
 		String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
@@ -251,11 +254,13 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public final class SongSearchAdapter extends ArrayAdapter<Song> {
+		
+		private SparseArray<Bitmap> bitmaps = new SparseArray<Bitmap>(0);
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
-		private SparseArray<Bitmap> bitmaps = new SparseArray<Bitmap>(0);
 		private boolean fullAction;
+		
 
 		private SongSearchAdapter(Context context, LayoutInflater inflater, boolean fullAction) {
 			super(context, -1, new ArrayList<Song>());
@@ -415,15 +420,15 @@ public abstract class OnlineSearchView extends View {
 			getNextResults();
 		}
 	}
-
+	
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args, boolean force) {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return null;
 		}
-		final RemoteSong song = (RemoteSong) resultAdapter.getItem(args.getInt(KEY_POSITION));
-		final String title = song.getTitle();
-		final String artist = song.getArtist();
+		downloadSong = (RemoteSong) resultAdapter.getItem(args.getInt(KEY_POSITION));
+		final String title = downloadSong.getTitle();
+		final String artist = downloadSong.getArtist();
 		final Context context = view.getContext();
 		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask() {
 			@Override
@@ -438,21 +443,21 @@ public abstract class OnlineSearchView extends View {
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			player = new Player(inflater.inflate(R.layout.download_dialog, null), title, artist);
-			if (song instanceof GrooveSong) {
-				player.setSongId(((GrooveSong) song).getSongId());
+			if (downloadSong instanceof GrooveSong) {
+				player.setSongId(((GrooveSong) downloadSong).getSongId());
 			}
 			try {
-				String url = song.getParentUrl();
+				String url = downloadSong.getParentUrl();
 				if (url != null) {
 					loadSong(url);
 				} else {
-					urlTask.execute(song);
+					urlTask.execute(downloadSong);
 				}
 			} catch (ClassCastException ex) {
 				Log.e(getClass().getSimpleName(), ex.getMessage());
 			}
 			if (getSettings().getIsCoversEnabled(context)) {
-				song.getCover(new OnBitmapReadyListener() {
+				downloadSong.getCover(new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (null != player) {
@@ -461,8 +466,8 @@ public abstract class OnlineSearchView extends View {
 					}
 				});
 			} else {
-				if (song.getSongCover() != null) {
-					player.setCover(song.getSongCover());
+				if (downloadSong.getSongCover() != null) {
+					player.setCover(downloadSong.getSongCover());
 				} else
 					player.hideCoverProgress();
 			}
@@ -478,21 +483,20 @@ public abstract class OnlineSearchView extends View {
 				urlTask.cancel(true);
 			}
 		};
-		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, (RemoteSong) song, null) {
+		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, (RemoteSong) downloadSong) {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);
-				player.cancel();
 				dialogDismisser.run();
 			}
 		};
 		if (getSettings().getIsCoversEnabled(context)) {
-			boolean hasCover = ((RemoteSong) song).getCover(downloadClickListener);
+			boolean hasCover = ((RemoteSong) downloadSong).getCover(downloadClickListener);
 			if (!hasCover)
 				player.setCover(null);
 		} else {
-			if (song.getSongCover() != null) {
-				player.setCover(song.getSongCover());
+			if (downloadSong.getSongCover() != null) {
+				player.setCover(downloadSong.getSongCover());
 			}
 		}
 		player.setTitle(artist + " - " + title);
@@ -505,15 +509,21 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 		b.setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
+			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				ArrayList<String> sFields = player.getFields();
-				if (null != sFields) {
-					downloadClickListener.setSong(sFields);
+				boolean useCover = player.isUseCover();
+				downloadClickListener.setUseAlbumCover(useCover);
+				if (sFields.isEmpty()) {
+					downloadClickListener.onClick(new View(getContext()));
+					return;
 				}
-
-				downloadClickListener.onClick(new View(getContext()));
+				String artist = sFields.get(0) != null ? sFields.get(0) : downloadSong.getArtist();
+				String title = sFields.get(1) != null ? sFields.get(1) : downloadSong.getTitle();
+				downloadClickListener.downloadSond(artist , title, useCover);
 			}
+			
 		});
 		AlertDialog alertDialog = b.create();
 		alertDialog.setOnCancelListener(new OnCancelListener() {

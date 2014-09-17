@@ -24,8 +24,8 @@ public class DownloadListener extends DownloadClickListener {
 	private MainActivity activity;
 	private Context context;
 
-	public DownloadListener(Context context, RemoteSong song, Bitmap bitmap, LibraryPagerAdapter adapter, MainActivity activity) {
-		super(context, song, bitmap);
+	public DownloadListener(Context context, RemoteSong song, LibraryPagerAdapter adapter, MainActivity activity) {
+		super(context, song);
 		this.context = context;
 		this.adapter = adapter;
 		this.activity = activity;

@@ -98,26 +98,26 @@ public class MP3Editor{
 		if (setArtistName()) {
 			return newArtistName;
 		}
-		return "";
+		return oldArtistName;
 	}
 
 	public String getNewSongTitle() {
 		if (setSongTitle()) {
 			return newSongTitle;
 		}
-		return "";
+		return oldSongTitle;
 	}
 
 	public String getNewAlbumTitle() {
 		if (setAlbumTitle()) {
 			return newAlbumTitle;
 		}
-		return "";
+		return oldAlbumTitle;
 	}
 	
 	private boolean setArtistName() {
 		String str = etArtistName.getText().toString();
-		if (!str.equals("")) {
+		if (!str.equals(oldArtistName)) {
 			newArtistName = str;
 			return true;
 		}
@@ -126,7 +126,7 @@ public class MP3Editor{
 	
 	private boolean setSongTitle() {
 		String str = etSongTitle.getText().toString();
-		if (!str.equals("")) {
+		if (!str.equals(oldSongTitle)) {
 			newSongTitle = str;
 			return true;
 		}
@@ -148,7 +148,7 @@ public class MP3Editor{
 	
 	private boolean setAlbumTitle() {
 		String str = etAlbumTitle.getText().toString();
-		if (!str.equals("")) {
+		if (!str.equals(oldAlbumTitle)) {
 			newAlbumTitle = str;
 			return true;
 		}

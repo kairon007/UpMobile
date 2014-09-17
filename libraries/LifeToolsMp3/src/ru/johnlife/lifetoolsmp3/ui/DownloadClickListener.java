@@ -26,7 +26,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -47,13 +46,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	public Integer songId;
 	private boolean waitingForCover = true;
 	private double progress = 0.0;
-	private String album;
-	private boolean useAlbumCover;
+	private boolean useAlbumCover = true;
 
-	protected DownloadClickListener(Context context, RemoteSong song, Bitmap bitmap) {
+	protected DownloadClickListener(Context context, RemoteSong song) {
 		this.context = context;
 		this.song = song;
-		this.cover = bitmap != null ? bitmap : null;
 		this.songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
 		songTitle = song.getTitle();
 		songArtist = song.getArtist();
@@ -62,16 +59,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		headers = song.getHeaders();
 	}
 
-	public void setSong(ArrayList<String> sFields) {
-		songArtist = sFields.get(0);
-		album = sFields.get(1);
-		songTitle = sFields.get(2);
-		useAlbumCover = (Boolean.getBoolean(sFields.get(3)));
-	}
-
 	@SuppressLint("NewApi")
-	@Override
-	public void onClick(View v) {
+	public void downloadSond(String artist, String title, final boolean useCover) {
+		if	(!this.songArtist.equals(artist)) {
+			songArtist = artist; 
+		}
+		if (!this.songTitle.equals(title)) {
+			songTitle = title; 
+		}
 		if (URL == null) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
@@ -139,7 +134,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 								path = cutPath(path);
 							}
 							src = new File(path);
-							song.path = path;
+							DownloadClickListener.this.song.path = path;
 							MusicMetadataSet src_set = null;
 							try {
 								src_set = new MyID3().read(src);
@@ -154,7 +149,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 								metadata.setSongTitle(songTitle + '/' + duration);
 							}
 							metadata.setArtist(songArtist);
-							if (null != cover) {
+							if (null != cover && useCover) {
 								ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 								cover.compress(CompressFormat.JPEG, 85, out);
 								metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
@@ -169,7 +164,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 								if (dst.exists())
 									dst.delete();
 							}
-							notifyMediascanner(song);
+							notifyMediascanner(DownloadClickListener.this.song);
 							this.cancel();
 						}
 					}
@@ -201,11 +196,21 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 	}
 
+	@SuppressLint("NewApi")
+	@Override
+	public void onClick(View v) {
+		downloadSond(songArtist, songTitle, useAlbumCover);
+	}
+
 	protected void notifyDuringDownload(final long currentDownloadId, final String currentDownloadTitle, final double currentProgress) {
 	}
 
 	protected void notifyAboutDownload(long downloadId) {
 
+	}
+	
+	public void setUseAlbumCover(boolean useAlbumCover) {
+		this.useAlbumCover = useAlbumCover;
 	}
 
 	protected String getDirectory() {
