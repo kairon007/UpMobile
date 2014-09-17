@@ -676,7 +676,6 @@ public class Settings implements BaseSettings {
 
 	@Override
 	public boolean getIsCoversEnabled(Context context) {
-		// TODO Auto-generated method stub
-		return false;
+		return !Settings.getIsBlacklisted(context) && ENABLE_ALBUM_COVERS && getSharedPrefs(context).getBoolean(PrefKeys.DISABLE_COVER_ART, true);
 	}
 }

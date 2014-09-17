@@ -280,20 +280,22 @@ public abstract class OnlineSearchView extends View {
 					.setIcon(song.getSongCover() == null ? R.drawable.fallback_cover : song.getSongCover())
 					.setButtonVisible(fullAction ? false : true);
 			// TODO: remove double-cacheing
-			Bitmap cover = bitmaps.get(position);
-			if (cover != null) {
-				builder.setIcon(bitmaps.get(position));
-			} else {
-				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
-					@Override
-					public void onBitmapReady(Bitmap bmp) {
-						bitmaps.put(position, bmp);
-						if (builder != null && builder.getId() == position) {
-							builder.setIcon(bmp);
-							((RemoteSong) song).setSongCover(bmp);
+			if (!getSettings().getIsCoversEnabled(getContext())) {
+				Bitmap cover = bitmaps.get(position);
+				if (cover != null) {
+					builder.setIcon(bitmaps.get(position));
+				} else {
+					((RemoteSong) song).getCover(new OnBitmapReadyListener() {
+						@Override
+						public void onBitmapReady(Bitmap bmp) {
+							bitmaps.put(position, bmp);
+							if (builder != null && builder.getId() == position) {
+								builder.setIcon(bmp);
+								((RemoteSong) song).setSongCover(bmp);
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 			if (position == getCount() - 1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
@@ -448,7 +450,7 @@ public abstract class OnlineSearchView extends View {
 			} catch (ClassCastException ex) {
 				Log.e(getClass().getSimpleName(), ex.getMessage());
 			}
-			if (getSettings().getIsCoversEnabled(context)) {
+			if (!getSettings().getIsCoversEnabled(context)) {
 				song.getCover(new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
@@ -458,7 +460,10 @@ public abstract class OnlineSearchView extends View {
 					}
 				});
 			} else {
-				player.hideCoverProgress();
+				if (song.getSongCover() != null) {
+					player.setCover(song.getSongCover());
+				} else
+					player.hideCoverProgress();
 			}
 		}
 		final Runnable dialogDismisser = new Runnable() {
@@ -480,10 +485,14 @@ public abstract class OnlineSearchView extends View {
 				dialogDismisser.run();
 			}
 		};
-		if (getSettings().getIsCoversEnabled(context)) {
+		if (!getSettings().getIsCoversEnabled(context)) {
 			boolean hasCover = ((RemoteSong) song).getCover(downloadClickListener);
 			if (!hasCover)
 				player.setCover(null);
+		} else {
+			if (song.getSongCover() != null) {
+				player.setCover(song.getSongCover());
+			}
 		}
 		player.setTitle(artist + " - " + title);
 		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
