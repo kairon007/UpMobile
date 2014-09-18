@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,17 +95,14 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				} else {
 					holder.cover.setImageResource(R.drawable.fallback_cover);
 				}
-				double progress = song.getDownloadProgress();
-				if (progress == 0) {   							//  temporary check, until you add a field isDownloaded in MusicData
-					if (progress == DOWNLOAD_FINISHED) {
-						holder.downloadProgress.setVisibility(View.GONE);
-						holder.remove.setImageResource(R.drawable.icon_ok);
-					} else {
-						holder.downloadProgress.setProgress((int) progress);
-					}
-				} else {
+				if (song.isDownloaded()) {
 					holder.downloadProgress.setVisibility(View.GONE);
 					holder.remove.setImageResource(R.drawable.icon_ok);
+				} else {
+					holder.downloadProgress.setVisibility(View.VISIBLE);
+					double progress = song.getDownloadProgress();
+					holder.downloadProgress.setProgress((int) progress);
+					holder.remove.setImageResource(R.drawable.icon_cancel);
 				}
 				holder.duration.setText(song.getSongDuration());
 			}
@@ -356,14 +354,18 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	}
 	
 	public void recreateAdaper() {
-		new ArrayList<MusicData>();
+		ArrayList<MusicData> dataMusic = new ArrayList<MusicData>();
 		for (int i = 0; i < adapter.getCount(); i++) {
-			MusicData data = adapter.getItem(i);
-			if (progressDownload >= 99.9 || data.getFileUri() != null) {
-				adapter.remove(data);
+			if (adapter.getItem(i).isDownloaded()){
+				dataMusic.add(adapter.getItem(i));
 			}
 		}
-		DBHelper.getInstance().deleteAll();
+		if(!dataMusic.isEmpty()) {
+			DBHelper.getInstance().deleteAll();
+		}
+		for (MusicData musicData : dataMusic) {
+			adapter.remove(musicData);
+		}
 	}
 	
 }
