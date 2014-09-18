@@ -66,7 +66,7 @@ public class SearchBrowserActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		SongArrayHolder.getInstance().getResultsFromAdapter(searchView);
+		SongArrayHolder.getInstance().saveStateAdapter(searchView);
 		super.onPause();
 	}	
 	

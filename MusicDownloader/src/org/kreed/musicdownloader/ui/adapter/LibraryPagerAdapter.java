@@ -637,8 +637,4 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	public SearchView getSearchView() {
 		return searchView;
 	}
-
-	public void setSearchView(SearchView searchView) {
-		this.searchView = searchView;
-	}
 }

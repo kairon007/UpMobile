@@ -551,7 +551,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
-		SongArrayHolder.getInstance().getResultsFromAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
+		SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
 	}
 
 	@Override
@@ -1585,7 +1585,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			mTextFilter.setText("");
 		}
 		if (lastPage == 0) {
-			SongArrayHolder.getInstance().getResultsFromAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
+			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
 		}
 		lastPage = position;
 	}

@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		textFilterLibrary = mTextFilter.getText().toString();
-		SongArrayHolder.getInstance().getResultsFromAdapter(mPagerAdapter.getSearchView());
+		SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		super.onPause();
 	}
 

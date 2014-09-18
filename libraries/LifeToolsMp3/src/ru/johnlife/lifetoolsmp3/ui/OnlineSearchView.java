@@ -156,7 +156,16 @@ public abstract class OnlineSearchView extends View {
 				progress.setVisibility(View.GONE);
 			}
 		});
-		SongArrayHolder.getInstance().setResultsToAdapter(this);
+		if (SongArrayHolder.getInstance().getResults() != null) {
+			for (Song song : SongArrayHolder.getInstance().getResults()) {
+				getResultAdapter().add(song);
+			}
+			setTaskIterator(SongArrayHolder.getInstance().getTaskIterator());
+			setSearchField(SongArrayHolder.getInstance().getSongName().toString());
+			setCurrentName(SongArrayHolder.getInstance().getSongName().toString());
+			getResultAdapter().notifyDataSetChanged();
+			setSearchStopped(false);
+		}
 		if (SongArrayHolder.getInstance().isStreamDialogOpened()) {
 			Bundle args = SongArrayHolder.getInstance().getStreamDialogArgs();
 			createStreamDialog(args, true).show();

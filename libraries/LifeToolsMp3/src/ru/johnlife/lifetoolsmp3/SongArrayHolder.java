@@ -8,6 +8,7 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.os.Bundle;
+import android.util.Log;
 
 public class SongArrayHolder {
 	private static SongArrayHolder instance = null;
@@ -59,7 +60,7 @@ public class SongArrayHolder {
 		this.taskIterator = taskIterator;
 	}
 
-	public void getResultsFromAdapter(OnlineSearchView searchView) {
+	public void saveStateAdapter(OnlineSearchView searchView) {
 		results = new ArrayList<Song>();
 		if (searchView != null && searchView.getResultAdapter() != null) {
 			for (int i = 0; i < searchView.getResultAdapter().getCount(); i++) {
@@ -68,19 +69,6 @@ public class SongArrayHolder {
 			}
 			SongArrayHolder.getInstance().setSongName(searchView.getSearchField().getText().toString());
 			SongArrayHolder.getInstance().setTaskIterator(searchView.getTaskIterator());
-		}
-	}
-
-	public void setResultsToAdapter(OnlineSearchView searchView) {
-		if (SongArrayHolder.getInstance().getResults() != null) {
-			for (Song song : SongArrayHolder.getInstance().getResults()) {
-				searchView.getResultAdapter().add(song);
-			}
-			searchView.setTaskIterator(SongArrayHolder.getInstance().getTaskIterator());
-			searchView.getSearchField().setText(SongArrayHolder.getInstance().getSongName().toString());
-			searchView.setCurrentName(SongArrayHolder.getInstance().getSongName().toString());
-			searchView.getResultAdapter().notifyDataSetChanged();
-			searchView.setSearchStopped(false);
 		}
 	}
 

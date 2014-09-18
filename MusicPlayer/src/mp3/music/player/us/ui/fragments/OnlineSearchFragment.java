@@ -32,7 +32,7 @@ public class OnlineSearchFragment extends SherlockFragment {
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		SongArrayHolder.getInstance().getResultsFromAdapter(searchView);
+		SongArrayHolder.getInstance().saveStateAdapter(searchView);
 		super.onSaveInstanceState(outState);
 	}
 }
