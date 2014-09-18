@@ -260,7 +260,6 @@ public abstract class OnlineSearchView extends View {
 
 	public final class SongSearchAdapter extends ArrayAdapter<Song> {
 
-		private SparseArray<Bitmap> bitmaps = new SparseArray<Bitmap>(0);
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
@@ -285,21 +284,14 @@ public abstract class OnlineSearchView extends View {
 					.setId(position).setIcon(song.getSongCover() == null ? R.drawable.fallback_cover : song.getSongCover()).setButtonVisible(fullAction ? false : true);
 			// TODO: remove double-cacheing
 			if (getSettings().getIsCoversEnabled(getContext())) {
-				Bitmap cover = bitmaps.get(position);
-				if (cover != null) {
-					builder.setIcon(bitmaps.get(position));
-				} else {
-					((RemoteSong) song).getCover(new OnBitmapReadyListener() {
-						@Override
-						public void onBitmapReady(Bitmap bmp) {
-							bitmaps.put(position, bmp);
-							if (builder != null && builder.getId() == position) {
-								builder.setIcon(bmp);
-								((RemoteSong) song).setSongCover(bmp);
-							}
+				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
+					@Override
+					public void onBitmapReady(Bitmap bmp) {
+						if (builder != null && builder.getId() == position) {
+							builder.setIcon(bmp);
 						}
-					});
-				}
+					}
+				});
 			}
 			if (position == getCount() - 1) {
 				refreshSpinner.setVisibility(View.VISIBLE);
@@ -332,13 +324,6 @@ public abstract class OnlineSearchView extends View {
 		public void hideProgress() {
 			refreshSpinner.setVisibility(View.GONE);
 		}
-
-		@Override
-		public void clear() {
-			super.clear();
-			bitmaps.clear();
-		}
-
 	}
 
 	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {

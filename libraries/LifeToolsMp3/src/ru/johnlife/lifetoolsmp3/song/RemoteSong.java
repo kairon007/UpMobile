@@ -20,6 +20,7 @@ public class RemoteSong extends Song {
 				synchronized (listeners) {
 					for (OnBitmapReadyListener listener : listeners) {
 						listener.onBitmapReady(bmp);
+						cover = new WeakReference<Bitmap>(bmp);
 					}
 					listeners.clear();
 					clearCoverLoaderQueue();
