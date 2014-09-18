@@ -1,8 +1,9 @@
-package com.simpleandroid.music;
+package ru.johnlife.lifetoolsmp3.engines.task;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
+import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -17,7 +18,7 @@ public class DownloadGrooveshark extends AsyncTask<Void, Void, Integer> {
 	private String downloadURL;
 	private String fileName;
 	private Integer songId;
-	File outputFile;
+	private File outputFile;
 	private static int ID = 1;
 	private NotificationManager notifyManager;
 	private Notification.Builder builder;
@@ -35,7 +36,11 @@ public class DownloadGrooveshark extends AsyncTask<Void, Void, Integer> {
 
 		this.notifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		this.builder = new Notification.Builder(context);
-		builder.setContentTitle("Download " + fileName).setContentText("Download in progress").setSmallIcon(R.drawable.ic_launcher).build();
+		builder
+			.setContentTitle("Download " + fileName)
+			.setContentText("Download in progress")
+			.setSmallIcon(R.drawable.ic_launcher)
+			.build();
 
 	}
 

@@ -23,18 +23,10 @@ package org.kreed.musicdownloader.ui.adapter;
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
 
-import org.cmc.music.common.ID3v1Genre;
-import org.cmc.music.metadata.ImageData;
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
 import org.kreed.musicdownloader.Constans;
-import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
@@ -44,14 +36,14 @@ import org.kreed.musicdownloader.ballast.SortAdapter;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
-import org.kreed.musicdownloader.ui.tab.SearchTab;
+import org.kreed.musicdownloader.ui.tab.SearchView;
 
+import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -163,7 +155,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 
 	private int currentType = -1;
 	private Context context;
-	private LibraryPagerAdapter parentAdapter = this;
 	public LibraryTabAdapter adapterLibrary = null;
 	private ArrayList<MusicData> array = new ArrayList<MusicData>();
 	private boolean isAdded;
@@ -270,21 +261,22 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		}
 	}
 
+	
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		int type = mTabOrder[position];
 		ListView view = mLists[type];
-
 		if (view == null) {
 			MainActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
-			TextView header = null;
-			Typeface font = MusicDownloaderApp.FONT_LIGHT;
 			switch (type) {
 			case MediaUtils.TYPE_SEARCH:
-				View searchView = SearchTab.getInstanceView(inflater, activity, parentAdapter);
-				container.addView(searchView);
-				return searchView;
+				if (searchView == null) {
+					searchView = new SearchView(inflater, this, mActivity);
+					viewSearchActivity = searchView.getView();	
+				}
+				container.addView(viewSearchActivity);
+				return viewSearchActivity;
 			case MediaUtils.TYPE_DOWNLOADS:
 				View downloadView = DownloadsTab.getInstanceView(inflater, activity);
 				container.addView(downloadView);
@@ -410,6 +402,8 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	 * Runs on UI thread.
 	 */
 	private static final int MSG_COMMIT_QUERY = 3;
+	private SearchView searchView;
+	private View viewSearchActivity;
 
 	@Override
 	public boolean handleMessage(Message message) {
@@ -638,5 +632,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			// CompatHoneycomb.setFastScrollAlwaysVisible(list);
 		}
 		mActivity.mFakeTarget = false;
+	}
+
+	public SearchView getSearchView() {
+		return searchView;
 	}
 }

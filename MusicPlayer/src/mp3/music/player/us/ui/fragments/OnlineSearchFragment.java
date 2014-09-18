@@ -1,8 +1,8 @@
 package mp3.music.player.us.ui.fragments;
 
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import mp3.music.player.us.Constants;
-import mp3.music.player.us.ui.OnlineSearchView;
-import mp3.music.player.us.ui.activities.HomeActivity;
+import mp3.music.player.us.ui.SearchView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,17 +14,25 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class OnlineSearchFragment extends SherlockFragment {
 	
+	private SearchView searchView;
+
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View searchView = OnlineSearchView.getInstanceView(inflater, (HomeActivity)getActivity());
+		searchView = new SearchView(inflater);
 		getSherlockActivity().getIntent();
 		Intent intent = getSherlockActivity().getIntent();
 		String str = intent.getStringExtra(Constants.EXTRA_SEARCH);
-		if(str != null && !str.isEmpty()){
+		if(str != null && !str.isEmpty()) {
 			getActivity().getIntent().removeExtra(Constants.EXTRA_SEARCH);
-			OnlineSearchView.getInstance(inflater, (HomeActivity)getActivity()).trySearch();
+			searchView.trySearch();
 		}		
-		return searchView;
-	}	
+		return searchView.getView();
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		SongArrayHolder.getInstance().saveStateAdapter(searchView);
+		super.onSaveInstanceState(outState);
+	}
 }

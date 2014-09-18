@@ -1,11 +1,15 @@
 package ru.johnlife.lifetoolsmp3.ui.dialog;
 
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.content.Context;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 public class MP3Editor{
@@ -24,8 +28,9 @@ public class MP3Editor{
 	private String oldAlbumTitle;
 	private boolean showCover = true;
 
-	public MP3Editor(Context context){
+	public MP3Editor(Context context, boolean isEnableCover) {
 		this.context = context;
+		this.showCover = isEnableCover;
 	}
 
 	public View getView() {
@@ -43,7 +48,40 @@ public class MP3Editor{
 		etArtistName.setText(newArtistName);
 		etSongTitle.setText(newSongTitle);
 		etAlbumTitle.setText(newAlbumTitle);
+		CustomWatcher watcher = new CustomWatcher();
+		etAlbumTitle.addTextChangedListener(watcher);
+		etSongTitle.addTextChangedListener(watcher);
+		etArtistName.addTextChangedListener(watcher);
 		checkBox.setChecked(showCover);
+		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				SongArrayHolder.getInstance().setCoverEnabled(isChecked);
+			}
+		});
+	}
+	
+	private class CustomWatcher implements TextWatcher {
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			newArtistName = etArtistName.getText().toString();
+			newSongTitle = etSongTitle.getText().toString();
+			newAlbumTitle = etAlbumTitle.getText().toString();
+			SongArrayHolder.getInstance().setID3DialogOpened(true, 
+					new String[] {newArtistName, newSongTitle, newAlbumTitle}, checkBox.isChecked());
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			
+		}
 	}
 	
 	public void hideCheckBox(boolean isHide) {
@@ -60,26 +98,26 @@ public class MP3Editor{
 		if (setArtistName()) {
 			return newArtistName;
 		}
-		return "";
+		return oldArtistName;
 	}
 
 	public String getNewSongTitle() {
 		if (setSongTitle()) {
 			return newSongTitle;
 		}
-		return "";
+		return oldSongTitle;
 	}
 
 	public String getNewAlbumTitle() {
 		if (setAlbumTitle()) {
 			return newAlbumTitle;
 		}
-		return "";
+		return oldAlbumTitle;
 	}
 	
 	private boolean setArtistName() {
 		String str = etArtistName.getText().toString();
-		if (!str.equals("")) {
+		if (!str.equals(oldArtistName)) {
 			newArtistName = str;
 			return true;
 		}
@@ -88,7 +126,7 @@ public class MP3Editor{
 	
 	private boolean setSongTitle() {
 		String str = etSongTitle.getText().toString();
-		if (!str.equals("")) {
+		if (!str.equals(oldSongTitle)) {
 			newSongTitle = str;
 			return true;
 		}
@@ -110,7 +148,7 @@ public class MP3Editor{
 	
 	private boolean setAlbumTitle() {
 		String str = etAlbumTitle.getText().toString();
-		if (!str.equals("")) {
+		if (!str.equals(oldAlbumTitle)) {
 			newAlbumTitle = str;
 			return true;
 		}

@@ -27,6 +27,7 @@ public class SearchPoisk extends SearchWithPages {
 	protected Void doInBackground(Void... arg0) {
 		String urlMp3poisk = null;
 		try {
+
 			urlMp3poisk = String.format(POISK_URL, URLEncoder.encode(getSongName(), "UTF-8"), page);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
@@ -95,8 +96,8 @@ public class SearchPoisk extends SearchWithPages {
 				} catch(Exception e) {
 					Log.e(getClass().getSimpleName(), "", e);
 				}
-				addSong(realSong);  
-				Log.i(Tag, "values = " + link);
+				addSong(realSong);
+				Log.d("1","1" + title);
 			}
 		} catch (IOException e) {
 			Log.e(getClass().getSimpleName(), "", e);

@@ -15,9 +15,6 @@ import java.io.FileDescriptor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.simpleandroid.music.BuildConfig;
-import com.simpleandroid.music.ImageCache;
-import com.simpleandroid.music.ApolloUtils;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Application;

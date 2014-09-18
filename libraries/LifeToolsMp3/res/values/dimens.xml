@@ -8,4 +8,21 @@
 	<dimen name="padding_text_element">5dp</dimen>
 	<dimen name="padding_title">5dp</dimen>
 	<dimen name="padding_layout">3dp</dimen>
+	<dimen name="text_size">18dp</dimen>
+	
+	<dimen name="default_text_padding">4dp</dimen>
+    <dimen name="text_size_middle">20sp</dimen> <!-- TODO: set in sp -->
+	
+	<dimen name="padding_middle_layout">4dp</dimen>
+	<dimen name="padding_middle">8dp</dimen>
+	<dimen name="padding_little">3dp</dimen>
+	<dimen name="padding_big">20dp</dimen>
+	<dimen name="size_big">168dp</dimen>
+	<dimen name="size_middle">88dp</dimen>
+	<dimen name="size_progress">32dp</dimen>
+	<dimen name="size_layout">48dp</dimen>
+	<dimen name="size_imageButton">64dp</dimen>
+	<dimen name="big_height">496dp</dimen>
+	<dimen name="size_very_small">1dp</dimen>
+		
 </resources>

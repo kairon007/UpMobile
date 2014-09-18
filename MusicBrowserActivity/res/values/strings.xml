@@ -300,9 +300,6 @@
     <!-- The string used to describe Music as a searchable item within system search settings. -->
     <string name="search_settings_description">Artists, albums, and tracks</string>
 
-    <!-- Shown in the search box as a hint -->
-    <string name="search_hint">Search Music</string>
-
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
@@ -312,26 +309,9 @@
     <!-- Menu text for the item controlling the audio effects panel [CHAR LIMIT=15] -->
     <string name="effectspanel">Sound effects</string>
     
-    <string name="search_message_default">No results yet.\nSearch for something.</string>
-    
-	<string name="download_error">Please wait while song loads.</string>
-	<string name="download_started">Download started for %s</string>
-	<string name="search_message_empty">No results for %s.\nSearch for something else.</string>
-	<string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
-	<string name="search_message_nothing">Please enter a query</string>
-	<string name="download_location">Download location</string>
-	<string name="download">Download</string>
-   	<string name="expand">Expand</string>
     <string name="could_not_be_pinned_to_home_screen">could not be pinned to your Home screen</string>
     <string name="settings_open_source_licenses">Open source licenses</string>
     <string name="apollo_themes_shop_key">Apollo Themes</string>
     <string name="set_as_ringtone">\"<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\" set as ringtone</string>
-    <string name="loading_download_url_title">Please Wait...</string>
-    <string name="loading_download_url_message">Loading...</string>
-    <string name="edit_mp3_tags">Edit Mp3 Tags</string>
-    <string name="hader_download">Download Location</string>
-    <string name="show_lyrics">Show Lyrics</string>
-	<string name="lyric_not_found">No Lyrics Found for %1$s</string>    
-	<string name="selected_folder_label">Selected folder:</string>
 </resources>
 

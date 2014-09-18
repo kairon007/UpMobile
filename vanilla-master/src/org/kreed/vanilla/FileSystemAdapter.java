@@ -29,9 +29,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
-import org.kreed.vanilla.ui.AdapterHelper;
-import org.kreed.vanilla.ui.AdapterHelper.ViewBuilder;
-
+import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
+import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -41,7 +40,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 /**
  * A list adapter that provides a view of the filesystem. The active directory
@@ -209,7 +207,7 @@ public class FileSystemAdapter
 			.setMainClickListener(this)
 			.setId(pos)
 			.setExpandable(isDirectory)
-			.setLine1(file.getName())
+			.setLine1(file.getName(), null)
 			.setLine2(null)
 			.setNumber(null, 0)
 			.setIcon(isDirectory ? mFolderIcon : null);

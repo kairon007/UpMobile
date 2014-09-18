@@ -10,7 +10,8 @@
  */
 package com.simpleandroid.music;
 
-//import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -18,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
-import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 
 /**
@@ -28,36 +28,46 @@ import android.widget.FrameLayout;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class SearchBrowserActivity extends Activity {
+	private View viewSearchActivity;
+	private SearchView searchView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_expanding_top:R.layout.media_picker_activity_expanding);
-        findViewById(android.R.id.list).setVisibility(View.GONE);
-        findViewById(R.id.search).setVisibility(View.VISIBLE);
-        MusicUtils.updateButtonBar(this, R.id.searchtab);
-        FrameLayout layout = (FrameLayout)findViewById(R.id.search);
-        View searchView = OnlineSearchView.getInstanceView(getLayoutInflater(), this);
-        layout.addView(searchView);
-        if (Settings.ENABLE_ADS) {
-            Advertisement.mopubShowBanner(this);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top : R.layout.media_picker_activity_expanding);
+		findViewById(android.R.id.list).setVisibility(View.GONE);
+		findViewById(R.id.search).setVisibility(View.VISIBLE);
+		MusicUtils.updateButtonBar(this, R.id.searchtab);
+		FrameLayout layout = (FrameLayout) findViewById(R.id.search);
+		searchView = new SearchView(getLayoutInflater());
+		viewSearchActivity = searchView.getView();
+		layout.addView(viewSearchActivity);
+		if (Settings.ENABLE_ADS) {
+			Advertisement.mopubShowBanner(this);
 		}
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		if (id == OnlineSearchView.STREAM_DIALOG_ID) {
-			return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args);
+			// return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args);
 		}
 		return super.onCreateDialog(id, args);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
-        if (Settings.ENABLE_ADS) {
-            Advertisement.mopubDestroy(this);
+		if (Settings.ENABLE_ADS) {
+			Advertisement.mopubDestroy(this);
 		}
 		super.onDestroy();
 	}
+	
+	@Override
+	protected void onPause() {
+		SongArrayHolder.getInstance().saveStateAdapter(searchView);
+		super.onPause();
+	}	
+	
 }

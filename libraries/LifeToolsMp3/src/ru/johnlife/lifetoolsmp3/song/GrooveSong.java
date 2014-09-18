@@ -3,7 +3,7 @@ package ru.johnlife.lifetoolsmp3.song;
 import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
 
 
-public class GrooveSong extends RemoteSong implements SongWithCover{
+public class GrooveSong extends SongWithCover {
 
 	private static final String coverUrl = "http://images.gs-cdn.net/static/albums/%d_%d.jpg";
 	private int songId;
@@ -21,11 +21,6 @@ public class GrooveSong extends RemoteSong implements SongWithCover{
 			downloadUrl = SearchGrooveshark.getDownloadUrl(songId);
 		}
 		return downloadUrl;
-	}
-
-	@Override
-	public String getSmallCoverUrl() {
-		return String.format(coverUrl, 40, albumId);
 	}
 
 	@Override

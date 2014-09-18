@@ -16,8 +16,9 @@ import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.ui.Player;
 import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
-import org.kreed.musicdownloader.ui.tab.SearchTab;
 
+import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,7 +35,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;
@@ -170,6 +170,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		textFilterLibrary = mTextFilter.getText().toString();
+		SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		super.onPause();
 	}
 
@@ -192,7 +193,7 @@ public class MainActivity extends Activity {
 		if (android.os.Build.VERSION.SDK_INT < 11) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
-		File file = new File(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX);
+		File file = new File(BaseConstants.DOWNLOAD_DIR);
 		if (!file.exists()) {
 			file.mkdirs();
 		}
@@ -439,7 +440,7 @@ public class MainActivity extends Activity {
 		}
 		if (!Constans.CALL_FROM_SEARCH.equals(from)) {
 			Log.d("logd", "stopPlayerTask");
-			SearchTab.stopPlayerTask();
+//			SongSearchView.stopPlayerTask();
 			resetPlayer();
 		}
 		player = new Player(headers, musicData);
@@ -459,7 +460,7 @@ public class MainActivity extends Activity {
 			new DeleteTask().execute();
 			break;
 		case EDIT_TAG:
-			showEditDialog();
+			showEditDialog(false);
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -501,7 +502,7 @@ public class MainActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			File file = new File(music.getFileUri());
 			if (!file.exists()) {
-				File file2 = new File(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX + music.getSongTitle() + " - " + music.getSongArtist() + ".mp3");
+				File file2 = new File(BaseConstants.DOWNLOAD_DIR + music.getSongTitle() + " - " + music.getSongArtist() + ".mp3");
 				file.renameTo(file2);
 			}
 			if (!file.exists()) {
@@ -521,9 +522,9 @@ public class MainActivity extends Activity {
 
 	}
 
-	public void showEditDialog() {
+	public void showEditDialog(boolean forse) {
 		final File file = new File(music.getFileUri());
-		final MP3Editor editor = new MP3Editor(this);
+		final MP3Editor editor = new MP3Editor(this, forse);
 		MusicData data = MusicData.getFromFile(file);
 		String[] filds = {data.getSongArtist(), data.getSongTitle(), ""};
 		if(null == data.getSongBitmap()) {

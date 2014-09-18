@@ -1,4 +1,4 @@
-package org.kreed.vanilla.ui;
+package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.io.File;
 import java.util.Vector;
@@ -7,11 +7,10 @@ import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
-import org.kreed.vanilla.LibraryActivity;
-import org.kreed.vanilla.PlaybackService;
-import org.kreed.vanilla.R;
-import org.kreed.vanilla.app.VanillaApp;
 
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,29 +29,37 @@ public class AdapterHelper {
 	public static class ViewBuilder {
 		private long id;
 		private String title;
-		private TextView text;
+		private TextView artistLine;
 		private TextView number;
-		private TextView line2;
-		private ImageView arrow;
+		private TextView titleLine;
+		private TextView chunkTime;
+		private ImageView btnDownload;
 		private ImageView cover;
 		private View view;
 		private View left;
 		private TextView caption;
+		private boolean fullAction = true;
 		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
 		
 		private ViewBuilder(View view) {
 			view.setTag(this);
 			this.view = view; 
 			view.setLongClickable(true);
-			text = (TextView)view.findViewById(R.id.text);
-			text.setTypeface(VanillaApp.FONT_LIGHT);
-			line2 = (TextView)view.findViewById(R.id.line2);
-			line2.setTypeface(VanillaApp.FONT_REGULAR);
+			init(view);
+			titleLine.setTypeface(MusicApp.FONT_REGULAR);
+			artistLine.setTypeface(MusicApp.FONT_LIGHT);
+			chunkTime.setTypeface(MusicApp.FONT_REGULAR);
+			number.setTypeface(MusicApp.FONT_LIGHT);
+			caption.setTypeface(MusicApp.FONT_LIGHT);
+		}
+
+		private void init(View view) {
+			artistLine = (TextView)view.findViewById(R.id.artistLine);
+			titleLine = (TextView)view.findViewById(R.id.titleLine);
+			chunkTime = (TextView) view.findViewById(R.id.chunkTime);
 			number = (TextView)view.findViewById(R.id.number);
-			number.setTypeface(VanillaApp.FONT_LIGHT);
 			caption = (TextView)view.findViewById(R.id.caption);
-			caption.setTypeface(VanillaApp.FONT_LIGHT);
-			arrow = (ImageView)view.findViewById(R.id.arrow);
+			btnDownload = (ImageView)view.findViewById(R.id.btnDownload);
 			cover = (ImageView)view.findViewById(R.id.cover);
 			left = (View) number.getParent();
 		}
@@ -62,12 +69,14 @@ public class AdapterHelper {
 			if (null == cache[idx]) {
 				cache[idx] = BitmapFactory.decodeResource(view.getContext().getResources(), value ? R.drawable.arrow : R.drawable.threedot);
 			}
-			arrow.setImageBitmap(cache[idx]);
+			if (fullAction) {
+				btnDownload.setImageBitmap(cache[idx]);
+			}
 			return this;
 		}
 		
 		public ViewBuilder setButtonVisible(boolean value) {
-			arrow.setVisibility(value ? View.VISIBLE : View.GONE);
+			btnDownload.setVisibility(value ? View.VISIBLE : View.GONE);
 			return this;
 		}
 
@@ -77,24 +86,13 @@ public class AdapterHelper {
 		}
 
 		public ViewBuilder setArrowClickListener(OnClickListener listener) {
-			arrow.setOnClickListener(listener);
+			btnDownload.setOnClickListener(listener);
 			return this;
 		}
 		
 		public ViewBuilder setMainClickListener(OnClickListener listener) {
 			view.setOnClickListener(listener);
-			setClickRedirect();
 			return this;
-		}
-		
-		public void setClickRedirect() {
-			view.findViewById(R.id.main_layout).setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					view.performClick();
-				}
-			});
 		}
 		
 		public ViewBuilder setId(long value) {
@@ -102,15 +100,21 @@ public class AdapterHelper {
 			return this;
 		}
 		
-		public ViewBuilder setLine1(String value) {
-			text.setText(value);
-			title = value;
+		public ViewBuilder setLine1(String valueTitle, String valueTime) {
+			setVisibility(chunkTime, valueTime);
+			setVisibility(titleLine, valueTitle);
+			artistLine.setText(valueTitle);
+			if (null != valueTime) {
+				fullAction = false;
+				chunkTime.setText(valueTime);
+			}
+			title = valueTitle;
 			return this;
 		}
 		
 		public ViewBuilder setLine2(String value) {
-			line2.setText(value);
-			setVisibility(line2, value);
+			titleLine.setText(value);
+			setVisibility(titleLine, value);
 			return this;
 		}
 		
@@ -132,43 +136,32 @@ public class AdapterHelper {
 			determineLeftVisibility();
 			return this;
 		}
+			/**
+			 * switch - case - will not work for this case because of the restriction of this operator
+			**/
 		
-		public ViewBuilder setIcon(Bitmap value) {
-			android.util.Log.d("log", "setIcon");
-			if (null == value) {
+		public ViewBuilder setIcon(Object value) {
+			if (null == value || value.equals(0)) {
 				cover.setVisibility(View.GONE);
 			} else {
 				cover.setVisibility(View.VISIBLE);
-				cover.setImageBitmap(value);
+				if (value.getClass().equals(Integer.class)) {
+					cover.setVisibility(View.VISIBLE);
+					cover.setImageResource((Integer) value);
+				} else if (value.getClass().equals(Drawable.class)) {
+					cover.setVisibility(View.VISIBLE);
+					cover.setImageDrawable((Drawable) value);
+					cover.setScaleType(ScaleType.CENTER_INSIDE);
+				} else if  (value.getClass().equals(Bitmap.class)) {
+					cover.setVisibility(View.VISIBLE);
+					cover.setImageBitmap((Bitmap) value);
+				}
 			}
 			determineLeftVisibility();
 			return this;
 		}
 		
-		public ViewBuilder setIcon(Drawable value) {
-			if (null == value) {
-				cover.setVisibility(View.GONE);
-			} else {
-				cover.setVisibility(View.VISIBLE);
-				cover.setImageDrawable(value);
-				cover.setScaleType(ScaleType.CENTER_INSIDE);
-			}
-			determineLeftVisibility();
-			return this;
-		}
-		
-		public ViewBuilder setIcon(int resourceId) {
-			if (0 == resourceId) {
-				cover.setVisibility(View.GONE);
-			} else {
-				cover.setVisibility(View.VISIBLE);
-				cover.setImageResource(resourceId);
-			}
-			determineLeftVisibility();
-			return this;
-		}
-		
-		public void startLoadCover(final int maxWidth, final int type, final long id, final LibraryActivity activity) {
+		public void startLoadCover(final int maxWidth, final Activity activity, final File file) {
 			if (null != loadCoverTask) {
 				loadCoverTask.cancel(true);
 			}
@@ -176,7 +169,6 @@ public class AdapterHelper {
 				
 				@Override
 				protected Bitmap doInBackground(Void... params) {
-					File file = PlaybackService.get(activity).getFilePath(type, id);
 					Resources res = activity.getResources();
 					try {
 						MusicMetadataSet src_set = new MyID3().read(file);
@@ -185,7 +177,7 @@ public class AdapterHelper {
 						if ((pictureList == null) || (pictureList.size() == 0)) {
 							return  BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
 						}
-						ImageData imageData = (ImageData) pictureList.get(pictureList.size()-1);
+						ImageData imageData = (ImageData) pictureList.get(0);
 						BitmapFactory.Options opts = new BitmapFactory.Options();
 						opts.inJustDecodeBounds = true;
 						int scale = 1;
@@ -209,7 +201,6 @@ public class AdapterHelper {
 				
 				@Override
 				protected void onPostExecute(Bitmap result) {
-					android.util.Log.d("log", "get result" + result.describeContents());
 					setIcon(result);
 				}
 			}.execute();
@@ -221,11 +212,8 @@ public class AdapterHelper {
 		}
 
 		private void determineLeftVisibility() {
-			left.setVisibility(
-				number.getVisibility() == View.GONE &&
-				cover.getVisibility() == View.GONE ?
-					View.INVISIBLE : View.VISIBLE
-			);
+			left.setVisibility(number.getVisibility() == View.GONE && cover.getVisibility() == View.GONE ?
+					View.INVISIBLE : View.VISIBLE);
 		}
 
 		public long getId() {
@@ -245,7 +233,7 @@ public class AdapterHelper {
 		View target = convertView;
 		ViewBuilder builder;
 		if (null == target) {
-			target = inflater.inflate(R.layout.library_row_expandable, null);
+			target = inflater.inflate(R.layout.row_online_search, null);
 			builder = new ViewBuilder(target);
 		} else {
 			try {

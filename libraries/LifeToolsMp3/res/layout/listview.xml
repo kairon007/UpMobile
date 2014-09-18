@@ -24,6 +24,7 @@ THE SOFTWARE.
     android:id="@+id/list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:divider="@color/divider_color"
     android:dividerHeight="1dip"
     android:listSelector="@drawable/selectable_item_bg"

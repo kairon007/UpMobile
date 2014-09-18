@@ -19,14 +19,11 @@ import android.util.Log;
 public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 
 	private static final String URL_PATTERN = "http://www.musicbrainz.org/ws/2/recording/?query=artist:%s+recording:%s";
-	public static enum Size {original, large, small};
-	protected Size size;
 	protected String artist;
 	protected String title;
 
-	public MuzicBrainzCoverLoaderTask(String artist, String title, Size size) {
+	public MuzicBrainzCoverLoaderTask(String artist, String title) {
 		super();
-		this.size = size;	
 		this.artist = artist;	
 		this.title = title;	
 	}
@@ -53,8 +50,7 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 			if (fromWhereToGetThePic == null) {
 				return null;
 			} else {
-				//TODO
-				String damnUrl = getTHEdamnURL(fromWhereToGetThePic, size.name());
+				String damnUrl = getTHEdamnURL(fromWhereToGetThePic, "large");
 				if (damnUrl == null) return null;
 				httpget = new HttpGet(damnUrl);
 				response = httpclient.execute(httpget);
@@ -123,8 +119,6 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 		int Offset = releaseIdTag.length();
 		for (int i = 0; i < arrayString2.length; i++)
 			if (arrayString2[i] != null) {
-				Log.e("i=" + i, arrayString2[i].indexOf(releaseIdTag) + "<-");
-
 				indexOfReleaseId = arrayString2[i].indexOf(releaseIdTag);
 				indexOfReleaseIdEnd = arrayString2[i].indexOf(releaseIdEnd,
 						indexOfReleaseId);
@@ -165,7 +159,6 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 					String line;
 					while ((line = reader.readLine()) != null) {
 						sb.append(line);
-						Log.e("!!!", line + "\n");
 					}
 					reader.close();
 				} catch (IOException e) {

@@ -11,12 +11,23 @@
 
 package mp3.music.player.us.ui.fragments.phone;
 
+import mp3.music.player.us.R;
+import mp3.music.player.us.adapters.PagerAdapter;
+import mp3.music.player.us.adapters.PagerAdapter.MusicFragments;
+import mp3.music.player.us.ui.SearchView;
+import mp3.music.player.us.ui.fragments.AlbumFragment;
+import mp3.music.player.us.ui.fragments.ArtistFragment;
+import mp3.music.player.us.ui.fragments.SongFragment;
+import mp3.music.player.us.utils.MusicUtils;
+import mp3.music.player.us.utils.NavUtils;
+import mp3.music.player.us.utils.PreferenceUtils;
+import mp3.music.player.us.utils.SortOrder;
+import mp3.music.player.us.utils.ThemeUtils;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -29,22 +40,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
-import mp3.music.player.us.R;
-import mp3.music.player.us.adapters.PagerAdapter;
-import mp3.music.player.us.adapters.PagerAdapter.MusicFragments;
-import mp3.music.player.us.ui.OnlineSearchView;
-import mp3.music.player.us.ui.activities.HomeActivity;
-import mp3.music.player.us.ui.fragments.AlbumFragment;
-import mp3.music.player.us.ui.fragments.ArtistFragment;
-import mp3.music.player.us.ui.fragments.OnlineSearchFragment;
-import mp3.music.player.us.ui.fragments.SongFragment;
-import mp3.music.player.us.utils.MusicUtils;
-import mp3.music.player.us.utils.NavUtils;
-import mp3.music.player.us.utils.PreferenceUtils;
-import mp3.music.player.us.utils.SortOrder;
-import mp3.music.player.us.utils.ThemeUtils;
-
 import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator.OnCenterItemClickListener;
 
@@ -77,10 +72,7 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
      */
     private ThemeUtils mResources;
 
-    private PreferenceUtils mPreferences;
-    
-    private OnlineSearchView onlineSearchView;
-    
+    private PreferenceUtils mPreferences;    
 
     /**
      * Empty constructor as per the {@link Fragment} documentation
@@ -140,11 +132,10 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
 		String str = args.getString("key");
 		if (str != null && !str.isEmpty()) {
 			mViewPager.setCurrentItem(0);
-			OnlineSearchView search = OnlineSearchView.getInstance();
-			search.searchField.setText(null);
-			search.searchField.setText(str);
+			//TODO: ???
+			SearchView search = new SearchView(inflater);
+			search.setSearchField(str);
 			search.search(str);
-			
 		} else {
 			mViewPager.setCurrentItem(mPreferences.getStartPage());
 		}

@@ -17,6 +17,7 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +28,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 
-public class Settings {
+public class Settings implements BaseSettings {
 	
 	
 	
@@ -615,6 +616,15 @@ public class Settings {
 		
 	}
 	
+	@Override
+	public String[][] getSearchEnginesArray(Context context) {
+		return GET_SEARCH_ENGINES(context);
+	}
+
+	@Override
+	public boolean getIsCoversEnabled(Context context) {
+		return !Settings.getIsBlacklisted(context) && ENABLE_ALBUM_COVERS;
+	}
 	
 	// KEY_REMOTE_SETTING_SETTINGs keys
 	public static String KEY_REMOTE_SETTING_INTERSTITIAL_START = "interstitial_start"; // also options: interstitial_start_options for all

@@ -17,6 +17,7 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +27,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-public class Settings {
+public class Settings implements BaseSettings{
 
 	// if you need to access SEARCH_ENGINES, call the public static method
 	// GET_SEARCH_ENGINES()
@@ -45,6 +46,10 @@ public class Settings {
 		{ "SearchZaycev", "7" }
 	// 	{"SearchSoundCloudV3", "1"},
 	};
+
+	public Settings() {
+
+	}
 
 	public static String REMOTE_SETTINGS_URL = "";
 	public static boolean ENABLE_ADS = true;
@@ -618,4 +623,14 @@ public class Settings {
 
 	public static boolean ENABLE_LYRICS = true;
 	public static boolean SHOW_BANNER_ON_TOP = false;
+
+	@Override
+	public String[][] getSearchEnginesArray(Context context) {
+		return SEARCH_ENGINES;
+	}
+
+	@Override
+	public boolean getIsCoversEnabled(Context context) {
+		return !Settings.getIsBlacklisted(context) && ENABLE_ALBUM_COVERS;
+	}
 }

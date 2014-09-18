@@ -1,25 +1,16 @@
 package org.kreed.musicdownloader.data;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Locale;
-import java.util.Vector;
 
-import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.common.ID3v1Genre;
-import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
-import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.DBHelper;
 
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.util.Log;
 
 public class MusicData {
@@ -28,7 +19,7 @@ public class MusicData {
 	private String songArtist;
 	private String songTitle;
 	private String songDuration;
-	private String downloadProgress;
+	private double downloadProgress = -1.0;
 	private String songGenre;
 	private String songAlbum;
 	private String fileUri;
@@ -45,7 +36,7 @@ public class MusicData {
 		this.songBitmap = songBitmap;
 	}
 
-	public MusicData(String songArtist, String songTitle, String songDuration, String downloadProgress, Bitmap cover) {
+	public MusicData(String songArtist, String songTitle, String songDuration, Double downloadProgress, Bitmap cover) {
 		this.songArtist = songArtist;
 		this.songTitle = songTitle;
 		this.songDuration = songDuration;
@@ -158,25 +149,19 @@ public class MusicData {
 		if (null != newTag.songGenre && !newTag.songGenre.equals(songGenre)) {
 			songGenre = newTag.songGenre;
 		}
-		int i = 0;
+		boolean changed = true;
 		if (!newTag.songArtist.equals(songArtist)) {
 			songArtist = newTag.songArtist;
-		} else {
-			++i;
+			changed &= true;
 		}
 		if (!newTag.songTitle.equals(songTitle)) {
 			songTitle = newTag.songTitle;
-		} else {
-			++i;
+			changed &= true;
 		}
-		if (i == 2) {
-			flag = false;
-		}
-
 		if (switcher) {
 			deleteCoverFromFile();
 		}
-		if (flag) {
+		if (changed || flag) {
 			renameBoundFile();
 		}
 	}
@@ -228,6 +213,13 @@ public class MusicData {
 			file.delete();
 		}
 	}
+	
+	public boolean isDownloaded() {
+		if (null != fileUri || downloadProgress == -1.0 || downloadProgress > 99.0) {
+			return true;
+		}
+		return false;
+	}
 
 	public boolean isUseCover() {
 		return useCover;
@@ -277,11 +269,11 @@ public class MusicData {
 		this.songBitmap = songBitmap;
 	}
 
-	public String getDownloadProgress() {
+	public Double getDownloadProgress() {
 		return downloadProgress;
 	}
 
-	public void setDownloadProgress(String downloadProgress) {
+	public void setDownloadProgress(Double downloadProgress) {
 		this.downloadProgress = downloadProgress;
 	}
 
@@ -333,6 +325,11 @@ public class MusicData {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }

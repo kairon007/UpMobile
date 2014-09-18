@@ -22,12 +22,10 @@
 
 package org.kreed.vanilla;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.vanilla.app.VanillaApp;
 
-import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -43,7 +41,6 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -205,6 +202,8 @@ public class LibraryPagerAdapter
 	 * The position of the genres page, or -1 if it is hidden.
 	 */
 	public int mGenresPosition = -1;
+	
+	private SearchView searchView;
 
 	private final ContentObserver mPlaylistObserver = new ContentObserver(null) {
 		@Override
@@ -217,7 +216,7 @@ public class LibraryPagerAdapter
 	};
 	
 	private int currentType = -1;
-	
+		
 	/**
 	 * Create the LibraryPager.
 	 *
@@ -338,7 +337,6 @@ public class LibraryPagerAdapter
 			LibraryAdapter adapter;
 			TextView header = null;
 			Typeface font = VanillaApp.FONT_LIGHT;
-
 			switch (type) {
 			case MediaUtils.TYPE_ARTIST: 
 				adapter = mArtistAdapter = new MediaAdapter(activity, MediaUtils.TYPE_ARTIST, null);
@@ -381,19 +379,20 @@ public class LibraryPagerAdapter
 				mPendingFileLimiter = null;
 				break;
 			case MediaUtils.TYPE_SEARCH:
-				View searchView = SearchTab.getInstanceView(inflater, activity);
+				searchView = new SearchView(inflater);
+				View viewSearchTab = searchView.getView();
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					searchView.findViewById(R.id.search_field).setBackgroundDrawable
+					viewSearchTab.findViewById(R.id.search_field).setBackgroundDrawable
 						(activity.getResources().getDrawable(R.drawable.search_background_white));
-					((ListView)searchView.findViewById(R.id.list)).setDivider(new ColorDrawable
+					((ListView)viewSearchTab.findViewById(R.id.list)).setDivider(new ColorDrawable
 							(activity.getResources().getColor(R.color.divider_color_light)));
-					((ListView)searchView.findViewById(R.id.list)).setDividerHeight(1);
+					((ListView)viewSearchTab.findViewById(R.id.list)).setDividerHeight(1);
 				} else if ("AppTheme.Black".equals(Util.getThemeName(activity))){
-					searchView.findViewById(R.id.search_field).setBackgroundDrawable
+					viewSearchTab.findViewById(R.id.search_field).setBackgroundDrawable
 						(activity.getResources().getDrawable(R.drawable.search_background_black));
 				}
-				container.addView(searchView);
-				return searchView;
+				container.addView(viewSearchTab);
+				return viewSearchTab;
 			default:
 				throw new IllegalArgumentException("Invalid media type: " + type);
 			}
@@ -922,5 +921,9 @@ public class LibraryPagerAdapter
 			//CompatHoneycomb.setFastScrollAlwaysVisible(list);
 		}
 		mActivity.mFakeTarget = false;
+	}
+	
+	public SearchView getSearchView() {
+		return searchView;
 	}
 }

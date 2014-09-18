@@ -16,7 +16,6 @@
 
 package com.simpleandroid.music;
 
-import com.simpleandroid.music.Advertisement;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;

@@ -17,6 +17,7 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +28,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 
-public class Settings {
+public class Settings implements BaseSettings {
 	
 	
 	
@@ -37,7 +38,7 @@ public class Settings {
 		{"SearchPleer", "2"},
 		{"SearchPoisk", "1"}, 
 		{"SearchHulkShare", "1"}, 
-		{"SearchMp3skull", "1"},
+//		{"SearchMp3skull", "1"},
 		{"SearchMp3World", "1"}, 
 		{"SearchSoundCloud", "1"},  
 		{"SearchSoundCloudV2", "1"}, 
@@ -254,13 +255,18 @@ public class Settings {
 
 
 	
+	@Override
+	public String[][] getSearchEnginesArray(Context context) {
+		return GET_SEARCH_ENGINES(context);
+	}
 	
-
-	
-	// paradise / maniac
+//	 paradise / maniac
 	public static ArrayList<String> getSearchEngines(Context context) {
 		return getEngines(context, Settings.KEY_REMOTE_SETTING_SEARCH_ENGINES);
 	}
+	
+	
+	
 	public static ArrayList<String> getExternalSearchEngines(Context context) {
 		return getEngines(context, Settings.KEY_REMOTE_SETTING_EXTERNAL_SEARCH_ENGINES);
 	}
@@ -659,4 +665,9 @@ public class Settings {
 	public static boolean ENABLE_LYRICS = true;
 	public static boolean SHOW_BANNER_ON_TOP = false;
 	public static final boolean ENABLE_MUSICBRAINZ_ALBUM_COVERS = true;
+
+	@Override
+	public boolean getIsCoversEnabled(Context context) {
+		return !Settings.getIsBlacklisted(context) && ENABLE_ALBUM_COVERS;
+	}
 }
