@@ -101,6 +101,7 @@ public class DirectoryChooserDialog {
 				if (m_chosenDirectoryListener != null) {
 					m_chosenDirectoryListener.onChosenDir(m_dir);
 				}
+				SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
 			}
 		}).setNegativeButton("Cancel", new OnClickListener() {
 			

@@ -1,4 +1,4 @@
- package ru.johnlife.lifetoolsmp3.ui;
+package ru.johnlife.lifetoolsmp3.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,7 +53,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public abstract class OnlineSearchView extends View {
-	
+
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
@@ -73,7 +73,6 @@ public abstract class OnlineSearchView extends View {
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private ListView listView;
 
-	
 	protected abstract BaseSettings getSettings();
 
 	protected abstract Advertisment getAdvertisment();
@@ -161,11 +160,11 @@ public abstract class OnlineSearchView extends View {
 				getResultAdapter().add(song);
 			}
 			if (SongArrayHolder.getInstance().getSongName() != null) {
-			setTaskIterator(SongArrayHolder.getInstance().getTaskIterator());
-			setSearchField(SongArrayHolder.getInstance().getSongName().toString());
-			setCurrentName(SongArrayHolder.getInstance().getSongName().toString());
-			getResultAdapter().notifyDataSetChanged();
-			setSearchStopped(false);
+				setTaskIterator(SongArrayHolder.getInstance().getTaskIterator());
+				setSearchField(SongArrayHolder.getInstance().getSongName().toString());
+				setCurrentName(SongArrayHolder.getInstance().getSongName().toString());
+				getResultAdapter().notifyDataSetChanged();
+				setSearchStopped(false);
 			}
 		}
 		if (SongArrayHolder.getInstance().isStreamDialogOpened()) {
@@ -173,21 +172,15 @@ public abstract class OnlineSearchView extends View {
 			createStreamDialog(args, true).show();
 		}
 		if (SongArrayHolder.getInstance().isID3DialogOpened()) {
-			createId3Dialog(SongArrayHolder.getInstance().getID3Fields(),
-					SongArrayHolder.getInstance().isCoverEnabled());
+			createId3Dialog(SongArrayHolder.getInstance().getID3Fields(), SongArrayHolder.getInstance().isCoverEnabled());
 		}
 		if (SongArrayHolder.getInstance().isLyricsOpened()) {
-			createLyricsDialog(SongArrayHolder.getInstance().getTitleArtistLyrics(), 
-					SongArrayHolder.getInstance().getLyrics());
+			createLyricsDialog(SongArrayHolder.getInstance().getTitleArtistLyrics(), SongArrayHolder.getInstance().getLyrics());
 		}
 		if (SongArrayHolder.getInstance().isDirectoryChooserOpened()) {
 			player.createDirectoryChooserDialog();
 		}
 		return view;
-	}
-	
-	protected View biuldCustomView() {
-		return null;
 	}
 
 	public void initSearchEngines(Context context) {
@@ -213,12 +206,13 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	protected void click(View view, int position) {
-	
-  }
 
-//	protected DownloadClickListener createListener(RemoteSong song, Bitmap bitmap) {
-//		return new DownloadClickListener(getContext(), song, bitmap);
-//	}
+	}
+
+	// protected DownloadClickListener createListener(RemoteSong song, Bitmap
+	// bitmap) {
+	// return new DownloadClickListener(getContext(), song, bitmap);
+	// }
 
 	public static String getDownloadPath(Context context) {
 		String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
@@ -265,13 +259,12 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public final class SongSearchAdapter extends ArrayAdapter<Song> {
-		
+
 		private SparseArray<Bitmap> bitmaps = new SparseArray<Bitmap>(0);
 		private LayoutInflater inflater;
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
 		private boolean fullAction;
-		
 
 		private SongSearchAdapter(Context context, LayoutInflater inflater, boolean fullAction) {
 			super(context, -1, new ArrayList<Song>());
@@ -288,13 +281,8 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setLine1(song.getTitle(), fullAction ? null : Util.formatTimeSimple((int)song.getDuration()))
-					.setLongClickable(false)
-					.setExpandable(false)
-					.setLine2(song.getArtist())
-					.setId(position)
-					.setIcon(song.getSongCover() == null ? R.drawable.fallback_cover : song.getSongCover())
-					.setButtonVisible(fullAction ? false : true);
+			builder.setLine1(song.getTitle(), fullAction ? null : Util.formatTimeSimple((int) song.getDuration())).setLongClickable(false).setExpandable(false).setLine2(song.getArtist())
+					.setId(position).setIcon(song.getSongCover() == null ? R.drawable.fallback_cover : song.getSongCover()).setButtonVisible(fullAction ? false : true);
 			// TODO: remove double-cacheing
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				Bitmap cover = bitmaps.get(position);
@@ -431,7 +419,7 @@ public abstract class OnlineSearchView extends View {
 			getNextResults();
 		}
 	}
-	
+
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args, boolean force) {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
@@ -520,7 +508,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 		b.setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
-			
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				ArrayList<String> sFields = player.getFields();
@@ -532,10 +520,10 @@ public abstract class OnlineSearchView extends View {
 				}
 				String artist = sFields.get(0) != null ? sFields.get(0) : downloadSong.getArtist();
 				String title = sFields.get(1) != null ? sFields.get(1) : downloadSong.getTitle();
-				downloadClickListener.downloadSond(artist , title, useCover);
+				downloadClickListener.downloadSond(artist, title, useCover);
 				player.cancel();
 			}
-			
+
 		});
 		AlertDialog alertDialog = b.create();
 		alertDialog.setOnCancelListener(new OnCancelListener() {
@@ -563,12 +551,14 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	private void createId3Dialog(String[] fields, boolean enableCover) {
-		if (null == player) return;
+		if (null == player)
+			return;
 		player.createId3dialog(fields, enableCover);
 	}
-	
+
 	private void createLyricsDialog(String[] titleArtist, String lyrics) {
-		if (null == player) return;
+		if (null == player)
+			return;
 		player.createLyricsDialog(titleArtist[0], titleArtist[1], lyrics);
 	}
 

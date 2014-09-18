@@ -282,7 +282,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				String artistName = editor.getNewArtistName();
 				String albumTitle = editor.getNewAlbumTitle();
 				String songTitle = editor.getNewSongTitle();
-				Log.d("log", "artist name = " + artistName);
 				sFields.add(artistName);
 				sFields.add(songTitle);
 				sFields.add(albumTitle);
