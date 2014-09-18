@@ -14,8 +14,10 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/selectable_item_bg"
-        android:clickable="true"
-        android:paddingLeft="8dp" >
+        android:paddingLeft="8dp"
+        android:paddingRight="0dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="0dp" >
 
         <FrameLayout
             android:layout_width="48dp"
