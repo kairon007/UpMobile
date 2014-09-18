@@ -36,11 +36,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private static DownloadsTab instance;
 	private View view;
 	private Activity activity;
-	private LayoutInflater inflater;
-	private MusicData mData;
-	private Bitmap cover;
 	private long cancelledId;
-	private String currentDownloadingSongTitle;
+	private final static double DOWNLOAD_FINISHED = -1;
 	private Long currentDownloadingID;
 	private ImageButton clearAll;
 	
@@ -97,12 +94,16 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				} else {
 					holder.cover.setImageResource(R.drawable.fallback_cover);
 				}
-				if (progressDownload >= 0.0 && progressDownload < 99.9) {
-						holder.downloadProgress.setVisibility(View.VISIBLE);
-						holder.remove.setImageResource(R.drawable.icon_cancel);
-						holder.downloadProgress.setProgress((int)progressDownload);
-				} else 	if (progressDownload > 99.9) {
-					holder.downloadProgress.setVisibility(View.INVISIBLE);
+				double progress = song.getDownloadProgress();
+				if (progress == 0) {   							//  temporary check, until you add a field isDownloaded in MusicData
+					if (progress == DOWNLOAD_FINISHED) {
+						holder.downloadProgress.setVisibility(View.GONE);
+						holder.remove.setImageResource(R.drawable.icon_ok);
+					} else {
+						holder.downloadProgress.setProgress((int) progress);
+					}
+				} else {
+					holder.downloadProgress.setVisibility(View.GONE);
 					holder.remove.setImageResource(R.drawable.icon_ok);
 				}
 				holder.duration.setText(song.getSongDuration());
@@ -250,29 +251,32 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	}
 
 	@Override
-	public void insertProgress(double progress) {
+	public void insertProgress(double progress, long downloadId) {
 		this.progressDownload = progress;
-		if (currentDownloadingSongTitle != null) {
 			for (int i = 0; i < adapter.getCount(); i++) {
-				if (adapter.getItem(i).getSongTitle().equalsIgnoreCase(currentDownloadingSongTitle) && adapter.getItem(i).getDownloadId() == currentDownloadingID) {
-					adapter.getItem(i).setDownloadProgress(progressDownload);
+				if (adapter.getItem(i).getDownloadId() == downloadId) {
+					adapter.getItem(i).setDownloadProgress(progress);
+					if (progress > 99) {
+						adapter.getItem(i).setDownloadProgress(DOWNLOAD_FINISHED);
+					}
+					adapter.notifyDataSetChanged();
 				}
 			}
 		}
-		adapter.notifyDataSetChanged();
-	}
 
 	@Override
 	public void insertCover(Bitmap cover) {
-		this.cover = cover;
-		adapter.getItem(0).setSongBitmap(cover);
-		adapter.notifyDataSetChanged();
+		for(int i = 0; i< adapter.getCount(); i++) {
+			if (adapter.getItem(i).getDownloadId() == currentDownloadingID) {
+				adapter.getItem(i).setSongBitmap(cover);
+				adapter.notifyDataSetChanged();
+			}
+		}
 	}
 
 	@Override
 	public void insertData(ArrayList<MusicData> result) {
 		for (MusicData data : result) {
-			mData = data;
 			adapter.insert(data, 0);
 		}
 		adapter.notifyDataSetChanged();
@@ -305,7 +309,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 
 	private DownloadsTab(final View inflateView, final LayoutInflater layoutInflater, Activity activity) {
 		this.view = inflateView;
-		this.inflater = layoutInflater;
 		this.activity = activity;
 		clearAll = (ImageButton) activity.findViewById(R.id.clear_all_button);
 		adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
@@ -331,7 +334,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 
 	@Override
 	public void currentDownloadingSongTitle(String currentDownloadingSongTitle) {
-		this.currentDownloadingSongTitle = currentDownloadingSongTitle;
 	}
 
 	@Override
@@ -354,7 +356,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	}
 	
 	public void recreateAdaper() {
-		ArrayList<MusicData> dataMusic = new ArrayList<MusicData>();
+		new ArrayList<MusicData>();
 		for (int i = 0; i < adapter.getCount(); i++) {
 			MusicData data = adapter.getItem(i);
 			if (progressDownload >= 99.9 || data.getFileUri() != null) {

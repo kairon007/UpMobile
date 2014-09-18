@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 public interface LoadPercentageInterface {
 	
-	public void insertProgress (double progress);
+	public void insertProgress (double progress, long downloadId );
 	
 	public void insertCover (Bitmap cover);
 	

@@ -62,7 +62,7 @@ public class DownloadListener extends DownloadClickListener {
 			public void run() {
 				downloadsTab.currentDownloadingID(currentDownloadId);
 				downloadsTab.currentDownloadingSongTitle(currentDownloadTitle);
-				downloadsTab.insertProgress(currentProgress);
+				downloadsTab.insertProgress(currentProgress, currentDownloadId);
 				downloadsTab.insertCover(cover);
 			}
 		});
