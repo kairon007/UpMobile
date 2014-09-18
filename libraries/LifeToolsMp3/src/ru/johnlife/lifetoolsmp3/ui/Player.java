@@ -114,7 +114,9 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		time = (TextView) view.findViewById(R.id.time);
 		time.setText(timeText);
 		coverImage = (ImageView) view.findViewById(R.id.cover);
-		coverImage.setImageBitmap(coverBitmap);
+		if (coverBitmap != null) {
+			coverImage.setImageBitmap(coverBitmap);
+		}
 		coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
 		if (!coverProgressVisible) {
 			coverProgress.setVisibility(View.GONE);
