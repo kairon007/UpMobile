@@ -1528,8 +1528,15 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				// res.getString(R.string.unknown): song.album;
 				mTitle.setText(title);
 				mArtist.setText(artist);
-				// mAlbum.setText(album);
-				cover = song.getCover(this);
+				File file = new File(song.path);
+				try {
+					MusicMetadataSet src_set = new MyID3().read(file);
+					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+					// mAlbum.setText(album);
+					cover = CoverBitmap.getArtworkImage(2, metadata);
+				} catch (Exception exception) {
+					cover = song.getCover(this);
+				}
 			}
 
 			if (Song.mDisableCoverArt)
