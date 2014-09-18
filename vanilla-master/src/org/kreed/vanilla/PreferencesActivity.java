@@ -144,6 +144,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
 			if ("AppTheme.White".equals(Util.getThemeName(this))) {
 				setTheme(R.style.BackActionBar_White);
 			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
