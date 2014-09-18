@@ -592,4 +592,12 @@ public abstract class OnlineSearchView extends View {
 	public void setSearchStopped(boolean searchStopped) {
 		this.searchStopped = searchStopped;
 	}
+
+	public static String getDOWNLOAD_DETAIL() {
+		return DOWNLOAD_DETAIL;
+	}
+
+	public static String getDOWNLOAD_DIR() {
+		return DOWNLOAD_DIR;
+	}
 }

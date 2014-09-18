@@ -41,7 +41,7 @@ import android.widget.Toast;
 
 public final class Player extends AsyncTask<String, Void, Boolean> {
 
-	private ArrayList<String> sFields = new ArrayList<>();
+	private ArrayList<String> sFields = new ArrayList<String>();
 	private String url = null;
 	private MediaPlayer mediaPlayer;
 	private boolean prepared = false;
@@ -65,15 +65,13 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean coverProgressVisible = true;
 	private String timeText;
 	private boolean rlCoverProgressVisible = true;
-	int current;
-	Runnable action;
-	boolean indeterminate;
-	int duration;
-	int imagePause;
-	boolean buttonVisible = false;
-	boolean spinnerVisible = true;
-	private DirectoryChooserDialog directoryChooserDialog;
-	private String chosenDir;
+	private int current;
+	private Runnable action;
+	private boolean indeterminate;
+	private int duration;
+	private int imagePause;
+	private boolean buttonVisible = false;
+	private boolean spinnerVisible = true;
 	private boolean useCover = true;
 
 	public void setSongId(Integer songId) {
@@ -104,9 +102,9 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			spinner.setVisibility(View.GONE);
 		}
 		button = (ImageButton) view.findViewById(R.id.pause);
-		button.setImageResource(imagePause);
 		if (buttonVisible) {
 			button.setVisibility(View.VISIBLE);
+			button.setImageResource(imagePause);
 		}
 		progress = (ProgressBar) view.findViewById(R.id.progress);
 		progress.setProgress(current);
@@ -204,19 +202,14 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				createLyricsDialog(title, artist, null);
 			}
 		});
-		if (null != chosenDir) {
-			OnlineSearchView.setDownloadPath(view.getContext(), chosenDir);
-		}
-
 	}
 
 	public void createDirectoryChooserDialog() {
-		directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
+		DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
 			@Override
 			public void onChosenDir(String chDir) {
-				chosenDir = chDir;
-				textPath.setText(chosenDir);
-				OnlineSearchView.setDownloadPath(view.getContext(), chosenDir);
+				textPath.setText(chDir);
+				OnlineSearchView.setDownloadPath(view.getContext(), chDir);
 			}
 		});
 		if (null != SongArrayHolder.getInstance().getDirectoryChooserPath()) {

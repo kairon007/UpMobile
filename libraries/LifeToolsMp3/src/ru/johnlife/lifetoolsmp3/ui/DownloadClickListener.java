@@ -21,6 +21,8 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -214,7 +216,19 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	protected String getDirectory() {
-		return BaseConstants.DOWNLOAD_DIR;
+		String downloadPath = BaseConstants.DOWNLOAD_DIR;
+	if (context != null) {
+		SharedPreferences downloadDetails = context.getSharedPreferences(OnlineSearchView.getDOWNLOAD_DETAIL(), Context.MODE_PRIVATE);
+		String sharedDownloadPath = downloadDetails.getString(OnlineSearchView.getDOWNLOAD_DIR(), "");
+		if (sharedDownloadPath.equals("")) {
+			Editor edit = downloadDetails.edit();
+			edit.clear();
+			edit.putString(OnlineSearchView.getDOWNLOAD_DIR(), downloadPath);
+			edit.commit();
+		} else
+			return sharedDownloadPath;
+	}
+	return downloadPath;
 	}
 
 	protected void prepare(final File src, RemoteSong song) {
