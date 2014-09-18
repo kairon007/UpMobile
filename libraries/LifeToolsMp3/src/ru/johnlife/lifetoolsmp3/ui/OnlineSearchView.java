@@ -160,11 +160,13 @@ public abstract class OnlineSearchView extends View {
 			for (Song song : SongArrayHolder.getInstance().getResults()) {
 				getResultAdapter().add(song);
 			}
+			if (SongArrayHolder.getInstance().getSongName() != null) {
 			setTaskIterator(SongArrayHolder.getInstance().getTaskIterator());
 			setSearchField(SongArrayHolder.getInstance().getSongName().toString());
 			setCurrentName(SongArrayHolder.getInstance().getSongName().toString());
 			getResultAdapter().notifyDataSetChanged();
 			setSearchStopped(false);
+			}
 		}
 		if (SongArrayHolder.getInstance().isStreamDialogOpened()) {
 			Bundle args = SongArrayHolder.getInstance().getStreamDialogArgs();
@@ -531,6 +533,7 @@ public abstract class OnlineSearchView extends View {
 				String artist = sFields.get(0) != null ? sFields.get(0) : downloadSong.getArtist();
 				String title = sFields.get(1) != null ? sFields.get(1) : downloadSong.getTitle();
 				downloadClickListener.downloadSond(artist , title, useCover);
+				player.cancel();
 			}
 			
 		});
