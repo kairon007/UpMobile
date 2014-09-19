@@ -4,13 +4,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import android.graphics.Bitmap;
-import android.util.Log;
-
 
 public class RemoteSong extends Song {
 	private final class WrapperCoverListener implements OnBitmapReadyListener {
@@ -22,6 +21,7 @@ public class RemoteSong extends Song {
 					for (OnBitmapReadyListener listener : listeners) {
 						listener.onBitmapReady(bmp);
 						cover = new WeakReference<Bitmap>(bmp);
+						smallCover = new WeakReference<Bitmap>(Util.resizeToSmall(bmp));
 					}
 					listeners.clear();
 					clearCoverLoaderQueue();
@@ -47,8 +47,7 @@ public class RemoteSong extends Song {
 	protected String downloadUrl;
 	public ArrayList<String []> headers;
 	private WeakReference<Bitmap> cover;
-
-	private Bitmap songCover;
+	private WeakReference<Bitmap> smallCover;
 	
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
@@ -83,10 +82,10 @@ public class RemoteSong extends Song {
 		return downloadUrl;
 	}
 	
-	public RemoteSong setSongCover (Bitmap songCover) {
-		songBmp = songCover;
-		return this;
-	}
+//	public RemoteSong setSongCover (Bitmap songCover) {
+//		songBmp = songCover;
+//		return this;
+//	}
 	
 	public RemoteSong setHeader(ArrayList<String []> headers) {
 		this.headers = headers;
@@ -125,5 +124,23 @@ public class RemoteSong extends Song {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean getSmallCover(final OnBitmapReadyListener listener) {
+		if (null != smallCover && null != smallCover.get()) {
+			listener.onBitmapReady(smallCover.get());
+			return true;
+		}
+		if (null != cover && null != cover.get()) {
+			listener.onBitmapReady(Util.resizeToSmall(cover.get()));
+			return true;
+		}
+		return getCover(new OnBitmapReadyListener() {
+			
+			@Override
+			public void onBitmapReady(Bitmap bmp) {
+				listener.onBitmapReady(Util.resizeToSmall(bmp));
+			}
+		});
 	}
 }

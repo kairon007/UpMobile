@@ -8,7 +8,6 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.os.Bundle;
-import android.util.Log;
 
 public class SongArrayHolder {
 	private static SongArrayHolder instance = null;
@@ -72,10 +71,6 @@ public class SongArrayHolder {
 		}
 	}
 
-	public boolean isStreamDialogOpened() {
-		return isStreamDialogOpened;
-	}
-
 	public void setStreamDialogOpened(boolean isStreamDialogOpened, Bundle streamDialogArgs, Player player) {
 		this.isStreamDialogOpened = isStreamDialogOpened;
 		this.streamDialogArgs = streamDialogArgs;
@@ -95,17 +90,9 @@ public class SongArrayHolder {
 	public Player getPlayerInstance() {
 		return playerInstance;
 	}
-
-	public boolean isID3DialogOpened() {
-		return isID3DialogOpened;
-	}
 	
 	public String[] getID3Fields() {
 		return fields;
-	}
-
-	public boolean isLyricsOpened() {
-		return isLyricsOpened;
 	}
 
 	public void setLyricsOpened(boolean isLyricsOpened, String[] titleArtistLyrics) {
@@ -123,10 +110,6 @@ public class SongArrayHolder {
 
 	public String[] getTitleArtistLyrics() {
 		return titleArtistLyrics;
-	}
-
-	public boolean isDirectoryChooserOpened() {
-		return isDirectoryChooserOpened;
 	}
 
 	public void setDirectoryChooserOpened(boolean isDirectoryChooserOpened) {
@@ -147,5 +130,21 @@ public class SongArrayHolder {
 
 	public void setCoverEnabled(boolean isCoverEnabled) {
 		this.isCoverEnabled = isCoverEnabled;
+	}
+	
+	public void restoreState(OnlineSearchView view) {
+		if (isStreamDialogOpened) {
+			Bundle args = getStreamDialogArgs();
+			view.createStreamDialog(args, true).show();
+		}
+		if (isID3DialogOpened) {
+			view.createId3Dialog(getID3Fields(), isCoverEnabled());
+		}
+		if (isLyricsOpened) {
+			view.createLyricsDialog(getTitleArtistLyrics(), getLyrics());
+		}
+		if (isDirectoryChooserOpened) {
+			view.getPlayer().createDirectoryChooserDialog();
+		}
 	}
 }

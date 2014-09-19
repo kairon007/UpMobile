@@ -138,7 +138,7 @@ public class Song implements Comparable<Song>, Parcelable {
 	 * in the song.
 	 */
 	
-	public Bitmap songBmp;
+//	public Bitmap songBmp;
 	
 	public Song(long id)
 	{
@@ -247,9 +247,9 @@ public class Song implements Comparable<Song>, Parcelable {
 		return duration;
 	}
 
-	public Bitmap getSongCover() {
-		return songBmp;
-	}
+//	public Bitmap getSongCover() {
+//		return songBmp;
+//	}
 	
 	
 	@Override
