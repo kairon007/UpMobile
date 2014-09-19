@@ -26,6 +26,7 @@ import java.util.Arrays;
 
 import org.kreed.vanilla.app.VanillaApp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -38,6 +39,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -204,6 +206,8 @@ public class LibraryPagerAdapter
 	public int mGenresPosition = -1;
 	
 	private SearchView searchView;
+	private View viewSearchTab;
+	private Context context;
 
 	private final ContentObserver mPlaylistObserver = new ContentObserver(null) {
 		@Override
@@ -229,6 +233,7 @@ public class LibraryPagerAdapter
 		mUiHandler = new Handler(this);
 		mWorkerHandler = new Handler(workerLooper, this);
 		mCurrentPage = -1;
+		context = mActivity.getApplicationContext();
 		activity.getContentResolver().registerContentObserver(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, true, mPlaylistObserver);
 	}
 	
@@ -379,8 +384,10 @@ public class LibraryPagerAdapter
 				mPendingFileLimiter = null;
 				break;
 			case MediaUtils.TYPE_SEARCH:
-				searchView = new SearchView(inflater);
-				View viewSearchTab = searchView.getView();
+				if (searchView == null) {
+					searchView = new SearchView(inflater);
+					viewSearchTab = searchView.getView();
+				}
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					viewSearchTab.findViewById(R.id.search_field).setBackgroundDrawable
 						(activity.getResources().getDrawable(R.drawable.search_background_white));
@@ -868,6 +875,10 @@ public class LibraryPagerAdapter
 	@Override
 	public void onPageSelected(int position)
 	{
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(PrefKeys.LIBRARY_PAGE, position);
+		editor.commit();
 		// onPageSelected and setPrimaryItem are called in similar cases, and it
 		// would be nice to use just one of them, but each has caveats:
 		// - onPageSelected isn't called when the ViewPager is first

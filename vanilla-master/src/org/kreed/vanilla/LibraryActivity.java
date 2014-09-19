@@ -191,7 +191,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	 */
 	private ApplicationInfo mFakeInfo;
 
-	int lastPage = -1;
+	private int lastPage = -1;
 	private Bundle state;
 
 	// -------------------------------------------------------------------------
@@ -549,9 +549,11 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle out) {
-		super.onSaveInstanceState(out);
-		SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
+	protected void onSaveInstanceState(Bundle outState) {
+			if (lastPage == 0) {
+				SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
+			}
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
