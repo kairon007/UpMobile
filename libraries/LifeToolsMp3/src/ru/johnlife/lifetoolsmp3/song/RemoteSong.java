@@ -9,6 +9,7 @@ import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 
 public class RemoteSong extends Song {
@@ -110,7 +111,7 @@ public class RemoteSong extends Song {
 	}
 	
 	public boolean getCover(OnBitmapReadyListener listener) {
-		if (null != cover && null != cover.get()) {
+		if (null != listener && null != cover && null != cover.get()) {
 			listener.onBitmapReady(cover.get());
 			return true;
 		}

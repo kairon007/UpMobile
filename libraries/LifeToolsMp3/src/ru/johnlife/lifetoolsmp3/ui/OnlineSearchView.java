@@ -289,6 +289,7 @@ public abstract class OnlineSearchView extends View {
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {
 							builder.setIcon(bmp);
+							((RemoteSong) song).setSongCover(bmp);
 						}
 					}
 				});
@@ -441,19 +442,20 @@ public abstract class OnlineSearchView extends View {
 				Log.e(getClass().getSimpleName(), ex.getMessage());
 			}
 			if (getSettings().getIsCoversEnabled(context)) {
-				downloadSong.getCover(new OnBitmapReadyListener() {
-					@Override
-					public void onBitmapReady(Bitmap bmp) {
-						if (null != player) {
-							player.setCover(bmp);
-						}
-					}
-				});
-			} else {
 				if (downloadSong.getSongCover() != null) {
 					player.setCover(downloadSong.getSongCover());
-				} else
-					player.hideCoverProgress();
+				} else {
+					downloadSong.getCover(new OnBitmapReadyListener() {
+						@Override
+						public void onBitmapReady(Bitmap bmp) {
+							if (null != player) {
+								player.setCover(bmp);
+							}
+						}
+					});
+				}
+			} else {
+				player.hideCoverProgress();
 			}
 		}
 		final Runnable dialogDismisser = new Runnable() {
@@ -475,12 +477,12 @@ public abstract class OnlineSearchView extends View {
 			}
 		};
 		if (getSettings().getIsCoversEnabled(context)) {
-			boolean hasCover = ((RemoteSong) downloadSong).getCover(downloadClickListener);
-			if (!hasCover)
-				player.setCover(null);
-		} else {
 			if (downloadSong.getSongCover() != null) {
 				player.setCover(downloadSong.getSongCover());
+			} else {
+				boolean hasCover = ((RemoteSong) downloadSong).getCover(downloadClickListener);
+				if (!hasCover)
+					player.setCover(null);
 			}
 		}
 		player.setTitle(artist + " - " + title);
