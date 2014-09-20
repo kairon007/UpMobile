@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -112,6 +113,7 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPostExecute(Void result) {
+		OnlineSearchView.setInProcess(false);
 		finished = true;
 		if (downloadStopped) return;
 		dInterface.onFinishParsing(songsList);

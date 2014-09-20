@@ -71,6 +71,9 @@ public abstract class OnlineSearchView extends View {
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private ListView listView;
+	private static boolean inProcess = false;
+	private static boolean recreate = false;
+	private static List<Song> songs;
 
 	protected abstract BaseSettings getSettings();
 
@@ -84,6 +87,15 @@ public abstract class OnlineSearchView extends View {
 
 	public View getView() {
 		final boolean fullAction = showFullElement();
+		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
+		if (recreate) {
+			if (null != songs) {
+				for (Song song : songs) {
+					resultAdapter.add(song);
+				}
+			}
+			recreate = false;
+		}
 		if (!fullAction) {
 			android.util.Log.d("log", "gone");
 			view.findViewById(R.id.downloads).setVisibility(View.GONE);
@@ -95,7 +107,6 @@ public abstract class OnlineSearchView extends View {
 				}
 			});
 		}
-		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
 		initSearchEngines(getContext());
 		message = (TextView) view.findViewById(R.id.message);
 		progress = view.findViewById(R.id.progress);
@@ -327,6 +338,7 @@ public abstract class OnlineSearchView extends View {
 					progress.setVisibility(View.GONE);
 				}
 			} else {
+				songs = songsList;
 				progress.setVisibility(View.GONE);
 				for (Song song : songsList) {
 					resultAdapter.add(song);
@@ -388,6 +400,7 @@ public abstract class OnlineSearchView extends View {
 				((SearchWithPages) searchTask).setPage(page);
 			}
 			searchTask.execute(NO_PARAMS);
+			OnlineSearchView.setInProcess(true);
 		} catch (Exception e) {
 			getNextResults();
 		}
@@ -561,5 +574,21 @@ public abstract class OnlineSearchView extends View {
 	
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public static boolean getInProcess() {
+		return inProcess;
+	}
+
+	public static void setInProcess(boolean inProcess) {
+		OnlineSearchView.inProcess = inProcess;
+	}
+	
+	public static boolean getRecreate() {
+		return recreate;
+	}
+
+	public static void setRecreate(boolean recreate) {
+		OnlineSearchView.recreate = recreate;
 	}
 }
