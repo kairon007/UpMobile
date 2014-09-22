@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -78,6 +79,15 @@ public abstract class OnlineSearchView extends View {
 	protected abstract BaseSettings getSettings();
 
 	protected abstract Advertisment getAdvertisment();
+	
+	public void fillAdapter(){
+		progress.setVisibility(View.GONE);
+		if (null != songs) {
+			for (Song song : songs) {
+				resultAdapter.add(song);
+			}
+		}
+	}
 
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -88,14 +98,6 @@ public abstract class OnlineSearchView extends View {
 	public View getView() {
 		final boolean fullAction = showFullElement();
 		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
-		if (recreate) {
-			if (null != songs) {
-				for (Song song : songs) {
-					resultAdapter.add(song);
-				}
-			}
-			recreate = false;
-		}
 		if (!fullAction) {
 			android.util.Log.d("log", "gone");
 			view.findViewById(R.id.downloads).setVisibility(View.GONE);
@@ -115,6 +117,10 @@ public abstract class OnlineSearchView extends View {
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setEmptyView(message);
+		if (recreate) {
+			message.setText("");
+			progress.setVisibility(View.VISIBLE);
+		}
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -339,10 +345,13 @@ public abstract class OnlineSearchView extends View {
 				}
 			} else {
 				songs = songsList;
-				progress.setVisibility(View.GONE);
-				for (Song song : songsList) {
-					resultAdapter.add(song);
+				if (recreate) {
+					recreate = false;
+					Intent intent = new Intent(BaseConstants.FILL_NEW_ADAPTER);
+					getContext().sendBroadcast(intent);	
 				}
+				progress.setVisibility(View.GONE);
+				fillAdapter();
 			}
 		}
 	};
@@ -378,6 +387,9 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public void search(String songName) {
+		if (null != songs) {
+			songs.clear();
+		}
 		searchStopped = false;
 		taskIterator = engines.iterator();
 		resultAdapter.clear();

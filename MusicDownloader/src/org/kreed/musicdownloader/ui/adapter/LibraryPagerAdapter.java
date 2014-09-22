@@ -29,7 +29,6 @@ import java.util.Arrays;
 import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.ballast.LibraryAdapter;
 import org.kreed.musicdownloader.ballast.MediaUtils;
 import org.kreed.musicdownloader.ballast.SortAdapter;
@@ -38,13 +37,10 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
-import ru.johnlife.lifetoolsmp3.BaseConstants;
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -261,6 +257,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		}
 	}
 
+	public void recreate (){
+		searchView.fillAdapter();
+		}
 	
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
@@ -273,6 +272,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			case MediaUtils.TYPE_SEARCH:
 				if (searchView == null) {
 					searchView = new SearchView(inflater, this, mActivity);
+					if (searchView.getInProcess()) {
+						searchView.setRecreate(true);
+							}
 					viewSearchActivity = searchView.getView();	
 				}
 				container.addView(viewSearchActivity);

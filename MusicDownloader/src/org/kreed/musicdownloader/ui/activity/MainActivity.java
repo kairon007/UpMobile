@@ -22,9 +22,11 @@ import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.media.MediaPlayer;
@@ -98,6 +100,7 @@ public class MainActivity extends Activity {
 	private int lastPage = -1;
 	private boolean mSearchBoxVisible;
 	public boolean mFakeTarget;
+	private FillAdapterReceiver receiver;
 
 	// -------------------------------------------------------------------------
 
@@ -164,6 +167,7 @@ public class MainActivity extends Activity {
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
+		unregisterReceiver(receiver);
 		super.onDestroy();
 	}
 
@@ -190,6 +194,9 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
+		IntentFilter filter = new IntentFilter(BaseConstants.FILL_NEW_ADAPTER);
+		receiver = new FillAdapterReceiver(); 
+		registerReceiver(receiver, filter);
 		if (android.os.Build.VERSION.SDK_INT < 11) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
@@ -600,6 +607,11 @@ public class MainActivity extends Activity {
 		@Override
 		public void afterTextChanged(Editable s) {
 
+		}
+	}
+	private class FillAdapterReceiver extends BroadcastReceiver {
+		public void onReceive(Context context, Intent intent) {
+			mPagerAdapter.recreate ();
 		}
 	}
 }
