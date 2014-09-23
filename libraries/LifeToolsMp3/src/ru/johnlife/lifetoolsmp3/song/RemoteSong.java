@@ -28,7 +28,7 @@ public class RemoteSong extends Song {
 				}
 			} else {
 				useNextCoverLoader();
-				getCover((OnBitmapReadyListener)null);
+				getCover(callFromPlayer,(OnBitmapReadyListener)null);
 			}
 		}
 
@@ -48,6 +48,7 @@ public class RemoteSong extends Song {
 	public ArrayList<String []> headers;
 	private WeakReference<Bitmap> cover;
 	private WeakReference<Bitmap> smallCover;
+	private boolean callFromPlayer;
 	
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
@@ -96,8 +97,10 @@ public class RemoteSong extends Song {
 	}	
 	
 	protected CoverLoaderTask getCoverLoader() {
+		if (callFromPlayer) {
 		return 0 == coverLoaderIndex ? new LastFmCoverLoaderTask(artist, title) : 
 			(1 == coverLoaderIndex && tryMuzicBrainz) ? new MuzicBrainzCoverLoaderTask(artist, title) : null;
+		} else return null;
 	}
 
 
@@ -109,7 +112,8 @@ public class RemoteSong extends Song {
 		coverLoaderIndex = 0;
 	}
 	
-	public boolean getCover(OnBitmapReadyListener listener) {
+	public boolean getCover(boolean callFromPlayer, OnBitmapReadyListener listener) {
+		this.callFromPlayer = callFromPlayer;
 		if (null != listener && null != cover && null != cover.get()) {
 			listener.onBitmapReady(cover.get());
 			return true;
@@ -126,7 +130,8 @@ public class RemoteSong extends Song {
 		return false;
 	}
 	
-	public boolean getSmallCover(final OnBitmapReadyListener listener) {
+	public boolean getSmallCover(boolean callFromPlayer,final OnBitmapReadyListener listener) {
+		this.callFromPlayer = callFromPlayer;
 		if (null != smallCover && null != smallCover.get()) {
 			listener.onBitmapReady(smallCover.get());
 			return true;
@@ -135,7 +140,7 @@ public class RemoteSong extends Song {
 			listener.onBitmapReady(Util.resizeToSmall(cover.get()));
 			return true;
 		}
-		return getCover(new OnBitmapReadyListener() {
+		return getCover(callFromPlayer, new OnBitmapReadyListener() {
 			
 			@Override
 			public void onBitmapReady(Bitmap bmp) {

@@ -288,7 +288,7 @@ public abstract class OnlineSearchView extends View {
 					.setId(position).setIcon(R.drawable.fallback_cover).setButtonVisible(fullAction ? false : true);
 			// TODO: remove double-cacheing
 			if (getSettings().getIsCoversEnabled(getContext())) {
-				((RemoteSong) song).getSmallCover(new OnBitmapReadyListener() {
+				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {
@@ -454,7 +454,7 @@ public abstract class OnlineSearchView extends View {
 				Log.e(getClass().getSimpleName(), ex.getMessage());
 			}
 			if (getSettings().getIsCoversEnabled(context)) {
-				downloadSong.getCover(new OnBitmapReadyListener() {
+				downloadSong.getCover(true, new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (null != player) {
@@ -485,7 +485,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		};
 		if (getSettings().getIsCoversEnabled(context)) {
-			boolean hasCover = ((RemoteSong) downloadSong).getCover(downloadClickListener);
+			boolean hasCover = ((RemoteSong) downloadSong).getCover(true, downloadClickListener);
 			if (!hasCover) player.setCover(null);
 		}
 		player.setTitle(artist + " - " + title);
