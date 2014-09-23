@@ -149,19 +149,16 @@ public class MusicData {
 		if (null != newTag.songGenre && !newTag.songGenre.equals(songGenre)) {
 			songGenre = newTag.songGenre;
 		}
-		boolean changed = true;
 		if (!newTag.songArtist.equals(songArtist)) {
 			songArtist = newTag.songArtist;
-			changed &= true;
 		}
 		if (!newTag.songTitle.equals(songTitle)) {
 			songTitle = newTag.songTitle;
-			changed &= true;
 		}
 		if (switcher) {
 			deleteCoverFromFile();
 		}
-		if (changed || flag) {
+		if (flag) {
 			renameBoundFile();
 		}
 	}
