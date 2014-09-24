@@ -428,7 +428,7 @@ public abstract class OnlineSearchView extends View {
 		}
 	}
 
-	public void prepareSong(Bundle args, boolean force) {
+	public void prepareSong(final Bundle args, boolean force) {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return;
 		}
@@ -439,12 +439,11 @@ public abstract class OnlineSearchView extends View {
 		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask() {
 			private ProgressDialog progressDialog;
 
-
 			@Override
 			protected void onPostExecute(String downloadUrl) {
 				loadSong(downloadUrl);
 				progressDialog.cancel();
-				createStreamDialog().show();
+				createStreamDialog(args).show();
 			}
 
 			@Override
@@ -477,7 +476,7 @@ public abstract class OnlineSearchView extends View {
 				String url = downloadSong.getParentUrl();
 				if (url != null) {
 					loadSong(url);
-					createStreamDialog().show();
+					createStreamDialog(args).show();
 				} else {
 					urlTask.execute(downloadSong);
 				}
@@ -496,6 +495,8 @@ public abstract class OnlineSearchView extends View {
 			} else {
 				player.hideCoverProgress();
 			}
+		} else {
+			createStreamDialog(args).show();
 		}
 		dialogDismisser = new Runnable() {
 			@Override
@@ -520,12 +521,10 @@ public abstract class OnlineSearchView extends View {
 			if (!hasCover) player.setCover(null);
 		}
 		player.setTitle(artist + " - " + title);
-		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);
 	}
 	
 	@SuppressLint("NewApi")
-	public Dialog createStreamDialog() {
-	
+	public Dialog createStreamDialog(Bundle args) {
 		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
@@ -559,6 +558,7 @@ public abstract class OnlineSearchView extends View {
 				dialogDismisser.run();
 			}
 		});
+		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);
 		return alertDialog;
 	}
 
