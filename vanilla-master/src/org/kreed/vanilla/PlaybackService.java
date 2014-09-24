@@ -1155,7 +1155,8 @@ public final class PlaybackService extends Service
 
 				if (!mPlayingBeforeCall) {
 					synchronized (mStateLock) {
-						if (mPlayingBeforeCall = (mState & FLAG_PLAYING) != 0)
+						mPlayingBeforeCall = (mState & FLAG_PLAYING) != 0;
+						if (mPlayingBeforeCall)
 							unsetFlag(FLAG_PLAYING);
 					}
 				}

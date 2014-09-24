@@ -22,7 +22,6 @@
 
 package org.kreed.vanilla;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -467,12 +466,12 @@ public class MediaAdapter
 			.setExpandable(mExpandable)
 			.setLine1(title, null)
 			.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
-			.setNumber(count > 3 ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
-		if (mType == MediaUtils.TYPE_SONG && Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
-				long id = cursor.getLong(0);
-				File file = PlaybackService.get(mActivity).getFilePath(mType, id);
-				builder.startLoadCover(2, mActivity, file);
-		}
+			.setNumber(count > 3 && mType != MediaUtils.TYPE_SONG ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
+//		if (mType == MediaUtils.TYPE_SONG && Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
+//				long id = cursor.getLong(0);
+//				File file = PlaybackService.get(mActivity).getFilePath(mType, id);
+//				builder.startLoadCover(2, mActivity, file);
+//		}
 		return builder.build();
 	}
 
