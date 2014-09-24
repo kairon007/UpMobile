@@ -1,9 +1,8 @@
 package mp3.music.player.us.ui.fragments;
 
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import mp3.music.player.us.Constants;
 import mp3.music.player.us.ui.SearchView;
-import android.annotation.SuppressLint;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ public class OnlineSearchFragment extends SherlockFragment {
 	
 	private SearchView searchView;
 
-	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		searchView = new SearchView(inflater);

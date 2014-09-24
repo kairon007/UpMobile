@@ -87,12 +87,31 @@ public class AdapterHelper {
 
 		public ViewBuilder setArrowClickListener(OnClickListener listener) {
 			btnDownload.setOnClickListener(listener);
+			setClickRedirect();
 			return this;
 		}
 		
+		/**
+		 * @param listener
+		 * @return
+		 */
 		public ViewBuilder setMainClickListener(OnClickListener listener) {
 			view.setOnClickListener(listener);
+			
 			return this;
+		}
+		
+		public void setClickRedirect() {
+			View v = view.findViewById(R.id.boxInfoItem);
+			if (null != v) {
+				v.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						view.performClick();
+					}
+				});
+			}
 		}
 		
 		public ViewBuilder setId(long value) {

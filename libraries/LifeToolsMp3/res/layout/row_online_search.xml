@@ -17,7 +17,8 @@
         android:paddingLeft="8dp"
         android:paddingRight="0dp"
         android:paddingStart="8dp"
-        android:paddingEnd="0dp" >
+        android:paddingEnd="0dp"
+        android:clickable="true" >
 
         <FrameLayout
             android:layout_width="48dp"
