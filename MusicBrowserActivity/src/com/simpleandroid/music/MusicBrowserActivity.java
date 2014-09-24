@@ -41,14 +41,7 @@ public class MusicBrowserActivity extends Activity
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        int activeTab = MusicUtils.getIntPref(this, "activetab", R.id.artisttab);
-        if (activeTab != R.id.artisttab
-                && activeTab != R.id.albumtab
-                && activeTab != R.id.songtab
-                && activeTab != R.id.playlisttab) {
-            activeTab = R.id.artisttab;
-        }
-        MusicUtils.activateTab(this, activeTab);
+        MusicUtils.activateTab(this, R.id.searchtab);
         MusicApp.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
         String shuf = getIntent().getStringExtra("autoshuffle");
         if ("true".equals(shuf)) {
