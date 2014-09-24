@@ -4,10 +4,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Vector;
+
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.util.Log;
 
 public final class Util {
 	
@@ -36,5 +40,35 @@ public final class Util {
 		m.postScale(scale, scale);
 		Bitmap small = Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
 		return small;
+	}
+	
+	public static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
+		if (maxWidth == 0) {
+			return null;
+		}
+		Vector<ImageData> pictureList = metadata.getPictureList();
+		if ((pictureList == null) || (pictureList.size() == 0)) {
+			return null;
+		}
+		ImageData imageData = (ImageData) pictureList.get(0);
+		if (imageData == null) {
+			return null;
+		}
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		opts.inPurgeable = true;
+		int scale = 1;
+		if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
+			// Find the correct scale value. It should be the power of 2.
+			int scaleWidth = opts.outWidth;
+			while (scaleWidth > maxWidth) {
+				scaleWidth /= 2;
+				scale *= 2;
+			}
+		}
+		opts = new BitmapFactory.Options();
+		opts.inSampleSize = scale;
+		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
+		return bitmap;
 	}
 }

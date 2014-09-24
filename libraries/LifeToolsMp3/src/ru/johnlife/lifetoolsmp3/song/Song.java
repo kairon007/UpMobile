@@ -271,6 +271,11 @@ public class Song implements Comparable<Song>, Parcelable {
 	
 	}
 	 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 	private Song (Parcel parcel) {
 		id = parcel.readLong();
 		path = parcel.readString();

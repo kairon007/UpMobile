@@ -1535,7 +1535,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					MusicMetadataSet src_set = new MyID3().read(file);
 					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 					// mAlbum.setText(album);
-					cover = CoverBitmap.getArtworkImage(2, metadata);
+					cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata);
 				} catch (Exception exception) {
 					cover = song.getCover(this);
 				}

@@ -22,14 +22,6 @@
 
 package org.kreed.vanilla;
 
-import java.io.File;
-import java.util.Vector;
-
-import org.cmc.music.metadata.ImageData;
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
 import android.content.res.Resources;
@@ -132,19 +124,7 @@ public final class CoverBitmap {
 	 * @return The image, or null if the song was null, or width or height
 	 * were less than 1
 	 */
-	public static Bitmap createBitmap(Context context, int style, Bitmap coverArt, Song song, int width, int height)
-	{
-		android.util.Log.d("log", "create bitmap = " + song.title + ", path = " + song.path);
-		File file = new File(song.path);
-		MusicMetadataSet src_set = null;
-		try {
-			src_set = new MyID3().read(file);
-		} catch (Exception exception) {
-		}
-		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-		if (src_set!=null && null != metadata.getPictureList()) {
-			coverArt = getArtworkImage(2, metadata);
-		}
+	 public static Bitmap createBitmap(Context context, int style, Bitmap coverArt, Song song, int width, int height) {
 		switch (style) {
 		case STYLE_OVERLAPPING_BOX:
 			return createOverlappingBitmap(context, coverArt, song, width, height);
@@ -157,36 +137,6 @@ public final class CoverBitmap {
 		}
 	}
 	
-	public static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
-		if (maxWidth == 0) {
-			return null;
-		}
-		Vector<ImageData> pictureList = metadata.getPictureList();
-		if ((pictureList == null) || (pictureList.size() == 0)) {
-			return null;
-		}
-		ImageData imageData = (ImageData) pictureList.get(0);
-		if (imageData == null) {
-			return null;
-		}
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inJustDecodeBounds = true;
-		opts.inPurgeable = true;
-		int scale = 1;
-		if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
-			// Find the correct scale value. It should be the power of 2.
-			int scaleWidth = opts.outWidth;
-			while (scaleWidth > maxWidth) {
-				scaleWidth /= 2;
-				scale *= 2;
-			}
-		}
-		opts = new BitmapFactory.Options();
-		opts.inSampleSize = scale;
-		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
-		return bitmap;
-	}
-
 	private static Bitmap createOverlappingBitmap(Context context, Bitmap cover, Song song, int width, int height)
 	{
 		if (TEXT_SIZE == -1)
