@@ -1113,7 +1113,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		case MENU_REMOVE_ALBUM_COVER:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			final File fileRAC = PlaybackService.get(this).getFilePath(type, type);
+			final File fileRAC = PlaybackService.get(this).getFilePath(type, id);
 			AlertDialog.Builder builderRAC = new AlertDialog.Builder(this);
 			builderRAC.setTitle(R.string.remove_album_cover_title);
 			builderRAC.setMessage(R.string.remove_album_cover_complete);
@@ -1368,13 +1368,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		AlertDialog.Builder builder;
 
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-			Log.d("log", "a");
 			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog_White));
-		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-			Log.d("log", "b");
-			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog_Black));
 		} else {
-			Log.d("log", "c");
 			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog));
 		}
 		int position = mPagerAdapter.getCurrentType();
