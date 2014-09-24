@@ -11,9 +11,7 @@
 package com.simpleandroid.music;
 
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -46,14 +44,6 @@ public class SearchBrowserActivity extends Activity {
 		if (Settings.ENABLE_ADS) {
 			Advertisement.mopubShowBanner(this);
 		}
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		if (id == OnlineSearchView.STREAM_DIALOG_ID) {
-			// return OnlineSearchView.getInstance(getLayoutInflater(), this).createStreamDialog(args);
-		}
-		return super.onCreateDialog(id, args);
 	}
 
 	@Override
