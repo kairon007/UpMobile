@@ -4,8 +4,8 @@ import android.content.Context;
 
 public interface Advertisment {
 
-	void searchStart(Context context);
+	void searchStartLib(Context context);
 
-	boolean isOnline(Context context);
+	boolean isOnlineLib(Context context);
 
 }

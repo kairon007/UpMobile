@@ -18,6 +18,13 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected Advertisment getAdvertisment() {
+		try {
+			return Advertisement.class.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 

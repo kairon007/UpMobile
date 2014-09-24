@@ -373,8 +373,8 @@ public abstract class OnlineSearchView extends View {
 		}
 
 		try {
-			if (getAdvertisment().isOnline(getContext())) {
-				getAdvertisment().searchStart(getContext());
+			if (getAdvertisment().isOnlineLib(getContext())) {
+				getAdvertisment().searchStartLib(getContext());
 			}
 		} catch (Exception e) {
 
