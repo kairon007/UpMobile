@@ -87,7 +87,6 @@ public class AdapterHelper {
 
 		public ViewBuilder setArrowClickListener(OnClickListener listener) {
 			btnDownload.setOnClickListener(listener);
-			setClickRedirect();
 			return this;
 		}
 		
@@ -97,7 +96,7 @@ public class AdapterHelper {
 		 */
 		public ViewBuilder setMainClickListener(OnClickListener listener) {
 			view.setOnClickListener(listener);
-			
+			setClickRedirect();
 			return this;
 		}
 		
