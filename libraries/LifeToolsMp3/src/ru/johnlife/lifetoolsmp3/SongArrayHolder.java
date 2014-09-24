@@ -135,7 +135,7 @@ public class SongArrayHolder {
 	public void restoreState(OnlineSearchView view) {
 		if (isStreamDialogOpened) {
 			Bundle args = getStreamDialogArgs();
-			view.createStreamDialog(args, true).show();
+			view.prepareSong(args, true);
 		}
 		if (isID3DialogOpened) {
 			view.createId3Dialog(getID3Fields(), isCoverEnabled());
