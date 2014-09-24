@@ -104,6 +104,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			buttonPlay.setVisibility(View.VISIBLE);
 			buttonProgress.setVisibility(View.GONE);
 		} else {
+			songProgress.setProgress(0);
+			songProgress.setIndeterminate(true);
 			buttonPlay.setVisibility(View.GONE);
 			buttonProgress.setVisibility(View.VISIBLE);
 		}

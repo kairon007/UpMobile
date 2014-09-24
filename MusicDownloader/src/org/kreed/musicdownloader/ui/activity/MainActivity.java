@@ -418,7 +418,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void setFooterView(String strTitle) {
-		TextView tv = (TextView) findViewById(R.id.player_title_song);
+		TextView tv = (TextView) findViewById(R.id.player_artist);
 		tv.setText(strTitle);
 		SeekBar sb = (SeekBar) findViewById(R.id.player_progress_song);
 		sb.setProgress(0);
