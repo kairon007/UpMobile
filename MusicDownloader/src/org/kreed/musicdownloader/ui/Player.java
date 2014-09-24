@@ -113,12 +113,16 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	}
 	
 	public void restart() {
-		if( null != mediaPlayer){
-			mediaPlayer.seekTo(0);
-			mediaPlayer.start();
-			setActivatedButton(true);
-			setImageOnButton();
-		} 
+		try {
+			if (null != mediaPlayer) {
+				mediaPlayer.seekTo(0);
+				mediaPlayer.start();
+				setActivatedButton(true);
+				setImageOnButton();
+			}
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(),"" + e);
+		}
 	}
 	
 	public MediaPlayer getMediaPlayer() {
