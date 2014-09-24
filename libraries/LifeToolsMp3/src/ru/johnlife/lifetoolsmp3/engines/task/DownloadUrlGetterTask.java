@@ -13,4 +13,7 @@ public abstract class DownloadUrlGetterTask extends AsyncTask<Song, Void, String
 
 	@Override
 	protected abstract void onPostExecute(String downloadUrl);
+	
+	@Override
+	protected abstract void onPreExecute();
 }

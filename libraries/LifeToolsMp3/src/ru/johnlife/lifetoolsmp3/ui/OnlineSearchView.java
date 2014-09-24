@@ -25,6 +25,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -75,6 +76,8 @@ public abstract class OnlineSearchView extends View {
 	private static boolean inProcess = false;
 	private static boolean recreate = false;
 	private static List<Song> songs;
+	private DownloadClickListener downloadClickListener;
+	private Runnable dialogDismisser;
 
 	protected abstract BaseSettings getSettings();
 
@@ -130,7 +133,7 @@ public abstract class OnlineSearchView extends View {
 				Bundle bundle = new Bundle(0);
 				bundle.putInt(KEY_POSITION, position);
 				if (fullAction) {
-					createStreamDialog(bundle, false).show();
+					prepareSong(bundle, false);
 				} else {
 					click(view, position);
 				}
@@ -418,19 +421,39 @@ public abstract class OnlineSearchView extends View {
 		}
 	}
 
-	@SuppressLint("NewApi")
-	public Dialog createStreamDialog(Bundle args, boolean force) {
+	public void prepareSong(Bundle args, boolean force) {
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
-			return null;
+			return;
 		}
 		downloadSong = (RemoteSong) resultAdapter.getItem(args.getInt(KEY_POSITION));
 		final String title = downloadSong.getTitle();
 		final String artist = downloadSong.getArtist();
 		final Context context = view.getContext();
 		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask() {
+			private ProgressDialog progressDialog;
+
+
 			@Override
 			protected void onPostExecute(String downloadUrl) {
 				loadSong(downloadUrl);
+				progressDialog.cancel();
+				createStreamDialog().show();
+			}
+
+			@Override
+			protected void onPreExecute() {
+				  progressDialog = new ProgressDialog(getContext());
+			      progressDialog.setTitle(R.string.please_wait);
+			      progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			      progressDialog.setMessage(getContext().getString(R.string.loading_song_details));
+			      progressDialog.setOnCancelListener(new OnCancelListener() {	
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						dialogDismisser.run();
+					}
+				});
+			      progressDialog.show();
+				
 			}
 		};
 		if (force) {
@@ -447,6 +470,7 @@ public abstract class OnlineSearchView extends View {
 				String url = downloadSong.getParentUrl();
 				if (url != null) {
 					loadSong(url);
+					createStreamDialog().show();
 				} else {
 					urlTask.execute(downloadSong);
 				}
@@ -466,7 +490,7 @@ public abstract class OnlineSearchView extends View {
 				player.hideCoverProgress();
 			}
 		}
-		final Runnable dialogDismisser = new Runnable() {
+		dialogDismisser = new Runnable() {
 			@Override
 			public void run() {
 				SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
@@ -477,7 +501,7 @@ public abstract class OnlineSearchView extends View {
 				urlTask.cancel(true);
 			}
 		};
-		final DownloadClickListener downloadClickListener = new DownloadClickListener(context, (RemoteSong) downloadSong) {
+		downloadClickListener = new DownloadClickListener(context, (RemoteSong) downloadSong) {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);
@@ -489,7 +513,13 @@ public abstract class OnlineSearchView extends View {
 			if (!hasCover) player.setCover(null);
 		}
 		player.setTitle(artist + " - " + title);
-		AlertDialog.Builder b = new AlertDialog.Builder(context).setView(player.getView());
+		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);
+	}
+	
+	@SuppressLint("NewApi")
+	public Dialog createStreamDialog() {
+	
+		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
@@ -522,7 +552,6 @@ public abstract class OnlineSearchView extends View {
 				dialogDismisser.run();
 			}
 		});
-		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);
 		return alertDialog;
 	}
 
