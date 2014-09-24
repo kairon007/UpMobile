@@ -78,6 +78,7 @@ public abstract class OnlineSearchView extends View {
 	private static List<Song> songs;
 	private DownloadClickListener downloadClickListener;
 	private Runnable dialogDismisser;
+	private String extraSearch = null;;
 
 	protected abstract BaseSettings getSettings();
 
@@ -102,7 +103,6 @@ public abstract class OnlineSearchView extends View {
 		final boolean fullAction = showFullElement();
 		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
 		if (!fullAction) {
-			android.util.Log.d("log", "gone");
 			view.findViewById(R.id.downloads).setVisibility(View.GONE);
 		} else {
 			view.findViewById(R.id.downloads).setOnClickListener(new View.OnClickListener() {
@@ -174,6 +174,13 @@ public abstract class OnlineSearchView extends View {
 				progress.setVisibility(View.GONE);
 			}
 		});
+		if (extraSearch != null) {
+			setSearchField(extraSearch);
+			setCurrentName(extraSearch);
+			trySearch();
+			extraSearch = null;
+			return view;
+		}
 		if (SongArrayHolder.getInstance().getResults() != null) {
 			for (Song song : SongArrayHolder.getInstance().getResults()) {
 				getResultAdapter().add(song);
@@ -631,5 +638,9 @@ public abstract class OnlineSearchView extends View {
 
 	public static void setRecreate(boolean recreate) {
 		OnlineSearchView.recreate = recreate;
+	}
+
+	public void setExtraSearch(String extraSearch) {
+		this.extraSearch = extraSearch;
 	}
 }

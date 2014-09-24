@@ -25,7 +25,7 @@ public class OnlineSearchFragment extends SherlockFragment {
 		String str = intent.getStringExtra(Constants.EXTRA_SEARCH);
 		if(str != null && !str.isEmpty()) {
 			getActivity().getIntent().removeExtra(Constants.EXTRA_SEARCH);
-			searchView.trySearch();
+			searchView.setExtraSearch(str);
 		}		
 		return searchView.getView();
 	}
