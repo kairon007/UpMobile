@@ -25,6 +25,7 @@ public class SongArrayHolder {
 	private String lyrics;
 	private boolean isDirectoryChooserOpened = false;
 	private String directoryChooserPath;
+	private boolean isSearchExecute = false;
 
 	public static SongArrayHolder getInstance() {
 		if (instance == null) {
@@ -146,5 +147,13 @@ public class SongArrayHolder {
 		if (isDirectoryChooserOpened) {
 			view.getPlayer().createDirectoryChooserDialog();
 		}
+	}
+
+	public boolean isSearchExecute() {
+		return isSearchExecute;
+	}
+
+	public void setSearchExecute(boolean isSearchExecute) {
+		this.isSearchExecute = isSearchExecute;
 	}
 }

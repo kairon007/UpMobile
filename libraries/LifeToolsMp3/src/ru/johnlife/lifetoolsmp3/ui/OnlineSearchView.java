@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
-import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -178,6 +177,9 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 		SongArrayHolder.getInstance().restoreState(this);
+		if (SongArrayHolder.getInstance().isSearchExecute() && resultAdapter.isEmpty()) {
+			search(SongArrayHolder.getInstance().getSongName());
+		}
 		return view;
 	}
 
@@ -328,6 +330,7 @@ public abstract class OnlineSearchView extends View {
 	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
 		@Override
 		public void onFinishParsing(List<Song> songsList) {
+			SongArrayHolder.getInstance().setSearchExecute(false);
 			resultAdapter.hideProgress();
 			if (searchStopped)
 				return;
@@ -373,7 +376,6 @@ public abstract class OnlineSearchView extends View {
 		} catch (Exception e) {
 
 		}
-
 	}
 
 	public void search(String songName) {
@@ -387,6 +389,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	private void getNextResults() {
+		SongArrayHolder.getInstance().setSearchExecute(true);
 		if (!taskIterator.hasNext()) {
 			resultAdapter.hideProgress();
 			return;
