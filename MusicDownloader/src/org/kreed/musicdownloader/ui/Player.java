@@ -36,9 +36,11 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private ProgressBar buttonProgress;
 	private ImageButton buttonPlay;
 	private TextView songTitle;
+	private TextView songArtist;
 	private TextView songDuration;
 	
 	private String title;
+	private String artist;
 	private String duration;
 	private int currentProgress = 0;
 	private boolean playFinish = false;
@@ -62,7 +64,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	};
 	
 	public Player(ArrayList<String[]> header, MusicData data) {
-		title = data.getSongArtist() + " - " + data.getSongTitle();
+		title = data.getSongTitle();
+		artist = data.getSongArtist();
 		duration = data.getSongDuration();
 		this.data = data;
 		this.header = header;
@@ -165,6 +168,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		}
 		songProgress.setOnSeekBarChangeListener(this);
 		songTitle.setText(title);
+		songArtist.setText(artist);
 		songDuration.setText(duration);
 		setImageOnButton();
 		buttonPlay.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +205,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
 		buttonProgress = (ProgressBar) view.findViewById(R.id.player_progress_play);
 		buttonPlay = (ImageButton) view.findViewById(R.id.player_play_song);
-		songTitle = (TextView) view.findViewById(R.id.player_title_song);
+		songArtist = (TextView) view.findViewById(R.id.player_artist);
+		songTitle = (TextView) view.findViewById(R.id.player_title);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
 	}
 
