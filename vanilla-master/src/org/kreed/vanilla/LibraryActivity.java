@@ -131,7 +131,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
 	private static final String SWICH_SHOW_DIALOG_RATE = "swich_show_dialog_rate";
-	
+
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
 
@@ -154,7 +154,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private MP3Editor editor;
 	private int type;
 	private long id;
-	
 
 	private HorizontalScrollView mLimiterScroller;
 	private ViewGroup mLimiterViews;
@@ -386,7 +385,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				mTitle.setTypeface(font);
 
 			}
-			
+
 			mCover.setOnClickListener(this);
 			previous.setOnClickListener(this);
 			mPlayPauseButton.setOnClickListener(this);
@@ -550,9 +549,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-			if (lastPage == 0) {
-				SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
-			}
+		if (lastPage == 0) {
+			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
+		}
 		super.onSaveInstanceState(outState);
 	}
 
@@ -798,10 +797,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	@Override
 	public void onClick(View view) {
 		if (view == mSortButton) {// mClearButton
-		// if (mTextFilter.getText().length() == 0)
-		// setSearchBoxVisible(false);
-		// else
-		// mTextFilter.setText("");
+			// if (mTextFilter.getText().length() == 0)
+			// setSearchBoxVisible(false);
+			// else
+			// mTextFilter.setText("");
 			openSortDialog();
 		} else if (view == mEqualizerButton) {
 			Intent intent = new Intent(this, MyEqualizer.class);
@@ -1103,10 +1102,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			updateLimiterViews();
 			break;
 		case MENU_EDIT_MP3_TAGS:
-			//TODO
+			// TODO
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			String[] fields = {intent.getStringExtra("selected_file_path"), intent.getStringExtra("title"), ""};
+			String[] fields = { intent.getStringExtra("selected_file_path"), intent.getStringExtra("title"), "" };
 			editor = new MP3Editor(this, true);
 			editor.setStrings(fields);
 			createEditID3Dialog(type, id, editor);
@@ -1131,7 +1130,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 						}
 
 					}.execute();
-					
+
 				}
 
 			});
@@ -1230,7 +1229,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				isChange = true;
 				metadata.setArtist(artist);
 			}
-			if(!isChange) {
+			if (!isChange) {
 				return;
 			}
 			new MyID3().update(file, src_set, metadata);
@@ -1244,10 +1243,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 			public void onScanCompleted(String path, Uri uri) {
 				Song song = new Song(id);
-				if(null != artist || artist.equals("")) {
+				if (null != artist || artist.equals("")) {
 					song.artist = artist;
 				}
-				if (null != title || title.equals("")){
+				if (null != title || title.equals("")) {
 					song.title = title;
 				}
 				onMediaChange();
@@ -1530,6 +1529,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				// res.getString(R.string.unknown): song.album;
 				mTitle.setText(title);
 				mArtist.setText(artist);
+				if (song.path == null) return;
 				File file = new File(song.path);
 				try {
 					MusicMetadataSet src_set = new MyID3().read(file);
@@ -1594,7 +1594,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			mTextFilter.setText("");
 		}
 		if (lastPage == 0) {
-			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter)mViewPager.getAdapter()).getSearchView());
+			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
 		}
 		lastPage = position;
 	}
