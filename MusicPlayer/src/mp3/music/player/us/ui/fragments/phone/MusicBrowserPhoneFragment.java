@@ -127,14 +127,8 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         mViewPager.setAdapter(mPagerAdapter);
         // Offscreen pager loading limit
 		mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
-		// Start on the last page the user was on
-		Bundle args = getArguments();
-		String str = args.getString("key");
-		if (str != null && !str.isEmpty()) {
-			mViewPager.setCurrentItem(0);
-		} else {
-			mViewPager.setCurrentItem(mPreferences.getStartPage());
-		}
+		// Always start search fragment
+		mViewPager.setCurrentItem(0);
 		// Initialze the TPI
 		final TitlePageIndicator pageIndicator = (TitlePageIndicator) rootView.findViewById(R.id.fragment_home_phone_pager_titles);
 		// Attach the ViewPager
