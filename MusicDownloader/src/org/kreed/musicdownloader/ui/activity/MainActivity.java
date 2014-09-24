@@ -439,7 +439,7 @@ public class MainActivity extends Activity {
 			player = null;
 		}
 		if (!Constans.CALL_FROM_SEARCH.equals(from)) {
-			Log.d("logd", "stopPlayerTask");
+//			Log.d("logd", "stopPlayerTask");
 //			SongSearchView.stopPlayerTask();
 			resetPlayer();
 		}

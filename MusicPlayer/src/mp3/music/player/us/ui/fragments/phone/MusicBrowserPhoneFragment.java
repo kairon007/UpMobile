@@ -85,12 +85,7 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
 	private BroadcastReceiver br = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			for (int i=0; i<mPagerAdapter.getCount()-1; i++) {
-				if(i==4) {
-					Log.d("logd", "broadcast received");
-					getSongFragment().refresh();
-				}
-			}
+			refreshAdapters();
 		}
 	};
     /**

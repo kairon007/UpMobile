@@ -34,9 +34,7 @@ public final class Util {
 		}
 		Matrix m = new Matrix();
 		m.postScale(scale, scale);
-		Log.d("logd", "original size = " + (original.getRowBytes() * original.getHeight()) / 1024 + "kB");
 		Bitmap small = Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
-		Log.d("logd", "small size = " + (small.getRowBytes() * small.getHeight()) / 1024 + "kB");
 		return small;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
@@ -79,6 +80,8 @@ public abstract class OnlineSearchView extends View {
 	protected abstract BaseSettings getSettings();
 
 	protected abstract Advertisment getAdvertisment();
+	
+	public abstract void refreshLibrary();
 
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -488,7 +491,13 @@ public abstract class OnlineSearchView extends View {
 				urlTask.cancel(true);
 			}
 		};
-		downloadClickListener = new DownloadClickListener(context, (RemoteSong) downloadSong) {
+		downloadClickListener = new DownloadClickListener(context, (RemoteSong) downloadSong, new RefreshListener() {
+			
+			@Override
+			public void success() {
+				refreshLibrary();
+			}
+		}) {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);

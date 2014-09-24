@@ -13,6 +13,8 @@ import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.RefreshListener;
+import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
@@ -49,11 +51,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private boolean waitingForCover = true;
 	private double progress = 0.0;
 	private boolean useAlbumCover = true;
+	private RefreshListener listener;
 
-	protected DownloadClickListener(Context context, RemoteSong song) {
+	protected DownloadClickListener(Context context, RemoteSong song, RefreshListener listener) {
 		this.context = context;
 		this.song = song;
 		this.songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
+		this.listener = listener;
 		songTitle = song.getTitle();
 		songArtist = song.getArtist();
 		URL = song.getDownloadUrl();
@@ -63,6 +67,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	@SuppressLint("NewApi")
 	public void downloadSond(String artist, String title, final boolean useCover) {
+		SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
 		if	(!this.songArtist.equals(artist)) {
 			songArtist = artist; 
 		}
@@ -188,6 +193,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 						public void onScanCompleted(String path, Uri uri) {
 							prepare(file, song);
+							if (null != listener) listener.success();
 						}
 
 					});
@@ -198,13 +204,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
 		downloadSond(songArtist, songTitle, useAlbumCover);
 	}
 
 	protected void notifyDuringDownload(final long currentDownloadId, final String currentDownloadTitle, final double currentProgress) {
+	
 	}
 
 	protected void notifyAboutDownload(long downloadId) {
@@ -232,6 +238,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	protected void prepare(final File src, RemoteSong song) {
+		
 	}
 
 	protected boolean isFullAction() {

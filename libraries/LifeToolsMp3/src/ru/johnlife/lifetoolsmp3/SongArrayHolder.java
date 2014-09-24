@@ -8,6 +8,7 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.os.Bundle;
+import android.util.Log;
 
 public class SongArrayHolder {
 	private static SongArrayHolder instance = null;

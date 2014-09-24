@@ -20,4 +20,9 @@ public class SearchView extends OnlineSearchView {
 	protected Advertisment getAdvertisment() {
 		return null;
 	}
+
+	@Override
+	public void refreshLibrary() {
+		// do nothing, just for others projects
+	}
 }

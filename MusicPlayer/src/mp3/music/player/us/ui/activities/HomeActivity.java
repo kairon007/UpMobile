@@ -45,7 +45,7 @@ import android.widget.Toast;
 public class HomeActivity extends BaseActivity {
 	private boolean doesTheMopub = false;
 	private final String IS_SHOW = "is.show";
-	private Fragment fr;
+	private static Fragment fr;
 	
 	/**
 	 * {@inheritDoc}
@@ -76,7 +76,7 @@ public class HomeActivity extends BaseActivity {
 		start(true);
 	}
 
-	public void refreshLibrary() {
+	public static void refreshLibrary() {
 		if (fr != null) {
 			((MusicBrowserPhoneFragment)fr).refreshAdapters();
 		}

@@ -42,7 +42,7 @@ public class SearchSoundCloudV3 extends SearchWithPages  {
 				if (arr.getJSONObject(i) != null) {
 					JSONObject nameObject = arr.getJSONObject(i);
 					String name = nameObject.getString("title").substring((nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1), nameObject.getString("title").length() - 1);
-					String author = nameObject.getString("title").substring(0, (nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1));					Log.d("logd", nameObject.getString("title"));
+					String author = nameObject.getString("title").substring(0, (nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1));
 					String id = nameObject.getString("id");
 					long duration = nameObject.getLong("duration");
 					String downloadUrl = "http://api.soundcloud.com/tracks/" + id + "/stream?client_id=2Kf29hhC5mgWf62708A";
