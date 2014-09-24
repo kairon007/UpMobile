@@ -38,7 +38,6 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 
 	private List<Song> songsList = new ArrayList<Song>();
 	private boolean downloadStopped = false;
-	private boolean finished;
 	private FinishedParsingSongs dInterface;
 	private String songName;
 
@@ -113,8 +112,6 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPostExecute(Void result) {
-		OnlineSearchView.setInProcess(false);
-		finished = true;
 		if (downloadStopped) return;
 		dInterface.onFinishParsing(songsList);
 		super.onPostExecute(result);

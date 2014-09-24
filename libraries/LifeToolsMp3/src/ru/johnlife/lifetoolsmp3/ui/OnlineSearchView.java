@@ -73,9 +73,6 @@ public abstract class OnlineSearchView extends View {
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private ListView listView;
-	private static boolean inProcess = false;
-	private static boolean recreate = false;
-	private static List<Song> songs;
 	private DownloadClickListener downloadClickListener;
 	private Runnable dialogDismisser;
 	private String extraSearch = null;;
@@ -83,15 +80,6 @@ public abstract class OnlineSearchView extends View {
 	protected abstract BaseSettings getSettings();
 
 	protected abstract Advertisment getAdvertisment();
-	
-	public void fillAdapter(){
-		progress.setVisibility(View.GONE);
-		if (null != songs) {
-			for (Song song : songs) {
-				resultAdapter.add(song);
-			}
-		}
-	}
 
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -120,10 +108,6 @@ public abstract class OnlineSearchView extends View {
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setEmptyView(message);
-		if (recreate) {
-			message.setText("");
-			progress.setVisibility(View.VISIBLE);
-		}
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -354,14 +338,10 @@ public abstract class OnlineSearchView extends View {
 					progress.setVisibility(View.GONE);
 				}
 			} else {
-				songs = songsList;
-				if (recreate) {
-					recreate = false;
-					Intent intent = new Intent(BaseConstants.FILL_NEW_ADAPTER);
-					getContext().sendBroadcast(intent);	
-				}
 				progress.setVisibility(View.GONE);
-				fillAdapter();
+				for (Song song : songsList) {
+					resultAdapter.add(song);
+				}
 			}
 		}
 	};
@@ -397,9 +377,6 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public void search(String songName) {
-		if (null != songs) {
-			songs.clear();
-		}
 		searchStopped = false;
 		taskIterator = engines.iterator();
 		resultAdapter.clear();
@@ -422,7 +399,6 @@ public abstract class OnlineSearchView extends View {
 				((SearchWithPages) searchTask).setPage(page);
 			}
 			searchTask.execute(NO_PARAMS);
-			OnlineSearchView.setInProcess(true);
 		} catch (Exception e) {
 			getNextResults();
 		}
@@ -622,22 +598,6 @@ public abstract class OnlineSearchView extends View {
 	
 	public Player getPlayer() {
 		return player;
-	}
-	
-	public static boolean getInProcess() {
-		return inProcess;
-	}
-
-	public static void setInProcess(boolean inProcess) {
-		OnlineSearchView.inProcess = inProcess;
-	}
-	
-	public static boolean getRecreate() {
-		return recreate;
-	}
-
-	public static void setRecreate(boolean recreate) {
-		OnlineSearchView.recreate = recreate;
 	}
 
 	public void setExtraSearch(String extraSearch) {

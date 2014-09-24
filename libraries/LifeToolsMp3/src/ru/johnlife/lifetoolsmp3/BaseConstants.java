@@ -9,5 +9,4 @@ public interface BaseConstants {
 	public static final String EDIT_SONG_TITLE = "edit_song_title";
 	public static final String USE_ALBUM_COVER = "use_album_cover";
 	public static final String DOWNLOAD_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
-	public static final String FILL_NEW_ADAPTER = "fill_new_adapter";
 }

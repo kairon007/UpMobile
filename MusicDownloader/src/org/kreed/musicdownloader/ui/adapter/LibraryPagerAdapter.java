@@ -256,10 +256,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			adapterLibrary.updateItem(i, musicData);
 		}
 	}
-
-	public void recreate (){
-		searchView.fillAdapter();
-		}
 	
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
@@ -272,9 +268,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			case MediaUtils.TYPE_SEARCH:
 				if (searchView == null) {
 					searchView = new SearchView(inflater, this, mActivity);
-					if (searchView.getInProcess()) {
-						searchView.setRecreate(true);
-							}
 					viewSearchActivity = searchView.getView();	
 				}
 				container.addView(viewSearchActivity);
