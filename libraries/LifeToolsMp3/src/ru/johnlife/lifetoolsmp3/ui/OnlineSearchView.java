@@ -283,8 +283,13 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setLine1(song.getTitle(), fullAction ? null : Util.formatTimeSimple((int) song.getDuration())).setLongClickable(false).setExpandable(false).setLine2(song.getArtist())
-					.setId(position).setIcon(R.drawable.fallback_cover).setButtonVisible(fullAction ? false : true);
+			builder.setLine1(song.getTitle(), fullAction ? null : Util.formatTimeSimple((int) song.getDuration()))
+					.setLongClickable(false)
+					.setExpandable(false)
+					.setLine2(song.getArtist())
+					.setId(position)
+					.setIcon(R.drawable.fallback_cover)
+					.setButtonVisible(fullAction ? false : true);
 			// TODO: remove double-cacheing
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
@@ -292,6 +297,9 @@ public abstract class OnlineSearchView extends View {
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {
 							builder.setIcon(bmp);
+								if (bmp == null) {
+									builder.setIcon(R.drawable.fallback_cover);
+								}
 //							((RemoteSong) song).setSongCover(bmp);
 						}
 					}
@@ -506,7 +514,10 @@ public abstract class OnlineSearchView extends View {
 		};
 		if (getSettings().getIsCoversEnabled(context)) {
 			boolean hasCover = ((RemoteSong) downloadSong).getCover(true, downloadClickListener);
-			if (!hasCover) player.setCover(null);
+			if (!hasCover) {	
+					player.hideCoverProgress();
+					player.setCover(null);
+				}
 		}
 		player.setTitle(artist + " - " + title);
 	}

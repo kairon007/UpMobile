@@ -14,21 +14,29 @@ import android.graphics.Bitmap;
 public class RemoteSong extends Song {
 	private final class WrapperCoverListener implements OnBitmapReadyListener {
 		List<OnBitmapReadyListener> listeners = new ArrayList<OnBitmapReadyListener>();
+
 		@Override
 		public void onBitmapReady(Bitmap bmp) {
 			if (null != bmp) {
-				synchronized (listeners) {
-					for (OnBitmapReadyListener listener : listeners) {
-						listener.onBitmapReady(bmp);
-						cover = new WeakReference<Bitmap>(bmp);
-						smallCover = new WeakReference<Bitmap>(Util.resizeToSmall(bmp));
-					}
-					listeners.clear();
-					clearCoverLoaderQueue();
-				}
+				setCover(bmp);
 			} else {
-				useNextCoverLoader();
-				getCover(callFromPlayer,(OnBitmapReadyListener)null);
+				if (coverLoaderIndex > 1) {
+					setCover(null);
+				} else
+					useNextCoverLoader();
+				getCover(callFromPlayer, (OnBitmapReadyListener) null);
+			}
+		}
+
+		private void setCover(Bitmap bmp) {
+			synchronized (listeners) {
+				for (OnBitmapReadyListener listener : listeners) {
+					listener.onBitmapReady(bmp);
+					cover = new WeakReference<Bitmap>(bmp);
+					smallCover = new WeakReference<Bitmap>(bmp == null ? null : Util.resizeToSmall(bmp));
+				}
+				listeners.clear();
+				clearCoverLoaderQueue();
 			}
 		}
 
@@ -144,7 +152,7 @@ public class RemoteSong extends Song {
 			
 			@Override
 			public void onBitmapReady(Bitmap bmp) {
-				listener.onBitmapReady(Util.resizeToSmall(bmp));
+				listener.onBitmapReady(bmp == null ? null : Util.resizeToSmall(bmp));
 			}
 		});
 	}
