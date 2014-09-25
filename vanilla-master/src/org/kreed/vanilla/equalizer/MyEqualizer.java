@@ -671,7 +671,7 @@ public class MyEqualizer extends Activity implements
 			presetsButton.setText(R.string.user);
 			Utils.changeAtBand(equalizer, band5, progress);
 		}
-
+		Utils.setEqPrefs(MyEqualizer.this, true);
 	}
 
 	@Override
