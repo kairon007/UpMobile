@@ -230,10 +230,9 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		final View lyricsView = inflater.inflate(R.layout.lyrics_view, null);
 		AlertDialog.Builder b = new Builder(view.getContext());
 		b.setView(lyricsView);
-		b.setOnDismissListener(new OnDismissListener() {
-			
+		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 			@Override
-			public void onDismiss(DialogInterface dialog) {
+			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
 				cancelLirycs();
 			}
@@ -242,13 +241,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				dialog.dismiss();
-				cancelLirycs();
-			}
-		});
-		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
 				cancelLirycs();
 			}
@@ -320,13 +312,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				cancelMP3editor(editor);
-			}
-		});
-		builder.setOnDismissListener(new OnDismissListener() {
-			
-			@Override
-			public void onDismiss(DialogInterface dialog) {
 				cancelMP3editor(editor);
 			}
 		});
