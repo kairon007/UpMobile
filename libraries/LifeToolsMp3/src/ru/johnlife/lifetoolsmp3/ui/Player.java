@@ -14,6 +14,8 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Service;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -228,12 +230,27 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		final View lyricsView = inflater.inflate(R.layout.lyrics_view, null);
 		AlertDialog.Builder b = new Builder(view.getContext());
 		b.setView(lyricsView);
+		b.setOnDismissListener(new OnDismissListener() {
+			
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				dialog.dismiss();
+				cancelLirycs();
+			}
+		});
+		b.setOnCancelListener(new OnCancelListener() {
+			
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialog.dismiss();
+				cancelLirycs();
+			}
+		});
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				SongArrayHolder.getInstance().setLyricsOpened(false, null);
-				SongArrayHolder.getInstance().setLyricsString(null);
+				cancelLirycs();
 			}
 		});
 		b.create().show();
@@ -265,6 +282,11 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			progressLayout.setVisibility(View.GONE);
 		}
 	}
+	
+	private void cancelLirycs() {
+		SongArrayHolder.getInstance().setLyricsOpened(false, null);
+		SongArrayHolder.getInstance().setLyricsString(null);
+	}
 
 	public void createId3dialog(String[] fields, boolean enableCover) {
 		// TODO: bug here!!!
@@ -291,18 +313,35 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				String artistName = editor.getNewArtistName();
-				String albumTitle = editor.getNewAlbumTitle();
-				String songTitle = editor.getNewSongTitle();
-				Log.d("log", "artist name = " + artistName);
-				sFields.add(artistName);
-				sFields.add(songTitle);
-				sFields.add(albumTitle);
-				SongArrayHolder.getInstance().setID3DialogOpened(false, null, true);
+				cancelMP3editor(editor);
+			}
+		});
+		builder.setOnCancelListener(new OnCancelListener() {
+			
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				cancelMP3editor(editor);
+			}
+		});
+		builder.setOnDismissListener(new OnDismissListener() {
+			
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				cancelMP3editor(editor);
 			}
 		});
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
+	}
+	
+	private void cancelMP3editor(final MP3Editor editor) {
+		String artistName = editor.getNewArtistName();
+		String albumTitle = editor.getNewAlbumTitle();
+		String songTitle = editor.getNewSongTitle();
+		sFields.add(artistName);
+		sFields.add(songTitle);
+		sFields.add(albumTitle);
+		SongArrayHolder.getInstance().setID3DialogOpened(false, null, true);
 	}
 
 	public ArrayList<String> getFields() {
