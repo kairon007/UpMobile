@@ -1150,7 +1150,7 @@ public class Advertisement implements Advertisment {
 	
 
 	public static int getAppIcon(Activity activity) {
-		int appIcon = R.drawable.icon; //getResourceId(activity, "app_icon", "drawable");
+		int appIcon = R.drawable.ic_launcher; //getResourceId(activity, "app_icon", "drawable");
 		if (appIcon == 0) appIcon = getRandomIcon();
 		
 		return appIcon;
