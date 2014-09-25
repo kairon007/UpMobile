@@ -547,15 +547,10 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				ArrayList<String> sFields = player.getFields();
+				String title = player.getTitle();
+				String artist = player.getArtist();
 				boolean useCover = player.isUseCover();
 				downloadClickListener.setUseAlbumCover(useCover);
-				if (sFields.isEmpty()) {
-					downloadClickListener.onClick(new View(getContext()));
-					return;
-				}
-				String artist = sFields.get(0) != null ? sFields.get(0) : downloadSong.getArtist();
-				String title = sFields.get(1) != null ? sFields.get(1) : downloadSong.getTitle();
 				downloadClickListener.downloadSond(artist, title, useCover);
 				player.cancel();
 			}
@@ -589,7 +584,7 @@ public abstract class OnlineSearchView extends View {
 	public void createId3Dialog(String[] fields, boolean enableCover) {
 		if (null == player)
 			return;
-		player.createId3dialog(fields, enableCover);
+		player.createId3dialog(fields, enableCover, true);
 	}
 
 	public void createLyricsDialog(String[] titleArtist, String lyrics) {

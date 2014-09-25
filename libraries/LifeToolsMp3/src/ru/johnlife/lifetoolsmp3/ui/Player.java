@@ -1,6 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.johnlife.lifetoolsmp3.R;
@@ -15,7 +14,6 @@ import android.app.AlertDialog.Builder;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -40,7 +38,6 @@ import android.widget.Toast;
 
 public final class Player extends AsyncTask<String, Void, Boolean> {
 
-	private ArrayList<String> sFields = new ArrayList<String>();
 	private String url = null;
 	private MediaPlayer mediaPlayer;
 	private boolean prepared = false;
@@ -94,7 +91,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void initView(final View view) {
 		this.view = view;
-		final String[] arrayField = { artist, title, "" };
 		songId = -1;
 		spinner = (ProgressBar) view.findViewById(R.id.spinner);
 		if (!spinnerVisible) {
@@ -134,6 +130,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				switch (arg1Event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					spinerPath.setBackgroundColor(Color.parseColor("#33777777"));
+					showHideChooser();
 					break;
 				default:
 					spinerPath.setBackgroundColor(Color.parseColor("#00000000"));
@@ -149,6 +146,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				switch (arg1Event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					buttonShowLyrics.setBackgroundColor(Color.parseColor("#33777777"));
+					createLyricsDialog(title, artist, null);
 					break;
 				default:
 					buttonShowLyrics.setBackgroundColor(Color.parseColor("#00000000"));
@@ -164,18 +162,14 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				switch (arg1Event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					buttonEditMp3Tag.setBackgroundColor(Color.parseColor("#33777777"));
+					String[] arrayField = { artist, title, "" };
+					createId3dialog(arrayField, true, false);
 					break;
 				default:
 					buttonEditMp3Tag.setBackgroundColor(Color.parseColor("#00000000"));
 					break;
 				}
 				return false;
-			}
-		});
-		spinerPath.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showHideChooser();
 			}
 		});
 		textPath.setOnClickListener(new View.OnClickListener() {
@@ -188,19 +182,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			@Override
 			public void onClick(View v) {
 				playPause();
-			}
-		});
-		buttonEditMp3Tag.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				createId3dialog(arrayField, true);
-			}
-		});
-		buttonShowLyrics.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				createLyricsDialog(title, artist, null);
 			}
 		});
 	}
@@ -238,7 +219,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			}
 		});
 		b.setOnCancelListener(new OnCancelListener() {
-			
+
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				dialog.dismiss();
@@ -274,75 +255,63 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			progressLayout.setVisibility(View.GONE);
 		}
 	}
-	
+
 	private void cancelLirycs() {
 		SongArrayHolder.getInstance().setLyricsOpened(false, null);
 		SongArrayHolder.getInstance().setLyricsString(null);
 	}
 
-	public void createId3dialog(String[] fields, boolean enableCover) {
-		// TODO: bug here!!!
+	public void createId3dialog(String[] fields, boolean enableCover, boolean forse) {
+		String[] arrayField = { artist, title, "" };
 		SongArrayHolder.getInstance().setID3DialogOpened(true, fields, SongArrayHolder.getInstance().isCoverEnabled());
 		final MP3Editor editor = new MP3Editor(view.getContext(), enableCover);
 		editor.setStrings(fields);
+		if (!forse) {
+			editor.setShowCover(useCover);
+		} 
 		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				String artistName = editor.getNewArtistName();
-				String albumTitle = editor.getNewAlbumTitle();
-				String songTitle = editor.getNewSongTitle();
-				sFields.add(artistName);
-				sFields.add(songTitle);
-				sFields.add(albumTitle);
-				boolean useAlbumCover = editor.useAlbumCover();
-				setUseCover(useAlbumCover);
-				SongArrayHolder.getInstance().setID3DialogOpened(false, null, useAlbumCover);
+				artist = editor.getNewArtistName();
+				title = editor.getNewSongTitle();
+				useCover = editor.useAlbumCover();
+				SongArrayHolder.getInstance().setID3DialogOpened(false, null, useCover);
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				cancelMP3editor(editor);
+				cancelMP3editor();
 			}
 		});
 		builder.setOnCancelListener(new OnCancelListener() {
-			
+
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				cancelMP3editor(editor);
+				cancelMP3editor();
 			}
 		});
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
 	}
-	
-	private void cancelMP3editor(final MP3Editor editor) {
-		String artistName = editor.getNewArtistName();
-		String albumTitle = editor.getNewAlbumTitle();
-		String songTitle = editor.getNewSongTitle();
-		sFields.add(artistName);
-		sFields.add(songTitle);
-		sFields.add(albumTitle);
-		SongArrayHolder.getInstance().setID3DialogOpened(false, null, true);
+
+	private void cancelMP3editor() {
+		SongArrayHolder.getInstance().setID3DialogOpened(false, null, useCover);
 	}
 
-	public ArrayList<String> getFields() {
-		return sFields;
+	public String getArtist() {
+		return artist == null ? "" : artist;
 	}
 
-	public void setFields(ArrayList<String> sFields) {
-		this.sFields = sFields;
+	public String getTitle() {
+		return title == null ? "" : title;
 	}
 
 	public boolean isUseCover() {
 		return useCover;
-	}
-
-	public void setUseCover(boolean useCover) {
-		this.useCover = useCover;
 	}
 
 	public Integer getSongId() {
