@@ -3,12 +3,15 @@ package org.kreed.vanilla;
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.app.Activity;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
+	
+	private PlaybackService service;
 
-	public SearchView(LayoutInflater inflater) {
-		super(inflater);
+	public SearchView(LayoutInflater inflater, Activity activity) {
+		super(inflater, activity);
 	}
 
 	@Override
@@ -31,5 +34,16 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	public void refreshLibrary() {
 		// do nothing, just for others projects
+	}
+
+	@Override
+	protected void stopSystemPlayer() {
+		// TODO stop player
+		service.pause();
+	}
+	
+	@Override
+	protected void bindToService(Activity activity) {
+		service = PlaybackService.get(activity);
 	}
 }

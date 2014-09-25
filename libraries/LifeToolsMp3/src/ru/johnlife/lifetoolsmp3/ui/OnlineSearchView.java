@@ -22,6 +22,7 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -59,6 +60,7 @@ public abstract class OnlineSearchView extends View {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
 	public static List<Engine> engines = null;
+	private Activity activity;
 	private RemoteSong downloadSong;
 	private LayoutInflater inflater;
 	private Iterator<Engine> taskIterator;
@@ -82,14 +84,18 @@ public abstract class OnlineSearchView extends View {
 	protected abstract Advertisment getAdvertisment();
 	
 	public abstract void refreshLibrary();
+	
+	protected abstract void stopSystemPlayer();
 
-	public OnlineSearchView(final LayoutInflater inflater) {
+	public OnlineSearchView(final LayoutInflater inflater, Activity activity) {
 		super(inflater.getContext());
+		this.activity = activity;
 		this.inflater = inflater;
 		this.view = inflater.inflate(R.layout.search, null);
 	}
 
 	public View getView() {
+		bindToService(activity);
 		final boolean fullAction = showFullElement();
 		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
 		if (!fullAction) {
@@ -210,6 +216,10 @@ public abstract class OnlineSearchView extends View {
 
 	protected void click(View view, int position) {
 
+	}
+	
+	protected void bindToService(Activity activity) {
+		
 	}
 
 	// protected DownloadClickListener createListener(RemoteSong song, Bitmap
@@ -524,6 +534,7 @@ public abstract class OnlineSearchView extends View {
 	
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args) {
+		stopSystemPlayer();
 		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
