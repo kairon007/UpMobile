@@ -187,6 +187,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void createDirectoryChooserDialog() {
+		SongArrayHolder.getInstance().setDirectoryChooserOpened(true);
 		DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
 			@Override
 			public void onChosenDir(String chDir) {
@@ -319,10 +320,17 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	private void showHideChooser() {
-		if (viewChooser.getVisibility() == View.VISIBLE)
+		if (viewChooser.getVisibility() == View.VISIBLE) {
 			viewChooser.setVisibility(View.GONE);
-		else
+			SongArrayHolder.getInstance().setSpinerPathOpened(false);
+		} else {
 			viewChooser.setVisibility(View.VISIBLE);
+			SongArrayHolder.getInstance().setSpinerPathOpened(true);
+		}
+	}
+
+	public void showSpinerPath() {
+		viewChooser.setVisibility(View.VISIBLE);
 	}
 
 	void setDownloadUrl(String downloadUrl) {
