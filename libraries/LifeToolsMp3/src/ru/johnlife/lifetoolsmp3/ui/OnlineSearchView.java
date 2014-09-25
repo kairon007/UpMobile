@@ -49,6 +49,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -375,7 +376,7 @@ public abstract class OnlineSearchView extends View {
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo == null;
 	}
-
+	
 	public void trySearch() {
 		InputMethodManager imm = (InputMethodManager) searchField.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
@@ -429,6 +430,10 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public void prepareSong(final Bundle args, boolean force) {
+		if(isOffline(getContext())) {
+			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
+			return;
+		}
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return;
 		}
