@@ -116,7 +116,7 @@ public class MainActivity extends Activity {
 	public static boolean isAlphaNumeric(String input) {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
-	
+
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
 		private boolean flag = false;
@@ -311,10 +311,6 @@ public class MainActivity extends Activity {
 	public void onRestoreInstanceState(Bundle in) {
 		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
-		if (null != player) {
-			player.setSongProgressIndeterminate(in.getBoolean(Constans.SAVE_PROGRESS, false));
-			player.setButtonProgressVisibility(in.getInt(Constans.SAVE_PROGRESS, View.VISIBLE));
-		}
 		if (in.getBoolean(Constans.SEARCH_BOX_VISIBLE))
 			super.onRestoreInstanceState(in);
 	}
@@ -326,10 +322,6 @@ public class MainActivity extends Activity {
 			out.putString(Constans.FILTER_TEXT_DOWNLOAD, textFilterDownload);
 		} else if (page == 2) {
 			out.putString(Constans.FILTER_TEXT_LIBRARY, textFilterLibrary);
-		}
-		if (null != player) {
-			out.putBoolean(Constans.SAVE_PROGRESS, player.isSongProgressIndeterminate());
-			out.putInt(Constans.SAVE_PROGRESS, player.getButtonProgressVisibility());
 		}
 		super.onSaveInstanceState(out);
 	}
@@ -429,32 +421,21 @@ public class MainActivity extends Activity {
 		pb.setVisibility(View.VISIBLE);
 	}
 
-	public void resetPlayer() {
-		if (player != null) {
-			player.stopTask();
-			player.remove();
-			player = null;
-		}
-	}
 	
 	public void play(ArrayList<String[]> headers, MusicData musicData, String from) {
 		music = musicData;
 		if (player != null && player.getData().equals(musicData)) {
-			player.restart();
+			player.stateManagementPlayer(Constans.RESTART);
 			return;
-		} else if (player != null && !player.getData().equals(musicData)) {
-			player.remove();
-			player = null;
 		}
-		if (!Constans.CALL_FROM_SEARCH.equals(from)) {
-//			Log.d("logd", "stopPlayerTask");
-//			SongSearchView.stopPlayerTask();
-			resetPlayer();
+		if (player == null) {
+			player = new Player(headers, musicData);
+		} else {
+			player.setData(headers, musicData);
 		}
-		player = new Player(headers, musicData);
 		MusicDownloaderApp.getService().setPlayer(player);
 		player.getView(footer);
-		player.play();
+		player.stateManagementPlayer(Constans.PLAY);
 	}
 
 	public LinearLayout getSearchLayout() {

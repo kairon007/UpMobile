@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 
@@ -27,6 +28,8 @@ import android.widget.TextView;
 
 public class Player implements SeekBar.OnSeekBarChangeListener {
 	
+	private static final int PLAY = R.drawable.play;
+	private static final int PAUSE = R.drawable.pause;
 	private MediaPlayer mediaPlayer;
 	private PlaySong downloadSong;
 	private MusicData data;
@@ -46,24 +49,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private boolean playFinish = false;
 	private boolean prepared = false;
 	private ArrayList<String[]> header;
-	
-	public boolean isSongProgressIndeterminate() {
-		return songProgress.isIndeterminate();
-	}
-
-	public void setSongProgressIndeterminate(boolean ind) {
-		songProgress.setIndeterminate(ind);
-
-	}
-
-	public int getButtonProgressVisibility() {
-		return buttonProgress.getVisibility();
-	}
-
-	public void setButtonProgressVisibility(int visibility) {
-		buttonProgress.setVisibility(visibility);
-		buttonPlay.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
-	}
+	private byte playerState = 0;
 	
 	private Runnable progressAction = new Runnable() {
 		
@@ -89,26 +75,14 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		this.header = header;
 	}
 	
-	@SuppressLint("NewApi") public void play() {
-		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		downloadSong = new PlaySong();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			downloadSong.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-		} else {
-			downloadSong.execute("");
-		}
+	public void setData(ArrayList<String[]> headers, MusicData musicData) {
+		title = data.getSongTitle();
+		artist = data.getSongArtist();
+		duration = data.getSongDuration();
+		this.data = musicData;
+		this.header = headers;
 	}
 	
-	public void remove(){
-		if (null != mediaPlayer) {
-			try {
-			mediaPlayer.stop();
-			mediaPlayer = null;
-			} catch (IllegalStateException e) {
-			}
-		}
-	}
 	
 	public void stopTask() {
 		if (downloadSong == null || downloadSong.getStatus() == Status.PENDING){
@@ -119,30 +93,19 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	
 	public void setActivatedButton(boolean value) {
 		if (value) {
+			songProgress.setIndeterminate(false);
 			buttonPlay.setVisibility(View.VISIBLE);
+			buttonPlay.setImageResource(PAUSE);
 			buttonProgress.setVisibility(View.GONE);
 		} else {
 			songProgress.setProgress(0);
 			songProgress.setIndeterminate(true);
 			buttonPlay.setVisibility(View.GONE);
 			buttonProgress.setVisibility(View.VISIBLE);
-			}
+		}
 		buttonPlay.setEnabled(value);
 	}
 	
-	public void restart() {
-		try {
-			if (null != mediaPlayer) {
-				mediaPlayer.seekTo(0);
-				mediaPlayer.start();
-				setActivatedButton(true);
-				setImageOnButton();
-				songProgress.setIndeterminate(false);
-			}
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(),"" + e);
-		}
-	}
 	
 	public MediaPlayer getMediaPlayer() {
 		return mediaPlayer;
@@ -200,16 +163,11 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 
 			@Override
 			public void onClick(View v) {
-				if (playFinish) {
-					mediaPlayer = new MediaPlayer();
-					mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-					downloadSong = new PlaySong();
-					playFinish = false;
-					if (downloadSong.getStatus() == Status.PENDING) {
-						downloadSong.execute("");
-					}
+				if (getPlayerState() == Constans.PLAY ||getPlayerState() == Constans.CONTINUE_PLAY) {
+					stateManagementPlayer(Constans.PAUSE);
+				} else  if (getPlayerState() == Constans.PAUSE) {
+					stateManagementPlayer(Constans.CONTINUE_PLAY);
 				}
-				playPause();
 			}
 			
 		});
@@ -220,9 +178,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			return;
 		}
 		if (mediaPlayer.isPlaying()) {
-			buttonPlay.setImageResource(R.drawable.pause);
+			buttonPlay.setImageResource(PAUSE);
 		} else {
-			buttonPlay.setImageResource(R.drawable.play);
+			buttonPlay.setImageResource(PLAY);
 		}
 	}
 	
@@ -274,7 +232,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		return String.format("%d:%02d", min, sec);
 	}
 
-	private class PlaySong extends AsyncTask<String, Void, Boolean> implements OnBufferingUpdateListener {
+	private class PlaySong extends AsyncTask<String, Void, Boolean> {
 
 		@SuppressLint("NewApi")
 		@Override
@@ -297,7 +255,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 						}
 					}
 					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
-					mediaPlayer.setOnBufferingUpdateListener(this);
 				}
 				mediaPlayer.prepare();
 				prepared = true;
@@ -315,27 +272,19 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			if (result && mediaPlayer!=null) {
-				setActivatedButton(true);
-				mediaPlayer.seekTo(getCurrentProgress());
 				mediaPlayer.start();
-				setImageOnButton();
+				setActivatedButton(true);
 				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 					
 					@Override
 					public void onCompletion(MediaPlayer mp) {
-						releasePlayer();
-						onFinished();
-						buttonPlay.setImageResource(R.drawable.play);
+						mediaPlayer.seekTo(0);
 						playFinish = true;
 					}
 					
 				});
 				onPrepared();
 			}
-		}
-		@Override
-		public void onBufferingUpdate(MediaPlayer arg0, int percent) {
-			Log.d("percent", percent + " ");
 		}
 	}
 	
@@ -364,4 +313,73 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	public void setCurrentProgress(int currentProgress) {
 		this.currentProgress = currentProgress;
 	}
+
+	public byte getPlayerState() {
+		return playerState;
+	}
+
+	public void setPlayerState(byte playerState) {
+		this.playerState = playerState;
+	}
+	
+	public void stateManagementPlayer(byte state) {
+		this.playerState = state;
+		switch (state) {
+		case 0: //in progress
+			break;
+		case 1: play();
+			break;
+		case 2: pause();
+			break;
+		case 3: stop();
+			break;
+		case 4: restart();
+			break;
+		case 5: continuePlaying();
+		}
+	}
+	
+	@SuppressLint("NewApi") 
+	private void play() {
+		if (mediaPlayer != null) {
+			mediaPlayer.seekTo(0);
+			mediaPlayer.stop();
+			mediaPlayer = null;
+		}
+		songArtist.setText(data.getSongArtist());
+		songTitle.setText(data.getSongTitle());
+		songProgress.setIndeterminate(true);
+		buttonPlay.setVisibility(View.GONE);
+		buttonProgress.setVisibility(View.VISIBLE);
+		mediaPlayer = new MediaPlayer();
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		downloadSong = new PlaySong();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			downloadSong.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+		} else {
+			downloadSong.execute("");
+		}
+	}
+	
+	private void pause() {
+		buttonPlay.setImageResource(PLAY);
+		mediaPlayer.pause();
+	}
+	
+	private void restart() {
+		if (mediaPlayer != null) {
+			mediaPlayer.seekTo(0);
+		}
+		setActivatedButton(true);
+	}
+	
+	private void continuePlaying() {
+		mediaPlayer.start();
+		buttonPlay.setImageResource(PAUSE);
+	}
+
+	private void stop() {
+		// TODO: clear player and view
+	}
+
 }
