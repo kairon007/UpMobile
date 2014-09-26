@@ -41,6 +41,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -256,7 +257,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			adapterLibrary.updateItem(i, musicData);
 		}
 	}
-	
+
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		int type = mTabOrder[position];
@@ -268,38 +269,28 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			case MediaUtils.TYPE_SEARCH:
 				if (searchView == null) {
 					searchView = new SearchView(inflater, this, mActivity);
-					viewSearchActivity = searchView.getView();	
+					viewSearchActivity = searchView.getView();
 				}
 				container.addView(viewSearchActivity);
 				return viewSearchActivity;
 			case MediaUtils.TYPE_DOWNLOADS:
 				View downloadView = DownloadsTab.getInstanceView(inflater, activity);
 				container.addView(downloadView);
-				// mLists[type] = (ListView) downloadView;
 				return downloadView;
 			case MediaUtils.TYPE_LIBRARY:
-				ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
 				File contentFile = new File(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX);
 				long contentFileLength = contentFile.length();
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-					contentFileLength = 1;
-				}
-				if (contentFileLength > 0) {
-					File[] files = contentFile.listFiles();
-					for (int i = 0; i < files.length; i++) {
-						String string = files[i].getName();
-						if (string.endsWith(".mp3")) {
-							MusicData musicData = new MusicData(files[i]);
-							arrayMusic.add(musicData);
-						}
-					}
-					adapterLibrary = new LibraryTabAdapter(mActivity, 0, arrayMusic, activity);
+				if (contentFileLength == 0) {
 					view = (ListView) inflater.inflate(R.layout.listview, null);
 					view.setAdapter(adapterLibrary);
-				} else {
-					view = (ListView) inflater.inflate(R.layout.listview, null);
-					view.setAdapter(adapterLibrary);
+					break;
 				}
+				FillLibraryTab task = new FillLibraryTab();
+				task.execute(contentFile);
+				ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
+				adapterLibrary = new LibraryTabAdapter(0, arrayMusic, activity);
+				view = (ListView) inflater.inflate(R.layout.listview, null);
+				view.setAdapter(adapterLibrary);
 				break;
 			default:
 				break;
@@ -311,6 +302,33 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		}
 		container.addView(view);
 		return view;
+	}
+
+	private class FillLibraryTab extends AsyncTask<File, Void, ArrayList<MusicData>> {
+
+		public FillLibraryTab() {
+		}
+
+		@Override
+		protected ArrayList<MusicData> doInBackground(File... params) {
+			ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
+			File[] files = params[0].listFiles();
+			for (int i = 0; i < files.length; i++) {
+				String string = files[i].getName();
+				if (string.endsWith(".mp3")) {
+					MusicData musicData = new MusicData(files[i]);
+					arrayMusic.add(musicData);
+				}
+			}
+			return arrayMusic;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<MusicData> result) {
+			for (MusicData musicData : result) {
+				adapterLibrary.add(musicData);
+			}
+		}
 	}
 
 	@Override

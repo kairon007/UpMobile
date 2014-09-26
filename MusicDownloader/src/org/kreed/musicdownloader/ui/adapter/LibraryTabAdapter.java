@@ -41,11 +41,11 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		}
 	};
 
-	public LibraryTabAdapter(Context context, int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
-		super(context, resource);
+	public LibraryTabAdapter(int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
+		super(activity, resource);
 		mObjects = arrayMusic;
 		this.activity = activity;
-		inflater = LayoutInflater.from(context);
+		inflater = LayoutInflater.from(activity);
 		textFilter = (EditText) activity.findViewById(R.id.filter_text);
 		textFilter.addTextChangedListener(this);
 		String str = activity.getTextFilterLibrary();
