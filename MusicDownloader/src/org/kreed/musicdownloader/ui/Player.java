@@ -47,6 +47,24 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private boolean prepared = false;
 	private ArrayList<String[]> header;
 	
+	public boolean isSongProgressIndeterminate() {
+		return songProgress.isIndeterminate();
+	}
+
+	public void setSongProgressIndeterminate(boolean ind) {
+		songProgress.setIndeterminate(ind);
+
+	}
+
+	public int getButtonProgressVisibility() {
+		return buttonProgress.getVisibility();
+	}
+
+	public void setButtonProgressVisibility(int visibility) {
+		buttonProgress.setVisibility(visibility);
+		buttonPlay.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
+	}
+	
 	private Runnable progressAction = new Runnable() {
 		
 		@Override
@@ -108,7 +126,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			songProgress.setIndeterminate(true);
 			buttonPlay.setVisibility(View.GONE);
 			buttonProgress.setVisibility(View.VISIBLE);
-		}
+			}
 		buttonPlay.setEnabled(value);
 	}
 	
@@ -119,6 +137,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 				mediaPlayer.start();
 				setActivatedButton(true);
 				setImageOnButton();
+				songProgress.setIndeterminate(false);
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(),"" + e);
