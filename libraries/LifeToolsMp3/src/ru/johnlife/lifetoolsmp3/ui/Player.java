@@ -1,6 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.johnlife.lifetoolsmp3.R;
@@ -14,6 +13,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Service;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -38,7 +38,6 @@ import android.widget.Toast;
 
 public final class Player extends AsyncTask<String, Void, Boolean> {
 
-	private ArrayList<String> sFields = new ArrayList<String>();
 	private String url = null;
 	private MediaPlayer mediaPlayer;
 	private boolean prepared = false;
@@ -92,7 +91,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void initView(final View view) {
 		this.view = view;
-		final String[] arrayField = { artist, title, "" };
 		songId = -1;
 		spinner = (ProgressBar) view.findViewById(R.id.spinner);
 		if (!spinnerVisible) {
@@ -132,6 +130,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				switch (arg1Event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					spinerPath.setBackgroundColor(Color.parseColor("#33777777"));
+					showHideChooser();
 					break;
 				default:
 					spinerPath.setBackgroundColor(Color.parseColor("#00000000"));
@@ -147,6 +146,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				switch (arg1Event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					buttonShowLyrics.setBackgroundColor(Color.parseColor("#33777777"));
+					createLyricsDialog(title, artist, null);
 					break;
 				default:
 					buttonShowLyrics.setBackgroundColor(Color.parseColor("#00000000"));
@@ -162,18 +162,14 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				switch (arg1Event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					buttonEditMp3Tag.setBackgroundColor(Color.parseColor("#33777777"));
+					String[] arrayField = { artist, title, "" };
+					createId3dialog(arrayField, true, false);
 					break;
 				default:
 					buttonEditMp3Tag.setBackgroundColor(Color.parseColor("#00000000"));
 					break;
 				}
 				return false;
-			}
-		});
-		spinerPath.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showHideChooser();
 			}
 		});
 		textPath.setOnClickListener(new View.OnClickListener() {
@@ -188,22 +184,10 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				playPause();
 			}
 		});
-		buttonEditMp3Tag.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				createId3dialog(arrayField, true);
-			}
-		});
-		buttonShowLyrics.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				createLyricsDialog(title, artist, null);
-			}
-		});
 	}
 
 	public void createDirectoryChooserDialog() {
+		SongArrayHolder.getInstance().setDirectoryChooserOpened(true);
 		DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
 			@Override
 			public void onChosenDir(String chDir) {
@@ -232,8 +216,15 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				SongArrayHolder.getInstance().setLyricsOpened(false, null);
-				SongArrayHolder.getInstance().setLyricsString(null);
+				cancelLirycs();
+			}
+		});
+		b.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialog.dismiss();
+				cancelLirycs();
 			}
 		});
 		b.create().show();
@@ -266,59 +257,62 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		}
 	}
 
-	public void createId3dialog(String[] fields, boolean enableCover) {
-		// TODO: bug here!!!
+	private void cancelLirycs() {
+		SongArrayHolder.getInstance().setLyricsOpened(false, null);
+		SongArrayHolder.getInstance().setLyricsString(null);
+	}
+
+	public void createId3dialog(String[] fields, boolean enableCover, boolean forse) {
+		String[] arrayField = { artist, title, "" };
 		SongArrayHolder.getInstance().setID3DialogOpened(true, fields, SongArrayHolder.getInstance().isCoverEnabled());
 		final MP3Editor editor = new MP3Editor(view.getContext(), enableCover);
 		editor.setStrings(fields);
+		if (!forse) {
+			editor.setShowCover(useCover);
+		} 
 		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				String artistName = editor.getNewArtistName();
-				String albumTitle = editor.getNewAlbumTitle();
-				String songTitle = editor.getNewSongTitle();
-				sFields.add(artistName);
-				sFields.add(songTitle);
-				sFields.add(albumTitle);
-				boolean useAlbumCover = editor.useAlbumCover();
-				setUseCover(useAlbumCover);
-				SongArrayHolder.getInstance().setID3DialogOpened(false, null, useAlbumCover);
+				artist = editor.getNewArtistName();
+				title = editor.getNewSongTitle();
+				useCover = editor.useAlbumCover();
+				SongArrayHolder.getInstance().setID3DialogOpened(false, null, useCover);
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				String artistName = editor.getNewArtistName();
-				String albumTitle = editor.getNewAlbumTitle();
-				String songTitle = editor.getNewSongTitle();
-				Log.d("log", "artist name = " + artistName);
-				sFields.add(artistName);
-				sFields.add(songTitle);
-				sFields.add(albumTitle);
-				SongArrayHolder.getInstance().setID3DialogOpened(false, null, true);
+				cancelMP3editor();
+			}
+		});
+		builder.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				cancelMP3editor();
 			}
 		});
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
 	}
 
-	public ArrayList<String> getFields() {
-		return sFields;
+	private void cancelMP3editor() {
+		SongArrayHolder.getInstance().setID3DialogOpened(false, null, useCover);
 	}
 
-	public void setFields(ArrayList<String> sFields) {
-		this.sFields = sFields;
+	public String getArtist() {
+		return artist == null ? "" : artist;
+	}
+
+	public String getTitle() {
+		return title == null ? "" : title;
 	}
 
 	public boolean isUseCover() {
 		return useCover;
-	}
-
-	public void setUseCover(boolean useCover) {
-		this.useCover = useCover;
 	}
 
 	public Integer getSongId() {
@@ -326,10 +320,17 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	private void showHideChooser() {
-		if (viewChooser.getVisibility() == View.VISIBLE)
+		if (viewChooser.getVisibility() == View.VISIBLE) {
 			viewChooser.setVisibility(View.GONE);
-		else
+			SongArrayHolder.getInstance().setSpinerPathOpened(false);
+		} else {
 			viewChooser.setVisibility(View.VISIBLE);
+			SongArrayHolder.getInstance().setSpinerPathOpened(true);
+		}
+	}
+
+	public void showSpinerPath() {
+		viewChooser.setVisibility(View.VISIBLE);
 	}
 
 	void setDownloadUrl(String downloadUrl) {

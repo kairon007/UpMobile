@@ -17,6 +17,7 @@ public class SongArrayHolder {
 	private Iterator<Engine> taskIterator;
 	private boolean isStreamDialogOpened = false;
 	private boolean isID3DialogOpened = false;
+	private boolean isSpinerPathOpened = false;
 	private String[] fields;
 	private boolean isCoverEnabled = true;
 	private Bundle streamDialogArgs;
@@ -134,6 +135,10 @@ public class SongArrayHolder {
 		this.isCoverEnabled = isCoverEnabled;
 	}
 	
+	public void setSpinerPathOpened(boolean isSpinerPathOpened) {
+		this.isSpinerPathOpened = isSpinerPathOpened;
+	}
+	
 	public void restoreState(OnlineSearchView view) {
 		if (isStreamDialogOpened) {
 			Bundle args = getStreamDialogArgs();
@@ -147,6 +152,9 @@ public class SongArrayHolder {
 		}
 		if (isDirectoryChooserOpened) {
 			view.getPlayer().createDirectoryChooserDialog();
+		}
+		if (isSpinerPathOpened && null != view.getPlayer()) {
+			view.getPlayer().showSpinerPath();
 		}
 	}
 

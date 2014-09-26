@@ -5,6 +5,7 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import ru.johnlife.lifetoolsmp3.Advertisment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,7 +44,7 @@ import com.startapp.android.publish.StartAppSDK;
 
 
 
-public class Advertisement {
+public class Advertisement implements Advertisment {
 
 	
 	
@@ -2058,16 +2059,6 @@ public class Advertisement {
 		
 	}
 	
-
-
-	
-	
-	
-	
-	
-	
-
-	
 	public static void toast(Context ctx, String msg) {
 		try { 
 			
@@ -2076,12 +2067,16 @@ public class Advertisement {
 			
 		} 
 	}
-	
-	
 
-	
-	
-	
+	@Override
+	public void searchStartLib(Context context) {
+		searchStart((Activity)context);
+	}
+
+	@Override
+	public boolean isOnlineLib(Context context) {
+		return isOnline(context);
+	}
 }
 
 

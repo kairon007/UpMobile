@@ -317,6 +317,102 @@
             android:name="com.google.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         
+          <!-- MOBILECORE -->
+        <service
+            android:name="com.ironsource.mobilcore.MobileCoreReport"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":mcServiceProcess" />
+
+        <receiver
+            android:name="com.ironsource.mobilcore.InstallationTracker"
+            android:enabled="true"
+            android:process=":installationTracker" />
+
+
+        <!-- APPNEXT -->
+        <service android:name="com.appnext.appnextsdk.DownloadService" />
+        
+        
+        <!-- AIRPUSH -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="5077000" />
+        
+<meta-data android:name="com.ekejuifky.wxfvksrhp191084.APPID" android:value="231055" />
+<meta-data android:name="com.ekejuifky.wxfvksrhp191084.APIKEY" android:value="android*1403132222191084428"/>
+<activity android:exported="false" android:name="com.ekejuifky.wxfvksrhp191084.AdActivity"
+     android:configChanges="orientation|screenSize"
+android:theme="@android:style/Theme.Translucent" />
+<activity android:name="com.ekejuifky.wxfvksrhp191084.BrowserActivity"
+android:configChanges="orientation|screenSize" />
+<activity android:name="com.ekejuifky.wxfvksrhp191084.VActivity"
+            android:configChanges="orientation|screenSize" android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+</activity> 
+ <service android:name="com.ekejuifky.wxfvksrhp191084.LService" android:exported="false"></service>
+ <receiver android:name="com.ekejuifky.wxfvksrhp191084.BootReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
+        </receiver>
+		 
+        
+ 
+ 
+        
+ <!-- STARTAPP -->
+ <activity android:name="com.startapp.android.publish.list3d.List3DActivity"
+          android:theme="@android:style/Theme" />
+
+<activity android:name="com.startapp.android.publish.AppWallActivity"
+          android:theme="@android:style/Theme.Translucent"
+          android:configChanges="orientation|keyboardHidden|screenSize" />
+ 
+ 
+
+
+ 
+ <!-- MINIMOB -->
+ 
+                <!-- MiniMob Manifest declaration start -->
+        <activity android:exported="false"
+                        android:excludeFromRecents="true"
+                        android:name="com.mm1373232377.android.OptinActivity1373232377"
+                        android:configChanges="orientation|keyboardHidden|screenSize"
+                        android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+                        android:taskAffinity=""
+                        android:excludeFromRecents="true"
+                        android:name="com.mm1373232377.android.Ads1373232377"
+                        android:configChanges="orientation|keyboardHidden|screenSize"
+                        android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                        android:windowSoftInputMode="adjustResize">
+                        <intent-filter>
+                            <action android:name="android.intent.action.VIEW" />
+                            <category android:name="android.intent.category.DEFAULT" />
+                        </intent-filter>
+        </activity>
+        <receiver android:name="com.mm1373232377.android.DeliveryReceiver1373232377"
+                                                        android:exported="false"/>
+        <receiver android:name="com.mm1373232377.android.MessageReceiver1373232377"
+                                                        android:exported="false"/>
+        <receiver android:name="com.mm1373232377.android.BootReceiver1373232377"
+                                                        android:exported="false">
+            <intent-filter>
+                <action  android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+                        
+        <meta-data android:name="MINIMOB_APPID" android:value="id:1373232377" />
+        <meta-data android:name="MINIMOB_APPKEY" android:value="key:0eb5e353d5" />
+        <meta-data android:name="MINIMOB_APPHOST" android:value="http://mpm.minimob.com/mobile/serve.asp" /> 
+        <meta-data android:name="MINIMOB_OUTOFAPP" android:value="true" /> 
+
+        <service android:name="com.mm1373232377.android.Service1373232377" android:exported="false"/>
+        <!-- MiniMob Manifest declaration end --> 
+        
     </application>
 
 </manifest>

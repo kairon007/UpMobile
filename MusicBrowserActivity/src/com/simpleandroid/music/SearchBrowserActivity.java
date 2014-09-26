@@ -38,7 +38,7 @@ public class SearchBrowserActivity extends Activity {
 		findViewById(R.id.search).setVisibility(View.VISIBLE);
 		MusicUtils.updateButtonBar(this, R.id.searchtab);
 		FrameLayout layout = (FrameLayout) findViewById(R.id.search);
-		searchView = new SearchView(getLayoutInflater());
+		searchView = new SearchView(getLayoutInflater(), this);
 		viewSearchActivity = searchView.getView();
 		layout.addView(viewSearchActivity);
 		if (Settings.ENABLE_ADS) {

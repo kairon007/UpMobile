@@ -22,6 +22,7 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -48,6 +49,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -59,6 +61,7 @@ public abstract class OnlineSearchView extends View {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
 	public static List<Engine> engines = null;
+	private Activity activity;
 	private RemoteSong downloadSong;
 	private LayoutInflater inflater;
 	private Iterator<Engine> taskIterator;
@@ -82,14 +85,18 @@ public abstract class OnlineSearchView extends View {
 	protected abstract Advertisment getAdvertisment();
 	
 	public abstract void refreshLibrary();
+	
+	protected abstract void stopSystemPlayer();
 
-	public OnlineSearchView(final LayoutInflater inflater) {
+	public OnlineSearchView(final LayoutInflater inflater, Activity activity) {
 		super(inflater.getContext());
+		this.activity = activity;
 		this.inflater = inflater;
 		this.view = inflater.inflate(R.layout.search, null);
 	}
 
 	public View getView() {
+		bindToService(activity);
 		final boolean fullAction = showFullElement();
 		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
 		if (!fullAction) {
@@ -211,6 +218,10 @@ public abstract class OnlineSearchView extends View {
 	protected void click(View view, int position) {
 
 	}
+	
+	protected void bindToService(Activity activity) {
+		
+	}
 
 	// protected DownloadClickListener createListener(RemoteSong song, Bitmap
 	// bitmap) {
@@ -283,8 +294,13 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setLine1(song.getTitle(), fullAction ? null : Util.formatTimeSimple((int) song.getDuration())).setLongClickable(false).setExpandable(false).setLine2(song.getArtist())
-					.setId(position).setIcon(R.drawable.fallback_cover).setButtonVisible(fullAction ? false : true);
+			builder.setLine1(song.getTitle(), fullAction ? null : Util.formatTimeSimple((int) song.getDuration()))
+					.setLongClickable(false)
+					.setExpandable(false)
+					.setLine2(song.getArtist())
+					.setId(position)
+					.setIcon(R.drawable.fallback_cover)
+					.setButtonVisible(fullAction ? false : true);
 			// TODO: remove double-cacheing
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
@@ -292,6 +308,9 @@ public abstract class OnlineSearchView extends View {
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {
 							builder.setIcon(bmp);
+								if (bmp == null) {
+									builder.setIcon(R.drawable.fallback_cover);
+								}
 //							((RemoteSong) song).setSongCover(bmp);
 						}
 					}
@@ -357,7 +376,7 @@ public abstract class OnlineSearchView extends View {
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo == null;
 	}
-
+	
 	public void trySearch() {
 		InputMethodManager imm = (InputMethodManager) searchField.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
@@ -373,8 +392,8 @@ public abstract class OnlineSearchView extends View {
 		}
 
 		try {
-			if (getAdvertisment().isOnline(getContext())) {
-				getAdvertisment().searchStart(getContext());
+			if (getAdvertisment().isOnlineLib(getContext())) {
+				getAdvertisment().searchStartLib(getContext());
 			}
 		} catch (Exception e) {
 
@@ -411,6 +430,10 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public void prepareSong(final Bundle args, boolean force) {
+		if(isOffline(getContext())) {
+			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
+			return;
+		}
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
 			return;
 		}
@@ -506,13 +529,17 @@ public abstract class OnlineSearchView extends View {
 		};
 		if (getSettings().getIsCoversEnabled(context)) {
 			boolean hasCover = ((RemoteSong) downloadSong).getCover(true, downloadClickListener);
-			if (!hasCover) player.setCover(null);
+			if (!hasCover) {	
+					player.hideCoverProgress();
+					player.setCover(null);
+				}
 		}
 		player.setTitle(artist + " - " + title);
 	}
 	
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args) {
+		stopSystemPlayer();
 		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
@@ -525,15 +552,10 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				ArrayList<String> sFields = player.getFields();
+				String title = player.getTitle();
+				String artist = player.getArtist();
 				boolean useCover = player.isUseCover();
 				downloadClickListener.setUseAlbumCover(useCover);
-				if (sFields.isEmpty()) {
-					downloadClickListener.onClick(new View(getContext()));
-					return;
-				}
-				String artist = sFields.get(0) != null ? sFields.get(0) : downloadSong.getArtist();
-				String title = sFields.get(1) != null ? sFields.get(1) : downloadSong.getTitle();
 				downloadClickListener.downloadSond(artist, title, useCover);
 				player.cancel();
 			}
@@ -567,7 +589,7 @@ public abstract class OnlineSearchView extends View {
 	public void createId3Dialog(String[] fields, boolean enableCover) {
 		if (null == player)
 			return;
-		player.createId3dialog(fields, enableCover);
+		player.createId3dialog(fields, enableCover, true);
 	}
 
 	public void createLyricsDialog(String[] titleArtist, String lyrics) {

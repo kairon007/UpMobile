@@ -148,6 +148,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							} catch (Exception exception) {
 								android.util.Log.d("log", "don't read music metadata from file. " + exception);
 							}
+							if (null == src_set) return;
 							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 							metadata.clearPictureList();
 							if (isFullAction()) {

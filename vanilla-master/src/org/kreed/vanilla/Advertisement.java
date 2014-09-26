@@ -1,12 +1,11 @@
 package org.kreed.vanilla;
 
-import java.util.ArrayList;
 import java.util.Random;
-
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import ru.johnlife.lifetoolsmp3.Advertisment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,6 +31,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.appnext.appnextsdk.Appnext;
 import com.appnext.appnextsdk.NoAdsInterface;
 import com.appnext.appnextsdk.PopupClosedInterface;
@@ -43,8 +43,8 @@ import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.mm1373232377.android.MiniMob1373232377;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
-import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
+import com.mopub.mobileads.MoPubView;
 import com.startapp.android.publish.StartAppAd;
 import com.startapp.android.publish.StartAppSDK;
 //import com.vungle.sdk.VunglePub;
@@ -52,7 +52,7 @@ import com.startapp.android.publish.StartAppSDK;
 
 
 
-public class Advertisement {
+public class Advertisement implements Advertisment {
 
 	
 	
@@ -2074,16 +2074,6 @@ public class Advertisement {
 		
 	}
 	
-
-
-	
-	
-	
-	
-	
-	
-
-	
 	public static void toast(Context ctx, String msg) {
 		try { 
 			
@@ -2092,12 +2082,16 @@ public class Advertisement {
 			
 		} 
 	}
-	
-	
 
-	
-	
-	
+	@Override
+	public void searchStartLib(Context context) {
+		searchStart((Activity)context);
+	}
+
+	@Override
+	public boolean isOnlineLib(Context context) {
+		return isOnline(context);
+	}
 }
 
 

@@ -385,7 +385,7 @@ public class LibraryPagerAdapter
 				break;
 			case MediaUtils.TYPE_SEARCH:
 				if (searchView == null) {
-					searchView = new SearchView(inflater);
+					searchView = new SearchView(inflater, activity);
 					viewSearchTab = searchView.getView();
 				}
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {

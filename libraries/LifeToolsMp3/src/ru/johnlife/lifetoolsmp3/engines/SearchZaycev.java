@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import ru.johnlife.lifetoolsmp3.song.ZaycevSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.content.SharedPreferences;
 
 public class SearchZaycev extends SearchWithPages {
@@ -50,7 +50,7 @@ public class SearchZaycev extends SearchWithPages {
 				String songArtist = songObject.getString("artistName");
 				String songDuration = songObject.getString("duration");
 				int songId = songObject.getInt("id");
-				addSong(new ZaycevSong(songId).setTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
+				addSong(new RemoteSong(getDownloadUrl(songId)).setTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -127,7 +127,7 @@ public class SearchZaycev extends SearchWithPages {
 		return "";
 	}
 
-	public static String getDownloadUrl(int songId) {
+	public String getDownloadUrl(int songId) {
 		try {
 			//	String link = "http://zaycev.net/external/download?id=" 
 			//			+ songId + "&access_token=" + getAccessToken();

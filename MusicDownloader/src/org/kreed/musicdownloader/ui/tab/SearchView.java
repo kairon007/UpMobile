@@ -2,6 +2,7 @@ package org.kreed.musicdownloader.ui.tab;
 
 import java.util.ArrayList;
 
+import org.kreed.musicdownloader.Advertisement;
 import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
@@ -25,7 +26,7 @@ public class SearchView  extends OnlineSearchView {
 	private LibraryPagerAdapter parentAdapter;
 
 	public SearchView(LayoutInflater inflater, LibraryPagerAdapter parentAdapter, MainActivity activity) {
-		super(inflater);
+		super(inflater, activity);
 		this.parentAdapter = parentAdapter;
 		this.activity = activity;
 	}
@@ -61,6 +62,13 @@ public class SearchView  extends OnlineSearchView {
 
 	@Override
 	protected Advertisment getAdvertisment() {
+		try {
+			return Advertisement.class.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -68,5 +76,10 @@ public class SearchView  extends OnlineSearchView {
 	public void refreshLibrary() {
 		// do nothing, just for others projects
 	}
-	
+
+	@Override
+	protected void stopSystemPlayer() {
+		// do nothing, just for others projects
+	}
+
 }

@@ -5,10 +5,12 @@ import java.util.Random;
 
 
 
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kreed.musicdownloader.engines.Settings;
 
+import ru.johnlife.lifetoolsmp3.Advertisment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,6 +36,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.appnext.appnextsdk.Appnext;
 import com.appnext.appnextsdk.NoAdsInterface;
 import com.appnext.appnextsdk.PopupClosedInterface;
@@ -54,24 +57,7 @@ import com.startapp.android.publish.StartAppSDK;
 
 
 
-public class Advertisement {
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+public class Advertisement implements Advertisment {
 	
 	// special mopub objects for exit interstitials. only needed for exits
 	public static MoPubInterstitial mopubExitInterstitial;   
@@ -1164,7 +1150,7 @@ public class Advertisement {
 	
 
 	public static int getAppIcon(Activity activity) {
-		int appIcon = R.drawable.icon; //getResourceId(activity, "app_icon", "drawable");
+		int appIcon = R.drawable.ic_launcher; //getResourceId(activity, "app_icon", "drawable");
 		if (appIcon == 0) appIcon = getRandomIcon();
 		
 		return appIcon;
@@ -2068,17 +2054,7 @@ public class Advertisement {
 		}
 		
 	}
-	
 
-
-	
-	
-	
-	
-	
-	
-
-	
 	public static void toast(Context ctx, String msg) {
 		try { 
 			
@@ -2087,12 +2063,16 @@ public class Advertisement {
 			
 		} 
 	}
-	
-	
 
-	
-	
-	
+	@Override
+	public void searchStartLib(Context context) {
+		searchStart((Activity)context);
+	}
+
+	@Override
+	public boolean isOnlineLib(Context context) {
+		return isOnline(context);
+	}
 }
 
 

@@ -370,16 +370,13 @@ public final class CoverView extends View implements Handler.Callback {
 		int style = mCoverStyle;
 		Context context = getContext();
 		Bitmap cover = song == null ? null : song.getCover(context);
-		android.util.Log.d("log", "1");
 		if (cover == null && style == CoverBitmap.STYLE_NO_INFO) {
-			android.util.Log.d("log", "2");
 			Bitmap def = mDefaultCover;
 			if (def == null) {
 				mDefaultCover = def = CoverBitmap.generateDefaultCover(getWidth(), getHeight());
 			}
 			mBitmaps[i] = def;
 		} else {
-			android.util.Log.d("log", "3");
 			mBitmaps[i] = CoverBitmap.createBitmap(context, style, cover, song, getWidth(), getHeight());
 		}
 
