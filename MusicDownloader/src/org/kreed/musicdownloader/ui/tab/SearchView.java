@@ -52,14 +52,7 @@ public class SearchView  extends OnlineSearchView {
 		data.setFileUri(path);
 		ArrayList<String[]> headers = song.getHeaders();
 		Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
-		if (MusicDownloaderApp.getService().getPlayer()== null) {
-			((MainActivity) activity).play(headers, data, Constans.CALL_FROM_SEARCH);
-		} else if (!MusicDownloaderApp.getService().getPlayer().getData().equals(data)) {
-			((MainActivity) activity).play(headers, data, Constans.CALL_FROM_SEARCH);
-		}
-		if(!MusicDownloaderApp.getService().getPlayer().getMediaPlayer().isPlaying())  {
-			((MainActivity) activity).setActivatedPlayButton(false);
-		}
+		((MainActivity) activity).play(headers, data);
 	}
 
 	@Override
