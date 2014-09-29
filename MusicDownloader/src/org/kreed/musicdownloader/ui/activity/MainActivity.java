@@ -428,7 +428,7 @@ public class MainActivity extends Activity {
 	}
 
 	
-	public void play(ArrayList<String[]> headers, MusicData musicData, String from) {
+	public void play(ArrayList<String[]> headers, MusicData musicData) {
 		music = musicData;
 		if (player != null && player.getData().equals(musicData)) {
 			player.stateManagementPlayer(Constans.RESTART);

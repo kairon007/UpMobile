@@ -9,6 +9,7 @@ import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -27,8 +28,8 @@ import android.widget.TextView;
 
 public class Player implements SeekBar.OnSeekBarChangeListener {
 	
-	private static final int PLAY = R.drawable.play;
-	private static final int PAUSE = R.drawable.pause;
+	private static final int IMAGE_PLAY = R.drawable.play;
+	private static final int IMAGE_PAUSE = R.drawable.pause;
 	private MediaPlayer mediaPlayer;
 	private PlaySong downloadSong;
 	private MusicData data;
@@ -58,7 +59,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 					int current = mediaPlayer.getCurrentPosition();
 					int total = mediaPlayer.getDuration();
 					songProgress.setProgress(current);
-					songDuration.setText(formatTime(current) + " / " + formatTime(total));
+					songDuration.setText(Util.formatTimeSimple(current) + " / " + Util.formatTimeSimple(total));
 					songProgress.postDelayed(this, 1000);
 				}
 			} catch (Exception e) {
@@ -76,6 +77,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	}
 	
 	public void setData(ArrayList<String[]> headers, MusicData musicData) {
+		if (null != downloadSong && downloadSong.getStatus() != Status.PENDING) {
+			downloadSong.cancel(true);
+		}
 		title = data.getSongTitle();
 		artist = data.getSongArtist();
 		duration = data.getSongDuration();
@@ -87,8 +91,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		if (value) {
 			songProgress.setIndeterminate(false);
 			buttonPlay.setVisibility(View.VISIBLE);
-			buttonPlay.setImageResource(PAUSE);
+			buttonPlay.setImageResource(IMAGE_PAUSE);
 			buttonProgress.setVisibility(View.GONE);
+			mediaPlayer.seekTo(0);
+			onPrepared();
 		} else {
 			songProgress.setProgress(0);
 			songProgress.setIndeterminate(true);
@@ -113,7 +119,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			downloadSong.cancel(true);
 		}
 	}
-
 
 	public void getView(FrameLayout footer) {
 		view = footer;
@@ -143,7 +148,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		});
 	}
 	
-	
 	private void init(FrameLayout view) {
 		playerLayout = (LinearLayout) view.findViewById(R.id.player_layout);
 		playerLayout.setVisibility(View.VISIBLE);
@@ -162,18 +166,11 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			songProgress.setVisibility(View.INVISIBLE);
 		} else {
 			songProgress.setVisibility(View.VISIBLE);
-			songDuration.setText(formatTime(duration));
+			songDuration.setText(Util.formatTimeSimple(duration));
 			songProgress.setIndeterminate(false);
 			songProgress.setMax(duration);
 			songProgress.postDelayed(progressAction, 1000);
 		}
-	}
-
-	private String formatTime(int duration) {
-		duration /= 1000;
-		int min = duration / 60;
-		int sec = duration % 60;
-		return String.format("%d:%02d", min, sec);
 	}
 
 	private class PlaySong extends AsyncTask<String, Void, Boolean> {
@@ -218,11 +215,18 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 					
 					@Override
 					public void onCompletion(MediaPlayer mp) {
-						mediaPlayer.seekTo(0);
+						mp.seekTo(0);
+						try {
+							mp.prepare();
+						} catch (Exception e) {
+							android.util.Log.d("log", "Appear problem: " + e);
+						}
+						mediaPlayer = mp;
+						playerState = Constans.PAUSE;
+						buttonPlay.setImageResource(IMAGE_PLAY);
 					}
 					
 				});
-				onPrepared();
 			}
 		}
 	}
@@ -289,20 +293,17 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	}
 	
 	private void pause() {
-		buttonPlay.setImageResource(PLAY);
+		buttonPlay.setImageResource(IMAGE_PLAY);
 		mediaPlayer.pause();
 	}
 	
 	private void restart() {
-		if (mediaPlayer != null) {
-			mediaPlayer.seekTo(0);
-		}
 		setActivatedButton(true);
 	}
 	
 	private void continuePlaying() {
 		mediaPlayer.start();
-		buttonPlay.setImageResource(PAUSE);
+		buttonPlay.setImageResource(IMAGE_PAUSE);
 	}
 
 	private void stop() {
