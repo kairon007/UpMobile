@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -125,52 +126,28 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		textPath.setText(OnlineSearchView.getDownloadPath(view.getContext()));
 		viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
 		spinerPath = (Button) view.findViewById(R.id.spiner_path_download);
-		spinerPath.setOnTouchListener(new OnTouchListener() {
+		spinerPath.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public boolean onTouch(View arg0, MotionEvent arg1Event) {
-				switch (arg1Event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					spinerPath.setBackgroundColor(Color.parseColor("#33777777"));
-					showHideChooser();
-					break;
-				default:
-					spinerPath.setBackgroundColor(Color.parseColor("#00000000"));
-					break;
-				}
-				return false;
+			public void onClick(View v) {
+				showHideChooser();
 			}
 		});
 		buttonShowLyrics = (Button) view.findViewById(R.id.button_show_lyrics);
-		buttonShowLyrics.setOnTouchListener(new OnTouchListener() {
+		buttonShowLyrics.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public boolean onTouch(View arg0, MotionEvent arg1Event) {
-				switch (arg1Event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					buttonShowLyrics.setBackgroundColor(Color.parseColor("#33777777"));
-					createLyricsDialog(title, artist, null);
-					break;
-				default:
-					buttonShowLyrics.setBackgroundColor(Color.parseColor("#00000000"));
-					break;
-				}
-				return false;
+			public void onClick(View v) {
+				createLyricsDialog(title, artist, null);
 			}
 		});
 		buttonEditMp3Tag = (Button) view.findViewById(R.id.button_edit_mp3_tag);
-		buttonEditMp3Tag.setOnTouchListener(new OnTouchListener() {
+		buttonEditMp3Tag.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public boolean onTouch(View arg0, MotionEvent arg1Event) {
-				switch (arg1Event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					buttonEditMp3Tag.setBackgroundColor(Color.parseColor("#33777777"));
-					String[] arrayField = { artist, title, "" };
-					createId3dialog(arrayField, true, false);
-					break;
-				default:
-					buttonEditMp3Tag.setBackgroundColor(Color.parseColor("#00000000"));
-					break;
-				}
-				return false;
+			public void onClick(View v) {
+				String[] arrayField = { artist, title, "" };
+				createId3dialog(arrayField, true, false);
 			}
 		});
 		textPath.setOnClickListener(new View.OnClickListener() {
