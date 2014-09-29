@@ -167,8 +167,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		textFilterLibrary = mTextFilter.getText().toString();
-		SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
+		textFilterLibrary = mTextFilter.getText().toString(); 
 		super.onPause();
 	}
 
@@ -329,6 +328,9 @@ public class MainActivity extends Activity {
 			out.putBoolean(Constans.SAVE_PROGRESS, player.isSongProgressIndeterminate());
 			out.putInt(Constans.SAVE_PROGRESS, player.getButtonProgressVisibility());
 		}
+		if (lastPage == 0) { 
+			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
+		}
 		super.onSaveInstanceState(out);
 	}
 
@@ -359,6 +361,9 @@ public class MainActivity extends Activity {
 			mTextFilter.removeTextChangedListener(textWatcher);
 			mTextFilter.setText("");
 			mTextFilter.addTextChangedListener(textWatcher);
+		}
+		if (lastPage == 0) {
+			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
 		}
 		lastPage = position;
 	}
