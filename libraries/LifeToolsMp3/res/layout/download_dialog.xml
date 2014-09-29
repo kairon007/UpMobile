@@ -172,7 +172,6 @@
                         android:id="@+id/button_show_lyrics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/padding_middle"
                         android:layout_marginBottom="@dimen/padding_middle_layout"
                         android:text="@string/show_lyrics"
                         android:textSize="@dimen/text_size_middle" />
@@ -181,7 +180,6 @@
                         android:id="@+id/button_edit_mp3_tag"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/padding_middle"
                         android:layout_marginBottom="@dimen/padding_middle_layout"
                         android:text="@string/edit_mp3_tags"
                         android:textSize="@dimen/text_size_middle" />
