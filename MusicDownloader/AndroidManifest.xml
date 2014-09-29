@@ -112,6 +112,10 @@
         <activity android:name="PreferencesActivity$AboutActivity" />
 
         <meta-data
+           android:name="com.google.android.gms.version"
+           android:value="google_play_services_version" />
+        
+        <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIH6Xcxa4hn6sHN1m4jMpi4MFFFMP5sv3XhFuWeA" />
 

@@ -3,8 +3,6 @@ package org.kreed.musicdownloader.ui.tab;
 import java.util.ArrayList;
 
 import org.kreed.musicdownloader.Advertisement;
-import org.kreed.musicdownloader.Constans;
-import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.engines.task.DownloadListener;
