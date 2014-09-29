@@ -32,14 +32,11 @@ public class PlayerService extends Service {
 		return player;
 	}
 	
-	public boolean conteinsPlayer() {
+	public boolean containsPlayer() {
 		return player != null;
 	}
 
 	public void setPlayer(Player player) {
-		if (this.player != null) {
-			this.player = null;
-		}
 		this.player = player;
 	}
 	

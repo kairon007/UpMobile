@@ -124,7 +124,7 @@ public class MainActivity extends Activity {
 		public void onCallStateChanged(int state, String incomingNumber) {
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
-				if (MusicDownloaderApp.getService().conteinsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
+				if (MusicDownloaderApp.getService().containsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
 					MediaPlayer mediaPlayer = MusicDownloaderApp.getService().getPlayer().getMediaPlayer();
 					if (mediaPlayer.isPlaying()) {
 						MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constans.PAUSE);
@@ -133,7 +133,7 @@ public class MainActivity extends Activity {
 				}
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
-				if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().conteinsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
+				if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().containsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
 					if (flag) {
 						MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constans.CONTINUE_PLAY);
 						flag = false;
@@ -261,11 +261,9 @@ public class MainActivity extends Activity {
 		if (pager.getCurrentItem() == 2) {
 			clearAll.setVisibility(View.GONE);
 		}
-		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().getPlayer() != null) {
+		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().containsPlayer()) {
 			MusicDownloaderApp.getService().getPlayer().getView(footer);
-			if (MusicDownloaderApp.getService().conteinsPlayer()) {
-				player = MusicDownloaderApp.getService().getPlayer();
-			}
+			player = MusicDownloaderApp.getService().getPlayer();
 		}
 		if (Settings.ENABLE_ADS) {
 			Advertisement.mopubShowBanner(this);
@@ -441,10 +439,11 @@ public class MainActivity extends Activity {
 		}
 		if (player == null) {
 			player = new Player(headers, musicData);
+			MusicDownloaderApp.getService().setPlayer(player);
 		} else {
 			player.setData(headers, musicData);
+			MusicDownloaderApp.getService().getPlayer().setData(headers, musicData);
 		}
-		MusicDownloaderApp.getService().setPlayer(player);
 		player.getView(footer);
 		player.stateManagementPlayer(Constans.PLAY);
 	}

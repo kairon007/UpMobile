@@ -30,6 +30,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	
 	private static final int IMAGE_PLAY = R.drawable.play;
 	private static final int IMAGE_PAUSE = R.drawable.pause;
+	private ArrayList<String[]> header;
 	private MediaPlayer mediaPlayer;
 	private PlaySong downloadSong;
 	private MusicData data;
@@ -46,8 +47,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private String title;
 	private String artist;
 	private String duration;
+	private Integer currentImageButton;
 	private boolean prepared = false;
-	private ArrayList<String[]> header;
 	private byte playerState = 0;
 	
 	private Runnable progressAction = new Runnable() {
@@ -92,6 +93,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 			songProgress.setIndeterminate(false);
 			buttonPlay.setVisibility(View.VISIBLE);
 			buttonPlay.setImageResource(IMAGE_PAUSE);
+			currentImageButton = IMAGE_PAUSE;
 			buttonProgress.setVisibility(View.GONE);
 			mediaPlayer.seekTo(0);
 			onPrepared();
@@ -134,6 +136,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		songTitle.setText(title);
 		songArtist.setText(artist);
 		songDuration.setText(duration);
+		if(null != currentImageButton) {
+			buttonPlay.setImageResource(currentImageButton);
+		}
 		buttonPlay.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -224,6 +229,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 						mediaPlayer = mp;
 						playerState = Constans.PAUSE;
 						buttonPlay.setImageResource(IMAGE_PLAY);
+						currentImageButton = IMAGE_PLAY;
 					}
 					
 				});
@@ -294,6 +300,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	
 	private void pause() {
 		buttonPlay.setImageResource(IMAGE_PLAY);
+		currentImageButton = IMAGE_PLAY;
 		mediaPlayer.pause();
 	}
 	
@@ -304,6 +311,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private void continuePlaying() {
 		mediaPlayer.start();
 		buttonPlay.setImageResource(IMAGE_PAUSE);
+		currentImageButton = IMAGE_PAUSE;
 	}
 
 	private void stop() {
