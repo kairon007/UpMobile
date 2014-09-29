@@ -28,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,9 +50,9 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	private ProgressBar coverProgress;
 	private TextView textPath;
 	private LinearLayout viewChooser;
-	private TextView spinerPath;
-	private TextView buttonShowLyrics;
-	private TextView buttonEditMp3Tag;
+	private Button spinerPath;
+	private Button buttonShowLyrics;
+	private Button buttonEditMp3Tag;
 	private RelativeLayout rlCoverProgress;
 	private View view;
 	private int songId;
@@ -123,7 +124,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		textPath = (TextView) view.findViewById(R.id.text_path_download);
 		textPath.setText(OnlineSearchView.getDownloadPath(view.getContext()));
 		viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
-		spinerPath = (TextView) view.findViewById(R.id.spiner_path_download);
+		spinerPath = (Button) view.findViewById(R.id.spiner_path_download);
 		spinerPath.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1Event) {
@@ -139,7 +140,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				return false;
 			}
 		});
-		buttonShowLyrics = (TextView) view.findViewById(R.id.button_show_lyrics);
+		buttonShowLyrics = (Button) view.findViewById(R.id.button_show_lyrics);
 		buttonShowLyrics.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1Event) {
@@ -155,7 +156,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				return false;
 			}
 		});
-		buttonEditMp3Tag = (TextView) view.findViewById(R.id.button_edit_mp3_tag);
+		buttonEditMp3Tag = (Button) view.findViewById(R.id.button_edit_mp3_tag);
 		buttonEditMp3Tag.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1Event) {

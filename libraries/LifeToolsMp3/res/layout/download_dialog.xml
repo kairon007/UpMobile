@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/download_dialog"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -168,22 +168,24 @@
 
                     <!-- android:textColor="@android:color/black" -->
 
-                    <TextView
+                    <Button
                         android:id="@+id/button_show_lyrics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/padding_middle"
                         android:gravity="left"
+                        android:background="@android:color/transparent"
                         android:layout_marginBottom="@dimen/padding_middle_layout"
                         android:text="@string/show_lyrics"
                         android:textSize="@dimen/text_size_middle" />
                     
-                     <TextView
+                     <Button
                         android:id="@+id/button_edit_mp3_tag"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/padding_middle"
                         android:gravity="left"
+                        android:background="@android:color/transparent"
                         android:layout_marginBottom="@dimen/padding_middle_layout"
                         android:text="@string/edit_mp3_tags"
                         android:textSize="@dimen/text_size_middle" />
@@ -195,15 +197,17 @@
                         android:indeterminate="false"
                         android:progress="0"
                         android:max="1"
+                       	android:background="@android:color/transparent"
                         android:layout_margin="@dimen/padding_middle_layout" />
                     
-                    <TextView
+                    <Button
                     	android:id="@+id/spiner_path_download"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/padding_middle_layout"
                         android:layout_marginLeft="@dimen/padding_middle"
                         android:gravity="left"
+                        android:background="@android:color/transparent"
                         android:text="@string/hader_download"
                         android:textSize="@dimen/text_size_middle" />
                     
