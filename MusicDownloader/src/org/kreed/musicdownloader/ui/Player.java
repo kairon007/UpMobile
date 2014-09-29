@@ -12,16 +12,15 @@ import org.kreed.musicdownloader.data.MusicData;
 import android.annotation.SuppressLint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -41,12 +40,11 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	private TextView songTitle;
 	private TextView songArtist;
 	private TextView songDuration;
+	private LinearLayout playerLayout;
 	
 	private String title;
 	private String artist;
 	private String duration;
-	private int currentProgress = 0;
-	private boolean playFinish = false;
 	private boolean prepared = false;
 	private ArrayList<String[]> header;
 	private byte playerState = 0;
@@ -55,12 +53,14 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		
 		@Override
 		public void run() {
-			try {
-				int current = mediaPlayer.getCurrentPosition();
-				int total = mediaPlayer.getDuration();
-				songProgress.setProgress(current);
-				songDuration.setText(formatTime(current) + " / " + formatTime(total));
-				songProgress.postDelayed(this, 1000);
+			try { 
+				if (mediaPlayer != null) {
+					int current = mediaPlayer.getCurrentPosition();
+					int total = mediaPlayer.getDuration();
+					songProgress.setProgress(current);
+					songDuration.setText(formatTime(current) + " / " + formatTime(total));
+					songProgress.postDelayed(this, 1000);
+				}
 			} catch (Exception e) {
 			}
 		}
@@ -81,14 +81,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		duration = data.getSongDuration();
 		this.data = musicData;
 		this.header = headers;
-	}
-	
-	
-	public void stopTask() {
-		if (downloadSong == null || downloadSong.getStatus() == Status.PENDING){
-			return;
-		}
-		downloadSong.cancel(true);
 	}
 	
 	public void setActivatedButton(boolean value) {
@@ -115,34 +107,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		return data;
 	}
 	
-	private void releasePlayer() {
-		if (null != mediaPlayer) {
-			songProgress.removeCallbacks(progressAction);
-			try {
-				if (mediaPlayer.isPlaying()) {
-					mediaPlayer.stop();
-				}
-			} catch (IllegalStateException e) {
-			}
-			mediaPlayer.reset();
-			mediaPlayer.release();
-			setCurrentProgress(100);
-			prepared = false;
-		}
-	}
 
 	public void stopDownloadSong() {
-		if (downloadSong != null) {
+		if (downloadSong != null && downloadSong.getStatus() == Status.PENDING) {
 			downloadSong.cancel(true);
 		}
 	}
 
-	public boolean isTaskExecute() {
-		if (downloadSong == null) {
-			return false;
-		}
-		return downloadSong.getStatus() != Status.PENDING;
-	}
 
 	public void getView(FrameLayout footer) {
 		view = footer;
@@ -158,7 +129,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		songTitle.setText(title);
 		songArtist.setText(artist);
 		songDuration.setText(duration);
-		setImageOnButton();
 		buttonPlay.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -173,18 +143,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		});
 	}
 	
-	private void setImageOnButton() {
-		if (mediaPlayer == null || !prepared) {
-			return;
-		}
-		if (mediaPlayer.isPlaying()) {
-			buttonPlay.setImageResource(PAUSE);
-		} else {
-			buttonPlay.setImageResource(PLAY);
-		}
-	}
 	
 	private void init(FrameLayout view) {
+		playerLayout = (LinearLayout) view.findViewById(R.id.player_layout);
+		playerLayout.setVisibility(View.VISIBLE);
 		songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
 		buttonProgress = (ProgressBar) view.findViewById(R.id.player_progress_play);
 		buttonPlay = (ImageButton) view.findViewById(R.id.player_play_song);
@@ -207,24 +169,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 		}
 	}
 
-	private void onFinished() {
-		songProgress.setIndeterminate(false);
-		songProgress.removeCallbacks(progressAction);
-	}
-
-	public void playPause() {
-		if (null == mediaPlayer) {
-			return;
-		}
-		if (mediaPlayer.isPlaying()) {
-			mediaPlayer.pause();
-		} else {
-			songProgress.setVisibility(View.VISIBLE);
-			mediaPlayer.start();
-		}
-		setImageOnButton();
-	}
-
 	private String formatTime(int duration) {
 		duration /= 1000;
 		int min = duration / 60;
@@ -244,13 +188,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 					FileInputStream inputStream = new FileInputStream(songFile);
 					mediaPlayer.setDataSource(inputStream.getFD());
 					inputStream.close();
-				} else  {
+				} else {
 					HashMap<String, String> headers = new HashMap<String, String>();
 					headers.put(
 							"User-Agent",
 							"2.0.0.6 � Debian GNU/Linux 4.0 � Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 					if (header != null && header.get(0) != null) {
-						for (int i = 0; i< header.size(); i++) {
+						for (int i = 0; i < header.size(); i++) {
 							headers.put(header.get(i)[0], header.get(i)[1]);
 						}
 					}
@@ -258,11 +202,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 				}
 				mediaPlayer.prepare();
 				prepared = true;
-				if (isCancelled()) {
-					releasePlayer();
-				} else {
-					return true;
-				}
+				return true;
 			} catch (Exception e) {
 			}
 			return false;
@@ -279,7 +219,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 					@Override
 					public void onCompletion(MediaPlayer mp) {
 						mediaPlayer.seekTo(0);
-						playFinish = true;
 					}
 					
 				});
@@ -291,7 +230,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (fromUser) {
-			setCurrentProgress(progress);
 			if (mediaPlayer != null && prepared) {
 				mediaPlayer.seekTo(progress);
 			}
@@ -304,14 +242,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-	}
-	
-	public int getCurrentProgress() {
-		return currentProgress;
-	}
-
-	public void setCurrentProgress(int currentProgress) {
-		this.currentProgress = currentProgress;
 	}
 
 	public byte getPlayerState() {
@@ -341,13 +271,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	
 	@SuppressLint("NewApi") 
 	private void play() {
-		if (mediaPlayer != null) {
-			mediaPlayer.seekTo(0);
-			mediaPlayer.stop();
-			mediaPlayer = null;
-		}
+		stop();
 		songArtist.setText(data.getSongArtist());
 		songTitle.setText(data.getSongTitle());
+		songDuration.setText("");
 		songProgress.setIndeterminate(true);
 		buttonPlay.setVisibility(View.GONE);
 		buttonProgress.setVisibility(View.VISIBLE);
@@ -379,7 +306,39 @@ public class Player implements SeekBar.OnSeekBarChangeListener {
 	}
 
 	private void stop() {
-		// TODO: clear player and view
+		if (mediaPlayer != null) {
+			songProgress.setProgress(0);
+			mediaPlayer.seekTo(0);
+			mediaPlayer.stop();
+			mediaPlayer.reset();
+			mediaPlayer.release();
+			mediaPlayer = null;
+			stopDownloadSong();
+			songProgress.removeCallbacks(progressAction);
+			prepared = false;
+		}
+	}
+	
+	public void hidePlayerView() {
+		playerLayout.setVisibility(View.GONE);
+	}
+
+	public boolean isSongProgressIndeterminate() {
+		return songProgress.isIndeterminate();
+	}
+
+	public void setSongProgressIndeterminate(boolean ind) {
+		songProgress.setIndeterminate(ind);
+
+	}
+
+	public int getButtonProgressVisibility() {
+		return buttonProgress.getVisibility();
+	}
+
+	public void setButtonProgressVisibility(int visibility) {
+		buttonProgress.setVisibility(visibility);
+		buttonPlay.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
 	}
 
 }

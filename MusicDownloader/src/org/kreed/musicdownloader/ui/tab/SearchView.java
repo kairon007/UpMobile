@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.kreed.musicdownloader.Advertisement;
 import org.kreed.musicdownloader.Constans;
+import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.engines.task.DownloadListener;
@@ -51,8 +52,14 @@ public class SearchView  extends OnlineSearchView {
 		data.setFileUri(path);
 		ArrayList<String[]> headers = song.getHeaders();
 		Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
-		((MainActivity) activity).play(headers, data, Constans.CALL_FROM_SEARCH);
-		((MainActivity) activity).setActivatedPlayButton(false);
+		if (MusicDownloaderApp.getService().getPlayer()== null) {
+			((MainActivity) activity).play(headers, data, Constans.CALL_FROM_SEARCH);
+		} else if (!MusicDownloaderApp.getService().getPlayer().getData().equals(data)) {
+			((MainActivity) activity).play(headers, data, Constans.CALL_FROM_SEARCH);
+		}
+		if(!MusicDownloaderApp.getService().getPlayer().getMediaPlayer().isPlaying())  {
+			((MainActivity) activity).setActivatedPlayButton(false);
+		}
 	}
 
 	@Override

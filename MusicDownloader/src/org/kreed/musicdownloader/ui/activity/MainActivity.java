@@ -44,7 +44,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -128,16 +127,15 @@ public class MainActivity extends Activity {
 				if (MusicDownloaderApp.getService().conteinsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
 					MediaPlayer mediaPlayer = MusicDownloaderApp.getService().getPlayer().getMediaPlayer();
 					if (mediaPlayer.isPlaying()) {
-						MusicDownloaderApp.getService().getPlayer().playPause();
+						MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constans.PAUSE);
 						flag = true;
 					}
 				}
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
 				if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().conteinsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
-					MediaPlayer mediaPlayer = MusicDownloaderApp.getService().getPlayer().getMediaPlayer();
 					if (flag) {
-						MusicDownloaderApp.getService().getPlayer().playPause();
+						MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constans.CONTINUE_PLAY);
 						flag = false;
 					}
 				}
@@ -312,7 +310,11 @@ public class MainActivity extends Activity {
 		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
 		if (in.getBoolean(Constans.SEARCH_BOX_VISIBLE))
-			super.onRestoreInstanceState(in);
+			if (null != player) {
+				player.setSongProgressIndeterminate(in.getBoolean(Constans.SAVE_PROGRESS, false));
+				player.setButtonProgressVisibility(in.getInt(Constans.SAVE_PROGRESS, View.VISIBLE));
+			}
+		super.onRestoreInstanceState(in);
 	}
 
 	@Override
@@ -322,6 +324,10 @@ public class MainActivity extends Activity {
 			out.putString(Constans.FILTER_TEXT_DOWNLOAD, textFilterDownload);
 		} else if (page == 2) {
 			out.putString(Constans.FILTER_TEXT_LIBRARY, textFilterLibrary);
+		}
+		if (null != player) {
+			out.putBoolean(Constans.SAVE_PROGRESS, player.isSongProgressIndeterminate());
+			out.putInt(Constans.SAVE_PROGRESS, player.getButtonProgressVisibility());
 		}
 		super.onSaveInstanceState(out);
 	}
@@ -506,6 +512,10 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(Void result) {
 			Toast.makeText(getApplicationContext(), music.getSongArtist() + " - " + music.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
 			mPagerAdapter.removeMusicData(music);
+			if (MusicDownloaderApp.getService().getPlayer().getData() == music) {
+				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constans.STOP);
+				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
+			}	
 			super.onPostExecute(result);
 		}
 
