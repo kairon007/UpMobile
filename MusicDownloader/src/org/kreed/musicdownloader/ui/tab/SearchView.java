@@ -17,6 +17,7 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -27,7 +28,7 @@ public class SearchView  extends OnlineSearchView {
 	private LibraryPagerAdapter parentAdapter;
 
 	public SearchView(LayoutInflater inflater, LibraryPagerAdapter parentAdapter, MainActivity activity) {
-		super(inflater, activity);
+		super(inflater);
 		this.parentAdapter = parentAdapter;
 		this.activity = activity;
 	}
@@ -80,6 +81,11 @@ public class SearchView  extends OnlineSearchView {
 	@Override
 	protected void stopSystemPlayer() {
 		// do nothing, just for others projects
+	}
+
+	@Override
+	protected void bindToService(Context context) {
+		// do nothing
 	}
 
 }

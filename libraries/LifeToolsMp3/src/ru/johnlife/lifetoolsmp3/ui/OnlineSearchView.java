@@ -61,7 +61,6 @@ public abstract class OnlineSearchView extends View {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
 	public static List<Engine> engines = null;
-	private Activity activity;
 	private RemoteSong downloadSong;
 	private LayoutInflater inflater;
 	private Iterator<Engine> taskIterator;
@@ -87,16 +86,17 @@ public abstract class OnlineSearchView extends View {
 	public abstract void refreshLibrary();
 	
 	protected abstract void stopSystemPlayer();
+	
+	protected abstract void bindToService(Context context);
 
-	public OnlineSearchView(final LayoutInflater inflater, Activity activity) {
+	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
-		this.activity = activity;
 		this.inflater = inflater;
 		this.view = inflater.inflate(R.layout.search, null);
 	}
 
 	public View getView() {
-		bindToService(activity);
+		bindToService(getContext());
 		final boolean fullAction = showFullElement();
 		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
 		if (!fullAction) {
@@ -219,9 +219,6 @@ public abstract class OnlineSearchView extends View {
 
 	}
 	
-	protected void bindToService(Activity activity) {
-		
-	}
 
 	// protected DownloadClickListener createListener(RemoteSong song, Bitmap
 	// bitmap) {

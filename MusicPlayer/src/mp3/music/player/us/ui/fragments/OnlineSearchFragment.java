@@ -19,7 +19,7 @@ public class OnlineSearchFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Activity activity = getActivity();
-		searchView = new SearchView(inflater, activity);
+		searchView = new SearchView(inflater);
 		getSherlockActivity().getIntent();
 		Intent intent = getSherlockActivity().getIntent();
 		String str = intent.getStringExtra(Constants.EXTRA_SEARCH);

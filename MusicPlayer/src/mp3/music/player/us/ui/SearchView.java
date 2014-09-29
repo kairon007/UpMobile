@@ -8,12 +8,13 @@ import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
 
-	public SearchView(LayoutInflater inflater, Activity activity) {
-		super(inflater, activity);
+	public SearchView(LayoutInflater inflater) {
+		super(inflater);
 	}
 
 	@Override
@@ -41,5 +42,9 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	protected void stopSystemPlayer() {
 		MusicUtils.pause();
+	}
+
+	@Override
+	protected void bindToService(Context context) {
 	}
 }

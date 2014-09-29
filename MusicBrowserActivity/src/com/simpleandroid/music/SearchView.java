@@ -7,6 +7,7 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -29,8 +30,8 @@ public class SearchView extends OnlineSearchView {
 		}
 	};
 
-	public SearchView(LayoutInflater inflater, Activity activity) {
-		super(inflater, activity);
+	public SearchView(LayoutInflater inflater) {
+		super(inflater);
 	}
 
 	@Override
@@ -59,8 +60,8 @@ public class SearchView extends OnlineSearchView {
 	}
 
 	@Override
-	protected void bindToService(Activity activity) {
-		mToken = MusicUtils.bindToService(activity, osc);
+	protected void bindToService(Context context) {
+		mToken = MusicUtils.bindToService((Activity) context, osc);
 	}
 
 }
