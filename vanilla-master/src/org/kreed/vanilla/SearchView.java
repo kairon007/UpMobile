@@ -3,7 +3,6 @@ package org.kreed.vanilla;
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 
@@ -38,13 +37,8 @@ public class SearchView extends OnlineSearchView {
 	}
 
 	@Override
-	protected void stopSystemPlayer() {
-		// TODO stop player
-		service.pause();
-	}
-
-	@Override
-	protected void bindToService(Context context) {
+	protected void stopSystemPlayer(Context context) {
 		service = PlaybackService.get(context);
+		service.pause();
 	}
 }

@@ -22,7 +22,6 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -49,11 +48,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public abstract class OnlineSearchView extends View {
 
@@ -84,10 +83,8 @@ public abstract class OnlineSearchView extends View {
 	protected abstract Advertisment getAdvertisment();
 	
 	public abstract void refreshLibrary();
-	
-	protected abstract void stopSystemPlayer();
-	
-	protected abstract void bindToService(Context context);
+		
+	protected abstract void stopSystemPlayer(Context context);
 
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -96,7 +93,6 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public View getView() {
-		bindToService(getContext());
 		final boolean fullAction = showFullElement();
 		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
 		if (!fullAction) {
@@ -536,7 +532,7 @@ public abstract class OnlineSearchView extends View {
 	
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args) {
-		stopSystemPlayer();
+		stopSystemPlayer(getContext());
 		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
