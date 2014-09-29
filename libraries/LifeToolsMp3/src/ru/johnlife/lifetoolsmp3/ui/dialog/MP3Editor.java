@@ -1,5 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui.dialog;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.content.Context;
@@ -167,5 +169,10 @@ public class MP3Editor{
 		oldArtistName = newArtistName = strings[0];
 		oldSongTitle = newSongTitle = strings[1];
 		oldAlbumTitle = newAlbumTitle = strings[2];
+	}
+
+	public ArrayList<String> getStrings() {
+		ArrayList<String> strings = new ArrayList<String>(Arrays.asList(newArtistName, newSongTitle, newAlbumTitle));
+		return strings;
 	}
 }

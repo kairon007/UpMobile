@@ -20,10 +20,12 @@ import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -97,6 +99,9 @@ public class MainActivity extends Activity {
 	private int lastPage = -1;
 	private boolean mSearchBoxVisible;
 	public boolean mFakeTarget;
+	private MP3Editor editor;
+	private ArrayList <String> mStrings;
+	private boolean showDialog = false;
 
 	// -------------------------------------------------------------------------
 
@@ -304,6 +309,14 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
+		String uri = in.getString(Constans.MUSIC_URI);
+		in.remove(Constans.MUSIC_URI);
+		mStrings = in.getStringArrayList(Constans.EDITOR_FIELDS);
+		if (null != uri) {
+			File musicUri = new File(uri);
+			music = new MusicData(musicUri);
+			showEditDialog(in.getBoolean(Constans.USE_COVER, false));
+		}
 		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
 		if (in.getBoolean(Constans.SEARCH_BOX_VISIBLE))
@@ -316,6 +329,12 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
+		if (showDialog && null != music) {
+			String mUri = music.getFileUri();
+			out.putString(Constans.MUSIC_URI, mUri);
+			out.putStringArrayList(Constans.EDITOR_FIELDS, editor.getStrings());
+			out.putBoolean(Constans.USE_COVER, editor.isShowCover());
+		}
 		out.putBoolean(Constans.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		if (page == 1) {
 			out.putString(Constans.FILTER_TEXT_DOWNLOAD, textFilterDownload);
@@ -525,15 +544,23 @@ public class MainActivity extends Activity {
 
 	}
 
-	public void showEditDialog(boolean forse) {
+	@SuppressLint("NewApi") 
+		public void showEditDialog(boolean forse) {
 		final File file = new File(music.getFileUri());
-		final MP3Editor editor = new MP3Editor(this, forse);
+		editor = new MP3Editor(this, forse);
+		showDialog = true;
 		MusicData data = MusicData.getFromFile(file);
-		String[] filds = {data.getSongArtist(), data.getSongTitle(), ""};
+		if (null != mStrings) {
+			String[] filds = mStrings.toArray(new String[mStrings.size()]);
+			editor.setStrings(filds);
+			mStrings = null;
+		} else {
+			String[] filds = { data.getSongArtist(), data.getSongTitle(), "" };
+			editor.setStrings(filds);
+		}
 		if(null == data.getSongBitmap()) {
 			editor.setShowCover(false);
 		}
-		editor.setStrings(filds);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
@@ -557,6 +584,7 @@ public class MainActivity extends Activity {
 						data.setSongAlbum(albumTitle);
 						musicData.rename(data);
 						notifyMediascanner(musicData);
+						showDialog = false;
 						return null;
 					}
 
@@ -564,10 +592,17 @@ public class MainActivity extends Activity {
 			}
 
 		});
+		builder.setOnDismissListener(new OnDismissListener() {
+			public void onDismiss(DialogInterface dialog) {
+				dialog.dismiss();
+				showDialog = false;
+			}
+		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				showDialog = false;
 			}
 
 		});

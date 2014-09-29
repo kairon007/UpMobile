@@ -14,4 +14,7 @@ public class Constans {
 	public static final byte STOP = 3;
 	public static final byte RESTART = 4;
 	public static final byte CONTINUE_PLAY = 5;
+	public static final String EDITOR_FIELDS = "aditor_fields";
+	public static final String USE_COVER = "use_cover";
+	public static final String MUSIC_URI = "music_uri";
 }
