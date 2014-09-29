@@ -50,7 +50,8 @@ public class SearchView extends OnlineSearchView {
 	}
 
 	@Override
-	protected void stopSystemPlayer() {
+	protected void stopSystemPlayer(Context context) {
+		mToken = MusicUtils.bindToService((Activity) context, osc);
 		if (mService == null) return;
 		try {
 			mService.pause();
@@ -58,10 +59,4 @@ public class SearchView extends OnlineSearchView {
 			android.util.Log.d("log", "Appear problem: " + e);
 		}
 	}
-
-	@Override
-	protected void bindToService(Context context) {
-		mToken = MusicUtils.bindToService((Activity) context, osc);
-	}
-
 }

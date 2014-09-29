@@ -40,11 +40,7 @@ public class SearchView extends OnlineSearchView {
 	}
 
 	@Override
-	protected void stopSystemPlayer() {
+	protected void stopSystemPlayer(Context context) {
 		MusicUtils.pause();
-	}
-
-	@Override
-	protected void bindToService(Context context) {
 	}
 }

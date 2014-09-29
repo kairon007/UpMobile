@@ -79,13 +79,7 @@ public class SearchView  extends OnlineSearchView {
 	}
 
 	@Override
-	protected void stopSystemPlayer() {
+	protected void stopSystemPlayer(Context context) {
 		// do nothing, just for others projects
 	}
-
-	@Override
-	protected void bindToService(Context context) {
-		// do nothing
-	}
-
 }
