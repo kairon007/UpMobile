@@ -8,7 +8,6 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.os.Bundle;
-import android.util.Log;
 
 public class SongArrayHolder {
 	private static SongArrayHolder instance = null;
@@ -17,7 +16,6 @@ public class SongArrayHolder {
 	private Iterator<Engine> taskIterator;
 	private boolean isStreamDialogOpened = false;
 	private boolean isID3DialogOpened = false;
-	private boolean isSpinerPathOpened = false;
 	private String[] fields;
 	private boolean isCoverEnabled = true;
 	private Bundle streamDialogArgs;
@@ -137,10 +135,6 @@ public class SongArrayHolder {
 		this.isCoverEnabled = isCoverEnabled;
 	}
 	
-	public void setSpinerPathOpened(boolean isSpinerPathOpened) {
-		this.isSpinerPathOpened = isSpinerPathOpened;
-	}
-	
 	public void restoreState(OnlineSearchView view) {
 		if (isStreamDialogOpened) {
 			Bundle args = getStreamDialogArgs();
@@ -154,9 +148,6 @@ public class SongArrayHolder {
 		}
 		if (isDirectoryChooserOpened) {
 			view.getPlayer().createDirectoryChooserDialog();
-		}
-		if (isSpinerPathOpened && null != view.getPlayer()) {
-			view.getPlayer().showSpinerPath();
 		}
 		if (isNewDirectoryOpened) {
 			view.getPlayer().createNewDirDialog(newDirName);
@@ -174,7 +165,7 @@ public class SongArrayHolder {
 	public void setIsNewDirectoryOpened(boolean isNewDirectoryOpened) {
 		this.isNewDirectoryOpened = isNewDirectoryOpened;
 	}
-	
+
 	public void setNewDirName(String name) {
 		newDirName = name;
 	}

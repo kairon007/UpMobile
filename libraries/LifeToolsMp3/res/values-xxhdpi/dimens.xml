@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- xxdpi -->
+    <dimen name="size_cover">120dp</dimen>
+    <dimen name="size_middle">80dp</dimen>
+    <dimen name="size_spinner">64dp</dimen>
+    <dimen name="padding_spinner">24dp</dimen>
+    <dimen name="dialog_text_size_btn">16sp</dimen>
+    <dimen name="default_size_element">48dp</dimen>
+    <dimen name="text_size_middle">20sp</dimen>
+
+</resources>

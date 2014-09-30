@@ -29,6 +29,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -60,6 +61,7 @@ public abstract class OnlineSearchView extends View {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
 	public static List<Engine> engines = null;
+	private AlertDialog alertDialog;
 	private RemoteSong downloadSong;
 	private LayoutInflater inflater;
 	private Iterator<Engine> taskIterator;
@@ -554,11 +556,22 @@ public abstract class OnlineSearchView extends View {
 			}
 
 		});
-		AlertDialog alertDialog = b.create();
+		alertDialog = b.create();
 		alertDialog.setOnCancelListener(new OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				dialogDismisser.run();
+			}
+		});
+		alertDialog.setOnShowListener(new OnShowListener() {
+			
+			@Override
+			public void onShow(DialogInterface dialog) {
+				float textSize = 16f;
+				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
+				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.darker_gray));
+				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
+				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(android.R.color.darker_gray));
 			}
 		});
 		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);

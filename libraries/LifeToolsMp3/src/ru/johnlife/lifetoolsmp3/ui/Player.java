@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
@@ -24,54 +25,52 @@ import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public final class Player extends AsyncTask<String, Void, Boolean> {
 
-	private String url = null;
-	private MediaPlayer mediaPlayer;
-	private boolean prepared = false;
-	private ProgressBar spinner;
-	private ImageButton button;
-	private ProgressBar progress;
-	private TextView time;
-	private ImageView coverImage;
-	private ProgressBar coverProgress;
-	private TextView textPath;
-	private LinearLayout viewChooser;
-	private Button spinerPath;
-	private Button buttonShowLyrics;
-	private Button buttonEditMp3Tag;
-	private RelativeLayout rlCoverProgress;
-	private View view;
-	private int songId;
-	boolean isId3Show = false;
-	private String title, artist;
-	private Bitmap coverBitmap;
-	private boolean coverProgressVisible = true;
-	private String timeText;
-	private boolean rlCoverProgressVisible = true;
-	private int current;
 	private Runnable action;
-	private boolean indeterminate;
+	private DirectoryChooserDialog directoryChooserDialog;
+	private MediaPlayer mediaPlayer;
+	private Bitmap coverBitmap;
+	private View view;
+	private LinearLayout boxPlayer;
+	private FrameLayout textPathChange;
+	private ProgressBar coverProgress;
+	private ProgressBar spinner;
+	private ProgressBar progress;
+	private ImageButton button;
+	private ImageView coverImage;
+	private TableRow rowLirycs;
+	private TableRow rowTags;
+	private TextView tvTags;
+	private TextView tvLyrics;
+	private TextView time;
+	private TextView textPath;
+	private String url = null;
+	private String title, artist;
+	private String timeText;
+	private int current;
+	private int songId;
 	private int duration;
 	private int imagePause;
+	private boolean isId3Show = false;
+	private boolean coverProgressVisible = true;
+	private boolean prepared = false;
+	private boolean indeterminate;
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
 	private boolean useCover = true;
-	DirectoryChooserDialog directoryChooserDialog;
 
 	public void setSongId(Integer songId) {
 		this.songId = songId;
@@ -95,63 +94,48 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	public void initView(final View view) {
 		this.view = view;
 		songId = -1;
-		spinner = (ProgressBar) view.findViewById(R.id.spinner);
+		init(view);
 		if (!spinnerVisible) {
 			spinner.setVisibility(View.GONE);
 		}
-		button = (ImageButton) view.findViewById(R.id.pause);
 		if (buttonVisible) {
-			button.setVisibility(View.VISIBLE);
+			boxPlayer.setVisibility(View.VISIBLE);
 			button.setImageResource(imagePause);
+			tvLyrics.setVisibility(View.GONE);
+			tvTags.setVisibility(View.GONE);
+		} else {
+			boxPlayer.setVisibility(View.GONE);
+			tvLyrics.setVisibility(View.VISIBLE);
+			tvTags.setVisibility(View.VISIBLE);
 		}
-		progress = (ProgressBar) view.findViewById(R.id.progress);
 		progress.setProgress(current);
 		progress.postDelayed(action, 1000);
 		progress.setIndeterminate(indeterminate);
 		progress.setMax(duration);
-		time = (TextView) view.findViewById(R.id.time);
 		time.setText(timeText);
-		coverImage = (ImageView) view.findViewById(R.id.cover);
+		textPath.setText(OnlineSearchView.getDownloadPath(view.getContext()));
 		if (coverBitmap != null) {
 			coverImage.setImageBitmap(coverBitmap);
 		}
-		coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
 		if (!coverProgressVisible) {
 			coverProgress.setVisibility(View.GONE);
 		}
-		rlCoverProgress = (RelativeLayout) view.findViewById(R.id.rlCoverProgress);
-		if (!rlCoverProgressVisible) {
-			rlCoverProgress.setVisibility(View.GONE);
-		}
-		textPath = (TextView) view.findViewById(R.id.text_path_download);
-		textPath.setText(OnlineSearchView.getDownloadPath(view.getContext()));
-		viewChooser = (LinearLayout) view.findViewById(R.id.path_download);
-		spinerPath = (Button) view.findViewById(R.id.spiner_path_download);
-		spinerPath.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				showHideChooser();
-			}
-		});
-		buttonShowLyrics = (Button) view.findViewById(R.id.button_show_lyrics);
-		buttonShowLyrics.setOnClickListener(new OnClickListener() {
-			
+		rowLirycs.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 				createLyricsDialog(title, artist, null);
 			}
 		});
-		buttonEditMp3Tag = (Button) view.findViewById(R.id.button_edit_mp3_tag);
-		buttonEditMp3Tag.setOnClickListener(new OnClickListener() {
-			
+		rowTags.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 				String[] arrayField = { artist, title, "" };
 				createId3dialog(arrayField, true, false);
 			}
 		});
-		textPath.setOnClickListener(new View.OnClickListener() {
+		textPathChange.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				createDirectoryChooserDialog();
@@ -163,6 +147,22 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				playPause();
 			}
 		});
+	}
+
+	private void init(final View view) {
+		spinner = (ProgressBar) view.findViewById(R.id.spinner);
+		button = (ImageButton) view.findViewById(R.id.pause);
+		progress = (ProgressBar) view.findViewById(R.id.progress);
+		time = (TextView) view.findViewById(R.id.time);
+		coverImage = (ImageView) view.findViewById(R.id.cover);
+		coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
+		textPath = (TextView) view.findViewById(R.id.text_path_download);
+		textPathChange = (FrameLayout) view.findViewById(R.id.text_path_change);
+		boxPlayer = (LinearLayout) view.findViewById(R.id.box_player);
+		rowTags = (TableRow) view.findViewById(R.id.row_tags);
+		rowLirycs = (TableRow) view.findViewById(R.id.row_lyrics);
+		tvLyrics = (TextView) view.findViewById(R.id.tv_show_lyrics);
+		tvTags = (TextView) view.findViewById(R.id.tv_edit_mp3_tag);
 	}
 
 	public void createDirectoryChooserDialog() {
@@ -180,7 +180,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(view.getContext()));
 		}
 	}
-	
+
 	public void createNewDirDialog(String name) {
 		directoryChooserDialog.createNewDirDialog(name);
 	}
@@ -211,7 +211,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			}
 		});
 		b.create().show();
-		LyricsFetcher lyricsFetcher = new LyricsFetcher(buttonShowLyrics.getContext());
+		LyricsFetcher lyricsFetcher = new LyricsFetcher(view.getContext());
 		lyricsFetcher.fetchLyrics(title, artist);
 		final TextView lyricsTextView = (TextView) lyricsView.findViewById(R.id.lyrics);
 		final LinearLayout progressLayout = (LinearLayout) lyricsView.findViewById(R.id.download_progress);
@@ -225,14 +225,14 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 						SongArrayHolder.getInstance().setLyricsString(lyrics);
 					} else {
 						String songName = artist + " - " + title;
-						lyricsTextView.setText(buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName));
+						lyricsTextView.setText(view.getContext().getResources().getString(R.string.lyric_not_found, songName));
 					}
 				}
 			});
 		} else {
 			if (lyrics.equals("")) {
 				String songName = artist + " - " + title;
-				lyricsTextView.setText(buttonShowLyrics.getContext().getResources().getString(R.string.lyric_not_found, songName));
+				lyricsTextView.setText(view.getContext().getResources().getString(R.string.lyric_not_found, songName));
 			} else {
 				lyricsTextView.setText(Html.fromHtml(lyrics));
 			}
@@ -252,7 +252,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		editor.setStrings(fields);
 		if (!forse) {
 			editor.setShowCover(useCover);
-		} 
+		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
@@ -302,20 +302,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		return songId;
 	}
 
-	private void showHideChooser() {
-		if (viewChooser.getVisibility() == View.VISIBLE) {
-			viewChooser.setVisibility(View.GONE);
-			SongArrayHolder.getInstance().setSpinerPathOpened(false);
-		} else {
-			viewChooser.setVisibility(View.VISIBLE);
-			SongArrayHolder.getInstance().setSpinerPathOpened(true);
-		}
-	}
-
-	public void showSpinerPath() {
-		viewChooser.setVisibility(View.VISIBLE);
-	}
-
 	void setDownloadUrl(String downloadUrl) {
 		url = downloadUrl;
 	}
@@ -327,8 +313,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	public void setCover(Bitmap bmp) {
 		coverProgress.setVisibility(View.GONE);
 		coverProgressVisible = false;
-		rlCoverProgressVisible = false;
-		rlCoverProgress.setVisibility(View.GONE);
 		if (null != bmp) {
 			coverImage.setImageBitmap(bmp);
 			coverBitmap = bmp;
@@ -337,7 +321,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void hideCoverProgress() {
 		coverProgress.setVisibility(View.GONE);
-		rlCoverProgress.setVisibility(View.GONE);
 	}
 
 	public View getView() {
@@ -362,7 +345,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				current = mediaPlayer.getCurrentPosition();
 				int total = mediaPlayer.getDuration();
 				progress.setProgress(current);
-				timeText = formatTime(current) + " / " + formatTime(total);
+				timeText = Util.formatTimeSimple(current) + " / " + Util.formatTimeSimple(total);
 				time.setText(timeText);
 				action = this;
 				progress.postDelayed(action, 1000);
@@ -375,15 +358,13 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	public void onPrepared() {
 		spinnerVisible = false;
 		spinner.setVisibility(View.GONE);
+		boxPlayer.setVisibility(View.VISIBLE);
 		buttonVisible = true;
-		button.setVisibility(View.VISIBLE);
-		// Intent i = new Intent(PlaybackService.ACTION_PAUSE);
-		// spinner.getContext().startService(i);
 		duration = mediaPlayer.getDuration();
 		if (duration == -1) {
 			progress.setIndeterminate(true);
 		} else {
-			time.setText(formatTime(duration));
+			time.setText(Util.formatTimeSimple(duration));
 			progress.setIndeterminate(false);
 			current = 0;
 			progress.setProgress(current);
@@ -391,13 +372,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			action = progressAction;
 			progress.postDelayed(action, 1000);
 		}
-	}
-
-	private String formatTime(int duration) {
-		duration /= 1000;
-		int min = duration / 60;
-		int sec = duration % 60;
-		return String.format("%d:%02d", min, sec);
 	}
 
 	public void onPaused() {
@@ -464,6 +438,8 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 		if (result && prepared) {
+			rowLirycs.removeView(tvLyrics);
+			rowTags.removeView(tvTags);
 			mediaPlayer.start();
 			mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				@Override
@@ -472,7 +448,12 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 					onFinished();
 				}
 			});
-			onPrepared();
+			rowLirycs.postDelayed(new Runnable() {
+				public void run() {
+					onPrepared();
+				}
+			}, 1000);
+
 		}
 	}
 
