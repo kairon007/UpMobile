@@ -6,6 +6,8 @@ import org.kreed.musicdownloader.PlayerService;
 
 
 
+
+
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Application;
 import android.content.ComponentName;
@@ -22,6 +24,8 @@ import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
+import android.util.Log;
+import android.view.accessibility.CaptioningManager.CaptioningChangeListener;
 
 public class MusicDownloaderApp extends Application {
 	private static final BitmapFactory.Options BITMAP_OPTIONS = new BitmapFactory.Options();
@@ -86,10 +90,17 @@ public class MusicDownloaderApp extends Application {
 	
 	
 	private ServiceConnection serviceConnection = new ServiceConnection() {
+
 		public void onServiceConnected(ComponentName name, IBinder binder) {
-			service  = ((PlayerService.PlayerBinder) binder).getService(); 
+			try {
+				service = ((PlayerService.PlayerBinder) binder).getService();
+			} catch (Exception e) {
+				Log.e(getClass().getSimpleName(), e.getMessage());
+			}
 		}
-		public void onServiceDisconnected(ComponentName name) {}
+
+		public void onServiceDisconnected(ComponentName name) {
+		}
 	};
 
 
