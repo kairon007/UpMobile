@@ -57,6 +57,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -285,12 +286,11 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 					view.setAdapter(adapterLibrary);
 					break;
 				}
-				FillLibraryTab task = new FillLibraryTab();
-				task.execute(contentFile);
-				ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
-				adapterLibrary = new LibraryTabAdapter(0, arrayMusic, activity);
+				adapterLibrary = new LibraryTabAdapter(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
+				FillLibraryTab task = new FillLibraryTab();
+				task.execute(contentFile);
 				break;
 			default:
 				break;
@@ -304,30 +304,19 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		return view;
 	}
 
-	private class FillLibraryTab extends AsyncTask<File, Void, ArrayList<MusicData>> {
-
-		public FillLibraryTab() {
-		}
+	private class FillLibraryTab extends AsyncTask<File, Void, Void> {
 
 		@Override
-		protected ArrayList<MusicData> doInBackground(File... params) {
-			ArrayList<MusicData> arrayMusic = new ArrayList<MusicData>();
+		protected Void doInBackground(File... params) {
 			File[] files = params[0].listFiles();
 			for (int i = 0; i < files.length; i++) {
 				String string = files[i].getName();
 				if (string.endsWith(".mp3")) {
 					MusicData musicData = new MusicData(files[i]);
-					arrayMusic.add(musicData);
+					adapterLibrary.add(musicData);
 				}
 			}
-			return arrayMusic;
-		}
-
-		@Override
-		protected void onPostExecute(ArrayList<MusicData> result) {
-			for (MusicData musicData : result) {
-				adapterLibrary.add(musicData);
-			}
+			return null;
 		}
 	}
 

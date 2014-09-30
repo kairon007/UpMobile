@@ -3,16 +3,13 @@ package org.kreed.musicdownloader.ui.adapter;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.kreed.musicdownloader.Constans;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,9 +38,9 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		}
 	};
 
-	public LibraryTabAdapter(int resource, ArrayList<MusicData> arrayMusic, MainActivity activity) {
+	public LibraryTabAdapter(int resource, MainActivity activity) {
 		super(activity, resource);
-		mObjects = arrayMusic;
+		mObjects = new ArrayList<MusicData>();
 		this.activity = activity;
 		inflater = LayoutInflater.from(activity);
 		textFilter = (EditText) activity.findViewById(R.id.filter_text);
