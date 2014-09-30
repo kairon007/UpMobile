@@ -8,8 +8,14 @@ import org.cmc.music.common.ID3v1Genre;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
 import org.kreed.musicdownloader.DBHelper;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -66,14 +72,15 @@ public class MusicData {
 					songAlbum = metadata.getAlbum();
 				}
 				if (metadata.getSongTitle() != null) {
-					int index = metadata.getSongTitle().indexOf('/');
 					fileUri = musicFile.getAbsolutePath();
-					if (index != -1) {
-						songTitle = metadata.getSongTitle().substring(0, index);
-						songDuration = metadata.getSongTitle().substring(index + 1);
-					} else {
-						songTitle = metadata.getSongTitle();
+					songTitle = metadata.getSongTitle();
+					int seconds = 0;
+					try {
+						seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
+					songDuration = Util.formatTimeSimple(seconds * 1000);
 				}
 				if (metadata.containsKey("genre_id")) {
 					int genre_id = (Integer) metadata.get("genre_id");

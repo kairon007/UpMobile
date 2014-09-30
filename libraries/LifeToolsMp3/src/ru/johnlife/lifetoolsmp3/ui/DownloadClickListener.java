@@ -10,6 +10,8 @@ import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
@@ -151,11 +153,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							if (null == src_set) return;
 							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 							metadata.clearPictureList();
-							if (isFullAction()) {
-								metadata.setSongTitle(songTitle);
-							} else {
-								metadata.setSongTitle(songTitle + '/' + duration);
-							}
+							metadata.setSongTitle(songTitle);
 							metadata.setArtist(songArtist);
 							if (null != cover && useCover) {
 								ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
