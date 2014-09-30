@@ -28,6 +28,8 @@ public class SongArrayHolder {
 	private boolean isDirectoryChooserOpened = false;
 	private String directoryChooserPath;
 	private boolean isSearchExecute = false;
+	private boolean isNewDirectoryOpened = false;
+	private String newDirName;
 
 	public static SongArrayHolder getInstance() {
 		if (instance == null) {
@@ -156,6 +158,9 @@ public class SongArrayHolder {
 		if (isSpinerPathOpened && null != view.getPlayer()) {
 			view.getPlayer().showSpinerPath();
 		}
+		if (isNewDirectoryOpened) {
+			view.getPlayer().createNewDirDialog(newDirName);
+		}
 	}
 
 	public boolean isSearchExecute() {
@@ -164,5 +169,13 @@ public class SongArrayHolder {
 
 	public void setSearchExecute(boolean isSearchExecute) {
 		this.isSearchExecute = isSearchExecute;
+	}
+	
+	public void setIsNewDirectoryOpened(boolean isNewDirectoryOpened) {
+		this.isNewDirectoryOpened = isNewDirectoryOpened;
+	}
+	
+	public void setNewDirName(String name) {
+		newDirName = name;
 	}
 }

@@ -13,9 +13,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.os.Environment;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,6 @@ public class DirectoryChooserDialog {
 		m_context = context;
 		m_sdcardDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 		m_chosenDirectoryListener = chosenDirectoryListener;
-
 		try {
 			m_sdcardDirectory = new File(m_sdcardDirectory).getCanonicalPath();
 		} catch (IOException ioe) {
@@ -187,23 +188,8 @@ public class DirectoryChooserDialog {
 		newDirButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final EditText input = new EditText(m_context);
-
 				// Show new folder name input dialog
-				new AlertDialog.Builder(m_context).setTitle("New folder name").setView(input).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						Editable newDir = input.getText();
-						String newDirName = newDir.toString();
-						// Create new directory
-						if (createSubDir(m_dir + "/" + newDirName)) {
-							// Navigate into the new directory
-							m_dir += "/" + newDirName;
-							updateDirectory();
-						} else {
-							Toast.makeText(m_context, "Failed to create '" + newDirName + "' folder", Toast.LENGTH_SHORT).show();
-						}
-					}
-				}).setNegativeButton("Cancel", null).show();
+				createNewDirDialog(null);
 			}
 		});
 		
@@ -232,6 +218,38 @@ public class DirectoryChooserDialog {
 		return dialogBuilder;
 	}
 
+	public void createNewDirDialog(String name) {
+		SongArrayHolder.getInstance().setIsNewDirectoryOpened(true);
+		final EditText input = new EditText(m_context);
+		input.addTextChangedListener(new CustomWatcher(input));
+		if (null != name) {
+			SongArrayHolder.getInstance().setNewDirName(name);
+			input.setText(name);
+		} else {
+			SongArrayHolder.getInstance().setNewDirName("");
+		}
+		new AlertDialog.Builder(m_context).setTitle("New folder name").setView(input).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				Editable newDir = input.getText();
+				String newDirName = newDir.toString();
+				// Create new directory
+				if (createSubDir(m_dir + "/" + newDirName)) {
+					// Navigate into the new directory
+					m_dir += "/" + newDirName;
+					updateDirectory();
+				} else {
+					Toast.makeText(m_context, "Failed to create '" + newDirName + "' folder", Toast.LENGTH_SHORT).show();
+				}
+			}
+		}).setNegativeButton("Cancel", null).setOnDismissListener(new OnDismissListener() {
+			
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);				
+			}
+		}).show();
+	}
+	
 	private void updateDirectory() {
 		m_subdirs.clear();
 		m_subdirs.addAll(getDirectories(m_dir));
@@ -255,5 +273,25 @@ public class DirectoryChooserDialog {
 				return v;
 			}
 		};
+	}
+	
+	private class CustomWatcher implements TextWatcher {
+		
+		private EditText linkToInput;
+		
+		public CustomWatcher(EditText linkToInput) {
+			this.linkToInput = linkToInput;
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			SongArrayHolder.getInstance().setNewDirName(linkToInput.getText().toString());
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {}
 	}
 }

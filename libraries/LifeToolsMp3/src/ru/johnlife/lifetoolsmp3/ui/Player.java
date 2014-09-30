@@ -71,6 +71,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
 	private boolean useCover = true;
+	DirectoryChooserDialog directoryChooserDialog;
 
 	public void setSongId(Integer songId) {
 		this.songId = songId;
@@ -166,7 +167,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void createDirectoryChooserDialog() {
 		SongArrayHolder.getInstance().setDirectoryChooserOpened(true);
-		DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
+		directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
 			@Override
 			public void onChosenDir(String chDir) {
 				textPath.setText(chDir);
@@ -178,6 +179,10 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		} else {
 			directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(view.getContext()));
 		}
+	}
+	
+	public void createNewDirDialog(String name) {
+		directoryChooserDialog.createNewDirDialog(name);
 	}
 
 	public void createLyricsDialog(final String title, final String artist, String lyrics) {
