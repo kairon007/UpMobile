@@ -60,9 +60,10 @@ public class MusicData {
 			if (src_set != null) {
 				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 				if (metadata.isEmpty()) {
-					String[] nameFileArray = musicFile.getName().split(" - ");
-					songTitle = nameFileArray[0];
-					songArtist = nameFileArray[1];
+					String nameFile = musicFile.getName().split(".mp3")[0];
+					String[] nameFileArray = nameFile.split(" - ");
+					songTitle = nameFileArray[1];
+					songArtist = nameFileArray[0];
 					metadata.setSongTitle(songTitle);
 					metadata.setArtist(songArtist);
 					int seconds = 0;
@@ -90,19 +91,19 @@ public class MusicData {
 					}
 				} else {
 					songArtist = metadata.getArtist();
+					songTitle = metadata.getSongTitle();
 					songBitmap = DBHelper.getArtworkImage(2, metadata);
+					int seconds = 0;
+					try {
+						seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					songDuration = Util.formatTimeSimple(seconds * 1000);
 					if (null != metadata.getAlbum()) {
 						songAlbum = metadata.getAlbum();
 					}
-					if (metadata.getSongTitle() != null) {
-						int seconds = 0;
-						try {
-							seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						songDuration = Util.formatTimeSimple(seconds * 1000);
-					}
+
 					if (metadata.containsKey("genre_id")) {
 						int genre_id = (Integer) metadata.get("genre_id");
 						songGenre = ID3v1Genre.get(genre_id);
