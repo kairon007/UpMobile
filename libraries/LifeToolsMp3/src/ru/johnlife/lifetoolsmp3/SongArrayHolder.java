@@ -28,6 +28,7 @@ public class SongArrayHolder {
 	private boolean isSearchExecute = false;
 	private boolean isNewDirectoryOpened = false;
 	private String newDirName;
+	private int listViewPosition;
 
 	public static SongArrayHolder getInstance() {
 		if (instance == null) {
@@ -69,8 +70,9 @@ public class SongArrayHolder {
 				Song song = searchView.getResultAdapter().getItem(i);
 				results.add(song);
 			}
-			SongArrayHolder.getInstance().setSongName(searchView.getSearchField().getText().toString());
-			SongArrayHolder.getInstance().setTaskIterator(searchView.getTaskIterator());
+			setListViewPosition(searchView.getListView().getFirstVisiblePosition());
+			setSongName(searchView.getSearchField().getText().toString());
+			setTaskIterator(searchView.getTaskIterator());
 		}
 	}
 
@@ -168,5 +170,13 @@ public class SongArrayHolder {
 
 	public void setNewDirName(String name) {
 		newDirName = name;
+	}
+
+	public int getListViewPosition() {
+		return listViewPosition;
+	}
+
+	public void setListViewPosition(int listViewPosition) {
+		this.listViewPosition = listViewPosition;
 	}
 }

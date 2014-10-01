@@ -182,6 +182,7 @@ public abstract class OnlineSearchView extends View {
 				setCurrentName(SongArrayHolder.getInstance().getSongName().toString());
 				getResultAdapter().notifyDataSetChanged();
 				setSearchStopped(false);
+				listView.setSelection(SongArrayHolder.getInstance().getListViewPosition());
 			}
 		}
 		SongArrayHolder.getInstance().restoreState(this);
@@ -642,5 +643,9 @@ public abstract class OnlineSearchView extends View {
 
 	public void setExtraSearch(String extraSearch) {
 		this.extraSearch = extraSearch;
+	}
+
+	public ListView getListView() {
+		return listView;
 	}
 }
