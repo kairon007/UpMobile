@@ -268,7 +268,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		}
 	}
 	
-	@SuppressLint("NewApi") 
 	private void play() {
 		stopDownloadSong();
 		stop();
