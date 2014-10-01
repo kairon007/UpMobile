@@ -46,6 +46,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -68,6 +69,8 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public class MainActivity extends Activity {
 
+	private static final String SAVE_BUTTONPLAY_PROGRESS = "SAVE_BUTTONPLAY_PROGRESS";
+	private static final String SAVE_SEEKBAR_PROGRESS = "SAVE_SEEKBAR_PROGRESS";
 	private final static int DELETE = 1;
 	private final static int EDIT_TAG = 2;
 
@@ -319,11 +322,10 @@ public class MainActivity extends Activity {
 		}
 		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
-		if (in.getBoolean(Constans.SEARCH_BOX_VISIBLE))
-			if (null != player) {
-				player.setSongProgressIndeterminate(in.getBoolean(Constans.SAVE_PROGRESS, false));
-				player.setButtonProgressVisibility(in.getInt(Constans.SAVE_PROGRESS, View.VISIBLE));
-			}
+		if (null != player) {
+			player.setSongProgressIndeterminate(in.getBoolean(SAVE_SEEKBAR_PROGRESS, false));
+			player.setButtonProgressVisibility(in.getInt(SAVE_BUTTONPLAY_PROGRESS, View.VISIBLE));
+		}
 		super.onRestoreInstanceState(in);
 	}
 
@@ -342,8 +344,9 @@ public class MainActivity extends Activity {
 			out.putString(Constans.FILTER_TEXT_LIBRARY, textFilterLibrary);
 		}
 		if (null != player) {
-			out.putBoolean(Constans.SAVE_PROGRESS, player.isSongProgressIndeterminate());
-			out.putInt(Constans.SAVE_PROGRESS, player.getButtonProgressVisibility());
+			out.putBoolean(SAVE_SEEKBAR_PROGRESS, player.isSongProgressIndeterminate());
+			Log.d("logd", String.valueOf(player.isSongProgressIndeterminate()));
+			out.putInt(SAVE_BUTTONPLAY_PROGRESS, player.getButtonProgressVisibility());
 		}
 		if (lastPage == 0) { 
 			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
