@@ -28,11 +28,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -355,6 +355,8 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void onPrepared() {
 		spinnerVisible = false;
+		rowLirycs.removeView(tvLyrics);
+		rowTags.removeView(tvTags);
 		spinner.setVisibility(View.GONE);
 		boxPlayer.setVisibility(View.VISIBLE);
 		buttonVisible = true;
@@ -436,8 +438,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 		if (result && prepared) {
-			rowLirycs.removeView(tvLyrics);
-			rowTags.removeView(tvTags);
 			mediaPlayer.start();
 			mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				@Override
