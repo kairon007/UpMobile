@@ -52,13 +52,11 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -259,6 +257,15 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			adapterLibrary.updateItem(i, musicData);
 		}
 	}
+	
+	public void removeDeletedData(String filePath) {
+		for (int i = 0; i < adapterLibrary.getCount(); i++) {
+			MusicData data = adapterLibrary.getItem(i);
+			if(filePath.equals(data.getFileUri())){
+				adapterLibrary.remove(data);
+			}
+		}
+	}
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
@@ -290,7 +297,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				adapterLibrary = new LibraryTabAdapter(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
-				FillLibraryTab task = new FillLibraryTab();
+				FillLibraryTask task = new FillLibraryTask();
 				task.execute(contentFile);
 				break;
 			default:
@@ -305,7 +312,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		return view;
 	}
 
-	private class FillLibraryTab extends AsyncTask<File, Void, Void> {
+	private class FillLibraryTask extends AsyncTask<File, Void, Void> {
 
 		@Override
 		protected Void doInBackground(File... params) {

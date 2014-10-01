@@ -37,6 +37,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.FileObserver;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;
@@ -123,6 +125,15 @@ public class MainActivity extends Activity {
 	public static boolean isAlphaNumeric(String input) {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
+	
+	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX, FileObserver.DELETE) {
+
+		@Override
+		public void onEvent(int event, String file) {
+			String filePath = Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX + file;
+			mPagerAdapter.removeDeletedData(filePath);
+		}
+	};
 
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
@@ -198,10 +209,7 @@ public class MainActivity extends Activity {
 		if (android.os.Build.VERSION.SDK_INT < 11) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
-		File file = new File(BaseConstants.DOWNLOAD_DIR);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
+		observer.startWatching();
 		telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -284,11 +292,7 @@ public class MainActivity extends Activity {
 		mPagerAdapter.notifyDataSetChanged();
 		loadTabOrder();
 	}
-
-	public void onMediaChange() {
-		mPagerAdapter.invalidateData();
-	}
-
+	
 	@Override
 	public void onStart() {
 		super.onStart();
