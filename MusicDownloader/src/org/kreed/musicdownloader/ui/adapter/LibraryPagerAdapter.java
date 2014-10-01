@@ -259,6 +259,15 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			adapterLibrary.updateItem(i, musicData);
 		}
 	}
+	
+	public void removeDeletedData(String filePath) {
+		for (int i = 0; i < adapterLibrary.getCount(); i++) {
+			MusicData data = adapterLibrary.getItem(i);
+			if(filePath.equals(data.getFileUri())){
+				adapterLibrary.remove(data);
+			}
+		}
+	}
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {

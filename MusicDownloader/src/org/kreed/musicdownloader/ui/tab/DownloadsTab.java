@@ -350,7 +350,11 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	}
 
 	public void setFilter(String text) {
-		adapter.getFilter().filter(text);
+		try {
+			adapter.getFilter().filter(text);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void recreateAdaper() {
