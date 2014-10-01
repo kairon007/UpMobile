@@ -281,7 +281,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				return downloadView;
 			case MediaUtils.TYPE_LIBRARY:
 				File contentFile = new File(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX);
-				long contentFileLength = contentFile.length();
+				long contentFileLength = contentFile.listFiles().length;
 				if (contentFileLength == 0) {
 					view = (ListView) inflater.inflate(R.layout.listview, null);
 					view.setAdapter(adapterLibrary);
