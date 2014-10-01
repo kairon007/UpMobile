@@ -54,20 +54,23 @@
                 android:orientation="horizontal" >
 
                 <RelativeLayout
-                    android:layout_width="@dimen/size_cover"
-                    android:layout_height="@dimen/size_cover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_middle_layout"
                     android:layout_marginRight="@dimen/padding_middle_layout"
-                    android:layout_marginTop="@dimen/padding_middle" >
+                    android:layout_marginTop="@dimen/padding_middle" 
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/cover"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:adjustViewBounds="true"
                         android:background="#1000"
+                        android:maxHeight="@dimen/size_cover"
+                        android:maxWidth="@dimen/size_cover"
                         android:scaleType="centerInside"
                         android:src="@drawable/default_cover" />
 
@@ -81,156 +84,150 @@
                         android:visibility="visible" />
                 </RelativeLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <FrameLayout
+                    android:id="@+id/wait_song_box"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal" >
+                    android:layout_weight="2"
+                    android:minHeight="@dimen/size_spinner" >
 
-                    <FrameLayout
-                        android:id="@+id/wait_song_box"
+                    <ProgressBar
+                        android:id="@+id/spinner"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="@dimen/size_spinner"
+                        android:layout_height="@dimen/size_spinner"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/padding_spinner" />
+
+                    <LinearLayout
+                        android:id="@+id/box_player"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:minHeight="@dimen/size_spinner" >
+                        android:orientation="vertical" >
 
-                        <ProgressBar
-                            android:id="@+id/spinner"
-                            style="?android:attr/progressBarStyle"
-                            android:layout_width="@dimen/size_spinner"
-                            android:layout_height="@dimen/size_spinner"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="@dimen/padding_spinner" />
+                        <ImageButton
+                            android:id="@+id/pause"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:background="@drawable/clear_clickable"
+                            android:src="@drawable/pause"
+                            android:visibility="visible" />
 
                         <LinearLayout
-                            android:id="@+id/box_player"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_weight="1"
                             android:orientation="vertical" >
 
-                            <ImageButton
-                                android:id="@+id/pause"
+                            <TextView
+                                android:id="@+id/time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_weight="1"
-                                android:background="@drawable/clear_clickable"
-                                android:src="@drawable/pause"
-                                android:visibility="visible" />
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:gravity="center"
+                                android:text="00:00"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@android:color/darker_gray"
+                                android:textSize="@dimen/dialog_text_size_btn" />
 
-                            <LinearLayout
+                            <ProgressBar
+                                android:id="@+id/progress"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:layout_weight="1"
-                                android:orientation="vertical" >
-
-                                <TextView
-                                    android:id="@+id/time"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="bottom|center_horizontal"
-                                    android:gravity="center"
-                                    android:text="00:00"
-                                    android:textAppearance="?android:attr/textAppearanceMedium"
-                                    android:textColor="@android:color/darker_gray"
-                                    android:textSize="@dimen/dialog_text_size_btn" />
-
-                                <ProgressBar
-                                    android:id="@+id/progress"
-                                    style="?android:attr/progressBarStyleHorizontal"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/size_progress"
-                                    android:layout_gravity="center"
-                                    android:indeterminate="true"
-                                    android:padding="@dimen/padding_middle" />
-                            </LinearLayout>
+                                android:layout_height="@dimen/size_progress"
+                                android:layout_gravity="center"
+                                android:indeterminate="true"
+                                android:padding="@dimen/padding_middle" />
                         </LinearLayout>
-                    </FrameLayout>
+                    </LinearLayout>
+                </FrameLayout>
 
-                    <TableLayout
+                <TableLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:animateLayoutChanges="true" >
+
+                    <TableRow
+                        android:id="@+id/row_lyrics"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:animateLayoutChanges="true" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:animateLayoutChanges="true"
+                        android:background="@drawable/selectable_item_bg"
+                        android:clickable="true" >
 
-                        <TableRow
-                            android:id="@+id/row_lyrics"
+                        <ImageButton
+                            android:id="@+id/button_show_lyrics"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:animateLayoutChanges="true"
-                            android:background="@drawable/selectable_item_bg"
-                            android:clickable="true" >
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:src="@drawable/lyrics_icon" />
 
-                            <ImageButton
-                                android:id="@+id/button_show_lyrics"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:background="@android:color/transparent"
-                                android:clickable="false"
-                                android:src="@drawable/lyrics_icon" />
+                        <TextView
+                            android:id="@+id/tv_show_lyrics"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:maxLines="2"
+                            android:text="@string/show_lyrics"
+                            android:textSize="@dimen/dialog_text_size_btn" />
+                    </TableRow>
 
-                            <TextView
-                                android:id="@+id/tv_show_lyrics"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:maxLines="2"
-                                android:text="@string/show_lyrics"
-                                android:textSize="@dimen/dialog_text_size_btn" />
-                        </TableRow>
+                    <TableRow
+                        android:id="@+id/tableRow1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
 
-                        <TableRow
-                            android:id="@+id/tableRow1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/size_very_small"
+                            android:layout_marginBottom="@dimen/padding_middle"
+                            android:layout_marginLeft="@dimen/padding_middle_layout"
+                            android:layout_marginTop="@dimen/padding_little"
+                            android:background="@android:color/darker_gray" />
 
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/size_very_small"
-                                android:layout_marginBottom="@dimen/padding_middle"
-                                android:layout_marginLeft="@dimen/padding_middle_layout"
-                                android:layout_marginTop="@dimen/padding_little"
-                                android:background="@android:color/darker_gray" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/size_very_small"
+                            android:layout_marginBottom="@dimen/padding_middle"
+                            android:layout_marginRight="@dimen/padding_middle_layout"
+                            android:layout_marginTop="@dimen/padding_little"
+                            android:background="@android:color/darker_gray" />
+                    </TableRow>
 
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/size_very_small"
-                                android:layout_marginBottom="@dimen/padding_middle"
-                                android:layout_marginRight="@dimen/padding_middle_layout"
-                                android:layout_marginTop="@dimen/padding_little"
-                                android:background="@android:color/darker_gray" />
-                        </TableRow>
+                    <TableRow
+                        android:id="@+id/row_tags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:animateLayoutChanges="true"
+                        android:background="@drawable/selectable_item_bg"
+                        android:clickable="true" >
 
-                        <TableRow
-                            android:id="@+id/row_tags"
+                        <ImageButton
+                            android:id="@+id/button_edit_mp3_tag"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:animateLayoutChanges="true"
-                            android:background="@drawable/selectable_item_bg"
-                            android:clickable="true" >
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:src="@android:drawable/ic_menu_edit" />
 
-                            <ImageButton
-                                android:id="@+id/button_edit_mp3_tag"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:background="@android:color/transparent"
-                                android:clickable="false"
-                                android:src="@android:drawable/ic_menu_edit" />
-
-                            <TextView
-                                android:id="@+id/tv_edit_mp3_tag"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:maxLines="2"
-                                android:text="@string/edit_mp3_tags"
-                                android:textSize="@dimen/dialog_text_size_btn" />
-                        </TableRow>
-                    </TableLayout>
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_edit_mp3_tag"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:maxLines="2"
+                            android:text="@string/edit_mp3_tags"
+                            android:textSize="@dimen/dialog_text_size_btn" />
+                    </TableRow>
+                </TableLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -240,78 +237,32 @@
                 android:layout_marginRight="@dimen/padding_middle_layout"
                 android:layout_marginTop="@dimen/padding_middle"
                 android:layout_weight="1"
-                android:orientation="vertical" >
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/spiner_path_download"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible" >
+                    android:layout_marginLeft="@dimen/padding_middle"
+                    android:text="@string/header_download"
+                    android:textSize="@dimen/text_size_middle" />
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="@dimen/size_very_small"
-                        android:layout_marginLeft="@dimen/padding_middle"
-                        android:layout_marginTop="@dimen/padding_middle"
-                        android:background="@android:color/transparent" />
-
-                    <TextView
-                        android:id="@+id/spiner_path_download"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/padding_middle_layout"
-                        android:layout_marginLeft="@dimen/padding_middle"
-                        android:layout_weight="1"
-                        android:text="@string/header_download"
-                        android:textSize="@dimen/text_size_middle" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/path_download"
+                <TextView
+                    android:id="@+id/text_path_download"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible" >
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="@dimen/padding_middle"
+                    android:background="@drawable/selectable_item_bg"
+                    android:drawableRight="@drawable/threedot"
+                    android:ellipsize="start"
+                    android:gravity="right|center"
+                    android:singleLine="true"
+                    android:text="@string/header_download"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/dialog_text_size_btn" />
 
-                    <FrameLayout
-                        android:id="@+id/text_path_change"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/default_size_element"
-                        android:background="@drawable/selectable_item_bg"
-                        android:clickable="true" >
-
-                        <TextView
-                            android:id="@+id/text_path_download"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginBottom="@dimen/padding_middle_layout"
-                            android:layout_marginLeft="@dimen/padding_middle"
-                            android:layout_marginRight="@dimen/padding_big"
-                            android:layout_marginTop="@dimen/padding_middle"
-                            android:gravity="left"
-                            android:text="@string/header_download"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@android:color/darker_gray"
-                            android:textSize="@dimen/dialog_text_size_btn" />
-
-                        <ImageView
-                            android:id="@+id/imageView1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right|center_vertical"
-                            android:src="@drawable/threedot" />
-                    </FrameLayout>
-
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="@dimen/size_very_small"
-                        android:layout_marginBottom="@dimen/padding_middle_layout"
-                        android:layout_marginLeft="@dimen/padding_middle_layout"
-                        android:layout_marginRight="@dimen/padding_middle_layout"
-                        android:layout_marginTop="@dimen/padding_middle_layout"
-                        android:background="@android:color/transparent" />
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

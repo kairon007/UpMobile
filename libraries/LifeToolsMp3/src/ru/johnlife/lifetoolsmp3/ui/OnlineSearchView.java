@@ -533,7 +533,6 @@ public abstract class OnlineSearchView extends View {
 		player.setTitle(artist + " - " + title);
 	}
 	
-	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(Bundle args) {
 		stopSystemPlayer(getContext());
 		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());

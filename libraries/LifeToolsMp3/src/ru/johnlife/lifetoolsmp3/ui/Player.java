@@ -45,7 +45,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	private Bitmap coverBitmap;
 	private View view;
 	private LinearLayout boxPlayer;
-	private FrameLayout textPathChange;
 	private ProgressBar coverProgress;
 	private ProgressBar spinner;
 	private ProgressBar progress;
@@ -135,7 +134,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				createId3dialog(arrayField, true, false);
 			}
 		});
-		textPathChange.setOnClickListener(new View.OnClickListener() {
+		textPath.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				createDirectoryChooserDialog();
@@ -157,7 +156,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		coverImage = (ImageView) view.findViewById(R.id.cover);
 		coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
 		textPath = (TextView) view.findViewById(R.id.text_path_download);
-		textPathChange = (FrameLayout) view.findViewById(R.id.text_path_change);
 		boxPlayer = (LinearLayout) view.findViewById(R.id.box_player);
 		rowTags = (TableRow) view.findViewById(R.id.row_tags);
 		rowLirycs = (TableRow) view.findViewById(R.id.row_lyrics);
