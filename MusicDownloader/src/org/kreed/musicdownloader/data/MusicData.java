@@ -54,21 +54,17 @@ public class MusicData {
 	}
 
 	public MusicData(File musicFile) {
+		fileUri = musicFile.getAbsolutePath();
 		try {
 			MusicMetadataSet src_set = new MyID3().read(musicFile);
 			if (src_set != null) {
 				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 				if (metadata.isEmpty()) {
-					return;
-				}
-				songArtist = metadata.getArtist();
-				songBitmap = DBHelper.getArtworkImage(2, metadata);
-				if (null != metadata.getAlbum()) {
-					songAlbum = metadata.getAlbum();
-				}
-				if (metadata.getSongTitle() != null) {
-					fileUri = musicFile.getAbsolutePath();
-					songTitle = metadata.getSongTitle();
+					String[] nameFileArray = musicFile.getName().split(" - ");
+					songTitle = nameFileArray[0];
+					songArtist = nameFileArray[1];
+					metadata.setSongTitle(songTitle);
+					metadata.setArtist(songArtist);
 					int seconds = 0;
 					try {
 						seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
@@ -76,14 +72,44 @@ public class MusicData {
 						e.printStackTrace();
 					}
 					songDuration = Util.formatTimeSimple(seconds * 1000);
-				}
-				if (metadata.containsKey("genre_id")) {
-					int genre_id = (Integer) metadata.get("genre_id");
-					songGenre = ID3v1Genre.get(genre_id);
+					if (metadata.containsKey("genre_id")) {
+						int genre_id = (Integer) metadata.get("genre_id");
+						songGenre = ID3v1Genre.get(genre_id);
+					} else {
+						songGenre = "unknown";
+					}
+					File dst = new File(musicFile.getParentFile(), musicFile.getName() + "-1");
+					try {
+						new MyID3().write(musicFile, dst, src_set, metadata);
+						dst.renameTo(musicFile);
+					} catch (Exception e) {
+						android.util.Log.d("log", "don't write music metadata from file. " + e);
+					} finally {
+						if (dst.exists())
+							dst.delete();
+					}
 				} else {
-					songGenre = "unknown";
+					songArtist = metadata.getArtist();
+					songBitmap = DBHelper.getArtworkImage(2, metadata);
+					if (null != metadata.getAlbum()) {
+						songAlbum = metadata.getAlbum();
+					}
+					if (metadata.getSongTitle() != null) {
+						int seconds = 0;
+						try {
+							seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						songDuration = Util.formatTimeSimple(seconds * 1000);
+					}
+					if (metadata.containsKey("genre_id")) {
+						int genre_id = (Integer) metadata.get("genre_id");
+						songGenre = ID3v1Genre.get(genre_id);
+					} else {
+						songGenre = "unknown";
+					}
 				}
-			} else {
 			}
 		} catch (IOException e) {
 		}
