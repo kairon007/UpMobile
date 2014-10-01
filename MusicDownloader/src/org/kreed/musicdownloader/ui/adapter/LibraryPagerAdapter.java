@@ -314,7 +314,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				String string = files[i].getName();
 				if (string.endsWith(".mp3")) {
 					final MusicData musicData = new MusicData(files[i]);
-					if (null != musicData.getFileUri()) {
+					if (musicData.isDownloaded()) {
 						mActivity.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
