@@ -546,8 +546,8 @@ public class MainActivity extends Activity {
 		}
 
 	}
-
-	@SuppressLint("NewApi") 
+	
+	@SuppressLint("NewApi")
 		public void showEditDialog(boolean forse) {
 		final File file = new File(music.getFileUri());
 		editor = new MP3Editor(this, forse);
@@ -595,12 +595,14 @@ public class MainActivity extends Activity {
 			}
 
 		});
-		builder.setOnDismissListener(new OnDismissListener() {
-			public void onDismiss(DialogInterface dialog) {
-				dialog.dismiss();
-				showDialog = false;
-			}
-		});
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			builder.setOnDismissListener(new OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					dialog.dismiss();
+					showDialog = false;
+				}
+			});
+		}
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override

@@ -176,7 +176,7 @@ public class MusicData {
 			m.clearPictureList();
 			MusicMetadata metadata = new MusicMetadata("");
 			metadata.setArtist(m.getArtist());
-			metadata.setSongTitle(m.getSongTitle() + "/" + songDuration);
+			metadata.setSongTitle(m.getSongTitle());
 			metadata.setGenre(m.getGenre());
 			metadata.setAlbum(m.getAlbum());
 			File temp = new File(file.getParent(), file.getName() + ".temp");
@@ -201,7 +201,7 @@ public class MusicData {
 			if (null != songAlbum && !songAlbum.equals("")) {
 				metadata.setAlbum(songAlbum);
 			}
-			metadata.setSongTitle(songTitle + "/" + songDuration);
+			metadata.setSongTitle(songTitle);
 			metadata.setArtist(songArtist);
 			newName = songTitle + " - " + songArtist + ".mp3";
 			newFile = new File(file.getParentFile(), newName);
