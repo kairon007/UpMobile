@@ -297,17 +297,15 @@ public abstract class OnlineSearchView extends View {
 					.setId(position)
 					.setIcon(R.drawable.fallback_cover)
 					.setButtonVisible(fullAction ? false : true);
-			// TODO: remove double-cacheing
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {
 							builder.setIcon(bmp);
-								if (bmp == null) {
-									builder.setIcon(R.drawable.fallback_cover);
-								}
-//							((RemoteSong) song).setSongCover(bmp);
+							if (bmp == null) {
+								builder.setIcon(R.drawable.fallback_cover);
+							}
 						}
 					}
 				});
@@ -485,14 +483,7 @@ public abstract class OnlineSearchView extends View {
 				Log.e(getClass().getSimpleName(), ex.getMessage());
 			}
 			if (getSettings().getIsCoversEnabled(context)) {
-				downloadSong.getCover(true, new OnBitmapReadyListener() {
-					@Override
-					public void onBitmapReady(Bitmap bmp) {
-						if (null != player) {
-							player.setCover(bmp);
-						}
-					}
-				});
+				player.setCoverFromSong(downloadSong);
 			} else {
 				player.hideCoverProgress();
 			}

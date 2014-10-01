@@ -5,8 +5,10 @@ import java.util.HashMap;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
@@ -28,7 +30,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -315,6 +316,16 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			coverImage.setImageBitmap(bmp);
 			coverBitmap = bmp;
 		}
+	}
+	
+	public void setCoverFromSong(RemoteSong song) {
+		song.getCover(true, new OnBitmapReadyListener() {
+			
+			@Override
+			public void onBitmapReady(Bitmap bmp) {
+				setCover(bmp);
+			}
+		});
 	}
 
 	public void hideCoverProgress() {
