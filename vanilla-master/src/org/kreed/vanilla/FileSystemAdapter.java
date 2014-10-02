@@ -307,7 +307,7 @@ public class FileSystemAdapter
 	public void onClick(View view)
 	{
 		int id = view.getId();
-		boolean arrowClicked = id == R.id.arrow;
+		boolean arrowClicked = id == R.id.btnDownload;
 		if (arrowClicked)
 			view = (View)view.getParent();
 		Intent intent = createData(view);
