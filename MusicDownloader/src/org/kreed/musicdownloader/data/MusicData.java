@@ -357,5 +357,4 @@ public class MusicData {
 	public int hashCode() {
 		return super.hashCode();
 	}
-
 }

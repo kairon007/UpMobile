@@ -23,7 +23,6 @@ package org.kreed.musicdownloader.ui.adapter;
  */
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.musicdownloader.Constans;
@@ -35,6 +34,7 @@ import org.kreed.musicdownloader.ballast.SortAdapter;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
+import org.kreed.musicdownloader.ui.tab.DownloadsTab.DownloadsAdapter;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
 import android.content.Context;
@@ -153,8 +153,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	private int currentType = -1;
 	private Context context;
 	public LibraryTabAdapter adapterLibrary = null;
-	private ArrayList<MusicData> array = new ArrayList<MusicData>();
-	private boolean isAdded;
 
 	/**
 	 * Create the LibraryPager.
@@ -241,7 +239,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	public void changeArrayMusicData(final MusicData musicData) {
 		if (null != adapterLibrary) {
 			adapterLibrary.add(musicData);
-			isAdded = true;
 		}
 
 	}
@@ -324,7 +321,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				String string = files[i].getName();
 				if (string.endsWith(".mp3")) {
 					final MusicData musicData = new MusicData(files[i]);
-					if (musicData.isDownloaded()) {
+					if (!DownloadsTab.getInstance().isDownloading(musicData)) {
 						mActivity.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {

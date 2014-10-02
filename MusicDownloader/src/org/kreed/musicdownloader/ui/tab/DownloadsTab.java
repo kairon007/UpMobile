@@ -33,7 +33,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private ListView listView;
 	private ProgressBar progress;
 	private DownloadsAdapter adapter;
-	private double progressDownload = 0.0;
 	private static DownloadsTab instance;
 	private View view;
 	private Activity activity;
@@ -42,7 +41,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private Long currentDownloadingID;
 	private ImageButton clearAll;
 	
-	private final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener	{
+	public final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener	{
 
 		private ArrayList<MusicData> mObjects;
 		private ArrayList<MusicData> mOriginalValues;
@@ -248,9 +247,17 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		}
 	}
 
+	public boolean isDownloading(MusicData song) {
+		if (null == adapter) return false;
+		for (int i = 0; i < adapter.getCount(); i++) {
+			MusicData current = adapter.getItem(i);
+			if (song.toString().equals(current.toString()) && !current.isDownloaded()) return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void insertProgress(double progress, long downloadId) {
-		this.progressDownload = progress;
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (adapter.getItem(i).getDownloadId() == downloadId) {
 					adapter.getItem(i).setDownloadProgress(progress);
@@ -371,5 +378,4 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			adapter.remove(musicData);
 		}
 	}
-	
 }
