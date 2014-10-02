@@ -11,20 +11,20 @@
 
 package mp3.music.player.us.loaders;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.provider.BaseColumns;
-import android.provider.MediaStore;
-import android.provider.MediaStore.Audio.AlbumColumns;
+import java.util.ArrayList;
+import java.util.List;
 
 import mp3.music.player.us.R;
 import mp3.music.player.us.model.Album;
 import mp3.music.player.us.utils.Lists;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.PreferenceUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.database.Cursor;
+import android.provider.BaseColumns;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AlbumColumns;
+import android.util.Log;
 
 /**
  * Used to query {@link MediaStore.Audio.Artists.Albums} and return the albums
@@ -109,7 +109,8 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
      * @param artistId The Id of the artist the albums belong to.
      */
     public static final Cursor makeArtistAlbumCursor(final Context context, final Long artistId) {
-        return context.getContentResolver().query(
+    	if (artistId == -1) return null;
+    	return context.getContentResolver().query(
                 MediaStore.Audio.Artists.Albums.getContentUri("external", artistId), new String[] {
                         /* 0 */
                         BaseColumns._ID,
