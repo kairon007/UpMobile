@@ -88,7 +88,7 @@
                         android:layout_height="0dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_weight="1"
-                        android:background="@drawable/clear_clickable"
+                        android:background="@drawable/selectable_item_bg"
                         android:src="@drawable/pause"
                         android:visibility="visible" />
 
