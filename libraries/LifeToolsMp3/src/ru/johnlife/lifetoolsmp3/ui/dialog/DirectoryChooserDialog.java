@@ -18,6 +18,7 @@ import android.content.DialogInterface.OnKeyListener;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +90,9 @@ public class DirectoryChooserDialog {
 
 		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
 			public void onClick(DialogInterface dialog, int item) {
-				m_dir += "/" + ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
+				String directory = (String)((AlertDialog) dialog).getListView().getAdapter().getItem(item);
+				if (directory.equals("")) return;
+				m_dir += "/" + directory;
 				updateDirectory();
 			}
 		}
@@ -212,6 +215,9 @@ public class DirectoryChooserDialog {
 
 		m_listAdapter = createListAdapter(listItems);
 
+		if (listItems.isEmpty()) {
+			m_listAdapter.add("");
+		}
 		dialogBuilder.setSingleChoiceItems(m_listAdapter, -1, onClickListener);
 		dialogBuilder.setCancelable(false);
 
@@ -255,6 +261,9 @@ public class DirectoryChooserDialog {
 		m_subdirs.addAll(getDirectories(m_dir));
 		titleText.setText(m_dir);
 		m_listAdapter.notifyDataSetChanged();
+		if (m_listAdapter.isEmpty()) {
+			m_listAdapter.add("");
+		}
 		SongArrayHolder.getInstance().setDirectoryChooserPath(m_dir);
 	}
 
