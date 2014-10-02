@@ -268,7 +268,7 @@ public abstract class OnlineSearchView extends View {
 		edit.commit();
 	}
 
-	public final class SongSearchAdapter extends ArrayAdapter<Song> {
+	public class SongSearchAdapter extends ArrayAdapter<Song> {
 
 		private LayoutInflater inflater;
 		private FrameLayout footer;
@@ -544,6 +544,7 @@ public abstract class OnlineSearchView extends View {
 				downloadClickListener.setUseAlbumCover(useCover);
 				downloadClickListener.downloadSond(artist, title, useCover);
 				player.cancel();
+				dialogDismisser.run();
 			}
 
 		});
