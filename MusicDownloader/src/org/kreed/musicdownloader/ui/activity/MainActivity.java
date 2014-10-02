@@ -107,6 +107,7 @@ public class MainActivity extends Activity {
 	private MP3Editor editor;
 	private ArrayList <String> mStrings;
 	private boolean showDialog = false;
+	private boolean useCover = false;
 
 	// -------------------------------------------------------------------------
 
@@ -323,7 +324,8 @@ public class MainActivity extends Activity {
 		if (null != uri) {
 			File musicUri = new File(uri);
 			music = new MusicData(musicUri);
-			showEditDialog(in.getBoolean(Constans.USE_COVER, false));
+			useCover = in.getBoolean(Constans.USE_COVER, false);
+			showEditDialog();
 		}
 		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
@@ -486,7 +488,10 @@ public class MainActivity extends Activity {
 			new DeleteTask().execute();
 			break;
 		case EDIT_TAG:
-			showEditDialog(false);
+			if (null != music.getSongBitmap()) {
+				useCover = true;
+			}
+			showEditDialog();
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -553,23 +558,16 @@ public class MainActivity extends Activity {
 	}
 	
 	@SuppressLint("NewApi")
-		public void showEditDialog(boolean forse) {
-		final File file = new File(music.getFileUri());
-		editor = new MP3Editor(this, forse);
+	public void showEditDialog() {
+		editor = new MP3Editor(this, useCover);
 		showDialog = true;
-		MusicData data = MusicData.getFromFile(file);
 		if (null != mStrings) {
 			String[] filds = mStrings.toArray(new String[mStrings.size()]);
 			editor.setStrings(filds);
 			mStrings = null;
 		} else {
-			String[] filds = { data.getSongArtist(), data.getSongTitle(), "" };
+			String[] filds = { music.getSongArtist(), music.getSongTitle(), "" };
 			editor.setStrings(filds);
-		}
-		if(null == data.getSongBitmap()) {
-			editor.setShowCover(false);
-		} else {
-			editor.setShowCover(true);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -580,20 +578,20 @@ public class MainActivity extends Activity {
 
 					@Override
 					protected Void doInBackground(Void... params) {
-						MusicData musicData = new MusicData(file);
 						String artistName = editor.getNewArtistName();
 						String albumTitle = editor.getNewAlbumTitle();
 						String songTitle = editor.getNewSongTitle();
 						boolean showCover = editor.useAlbumCover();
-						musicData.setUseCover(showCover);
+						music.setUseCover(showCover);
 						if (!editor.manipulateText() && showCover) {
 							cancel(true);
 							return null;
 						}
 						MusicData data = new MusicData(artistName, songTitle, null, null);
 						data.setSongAlbum(albumTitle);
-						musicData.rename(data);
-						notifyMediascanner(musicData);
+						observer.stopWatching();
+						music.rename(data);
+						notifyMediascanner(music);
 						showDialog = false;
 						return null;
 					}
@@ -627,6 +625,7 @@ public class MainActivity extends Activity {
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
+				observer.startWatching();
 				int i = getSelectedItem();
 				mPagerAdapter.updateMusicData(i, musicData);
 			}

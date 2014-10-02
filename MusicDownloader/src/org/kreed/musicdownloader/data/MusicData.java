@@ -161,7 +161,7 @@ public class MusicData {
 	}
 
 	public void rename(MusicData newTag) {
-		update(newTag, true);
+		update(newTag, false);
 	}
 
 	private void update(MusicData newTag, boolean flag) {
@@ -169,7 +169,7 @@ public class MusicData {
 		if (null != newTag.fileUri) {
 			fileUri = newTag.fileUri;
 		}
-		if (!newTag.useCover || !useCover) {
+		if (!useCover) {
 			if (null != songBitmap) {
 				switcher = true;
 			}
@@ -180,14 +180,18 @@ public class MusicData {
 		}
 		if (!newTag.songArtist.equals(songArtist)) {
 			songArtist = newTag.songArtist;
+			flag = true;
 		}
 		if (!newTag.songTitle.equals(songTitle)) {
 			songTitle = newTag.songTitle;
+			flag = true;
 		}
 		if (switcher) {
+			android.util.Log.d("log", "if switcher");
 			deleteCoverFromFile();
 		}
 		if (flag) {
+			android.util.Log.d("log", "if flag");
 			renameBoundFile();
 		}
 	}
@@ -239,7 +243,7 @@ public class MusicData {
 			file.delete();
 		}
 	}
-	
+
 	public boolean isDownloaded() {
 		if (null != fileUri || downloadProgress == -1.0 || downloadProgress > 99.0) {
 			return true;
@@ -360,4 +364,5 @@ public class MusicData {
 	public int hashCode() {
 		return super.hashCode();
 	}
+
 }
