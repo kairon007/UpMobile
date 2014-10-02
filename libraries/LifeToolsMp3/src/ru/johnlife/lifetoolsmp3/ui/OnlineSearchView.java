@@ -40,7 +40,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -528,7 +527,7 @@ public abstract class OnlineSearchView extends View {
 	
 	public Dialog createStreamDialog(Bundle args) {
 		stopSystemPlayer(getContext());
-		AlertDialog.Builder b = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.Dialog)).setView(player.getView());
+		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
@@ -567,7 +566,6 @@ public abstract class OnlineSearchView extends View {
 				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(android.R.color.darker_gray));
 				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-					android.util.Log.d("log", "hoop");
 					int color = getResources().getColor(R.color.window_background_black);
 					((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(color);
 					((AlertDialog)dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(color);
