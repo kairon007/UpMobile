@@ -181,6 +181,7 @@ public class MainActivity extends Activity {
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
+		Advertisement.onDestroy(this);
 		super.onDestroy();
 	}
 
@@ -567,6 +568,8 @@ public class MainActivity extends Activity {
 		}
 		if(null == data.getSongBitmap()) {
 			editor.setShowCover(false);
+		} else {
+			editor.setShowCover(true);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
