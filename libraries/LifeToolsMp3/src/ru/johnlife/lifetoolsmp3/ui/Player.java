@@ -52,8 +52,8 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	private ProgressBar progress;
 	private ImageButton button;
 	private ImageView coverImage;
-	private TableRow rowLirycs;
-	private TableRow rowTags;
+	private ViewGroup rowLirycs;
+	private ViewGroup rowTags;
 	private TextView tvTags;
 	private TextView tvLyrics;
 	private TextView time;
@@ -78,9 +78,10 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void setTitle(String title) {
-		ScrollingTextView textView = (ScrollingTextView) view.findViewById(R.id.download_title);
-		if (textView != null)
+		TextView textView = (TextView) view.findViewById(R.id.download_title);
+		if (textView != null) {
 			textView.setText(title);
+		}
 	}
 
 	public Player(final View view, final String title, final String artist) {
@@ -136,7 +137,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 				createId3dialog(arrayField, true, false);
 			}
 		});
-		textPath.setOnClickListener(new View.OnClickListener() {
+		view.findViewById(R.id.download_location).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				createDirectoryChooserDialog();
@@ -159,8 +160,8 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		coverProgress = (ProgressBar) view.findViewById(R.id.coverProgress);
 		textPath = (TextView) view.findViewById(R.id.text_path_download);
 		boxPlayer = (LinearLayout) view.findViewById(R.id.box_player);
-		rowTags = (TableRow) view.findViewById(R.id.row_tags);
-		rowLirycs = (TableRow) view.findViewById(R.id.row_lyrics);
+		rowTags = (ViewGroup) view.findViewById(R.id.row_tags);
+		rowLirycs = (ViewGroup) view.findViewById(R.id.row_lyrics);
 		tvLyrics = (TextView) view.findViewById(R.id.tv_show_lyrics);
 		tvTags = (TextView) view.findViewById(R.id.tv_edit_mp3_tag);
 	}
