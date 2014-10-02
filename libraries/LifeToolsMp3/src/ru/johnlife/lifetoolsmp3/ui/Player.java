@@ -39,7 +39,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public final class Player extends AsyncTask<String, Void, Boolean> {
+public class Player extends AsyncTask<String, Void, Boolean> {
 
 	private Runnable action;
 	private DirectoryChooserDialog directoryChooserDialog;
@@ -133,8 +133,7 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(View v) {
-				String[] arrayField = { artist, title, "" };
-				createId3dialog(arrayField, true, false);
+				createId3dialog(null, true, false);
 			}
 		});
 		view.findViewById(R.id.download_location).setOnClickListener(new View.OnClickListener() {
@@ -248,9 +247,13 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void createId3dialog(String[] fields, boolean enableCover, boolean forse) {
 		String[] arrayField = { artist, title, "" };
-		SongArrayHolder.getInstance().setID3DialogOpened(true, fields, SongArrayHolder.getInstance().isCoverEnabled());
+		SongArrayHolder.getInstance().setID3DialogOpened(true, arrayField, SongArrayHolder.getInstance().isCoverEnabled());
 		final MP3Editor editor = new MP3Editor(view.getContext(), enableCover);
-		editor.setStrings(fields);
+		if (fields == null) {
+			editor.setStrings(arrayField);
+		} else {
+			editor.setStrings(fields);
+		}
 		if (!forse) {
 			editor.setShowCover(useCover);
 		}
