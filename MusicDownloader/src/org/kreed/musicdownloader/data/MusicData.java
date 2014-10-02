@@ -329,6 +329,9 @@ public class MusicData {
 
 	@Override
 	public String toString() {
+		if (null == songArtist && null == songTitle) return "null";
+		if (null != songArtist && null == songTitle) return getSongArtist().toLowerCase(Locale.ENGLISH);
+		if (null == songArtist && null != songTitle) return getSongTitle().toLowerCase(Locale.ENGLISH);
 		return getSongArtist().toLowerCase(Locale.ENGLISH) + " - " + getSongTitle().toLowerCase(Locale.ENGLISH);
 	}
 

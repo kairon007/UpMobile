@@ -181,6 +181,7 @@ public class MainActivity extends Activity {
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
+		Advertisement.onDestroy(this);
 		super.onDestroy();
 	}
 
