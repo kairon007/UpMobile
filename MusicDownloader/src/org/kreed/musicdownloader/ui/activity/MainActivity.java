@@ -567,6 +567,8 @@ public class MainActivity extends Activity {
 		}
 		if(null == data.getSongBitmap()) {
 			editor.setShowCover(false);
+		} else {
+			editor.setShowCover(true);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
