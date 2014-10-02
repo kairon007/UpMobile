@@ -65,7 +65,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 					songProgress.postDelayed(this, 1000);
 				}
 			} catch (Exception e) {
-				Log.d("logd", "" + e);
+				Log.d(getClass().getSimpleName(), e.getMessage());
 			}
 		}
 		
@@ -213,7 +213,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 						try {
 							mp.prepare();
 						} catch (Exception e) {
-							android.util.Log.d("log", "Appear problem: " + e);
+							Log.e(getClass().getSimpleName(), e.getMessage());
 						}
 						mediaPlayer = mp;
 						playerState = Constans.PAUSE;
@@ -290,12 +290,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	}
 	
 	private void restart() {
-		if (mediaPlayer != null && (getPlayerState() == Constans.PLAY || getPlayerState() == Constans.CONTINUE_PLAY || getPlayerState() == Constans.RESTART)) {
-			if (prepared) {
+		if (mediaPlayer != null && prepared && getPlayerState() == Constans.RESTART) {
 				mediaPlayer.seekTo(0);
 				mediaPlayer.start();
 				setActivatedButton(true);
-			}  else setActivatedButton(false);
 		} else setActivatedButton(false);
 	}
 	
