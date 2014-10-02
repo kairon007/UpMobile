@@ -17,6 +17,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnShowListener;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -24,6 +25,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,6 +74,18 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
 	private boolean useCover = true;
+
+	OnShowListener dialogShowListener = new OnShowListener() {
+
+		@Override
+		public void onShow(DialogInterface dialog) {
+			float textSize = 16f;
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(view.getResources().getColor(android.R.color.darker_gray));
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(view.getResources().getColor(android.R.color.darker_gray));
+		}
+	};
 
 	public void setSongId(Integer songId) {
 		this.songId = songId;
@@ -210,7 +224,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 				cancelLirycs();
 			}
 		});
-		b.create().show();
+		AlertDialog dialog = b.create();
+		dialog.setOnShowListener(dialogShowListener);
+		dialog.show();
 		LyricsFetcher lyricsFetcher = new LyricsFetcher(view.getContext());
 		lyricsFetcher.fetchLyrics(title, artist);
 		final TextView lyricsTextView = (TextView) lyricsView.findViewById(R.id.lyrics);
@@ -283,6 +299,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			}
 		});
 		AlertDialog alertDialog = builder.create();
+		alertDialog.setOnShowListener(dialogShowListener);
 		alertDialog.show();
 	}
 
@@ -322,10 +339,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			coverBitmap = bmp;
 		}
 	}
-	
+
 	public void setCoverFromSong(RemoteSong song) {
 		song.getCover(true, new OnBitmapReadyListener() {
-			
+
 			@Override
 			public void onBitmapReady(Bitmap bmp) {
 				setCover(bmp);

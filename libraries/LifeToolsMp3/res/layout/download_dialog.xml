@@ -27,7 +27,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="@android:color/darker_gray"
-            android:textSize="@dimen/text_size_middle" />
+            android:textSize="@dimen/text_title_size" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,7 +84,7 @@
 
                     <ImageButton
                         android:id="@+id/pause"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_weight="1"
@@ -109,7 +109,7 @@
                             android:text="00:00"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@android:color/darker_gray"
-                            android:textSize="@dimen/dialog_text_size_btn" />
+                            android:textSize="@dimen/dialog_default_text_size" />
 
                         <ProgressBar
                             android:id="@+id/progress"
@@ -162,7 +162,7 @@
                         android:layout_gravity="center_vertical"
                         android:maxLines="2"
                         android:text="@string/show_lyrics"
-                        android:textSize="@dimen/dialog_text_size_btn" />
+                        android:textSize="@dimen/dialog_default_text_size" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -190,7 +190,7 @@
                         android:layout_gravity="center_vertical"
                         android:maxLines="2"
                         android:text="@string/edit_mp3_tags"
-                        android:textSize="@dimen/dialog_text_size_btn" />
+                        android:textSize="@dimen/dialog_default_text_size" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -212,7 +212,7 @@
                 android:layout_marginLeft="@dimen/padding_middle"
                 android:gravity="left|center_vertical"
                 android:text="@string/header_download"
-                android:textSize="@dimen/dialog_text_size_btn"
+                android:textSize="@dimen/dialog_default_text_size"
                 android:textStyle="bold" />
 
             <TextView
@@ -233,7 +233,7 @@
                 android:text="@string/header_download"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="@dimen/dialog_text_size_btn" />
+                android:textSize="@dimen/dialog_default_text_size" />
 
         </RelativeLayout>
     </LinearLayout>

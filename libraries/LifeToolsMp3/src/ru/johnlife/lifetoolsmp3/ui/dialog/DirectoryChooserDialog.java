@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
+import android.content.DialogInterface.OnShowListener;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,7 +40,7 @@ public class DirectoryChooserDialog {
 	private List<String> m_subdirs = null;
 	private ChosenDirectoryListener m_chosenDirectoryListener = null;
 	private ArrayAdapter<String> m_listAdapter = null;
-	
+
 	private File parent;
 
 	// ////////////////////////////////////////////////////
@@ -89,8 +90,9 @@ public class DirectoryChooserDialog {
 
 		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
 			public void onClick(DialogInterface dialog, int item) {
-				String directory = (String)((AlertDialog) dialog).getListView().getAdapter().getItem(item);
-				if (directory.equals("")) return;
+				String directory = (String) ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
+				if (directory.equals(""))
+					return;
 				m_dir += "/" + directory;
 				updateDirectory();
 			}
@@ -107,16 +109,25 @@ public class DirectoryChooserDialog {
 				SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
 			}
 		}).setNegativeButton("Cancel", new OnClickListener() {
-			
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
 				SongArrayHolder.getInstance().setDirectoryChooserPath(null);
 			}
 		});
-
 		final AlertDialog dirsDialog = dialogBuilder.create();
+		dirsDialog.setOnShowListener(new OnShowListener() {
 
+			@Override
+			public void onShow(DialogInterface dialog) {
+				float textSize = 16f;
+				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
+				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(m_context.getResources().getColor(android.R.color.darker_gray));
+				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
+				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(m_context.getResources().getColor(android.R.color.darker_gray));
+			}
+		});
 		dirsDialog.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -181,7 +192,7 @@ public class DirectoryChooserDialog {
 
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(m_context);
-		LayoutInflater inflater = (LayoutInflater)m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View titleView = inflater.inflate(R.layout.directory_chooser_dialog, null);
 		titleText = (TextView) titleView.findViewById(R.id.directoryText);
 		titleText.setText(title);
@@ -194,7 +205,7 @@ public class DirectoryChooserDialog {
 				createNewDirDialog(null);
 			}
 		});
-		
+
 		parentDirectory.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -209,7 +220,7 @@ public class DirectoryChooserDialog {
 		if (!m_isNewFolderEnabled) {
 			newDirButton.setVisibility(View.GONE);
 		}
-		
+
 		dialogBuilder.setCustomTitle(titleView);
 
 		m_listAdapter = createListAdapter(listItems);
@@ -247,14 +258,14 @@ public class DirectoryChooserDialog {
 				}
 			}
 		}).setNegativeButton("Cancel", null).setOnDismissListener(new OnDismissListener() {
-			
+
 			@Override
 			public void onDismiss(DialogInterface dialog) {
-				SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);				
+				SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);
 			}
 		}).show();
 	}
-	
+
 	private void updateDirectory() {
 		m_subdirs.clear();
 		m_subdirs.addAll(getDirectories(m_dir));
@@ -282,17 +293,18 @@ public class DirectoryChooserDialog {
 			}
 		};
 	}
-	
+
 	private class CustomWatcher implements TextWatcher {
-		
+
 		private EditText linkToInput;
-		
+
 		public CustomWatcher(EditText linkToInput) {
 			this.linkToInput = linkToInput;
 		}
 
 		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+		}
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -300,6 +312,7 @@ public class DirectoryChooserDialog {
 		}
 
 		@Override
-		public void afterTextChanged(Editable s) {}
+		public void afterTextChanged(Editable s) {
+		}
 	}
 }

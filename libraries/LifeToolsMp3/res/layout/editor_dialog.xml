@@ -4,40 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <LinearLayout
+    <LinearLayout 
         android:id="@+id/editor_dialog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:divider="@drawable/layout_divider"
+        android:orientation="vertical"
+        android:showDividers="middle" >
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="48dp" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/padding_title"
-                android:paddingLeft="@dimen/padding_title"
-                android:paddingTop="@dimen/padding_title"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
                 android:text="@string/dialog_title"
-                android:textSize="@dimen/font_size_title" />
-        </FrameLayout>
+                android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/text_title_size" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/hight_divider"
-            android:layout_margin="@dimen/padding_layout"
-            android:background="@android:color/white"
-            android:clickable="true"
-            android:visibility="visible" />
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_layout"
-            android:layout_marginRight="@dimen/padding_layout"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:orientation="vertical"
             android:visibility="visible" >
 
@@ -45,60 +40,67 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/padding_text_element"
-                android:layout_marginBottom="@dimen/padding_text_element"
-                android:layout_marginLeft="@dimen/padding_text_element"
-                android:layout_marginTop="@dimen/padding_text_element"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/title"
-                android:textSize="@dimen/font_size_normal" />
+                android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/dialog_default_text_size" />
 
             <EditText
                 android:id="@+id/editTextTitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textNoSuggestions" />
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:inputType="textNoSuggestions"
+                android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="@dimen/padding_text_element"
-                android:layout_marginLeft="@dimen/padding_text_element"
-                android:layout_marginTop="@dimen/padding_text_element"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/artist"
-                android:textSize="@dimen/font_size_normal" />
+                android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/dialog_default_text_size" />
 
             <EditText
                 android:id="@+id/editTextArtist"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textNoSuggestions" />
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:inputType="textNoSuggestions"
+                android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="@dimen/padding_text_element"
-                android:layout_marginLeft="@dimen/padding_text_element"
-                android:layout_marginTop="@dimen/padding_text_element"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/album"
-                android:textSize="@dimen/font_size_normal" />
+                android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/dialog_default_text_size" />
 
             <EditText
                 android:id="@+id/editTextAlbum"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textNoSuggestions" />
-        </LinearLayout>
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:inputType="textNoSuggestions"
+                android:textSize="@dimen/dialog_default_text_size" />
 
-        <CheckBox
-            android:id="@+id/isShowCover"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding_text_element"
-            android:checked="true"
-            android:text="@string/cb_text"
-            android:textSize="@dimen/font_size_normal" />
+            <CheckBox
+                android:id="@+id/isShowCover"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:checked="true"
+                android:text="@string/cb_text"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

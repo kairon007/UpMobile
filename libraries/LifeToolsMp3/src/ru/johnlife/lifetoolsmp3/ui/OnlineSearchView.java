@@ -79,7 +79,19 @@ public abstract class OnlineSearchView extends View {
 	private ListView listView;
 	private DownloadClickListener downloadClickListener;
 	private Runnable dialogDismisser;
-	private String extraSearch = null;;
+	private String extraSearch = null;
+	
+	OnShowListener dialogShowListener = new OnShowListener() {
+
+		@Override
+		public void onShow(DialogInterface dialog) {
+			float textSize = 16f;
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(view.getResources().getColor(android.R.color.darker_gray));
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(view.getResources().getColor(android.R.color.darker_gray));
+		}
+	};
 
 	protected abstract BaseSettings getSettings();
 
@@ -556,22 +568,7 @@ public abstract class OnlineSearchView extends View {
 				dialogDismisser.run();
 			}
 		});
-		alertDialog.setOnShowListener(new OnShowListener() {
-			
-			@Override
-			public void onShow(DialogInterface dialog) {
-				float textSize = 16f;
-				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
-				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.darker_gray));
-				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
-				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(android.R.color.darker_gray));
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-					int color = getResources().getColor(R.color.window_background_black);
-					((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(color);
-					((AlertDialog)dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(color);
-				}
-			}
-		});
+		alertDialog.setOnShowListener(dialogShowListener);
 		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);
 		return alertDialog;
 	}
