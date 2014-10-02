@@ -408,7 +408,6 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 		progress.removeCallbacks(progressAction);
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	protected Boolean doInBackground(String... params) {
 		try {
@@ -460,7 +459,9 @@ public final class Player extends AsyncTask<String, Void, Boolean> {
 			});
 			rowLirycs.postDelayed(new Runnable() {
 				public void run() {
-					onPrepared();
+					if (null != mediaPlayer) {
+						onPrepared();
+					}
 				}
 			}, 1000);
 
