@@ -22,6 +22,8 @@
 
 package org.kreed.vanilla;
 
+import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
+import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Activity;
 import android.content.Intent;
@@ -34,6 +36,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -42,7 +46,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -80,6 +89,9 @@ public abstract class PlaybackActivity extends Activity
 	protected int mState;
 	private long mLastStateEvent;
 	private long mLastSongEvent;
+	private boolean isLyricsShow;
+	private TextView mLyricsView;
+	private ProgressBar progressLyric;
 
 	@Override
 	public void onCreate(Bundle state)
@@ -92,7 +104,6 @@ public abstract class PlaybackActivity extends Activity
 		thread.start();
 		mLooper = thread.getLooper();
 		mHandler = new Handler(mLooper, this);
-
 	}
 
 	
@@ -268,10 +279,53 @@ public abstract class PlaybackActivity extends Activity
 	{
 		if (mCoverView != null)
 			mCoverView.querySongs(PlaybackService.get(this));
+		if (song != null) {
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+			isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
+			if (mLyricsView != null && Settings.ENABLE_LYRICS && isLyricsShow == true) {
+				loaderLyrics(song);
+			} else if (mLyricsView != null) {
+				mLyricsView.setText("");
+			}
+		}
 	}
 
-	protected void setSong(final Song song)
-	{
+	public void loaderLyrics(final Song song) {
+		enableProgress();
+		LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
+		lyricsFetcher.fetchLyrics(song.title, song.artist);
+		lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+					@Override
+					public void onLyricsFetched(boolean foundLyrics,String lyrics) {
+						disableProgress();
+						if (foundLyrics) {
+							mLyricsView.setText(Html.fromHtml(lyrics));
+						} else {
+							String songName = song.artist + " - " + song.title;
+							mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
+						}
+					}
+				});
+	}
+	
+	public void setParentView(TextView mLyricsView, ProgressBar progressLyric) {
+		this.mLyricsView = mLyricsView;
+		this.progressLyric = progressLyric;
+	}
+	
+	public void enableProgress() {
+		if (progressLyric != null)
+			progressLyric.setVisibility(View.VISIBLE);
+
+	}
+
+	public void disableProgress() {
+		if (progressLyric != null)
+			progressLyric.setVisibility(View.GONE);
+
+	}
+	
+	protected void setSong(final Song song)	{
 		mLastSongEvent = SystemClock.uptimeMillis();
 		runOnUiThread(new Runnable() {
 			@Override

@@ -30,8 +30,6 @@ import java.io.InputStream;
 
 import org.kreed.vanilla.equalizer.MyEqualizer;
 
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -50,7 +48,6 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -191,12 +188,14 @@ public class FullPlaybackActivity extends PlaybackActivity
 		mLyricsView = (TextView) findViewById(R.id.lyric);
 		mLyricsConteiner = (FrameLayout) findViewById(R.id.lyric_conteiner);
 		mLyricsHider = (ImageView) findViewById(R.id.lyric_closer);
+		progressLyric = (ProgressBar) findViewById(R.id.progressLyric);
 		mLyricsHider.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View paramView) {
 				mLyricsConteiner.setVisibility(View.GONE);
 			}
 		});
+		setParentView(mLyricsView, progressLyric);
 		mControlsBottom = findViewById(R.id.controls_bottom);
 		View previousButton = findViewById(R.id.previous);
 		previousButton.setOnClickListener(this);
@@ -259,7 +258,6 @@ public class FullPlaybackActivity extends PlaybackActivity
 		setControlsVisible(settings.getBoolean(PrefKeys.VISIBLE_CONTROLS, true));
 		setExtraInfoVisible(settings.getBoolean(PrefKeys.VISIBLE_EXTRA_INFO, false));
 		setDuration(0);
-		
 		
 
 		
@@ -496,9 +494,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 	protected void onSongChange(final Song song)
 	{
 		super.onSongChange(song);
-
 		setDuration(song == null ? 0 : song.duration);
-
 		if (mTitle != null) {
 			if (song == null) {
 				mTitle.setText(null);
@@ -508,29 +504,6 @@ public class FullPlaybackActivity extends PlaybackActivity
 				mTitle.setText(song.title);
 				mAlbum.setText(song.album);
 				mArtist.setText(song.artist);
-				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-				isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-				if (mLyricsView != null && Settings.ENABLE_LYRICS && isLyricsShow == true) {
-					progressLyric = (ProgressBar) findViewById(R.id.progressLyric);
-					enableProgress();
-					LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
-					lyricsFetcher.fetchLyrics(song.title, song.artist);
-					lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
-						@Override
-						public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-							disableProgress();
-							if (foundLyrics) {
-								mLyricsView.setText(Html.fromHtml(lyrics));
-							} else {
-								String songName = song.artist + " - " + song.title;
-								mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
-							}
-						}
-					});
-				} else if (mLyricsView != null) {
-					mLyricsView.setText("");
-
-				}
 			}
 			updateQueuePosition();
 		}
@@ -542,40 +515,13 @@ public class FullPlaybackActivity extends PlaybackActivity
 			mHandler.sendEmptyMessage(MSG_LOAD_EXTRA_INFO);
 		}
 	}
-
-	public void enableProgress() {
-		if (progressLyric != null)
-			progressLyric.setVisibility(View.VISIBLE);
-
-	}
-
-	public void disableProgress() {
-		if (progressLyric != null)
-			progressLyric.setVisibility(View.GONE);
-
-	}
 	
 	public void loadLyrics(final Song song) {
 		if (mLyricsView != null && Settings.ENABLE_LYRICS) {
-			progressLyric = (ProgressBar) findViewById(R.id.progressLyric);
-			enableProgress();
-			LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
-			lyricsFetcher.fetchLyrics(song.title, song.artist);
-			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
-						@Override
-						public void onLyricsFetched(boolean foundLyrics,String lyrics) {
-							disableProgress();
-							if (foundLyrics) {
-								mLyricsView.setText(Html.fromHtml(lyrics));
-							} else {
-								String songName = song.artist + " - " + song.title;
-								mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
-							}
-						}
-					});
+			loaderLyrics(song);
 		}
-
 	}
+
 	/**
 	 * Update the queue position display. mQueuePos must not be null.
 	 */
