@@ -3,7 +3,7 @@ package org.kreed.musicdownloader.engines.task;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.kreed.musicdownloader.Constans;
+import org.kreed.musicdownloader.Constants;
 import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.interfaces.MusicDataInterface;
@@ -46,7 +46,7 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected String getDirectory() {
-		return Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX;
+		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	}
 
 	@Override

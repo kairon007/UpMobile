@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.kreed.musicdownloader.Advertisement;
-import org.kreed.musicdownloader.Constans;
+import org.kreed.musicdownloader.Constants;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
@@ -127,11 +127,11 @@ public class MainActivity extends Activity {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
 	
-	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX, FileObserver.DELETE) {
+	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX, FileObserver.DELETE) {
 
 		@Override
 		public void onEvent(int event, String file) {
-			String filePath = Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX + file;
+			String filePath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX + file;
 			mPagerAdapter.removeDeletedData(filePath);
 		}
 	};
@@ -147,7 +147,7 @@ public class MainActivity extends Activity {
 				if (MusicDownloaderApp.getService().containsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
 					MediaPlayer mediaPlayer = MusicDownloaderApp.getService().getPlayer().getMediaPlayer();
 					if (mediaPlayer.isPlaying()) {
-						MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constans.PAUSE);
+						MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.PAUSE);
 						flag = true;
 					}
 				}
@@ -155,7 +155,7 @@ public class MainActivity extends Activity {
 			case TelephonyManager.CALL_STATE_IDLE:
 				if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().containsPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
 					if (flag) {
-						MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constans.CONTINUE_PLAY);
+						MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.CONTINUE_PLAY);
 						flag = false;
 					}
 				}
@@ -318,17 +318,17 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
-		String uri = in.getString(Constans.MUSIC_URI);
-		in.remove(Constans.MUSIC_URI);
-		mStrings = in.getStringArrayList(Constans.EDITOR_FIELDS);
+		String uri = in.getString(Constants.MUSIC_URI);
+		in.remove(Constants.MUSIC_URI);
+		mStrings = in.getStringArrayList(Constants.EDITOR_FIELDS);
 		if (null != uri) {
 			File musicUri = new File(uri);
 			music = new MusicData(musicUri);
-			useCover = in.getBoolean(Constans.USE_COVER, false);
+			useCover = in.getBoolean(Constants.USE_COVER, false);
 			showEditDialog();
 		}
-		textFilterDownload = in.getString(Constans.FILTER_TEXT_DOWNLOAD);
-		textFilterLibrary = in.getString(Constans.FILTER_TEXT_LIBRARY);
+		textFilterDownload = in.getString(Constants.FILTER_TEXT_DOWNLOAD);
+		textFilterLibrary = in.getString(Constants.FILTER_TEXT_LIBRARY);
 		if (null != player) {
 			player.setSongProgressIndeterminate(in.getBoolean(SAVE_SEEKBAR_PROGRESS, false));
 			player.setButtonProgressVisibility(in.getInt(SAVE_BUTTONPLAY_PROGRESS, View.VISIBLE));
@@ -340,15 +340,15 @@ public class MainActivity extends Activity {
 	protected void onSaveInstanceState(Bundle out) {
 		if (showDialog && null != music) {
 			String mUri = music.getFileUri();
-			out.putString(Constans.MUSIC_URI, mUri);
-			out.putStringArrayList(Constans.EDITOR_FIELDS, editor.getStrings());
-			out.putBoolean(Constans.USE_COVER, editor.isShowCover());
+			out.putString(Constants.MUSIC_URI, mUri);
+			out.putStringArrayList(Constants.EDITOR_FIELDS, editor.getStrings());
+			out.putBoolean(Constants.USE_COVER, editor.isShowCover());
 		}
-		out.putBoolean(Constans.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
+		out.putBoolean(Constants.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		if (page == 1) {
-			out.putString(Constans.FILTER_TEXT_DOWNLOAD, textFilterDownload);
+			out.putString(Constants.FILTER_TEXT_DOWNLOAD, textFilterDownload);
 		} else if (page == 2) {
-			out.putString(Constans.FILTER_TEXT_LIBRARY, textFilterLibrary);
+			out.putString(Constants.FILTER_TEXT_LIBRARY, textFilterLibrary);
 		}
 		if (null != player) {
 			out.putBoolean(SAVE_SEEKBAR_PROGRESS, player.isSongProgressIndeterminate());
@@ -463,7 +463,7 @@ public class MainActivity extends Activity {
 	public void play(ArrayList<String[]> headers, MusicData musicData) {
 		music = musicData;
 		if (player != null && player.getData().equals(musicData)) {
-			player.stateManagementPlayer(Constans.RESTART);
+			player.stateManagementPlayer(Constants.RESTART);
 			return;
 		}
 		if (player == null) {
@@ -474,7 +474,7 @@ public class MainActivity extends Activity {
 			MusicDownloaderApp.getService().getPlayer().setData(headers, musicData);
 		}
 		player.getView(footer);
-		player.stateManagementPlayer(Constans.PLAY);
+		player.stateManagementPlayer(Constants.PLAY);
 	}
 
 	public LinearLayout getSearchLayout() {
@@ -549,7 +549,7 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(), music.getSongArtist() + " - " + music.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
 			mPagerAdapter.removeMusicData(music);
 			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().equals(music)) {
-				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constans.STOP);
+				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
 			}	
 			super.onPostExecute(result);

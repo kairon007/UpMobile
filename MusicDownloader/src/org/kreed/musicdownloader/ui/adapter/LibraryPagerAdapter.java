@@ -25,7 +25,7 @@ package org.kreed.musicdownloader.ui.adapter;
 import java.io.File;
 import java.util.Arrays;
 
-import org.kreed.musicdownloader.Constans;
+import org.kreed.musicdownloader.Constants;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.ballast.LibraryAdapter;
@@ -284,7 +284,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				container.addView(downloadView);
 				return downloadView;
 			case MediaUtils.TYPE_LIBRARY:
-				File contentFile = new File(Environment.getExternalStorageDirectory() + Constans.DIRECTORY_PREFIX);
+				File contentFile = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
 				if (!contentFile.exists()) {
 					contentFile.mkdirs();
 				}
@@ -616,6 +616,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		setPrimaryItem(null, position, null);
 		mActivity.getSearchLayout().setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 		mActivity.getSearchLayout().findViewById(R.id.clear_all_button).setVisibility(position == 0 || position == 2 ? View.GONE : View.VISIBLE);
+		if (position == 0) {
+			searchView.notifyAdapter();
+		}
 	}
 
 	/**

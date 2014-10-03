@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.kreed.musicdownloader.Constans;
+import org.kreed.musicdownloader.Constants;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 
@@ -216,7 +216,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 							Log.e(getClass().getSimpleName(), e.getMessage());
 						}
 						mediaPlayer = mp;
-						playerState = Constans.PAUSE;
+						playerState = Constants.PAUSE;
 						buttonPlay.setImageResource(IMAGE_PLAY);
 						currentImageButton = IMAGE_PLAY;
 					}
@@ -290,7 +290,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	}
 	
 	private void restart() {
-		if (mediaPlayer != null && prepared && getPlayerState() == Constans.RESTART) {
+		if (mediaPlayer != null && prepared && getPlayerState() == Constants.RESTART) {
 				mediaPlayer.seekTo(0);
 				mediaPlayer.start();
 				setActivatedButton(true);
@@ -343,10 +343,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.player_play_song) {
-			if (getPlayerState() == Constans.PLAY || getPlayerState() == Constans.CONTINUE_PLAY || getPlayerState() == Constans.RESTART) {
-				stateManagementPlayer(Constans.PAUSE);
-			} else if (getPlayerState() == Constans.PAUSE) {
-				stateManagementPlayer(Constans.CONTINUE_PLAY);
+			if (getPlayerState() == Constants.PLAY || getPlayerState() == Constants.CONTINUE_PLAY || getPlayerState() == Constants.RESTART) {
+				stateManagementPlayer(Constants.PAUSE);
+			} else if (getPlayerState() == Constants.PAUSE) {
+				stateManagementPlayer(Constants.CONTINUE_PLAY);
 			}
 		}
 	}

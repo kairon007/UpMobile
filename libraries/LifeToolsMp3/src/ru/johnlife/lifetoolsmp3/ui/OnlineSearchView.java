@@ -33,10 +33,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -641,5 +639,9 @@ public abstract class OnlineSearchView extends View {
 
 	public ListView getListView() {
 		return listView;
+	}
+	
+	public void notifyAdapter() {
+		resultAdapter.notifyDataSetChanged();
 	}
 }
