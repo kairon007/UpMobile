@@ -725,6 +725,12 @@ public class AppMsg {
                     && style.background == background;
         }
 
+		@Override
+		public int hashCode() {
+			// TODO Auto-generated method stub
+			return super.hashCode();
+		}
+
     }
 
 }

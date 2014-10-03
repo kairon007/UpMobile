@@ -1228,9 +1228,10 @@ public class MenuBuilder implements Menu {
         stopDispatchingItemsChanged();
         for (WeakReference<MenuPresenter> ref : mPresenters) {
             final MenuPresenter presenter = ref.get();
+            expanded = presenter.expandItemActionView(this, item);
             if (presenter == null) {
                 mPresenters.remove(ref);
-            } else if ((expanded = presenter.expandItemActionView(this, item))) {
+            } else if (expanded) {
                 break;
             }
         }
@@ -1250,9 +1251,10 @@ public class MenuBuilder implements Menu {
         stopDispatchingItemsChanged();
         for (WeakReference<MenuPresenter> ref : mPresenters) {
             final MenuPresenter presenter = ref.get();
+            collapsed = presenter.collapseItemActionView(this, item);
             if (presenter == null) {
                 mPresenters.remove(ref);
-            } else if ((collapsed = presenter.collapseItemActionView(this, item))) {
+            } else if (collapsed) {
                 break;
             }
         }

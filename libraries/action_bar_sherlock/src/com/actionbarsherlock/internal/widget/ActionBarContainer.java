@@ -244,7 +244,8 @@ public class ActionBarContainer extends NineFrameLayout {
                         mActionBarView.getRight(), mActionBarView.getBottom());
                 needsInvalidate = true;
             }
-            if ((mIsStacked = hasTabs && mStackedBackground != null)) {
+            mIsStacked = hasTabs;
+            if ((mIsStacked && mStackedBackground != null)) {
                 mStackedBackground.setBounds(mTabContainer.getLeft(), mTabContainer.getTop(),
                         mTabContainer.getRight(), mTabContainer.getBottom());
                 needsInvalidate = true;
