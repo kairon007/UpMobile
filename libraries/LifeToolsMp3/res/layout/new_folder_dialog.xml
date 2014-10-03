@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@drawable/layout_divider"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:showDividers="middle" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:text="@string/new_folder_dialog_title"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/text_title_size" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp" >
+
+        <EditText
+            android:id="@+id/etNewFolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:ems="10"
+            android:textSize="@dimen/dialog_default_text_size" />
+
+    </FrameLayout>
+
+</LinearLayout>

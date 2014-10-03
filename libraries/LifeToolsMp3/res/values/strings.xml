@@ -8,7 +8,7 @@
     <string name="artist">Artist:</string>
     <string name="album">Album:</string>
     <string name="cb_text">Use Album Cover</string>
-    
+    <string name="new_folder_dialog_title">New folder name</string>
    	<string name="expand">Expand</string>
     <string name="download_started">Download started for %s</string>
 	<string name="download_error">Please wait while song loads.</string>

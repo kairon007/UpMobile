@@ -9,6 +9,7 @@ import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,22 +17,29 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.DialogInterface.OnShowListener;
+import android.os.Build;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class DirectoryChooserDialog {
+	
 	private boolean m_isNewFolderEnabled = true;
+	private ListView lvContent;
 	private String m_sdcardDirectory = "";
 	private Context m_context;
 	private TextView titleText;
@@ -40,9 +48,21 @@ public class DirectoryChooserDialog {
 	private List<String> m_subdirs = null;
 	private ChosenDirectoryListener m_chosenDirectoryListener = null;
 	private ArrayAdapter<String> m_listAdapter = null;
-
+	
 	private File parent;
 
+	OnShowListener showlistener = new OnShowListener() {
+
+		@Override
+		public void onShow(DialogInterface dialog) {
+			float textSize = 16f;
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(m_context.getResources().getColor(android.R.color.darker_gray));
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
+			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(m_context.getResources().getColor(android.R.color.darker_gray));
+		}
+	};
+	
 	// ////////////////////////////////////////////////////
 	// Callback interface for selected directory
 	// ////////////////////////////////////////////////////
@@ -117,17 +137,7 @@ public class DirectoryChooserDialog {
 			}
 		});
 		final AlertDialog dirsDialog = dialogBuilder.create();
-		dirsDialog.setOnShowListener(new OnShowListener() {
-
-			@Override
-			public void onShow(DialogInterface dialog) {
-				float textSize = 16f;
-				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
-				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(m_context.getResources().getColor(android.R.color.darker_gray));
-				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
-				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(m_context.getResources().getColor(android.R.color.darker_gray));
-			}
-		});
+		dirsDialog.setOnShowListener(showlistener);
 		dirsDialog.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -193,11 +203,12 @@ public class DirectoryChooserDialog {
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(m_context);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View titleView = inflater.inflate(R.layout.directory_chooser_dialog, null);
-		titleText = (TextView) titleView.findViewById(R.id.directoryText);
+		View contentView = inflater.inflate(R.layout.dir_chooser_dialog, null);
+		titleText = (TextView) contentView.findViewById(R.id.directoryText);
+		lvContent = (ListView) contentView.findViewById(R.id.lvPath);
 		titleText.setText(title);
-		ImageButton parentDirectory = (ImageButton) titleView.findViewById(R.id.imageButton1);
-		ImageButton newDirButton = (ImageButton) titleView.findViewById(R.id.imageButton2);
+		ImageButton parentDirectory = (ImageButton) contentView.findViewById(R.id.imageButton1);
+		ImageButton newDirButton = (ImageButton) contentView.findViewById(R.id.imageButton2);
 		newDirButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -205,7 +216,6 @@ public class DirectoryChooserDialog {
 				createNewDirDialog(null);
 			}
 		});
-
 		parentDirectory.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -216,27 +226,38 @@ public class DirectoryChooserDialog {
 				updateDirectory();
 			}
 		});
-
 		if (!m_isNewFolderEnabled) {
 			newDirButton.setVisibility(View.GONE);
 		}
-
-		dialogBuilder.setCustomTitle(titleView);
-
 		m_listAdapter = createListAdapter(listItems);
-
+		
 		if (listItems.isEmpty()) {
 			m_listAdapter.add("");
 		}
-		dialogBuilder.setSingleChoiceItems(m_listAdapter, -1, onClickListener);
 		dialogBuilder.setCancelable(false);
+		lvContent.setAdapter(m_listAdapter);
+		lvContent.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String directory = (String) lvContent.getAdapter().getItem(position);
+				if (directory.equals(""))
+					return;
+				m_dir += "/" + directory;
+				updateDirectory();
+			}
+		});
+		dialogBuilder.setView(contentView);
 		return dialogBuilder;
 	}
 
+	@SuppressLint("NewApi")
 	public void createNewDirDialog(String name) {
 		SongArrayHolder.getInstance().setIsNewDirectoryOpened(true);
-		final EditText input = new EditText(m_context);
+		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.new_folder_dialog, null);
+		
+		final EditText input = (EditText) view.findViewById(R.id.etNewFolder);
 		input.addTextChangedListener(new CustomWatcher(input));
 		if (null != name) {
 			SongArrayHolder.getInstance().setNewDirName(name);
@@ -244,7 +265,7 @@ public class DirectoryChooserDialog {
 		} else {
 			SongArrayHolder.getInstance().setNewDirName("");
 		}
-		new AlertDialog.Builder(m_context).setTitle("New folder name").setView(input).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(m_context).setView(view).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				Editable newDir = input.getText();
 				String newDirName = newDir.toString();
@@ -257,13 +278,19 @@ public class DirectoryChooserDialog {
 					Toast.makeText(m_context, "Failed to create '" + newDirName + "' folder", Toast.LENGTH_SHORT).show();
 				}
 			}
-		}).setNegativeButton("Cancel", null).setOnDismissListener(new OnDismissListener() {
+		}).setNegativeButton("Cancel", null);
+		if (Build.VERSION.SDK_INT  > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+			builder.setOnDismissListener(new OnDismissListener() {
 
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);
-			}
-		}).show();
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);
+				}
+			});
+		}
+		AlertDialog dialog = builder.create();
+		dialog.setOnShowListener(showlistener);
+		dialog.show();
 	}
 
 	private void updateDirectory() {
@@ -279,14 +306,17 @@ public class DirectoryChooserDialog {
 
 	private ArrayAdapter<String> createListAdapter(List<String> items) {
 		return new ArrayAdapter<String>(m_context, android.R.layout.select_dialog_item, android.R.id.text1, items) {
+			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				View v = super.getView(position, convertView, parent);
-
 				if (v instanceof TextView) {
 					// Enable list item (directory) text wrapping
 					TextView tv = (TextView) v;
 					tv.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+					tv.getLayoutParams().width = LayoutParams.MATCH_PARENT;
+					tv.setGravity(Gravity.CENTER_VERTICAL);
+					tv.setTextSize(16f);
 					tv.setEllipsize(null);
 				}
 				return v;
