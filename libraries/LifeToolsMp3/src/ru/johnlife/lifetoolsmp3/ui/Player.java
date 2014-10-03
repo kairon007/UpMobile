@@ -11,7 +11,6 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Service;
@@ -25,7 +24,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,8 +34,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -263,12 +259,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void createId3dialog(String[] fields, boolean enableCover, boolean forse) {
 		String[] arrayField = { artist, title, "" };
-		SongArrayHolder.getInstance().setID3DialogOpened(true, arrayField, SongArrayHolder.getInstance().isCoverEnabled());
 		final MP3Editor editor = new MP3Editor(view.getContext(), enableCover);
 		if (fields == null) {
 			editor.setStrings(arrayField);
+			SongArrayHolder.getInstance().setID3DialogOpened(true, arrayField, SongArrayHolder.getInstance().isCoverEnabled());
 		} else {
 			editor.setStrings(fields);
+			SongArrayHolder.getInstance().setID3DialogOpened(true, fields, SongArrayHolder.getInstance().isCoverEnabled());
 		}
 		if (!forse) {
 			editor.setShowCover(useCover);
