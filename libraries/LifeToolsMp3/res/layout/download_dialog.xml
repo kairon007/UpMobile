@@ -135,6 +135,7 @@
                 android:divider="@drawable/layout_divider"
                 android:minHeight="@dimen/size_cover"
                 android:orientation="vertical"
+                android:paddingRight="@dimen/default_text_padding"
                 android:showDividers="middle" >
 
                 <LinearLayout
