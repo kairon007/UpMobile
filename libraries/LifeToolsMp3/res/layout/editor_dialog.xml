@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="8dp" >
 
-    <LinearLayout 
+    <LinearLayout
         android:id="@+id/editor_dialog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,29 +22,24 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/dialog_title"
-                android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/text_title_size" />
-
         </FrameLayout>
 
         <LinearLayout
             android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@drawable/layout_divider"
             android:orientation="vertical"
             android:paddingLeft="8dp"
-            android:showDividers="middle"
             android:visibility="visible" >
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/title"
-                android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <EditText
@@ -56,13 +51,12 @@
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/artist"
-                android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <EditText
@@ -74,13 +68,12 @@
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/album"
-                android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <EditText
@@ -98,9 +91,7 @@
                 android:layout_gravity="center_vertical"
                 android:checked="true"
                 android:text="@string/cb_text"
-                android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/dialog_default_text_size" />
-
         </LinearLayout>
     </LinearLayout>
 

@@ -17,6 +17,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.DialogInterface.OnShowListener;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
 import android.text.Editable;
@@ -57,9 +58,7 @@ public class DirectoryChooserDialog {
 		public void onShow(DialogInterface dialog) {
 			float textSize = 16f;
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
-			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(m_context.getResources().getColor(android.R.color.darker_gray));
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
-			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(m_context.getResources().getColor(android.R.color.darker_gray));
 		}
 	};
 	
@@ -316,6 +315,8 @@ public class DirectoryChooserDialog {
 					tv.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
 					tv.getLayoutParams().width = LayoutParams.MATCH_PARENT;
 					tv.setGravity(Gravity.CENTER_VERTICAL);
+//					int white = Color.WHITE;
+//					tv.setTextColor(white);
 					tv.setTextSize(16f);
 					tv.setEllipsize(null);
 				}
