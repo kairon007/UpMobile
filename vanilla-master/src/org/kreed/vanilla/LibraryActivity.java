@@ -191,7 +191,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private ApplicationInfo mFakeInfo;
 
 	private int lastPage = -1;
-	private Bundle state;
 
 	// -------------------------------------------------------------------------
 
@@ -264,7 +263,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
-		this.state = state;
 		if (state == null) {
 			checkForLaunch(getIntent());
 
@@ -470,9 +468,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	@Override
 	public void onStart() {
 		super.onStart();
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			onCreate(state);
-		}
 		SharedPreferences settings = PlaybackService.getSettings(this);
 		// if (settings.getBoolean(PrefKeys.CONTROLS_IN_SELECTOR, false) !=
 		// (mControls != null)) {
@@ -1338,7 +1333,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			return true;
 		}
 		default:
-			onDestroy();
 			return super.onOptionsItemSelected(item);
 		}
 	}
