@@ -187,11 +187,9 @@ public class MusicData {
 			flag = true;
 		}
 		if (switcher) {
-			android.util.Log.d("log", "if switcher");
 			deleteCoverFromFile();
 		}
 		if (flag) {
-			android.util.Log.d("log", "if flag");
 			renameBoundFile();
 		}
 	}

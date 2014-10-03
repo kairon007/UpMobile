@@ -30,6 +30,7 @@ public class MP3Editor {
 	private String oldArtistName;
 	private String oldSongTitle;
 	private String oldAlbumTitle;
+	private final String UNKNOWN = "unknown";
 	private boolean showCover = true;
 
 	public MP3Editor(Context context, boolean isEnableCover) {
@@ -127,7 +128,10 @@ public class MP3Editor {
 
 	private boolean setArtistName() {
 		String str = etArtistName.getText().toString();
-		if (!str.equals(oldArtistName)) {
+		if (str.equals("")) {
+			newArtistName = UNKNOWN;
+			return true;
+		} else if (!str.equals(oldArtistName)) {
 			newArtistName = str;
 			return true;
 		}
@@ -136,8 +140,23 @@ public class MP3Editor {
 
 	private boolean setSongTitle() {
 		String str = etSongTitle.getText().toString();
-		if (!str.equals(oldSongTitle)) {
+		if (str.equals("")) {
+			newSongTitle = UNKNOWN;
+			return true;
+		} else if (!str.equals(oldSongTitle)) {
 			newSongTitle = str;
+			return true;
+		}
+		return false;
+	}
+
+	private boolean setAlbumTitle() {
+		String str = etAlbumTitle.getText().toString();
+		if (str.equals("")) {
+			newAlbumTitle = UNKNOWN;
+			return true;
+		} else if (!str.equals(oldAlbumTitle)) {
+			newAlbumTitle = str;
 			return true;
 		}
 		return false;
@@ -151,15 +170,6 @@ public class MP3Editor {
 			return true;
 		}
 		if (!oldSongTitle.equals(newSongTitle)) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean setAlbumTitle() {
-		String str = etAlbumTitle.getText().toString();
-		if (!str.equals(oldAlbumTitle)) {
-			newAlbumTitle = str;
 			return true;
 		}
 		return false;
