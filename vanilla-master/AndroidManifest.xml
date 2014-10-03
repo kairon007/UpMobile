@@ -82,6 +82,7 @@ THE SOFTWARE.
         <!-- android:theme="@style/Playback" -->
         <activity
             android:name="FullPlaybackActivity"
+            android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -97,6 +98,7 @@ THE SOFTWARE.
         
         <activity
             android:name="LibraryActivity"
+            android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTask"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
@@ -107,14 +109,17 @@ THE SOFTWARE.
         </activity>
         <!-- android:theme="@style/BackActionBar" -->
         <activity
+            android:windowSoftInputMode="stateHidden"
             android:name="PlaylistActivity"
             android:launchMode="singleTask" />
         <activity
+            android:windowSoftInputMode="stateHidden"
             android:name="com.millennialmedia.android.MMActivity"
             android:configChanges="keyboardHidden|orientation|keyboard"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- android:theme="@style/Dialog" -->
         <activity
+            android:windowSoftInputMode="stateHidden"
             android:name="MiniPlaybackActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance" />
