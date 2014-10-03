@@ -412,18 +412,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		button.setImageResource(R.drawable.pause);
 	}
 
-	public void onFinished() {
-		buttonVisible = false;
-		button.setVisibility(View.INVISIBLE);
-		indeterminate = false;
-		progress.setIndeterminate(indeterminate);
-		current = 100;
-		progress.setProgress(current);
-		duration = 100;
-		progress.setMax(duration);
-		progress.removeCallbacks(progressAction);
-	}
-
 	@Override
 	protected Boolean doInBackground(String... params) {
 		try {
@@ -469,8 +457,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				@Override
 				public void onCompletion(MediaPlayer mp) {
-					releasePlayer();
-					onFinished();
+					mp.seekTo(0);
+					imagePause = R.drawable.play;
+					button.setImageResource(imagePause);
+					progress.setProgress(0);
 				}
 			});
 			rowLirycs.postDelayed(new Runnable() {
