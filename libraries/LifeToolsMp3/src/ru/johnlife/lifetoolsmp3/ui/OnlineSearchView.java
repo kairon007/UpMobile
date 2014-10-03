@@ -85,9 +85,7 @@ public abstract class OnlineSearchView extends View {
 		public void onShow(DialogInterface dialog) {
 			float textSize = 16f;
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
-			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(view.getResources().getColor(android.R.color.darker_gray));
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
-			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(view.getResources().getColor(android.R.color.darker_gray));
 		}
 	};
 

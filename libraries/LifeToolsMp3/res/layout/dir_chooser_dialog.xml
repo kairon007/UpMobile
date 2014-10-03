@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/selected_folder_label"
-                android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
@@ -46,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/dialog_default_text_size" />
         </LinearLayout>
 
@@ -66,7 +64,6 @@
         android:clickable="true"
         android:paddingBottom="8dp"
         android:paddingTop="8dp" >
-
     </ListView>
 
 </LinearLayout>
