@@ -1586,6 +1586,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
 		}
 		lastPage = position;
+		if (position == 0) {
+			((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView().notifyAdapter();
+		}
 	}
 
 	@Override
