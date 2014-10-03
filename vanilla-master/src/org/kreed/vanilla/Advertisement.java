@@ -1480,7 +1480,8 @@ public class Advertisement implements Advertisment {
     
     
     public static void onDestroy(Activity activity) {
-    	
+    	MoPubView moPubView = (MoPubView) activity.findViewById(R.id.banner_view);
+    	moPubView.destroy();
     }
     
   public static void onResume(Activity activity) {
