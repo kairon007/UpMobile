@@ -34,7 +34,6 @@ import org.kreed.musicdownloader.ballast.SortAdapter;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
-import org.kreed.musicdownloader.ui.tab.DownloadsTab.DownloadsAdapter;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
 import android.content.Context;

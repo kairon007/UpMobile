@@ -7,7 +7,6 @@ import mp3.music.player.us.utils.MusicUtils;
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 

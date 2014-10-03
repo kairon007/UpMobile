@@ -73,7 +73,7 @@ public class SearchView  extends OnlineSearchView {
 
 	@Override
 	public void refreshLibrary() {
-		// do nothing, just for others projects
+		((MainActivity) activity).refreshLibraryTab();
 	}
 
 	@Override

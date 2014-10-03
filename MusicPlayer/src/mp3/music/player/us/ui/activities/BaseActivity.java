@@ -29,11 +29,14 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+
+import mp3.music.player.us.Advertisement;
 import mp3.music.player.us.IApolloService;
 import mp3.music.player.us.MusicPlaybackService;
 import mp3.music.player.us.MusicStateListener;
@@ -47,6 +50,7 @@ import mp3.music.player.us.utils.ThemeUtils;
 import mp3.music.player.us.widgets.PlayPauseButton;
 import mp3.music.player.us.widgets.RepeatButton;
 import mp3.music.player.us.widgets.ShuffleButton;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -302,7 +306,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity implements S
         } catch (final Throwable e) {
             //$FALL-THROUGH$
         }
-
+        Advertisement.onDestroy(this);
         // Remove any music status listeners
         mMusicStateListener.clear();
     }
