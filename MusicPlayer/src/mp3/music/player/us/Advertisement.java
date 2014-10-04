@@ -279,7 +279,11 @@ public class Advertisement implements Advertisment {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setTitle(activity.getString(R.string.rate_popup_title));      
-		builder.setMessage(activity.getString(R.string.rate_popup_message)).setPositiveButton(activity.getString(R.string.rate_popup_positive_button), dialogClickListener).setNegativeButton(activity.getString(R.string.rate_popup_negative_button), dialogClickListener).setCancelable(false).show();
+		builder.setMessage(activity.getString(R.string.rate_popup_message))
+				.setPositiveButton(activity.getString(R.string.rate_popup_positive_button), dialogClickListener)
+				.setNegativeButton(activity.getString(R.string.rate_popup_negative_button), dialogClickListener)
+				.setCancelable(false)
+				.show();
 	}
 	
 

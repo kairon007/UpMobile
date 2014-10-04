@@ -43,6 +43,7 @@ import android.widget.Toast;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class HomeActivity extends BaseActivity {
+	private static final String KEY_EXTRA_SEARCH = "KEY_EXTRA_SEARCH";
 	private boolean doesTheMopub = false;
 	private final String IS_SHOW = "is.show";
 	private static Fragment fr;
@@ -56,7 +57,7 @@ public class HomeActivity extends BaseActivity {
 		// Load the music browser fragment
 		if (savedInstanceState == null) { 
 			Bundle b = new Bundle();
-			b.putString("key", getIntent().getStringExtra(Constants.EXTRA_SEARCH));
+			b.putString(KEY_EXTRA_SEARCH, getIntent().getStringExtra(Constants.EXTRA_SEARCH));
 			fr = Fragment.instantiate(this, MusicBrowserPhoneFragment.class.getName(), b);
 			getSupportFragmentManager().beginTransaction()
 			.replace(R.id.activity_base_content, fr).commit();

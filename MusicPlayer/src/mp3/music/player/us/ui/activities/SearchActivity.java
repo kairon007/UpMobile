@@ -12,7 +12,6 @@
 package mp3.music.player.us.ui.activities;
 
 import static mp3.music.player.us.utils.MusicUtils.mService;
-
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
@@ -75,7 +74,9 @@ import java.util.Locale;
  */
 public class SearchActivity extends SherlockFragmentActivity implements LoaderCallbacks<Cursor>,
         OnScrollListener, OnQueryTextListener, OnItemClickListener, ServiceConnection {
-    /**
+    private static final String KEY_EXTRA_SEARCH = "KEY_EXTRA_SEARCH";
+
+	/**
      * Grid view column count. ONE - list, TWO - normal grid
      */
     private static final int ONE = 1, TWO = 2;
@@ -285,7 +286,7 @@ public class SearchActivity extends SherlockFragmentActivity implements LoaderCa
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Bundle bundle = new Bundle();
-				bundle.putString("key", mFilterString);
+				bundle.putString(KEY_EXTRA_SEARCH, mFilterString);
 				Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
 				intent.putExtra(Constants.EXTRA_SEARCH, mFilterString);
 			    startActivity(intent);

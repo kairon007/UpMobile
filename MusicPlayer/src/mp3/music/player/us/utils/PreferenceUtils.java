@@ -34,7 +34,7 @@ import mp3.music.player.us.ui.fragments.profile.ArtistSongFragment;
 public final class PreferenceUtils {
 
     /* Default start page (Artist page) */
-    public static final int DEFFAULT_PAGE = 2;
+    public static final int DEFFAULT_PAGE = 0;
 
     /* Saves the last page the pager was on in {@link MusicBrowserPhoneFragment} */
     public static final String START_PAGE = "start_page";
@@ -84,6 +84,8 @@ public final class PreferenceUtils {
     private static PreferenceUtils sInstance;
 
     private final SharedPreferences mPreferences;
+    
+    private boolean firstStart = true;
 
     /**
      * Constructor for <code>PreferenceUtils</code>
@@ -115,6 +117,7 @@ public final class PreferenceUtils {
         ApolloUtils.execute(false, new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... unused) {
+            	firstStart = false;
                 final SharedPreferences.Editor editor = mPreferences.edit();
                 editor.putInt(START_PAGE, value);
                 SharedPreferencesCompat.apply(editor);
@@ -130,7 +133,7 @@ public final class PreferenceUtils {
      * @return The page to start on when the app is opened.
      */
     public final int getStartPage() {
-        return mPreferences.getInt(START_PAGE, DEFFAULT_PAGE);
+        return (firstStart ? DEFFAULT_PAGE : mPreferences.getInt(START_PAGE, DEFFAULT_PAGE));
     }
 
     /**

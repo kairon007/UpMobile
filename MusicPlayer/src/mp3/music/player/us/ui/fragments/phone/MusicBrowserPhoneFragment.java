@@ -57,7 +57,9 @@ import com.viewpagerindicator.TitlePageIndicator.OnCenterItemClickListener;
  */
 public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCenterItemClickListener {
 
-    /**
+    private static final String KEY_EXTRA_SEARCH = "KEY_EXTRA_SEARCH";
+
+	/**
      * Pager
      */
     private ViewPager mViewPager;
@@ -119,11 +121,16 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         // Initialize the ViewPager
         mViewPager = (ViewPager)rootView.findViewById(R.id.fragment_home_phone_pager);
         // Attch the adapter
-        mViewPager.setAdapter(mPagerAdapter);
-        // Offscreen pager loading limit
+		mViewPager.setAdapter(mPagerAdapter);
+		// Offscreen pager loading limit
 		mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
-		// Always start search fragment
-		mViewPager.setCurrentItem(0);
+		// Start on the last page the user was on
+		String extraSearch = getArguments().getString(KEY_EXTRA_SEARCH);
+		if (extraSearch != null && !extraSearch.isEmpty()) {
+			mViewPager.setCurrentItem(0);
+		} else {
+			mViewPager.setCurrentItem(mPreferences.getStartPage());
+		}
 		// Initialze the TPI
 		final TitlePageIndicator pageIndicator = (TitlePageIndicator) rootView.findViewById(R.id.fragment_home_phone_pager_titles);
 		// Attach the ViewPager
