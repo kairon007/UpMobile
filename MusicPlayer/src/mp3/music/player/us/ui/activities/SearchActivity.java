@@ -285,7 +285,7 @@ public class SearchActivity extends SherlockFragmentActivity implements LoaderCa
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Bundle bundle = new Bundle();
-				bundle.putString("key", mFilterString);
+				bundle.putString(Constants.KEY_EXTRA_SEARCH, mFilterString);
 				Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
 				intent.putExtra(Constants.EXTRA_SEARCH, mFilterString);
 			    startActivity(intent);

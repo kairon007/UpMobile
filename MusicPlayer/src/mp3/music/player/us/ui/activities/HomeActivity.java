@@ -57,7 +57,7 @@ public class HomeActivity extends BaseActivity {
 		// Load the music browser fragment
 		if (savedInstanceState == null) { 
 			Bundle b = new Bundle();
-			b.putString("key", getIntent().getStringExtra(Constants.EXTRA_SEARCH));
+			b.putString(Constants.KEY_EXTRA_SEARCH, getIntent().getStringExtra(Constants.EXTRA_SEARCH));
 			fr = Fragment.instantiate(this, MusicBrowserPhoneFragment.class.getName(), b);
 			getSupportFragmentManager().beginTransaction()
 			.replace(R.id.activity_base_content, fr).commit();
