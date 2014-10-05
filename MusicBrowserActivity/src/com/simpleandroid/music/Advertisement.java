@@ -1465,7 +1465,9 @@ public class Advertisement {
     
     
     public static void onDestroy(Activity activity) {
-    	
+    	MoPubView moPubView = (MoPubView) activity.findViewById(R.id.banner_view);
+    	if (null == moPubView) return;
+    	moPubView.destroy();
     }
     
   public static void onResume(Activity activity) {

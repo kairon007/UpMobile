@@ -34,7 +34,7 @@ import mp3.music.player.us.ui.fragments.profile.ArtistSongFragment;
 public final class PreferenceUtils {
 
     /* Default start page (Artist page) */
-    public static final int DEFFAULT_PAGE = 0;
+    public static final int DEFFAULT_PAGE = 2;
 
     /* Saves the last page the pager was on in {@link MusicBrowserPhoneFragment} */
     public static final String START_PAGE = "start_page";
@@ -80,12 +80,13 @@ public final class PreferenceUtils {
 
     // Key used to set the overall theme color
     public static final String DEFAULT_THEME_COLOR = "default_theme_color";
+    
+    private int defaultPage = 0;
+    private boolean isNeedRestore = false;
 
     private static PreferenceUtils sInstance;
 
     private final SharedPreferences mPreferences;
-    
-    private boolean firstStart = true;
 
     /**
      * Constructor for <code>PreferenceUtils</code>
@@ -117,7 +118,6 @@ public final class PreferenceUtils {
         ApolloUtils.execute(false, new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... unused) {
-            	firstStart = false;
                 final SharedPreferences.Editor editor = mPreferences.edit();
                 editor.putInt(START_PAGE, value);
                 SharedPreferencesCompat.apply(editor);
@@ -133,7 +133,7 @@ public final class PreferenceUtils {
      * @return The page to start on when the app is opened.
      */
     public final int getStartPage() {
-        return (firstStart ? DEFFAULT_PAGE : mPreferences.getInt(START_PAGE, DEFFAULT_PAGE));
+        return mPreferences.getInt(START_PAGE, DEFFAULT_PAGE);
     }
 
     /**
@@ -467,4 +467,16 @@ public final class PreferenceUtils {
         return mPreferences.getString(which, defaultValue).equals(grid);
     }
 
+    public void setCurrentPage(final int page) {
+    	defaultPage = page;
+    	isNeedRestore = true;
+    }
+    
+    public int getCurrentPage() {
+    	return defaultPage;
+    }
+    
+    public boolean isNeedRestore() {
+    	return isNeedRestore;
+    }
 }

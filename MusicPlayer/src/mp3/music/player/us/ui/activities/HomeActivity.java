@@ -18,6 +18,7 @@ import mp3.music.player.us.Constants;
 import mp3.music.player.us.R;
 import mp3.music.player.us.Settings;
 import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
+import mp3.music.player.us.utils.PreferenceUtils;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,7 +44,6 @@ import android.widget.Toast;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class HomeActivity extends BaseActivity {
-	private static final String KEY_EXTRA_SEARCH = "KEY_EXTRA_SEARCH";
 	private boolean doesTheMopub = false;
 	private final String IS_SHOW = "is.show";
 	private static Fragment fr;
@@ -57,7 +57,7 @@ public class HomeActivity extends BaseActivity {
 		// Load the music browser fragment
 		if (savedInstanceState == null) { 
 			Bundle b = new Bundle();
-			b.putString(KEY_EXTRA_SEARCH, getIntent().getStringExtra(Constants.EXTRA_SEARCH));
+			b.putString("key", getIntent().getStringExtra(Constants.EXTRA_SEARCH));
 			fr = Fragment.instantiate(this, MusicBrowserPhoneFragment.class.getName(), b);
 			getSupportFragmentManager().beginTransaction()
 			.replace(R.id.activity_base_content, fr).commit();
@@ -74,7 +74,7 @@ public class HomeActivity extends BaseActivity {
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.toString());
 		} 
-		start(true);
+		start(!PreferenceUtils.getInstace(this).isNeedRestore());
 	}
 
 	public static void refreshLibrary() {

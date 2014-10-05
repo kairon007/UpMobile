@@ -14,7 +14,6 @@ package mp3.music.player.us.ui.fragments.phone;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.PagerAdapter;
 import mp3.music.player.us.adapters.PagerAdapter.MusicFragments;
-import mp3.music.player.us.ui.SearchView;
 import mp3.music.player.us.ui.fragments.AlbumFragment;
 import mp3.music.player.us.ui.fragments.ArtistFragment;
 import mp3.music.player.us.ui.fragments.SongFragment;
@@ -31,7 +30,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +56,7 @@ import com.viewpagerindicator.TitlePageIndicator.OnCenterItemClickListener;
  */
 public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCenterItemClickListener {
 
-    private static final String KEY_EXTRA_SEARCH = "KEY_EXTRA_SEARCH";
-
-	/**
+    /**
      * Pager
      */
     private ViewPager mViewPager;
@@ -121,22 +118,35 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         // Initialize the ViewPager
         mViewPager = (ViewPager)rootView.findViewById(R.id.fragment_home_phone_pager);
         // Attch the adapter
-		mViewPager.setAdapter(mPagerAdapter);
-		// Offscreen pager loading limit
+        mViewPager.setAdapter(mPagerAdapter);
+        // Offscreen pager loading limit
 		mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
-		// Start on the last page the user was on
-		String extraSearch = getArguments().getString(KEY_EXTRA_SEARCH);
-		if (extraSearch != null && !extraSearch.isEmpty()) {
-			mViewPager.setCurrentItem(0);
-		} else {
-			mViewPager.setCurrentItem(mPreferences.getStartPage());
+		int tab = 0;
+		if (PreferenceUtils.getInstace(getActivity()).isNeedRestore()) {
+			tab = PreferenceUtils.getInstace(getActivity()).getCurrentPage();
 		}
+		mViewPager.setCurrentItem(tab);
+		// This need to disable showing "Rate me" popup
+		PreferenceUtils.getInstace(getActivity()).setCurrentPage(tab);
 		// Initialze the TPI
 		final TitlePageIndicator pageIndicator = (TitlePageIndicator) rootView.findViewById(R.id.fragment_home_phone_pager_titles);
 		// Attach the ViewPager
 		pageIndicator.setViewPager(mViewPager);
 		// Scroll to the current artist, album, or song
 		pageIndicator.setOnCenterItemClickListener(this);
+		pageIndicator.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int arg0) {
+				PreferenceUtils.getInstace(getActivity()).setCurrentPage(arg0);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {}
+		});
 		return rootView;
 	}
 
