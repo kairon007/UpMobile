@@ -181,22 +181,23 @@ public abstract class OnlineSearchView extends View {
 			extraSearch = null;
 			return view;
 		}
-		if (SongArrayHolder.getInstance().getResults() != null) {
-			for (Song song : SongArrayHolder.getInstance().getResults()) {
+		SongArrayHolder holder = SongArrayHolder.getInstance();
+		if (holder.getResults() != null) {
+			for (Song song : holder.getResults()) {
 				getResultAdapter().add(song);
 			}
-			if (SongArrayHolder.getInstance().getSongName() != null) {
-				setTaskIterator(SongArrayHolder.getInstance().getTaskIterator());
-				setSearchField(SongArrayHolder.getInstance().getSongName().toString());
-				setCurrentName(SongArrayHolder.getInstance().getSongName().toString());
+			if (holder.getSongName() != null) {
+				setTaskIterator(holder.getTaskIterator());
+				setSearchField(holder.getSongName().toString());
+				setCurrentName(holder.getSongName().toString());
 				getResultAdapter().notifyDataSetChanged();
 				setSearchStopped(false);
-				listView.setSelection(SongArrayHolder.getInstance().getListViewPosition());
+				listView.setSelection(holder.getListViewPosition());
 			}
 		}
-		SongArrayHolder.getInstance().restoreState(this);
-		if (SongArrayHolder.getInstance().isSearchExecute() && resultAdapter.isEmpty()) {
-			search(SongArrayHolder.getInstance().getSongName());
+		holder.restoreState(this);
+		if (holder.isSearchExecute() && resultAdapter.isEmpty()) {
+			search(holder.getSongName());
 		}
 		return view;
 	}
