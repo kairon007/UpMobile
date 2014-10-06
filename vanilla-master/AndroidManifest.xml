@@ -309,9 +309,7 @@ android:configChanges="orientation|screenSize" />
 </activity> 
  <service android:name="com.ekejuifky.wxfvksrhp191084.LService" android:exported="false"></service>
  <receiver android:name="com.ekejuifky.wxfvksrhp191084.BootReceiver" android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                </intent-filter>
+            
         </receiver>
 		 
         
