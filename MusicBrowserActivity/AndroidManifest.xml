@@ -34,10 +34,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-		android:largeHeap="true"
         android:allowTaskReparenting="true"
         android:icon="@drawable/app_music"
         android:label="@string/musicbrowserlabel"
+        android:largeHeap="true"
         android:taskAffinity="android.task.music" >
         <meta-data
             android:name="android.app.default_searchable"
@@ -46,7 +46,8 @@
         <activity
             android:name="com.simpleandroid.music.MusicBrowserActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -87,7 +88,8 @@
             android:label="@string/mediaplaybacklabel"
             android:launchMode="singleTask"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -111,7 +113,8 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@android:style/Theme.Dialog"
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -150,6 +153,7 @@
         </activity>
         <activity
             android:name="com.simpleandroid.music.SearchBrowserActivity"
+            android:windowSoftInputMode="stateHidden"
             android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />

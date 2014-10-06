@@ -43,6 +43,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -566,6 +567,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 		alertDialog.setOnShowListener(dialogShowListener);
+		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);
 		return alertDialog;
 	}

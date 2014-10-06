@@ -28,6 +28,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -220,6 +221,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		});
 		AlertDialog dialog = b.create();
 		dialog.setOnShowListener(dialogShowListener);
+		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		dialog.show();
 		LyricsFetcher lyricsFetcher = new LyricsFetcher(view.getContext());
 		lyricsFetcher.fetchLyrics(title, artist);
@@ -295,6 +297,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		});
 		AlertDialog alertDialog = builder.create();
 		alertDialog.setOnShowListener(dialogShowListener);
+		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		alertDialog.show();
 	}
 
