@@ -27,6 +27,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -156,7 +157,7 @@ public class DirectoryChooserDialog {
 				}
 			}
 		});
-
+		dirsDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		// Show directory chooser dialog
 		dirsDialog.show();
 		SongArrayHolder.getInstance().setDirectoryChooserOpened(true);
@@ -289,6 +290,7 @@ public class DirectoryChooserDialog {
 		}
 		AlertDialog dialog = builder.create();
 		dialog.setOnShowListener(showlistener);
+		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		dialog.show();
 	}
 

@@ -213,7 +213,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 						try {
 							mp.prepare();
 						} catch (Exception e) {
-							Log.e(getClass().getSimpleName(), e.getMessage());
 						}
 						mediaPlayer = mp;
 						playerState = Constants.PAUSE;

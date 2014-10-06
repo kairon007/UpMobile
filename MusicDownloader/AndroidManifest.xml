@@ -58,6 +58,7 @@
         <activity
             android:name="org.kreed.musicdownloader.ui.activity.MainActivity"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

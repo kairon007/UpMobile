@@ -68,12 +68,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	@SuppressLint("NewApi")
 	public void downloadSond(String artist, String title, final boolean useCover) {
 		SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
-		if	(!this.songArtist.equals(artist)) {
-			songArtist = artist; 
+		if (!this.songArtist.equals(artist)) {
+			songArtist = artist;
 		}
 		if (!this.songTitle.equals(title)) {
-			songTitle = title; 
+			songTitle = title;
 		}
+		android.util.Log.d("log", "title = " + songTitle +", artist = " + songArtist);
 		if (URL == null) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
@@ -89,18 +90,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			manager.execute();
 		} else {
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(URL))
-							.addRequestHeader("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
+			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(URL)).addRequestHeader("User-Agent",
+					"Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
 			if (headers != null && headers.get(0) != null) {
 				for (int i = 0; i < headers.size(); i++) {
 					request.addRequestHeader(headers.get(i)[0], headers.get(i)[1]);
 				}
 			}
 			final String fileName = sb.toString();
-			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-					.setAllowedOverRoaming(false).setTitle(fileName);
-			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb.append(".mp3")
-					.toString());
+			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(fileName);
+			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb.append(".mp3").toString());
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				request.allowScanningByMediaScanner();
 			}
@@ -113,7 +112,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 				@Override
 				public void run() {
-					if(isFullAction() && waitingForCover) {
+					if (isFullAction() && waitingForCover) {
 						return;
 					}
 					Cursor cs = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
@@ -149,6 +148,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 								path = cutPath(path);
 							}
 							src = new File(path);
+							android.util.Log.d("log", "artist = " + songArtist + ", title = " + songTitle);
 							DownloadClickListener.this.song.path = path;
 							MusicMetadataSet src_set = null;
 							try {
@@ -156,7 +156,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							} catch (Exception exception) {
 								android.util.Log.d("log", "don't read music metadata from file. " + exception);
 							}
-							if (null == src_set) return;
+							if (null == src_set)
+								return;
 							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 							metadata.clearPictureList();
 							metadata.setSongTitle(songTitle);
@@ -198,7 +199,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 						public void onScanCompleted(String path, Uri uri) {
 							prepare(file, song);
-							if (null != listener) listener.success();
+							if (null != listener)
+								listener.success();
 						}
 
 					});
@@ -215,41 +217,41 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	protected void notifyDuringDownload(final long currentDownloadId, final String currentDownloadTitle, final double currentProgress) {
-	
+
 	}
 
 	protected void notifyAboutDownload(long downloadId) {
 
 	}
-	
+
 	public void setUseAlbumCover(boolean useAlbumCover) {
 		this.useAlbumCover = useAlbumCover;
 	}
 
 	protected String getDirectory() {
 		String downloadPath = BaseConstants.DOWNLOAD_DIR;
-	if (context != null) {
-		SharedPreferences downloadDetails = context.getSharedPreferences(OnlineSearchView.getDOWNLOAD_DETAIL(), Context.MODE_PRIVATE);
-		String sharedDownloadPath = downloadDetails.getString(OnlineSearchView.getDOWNLOAD_DIR(), "");
-		if (sharedDownloadPath.equals("")) {
-			Editor edit = downloadDetails.edit();
-			edit.clear();
-			edit.putString(OnlineSearchView.getDOWNLOAD_DIR(), downloadPath);
-			edit.commit();
-		} else
-			return sharedDownloadPath;
-	}
-	return downloadPath;
+		if (context != null) {
+			SharedPreferences downloadDetails = context.getSharedPreferences(OnlineSearchView.getDOWNLOAD_DETAIL(), Context.MODE_PRIVATE);
+			String sharedDownloadPath = downloadDetails.getString(OnlineSearchView.getDOWNLOAD_DIR(), "");
+			if (sharedDownloadPath.equals("")) {
+				Editor edit = downloadDetails.edit();
+				edit.clear();
+				edit.putString(OnlineSearchView.getDOWNLOAD_DIR(), downloadPath);
+				edit.commit();
+			} else
+				return sharedDownloadPath;
+		}
+		return downloadPath;
 	}
 
 	protected void prepare(final File src, RemoteSong song) {
-		
+
 	}
 
 	protected boolean isFullAction() {
 		return true;
 	}
-	
+
 	@Override
 	public void onBitmapReady(Bitmap bmp) {
 		this.cover = bmp;
