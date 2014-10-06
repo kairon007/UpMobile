@@ -70,7 +70,7 @@ public class SongArrayHolder {
 				Song song = searchView.getResultAdapter().getItem(i);
 				results.add(song);
 			}
-			setListViewPosition(searchView.getListView().getFirstVisiblePosition());
+			setListViewPosition(searchView.getListViewPosition());
 			setSongName(searchView.getSearchField().getText().toString());
 			setTaskIterator(searchView.getTaskIterator());
 		}
