@@ -73,7 +73,7 @@ public class DownloadListener extends DownloadClickListener {
 		return false;
 	}
 
-	private static class InsertDownloadItem {
+	private class InsertDownloadItem {
 		private MusicDataInterface musicDataInterface;
 		private String songTitle;
 		private String songArtist;
