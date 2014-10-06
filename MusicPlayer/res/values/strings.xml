@@ -206,4 +206,5 @@
 	<string name="hader_download">Download Location</string>
 	<string name="lyric_not_found">No Lyrics Found for %1$s</string>
 	<string name="selected_folder_label">Selected folder:</string>
+	<string name="this_song_has_already_been_removed">This album has already been removed</string>
 </resources>

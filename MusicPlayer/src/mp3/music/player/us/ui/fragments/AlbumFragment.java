@@ -12,7 +12,6 @@
 package mp3.music.player.us.ui.fragments;
 
 import static mp3.music.player.us.utils.PreferenceUtils.ALBUM_LAYOUT;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -37,6 +36,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.devspark.appmsg.AppMsg;
+
 import mp3.music.player.us.Config;
 import mp3.music.player.us.MusicStateListener;
 import mp3.music.player.us.R;
@@ -52,6 +53,7 @@ import mp3.music.player.us.utils.ApolloUtils;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.NavUtils;
 import mp3.music.player.us.utils.PreferenceUtils;
+
 import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.List;
@@ -220,40 +222,48 @@ public class AlbumFragment extends SherlockFragment implements LoaderCallbacks<L
      * {@inheritDoc}
      */
     @Override
-    public boolean onContextItemSelected(final MenuItem item) {
-        // Avoid leaking context menu selections
-        if (item.getGroupId() == GROUP_ID) {
-            switch (item.getItemId()) {
-                case FragmentMenuItems.PLAY_SELECTION:
-                    MusicUtils.playAll(getSherlockActivity(), mAlbumList, 0, false);
-                    return true;
-                case FragmentMenuItems.ADD_TO_QUEUE:
-                    MusicUtils.addToQueue(getSherlockActivity(), mAlbumList);
-                    return true;
-                case FragmentMenuItems.NEW_PLAYLIST:
-                    CreateNewPlaylist.getInstance(mAlbumList).show(getFragmentManager(),
-                            "CreatePlaylist");
-                    return true;
-                case FragmentMenuItems.MORE_BY_ARTIST:
-                    NavUtils.openArtistProfile(getSherlockActivity(), mAlbum.mArtistName);
-                    return true;
-                case FragmentMenuItems.PLAYLIST_SELECTED:
-                    final long id = item.getIntent().getLongExtra("playlist", 0);
-                    MusicUtils.addToPlaylist(getSherlockActivity(), mAlbumList, id);
-                    return true;
-                case FragmentMenuItems.DELETE:
-                    mShouldRefresh = true;
-                    final String album = mAlbum.mAlbumName;
-                    DeleteDialog.newInstance(album, mAlbumList, album + Config.ALBUM_ART_SUFFIX)
-                            .show(getFragmentManager(), "DeleteDialog");
-                    return true;
-                default:
-                    break;
-            }
-        }
-        return super.onContextItemSelected(item);
-    }
-
+	public boolean onContextItemSelected(final MenuItem item) {
+		// Avoid leaking context menu selections
+		if (item.getGroupId() == GROUP_ID) {
+			if (null == mAlbum || null == mAlbumList ) {
+				return removeDeleted(getSherlockActivity());
+			} else {
+				switch (item.getItemId()) {
+				case FragmentMenuItems.PLAY_SELECTION:
+					MusicUtils.playAll(getSherlockActivity(), mAlbumList, 0, false);
+					return true;
+				case FragmentMenuItems.ADD_TO_QUEUE:
+					MusicUtils.addToQueue(getSherlockActivity(), mAlbumList);
+					return true;
+				case FragmentMenuItems.NEW_PLAYLIST:
+					CreateNewPlaylist.getInstance(mAlbumList).show(getFragmentManager(), "CreatePlaylist");
+					return true;
+				case FragmentMenuItems.MORE_BY_ARTIST:
+					NavUtils.openArtistProfile(getSherlockActivity(), mAlbum.mArtistName);
+					return true;
+				case FragmentMenuItems.PLAYLIST_SELECTED:
+					final long id = item.getIntent().getLongExtra("playlist", 0);
+					MusicUtils.addToPlaylist(getSherlockActivity(), mAlbumList, id);
+					return true;
+				case FragmentMenuItems.DELETE:
+					mShouldRefresh = true;
+					final String album = mAlbum.mAlbumName;
+					DeleteDialog.newInstance(album, mAlbumList, album + Config.ALBUM_ART_SUFFIX).show(getFragmentManager(), "DeleteDialog");
+					return true;
+				default:
+					break;
+				}
+			}
+		}
+		return super.onContextItemSelected(item);
+	}
+    
+	private boolean removeDeleted(Activity activity) {
+		AppMsg.makeText(activity, R.string.this_song_has_already_been_removed, AppMsg.STYLE_CONFIRM).show();
+		MusicUtils.refresh();
+		return true;
+	}
+	
     /**
      * {@inheritDoc}
      */
