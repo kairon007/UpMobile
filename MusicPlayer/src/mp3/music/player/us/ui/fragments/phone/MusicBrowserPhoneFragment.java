@@ -11,6 +11,7 @@
 
 package mp3.music.player.us.ui.fragments.phone;
 
+import mp3.music.player.us.Constants;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.PagerAdapter;
 import mp3.music.player.us.adapters.PagerAdapter.MusicFragments;
@@ -124,6 +125,10 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
 		int tab = 0;
 		if (PreferenceUtils.getInstace(getActivity()).isNeedRestore()) {
 			tab = PreferenceUtils.getInstace(getActivity()).getCurrentPage();
+		}
+		String extraSearch = getArguments().getString(Constants.KEY_EXTRA_SEARCH);
+		if (extraSearch != null && !extraSearch.isEmpty()) {
+			tab = 0;
 		}
 		mViewPager.setCurrentItem(tab);
 		// This need to disable showing "Rate me" popup
