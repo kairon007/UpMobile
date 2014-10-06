@@ -1293,58 +1293,60 @@ public final class MusicUtils {
         };
         final StringBuilder selection = new StringBuilder();
         selection.append(BaseColumns._ID + " IN (");
-        for (int i = 0; i < list.length; i++) {
-            selection.append(list[i]);
-            if (i < list.length - 1) {
-                selection.append(",");
-            }
+        if (null != list)  {
+	        for (int i = 0; i < list.length; i++) {
+	            selection.append(list[i]);
+	            if (i < list.length - 1) {
+	                selection.append(",");
+	            }
+	        }
+	        selection.append(")");
+	        final Cursor c = context.getContentResolver().query(
+	                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(),
+	                null, null);
+	        if (c != null) {
+	            // Step 1: Remove selected tracks from the current playlist, as well
+	            // as from the album art cache
+	            c.moveToFirst();
+	            while (!c.isAfterLast()) {
+	                // Remove from current playlist
+	                final long id = c.getLong(0);
+	                removeTrack(id);
+	                // Remove from the favorites playlist
+	                FavoritesStore.getInstance(context).removeItem(id);
+	                // Remove any items in the recents database
+	                RecentStore.getInstance(context).removeItem(String.valueOf(c.getLong(2)));
+	                c.moveToNext();
+	            }
+	
+	            // Step 2: Remove selected tracks from the database
+	            context.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+	                    selection.toString(), null);
+	
+	            // Step 3: Remove files from card
+	            c.moveToFirst();
+	            while (!c.isAfterLast()) {
+	                final String name = c.getString(1);
+	                final File f = new File(name);
+	                try { // File.delete can throw a security exception
+	                    if (!f.delete()) {
+	                        // I'm not sure if we'd ever get here (deletion would
+	                        // have to fail, but no exception thrown)
+	                        Log.e("MusicUtils", "Failed to delete file " + name);
+	                    }
+	                    c.moveToNext();
+	                } catch (final SecurityException ex) {
+	                    c.moveToNext();
+	                }
+	            }
+	            c.close();
+	        }
+	
+	        final String message = context.getResources().getQuantityString(R.plurals.NNNtracksdeleted,
+	                list.length, Integer.valueOf(list.length));
+	
+	        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
         }
-        selection.append(")");
-        final Cursor c = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(),
-                null, null);
-        if (c != null) {
-            // Step 1: Remove selected tracks from the current playlist, as well
-            // as from the album art cache
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                // Remove from current playlist
-                final long id = c.getLong(0);
-                removeTrack(id);
-                // Remove from the favorites playlist
-                FavoritesStore.getInstance(context).removeItem(id);
-                // Remove any items in the recents database
-                RecentStore.getInstance(context).removeItem(String.valueOf(c.getLong(2)));
-                c.moveToNext();
-            }
-
-            // Step 2: Remove selected tracks from the database
-            context.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    selection.toString(), null);
-
-            // Step 3: Remove files from card
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                final String name = c.getString(1);
-                final File f = new File(name);
-                try { // File.delete can throw a security exception
-                    if (!f.delete()) {
-                        // I'm not sure if we'd ever get here (deletion would
-                        // have to fail, but no exception thrown)
-                        Log.e("MusicUtils", "Failed to delete file " + name);
-                    }
-                    c.moveToNext();
-                } catch (final SecurityException ex) {
-                    c.moveToNext();
-                }
-            }
-            c.close();
-        }
-
-        final String message = context.getResources().getQuantityString(R.plurals.NNNtracksdeleted,
-                list.length, Integer.valueOf(list.length));
-
-        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
         // We deleted a number of tracks, which could affect any number of
         // things
         // in the media content domain, so update everything.

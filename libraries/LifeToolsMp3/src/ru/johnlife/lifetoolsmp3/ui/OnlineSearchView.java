@@ -635,8 +635,8 @@ public abstract class OnlineSearchView extends View {
 		this.extraSearch = extraSearch;
 	}
 
-	public ListView getListView() {
-		return listView;
+	public int getListViewPosition() {
+		return listView.getFirstVisiblePosition();
 	}
 	
 	public void notifyAdapter() {
