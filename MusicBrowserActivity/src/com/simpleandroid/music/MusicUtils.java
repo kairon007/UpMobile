@@ -164,10 +164,10 @@ public class MusicUtils {
         return bindToService(context, null);
     }
 
-    public static ServiceToken bindToService(Activity context, ServiceConnection callback) {
-        Activity realActivity = context.getParent();
+    public static ServiceToken bindToService(Activity activity, ServiceConnection callback) {
+        Activity realActivity = activity.getParent();
         if (realActivity == null) {
-            realActivity = context;
+            realActivity = activity;
         }
         ContextWrapper cw = new ContextWrapper(realActivity);
         cw.startService(new Intent(cw, MediaPlaybackService.class));
