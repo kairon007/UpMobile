@@ -171,6 +171,7 @@ public class MyEqualizer extends Activity implements
 						enableAll();
 						Utils.setEqPrefs(MyEqualizer.this, true);
 					} else {
+						setPreset("Flat");
 						onOffBtn.setImageResource(R.drawable.off_btn);
 						Utils.isOn = false;
 
