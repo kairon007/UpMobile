@@ -229,7 +229,10 @@ public abstract class OnlineSearchView extends View {
 
 	}
 	
-
+	protected boolean onlyOnWifi() {
+		return true;
+	}
+	
 	// protected DownloadClickListener createListener(RemoteSong song, Bitmap
 	// bitmap) {
 	// return new DownloadClickListener(getContext(), song, bitmap);
@@ -437,6 +440,10 @@ public abstract class OnlineSearchView extends View {
 	public void prepareSong(final Bundle args, boolean force) {
 		if(isOffline(getContext())) {
 			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
+			return;
+		}
+		if(!onlyOnWifi()){
+			Toast.makeText(view.getContext(), view.getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {

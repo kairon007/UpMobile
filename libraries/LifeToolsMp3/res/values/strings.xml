@@ -28,5 +28,6 @@
     <string name="search_hint">Search Music</string>
     <string name="loading_song_details">Loading song details...</string>
     <string name="please_wait">Please Wait...</string>
+    <string name="no_wi_fi">no wi-fi</string>
 					
 </resources>

@@ -4,6 +4,7 @@ import mp3.music.player.us.Advertisement;
 import mp3.music.player.us.Settings;
 import mp3.music.player.us.ui.activities.HomeActivity;
 import mp3.music.player.us.utils.MusicUtils;
+import mp3.music.player.us.utils.PreferenceUtils;
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
@@ -31,6 +32,11 @@ public class SearchView extends OnlineSearchView {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	protected boolean onlyOnWifi() {
+		return PreferenceUtils.getInstace(getContext()).onlyOnWifi();
 	}
 
 	@Override
