@@ -43,8 +43,17 @@
                 android:id="@+id/directoryText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:ellipsize="start"
+                android:fontFamily="sans-serif-light"
+                android:gravity="left|center_vertical"
                 android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/dialog_default_text_size" />
         </LinearLayout>
 
