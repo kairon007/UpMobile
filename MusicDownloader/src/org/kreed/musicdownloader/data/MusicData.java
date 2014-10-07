@@ -61,7 +61,12 @@ public class MusicData {
 				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 				if (metadata.isEmpty()) {
 					String nameFile = musicFile.getName().split(".mp3")[0];
-					String[] nameFileArray = nameFile.split(" - ");
+					String[] nameFileArray;
+					if (!nameFile.contains("-<")) {
+						nameFileArray = nameFile.split(" - ");
+					} else {
+						nameFileArray = nameFile.split("-<")[0].split(" - ");
+					}
 					songTitle = nameFileArray[1];
 					songArtist = nameFileArray[0];
 					metadata.setSongTitle(songTitle);
@@ -126,22 +131,18 @@ public class MusicData {
 					return temp;
 				}
 				temp.setSongArtist(metadata.getArtist());
+				temp.setSongTitle(metadata.getSongTitle());
+				int seconds = 0;
+				try {
+					seconds = AudioFileIO.read(file).getAudioHeader().getTrackLength();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				temp.setSongDuration(Util.formatTimeSimple(seconds * 1000));
 				Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
 				temp.setSongBitmap(bitmap);
 				if (null != metadata.getAlbum()) {
 					temp.setSongAlbum(metadata.getAlbum());
-				}
-				if (metadata.getSongTitle() != null) {
-					int index = metadata.getSongTitle().indexOf('/');
-					temp.setFileUri(file.getAbsolutePath());
-					if (index != -1) {
-						String title = metadata.getSongTitle().substring(0, index);
-						String duration = metadata.getSongTitle().substring(index + 1);
-						temp.setSongTitle(title);
-						temp.setSongDuration(duration);
-					} else {
-						temp.setSongTitle(metadata.getSongTitle());
-					}
 				}
 				if (metadata.containsKey("genre_id")) {
 					int genre_id = (Integer) metadata.get("genre_id");
@@ -221,6 +222,8 @@ public class MusicData {
 
 	private void renameBoundFile() {
 		File file = new File(fileUri);
+		String strCompare = songArtist + " - "  +songTitle;
+		int compareResult = Util.existFile(file.getParent(), strCompare);
 		File newFile = null;
 		MusicMetadataSet src_set = null;
 		try {
@@ -232,7 +235,11 @@ public class MusicData {
 			}
 			metadata.setSongTitle(songTitle);
 			metadata.setArtist(songArtist);
-			newName = songTitle + " - " + songArtist + ".mp3";
+			if (compareResult <= 0) {
+				newName = songArtist+ " - " + songTitle + ".mp3";
+			} else {
+				newName = songArtist + " - " + songTitle + "-<" + (compareResult) + ">.mp3";
+			}
 			newFile = new File(file.getParentFile(), newName);
 			fileUri = newFile.getAbsolutePath();
 			new MyID3().write(file, newFile, src_set, metadata);
@@ -331,9 +338,12 @@ public class MusicData {
 
 	@Override
 	public String toString() {
-		if (null == songArtist && null == songTitle) return "null";
-		if (null != songArtist && null == songTitle) return getSongArtist().toLowerCase(Locale.ENGLISH);
-		if (null == songArtist && null != songTitle) return getSongTitle().toLowerCase(Locale.ENGLISH);
+		if (null == songArtist && null == songTitle)
+			return "null";
+		if (null != songArtist && null == songTitle)
+			return getSongArtist().toLowerCase(Locale.ENGLISH);
+		if (null == songArtist && null != songTitle)
+			return getSongTitle().toLowerCase(Locale.ENGLISH);
 		return getSongArtist().toLowerCase(Locale.ENGLISH) + " - " + getSongTitle().toLowerCase(Locale.ENGLISH);
 	}
 

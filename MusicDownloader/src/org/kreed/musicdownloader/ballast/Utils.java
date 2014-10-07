@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-public class Util {
+public class Utils {
 	
 	public static String getThemeName(Context context)
 	{

@@ -1,5 +1,6 @@
 package ru.johnlife.lifetoolsmp3;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,6 +41,24 @@ public final class Util {
 		m.postScale(scale, scale);
 		Bitmap small = Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
 		return small;
+	}
+	
+	public static int existFile(String parentName, String fileName) {
+		int result = 0;
+		File file = new File(parentName);
+		File[] fileArray = file.listFiles();
+		for (int i = 0; i < fileArray.length; i++) {
+			File f = fileArray[i];
+			String fName = f.getName().split(".mp3")[0];
+			if(fName.contains("-<")){
+				fName = fName.split("-<")[0];
+			}
+			if (fileName.equals(fName)){
+				result++;
+				continue;
+			}
+		}
+		return result;
 	}
 	
 	public static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
