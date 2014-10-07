@@ -227,7 +227,6 @@
                 android:paddingLeft="8dp"
                 android:singleLine="true"
                 android:text="@string/header_download"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/dialog_default_text_size" />
         </RelativeLayout>
     </LinearLayout>

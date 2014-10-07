@@ -317,8 +317,10 @@ public class DirectoryChooserDialog {
 					tv.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
 					tv.getLayoutParams().width = LayoutParams.MATCH_PARENT;
 					tv.setGravity(Gravity.CENTER_VERTICAL);
-//					int white = Color.WHITE;
-//					tv.setTextColor(white);
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+						int white = Color.WHITE;
+						tv.setTextColor(white);
+					}
 					tv.setTextSize(16f);
 					tv.setEllipsize(null);
 				}
