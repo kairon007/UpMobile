@@ -13,6 +13,7 @@ import org.cmc.music.metadata.MusicMetadata;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.Build;
 
 public final class Util {
 	
@@ -58,7 +59,6 @@ public final class Util {
 				continue;
 			}
 		}
-		android.util.Log.d("log", "result = " + result);
 		return result;
 	}
 	
