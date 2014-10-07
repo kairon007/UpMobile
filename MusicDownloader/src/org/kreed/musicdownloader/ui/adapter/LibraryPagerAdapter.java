@@ -23,6 +23,7 @@ package org.kreed.musicdownloader.ui.adapter;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.musicdownloader.Constants;
@@ -35,6 +36,8 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
+
+import com.soundcloud.api.examples.PostResource;
 
 import android.content.Context;
 import android.content.Intent;
@@ -152,6 +155,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	private int currentType = -1;
 	private Context context;
 	public LibraryTabAdapter adapterLibrary = null;
+	private ArrayList<MusicData> listLibrarySongs = new ArrayList<MusicData>();
+	private boolean isDeployFilter;
+	private ArrayList<MusicData> listOriginSongs = new ArrayList<MusicData>();
 
 	/**
 	 * Create the LibraryPager.
@@ -212,6 +218,14 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		return false;
 	}
 
+	public void setListLibrarySongs(ArrayList<MusicData> data) {
+		listLibrarySongs.addAll(data);
+	}
+	
+	public void setIsDeployFilter(boolean isDeployFilter) {
+		this.isDeployFilter = isDeployFilter;
+	}
+	
 	public void computeExpansions() {
 		int[] order = mTabOrder;
 		int musicPosition = -1;
@@ -296,8 +310,25 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				adapterLibrary = new LibraryTabAdapter(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
-				FillLibraryTask task = new FillLibraryTask();
-				task.execute(contentFile);
+				if (isDeployFilter) {
+					for (MusicData m : listLibrarySongs) {
+						adapterLibrary.add(m);
+					}
+					File[] files = contentFile.listFiles();
+					for (int i = 0; i < files.length; i++) {
+						String string = files[i].getName();
+						if (string.endsWith(".mp3")) {
+							final MusicData musicData = new MusicData(files[i]);
+							if (!DownloadsTab.getInstance().isDownloading(musicData)) {
+								listOriginSongs.add(musicData);
+							}
+						}
+					}
+					adapterLibrary.setOriginalValues(listOriginSongs);
+				} else {
+					FillLibraryTask task = new FillLibraryTask();
+					task.execute(contentFile);
+				}
 				break;
 			default:
 				break;
@@ -307,8 +338,14 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			enableFastScroll(view);
 			mLists[type] = view;
 		}
-		container.addView(view);
+		if (container != null) {
+			container.addView(view);
+		}
 		return view;
+	}
+	
+	public LibraryTabAdapter getLibraryTabAdapter() {
+		return adapterLibrary;
 	}
 
 	private class FillLibraryTask extends AsyncTask<File, Void, Void> {
@@ -331,6 +368,11 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				}
 			}
 			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			adapterLibrary.setFilter();
 		}
 	}
 
