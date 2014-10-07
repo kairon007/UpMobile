@@ -36,7 +36,8 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	protected boolean onlyOnWifi() {
-		return PreferenceUtils.getInstace(getContext()).onlyOnWifi();
+		boolean flag = !PreferenceUtils.getInstace(getContext()).onlyOnWifi();
+		return flag;
 	}
 
 	@Override
