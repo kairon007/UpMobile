@@ -120,6 +120,6 @@
         android:contentDescription="@string/expand"
         android:longClickable="true"
         android:scaleType="center"
-        android:src="@drawable/arrow" />
+        android:src="@drawable/icon_download"/>
 
 </LinearLayout>
