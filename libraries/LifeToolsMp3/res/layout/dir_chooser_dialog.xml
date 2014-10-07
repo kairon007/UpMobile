@@ -71,9 +71,11 @@
         android:id="@+id/lvPath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:cacheColorHint="@android:color/transparent"
         android:clickable="true"
         android:paddingBottom="8dp"
         android:paddingTop="8dp" >
+
     </ListView>
 
 </LinearLayout>
