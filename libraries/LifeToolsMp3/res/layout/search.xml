@@ -44,14 +44,14 @@
             android:id="@+id/search"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/clear_clickable"
+            android:background="@drawable/selectable_item_bg"
             android:src="@drawable/ic_menu_search" />
 
         <ImageButton
             android:id="@+id/downloads"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/clear_clickable"
+            android:background="@drawable/selectable_item_bg"
             android:src="@drawable/ic_menu_archive" />
     </LinearLayout>
 
