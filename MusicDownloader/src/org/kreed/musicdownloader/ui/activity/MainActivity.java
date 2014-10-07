@@ -343,7 +343,11 @@ public class MainActivity extends Activity {
 		if (showDialog && null != music) {
 			String mUri = music.getFileUri();
 			out.putString(Constants.MUSIC_URI, mUri);
-			out.putStringArrayList(Constants.EDITOR_FIELDS, editor.getStrings());
+			ArrayList<String> strings = new ArrayList<String>();
+			strings.add(editor.getStrings()[0]);
+			strings.add(editor.getStrings()[1]);
+			strings.add(editor.getStrings()[2]);
+			out.putStringArrayList(Constants.EDITOR_FIELDS, strings);
 			out.putBoolean(Constants.USE_COVER, editor.isShowCover());
 		}
 		out.putBoolean(Constants.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
@@ -357,7 +361,7 @@ public class MainActivity extends Activity {
 			Log.d("logd", String.valueOf(player.isSongProgressIndeterminate()));
 			out.putInt(SAVE_BUTTONPLAY_PROGRESS, player.getButtonProgressVisibility());
 		}
-		if (lastPage == 0) {
+		if (lastPage == 0) { 
 			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		}
 		super.onSaveInstanceState(out);

@@ -652,6 +652,11 @@ public class LibraryPagerAdapter
 		return tab;
 	}
 
+	public void notifySongAdapter() {
+		requestRequery(mSongAdapter);
+		requeryIfNeeded(MediaUtils.TYPE_SONG);
+	}
+	
 	/**
 	 * Returns the limiter set on the current adapter or null if there is none.
 	 */

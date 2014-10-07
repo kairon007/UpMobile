@@ -96,6 +96,10 @@ public class SongArrayHolder {
 		return playerInstance;
 	}
 	
+	public boolean isID3Opened() {
+		return isID3DialogOpened;
+	}
+	
 	public String[] getID3Fields() {
 		return fields;
 	}

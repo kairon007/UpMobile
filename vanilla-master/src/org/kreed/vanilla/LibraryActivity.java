@@ -37,10 +37,12 @@ import org.kreed.vanilla.equalizer.MyEqualizer;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -131,6 +133,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
 	private static final String SWICH_SHOW_DIALOG_RATE = "swich_show_dialog_rate";
+	private static final String TYPE_FILE = "type_file";
+	private static final String ID_FILE = "id_file";
 
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
@@ -537,8 +541,14 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
-		if (in.getBoolean(SEARCH_BOX_VISIBLE))
+		type = in.getInt(TYPE_FILE);
+		id = in.getLong(ID_FILE);
+		if (in.getBoolean(SEARCH_BOX_VISIBLE)) {
 			setSearchBoxVisible(true);
+		}
+		if (SongArrayHolder.getInstance().isID3Opened()) {
+			createEditID3Dialog(type, id, null);
+		}
 		super.onRestoreInstanceState(in);
 	}
 
@@ -547,6 +557,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		if (lastPage == 0) {
 			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
 		}
+		outState.putInt(TYPE_FILE, type);
+		outState.putLong(ID_FILE, id);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -1143,11 +1155,16 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 		return true;
 	}
-
+	
+	@SuppressLint("NewApi") 
 	private void createEditID3Dialog(int type, long id, MP3Editor view) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		if (null == view) {
 			editor = new MP3Editor(this, true);
+		}
+		final SongArrayHolder holder = SongArrayHolder.getInstance();
+		if (holder.isID3Opened()) {
+			editor.setStrings(holder.getID3Fields());
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		editor.hideCheckBox(true);
@@ -1155,6 +1172,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				holder.setID3DialogOpened(false, null, false);
 				final String artistName = editor.getNewArtistName();
 				final String albumTitle = editor.getNewAlbumTitle();
 				final String songTitle = editor.getNewSongTitle();
@@ -1168,6 +1186,11 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 						rename(file, artistName, albumTitle, songTitle);
 						return null;
 					}
+					
+					@Override
+					protected void onPostExecute(Void result) {
+						((LibraryPagerAdapter) mViewPager.getAdapter()).notifySongAdapter();
+					};
 
 				}.execute();
 			}
@@ -1177,11 +1200,22 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
+				holder.setID3DialogOpened(false, null, false);
 			}
 
 		});
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+			builder.setOnDismissListener(new OnDismissListener() {
+				
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					holder.setID3DialogOpened(false, null, false);
+				}
+			});
+		}
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
+		holder.setID3DialogOpened(true, editor.getStrings(), false);
 	}
 
 	private void deleteCover(File f) {

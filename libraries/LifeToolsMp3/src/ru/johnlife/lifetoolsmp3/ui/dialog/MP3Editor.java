@@ -189,8 +189,7 @@ public class MP3Editor {
 		oldAlbumTitle = newAlbumTitle = strings[2];
 	}
 
-	public ArrayList<String> getStrings() {
-		ArrayList<String> strings = new ArrayList<String>(Arrays.asList(newArtistName, newSongTitle, newAlbumTitle));
-		return strings;
+	public String[] getStrings() {
+		return new String[] {newArtistName, newSongTitle, newAlbumTitle};
 	}
 }
