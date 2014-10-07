@@ -223,7 +223,7 @@ public class MusicData {
 	private void renameBoundFile() {
 		File file = new File(fileUri);
 		String strCompare = songArtist + " - "  +songTitle;
-		int compareResult = Util.existFile(file.getParent(), strCompare);
+		int index = Util.existFile(file.getParent(), strCompare);
 		File newFile = null;
 		MusicMetadataSet src_set = null;
 		try {
@@ -235,10 +235,10 @@ public class MusicData {
 			}
 			metadata.setSongTitle(songTitle);
 			metadata.setArtist(songArtist);
-			if (compareResult <= 0) {
+			if (index < 1) {
 				newName = songArtist+ " - " + songTitle + ".mp3";
 			} else {
-				newName = songArtist + " - " + songTitle + "-<" + (compareResult) + ">.mp3";
+				newName = songArtist + " - " + songTitle + "-<" + (index) + ">.mp3";
 			}
 			newFile = new File(file.getParentFile(), newName);
 			fileUri = newFile.getAbsolutePath();

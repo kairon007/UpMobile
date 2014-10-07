@@ -58,6 +58,7 @@ public final class Util {
 				continue;
 			}
 		}
+		android.util.Log.d("log", "result = " + result);
 		return result;
 	}
 	

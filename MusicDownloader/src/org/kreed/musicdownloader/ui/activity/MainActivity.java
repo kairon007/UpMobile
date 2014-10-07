@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 	private boolean mSearchBoxVisible;
 	public boolean mFakeTarget;
 	private MP3Editor editor;
-	private ArrayList <String> mStrings;
+	private ArrayList<String> mStrings;
 	private boolean showDialog = false;
 	private boolean useCover = false;
 
@@ -128,7 +128,7 @@ public class MainActivity extends Activity {
 	public static boolean isAlphaNumeric(String input) {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
-	
+
 	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX, FileObserver.DELETE) {
 
 		@Override
@@ -190,7 +190,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		textFilterLibrary = mTextFilter.getText().toString(); 
+		textFilterLibrary = mTextFilter.getText().toString();
 		super.onPause();
 	}
 
@@ -199,7 +199,7 @@ public class MainActivity extends Activity {
 		super.onResume();
 		if (page == 1 && null != textFilterDownload && !textFilterDownload.equals("")) {
 			mTextFilter.setText(textFilterDownload);
-		} 
+		}
 	}
 
 	@Override
@@ -296,7 +296,7 @@ public class MainActivity extends Activity {
 		mPagerAdapter.notifyDataSetChanged();
 		loadTabOrder();
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -357,7 +357,7 @@ public class MainActivity extends Activity {
 			Log.d("logd", String.valueOf(player.isSongProgressIndeterminate()));
 			out.putInt(SAVE_BUTTONPLAY_PROGRESS, player.getButtonProgressVisibility());
 		}
-		if (lastPage == 0) { 
+		if (lastPage == 0) {
 			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		}
 		super.onSaveInstanceState(out);
@@ -419,7 +419,7 @@ public class MainActivity extends Activity {
 		showOptions.addCategory(Intent.CATEGORY_HOME);
 		startActivity(showOptions);
 	}
-	
+
 	public String getTextFilterLibrary() {
 		if (null == textFilterLibrary || textFilterLibrary.equals("")) {
 			return "";
@@ -461,7 +461,6 @@ public class MainActivity extends Activity {
 		pb.setVisibility(View.VISIBLE);
 	}
 
-	
 	public void play(ArrayList<String[]> headers, MusicData musicData) {
 		music = musicData;
 		if (player != null && player.getData().equals(musicData)) {
@@ -553,12 +552,12 @@ public class MainActivity extends Activity {
 			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().equals(music)) {
 				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
-			}	
+			}
 			super.onPostExecute(result);
 		}
 
 	}
-	
+
 	@SuppressLint("NewApi")
 	public void showEditDialog() {
 		editor = new MP3Editor(this, useCover);
@@ -622,7 +621,7 @@ public class MainActivity extends Activity {
 		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		alertDialog.show();
 	}
-	
+
 	private void notifyMediascanner(final MusicData musicData) {
 		File file = new File(musicData.getFileUri());
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
@@ -635,7 +634,7 @@ public class MainActivity extends Activity {
 
 		});
 	}
-	
+
 	public class CustomTextWatcher implements TextWatcher {
 
 		@Override
@@ -654,7 +653,7 @@ public class MainActivity extends Activity {
 
 		}
 	}
-	
+
 	public void refreshLibraryTab() {
 		mPagerAdapter.instantiateItem(null, MediaUtils.TYPE_LIBRARY);
 	}
