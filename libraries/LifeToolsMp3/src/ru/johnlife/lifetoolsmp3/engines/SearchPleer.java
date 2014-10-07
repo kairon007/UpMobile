@@ -20,6 +20,8 @@ public class SearchPleer extends SearchWithPages {
 	
 	@Override
 	protected Void doInBackground(Void... arg0) {
+		
+	
 		if (page == 1) maxPages = 100;
 		if (page > maxPages) return null;
 		try {

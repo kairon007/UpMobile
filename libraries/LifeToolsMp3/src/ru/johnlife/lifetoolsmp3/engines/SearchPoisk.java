@@ -25,6 +25,8 @@ public class SearchPoisk extends SearchWithPages {
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
+		
+		
 		String urlMp3poisk = null;
 		try {
 

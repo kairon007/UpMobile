@@ -13,7 +13,11 @@ import android.util.Log;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
 public class SearchSoundCloudV3 extends SearchWithPages  {
-	private final static String URL_PATTERN = "http://m.soundcloud.com/_api/tracks/?q=%s&offset=%s&client_id=2Kf29hhC5mgWf62708A&format=json";
+ 	
+	public String getSoundcloudUrlPattern(String clientId) {
+		return "http://m.soundcloud.com/_api/tracks/?q=%s&offset=%s&client_id=" + clientId + "&format=json";		
+	}
+	
 	private int pag;
 	public SearchSoundCloudV3(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -27,10 +31,16 @@ public class SearchSoundCloudV3 extends SearchWithPages  {
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
+		
+		
+		String soundcloudClientId = getSoundcloudClientId();
 
 		String link = null;
 		try {
-			link = String.format(URL_PATTERN, URLEncoder.encode(getSongName(), "UTF-8"), getPage());
+			
+			String soundcloudUrlPattern = getSoundcloudUrlPattern(soundcloudClientId);
+			
+			link = String.format(soundcloudUrlPattern, URLEncoder.encode(getSongName(), "UTF-8"), getPage());
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
@@ -45,7 +55,7 @@ public class SearchSoundCloudV3 extends SearchWithPages  {
 					String author = nameObject.getString("title").substring(0, (nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1));
 					String id = nameObject.getString("id");
 					long duration = nameObject.getLong("duration");
-					String downloadUrl = "http://api.soundcloud.com/tracks/" + id + "/stream?client_id=2Kf29hhC5mgWf62708A";
+					String downloadUrl = "http://api.soundcloud.com/tracks/" + id + "/stream?client_id=" + soundcloudClientId;
 					addSong(new RemoteSong(downloadUrl).setTitle(name).setArtistName(author).setDuration(duration));
 				}
 			}

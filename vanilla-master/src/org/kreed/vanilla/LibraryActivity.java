@@ -38,6 +38,7 @@ import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -450,7 +451,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		// load banner ad
 		try {
 			if (Settings.ENABLE_ADS) {
-				Advertisement.mopubShowBanner(this);
+				Advertisement.showBanner(this);
 			}
 		} catch (Exception e) {
 
@@ -541,15 +542,16 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
-		type = in.getInt(TYPE_FILE);
-		id = in.getLong(ID_FILE);
-		if (in.getBoolean(SEARCH_BOX_VISIBLE)) {
+			type = in.getInt(TYPE_FILE);
+			id = in.getLong(ID_FILE);
+			if (in.getBoolean(SEARCH_BOX_VISIBLE)) {
+		 		setSearchBoxVisible(true);
+			}
+			if (SongArrayHolder.getInstance().isID3Opened()) {
+				createEditID3Dialog(type, id, null);
+			}
 			setSearchBoxVisible(true);
-		}
-		if (SongArrayHolder.getInstance().isID3Opened()) {
-			createEditID3Dialog(type, id, null);
-		}
-		super.onRestoreInstanceState(in);
+			super.onRestoreInstanceState(in);
 	}
 
 	@Override
@@ -562,12 +564,24 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		super.onSaveInstanceState(outState);
 	}
 
+	public Activity getActivity() {
+		return this;
+	}
+	
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
 			mTextFilter.setText("");
-			onBackPressed();
+			//onBackPressed();
+			
+            try {
+            	Advertisement.exit(getActivity());
+            } catch(Exception e) {
+            	
+            }
+
+			
 			break;
 		// case KeyEvent.KEYCODE_BACK:
 		// if (mSearchBoxVisible) {
@@ -1155,7 +1169,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 		return true;
 	}
-	
+
 	@SuppressLint("NewApi") 
 	private void createEditID3Dialog(int type, long id, MP3Editor view) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);

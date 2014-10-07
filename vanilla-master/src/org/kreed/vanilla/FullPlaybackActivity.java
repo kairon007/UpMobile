@@ -274,7 +274,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 		// load banner ad
 		try {
 			if (Settings.ENABLE_ADS) {
-				Advertisement.mopubShowBanner(this); 
+				Advertisement.showBanner(this); 
 			}
 		} catch (Exception e) { 
 			 

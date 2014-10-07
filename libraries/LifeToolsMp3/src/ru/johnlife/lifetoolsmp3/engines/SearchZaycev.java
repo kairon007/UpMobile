@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class SearchZaycev extends SearchWithPages {
 
@@ -29,6 +30,8 @@ public class SearchZaycev extends SearchWithPages {
 	
 	@Override
 	protected Void doInBackground(Void... params) {
+		
+		
 		if (page == 1) maxPages = 1;
 		if (page > maxPages) return null;
 		try {

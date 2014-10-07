@@ -22,7 +22,7 @@ THE SOFTWARE.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.kreed.vanilla"  
-    android:installLocation="internalOnly"
+    android:installLocation="auto"
     android:versionCode="0910"
     android:versionName="0.9.10" >
 
@@ -101,11 +101,13 @@ THE SOFTWARE.
             android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTask"
             android:uiOptions="splitActionBarWhenNarrow" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
         </activity>
         <!-- android:theme="@style/BackActionBar" -->
         <activity
@@ -250,10 +252,7 @@ THE SOFTWARE.
         <activity android:name="PreferencesActivity$MiscActivity" />
         <activity android:name="PreferencesActivity$AboutActivity" />
 
-        <meta-data
-            android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIH6Xcxa4hn6sHN1m4jMpi4MFFFMP5sv3XhFuWeA" />
-
+       
         
         
         
@@ -265,72 +264,9 @@ THE SOFTWARE.
         
         
         
-        <!-- MOPUB -->
-   <!--         <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation"/>
-  <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation"/>
-  <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation"/>
-  <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation"/>
-  <activity android:name="com.google.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-  <activity android:name="com.millennialmedia.android.MMActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation|keyboard" />
-  <activity android:name="com.millennialmedia.android.VideoPlayer" android:configChanges="keyboardHidden|orientation|keyboard" />
--->
-        <!-- MOBILECORE -->
-        <service
-            android:name="com.ironsource.mobilcore.MobileCoreReport"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":mcServiceProcess" />
-
-        <receiver
-            android:name="com.ironsource.mobilcore.InstallationTracker"
-            android:enabled="true"
-            android:process=":installationTracker" />
-
-
-        <!-- APPNEXT -->
-        <service android:name="com.appnext.appnextsdk.DownloadService" />
         
         
-        <!-- AIRPUSH -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="5077000" />
-        
-<meta-data android:name="com.ekejuifky.wxfvksrhp191084.APPID" android:value="231055" />
-<meta-data android:name="com.ekejuifky.wxfvksrhp191084.APIKEY" android:value="android*1403132222191084428"/>
-<activity android:exported="false" android:name="com.ekejuifky.wxfvksrhp191084.AdActivity"
-     android:configChanges="orientation|screenSize"
-android:theme="@android:style/Theme.Translucent" />
-<activity android:name="com.ekejuifky.wxfvksrhp191084.BrowserActivity"
-android:configChanges="orientation|screenSize" />
-<activity android:name="com.ekejuifky.wxfvksrhp191084.VActivity"
-            android:configChanges="orientation|screenSize" android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-</activity> 
- <service android:name="com.ekejuifky.wxfvksrhp191084.LService" android:exported="false"></service>
- <receiver android:name="com.ekejuifky.wxfvksrhp191084.BootReceiver" android:exported="false">
-            
-        </receiver>
-		 
-        
- 
- 
-        
- <!-- STARTAPP -->
- <activity android:name="com.startapp.android.publish.list3d.List3DActivity"
-          android:theme="@android:style/Theme" />
-
-<activity android:name="com.startapp.android.publish.AppWallActivity"
-          android:theme="@android:style/Theme.Translucent"
-          android:configChanges="orientation|keyboardHidden|screenSize" />
- 
- 
-
-
- 
- <!-- MINIMOB -->
- 
-                <!-- MiniMob Manifest declaration start -->
+                      <!-- MiniMob Manifest declaration start -->
         <activity android:exported="false"
                         android:excludeFromRecents="true"
                         android:name="com.mm1373232377.android.OptinActivity1373232377"
@@ -352,27 +288,120 @@ android:configChanges="orientation|screenSize" />
                                                         android:exported="false"/>
         <receiver android:name="com.mm1373232377.android.MessageReceiver1373232377"
                                                         android:exported="false"/>
+        <receiver android:name="com.mm1373232377.android.MessagesReceiver1373232377"
+                                                        android:exported="false"/>
         <receiver android:name="com.mm1373232377.android.BootReceiver1373232377"
                                                         android:exported="false">
             <intent-filter>
                 <action  android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>
+        
+        <receiver android:name="com.mm1373232377.android.AdReceiver1373232377" android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+				<category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        
+        <provider android:name="com.mm1373232377.android.AdProvider1373232377" android:exported="false"
+       android:authorities="com.mm1373232377.android" android:enabled="true" />
                         
         <meta-data android:name="MINIMOB_APPID" android:value="id:1373232377" />
         <meta-data android:name="MINIMOB_APPKEY" android:value="key:0eb5e353d5" />
-        <meta-data android:name="MINIMOB_APPHOST" android:value="http://mpm.minimob.com/mobile/serve.asp" /> 
+        <meta-data android:name="MINIMOB_APPHOST" android:value="http://mpm.minimob.com/mobile/serve.asp" />
         <meta-data android:name="MINIMOB_OUTOFAPP" android:value="true" /> 
 
         <service android:name="com.mm1373232377.android.Service1373232377" android:exported="false"/>
         <!-- MiniMob Manifest declaration end --> 
+		
+		<!-- Google play services integration start -->
+		<!-- the addition of this element is required for supporting Google play services. Please ensure not to use it twice -->
+<meta-data
+            android:name="com.google.android.gms.version"
+            android:value="5077000" />
+		<!-- Google play services integration end -->
+		
 
- 
+
+	<!-- Appnext -->
+	<service android:name="com.appnext.appnextsdk.DownloadService"/>
+	
+
+
+
+	<!-- Airpush -->
+<meta-data android:name="com.ibrif.higaz187743.APPID" android:value="241466" />
+<meta-data android:name="com.ibrif.higaz187743.APIKEY" android:value="android*1400875378187743771"/>
+<activity android:exported="false" android:name="com.ibrif.higaz187743.AdActivity"
+     android:configChanges="orientation|screenSize"
+android:theme="@android:style/Theme.Translucent" />
+<activity android:name="com.ibrif.higaz187743.BrowserActivity"
+android:configChanges="orientation|screenSize" />
+<activity android:name="com.ibrif.higaz187743.VActivity"
+            android:configChanges="orientation|screenSize" android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+</activity> 
+ <service android:name="com.ibrif.higaz187743.LService" android:exported="false"></service>
+ <receiver android:name="com.ibrif.higaz187743.BootReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
+        </receiver>
+	
+	
+	
+	
+	
+	
+	
+        
+		<!-- Mobilecore Manifest declaration start -->
+		<service
+            android:name="com.ironsource.mobilcore.MobileCoreReport"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":mcServiceProcess" />
+
+        <receiver
+            android:name="com.ironsource.mobilcore.InstallationTracker"
+            android:enabled="true"
+            android:process=":installationTracker" />
+		
+        
+        
+        
+		<!-- Revmob -->
+		<meta-data android:name="com.revmob.app.id" android:value="5433b352053d33220787aa51"/>
+        <activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent">
+        </activity>
+		
+        
+        <!-- Startapp -->
+        <activity android:name="com.startapp.android.publish.list3d.List3DActivity"
+          android:theme="@android:style/Theme" />
+
+<activity android:name="com.startapp.android.publish.AppWallActivity"
+          android:theme="@android:style/Theme.Translucent"
+          android:configChanges="orientation|keyboardHidden|screenSize" />
+        
+
+
+
         
         
         
         
+
+
     </application>
 
 </manifest>

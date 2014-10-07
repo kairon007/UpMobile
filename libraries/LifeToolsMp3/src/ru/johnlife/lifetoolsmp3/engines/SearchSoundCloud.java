@@ -14,10 +14,11 @@ public class SearchSoundCloud extends SearchWithPages {
 	public SearchSoundCloud(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
-
-	private static String SOUNDCLOUD_URL = "http://api.soundcloud.com/tracks.json?client_id=2fd7fa3d5ed2be9ac17c538f644fc4c6&filter=downloadable&q=";
-	private static String CLIENT_ID = "b28035537c669e1d5f232dcbf2b32dc4";
-
+	
+	public String getSoundcloudUrl(String clientId) {
+		return "http://api.soundcloud.com/tracks.json?client_id=" + clientId + "&filter=downloadable&q=";		
+	}
+	
 	private int getPage() {
 		this.pag = page;
 		return (pag - 1) * 50;
@@ -25,18 +26,22 @@ public class SearchSoundCloud extends SearchWithPages {
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
+		
 		try {
+			
+			String soundcloudClientId = getSoundcloudClientId();
+			
 			specialIndex = 0;
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
 			songName = songName.replace("%20", "_");
 			String offset = "&offset=" + getPage();
-			String link = SOUNDCLOUD_URL + songName + offset;
+			String link = getSoundcloudUrl(soundcloudClientId) + songName + offset;
 			StringBuffer sb = readLinkApacheHttp(link);
 			String songString;
 			do {
 				songString = searchNext(sb.toString());
 				if (songString != null) {
-					addSong(new SoundCloudV1Song(getDownloadUrl(songString) + "?client_id=" + CLIENT_ID, getImageUrl(songString).equals("ul") ? "NOT_FOUND" : getImageUrl(songString))
+					addSong(new SoundCloudV1Song(getDownloadUrl(songString) + "?client_id=" + soundcloudClientId, getImageUrl(songString).equals("ul") ? "NOT_FOUND" : getImageUrl(songString))
 							.setArtistName(getArtistName(getTitle(songString)))
 							.setTitle(getTitle(songString))
 							.setDuration(Long.valueOf(getDuration(songString))));
@@ -45,7 +50,6 @@ public class SearchSoundCloud extends SearchWithPages {
 		} catch (UnsupportedEncodingException e) {
 			Log.e(getClass().getSimpleName(), "", e);
 		}
-
 		return null;
 	}
 

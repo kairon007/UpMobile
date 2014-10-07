@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONArray;
+
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
@@ -11,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.engines.Engine;
@@ -216,7 +219,7 @@ public abstract class OnlineSearchView extends View {
 					engines.add(new Engine(engineClass, page));
 				}
 			} catch (ClassNotFoundException e) {
-				Log.e("SearchTab", "Unknown engine", e);
+				
 			}
 		}
 	}
@@ -407,10 +410,77 @@ public abstract class OnlineSearchView extends View {
 
 		}
 	}
+	
+	public ArrayList<String> getDMCABlacklistedItems(String remoteSetting) {
+		ArrayList<String> searchEngines = new ArrayList<String>();
+		try {
+			SharedPreferences prefs = MusicApp.getSharedPreferences();
+			String remoteSettingSearchEngines = prefs.getString(remoteSetting, null);
+			JSONArray jsonArray = new JSONArray(remoteSettingSearchEngines);
+			for (int i = 0; i < jsonArray.length(); i++) {
+				try {
+					String searchEngine = jsonArray.getString(i);
+					searchEngines.add(searchEngine); 
+				}catch(Exception e) { 
+					
+				}
+			}
+		}catch(Exception e) {
+			
+		}
+		
+		return searchEngines;
+	}
+	
 
+	public boolean isBlacklistedQuery(String songName) {
+		
+	      ArrayList<String> dmcaSearchQueryBlacklist = getDMCABlacklistedItems("dmca_searchquery_blacklist");
+          
+          if (songName != null) {
+          	
+          	// serach blacklist
+	    	        for (String blacklistedSearchQuery : BaseSearchTask.blacklist) {
+	    	        	blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
+                  	if (songName.contains(blacklistedSearchQuery)) {
+                  		
+                      	return true;
+                      }
+	    	        }
+          	
+	    	        // serach dmca_searchquery blacklist
+              for (String blacklistedSearchQuery : dmcaSearchQueryBlacklist) {
+              	blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
+              	if (songName.contains(blacklistedSearchQuery)) {
+              		
+                  	return true;
+                  }
+              }
+          }
+          
+          
+          return false;
+	}
+	
+
+	
+	
 	public void search(String songName) {
 		searchStopped = false;
-		taskIterator = engines.iterator();
+		
+		if (isBlacklistedQuery(songName)) {
+			// if blacklisted query, then searchNothing			
+			ArrayList<Engine> nothingSearch = new ArrayList<Engine>();
+			try {
+				Class<? extends BaseSearchTask> engineClass = (Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines.SearchNothing");
+				nothingSearch.add(new Engine(engineClass, 1));
+			} catch (ClassNotFoundException e) {
+				Log.e("SearchTab", "Unknown engine", e);
+			}
+			taskIterator = nothingSearch.iterator();
+		} else {
+			taskIterator = engines.iterator();
+		}
 		resultAdapter.clear();
 		currentName = songName;
 		message.setText("");
