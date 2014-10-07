@@ -9,10 +9,12 @@ import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
-
+	
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
 	}
@@ -36,7 +38,14 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	protected boolean onlyOnWifi() {
-		boolean flag = !PreferenceUtils.getInstace(getContext()).onlyOnWifi();
+		ConnectivityManager connManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		boolean flag;
+		if (PreferenceUtils.getInstace(getContext()).onlyOnWifi()) {
+			flag = wifi.isConnected();
+		} else {
+			flag = true;
+		}
 		return flag;
 	}
 
