@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
@@ -22,7 +23,7 @@ public class SearchView extends OnlineSearchView {
 			try {
 				mService.pause();
 			} catch (RemoteException e) {
-				android.util.Log.d("log", "Appear problem: " + e);
+				Log.e(getClass().getSimpleName(), e.getMessage());
 			}
 		}
 
