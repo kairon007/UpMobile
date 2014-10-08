@@ -531,9 +531,8 @@ public abstract class OnlineSearchView extends View {
 			protected void onPostExecute(String downloadUrl) {
 				loadSong(downloadUrl);
 				progressDialog.cancel();
-				if (!isDialogOpened) {
-					createStreamDialog(args).show();
-				}
+				android.util.Log.d("logd", "1");
+				createStreamDialog(args).show();
 			}
 
 			@Override
@@ -564,8 +563,9 @@ public abstract class OnlineSearchView extends View {
 			}
 			try {
 				String url = downloadSong.getParentUrl();
-				if (url != null && !isDialogOpened) {
+				if (url != null) {
 					loadSong(url);
+					android.util.Log.d("logd", "2");
 					createStreamDialog(args).show();
 				} else {
 					urlTask.execute(downloadSong);
@@ -579,7 +579,9 @@ public abstract class OnlineSearchView extends View {
 				player.hideCoverProgress();
 			}
 		} else {
-			createStreamDialog(args).show();
+			if (force || !isDialogOpened) {
+				createStreamDialog(args).show();
+			}
 		}
 		dialogDismisser = new Runnable() {
 			@Override
