@@ -523,6 +523,7 @@ public abstract class OnlineSearchView extends View {
 		final String title = downloadSong.getTitle();
 		final String artist = downloadSong.getArtist();
 		final Context context = view.getContext();
+		final boolean isDialogOpened = SongArrayHolder.getInstance().isStremDialogOpened();
 		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask() {
 			private ProgressDialog progressDialog;
 
@@ -530,7 +531,9 @@ public abstract class OnlineSearchView extends View {
 			protected void onPostExecute(String downloadUrl) {
 				loadSong(downloadUrl);
 				progressDialog.cancel();
-				createStreamDialog(args).show();
+				if (!isDialogOpened) {
+					createStreamDialog(args).show();
+				}
 			}
 
 			@Override
@@ -561,7 +564,7 @@ public abstract class OnlineSearchView extends View {
 			}
 			try {
 				String url = downloadSong.getParentUrl();
-				if (url != null) {
+				if (url != null && !isDialogOpened) {
 					loadSong(url);
 					createStreamDialog(args).show();
 				} else {
@@ -576,7 +579,9 @@ public abstract class OnlineSearchView extends View {
 				player.hideCoverProgress();
 			}
 		} else {
-			createStreamDialog(args).show();
+			if (!isDialogOpened) {
+				createStreamDialog(args).show();
+			}
 		}
 		dialogDismisser = new Runnable() {
 			@Override

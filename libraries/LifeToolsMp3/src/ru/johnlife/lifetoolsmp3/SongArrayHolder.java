@@ -100,6 +100,10 @@ public class SongArrayHolder {
 		return isID3DialogOpened;
 	}
 	
+	public boolean isStremDialogOpened() {
+		return isStreamDialogOpened;
+	}
+	
 	public String[] getID3Fields() {
 		return fields;
 	}
