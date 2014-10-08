@@ -579,9 +579,7 @@ public abstract class OnlineSearchView extends View {
 				player.hideCoverProgress();
 			}
 		} else {
-			if (!isDialogOpened) {
-				createStreamDialog(args).show();
-			}
+			createStreamDialog(args).show();
 		}
 		dialogDismisser = new Runnable() {
 			@Override
