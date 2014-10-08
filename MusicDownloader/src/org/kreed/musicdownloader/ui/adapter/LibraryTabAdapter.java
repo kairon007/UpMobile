@@ -1,12 +1,16 @@
 package org.kreed.musicdownloader.ui.adapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 
+import com.ironsource.mobilcore.MobileCore;
+
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +34,8 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	private MainActivity activity;
 	private LayoutInflater inflater;
 	private EditText textFilter;
+	private boolean isDeployFilter;
+	
 	private Runnable reDraw = new Runnable() {
 
 		@Override
@@ -60,12 +66,19 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		activity.runOnUiThread(reDraw);
 	}
 	
+	public void setOriginalValues(ArrayList<MusicData> data) {
+		if (mOriginalValues == null) {
+			mOriginalValues = new ArrayList<MusicData>();
+		}
+		mOriginalValues.addAll(data);
+	}
+	
 	@Override
 	public void remove(MusicData object) {
 		if (mOriginalValues != null) {
 			mOriginalValues.remove(object);
 		}
-		mObjects.remove(object);
+		mObjects.add(object);
 		activity.runOnUiThread(reDraw);
 	}
 
@@ -219,11 +232,34 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		getFilter().filter(textFilter.getText().toString().toLowerCase(Locale.ENGLISH));
+		if (!mObjects.isEmpty()) {
+			getFilter().filter(textFilter.getText().toString().toLowerCase(Locale.ENGLISH));
+			if (count != 0) {
+				isDeployFilter = true;
+			} else {
+				isDeployFilter = false;
+			}
+		}
 	}
 
 	@Override
 	public void afterTextChanged(Editable s) {
 
+	}
+	
+	public void setFilter() {
+		getFilter().filter(textFilter.getText().toString().toLowerCase(Locale.ENGLISH));
+	}
+	
+	public boolean checkDeployFilter() {
+		return isDeployFilter;
+	}
+	
+	public ArrayList<String> getListUri() {
+		ArrayList<String> listUri = new ArrayList<String>();
+		for (MusicData m : mObjects) {
+			listUri.add(m.getFileUri());
+		}
+		return listUri;
 	}
 }

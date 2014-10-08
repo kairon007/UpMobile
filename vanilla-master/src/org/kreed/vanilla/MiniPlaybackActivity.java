@@ -63,6 +63,17 @@ public class MiniPlaybackActivity extends PlaybackActivity {
 		mEndButton = (ImageButton)findViewById(R.id.end_action);
 		mEndButton.setOnClickListener(this);
 		registerForContextMenu(mEndButton);
+		
+		
+
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this); 
+			}
+		} catch (Exception e) { 
+			 
+		}
 	}
 
 	@Override

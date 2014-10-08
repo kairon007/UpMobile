@@ -285,9 +285,57 @@ public class MainActivity extends Activity {
 			MusicDownloaderApp.getService().getPlayer().getView(footer);
 			player = MusicDownloaderApp.getService().getPlayer();
 		}
-		if (Settings.ENABLE_ADS) {
-			Advertisement.mopubShowBanner(this);
+
+		// show cross promo box
+		try {
+			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
+			if (downloadsLayout != null) {
+				if (Settings.getIsBlacklisted(this)) {
+					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				} else {
+					Advertisement.showCrossPromoBox(this, downloadsLayout);
+				}
+			}
+		} catch (Exception e) {
+
 		}
+
+		// show or hide disclaimer
+		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
+		if (editTextDisclaimer != null) {
+			if (Settings.getIsBlacklisted(this)) {
+				editTextDisclaimer.setVisibility(View.VISIBLE);
+			} else {
+				editTextDisclaimer.setVisibility(View.GONE);
+			}
+		}
+
+
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
+		}
+
+
+
+		// show in the first activity
+
+
+		// initialize ad networks
+		try {
+			if (!Settings.getIsBlacklisted(this)) {
+				//Advertisement.start(this, false);
+			} else {
+				Advertisement.showDisclaimer(this);
+			}
+		} catch (Exception e) {
+
+		}
+
 	}
 
 	@Override
@@ -335,6 +383,15 @@ public class MainActivity extends Activity {
 			player.setSongProgressIndeterminate(in.getBoolean(SAVE_SEEKBAR_PROGRESS, false));
 			player.setButtonProgressVisibility(in.getInt(SAVE_BUTTONPLAY_PROGRESS, View.VISIBLE));
 		}
+		ArrayList<String> listLibrarySongsUri = in.getStringArrayList(Constants.MUSIC_LIST_URI);
+		ArrayList<MusicData> listLibrarySongs = new ArrayList<MusicData>();
+		for (String uriFile : listLibrarySongsUri) {
+			listLibrarySongs.add(new MusicData(new File(uriFile)));
+		}
+		boolean isDeployFilter = in.getBoolean(Constants.IS_DEPLOY_FILTER);
+		mPagerAdapter.setListLibrarySongs(listLibrarySongs);
+		mPagerAdapter.setIsDeployFilter(isDeployFilter);
+		refreshLibraryTab();
 		super.onRestoreInstanceState(in);
 	}
 
@@ -364,6 +421,8 @@ public class MainActivity extends Activity {
 		if (lastPage == 0) { 
 			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		}
+		out.putStringArrayList(Constants.MUSIC_LIST_URI, mPagerAdapter.getLibraryTabAdapter().getListUri());
+		out.putBoolean(Constants.IS_DEPLOY_FILTER, mPagerAdapter.getLibraryTabAdapter().checkDeployFilter());
 		super.onSaveInstanceState(out);
 	}
 

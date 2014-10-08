@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
 import java.util.Iterator;
 
 import org.apache.http.HttpEntity;
@@ -26,6 +29,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 
 public class Settings implements BaseSettings {
@@ -35,6 +39,7 @@ public class Settings implements BaseSettings {
 	// if you need to access SEARCH_ENGINES, call the public static method GET_SEARCH_ENGINES()  
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
 		//{"SearchVmusice", "1"}, 
+		{"SearchZaycev", "2"},
 		{"SearchPleer", "2"},
 		{"SearchPoisk", "1"}, 
 		{"SearchHulkShare", "1"}, 
@@ -43,7 +48,7 @@ public class Settings implements BaseSettings {
 		{"SearchSoundCloud", "1"},  
 		{"SearchSoundCloudV2", "1"}, 
 		{"SearchSogou", "1"},
-		{"SearchGrooveshark", "1"},
+		{"SearchGrooveshark", "1"}, 
 		{"SearchTing", "1"}, 
 		{"SearchZaycev", "7"} 
 	};
@@ -56,29 +61,88 @@ public class Settings implements BaseSettings {
 
 	public static String REMOTE_SETTINGS_URL ="";   
 	public static boolean ENABLE_ADS = true; 
-	public static int REMOTE_SETTINGS_MIN_UPDATE_INTERVAL_MILLIS = 9999999;//30000; //28800000;    
-	public static int RATE_ME_POPUP_DELAY_MILLIS = 9999999;//30000; 
+	public static int REMOTE_SETTINGS_MIN_UPDATE_INTERVAL_MILLIS = 14400000;///14400000;//30000; //14400000;    
+	public static int RATE_ME_POPUP_DELAY_MILLIS = 120000;//30000; 
 	private static final boolean ENABLE_ALBUM_COVERS = true;	 
+	public static final boolean ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB = false;
 
 	// AD NETWORK ID'S
-	public static String APPNEXT_ID = "85acb334-cdb4-4a5b-b434-4dc722c6a97f"; 
-	public static String MOBILECORE_ID = "6AFPIUJW9K2IAJMIJ41605AI1UJUY";
-	public static String MOPUB_ID_BANNER = "606c9343ef8849e79f9636fde1889428";     
-	public static String MOPUB_ID_INTERSTITIAL = "22f809781d7d414abb7236c6044a922e";
+	public static String MOBILECORE_ID = "6AFPIUJW9K2IAQMIJ41605AI1UJUY";
+	public static String MOPUB_ID_BANNER = "f40978289ed7454c8a51a19e17715713";     
+	public static String MOPUB_ID_INTERSTITIAL = "d283568507414b74a57ebccf8867bf04";
+	private static String MOPUB_ID_NATIVE = "7074b972d43f44f7ad2203cd50b6954a";
+	public static String APPNEXT_ID = "e03e502a-671a-4565-b46c-c7d28708f539";
 	public static String STARTAPP_DEV_ID = "107671050";
-	public static String STARTAPP_APP_ID = "207135275";	
-	public static String VUNGLE_ID = "53d5c18be262df2c4200002a"; 
-
-
-	// blacklisted song items (dmca)
-	public static String[] BLACKLISTED_SONGS_AND_ARTISTS = {};
-	// public static String[] BLACKLISTED_SONGS_AND_ARTISTS = {"trilla t", "mitchie rikzu", "razzykill", "ana carolina", "renato russo", "tom jobim", "jobim", "marisa monte", "monte", "marisa", "renato russo", "renato", "russo", "michel telo", "telo", "elis regina", "elis", "caetano veloso", "caetano", "veloso", "chico buarque", "buarque", "andre matos", "matos", "andre", "gilberto gil", "gilberto", "joao gilberto", "joao", "ivete sangalo", "ivete", "sangalo", "roberto carlos", "cazuza", "cassia eller", "cassia", "eller", "paula fernandes", "zizi possi", "zizi", "possi", "simone", "gusttavo lima", "gusttavo", "lima", "tim maia", "maia", "lisa ono", "maria bethania", "bethania", "adriana calcanhotto", "adriana", "calcanhotto", "astrud gilberto", "astrud", "bebel gilberto", "gilberto", "bebel", "max cavalera", "cavalera", "luan santana", "luan", "gal costa", "daniela mercury", "seu jorge", "ana carolina", "carolina", "ivan lins", "martinho da vila", "martinho", "raul seixas", "seixas", "claudia leitte", "leitte", "samuel rosa", "jorge ben jor", "zeze di camargo", "zeze", "camargo", "sergio mendes", "moraes moreira", "moraes", "moreira", "roberta sa", "dinho", "joanna", "oswaldo montenegro", "oswaldo", "montenegro", "jesse", "edu falaschi", "falaschi", "carlinhos brown", "carlinhos", "djavan", "vanessa da mata", "da mata", "nara leao", "nara", "leao", "geraldo vandre", "vandre", "mano brown", "tom ze", "jorge aragao", "aragao", "dick farney", "carney", "psirico", "valesca popzuda", "valesca", "popzuda", "lucas lucco", "lucco", "shakira", "claudia leitte", "leitte", "fernando", "sorocaba", "jason derulo", "derulo", "henrique", "juliano", "bastille", "gusttavo lima", "cristiano araujo", "gusttavo", "araujo", "fernandes", "maria cecilia", "cecilia", "rodolfo", "luan santana", "anitta", "zeze di camargo", "zeze", "camargo", "sorriso maroto", "sorriso", "maroto", "marrone", "ricardo", "joao", "guilherme", "naldo benny", "naldo", "benny", "ivete sangalo", "ivete", "turma do pagode", "turma", "pagode", "sorriso maroto", "sorriso", "maroto", "thiaguinho", "martin garrix", "garrix", "sorocaba", "gusttavo", "lima", "bruno", "sorriso maroto", "moroto", "sorriso", "thiaguinho", "michel telo", "anitta", "santana", "mateus", "cesar menotti", "menotti", "fabiano", "gabriel valim", "valim", "michel telo", "telo", "detonautas", "lucas lucco", "lucco"};
-	
+	public static String STARTAPP_APP_ID = "210262312";	
+ 
 
 	
 	
+	// accessor methods
+	public static String GET_STARTAPP_APP_ID(Context context) {
+		String remoteId = getSharedPrefString(context, "startapp_app_id", "");
+		if (remoteId == null || remoteId.equals("")) {
+			return STARTAPP_APP_ID; // return default
+		} else {
+			return remoteId;
+		}
+	}
+	
+	public static String GET_STARTAPP_DEV_ID(Context context) {
+		String remoteId = getSharedPrefString(context, "startapp_dev_id", "");
+		if (remoteId == null || remoteId.equals("")) {
+			return STARTAPP_DEV_ID; // return default
+		} else {
+			return remoteId;
+		}
+	}
+	
+	public static String GET_APPNEXT_ID(Context context) {
+		String remoteId = getSharedPrefString(context, "appnext_id", "");
+		if (remoteId == null || remoteId.equals("")) {
+			return APPNEXT_ID; // return default
+		} else {
+			return remoteId;
+		}
+	}
+	
+	public static String GET_MOPUB_ID_BANNER(Context context) {
+		String remoteId = getSharedPrefString(context, "mopub_banner_id", "");
+		if (remoteId == null || remoteId.equals("")) {
+			return MOPUB_ID_BANNER; // return default
+		} else {
+			return remoteId;
+		}
+	}
+	
+	public static String GET_MOPUB_ID_NATIVE(Context context) {
+		String remoteId = getSharedPrefString(context, "mopub_native_id", "");
+		if (remoteId == null || remoteId.equals("")) {
+			return MOPUB_ID_NATIVE; // return default
+		} else {
+			return remoteId;
+		}
+	}
+	
+	public static String GET_MOPUB_ID_INTERSTITIAL(Context context) {
+		String remoteId = getSharedPrefString(context, "mopub_interstitial_id", "");
+		if (remoteId == null || remoteId.equals("")) {
+			return MOPUB_ID_INTERSTITIAL; // return default
+		} else {
+			return remoteId;
+		}
+	}
 	
 	
+	public static String GET_MOBILECORE_ID_BANNER(Context context) {
+		String remoteId = getSharedPrefString(context, "mobilecore_id", "");
+		if (remoteId == null || remoteId.equals("")) {
+			return MOBILECORE_ID; // return default
+		} else {
+			return remoteId;
+		}
+	}
+
 	
 	
 	
@@ -176,7 +240,7 @@ public class Settings implements BaseSettings {
 		ArrayList<String[]> searchEngineTuples = new ArrayList<String[]>();
 		if (Settings.getIsBlacklisted(context)) {
 			
-			String[] searchEngineTuple = {"SearchSoundCloud", "1"};
+			String[] searchEngineTuple = {"SearchNothing", "1"};
 			searchEngineTuples.add(searchEngineTuple); 
 			
 		} else if (getIsRemoteSettingsOn()) {
@@ -228,6 +292,9 @@ public class Settings implements BaseSettings {
 							searchEngineTuple[1] = "1";
 						} else if (searchEngineName.equals("vmusice")) { 
 							searchEngineTuple[0] = "SearchVmusice";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("nothing")) { 
+							searchEngineTuple[0] = "SearchNothing";
 							searchEngineTuple[1] = "1";
 						}
 					}
@@ -414,10 +481,10 @@ public class Settings implements BaseSettings {
 	
 	
 
-	public static void updateSettingsAsyncTask(Context context, String serverUrl, int minUpdateIntervalMillis, int connectionTimeoutMillis, int socketTimeoutMillis) { // NOT ASYNCTASK. so you should call it in an asynctask
+	public static void updateSettingsAsyncTask(Context context, String serverUrl, int minUpdateIntervalMillis, int connectionTimeoutMillis, int socketTimeoutMillis, boolean createPushNotificationIfNeededAfterUpdateSettings) { // NOT ASYNCTASK. so you should call it in an asynctask
 		try {
 			if (serverUrl != null && !serverUrl.equals("")) {
-				UpdateSettingsAsyncTask task = new UpdateSettingsAsyncTask(context, serverUrl, minUpdateIntervalMillis, connectionTimeoutMillis, socketTimeoutMillis); 
+				UpdateSettingsAsyncTask task = new UpdateSettingsAsyncTask(context, serverUrl, minUpdateIntervalMillis, connectionTimeoutMillis, socketTimeoutMillis, createPushNotificationIfNeededAfterUpdateSettings); 
 				task.execute();
 			}
 		} catch(Exception e) {
@@ -434,19 +501,23 @@ public class Settings implements BaseSettings {
 		private int mMinUpdateIntervalMillis;
 		private int mConnectionTimeoutMillis;
 		private int mSocketTimeoutMillis;
+		private boolean mCreatePushNotificationIfNeededAfterUpdateSettings;
 		
 		
-		public UpdateSettingsAsyncTask(Context ctx, String serverUrl, int minUpdateIntervalMillis, int connectionTimeoutMillis, int socketTimeoutMillis) {
+		public UpdateSettingsAsyncTask(Context ctx, String serverUrl, int minUpdateIntervalMillis, int connectionTimeoutMillis, int socketTimeoutMillis, boolean createPushNotificationIfNeededAfterUpdateSettings) {
 			mContext = ctx;
 			mServerUrl = serverUrl;
 			mMinUpdateIntervalMillis = minUpdateIntervalMillis;
 			mConnectionTimeoutMillis = connectionTimeoutMillis;
 			mSocketTimeoutMillis = socketTimeoutMillis;
+			mCreatePushNotificationIfNeededAfterUpdateSettings = createPushNotificationIfNeededAfterUpdateSettings;
 		}
 		
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
+	        
+	        
 	        
 	    }
 	
@@ -466,10 +537,28 @@ public class Settings implements BaseSettings {
             super.onPostExecute(result);
            
             
+            if (mCreatePushNotificationIfNeededAfterUpdateSettings) {
+            	
+            	
+            	
+            	boolean shouldRemoteBlacklistDevice = Advertisement.shouldRemoteBlacklistDevice(mContext);
+				if (!shouldRemoteBlacklistDevice || (shouldRemoteBlacklistDevice && !Advertisement.isRemoteBlacklistedDevice(mContext))) {
+            	
+					Advertisement.createPushNotificationIfNeeded(mContext);
+				}
+            	
+            	
+            } else {
+            	
+            	
+            	
+            	
+            }
             	
         }
 	    
 	}
+
 	
 	
 
@@ -592,45 +681,59 @@ public class Settings implements BaseSettings {
 
 
 	public static boolean getIsBlacklistedIP(Context ctx) { 
+
+		// if it's disabled, ignore and always return true		
+		String disableBlacklistByIpString = Settings.getRemoteSetting(ctx, "disable_blacklist_by_ip", "false");
 		
+		if (disableBlacklistByIpString != null && disableBlacklistByIpString.equals("true")) return false;
+
+
 		String isBlacklistedIPString = getSharedPrefString(ctx, IS_BLACKLISTED_IP_KEY, null);
 		if (isBlacklistedIPString == null || isBlacklistedIPString.equals("false")) return false;
 		else return true;
 		 
 	}
  
-	public static boolean getIsBlacklisted(Context ctx) {      
-		
-		
-		return getIsBlacklistedIP(ctx) || getIsBlacklistedLocation(ctx);     
-		   
-	}
-	
+
+
+
+
+
+
+
 	
 
 	public static boolean getIsBlacklistedLocation(Context ctx) {
 		
+		// if it's disabled, ignore and always return true		
+		String disableBlacklistByLocationString = Settings.getRemoteSetting(ctx, "disable_blacklist_by_location", "false");
+		
+		
+		if (disableBlacklistByLocationString != null && disableBlacklistByLocationString.equals("true")) return false;
+
 		String isBlacklistedLocationString = getSharedPrefString(ctx, Settings.IS_BLACKLISTED_LOCATION_KEY, null);
 		if (isBlacklistedLocationString == null || isBlacklistedLocationString.equals("false")) return false;
 		else return true;
 		
 	}
 	
-	@Override
-	public String[][] getSearchEnginesArray(Context context) {
-		return GET_SEARCH_ENGINES(context);
+ 
+	public static boolean getIsBlacklisted(Context ctx) {      
+		
+		return getIsBlacklistedIP(ctx) || getIsBlacklistedLocation(ctx);     
+		   
 	}
 
-	@Override
-	public boolean getIsCoversEnabled(Context context) {
-		return !Settings.getIsBlacklisted(context) && ENABLE_ALBUM_COVERS;
-	}
+	
 	
 	// KEY_REMOTE_SETTING_SETTINGs keys
 	public static String KEY_REMOTE_SETTING_INTERSTITIAL_START = "interstitial_start"; // also options: interstitial_start_options for all
 	public static String KEY_REMOTE_SETTING_INTERSTITIAL_START_OPTIONS = "interstitial_start_options";
 	public static String KEY_REMOTE_SETTING_INTERSTITIAL_EXIT= "interstitial_exit";
 	public static String KEY_REMOTE_SETTING_INTERSTITIAL_EXIT_OPTIONS = "interstitial_exit_options";
+	
+	public static String KEY_REMOTE_SETTING_BANNER_SETTINGS = "banner_settings";
+
 	
 	public static String KEY_REMOTE_SETTING_INTERSTITIAL_LETANG = "interstitial_letang";
 	public static String KEY_REMOTE_SETTING_INTERSTITIAL_LETANG_OPTIONS = "interstitial_letang_options";
@@ -668,5 +771,22 @@ public class Settings implements BaseSettings {
 	
 	public static boolean ENABLE_LYRICS = true;
 	public static boolean SHOW_BANNER_ON_TOP = false;
+	public static boolean ENABLE_EQUALIZER = true;
+	public static boolean ENABLE_GENRES_TAB_BY_DEFAULT = true;
+	public static boolean ENABLE_FILES_TAB_BY_DEFAULT = true;
 	public static final boolean ENABLE_MUSICBRAINZ_ALBUM_COVERS = true;
+	
+	
+	@Override
+	public String[][] getSearchEnginesArray(Context context) {
+		return GET_SEARCH_ENGINES(context);
+	}
+
+
+
+
+	@Override
+	public boolean getIsCoversEnabled(Context context) {
+		return !Settings.getIsBlacklisted(context) && ENABLE_ALBUM_COVERS;
+	}
 }

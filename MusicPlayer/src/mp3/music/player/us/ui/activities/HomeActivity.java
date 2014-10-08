@@ -35,6 +35,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -67,13 +70,66 @@ public class HomeActivity extends BaseActivity {
 		}
 		MusicApp.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
 		// load banner ad
+		/*
 		try {
 			if (Settings.ENABLE_ADS) {
 				Advertisement.mopubShowBanner(this); 
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.toString());
-		} 
+		}
+		*/
+		
+		// show cross promo box
+		try {
+			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
+			if (downloadsLayout != null) {
+				if (Settings.getIsBlacklisted(this)) {
+					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				} else {
+					Advertisement.showCrossPromoBox(this, downloadsLayout);
+				}
+			}
+		} catch (Exception e) {
+
+		}
+
+		// show or hide disclaimer
+		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
+		if (editTextDisclaimer != null) {
+			if (Settings.getIsBlacklisted(this)) {
+				editTextDisclaimer.setVisibility(View.VISIBLE);
+			} else {
+				editTextDisclaimer.setVisibility(View.GONE);
+			}
+		}
+
+
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
+		}
+
+
+
+		// show in the first activity
+
+
+		// initialize ad networks
+		try {
+			if (!Settings.getIsBlacklisted(this)) {
+				Advertisement.start(this, false);
+			} else {
+				Advertisement.showDisclaimer(this);
+			}
+		} catch (Exception e) {
+
+		}
+
 		start(!PreferenceUtils.getInstace(this).isNeedRestore());
 	}
 

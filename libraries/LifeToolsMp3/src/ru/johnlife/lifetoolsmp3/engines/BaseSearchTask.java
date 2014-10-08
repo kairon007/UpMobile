@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -17,9 +18,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -35,7 +40,11 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 		"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; .NET CLR 1.2.30703)",
 	};
 	private final static StringBuffer EMPTY_BUFFER = new StringBuffer();
+	
 
+	public static String[] blacklist = {"bisbal", "princesa", "calamaro", "goosen", "belugo", "chayanne"};
+	
+	
 	private List<Song> songsList = new ArrayList<Song>();
 	private boolean downloadStopped = false;
 	private FinishedParsingSongs dInterface;
@@ -46,6 +55,25 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 		this.songName = songName;
 	}
 
+	
+
+	public String getSoundcloudClientId() {
+		String defaultSoundcloudClientId = "b5990142b74d929a8e0af4ceb3ca3615";
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		String soundcloudClientId = prefs.getString("soundcloud_client_id", defaultSoundcloudClientId);
+		if (soundcloudClientId == null || soundcloudClientId.equals("")) soundcloudClientId = defaultSoundcloudClientId;
+		return soundcloudClientId;
+	}
+	
+	public static String getSoundcloudClientSecret() {
+		String defaultSoundcloudClientSecret = " "; //"49c8b0d16ba2ca7dd2b7c1d915789c5e";
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		String soundcloudClientSecret = prefs.getString("soundcloud_client_secret", defaultSoundcloudClientSecret);
+		if (soundcloudClientSecret == null || soundcloudClientSecret.equals("")) soundcloudClientSecret = defaultSoundcloudClientSecret;
+		return soundcloudClientSecret;
+	}
+
+	
 	protected StringBuffer readLink(String link) throws MalformedURLException {
 		URL url = new URL(link);
 		try {
@@ -110,8 +138,52 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 		return agents[new Random().nextInt(agents.length)];
 	}
 	
+
+	
+	
+	// returns true if String s contains any item in arrayList. case insensitive
+	public boolean isAnyArrayListItemInsideString(String s, ArrayList<String> arrayList) {
+		if (s != null && !s.equals("")) {
+			s = s.toLowerCase();
+			for (String blacklistedItem : arrayList) {
+	        	blacklistedItem = blacklistedItem.toLowerCase();
+	        	if (s.contains(blacklistedItem)) {
+	        		return true;
+	        	}
+	        }
+		}
+		return false;
+	}
+	
+	
+	
 	@Override
 	protected void onPostExecute(Void result) {
+		
+		
+		// filter out songs
+		ArrayList<Song> filteredSongList = new ArrayList<Song>();
+		ArrayList<String> baseBlacklist = new ArrayList<String>(Arrays.asList(blacklist)); 
+        ArrayList<String> dmcaResultBlacklist = getDMCABlacklistedItems("dmca_blacklist");
+        
+        		
+        try {
+	        for (Song s : songsList) {
+	        	String songTitle = s.getTitle();
+	        	String artistName = s.getArtist();
+	        	
+	        	boolean isEitherSongTitleOrArtistNameContainingBlacklistItem = isAnyArrayListItemInsideString(songTitle, baseBlacklist) || isAnyArrayListItemInsideString(songTitle, dmcaResultBlacklist) || isAnyArrayListItemInsideString(artistName, baseBlacklist) || isAnyArrayListItemInsideString(artistName, dmcaResultBlacklist);
+	        	
+	  	        if (!isEitherSongTitleOrArtistNameContainingBlacklistItem) filteredSongList.add(s);
+
+	        }
+        } catch(Exception e) {
+        	
+        }
+		
+        
+        songsList = filteredSongList;
+        
 		if (downloadStopped) return;
 		dInterface.onFinishParsing(songsList);
 		super.onPostExecute(result);
@@ -128,5 +200,30 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	public String getSongName() {
 		return songName;
 	}
+	
+	
+	
+	public ArrayList<String> getDMCABlacklistedItems(String remoteSetting) {
+		ArrayList<String> searchEngines = new ArrayList<String>();
+		try {
+			SharedPreferences prefs = MusicApp.getSharedPreferences();
+			String remoteSettingSearchEngines = prefs.getString(remoteSetting, null);
+			JSONArray jsonArray = new JSONArray(remoteSettingSearchEngines);
+			for (int i = 0; i < jsonArray.length(); i++) {
+				try {
+					String searchEngine = jsonArray.getString(i);
+					searchEngines.add(searchEngine); 
+				}catch(Exception e) { 
+					
+				}
+			}
+		}catch(Exception e) {
+			
+		}
+		
+		return searchEngines;
+	}
+	
+
 
 }

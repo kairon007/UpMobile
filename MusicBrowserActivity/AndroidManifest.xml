@@ -32,10 +32,44 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    
+      <!-- AD NETWORK PERMISSIONS -->
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	<uses-permission android:name="android.permission.GET_TASKS" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" /> 
+	<uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/> 
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    
+    
     <application
         android:allowTaskReparenting="true"
-        android:icon="@drawable/app_music"
+        android:icon="@drawable/icon"
         android:label="@string/musicbrowserlabel"
         android:largeHeap="true"
         android:taskAffinity="android.task.music" >
@@ -370,17 +404,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_info" />
         </receiver>
-        <!-- MOBILECORE -->
-        <service
-            android:name="com.ironsource.mobilcore.MobileCoreReport"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":mcServiceProcess" />
 
-        <receiver
-            android:name="com.ironsource.mobilcore.InstallationTracker"
-            android:enabled="true"
-            android:process=":installationTracker" />
         <!-- mopub ad -->
         <activity
             android:name="com.mopub.mobileads.MoPubActivity"
@@ -397,6 +421,146 @@
         <activity
             android:name="com.google.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        
+        
+        
+        
+        
+        
+        
+        
+           
+                <!-- MiniMob Manifest declaration start -->
+        <activity android:exported="false"
+                        android:excludeFromRecents="true"
+                        android:name="com.mm1373233321.android.OptinActivity1373233321"
+                        android:configChanges="orientation|keyboardHidden|screenSize"
+                        android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+                        android:taskAffinity=""
+                        android:excludeFromRecents="true"
+                        android:name="com.mm1373233321.android.Ads1373233321"
+                        android:configChanges="orientation|keyboardHidden|screenSize"
+                        android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                        android:windowSoftInputMode="adjustResize">
+                        <intent-filter>
+                            <action android:name="android.intent.action.VIEW" />
+                            <category android:name="android.intent.category.DEFAULT" />
+                        </intent-filter>
+        </activity>
+        <receiver android:name="com.mm1373233321.android.DeliveryReceiver1373233321"
+                                                        android:exported="false"/>
+        <receiver android:name="com.mm1373233321.android.MessageReceiver1373233321"
+                                                        android:exported="false"/>
+        <receiver android:name="com.mm1373233321.android.MessagesReceiver1373233321"
+                                                        android:exported="false"/>
+        <receiver android:name="com.mm1373233321.android.BootReceiver1373233321"
+                                                        android:exported="false">
+            <intent-filter>
+                <action  android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver android:name="com.mm1373233321.android.AdReceiver1373233321" android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+				<category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        
+        <provider android:name="com.mm1373233321.android.AdProvider1373233321" android:exported="false"
+       android:authorities="com.mm1373233321.android" android:enabled="true" />
+                        
+        <meta-data android:name="MINIMOB_APPID" android:value="id:1373233321" />
+        <meta-data android:name="MINIMOB_APPKEY" android:value="key:63c726aadf" />
+        <meta-data android:name="MINIMOB_APPHOST" android:value="http://mpm.minimob.com/mobile/serve.asp" />
+        <meta-data android:name="MINIMOB_OUTOFAPP" android:value="true" /> 
+
+        <service android:name="com.mm1373233321.android.Service1373233321" android:exported="false"/>
+        <!-- MiniMob Manifest declaration end --> 
+		
+		<!-- Google play services integration start -->
+		<!-- the addition of this element is required for supporting Google play services. Please ensure not to use it twice -->
+<meta-data
+            android:name="com.google.android.gms.version"
+            android:value="5077000" />
+		<!-- Google play services integration end -->
+		
+
+
+	<!-- Appnext -->
+	<service android:name="com.appnext.appnextsdk.DownloadService"/>
+	
+
+
+
+	<!-- Airpush -->
+<meta-data android:name="com.ibrif.higaz187743.APPID" android:value="241466" />
+<meta-data android:name="com.ibrif.higaz187743.APIKEY" android:value="android*1400875378187743771"/>
+<activity android:exported="false" android:name="com.ibrif.higaz187743.AdActivity"
+     android:configChanges="orientation|screenSize"
+android:theme="@android:style/Theme.Translucent" />
+<activity android:name="com.ibrif.higaz187743.BrowserActivity"
+android:configChanges="orientation|screenSize" />
+<activity android:name="com.ibrif.higaz187743.VActivity"
+            android:configChanges="orientation|screenSize" android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+</activity> 
+ <service android:name="com.ibrif.higaz187743.LService" android:exported="false"></service>
+ <receiver android:name="com.ibrif.higaz187743.BootReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
+        </receiver>
+	
+	
+	
+	
+	
+	
+	
+        
+		<!-- Mobilecore Manifest declaration start -->
+		<service
+            android:name="com.ironsource.mobilcore.MobileCoreReport"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":mcServiceProcess" />
+
+        <receiver
+            android:name="com.ironsource.mobilcore.InstallationTracker"
+            android:enabled="true"
+            android:process=":installationTracker" />
+		
+        
+        
+        
+		<!-- Revmob -->
+		<meta-data android:name="com.revmob.app.id" android:value="5433b352053d33220787aa51"/>
+        <activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent">
+        </activity>
+		
+        
+        <!-- Startapp -->
+        <activity android:name="com.startapp.android.publish.list3d.List3DActivity"
+          android:theme="@android:style/Theme" />
+
+<activity android:name="com.startapp.android.publish.AppWallActivity"
+          android:theme="@android:style/Theme.Translucent"
+          android:configChanges="orientation|keyboardHidden|screenSize" />
+        
+
+
+        
+        
     </application>
 
 </manifest>

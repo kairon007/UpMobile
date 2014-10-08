@@ -62,9 +62,15 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
         }
         mToken = MusicUtils.bindToService(this);
         init();
-        if (Settings.ENABLE_ADS) {
-            Advertisement.mopubShowBanner(this);
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
 		}
+
     }
 
     @Override
@@ -74,9 +80,11 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
         if (mCursor != null) {
             mCursor.close();
         }
+        /*
         if (Settings.ENABLE_ADS) {
             Advertisement.mopubDestroy(this);
 		}
+		*/
     }
 
     public void init() {

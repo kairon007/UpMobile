@@ -16,4 +16,6 @@ public class Constants {
 	public static final String EDITOR_FIELDS = "aditor_fields";
 	public static final String USE_COVER = "use_cover";
 	public static final String MUSIC_URI = "music_uri";
+	public static final String MUSIC_LIST_URI = "music_list_uri";
+	public static final String IS_DEPLOY_FILTER = "is_deploy_filter";
 }

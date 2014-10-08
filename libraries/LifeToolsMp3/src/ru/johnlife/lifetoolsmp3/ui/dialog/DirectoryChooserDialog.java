@@ -230,11 +230,11 @@ public class DirectoryChooserDialog {
 			newDirButton.setVisibility(View.GONE);
 		}
 		m_listAdapter = createListAdapter(listItems);
-		
 		if (listItems.isEmpty()) {
 			m_listAdapter.add("");
 		}
 		dialogBuilder.setCancelable(false);
+		
 		lvContent.setAdapter(m_listAdapter);
 		lvContent.setOnItemClickListener(new OnItemClickListener() {
 

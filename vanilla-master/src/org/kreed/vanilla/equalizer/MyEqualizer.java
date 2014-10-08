@@ -111,6 +111,8 @@ public class MyEqualizer extends Activity implements
 
 			Log.e("eqActive", Boolean.toString(equalizer.getEnabled()));
 			dontTouch.setVisibility(View.VISIBLE);
+			equalizer.setEnabled(false);
+			
 			equalizer.release();
 			bassBoost.release();
 			virtualizer.release();

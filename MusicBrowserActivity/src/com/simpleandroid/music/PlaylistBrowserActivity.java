@@ -173,9 +173,15 @@ public class PlaylistBrowserActivity extends ListActivity
                 getPlaylistCursor(mAdapter.getQueryHandler(), null);
             }
         }
-        if (Settings.ENABLE_ADS) {
-            Advertisement.mopubShowBanner(this);
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
 		}
+
     }
     
     @Override
@@ -209,9 +215,11 @@ public class PlaylistBrowserActivity extends ListActivity
         setListAdapter(null);
         mAdapter = null;
         unregisterReceiver(mScanListener);
+        /*
         if (Settings.ENABLE_ADS) {
             Advertisement.mopubDestroy(this);
 		}
+		*/
         super.onDestroy();
     }
     
