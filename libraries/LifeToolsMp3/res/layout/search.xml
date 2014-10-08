@@ -51,8 +51,10 @@
             android:id="@+id/downloads"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_gravity="center"
             android:background="@drawable/selectable_item_bg"
-            android:src="@drawable/ic_menu_archive" />
+            android:src="@drawable/ic_download" />
+
     </LinearLayout>
 
     <FrameLayout
