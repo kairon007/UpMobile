@@ -117,8 +117,10 @@ public class PlaylistAdapter extends CursorAdapter implements Handler.Callback, 
 	 * Generate a new view.
 	 */
 	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup parent)
-	{
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+		if ("AppTheme.White".equals(Util.getThemeName(context))) {
+			return mInflater.inflate(R.layout.white_playlist_row, null);
+		}
 		return mInflater.inflate(R.layout.playlist_row, null);
 	}
 
