@@ -129,9 +129,15 @@ public class AlbumBrowserActivity extends ListActivity
                 getAlbumCursor(mAdapter.getQueryHandler(), null);
             }
         }
-        if (Settings.ENABLE_ADS) {
-            Advertisement.mopubShowBanner(this);
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
 		}
+
     }
     
     @Override
@@ -174,9 +180,11 @@ public class AlbumBrowserActivity extends ListActivity
         setListAdapter(null);
         mAdapter = null;
         unregisterReceiver(mScanListener);
+        /*
         if (Settings.ENABLE_ADS) {
             Advertisement.mopubDestroy(this);
 		}
+		*/
         super.onDestroy();
     }
     

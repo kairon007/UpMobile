@@ -41,9 +41,15 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
         super.onCreate(icicle);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         init();
-        if (Settings.ENABLE_ADS) {
-            Advertisement.mopubShowBanner(this);
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
 		}
+
     }
 
     public void init() {
@@ -111,9 +117,11 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
         if (mCursor != null) {
             mCursor.close();
         }
+        /*
         if (Settings.ENABLE_ADS) {
             Advertisement.mopubDestroy(this);
 		}
+		*/
         super.onDestroy();
     }
 

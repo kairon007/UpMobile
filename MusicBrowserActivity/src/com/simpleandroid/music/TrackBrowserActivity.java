@@ -185,9 +185,15 @@ public class TrackBrowserActivity extends ListActivity
                 setAlbumArtBackground();
             }
         });
-        if (Settings.ENABLE_ADS) {
-            Advertisement.mopubShowBanner(this);
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
 		}
+
     }
 
     public void onServiceConnected(ComponentName name, IBinder service)
@@ -288,9 +294,11 @@ public class TrackBrowserActivity extends ListActivity
         setListAdapter(null);
         mAdapter = null;
         unregisterReceiverSafe(mScanListener);
+        /*
         if (Settings.ENABLE_ADS) {
             Advertisement.mopubDestroy(this);
 		}
+		*/
         super.onDestroy();
     }
     

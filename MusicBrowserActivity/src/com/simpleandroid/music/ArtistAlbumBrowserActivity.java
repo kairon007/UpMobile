@@ -129,9 +129,15 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
                 getArtistCursor(mAdapter.getQueryHandler(), null);
             }
         }
-        if (Settings.ENABLE_ADS) {
-            Advertisement.mopubShowBanner(this);
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
 		}
+
     }
 
     @Override
@@ -178,9 +184,11 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         mAdapter = null;
         unregisterReceiver(mScanListener);
         setListAdapter(null);
+        /*
         if (Settings.ENABLE_ADS) {
             Advertisement.mopubDestroy(this);
 		}
+		*/
         super.onDestroy();
     }
     

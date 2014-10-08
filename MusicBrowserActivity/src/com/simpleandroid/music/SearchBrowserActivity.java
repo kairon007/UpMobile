@@ -18,6 +18,8 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * This class is used to display the {@link ViewPager} used to swipe between the
@@ -41,16 +43,65 @@ public class SearchBrowserActivity extends Activity {
 		searchView = new SearchView(this);
 		viewSearchActivity = searchView.getView();
 		layout.addView(viewSearchActivity);
-		if (Settings.ENABLE_ADS) {
-			Advertisement.mopubShowBanner(this);
+		
+
+		// show cross promo box
+		try {
+			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
+			if (downloadsLayout != null) {
+				if (Settings.getIsBlacklisted(this)) {
+					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				} else {
+					Advertisement.showCrossPromoBox(this, downloadsLayout);
+				}
+			}
+		} catch (Exception e) {
+
 		}
+
+		// show or hide disclaimer
+		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
+		if (editTextDisclaimer != null) {
+			if (Settings.getIsBlacklisted(this)) {
+				editTextDisclaimer.setVisibility(View.VISIBLE);
+			} else {
+				editTextDisclaimer.setVisibility(View.GONE);
+			}
+		}
+
+
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
+		}
+		
+
+
+		// initialize ad networks
+		try {
+			if (!Settings.getIsBlacklisted(this)) {
+				Advertisement.start(this, false);
+			} else {
+				Advertisement.showDisclaimer(this);
+			}
+		} catch (Exception e) {
+
+		}
+
+
 	}
 
 	@Override
 	protected void onDestroy() {
+		/*
 		if (Settings.ENABLE_ADS) {
 			Advertisement.mopubDestroy(this);
 		}
+		*/
 		super.onDestroy();
 	}
 	

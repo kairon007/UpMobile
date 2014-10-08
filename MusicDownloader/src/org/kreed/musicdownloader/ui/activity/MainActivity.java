@@ -285,9 +285,57 @@ public class MainActivity extends Activity {
 			MusicDownloaderApp.getService().getPlayer().getView(footer);
 			player = MusicDownloaderApp.getService().getPlayer();
 		}
-		if (Settings.ENABLE_ADS) {
-			Advertisement.mopubShowBanner(this);
+
+		// show cross promo box
+		try {
+			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
+			if (downloadsLayout != null) {
+				if (Settings.getIsBlacklisted(this)) {
+					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				} else {
+					Advertisement.showCrossPromoBox(this, downloadsLayout);
+				}
+			}
+		} catch (Exception e) {
+
 		}
+
+		// show or hide disclaimer
+		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
+		if (editTextDisclaimer != null) {
+			if (Settings.getIsBlacklisted(this)) {
+				editTextDisclaimer.setVisibility(View.VISIBLE);
+			} else {
+				editTextDisclaimer.setVisibility(View.GONE);
+			}
+		}
+
+
+		// load banner ad
+		try {
+			if (Settings.ENABLE_ADS) {
+				Advertisement.showBanner(this);
+			}
+		} catch (Exception e) {
+
+		}
+
+
+
+		// show in the first activity
+
+
+		// initialize ad networks
+		try {
+			if (!Settings.getIsBlacklisted(this)) {
+				//Advertisement.start(this, false);
+			} else {
+				Advertisement.showDisclaimer(this);
+			}
+		} catch (Exception e) {
+
+		}
+
 	}
 
 	@Override
