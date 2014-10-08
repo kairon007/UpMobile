@@ -68,10 +68,15 @@ public class LyricsFetcher {
 	
 	public void fetchLyrics(String songName, String artistName) {
 		Locale locale = Locale.getDefault();
-		String urlString = "http://www.azlyrics.com/lyrics/"
-		+ artistName.toLowerCase(locale).replaceAll(" ", "").replaceAll("-", "")
-		+ "/" + songName.toLowerCase(locale).replaceAll(" ", "").replaceAll("-", "") + ".html";
+		String urlString = "http://www.azlyrics.com/lyrics/" 
+				+ deleteSpecialCharacters(artistName.toLowerCase(locale)) + "/"
+				+ deleteSpecialCharacters(songName.toLowerCase(locale)) + ".html";
 		new FetchLyrics().execute(urlString);
+	}
+
+	private String deleteSpecialCharacters(String name) {
+		name = name.replaceAll(" ", "").replaceAll("-", "").replaceAll("'", "").replaceAll("!", "").replaceAll("\"", "");
+		return name;
 	}
 	
 	public void setOnLyricsFetchedListener(OnLyricsFetchedListener listener) {
