@@ -26,7 +26,14 @@ THE SOFTWARE.
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/banner" />
+		<LinearLayout 
+            android:orientation="vertical"
+            android:id="@+id/banner_view"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            >
+		</LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/search_box"
