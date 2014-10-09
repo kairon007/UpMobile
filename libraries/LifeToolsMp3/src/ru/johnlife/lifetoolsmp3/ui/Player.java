@@ -71,6 +71,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
 	private boolean useCover = true;
+	private boolean isWhiteThemeVanilla = false;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -91,6 +92,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (textView != null) {
 			textView.setText(title);
 		}
+	}
+	
+	public void setWhiteThemeVanilla(boolean isWhiteThemeVanilla) {
+		this.isWhiteThemeVanilla = isWhiteThemeVanilla;
 	}
 
 	public Player(final View view, final String title, final String artist) {
@@ -269,6 +274,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		}
 		if (!forse) {
 			editor.setShowCover(useCover);
+		}
+		if (isWhiteThemeVanilla){
+			int color = android.R.color.darker_gray;
+			editor.setCbTextColor(color);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

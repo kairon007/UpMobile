@@ -4,6 +4,7 @@ import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
@@ -40,5 +41,15 @@ public class SearchView extends OnlineSearchView {
 	protected void stopSystemPlayer(Context context) {
 		service = PlaybackService.get(context);
 		service.pause();
+	}
+	
+	@Override
+	protected boolean isWhiteThemeVanilla() {
+		if ("AppTheme.White".equals(Util.getThemeName(getContext())) && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+			return true;
+		} else {
+			return false;
+		}
+		
 	}
 }

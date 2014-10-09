@@ -236,6 +236,10 @@ public abstract class OnlineSearchView extends View {
 		return true;
 	}
 	
+	protected boolean isWhiteThemeVanilla() {
+		return false;
+	}
+	
 	// protected DownloadClickListener createListener(RemoteSong song, Bitmap
 	// bitmap) {
 	// return new DownloadClickListener(getContext(), song, bitmap);
@@ -558,6 +562,7 @@ public abstract class OnlineSearchView extends View {
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			player = new Player(inflater.inflate(R.layout.download_dialog, null), title, artist);
+			player.setWhiteThemeVanilla(isWhiteThemeVanilla());
 			if (downloadSong instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) downloadSong).getSongId());
 			}

@@ -1,8 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui.dialog;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import android.content.Context;
@@ -10,7 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -71,7 +67,9 @@ public class MP3Editor {
 		etArtistName = (EditText) view.findViewById(R.id.editTextArtist);
 		etSongTitle = (EditText) view.findViewById(R.id.editTextTitle);
 		etAlbumTitle = (EditText) view.findViewById(R.id.editTextAlbum);
-		checkBox = (CheckBox) view.findViewById(R.id.isShowCover);
+		if (null == checkBox) {
+			checkBox = (CheckBox) view.findViewById(R.id.isShowCover);
+		}
 	}
 
 	private class CustomWatcher implements TextWatcher {
@@ -99,6 +97,13 @@ public class MP3Editor {
 		if (isHide) {
 			checkBox.setVisibility(View.GONE);
 		}
+	}
+	
+	public void setCbTextColor(int color) {
+		if (null == checkBox) {
+			checkBox = (CheckBox) view.findViewById(R.id.isShowCover);
+		}
+		checkBox.setTextColor(color);
 	}
 
 	public boolean useAlbumCover() {
