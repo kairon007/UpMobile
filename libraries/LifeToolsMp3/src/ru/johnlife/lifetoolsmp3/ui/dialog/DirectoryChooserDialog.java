@@ -142,15 +142,7 @@ public class DirectoryChooserDialog {
 			@Override
 			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-					// Back button pressed
-					if (m_dir.equals(m_sdcardDirectory)) {
-						return false;
-					} else {
-						// Navigate back to an upper directory
-						m_dir = new File(m_dir).getParent();
-						updateDirectory();
-					}
-
+					dirsDialog.dismiss();
 					return true;
 				} else {
 					return false;
