@@ -205,6 +205,8 @@ android:configChanges="orientation|screenSize" />
             android:enabled="true"
             android:exported="false"
             android:process=":mcServiceProcess" />
+		
+		<service android:name="PlayerService"></service>
 
         <receiver
             android:name="com.ironsource.mobilcore.InstallationTracker"

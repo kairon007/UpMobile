@@ -310,25 +310,8 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				adapterLibrary = new LibraryTabAdapter(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
-				if (isDeployFilter) {
-					for (MusicData m : listLibrarySongs) {
-						adapterLibrary.add(m);
-					}
-					File[] files = contentFile.listFiles();
-					for (int i = 0; i < files.length; i++) {
-						String string = files[i].getName();
-						if (string.endsWith(".mp3")) {
-							final MusicData musicData = new MusicData(files[i]);
-							if (!DownloadsTab.getInstance().isDownloading(musicData)) {
-								listOriginSongs.add(musicData);
-							}
-						}
-					}
-					adapterLibrary.setOriginalValues(listOriginSongs);
-				} else {
-					FillLibraryTask task = new FillLibraryTask();
-					task.execute(contentFile);
-				}
+				FillLibraryTask task = new FillLibraryTask();
+				task.execute(contentFile);
 				break;
 			default:
 				break;
@@ -349,7 +332,16 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	}
 
 	private class FillLibraryTask extends AsyncTask<File, Void, Void> {
-
+		
+		@Override
+		protected void onPreExecute() {
+			if (isDeployFilter) {
+				for (MusicData m : listLibrarySongs) {
+					adapterLibrary.add(m);
+				}
+			}
+		}
+		
 		@Override
 		protected Void doInBackground(File... params) {
 			File[] files = params[0].listFiles();
@@ -358,12 +350,16 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				if (string.endsWith(".mp3")) {
 					final MusicData musicData = new MusicData(files[i]);
 					if (!DownloadsTab.getInstance().isDownloading(musicData)) {
-						mActivity.runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								adapterLibrary.add(musicData);
-							}
-						});
+						if (isDeployFilter) {
+							listOriginSongs.add(musicData);
+						} else {
+							mActivity.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									adapterLibrary.add(musicData);
+								}
+							});
+						}
 					}
 				}
 			}
@@ -372,7 +368,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		
 		@Override
 		protected void onPostExecute(Void result) {
-			adapterLibrary.setFilter();
+			if (isDeployFilter) {
+				adapterLibrary.setOriginalValues(listOriginSongs);
+			}
 		}
 	}
 

@@ -1,16 +1,12 @@
 package org.kreed.musicdownloader.ui.adapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Locale;
 
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 
-import com.ironsource.mobilcore.MobileCore;
-
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -70,6 +66,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		if (mOriginalValues == null) {
 			mOriginalValues = new ArrayList<MusicData>();
 		}
+		mOriginalValues.clear();
 		mOriginalValues.addAll(data);
 	}
 	
@@ -78,7 +75,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		if (mOriginalValues != null) {
 			mOriginalValues.remove(object);
 		}
-		mObjects.add(object);
+		mObjects.remove(object);
 		activity.runOnUiThread(reDraw);
 	}
 
@@ -234,21 +231,13 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		if (!mObjects.isEmpty()) {
 			getFilter().filter(textFilter.getText().toString().toLowerCase(Locale.ENGLISH));
-			if (count != 0) {
-				isDeployFilter = true;
-			} else {
-				isDeployFilter = false;
-			}
+			isDeployFilter = (count != 0) ? true : false;
 		}
 	}
 
 	@Override
 	public void afterTextChanged(Editable s) {
 
-	}
-	
-	public void setFilter() {
-		getFilter().filter(textFilter.getText().toString().toLowerCase(Locale.ENGLISH));
 	}
 	
 	public boolean checkDeployFilter() {
