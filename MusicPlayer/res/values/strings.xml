@@ -132,14 +132,14 @@
     <string name="settings_data_category">Data</string>
     <string name="settings_about_category">About</string>
     <string name="settings_author_title">Author</string>
-    <string name="settings_about_apollo">About Apollo</string>
+    <string name="settings_about_apollo">About MusicPlayer</string>
     <string name="settings_special_thanks">Special thanks</string>
     <string name="settings_cyanogenmod_title">CyanogenMod</string>
     <string name="settings_self_title">Andrew Neal</string>
     <string name="settings_lopez_title">A.J. Lopez</string>
     <string name="settings_lopez_summary">Icon and Play Store banner design</string>
-    <string name="settings_color_scheme_title">Choose Apollo\'s default color scheme</string>
-    <string name="settings_color_scheme_summary">Changes the accent color in Apollo</string>
+    <string name="settings_color_scheme_title">Choose MusicPlayer\'s default color scheme</string>
+    <string name="settings_color_scheme_summary">Changes the accent color in MusicPlayer</string>
     <string name="settings_theme_chooser_title">Theme chooser</string>
     <string name="settings_delete_cache_title">Delete cache</string>
     <string name="settings_delete_cache_summary">Remove all cached images</string>
@@ -155,7 +155,7 @@
     <string name="now_listening_to">#NowPlaying</string>
     <string name="by">by</string>
     <string name="share_track_using">Share track using:</string>
-    <string name="hash_apollo">#Apollo</string>
+    <string name="hash_apollo">#MusicPlayer</string>
 
     <!-- ColorPicker -->
     <string name="color_picker_title">Color scheme</string>
@@ -164,14 +164,14 @@
     <string name="new_color">New</string>
 
     <!-- App widget -->
-    <string name="app_widget_small">Apollo: 4x1</string>
-    <string name="app_widget_large">Apollo: 4x2</string>
-    <string name="app_widget_large_alt">Apollo: 4x2 (Alternate)</string>
-    <string name="app_widget_recent">Apollo: Recently listened</string>
+    <string name="app_widget_small">MusicPlayer: 4x1</string>
+    <string name="app_widget_large">MusicPlayer: 4x2</string>
+    <string name="app_widget_large_alt">MusicPlayer: 4x2 (Alternate)</string>
+    <string name="app_widget_recent">MusicPlayer: Recently listened</string>
     <string name="app_widget_text_separator">-</string>
 
     <!-- What keywords to use when shopping for Apollo themes -->
-    <string name="apollo_themes_shop_key">Apollo Themes</string>
+    <string name="apollo_themes_shop_key">MusicPlayer Themes</string>
 
     <!-- Empty list / error messages -->
     <string name="no_effects_for_you">The equalizer could not be opened.</string>
