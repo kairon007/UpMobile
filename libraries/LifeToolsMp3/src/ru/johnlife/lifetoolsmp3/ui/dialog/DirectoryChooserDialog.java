@@ -143,6 +143,7 @@ public class DirectoryChooserDialog {
 			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
 					dirsDialog.dismiss();
+					SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
 					return true;
 				} else {
 					return false;
