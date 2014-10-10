@@ -93,7 +93,7 @@ public class MyEqualizer extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.equalizer_main);
 
 		startService(new Intent(this, MyService.class));
 

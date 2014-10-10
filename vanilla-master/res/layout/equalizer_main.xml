@@ -9,7 +9,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -89,12 +90,12 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="5" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical" >
 
                     <TextView
@@ -108,7 +109,7 @@
                     <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar1"
                         android:layout_width="wrap_content"
-                        android:layout_height="200dp"
+                        android:layout_height="match_parent"
                         android:max="30"
                         android:progress="15" />
 
@@ -129,7 +130,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical" >
 
                     <TextView
@@ -143,7 +144,7 @@
                     <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar2"
                         android:layout_width="wrap_content"
-                        android:layout_height="200dp"
+                        android:layout_height="match_parent"
                         android:max="30"
                         android:progress="15" />
 
@@ -164,7 +165,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical" >
 
                     <TextView
@@ -178,7 +179,7 @@
                     <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar3"
                         android:layout_width="wrap_content"
-                        android:layout_height="200dp"
+                        android:layout_height="match_parent"
                         android:max="30"
                         android:progress="15" />
 
@@ -199,7 +200,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical" >
 
                     <TextView
@@ -213,7 +214,7 @@
                     <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar4"
                         android:layout_width="wrap_content"
-                        android:layout_height="200dp"
+                        android:layout_height="match_parent"
                         android:max="30"
                         android:progress="15" />
 
@@ -234,7 +235,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical" >
 
                     <TextView
@@ -248,7 +249,7 @@
                     <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar5"
                         android:layout_width="wrap_content"
-                        android:layout_height="200dp"
+                        android:layout_height="match_parent"
                         android:max="30"
                         android:progress="15" />
 
@@ -310,7 +311,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -433,7 +435,7 @@
     <Button
         android:id="@+id/not_touch"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="1dp"
         android:background="@color/trasparent_black"
         android:clickable="false"
         android:enabled="false" />
