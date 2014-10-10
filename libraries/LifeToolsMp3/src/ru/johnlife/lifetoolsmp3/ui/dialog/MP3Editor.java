@@ -67,9 +67,7 @@ public class MP3Editor {
 		etArtistName = (EditText) view.findViewById(R.id.editTextArtist);
 		etSongTitle = (EditText) view.findViewById(R.id.editTextTitle);
 		etAlbumTitle = (EditText) view.findViewById(R.id.editTextAlbum);
-		if (null == checkBox) {
-			checkBox = (CheckBox) view.findViewById(R.id.isShowCover);
-		}
+		checkBox = (CheckBox) view.findViewById(R.id.isShowCover);
 	}
 
 	private class CustomWatcher implements TextWatcher {
@@ -97,13 +95,6 @@ public class MP3Editor {
 		if (isHide) {
 			checkBox.setVisibility(View.GONE);
 		}
-	}
-	
-	public void setCbTextColor(int color) {
-		if (null == checkBox) {
-			checkBox = (CheckBox) view.findViewById(R.id.isShowCover);
-		}
-		checkBox.setTextColor(color);
 	}
 
 	public boolean useAlbumCover() {

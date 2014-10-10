@@ -43,13 +43,4 @@ public class SearchView extends OnlineSearchView {
 		service.pause();
 	}
 	
-	@Override
-	protected boolean isWhiteThemeVanilla() {
-		if ("AppTheme.White".equals(Util.getThemeName(getContext())) && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
 }
