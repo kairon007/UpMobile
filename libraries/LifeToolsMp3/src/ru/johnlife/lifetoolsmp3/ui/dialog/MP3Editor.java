@@ -94,6 +94,7 @@ public class MP3Editor {
 	public void hideCheckBox(boolean isHide) {
 		if (isHide) {
 			checkBox.setVisibility(View.GONE);
+			view.findViewById(R.id.text_check_box).setVisibility(View.GONE);
 		}
 	}
 
