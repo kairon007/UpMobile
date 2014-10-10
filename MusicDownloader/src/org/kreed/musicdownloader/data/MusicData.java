@@ -12,6 +12,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.kreed.musicdownloader.DBHelper;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.graphics.Bitmap;
 
 public class MusicData {
@@ -67,8 +68,13 @@ public class MusicData {
 					} else {
 						nameFileArray = nameFile.split("-<")[0].split(" - ");
 					}
-					songTitle = nameFileArray[1];
-					songArtist = nameFileArray[0];
+					if (nameFileArray.length > 0) {
+						songTitle = nameFileArray[1];
+						songArtist = nameFileArray[0];
+					} else {
+						songTitle = MP3Editor.UNKNOWN;
+						songArtist = MP3Editor.UNKNOWN;
+					}
 					metadata.setSongTitle(songTitle);
 					metadata.setArtist(songArtist);
 					int seconds = 0;
@@ -82,7 +88,7 @@ public class MusicData {
 						int genre_id = (Integer) metadata.get("genre_id");
 						songGenre = ID3v1Genre.get(genre_id);
 					} else {
-						songGenre = "unknown";
+						songGenre = MP3Editor.UNKNOWN;
 					}
 					File dst = new File(musicFile.getParentFile(), musicFile.getName() + "-1");
 					try {
@@ -113,7 +119,7 @@ public class MusicData {
 						int genre_id = (Integer) metadata.get("genre_id");
 						songGenre = ID3v1Genre.get(genre_id);
 					} else {
-						songGenre = "unknown";
+						songGenre = MP3Editor.UNKNOWN;
 					}
 				}
 			}
@@ -148,7 +154,7 @@ public class MusicData {
 					int genre_id = (Integer) metadata.get("genre_id");
 					temp.setSongGenre(ID3v1Genre.get(genre_id));
 				} else {
-					temp.setSongGenre("unknown");
+					temp.setSongGenre(MP3Editor.UNKNOWN);
 				}
 			} else {
 			}

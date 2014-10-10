@@ -26,7 +26,7 @@ public class MP3Editor {
 	private String oldArtistName;
 	private String oldSongTitle;
 	private String oldAlbumTitle;
-	private final String UNKNOWN = "unknown";
+	public static final String UNKNOWN = "unknown";
 	private boolean showCover = true;
 
 	public MP3Editor(Context context, boolean isEnableCover) {
