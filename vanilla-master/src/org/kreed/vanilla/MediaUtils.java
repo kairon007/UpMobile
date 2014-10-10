@@ -136,6 +136,7 @@ public class MediaUtils {
 		StringBuilder selection = new StringBuilder();
 
 		switch (type) {
+		case TYPE_SEARCH:
 		case TYPE_SONG:
 			selection.append(MediaStore.Audio.Media._ID);
 			break;
@@ -216,6 +217,7 @@ public class MediaUtils {
 	public static QueryTask buildQuery(int type, long id, String[] projection, String selection)
 	{
 		switch (type) {
+		case TYPE_SEARCH:
 		case TYPE_ARTIST:
 		case TYPE_ALBUM:
 		case TYPE_SONG:
