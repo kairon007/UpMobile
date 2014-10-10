@@ -92,7 +92,6 @@ public class MainActivity extends Activity {
 	private TabPageIndicator mTabs;
 	private View mSearchBox;
 	private EditText mTextFilter;
-	private CustomTextWatcher textWatcher;
 	private LinearLayout searchLayout;
 	private ImageButton clearAll;
 	private ImageButton mClearFilterEditText;
@@ -227,8 +226,6 @@ public class MainActivity extends Activity {
 		mSearchBox = findViewById(R.id.search_box);
 		setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
 		mTextFilter = (EditText) findViewById(R.id.filter_text);
-		textWatcher = new CustomTextWatcher();
-		mTextFilter.addTextChangedListener(textWatcher);
 		mClearFilterEditText = (ImageButton) findViewById(R.id.clear_filter);
 		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
 
@@ -447,9 +444,9 @@ public class MainActivity extends Activity {
 			CompatHoneycomb.selectTab(this, position);
 		}
 		if (lastPage != position && lastPage != -1) {
-			mTextFilter.removeTextChangedListener(textWatcher);
+			//mTextFilter.removeTextChangedListener(textWatcher);
 			mTextFilter.setText("");
-			mTextFilter.addTextChangedListener(textWatcher);
+			//mTextFilter.addTextChangedListener(textWatcher);
 		}
 		if (lastPage == 0) {
 			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
@@ -693,25 +690,6 @@ public class MainActivity extends Activity {
 			}
 
 		});
-	}
-
-	public class CustomTextWatcher implements TextWatcher {
-
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-		}
-
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			textFilterDownload = mTextFilter.getText().toString().toLowerCase(Locale.ENGLISH);
-			DownloadsTab.getInstance().setFilter(textFilterDownload);
-		}
-
-		@Override
-		public void afterTextChanged(Editable s) {
-
-		}
 	}
 
 	public void refreshLibraryTab() {
