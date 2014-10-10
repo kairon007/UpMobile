@@ -49,7 +49,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -73,6 +72,7 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public class MainActivity extends Activity {
 
+	private static final String SAVE_PLAYER_VIEW = "SAVE_PLAYER_VIEW";
 	private static final String SAVE_BUTTONPLAY_PROGRESS = "SAVE_BUTTONPLAY_PROGRESS";
 	private static final String SAVE_SEEKBAR_PROGRESS = "SAVE_SEEKBAR_PROGRESS";
 	private final static int DELETE = 1;
@@ -110,6 +110,7 @@ public class MainActivity extends Activity {
 	private ArrayList<String> mStrings;
 	private boolean showDialog = false;
 	private boolean useCover = false;
+	private boolean isPlayerHide;
 
 	// -------------------------------------------------------------------------
 
@@ -283,8 +284,13 @@ public class MainActivity extends Activity {
 		if (pager.getCurrentItem() == 2) {
 			clearAll.setVisibility(View.GONE);
 		}
+		if (null != state) {
+			isPlayerHide = state.getBoolean(SAVE_PLAYER_VIEW);
+		}
 		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().containsPlayer()) {
-			MusicDownloaderApp.getService().getPlayer().getView(footer);
+			if (isPlayerHide) {
+				MusicDownloaderApp.getService().getPlayer().getView(footer);
+			}
 			player = MusicDownloaderApp.getService().getPlayer();
 		}
 
@@ -408,8 +414,8 @@ public class MainActivity extends Activity {
 		}
 		if (null != player) {
 			out.putBoolean(SAVE_SEEKBAR_PROGRESS, player.isSongProgressIndeterminate());
-			Log.d("logd", String.valueOf(player.isSongProgressIndeterminate()));
 			out.putInt(SAVE_BUTTONPLAY_PROGRESS, player.getButtonProgressVisibility());
+			out.putBoolean(SAVE_PLAYER_VIEW, player.getPlayerVisibility() == View.VISIBLE);
 		}
 		if (lastPage == 0) { 
 			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
