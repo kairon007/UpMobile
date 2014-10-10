@@ -46,10 +46,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +61,7 @@ public abstract class PlaybackActivity extends Activity
 	           View.OnClickListener,
 	           CoverView.Callback
 {
+
 	private Action mUpAction;
 	private Action mDownAction;
 
@@ -92,7 +90,7 @@ public abstract class PlaybackActivity extends Activity
 	private boolean isLyricsShow;
 	private TextView mLyricsView;
 	private ProgressBar progressLyric;
-
+	
 	@Override
 	public void onCreate(Bundle state)
 	{
@@ -282,30 +280,35 @@ public abstract class PlaybackActivity extends Activity
 		if (song != null) {
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 			isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-			if (mLyricsView != null && Settings.ENABLE_LYRICS && isLyricsShow == true) {
+			if (mLyricsView != null && Settings.ENABLE_LYRICS && isLyricsShow == true && mLyricsView.getText().equals("") && mLyricsView.getVisibility() == View.VISIBLE) {
 				loaderLyrics(song);
-			} else if (mLyricsView != null) {
+			}/* else if (mLyricsView != null) {
 				mLyricsView.setText("");
-			}
+			}*/
 		}
 	}
 
 	public void loaderLyrics(final Song song) {
-		enableProgress();
-		LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
-		lyricsFetcher.fetchLyrics(song.title, song.artist);
-		lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
-					@Override
-					public void onLyricsFetched(boolean foundLyrics,String lyrics) {
-						disableProgress();
-						if (foundLyrics) {
-							mLyricsView.setText(Html.fromHtml(lyrics));
-						} else {
-							String songName = song.artist + " - " + song.title;
-							mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
-						}
+		if (null != song) {
+			enableProgress();
+			LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
+			lyricsFetcher.fetchLyrics(song.title, song.artist);
+			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+				@Override
+				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+					disableProgress();
+					if (foundLyrics) {
+						mLyricsView.setText(Html.fromHtml(lyrics));
+					} else {
+						String songName = song.artist + " - " + song.title;
+						mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
 					}
-				});
+				}
+			});
+		} else {
+			Toast toast = Toast.makeText(getApplicationContext(), R.string.not_selected_song, Toast.LENGTH_SHORT);
+			toast.show();
+		}
 	}
 	
 	public void setParentView(TextView mLyricsView, ProgressBar progressLyric) {

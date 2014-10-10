@@ -48,6 +48,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -79,6 +81,8 @@ public class FullPlaybackActivity extends PlaybackActivity
 	public static final int DISPLAY_INFO_OVERLAP = 0;
 	public static final int DISPLAY_INFO_BELOW = 1;
 	public static final int DISPLAY_INFO_WIDGETS = 2;
+	private static final String EXTRA_LYRICS_STATE = "EXTRA_LYRICS_STATE";
+	private static final String EXTRA_LIRYCS_TEXT = "EXTRA_LIRYCS_TEXT";
 
 	private TextView mOverlayText;
 	private View mControlsTop;
@@ -280,6 +284,13 @@ public class FullPlaybackActivity extends PlaybackActivity
 			 
 		}
 		lyricConfigurate();
+		
+		if (icicle != null && mLyricsView != null && icicle.getBoolean(EXTRA_LYRICS_STATE)) {
+			mLyricsConteiner.setVisibility(View.VISIBLE);
+			progressLyric.setVisibility(View.GONE);
+			mLyricsView.setVisibility(View.VISIBLE);
+			mLyricsView.setText(Html.fromHtml(icicle.getString(EXTRA_LIRYCS_TEXT)));
+		}
 	}
 
 
@@ -517,7 +528,7 @@ public class FullPlaybackActivity extends PlaybackActivity
 	}
 	
 	public void loadLyrics(final Song song) {
-		if (mLyricsView != null && Settings.ENABLE_LYRICS) {
+		if (mLyricsView != null && Settings.ENABLE_LYRICS && mLyricsView.getText().equals("") && mLyricsView.getVisibility() == View.VISIBLE) {
 			loaderLyrics(song);
 		}
 	}
@@ -929,5 +940,13 @@ public class FullPlaybackActivity extends PlaybackActivity
 		NetworkInfo ni = cm.getActiveNetworkInfo();
 		if (ni == null) return false;
 		else return true;
+	}
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		if(null != mLyricsView && mLyricsView.getVisibility() == View.VISIBLE && !mLyricsView.getText().equals("") && mLyricsConteiner.getVisibility() == View.VISIBLE) {
+			outState.putString(EXTRA_LIRYCS_TEXT, Html.toHtml(new SpannableStringBuilder(mLyricsView.getText().toString())));
+			outState.putBoolean(EXTRA_LYRICS_STATE, true);
+		}
+		super.onSaveInstanceState(outState);
 	}
 }

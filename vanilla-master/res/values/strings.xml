@@ -73,4 +73,5 @@
         <item>Pop</item>
         <item>Rock</item>
     </string-array>
+        <string name="not_selected_song">Not selected song</string>
 </resources>
