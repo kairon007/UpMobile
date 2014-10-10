@@ -385,19 +385,6 @@ public class MainActivity extends Activity {
 			player.setSongProgressIndeterminate(in.getBoolean(SAVE_SEEKBAR_PROGRESS, false));
 			player.setButtonProgressVisibility(in.getInt(SAVE_BUTTONPLAY_PROGRESS, View.VISIBLE));
 		}
-		if (in.containsKey(Constants.MUSIC_LIST_URI) && in.containsKey(Constants.IS_DEPLOY_FILTER)) {
-			ArrayList<String> listLibrarySongsUri = in.getStringArrayList(Constants.MUSIC_LIST_URI);
-			ArrayList<MusicData> listLibrarySongs = new ArrayList<MusicData>();
-			for (String uriFile : listLibrarySongsUri) {
-				listLibrarySongs.add(new MusicData(new File(uriFile)));
-			}
-			boolean isDeployFilter = in.getBoolean(Constants.IS_DEPLOY_FILTER);
-			mPagerAdapter.setListLibrarySongs(listLibrarySongs);
-			mPagerAdapter.setIsDeployFilter(isDeployFilter);
-		}
-		if (PreferenceManager.getDefaultSharedPreferences(this).getInt(PrefKeys.LIBRARY_PAGE, 0) == 2) {
-			refreshLibraryTab();
-		}
 		super.onRestoreInstanceState(in);
 	}
 
@@ -426,10 +413,6 @@ public class MainActivity extends Activity {
 		}
 		if (lastPage == 0) { 
 			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
-		}
-		if (mPagerAdapter.getLibraryTabAdapter() != null) {
-			out.putStringArrayList(Constants.MUSIC_LIST_URI, mPagerAdapter.getLibraryTabAdapter().getListUri());
-			out.putBoolean(Constants.IS_DEPLOY_FILTER, mPagerAdapter.getLibraryTabAdapter().checkDeployFilter());
 		}
 		super.onSaveInstanceState(out);
 	}

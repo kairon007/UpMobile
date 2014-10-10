@@ -10,6 +10,7 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWatcher {
@@ -30,8 +32,6 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	private MainActivity activity;
 	private LayoutInflater inflater;
 	private EditText textFilter;
-	private boolean isDeployFilter;
-	
 	private Runnable reDraw = new Runnable() {
 
 		@Override
@@ -39,9 +39,12 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			notifyDataSetChanged();
 		}
 	};
+	private boolean isDeployFilter;
+	private ListView lv;
 
 	public LibraryTabAdapter(int resource, MainActivity activity) {
 		super(activity, resource);
+		Log.d("logd", "LibraryTabAdapter");
 		mObjects = new ArrayList<MusicData>();
 		this.activity = activity;
 		inflater = LayoutInflater.from(activity);
@@ -58,16 +61,11 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		if (mOriginalValues != null) {
 			mOriginalValues.add(object);
 		}
+		if (null == mObjects) {
+			mObjects = new ArrayList<MusicData>();
+		}
 		mObjects.add(object);
 		activity.runOnUiThread(reDraw);
-	}
-	
-	public void setOriginalValues(ArrayList<MusicData> data) {
-		if (mOriginalValues == null) {
-			mOriginalValues = new ArrayList<MusicData>();
-		}
-		mOriginalValues.clear();
-		mOriginalValues.addAll(data);
 	}
 	
 	@Override
@@ -219,6 +217,9 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		protected void publishResults(CharSequence constraint, final FilterResults results) {
 			mObjects = (ArrayList<MusicData>) results.values;
 			activity.runOnUiThread(reDraw);
+			if (lv != null && isDeployFilter) {
+				lv.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
@@ -229,10 +230,8 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		if (!mObjects.isEmpty()) {
-			getFilter().filter(textFilter.getText().toString().toLowerCase(Locale.ENGLISH));
-			isDeployFilter = (count != 0) ? true : false;
-		}
+		notifyFilter(null);
+		isDeployFilter = (count != 0) ? true : false;
 	}
 
 	@Override
@@ -240,15 +239,12 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 	}
 	
+	public void notifyFilter(ListView lv) {
+		getFilter().filter(textFilter.getText().toString().toLowerCase(Locale.ENGLISH));
+		this.lv = lv;
+	}
+
 	public boolean checkDeployFilter() {
 		return isDeployFilter;
-	}
-	
-	public ArrayList<String> getListUri() {
-		ArrayList<String> listUri = new ArrayList<String>();
-		for (MusicData m : mObjects) {
-			listUri.add(m.getFileUri());
-		}
-		return listUri;
 	}
 }

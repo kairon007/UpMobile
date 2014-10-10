@@ -23,7 +23,6 @@ package org.kreed.musicdownloader.ui.adapter;
  */
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.musicdownloader.Constants;
@@ -36,8 +35,6 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
-
-import com.soundcloud.api.examples.PostResource;
 
 import android.content.Context;
 import android.content.Intent;
@@ -155,9 +152,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	private int currentType = -1;
 	private Context context;
 	public LibraryTabAdapter adapterLibrary = null;
-	private ArrayList<MusicData> listLibrarySongs = new ArrayList<MusicData>();
-	private boolean isDeployFilter;
-	private ArrayList<MusicData> listOriginSongs = new ArrayList<MusicData>();
 
 	/**
 	 * Create the LibraryPager.
@@ -218,14 +212,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		return false;
 	}
 
-	public void setListLibrarySongs(ArrayList<MusicData> data) {
-		listLibrarySongs.addAll(data);
-	}
-	
-	public void setIsDeployFilter(boolean isDeployFilter) {
-		this.isDeployFilter = isDeployFilter;
-	}
-	
 	public void computeExpansions() {
 		int[] order = mTabOrder;
 		int musicPosition = -1;
@@ -301,15 +287,18 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				if (!contentFile.exists()) {
 					contentFile.mkdirs();
 				}
-				long contentFileLength = contentFile.listFiles().length;
-				if (contentFileLength == 0) {
-					view = (ListView) inflater.inflate(R.layout.listview, null);
-					view.setAdapter(adapterLibrary);
-					break;
-				}
+//				long contentFileLength = contentFile.listFiles().length;
+//				if (contentFileLength == 0) {
+//					view = (ListView) inflater.inflate(R.layout.listview, null);
+//					view.setAdapter(adapterLibrary);
+//					break;
+//				}
 				adapterLibrary = new LibraryTabAdapter(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
+				if (adapterLibrary.checkDeployFilter()) {
+					view.setVisibility(View.INVISIBLE);
+				}
 				FillLibraryTask task = new FillLibraryTask();
 				task.execute(contentFile);
 				break;
@@ -321,27 +310,12 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			enableFastScroll(view);
 			mLists[type] = view;
 		}
-		if (container != null) {
-			container.addView(view);
-		}
+		container.addView(view);
 		return view;
-	}
-	
-	public LibraryTabAdapter getLibraryTabAdapter() {
-		return adapterLibrary;
 	}
 
 	private class FillLibraryTask extends AsyncTask<File, Void, Void> {
-		
-		@Override
-		protected void onPreExecute() {
-			if (isDeployFilter) {
-				for (MusicData m : listLibrarySongs) {
-					adapterLibrary.add(m);
-				}
-			}
-		}
-		
+
 		@Override
 		protected Void doInBackground(File... params) {
 			File[] files = params[0].listFiles();
@@ -350,16 +324,12 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				if (string.endsWith(".mp3")) {
 					final MusicData musicData = new MusicData(files[i]);
 					if (!DownloadsTab.getInstance().isDownloading(musicData)) {
-						if (isDeployFilter) {
-							listOriginSongs.add(musicData);
-						} else {
-							mActivity.runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									adapterLibrary.add(musicData);
-								}
-							});
-						}
+						mActivity.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								adapterLibrary.add(musicData);
+							}
+						});
 					}
 				}
 			}
@@ -368,9 +338,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		
 		@Override
 		protected void onPostExecute(Void result) {
-			if (isDeployFilter) {
-				adapterLibrary.setOriginalValues(listOriginSongs);
-			}
+			adapterLibrary.notifyFilter(mLists[2]);
 		}
 	}
 
@@ -460,6 +428,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	private static final int MSG_COMMIT_QUERY = 3;
 	private SearchView searchView;
 	private View viewSearchActivity;
+	private boolean isDeployFilter;
 
 	@Override
 	public boolean handleMessage(Message message) {
