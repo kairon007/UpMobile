@@ -66,6 +66,7 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 
 			e.printStackTrace();
 		}
+		if (null == jsonObject) return null;
 		if (jsonObject.toString().length() < 800) {
 			return null;
 		}
