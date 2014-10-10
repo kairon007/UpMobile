@@ -101,7 +101,6 @@ public class MainActivity extends Activity {
 	private String textFilterLibrary = "";
 	private long mLastActedId;
 	private int page;
-	private int mDefaultAction;
 	private int selectedItem;
 	private int lastPage = -1;
 	private boolean mSearchBoxVisible;
@@ -356,8 +355,6 @@ public class MainActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		mDefaultAction = Integer.parseInt(settings.getString(PrefKeys.DEFAULT_ACTION_INT, "7"));
 		mLastActedId = LibraryAdapter.INVALID_ID;
 	}
 
@@ -612,6 +609,7 @@ public class MainActivity extends Activity {
 			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(music.getFileUri())) {
 				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
+				player = null;
 			}
 			super.onPostExecute(result);
 		}
