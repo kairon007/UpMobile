@@ -349,5 +349,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 			}
 		}
 	}
+	
+	public int getPlayerVisibility() {
+		return playerLayout.getVisibility();
+		
+	}
 
 }
