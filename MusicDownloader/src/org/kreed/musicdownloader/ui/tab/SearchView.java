@@ -36,6 +36,10 @@ public class SearchView  extends OnlineSearchView {
 	}
 
 	protected void click(View view, int position) {
+		if (isOffline(getContext())) {
+			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
+			return;
+		}
 		RemoteSong song = (RemoteSong) getResultAdapter().getItem(position);
 		if (view.getId() == R.id.btnDownload) {
 			DownloadListener listener = new DownloadListener(getContext(),song, parentAdapter, activity);
