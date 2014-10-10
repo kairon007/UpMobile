@@ -609,7 +609,7 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(Void result) {
 			Toast.makeText(getApplicationContext(), music.getSongArtist() + " - " + music.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
 			mPagerAdapter.removeMusicData(music);
-			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().equals(music)) {
+			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(music.getFileUri())) {
 				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
 			}
