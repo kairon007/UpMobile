@@ -51,13 +51,11 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -268,8 +266,8 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		int type = mTabOrder[position];
-		ListView listView = mLists[type];
-		if (listView == null) {
+		ListView view = mLists[type];
+		if (view == null) {
 			MainActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
 			switch (type) {
@@ -296,13 +294,10 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 //					break;
 //				}
 				adapterLibrary = new LibraryTabAdapter(0, activity);
-				ViewGroup view = (ViewGroup) inflater.inflate(R.layout.listview, null);
-				listView = (ListView)view.findViewById(R.id.list);
-				ProgressBar progress = (ProgressBar)view.findViewById(R.id.progressList);
-				listView.setAdapter(adapterLibrary);
+				view = (ListView) inflater.inflate(R.layout.listview, null);
+				view.setAdapter(adapterLibrary);
 				if (adapterLibrary.checkDeployFilter()) {
-					listView.setVisibility(View.GONE);
-					progress.setVisibility(View.VISIBLE);
+					view.setVisibility(View.INVISIBLE);
 				}
 				FillLibraryTask task = new FillLibraryTask();
 				task.execute(contentFile);
@@ -310,13 +305,13 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			default:
 				break;
 			}
-			listView.setOnItemClickListener(this);
-			listView.setTag(type);
-			enableFastScroll(listView);
-			mLists[type] = listView;
+			view.setOnItemClickListener(this);
+			view.setTag(type);
+			enableFastScroll(view);
+			mLists[type] = view;
 		}
-		container.addView(listView);
-		return listView;
+		container.addView(view);
+		return view;
 	}
 
 	private class FillLibraryTask extends AsyncTask<File, Void, Void> {

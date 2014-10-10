@@ -220,10 +220,6 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			if (lv != null && isDeployFilter) {
 				lv.setVisibility(View.VISIBLE);
 			}
-//			View progress = ((View)lv.getParent()).findViewById(R.id.progress);
-//			if (progress != null) {
-//				progress.setVisibility(View.GONE);
-//			}
 		}
 	}
 

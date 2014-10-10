@@ -2,7 +2,6 @@ package org.kreed.musicdownloader.ui.tab;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Locale;
 
 import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.R;
@@ -10,21 +9,18 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.interfaces.LoadPercentageInterface;
 import org.kreed.musicdownloader.interfaces.MusicDataInterface;
 import org.kreed.musicdownloader.interfaces.TaskSuccessListener;
-import org.kreed.musicdownloader.ui.activity.MainActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -45,24 +41,17 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private Long currentDownloadingID;
 	private ImageButton clearAll;
 	
-	public final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener, TextWatcher	{
+	public final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener	{
 
 		private ArrayList<MusicData> mObjects;
 		private ArrayList<MusicData> mOriginalValues;
 		private LayoutInflater inflater;
 		private Filter filter;
-		private EditText textFilter;
 
 		public DownloadsAdapter(Context context, int resource) {
 			super(context, resource);
 			this.inflater = LayoutInflater.from(context);
 			mObjects = new ArrayList<MusicData>();
-			textFilter = (EditText) activity.findViewById(R.id.filter_text);
-			textFilter.addTextChangedListener(this);
-			String str = ((MainActivity) activity).getTextFilterLibrary();
-			if (!str.equals("")) {
-				textFilter.setText(str);
-			}
 			DBHelper.getInstance(getContext()).getAll(this);
 		}
 
@@ -255,22 +244,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				mObjects = (ArrayList<MusicData>) results.values;
 				redraw();
 			}
-		}
-		
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-		}
-
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			String textFilterDownload = textFilter.getText().toString().toLowerCase(Locale.ENGLISH);
-			DownloadsTab.getInstance().setFilter(textFilterDownload);
-		}
-
-		@Override
-		public void afterTextChanged(Editable s) {
-
 		}
 	}
 
