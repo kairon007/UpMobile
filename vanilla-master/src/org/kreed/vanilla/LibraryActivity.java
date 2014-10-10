@@ -547,7 +547,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			if (in.getBoolean(SEARCH_BOX_VISIBLE)) {
 		 		setSearchBoxVisible(true);
 			}
-			if (SongArrayHolder.getInstance().isID3Opened()) {
+			if (SongArrayHolder.getInstance().isID3Opened() && mPagerAdapter.getCurrentType() == MediaUtils.TYPE_SONG) {
 				createEditID3Dialog(type, id, null);
 			}
 			setSearchBoxVisible(true);
