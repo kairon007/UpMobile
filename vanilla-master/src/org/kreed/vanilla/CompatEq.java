@@ -25,6 +25,7 @@ package org.kreed.vanilla;
 import android.annotation.TargetApi;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
+import android.util.Log;
 
 /**
  * Gingerbread equalizer compatibility.
@@ -57,6 +58,10 @@ public class CompatEq {
 	 */
 	public void setBandLevel(short band, short level)
 	{
-		mEq.setBandLevel(band, level);
+		try {
+			mEq.setBandLevel(band, level);
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
+		}
 	}
 }
