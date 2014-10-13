@@ -74,7 +74,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		if (!this.songTitle.equals(title)) {
 			songTitle = title;
 		}
-		android.util.Log.d("log", "title = " + songTitle +", artist = " + songArtist);
 		if (URL == null) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
@@ -172,7 +171,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 								new MyID3().write(src, dst, src_set, metadata);
 								dst.renameTo(src);
 							} catch (Exception e) {
-								android.util.Log.d("log", "don't write music metadata from file. " + e);
+								Log.d("log", "don't write music metadata from file. " + e);
 							} finally {
 								if (dst.exists())
 									dst.delete();
