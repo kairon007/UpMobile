@@ -500,5 +500,23 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			onResumed();
 		}
 	}
+	
+	public void pause() {
+		if (!prepared || null == mediaPlayer)
+			return;
+		if (mediaPlayer.isPlaying()) {
+			mediaPlayer.pause();
+			onPaused();
+		}
+	}
+	
+	public void play() {
+		if (!prepared || null == mediaPlayer)
+			return;
+		if (!mediaPlayer.isPlaying()) {
+			mediaPlayer.start();
+			onResumed();
+		}
+	}
 
 }

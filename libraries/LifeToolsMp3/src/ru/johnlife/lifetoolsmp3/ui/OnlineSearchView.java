@@ -28,18 +28,24 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -66,6 +72,8 @@ public abstract class OnlineSearchView extends View {
 	public static List<Engine> engines = null;
 	private AlertDialog alertDialog;
 	private RemoteSong downloadSong;
+	private TelephonyManager telephonyManager;
+	private HeadsetIntentReceiver headsetReceiver;
 	private LayoutInflater inflater;
 	private Iterator<Engine> taskIterator;
 	private String currentName = null;
@@ -90,6 +98,35 @@ public abstract class OnlineSearchView extends View {
 			float textSize = 16f;
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
+		}
+	};
+	
+	private class HeadsetIntentReceiver extends BroadcastReceiver {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
+				player.pause();
+			}
+		}
+	};
+	
+	PhoneStateListener phoneStateListener = new PhoneStateListener() {
+
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber) {
+			switch (state) {
+			case TelephonyManager.CALL_STATE_RINGING:
+				player.pause();
+				break;
+			case TelephonyManager.CALL_STATE_IDLE:
+				player.play();
+				break;
+			default:
+				break;
+			}
+			super.onCallStateChanged(state, incomingNumber);
 		}
 	};
 
@@ -462,9 +499,6 @@ public abstract class OnlineSearchView extends View {
           return false;
 	}
 	
-
-	
-	
 	public void search(String songName) {
 		searchStopped = false;
 		
@@ -618,6 +652,14 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public Dialog createStreamDialog(Bundle args) {
+		headsetReceiver = new HeadsetIntentReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+		getContext().registerReceiver(headsetReceiver, filter);
+		telephonyManager = (TelephonyManager) getContext().getSystemService(Service.TELEPHONY_SERVICE);
+		if (telephonyManager != null) {
+			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		}
 		stopSystemPlayer(getContext());
 		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -625,6 +667,10 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialogDismisser.run();
+				getContext().unregisterReceiver(headsetReceiver);
+				if (telephonyManager != null) {
+					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+				}
 			}
 		});
 		b.setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
@@ -638,6 +684,10 @@ public abstract class OnlineSearchView extends View {
 				downloadClickListener.downloadSond(artist, title, useCover);
 				player.cancel();
 				dialogDismisser.run();
+				getContext().unregisterReceiver(headsetReceiver);
+				if (telephonyManager != null) {
+					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+				}
 			}
 
 		});
@@ -646,6 +696,10 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				dialogDismisser.run();
+				getContext().unregisterReceiver(headsetReceiver);
+				if (telephonyManager != null) {
+					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+				}
 			}
 		});
 		alertDialog.setOnShowListener(dialogShowListener);
