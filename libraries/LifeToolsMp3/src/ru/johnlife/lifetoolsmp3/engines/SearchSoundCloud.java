@@ -32,6 +32,7 @@ public class SearchSoundCloud extends SearchWithPages {
 			String soundcloudClientId = getSoundcloudClientId();
 			
 			specialIndex = 0;
+			if (null == getSongName()) return null;
 			String songName = URLEncoder.encode(getSongName(), "UTF-8");
 			songName = songName.replace("%20", "_");
 			String offset = "&offset=" + getPage();
@@ -48,7 +49,7 @@ public class SearchSoundCloud extends SearchWithPages {
 				}
 			} while (songString != null);
 		} catch (UnsupportedEncodingException e) {
-			Log.e(getClass().getSimpleName(), "", e);
+			Log.e(getClass().getSimpleName(), e.getMessage());
 		}
 		return null;
 	}
