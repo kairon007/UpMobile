@@ -22,6 +22,12 @@
 
 package ru.johnlife.lifetoolsmp3.song;
 
+import java.io.File;
+
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.content.Context;
 import android.database.Cursor;
@@ -202,12 +208,17 @@ public class Song implements Comparable<Song>, Parcelable {
 	 */
 	public Bitmap getCover(Context context)
 	{
-		if (mDisableCoverArt || id == -1 || (flags & FLAG_NO_COVER) != 0)
-			return null;
-
-		Bitmap cover = MusicApp.getCoverCache().get(id);
-		if (cover == null)
-			flags |= FLAG_NO_COVER;
+		Bitmap cover = null;
+		if (mDisableCoverArt || id == -1 || (flags & FLAG_NO_COVER) != 0) return null;
+		File file = new File(path);
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata);
+		} catch (Exception ex) {
+			cover = MusicApp.getCoverCache().get(id);
+		}
+		if (cover == null) flags |= FLAG_NO_COVER;
 		return cover;
 	}
 
