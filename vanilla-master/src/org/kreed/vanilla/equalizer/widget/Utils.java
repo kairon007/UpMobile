@@ -3,6 +3,7 @@ package org.kreed.vanilla.equalizer.widget;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.audiofx.Equalizer;
+import android.util.Log;
 
 public class Utils {
 
@@ -24,12 +25,16 @@ public class Utils {
 	
 	public static void changeAtBand(Equalizer equalizer, final short band, int progress) {
 		short level = 0;
-		if (progress >= 0) {
-			level = (short) (progress * 100); // + maxEQLevel);
-			equalizer.setBandLevel(band, level);
-		} else if (progress < 0) {
-			level = (short) (progress * 100); // + minEQLevel);
-			equalizer.setBandLevel(band, level);
+		try {
+			if (progress >= 0) {
+				level = (short) (progress * 100); // + maxEQLevel);
+				equalizer.setBandLevel(band, level);
+			} else if (progress < 0) {
+				level = (short) (progress * 100); // + minEQLevel);
+				equalizer.setBandLevel(band, level);
+			}
+		} catch (Exception e) {
+			Log.e(Utils.class.getSimpleName(), e.getMessage());
 		}
 	}
 }
