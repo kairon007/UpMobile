@@ -132,7 +132,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					}
 					cs.close();
 					Cursor completeCursor = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-					if (completeCursor.moveToFirst()) {
+					if (null != completeCursor && completeCursor.moveToFirst()) {
 						if (currentDownloadingSongTitle.equalsIgnoreCase(completeCursor.getString(completeCursor.getColumnIndex(DownloadManager.COLUMN_TITLE)))) {
 							progress = 100;
 							notifyDuringDownload(currentDownloadId, currentDownloadingSongTitle, progress);
@@ -150,16 +150,17 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 								path = cutPath(path);
 							}
 							src = new File(path);
-							android.util.Log.d("log", "artist = " + songArtist + ", title = " + songTitle);
 							DownloadClickListener.this.song.path = path;
 							MusicMetadataSet src_set = null;
 							try {
 								src_set = new MyID3().read(src);
 							} catch (Exception exception) {
-								android.util.Log.d("log", "don't read music metadata from file. " + exception);
+								Log.d("log", "don't read music metadata from file. " + exception);
 							}
-							if (null == src_set)
+							if (null == src_set) {
+								this.cancel();
 								return;
+							}
 							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 							metadata.clearPictureList();
 							metadata.setSongTitle(songTitle);
