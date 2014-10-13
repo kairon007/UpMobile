@@ -43,7 +43,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected Bitmap cover;
 	protected String songTitle;
 	protected String songArtist;
-	private String URL;
+	private String url;
 	protected String duration;
 	private String currentDownloadingSongTitle;
 	protected Long currentDownloadId;
@@ -60,7 +60,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		this.listener = listener;
 		songTitle = song.getTitle();
 		songArtist = song.getArtist();
-		URL = song.getDownloadUrl();
+		url = song.getDownloadUrl();
 		duration = Util.formatTimeIsoDate(song.getDuration());
 		headers = song.getHeaders();
 	}
@@ -74,7 +74,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		if (!this.songTitle.equals(title)) {
 			songTitle = title;
 		}
-		if (URL == null) {
+		if (url == null) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -89,7 +89,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			manager.execute();
 		} else {
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(URL)).addRequestHeader("User-Agent",
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+				   url = url.replaceFirst("https", "http");
+			}
+			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url)).addRequestHeader("User-Agent",
 					"Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
 			if (headers != null && headers.get(0) != null) {
 				for (int i = 0; i < headers.size(); i++) {
