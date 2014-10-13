@@ -10,7 +10,6 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,7 +43,6 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 
 	public LibraryTabAdapter(int resource, MainActivity activity) {
 		super(activity, resource);
-		Log.d("logd", "LibraryTabAdapter");
 		mObjects = new ArrayList<MusicData>();
 		this.activity = activity;
 		inflater = LayoutInflater.from(activity);

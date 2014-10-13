@@ -444,9 +444,9 @@ public class MainActivity extends Activity {
 			CompatHoneycomb.selectTab(this, position);
 		}
 		if (lastPage != position && lastPage != -1) {
-			mTextFilter.removeTextChangedListener(textWatcher);
+			//mTextFilter.removeTextChangedListener(textWatcher);
 			mTextFilter.setText("");
-			mTextFilter.addTextChangedListener(textWatcher);
+			//mTextFilter.addTextChangedListener(textWatcher);
 		}
 		if (lastPage == 0) {
 			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
