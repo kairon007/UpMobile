@@ -666,7 +666,11 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				dialogDismisser.run();
+				if (dialogDismisser != null) {
+					dialogDismisser.run();
+				} else {
+					dialog.dismiss();
+				}
 				getContext().unregisterReceiver(headsetReceiver);
 				if (telephonyManager != null) {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);

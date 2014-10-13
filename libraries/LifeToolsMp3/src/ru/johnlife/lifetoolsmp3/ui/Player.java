@@ -456,6 +456,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
+		if (null == mediaPlayer) return;
 		if (result && prepared) {
 			mediaPlayer.start();
 			mediaPlayer.setOnCompletionListener(new OnCompletionListener() {

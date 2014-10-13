@@ -31,6 +31,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -101,7 +102,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			final String fileName = sb.toString();
 			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(fileName);
-			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb.append(".mp3").toString());
+			try {
+				request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb.append(".mp3").toString());
+			} catch (Exception e) {
+				Log.e(getClass().getSimpleName(), e.getMessage());
+				String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
+				Log.e(getClass().getSimpleName(), "Something wrong. Set default directory: " + dir);
+				request.setDestinationInExternalPublicDir(dir, sb.append(".mp3").toString());
+			}
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				request.allowScanningByMediaScanner();
 			}
