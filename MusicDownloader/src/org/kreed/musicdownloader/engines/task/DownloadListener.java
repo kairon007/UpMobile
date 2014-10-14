@@ -46,7 +46,15 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected String getDirectory() {
+		createAppFolder();
 		return Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX;
+	}
+	
+	private void createAppFolder() {
+		File appFolder = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
+		if (!appFolder.exists()) {
+			appFolder.mkdirs();
+		}
 	}
 
 	@Override

@@ -158,8 +158,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 								path = cutPath(path);
 							}
-							String newPath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + fileName + ".mp3";
 							src = new File(path);
+							String newPath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + src.getName();
 							if (!isFullAction() && null != src) {
 								try {
 									Util.copyFile(src, new File(newPath));
