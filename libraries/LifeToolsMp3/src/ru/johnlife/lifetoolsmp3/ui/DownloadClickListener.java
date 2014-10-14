@@ -2,6 +2,7 @@ package ru.johnlife.lifetoolsmp3.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -157,13 +158,23 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 								path = cutPath(path);
 							}
+							String newPath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + fileName + ".mp3";
 							src = new File(path);
-							DownloadClickListener.this.song.path = path;
+							if (!isFullAction() && null != src) {
+								try {
+									Util.copyFile(src, new File(newPath));
+									src.delete();
+									src = new File(newPath);
+								} catch (IOException e) {
+									Log.e(getClass().getSimpleName(), e.toString());
+								}
+							}
+							DownloadClickListener.this.song.path = isFullAction() ? path : newPath;
 							MusicMetadataSet src_set = null;
 							try {
 								src_set = new MyID3().read(src);
 							} catch (Exception exception) {
-								Log.d("log", "don't read music metadata from file. " + exception);
+								android.util.Log.d(getClass().getSimpleName(), "Don't read music metadata from file. " + exception);
 							}
 							if (null == src_set) {
 								this.cancel();
@@ -183,7 +194,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 								new MyID3().write(src, dst, src_set, metadata);
 								dst.renameTo(src);
 							} catch (Exception e) {
-								Log.d("log", "don't write music metadata from file. " + e);
+								android.util.Log.d(getClass().getSimpleName(), "don't write music metadata from file. " + e);
 							} finally {
 								if (dst.exists())
 									dst.delete();
