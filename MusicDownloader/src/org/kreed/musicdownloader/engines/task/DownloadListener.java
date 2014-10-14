@@ -41,7 +41,8 @@ public class DownloadListener extends DownloadClickListener {
 		data.setSongBitmap(cover);
 		data.setFileUri(pathToFile);
 		DBHelper.getInstance(context).insert(data);
-		adapter.fillLibrary();
+		adapter.changeArrayMusicData(data);
+//		adapter.fillLibrary();
 	}
 
 	@Override
