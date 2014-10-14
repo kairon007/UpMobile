@@ -23,6 +23,7 @@ package org.kreed.musicdownloader.ui.adapter;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 import org.kreed.musicdownloader.Constants;
@@ -36,6 +37,7 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,6 +53,7 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -287,6 +290,10 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				if (!contentFile.exists()) {
 					contentFile.mkdirs();
 				}
+				final File folder = new File(Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX);
+				if (!folder.exists()) {
+					folder.mkdirs();
+				}
 //				long contentFileLength = contentFile.listFiles().length;
 //				if (contentFileLength == 0) {
 //					view = (ListView) inflater.inflate(R.layout.listview, null);
@@ -300,7 +307,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 					view.setVisibility(View.INVISIBLE);
 				}
 				FillLibraryTask task = new FillLibraryTask();
-				task.execute(contentFile);
+				task.execute(contentFile, folder);
 				break;
 			default:
 				break;
@@ -318,22 +325,38 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 
 		@Override
 		protected Void doInBackground(File... params) {
-			File[] files = params[0].listFiles();
-			for (int i = 0; i < files.length; i++) {
-				String string = files[i].getName();
-				if (string.endsWith(".mp3")) {
-					final MusicData musicData = new MusicData(files[i]);
-					if (!DownloadsTab.getInstance().isDownloading(musicData)) {
-						mActivity.runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								adapterLibrary.add(musicData);
-							}
-						});
+			for (File file : params[0].listFiles()) {
+				provisioninAdapter(file);
+			}
+			if (!mActivity.isClearedTemp() && params[1].listFiles().length > 0) {
+				mActivity.setClearedTemp(true);
+				android.util.Log.d("logd", "doInBackground");
+				for (File file : params[1].listFiles()) {
+					try {
+						File movedFile = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX + file.getName() + ".mp3");
+						Util.copyFile(file, movedFile);
+						Log.d("logd", file.getName());
+						file.delete();
+						provisioninAdapter(movedFile);
+					} catch (IOException e) {
+						Log.e(getClass().getSimpleName(), e.toString());
 					}
 				}
 			}
 			return null;
+		}
+
+		private void provisioninAdapter(File file) {
+			String string = file.getName();
+			if (string.endsWith(".mp3")) {
+				final MusicData musicData = new MusicData(file);
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						adapterLibrary.add(musicData);
+					}
+				});
+			}
 		}
 		
 		@Override

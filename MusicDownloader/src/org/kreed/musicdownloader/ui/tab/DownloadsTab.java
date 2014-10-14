@@ -246,15 +246,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			}
 		}
 	}
-
-	public boolean isDownloading(MusicData song) {
-		if (null == adapter) return false;
-		for (int i = 0; i < adapter.getCount(); i++) {
-			MusicData current = adapter.getItem(i);
-			if (song.toString().equals(current.toString()) && !current.isDownloaded()) return true;
-		}
-		return false;
-	}
 	
 	@Override
 	public void insertProgress(double progress, long downloadId) {

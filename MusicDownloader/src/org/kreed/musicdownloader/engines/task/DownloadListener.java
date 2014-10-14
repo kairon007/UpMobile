@@ -46,7 +46,9 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected String getDirectory() {
-		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+//		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+//		android.util.Log.d("logd", Environment.getDownloadCacheDirectory() + Constants.TEMP_PREFIX);
+		return Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX;
 	}
 
 	@Override
