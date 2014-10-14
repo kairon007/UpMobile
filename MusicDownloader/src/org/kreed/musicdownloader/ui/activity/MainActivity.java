@@ -14,7 +14,7 @@ import org.kreed.musicdownloader.ballast.LibraryAdapter;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.ui.Player;
-import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
+import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
 	private final static int DELETE = 1;
 	private final static int EDIT_TAG = 2;
 
-	public LibraryPagerAdapter mPagerAdapter;
+	public ViewPagerAdapter mPagerAdapter;
 	private ApplicationInfo mFakeInfo;
 	protected Looper mLooper;
 	private MusicData music;
@@ -251,7 +251,7 @@ public class MainActivity extends Activity {
 		mLimiterScroller = (HorizontalScrollView) findViewById(R.id.limiter_scroller);
 		mLimiterViews = (ViewGroup) findViewById(R.id.limiter_layout);
 
-		LibraryPagerAdapter pagerAdapter = new LibraryPagerAdapter(this, mLooper);
+		ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(this, mLooper);
 		mPagerAdapter = pagerAdapter;
 
 		ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -449,7 +449,7 @@ public class MainActivity extends Activity {
 			//mTextFilter.addTextChangedListener(textWatcher);
 		}
 		if (lastPage == 0) {
-			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
+			SongArrayHolder.getInstance().saveStateAdapter(((ViewPagerAdapter) mViewPager.getAdapter()).getSearchView());
 		}
 		lastPage = position;
 	}

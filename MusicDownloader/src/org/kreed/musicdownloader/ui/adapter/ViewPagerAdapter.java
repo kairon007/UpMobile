@@ -61,7 +61,7 @@ import android.widget.TextView;
 /**
  * PagerAdapter that manages the library media ListViews.
  */
-public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener {
+public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener {
 	/**
 	 * The number of unique list types. The number of visible lists may be
 	 * smaller.
@@ -162,7 +162,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	 * @param workerLooper
 	 *            A Looper running on a worker thread.
 	 */
-	public LibraryPagerAdapter(MainActivity activity, Looper workerLooper) {
+	public ViewPagerAdapter(MainActivity activity, Looper workerLooper) {
 		mActivity = activity;
 		context = activity.getBaseContext();
 		mUiHandler = new Handler(this);
@@ -413,7 +413,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	 */
 	private static final int MSG_SAVE_SORT = 1;
 	/**
-	 * Call {@link LibraryPagerAdapter#requestRequery(LibraryAdapter)} on the
+	 * Call {@link ViewPagerAdapter#requestRequery(LibraryAdapter)} on the
 	 * adapter passed in obj.
 	 * 
 	 * Runs on worker thread.
@@ -489,7 +489,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	}
 
 	/**
-	 * Call {@link LibraryPagerAdapter#requestRequery(LibraryAdapter)} on the UI
+	 * Call {@link ViewPagerAdapter#requestRequery(LibraryAdapter)} on the UI
 	 * thread.
 	 * 
 	 * @param adapter

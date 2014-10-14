@@ -23,7 +23,7 @@
 package org.kreed.musicdownloader.ballast;
 
 import org.kreed.musicdownloader.ui.activity.MainActivity;
-import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
+import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -74,7 +74,7 @@ public class CompatHoneycomb {
 			ab.removeAllTabs();
 		
 			int[] order = activity.mPagerAdapter.mTabOrder;
-		int[] titles = LibraryPagerAdapter.TITLES;
+		int[] titles = ViewPagerAdapter.TITLES;
 		for (int i = 0, n = activity.mPagerAdapter.getCount(); i != n; ++i) {
 			ab.addTab
 			(ab.newTab()

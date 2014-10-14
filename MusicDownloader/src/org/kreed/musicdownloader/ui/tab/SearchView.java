@@ -7,7 +7,7 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.engines.task.DownloadListener;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
-import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
+import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
@@ -23,9 +23,9 @@ import android.widget.Toast;
 public class SearchView  extends OnlineSearchView {
 	
 	private MainActivity activity;
-	private LibraryPagerAdapter parentAdapter;
+	private ViewPagerAdapter parentAdapter;
 
-	public SearchView(LayoutInflater inflater, LibraryPagerAdapter parentAdapter, MainActivity activity) {
+	public SearchView(LayoutInflater inflater, ViewPagerAdapter parentAdapter, MainActivity activity) {
 		super(inflater);
 		this.parentAdapter = parentAdapter;
 		this.activity = activity;

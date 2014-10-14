@@ -8,7 +8,7 @@ import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.interfaces.MusicDataInterface;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
-import org.kreed.musicdownloader.ui.adapter.LibraryPagerAdapter;
+import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -20,11 +20,11 @@ import android.os.Environment;
 public class DownloadListener extends DownloadClickListener {
 
 	private DownloadsTab downloadsTab;
-	private LibraryPagerAdapter adapter;
+	private ViewPagerAdapter adapter;
 	private MainActivity activity;
 	private Context context;
 
-	public DownloadListener(Context context, RemoteSong song, LibraryPagerAdapter adapter, MainActivity activity) {
+	public DownloadListener(Context context, RemoteSong song, ViewPagerAdapter adapter, MainActivity activity) {
 		super(context, song, null);
 		this.context = context;
 		this.adapter = adapter;
