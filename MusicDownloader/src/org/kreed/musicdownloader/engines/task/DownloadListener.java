@@ -33,30 +33,22 @@ public class DownloadListener extends DownloadClickListener {
 	}
 
 	@Override
-	protected void prepare(File src, RemoteSong song) {
+	protected void prepare(File src, RemoteSong song, String pathToFile) {
 		MusicData data = new MusicData();
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(duration);
 		data.setSongBitmap(cover);
-		data.setFileUri(song.path);
+		data.setFileUri(pathToFile);
 		DBHelper.getInstance(context).insert(data);
 		adapter.changeArrayMusicData(data);
 	}
 
 	@Override
 	protected String getDirectory() {
-		createAppFolder();
-		return Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX;
+		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	}
 	
-	private void createAppFolder() {
-		File appFolder = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
-		if (!appFolder.exists()) {
-			appFolder.mkdirs();
-		}
-	}
-
 	@Override
 	protected void notifyAboutDownload(long downloadId) {
 		InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, songArtist, duration, downloadsTab, downloadId, cover);

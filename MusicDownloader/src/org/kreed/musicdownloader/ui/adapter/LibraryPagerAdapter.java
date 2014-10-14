@@ -326,35 +326,18 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		@Override
 		protected Void doInBackground(File... params) {
 			for (File file : params[0].listFiles()) {
-				provisioninAdapter(file);
-			}
-			if (!mActivity.isClearedTemp() && params[1].listFiles().length > 0) {
-				mActivity.setClearedTemp(true);
-				for (File file : params[1].listFiles()) {
-					try {
-						File movedFile = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX + file.getName() + ".mp3");
-						Util.copyFile(file, movedFile);
-						file.delete();
-						provisioninAdapter(movedFile);
-					} catch (IOException e) {
-						Log.e(getClass().getSimpleName(), e.toString());
-					}
+				String string = file.getName();
+				if (string.endsWith(".mp3")) {
+					final MusicData musicData = new MusicData(file);
+					mActivity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							adapterLibrary.add(musicData);
+						}
+					});
 				}
 			}
 			return null;
-		}
-
-		private void provisioninAdapter(File file) {
-			String string = file.getName();
-			if (string.endsWith(".mp3")) {
-				final MusicData musicData = new MusicData(file);
-				mActivity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						adapterLibrary.add(musicData);
-					}
-				});
-			}
 		}
 		
 		@Override

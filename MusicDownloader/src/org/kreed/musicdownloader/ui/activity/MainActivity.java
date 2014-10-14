@@ -111,7 +111,6 @@ public class MainActivity extends Activity {
 	private boolean showDialog = false;
 	private boolean useCover = false;
 	private boolean isPlayerHide;
-	private boolean isClearedTemp = false;
 
 	// -------------------------------------------------------------------------
 
@@ -255,10 +254,6 @@ public class MainActivity extends Activity {
 
 		LibraryPagerAdapter pagerAdapter = new LibraryPagerAdapter(this, mLooper);
 		mPagerAdapter = pagerAdapter;
-		
-		if (state != null) {
-			isClearedTemp = state.getBoolean(SAVE_CLEAR_TEMP);
-		}
 
 		ViewPager pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(pagerAdapter);
@@ -423,7 +418,6 @@ public class MainActivity extends Activity {
 		if (lastPage == 0) { 
 			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		}
-		out.putBoolean(SAVE_CLEAR_TEMP, isClearedTemp);
 		super.onSaveInstanceState(out);
 	}
 
@@ -723,11 +717,4 @@ public class MainActivity extends Activity {
 		mPagerAdapter.instantiateItem(null, MediaUtils.TYPE_LIBRARY);
 	}
 
-	public boolean isClearedTemp() {
-		return isClearedTemp;
-	}
-
-	public void setClearedTemp(boolean isClearedTemp) {
-		this.isClearedTemp = isClearedTemp;
-	}
 }

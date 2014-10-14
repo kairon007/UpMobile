@@ -97,7 +97,7 @@ public final class Util {
 		return bitmap;
 	}
 	
-	public static void copyFile(File source, File dest) throws IOException {
+	public synchronized static void copyFile(File source, File dest) throws IOException {
 		InputStream is = null;
 		OutputStream os = null;
 		try {

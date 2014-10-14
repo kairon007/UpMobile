@@ -2,7 +2,6 @@ package ru.johnlife.lifetoolsmp3.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -117,119 +116,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			final long downloadId = manager.enqueue(request);
 			notifyAboutDownload(downloadId);
 			Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
-			final TimerTask progresUpdateTask = new TimerTask() {
-
-				private File src;
-
-				@Override
-				public void run() {
-					if (isFullAction() && waitingForCover) {
-						return;
-					}
-					Cursor cs = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
-					if (cs.moveToFirst()) {
-						int sizeIndex = cs.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
-						int downloadedIndex = cs.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
-						long size = cs.getInt(sizeIndex);
-						long downloaded = cs.getInt(downloadedIndex);
-						currentDownloadId = downloadId;
-						currentDownloadingSongTitle = cs.getString(cs.getColumnIndex(DownloadManager.COLUMN_TITLE));
-						if (size != -1) {
-							progress = downloaded * 100.0 / size;
-						}
-						notifyDuringDownload(currentDownloadId, currentDownloadingSongTitle, progress);
-					}
-					cs.close();
-					Cursor completeCursor = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-					if (null != completeCursor && completeCursor.moveToFirst()) {
-						if (currentDownloadingSongTitle.equalsIgnoreCase(completeCursor.getString(completeCursor.getColumnIndex(DownloadManager.COLUMN_TITLE)))) {
-							progress = 100;
-							notifyDuringDownload(currentDownloadId, currentDownloadingSongTitle, progress);
-							int columnIndex = 0;
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-								columnIndex = completeCursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-							} else if (columnIndex != -1) {
-								columnIndex = completeCursor.getColumnIndex("local_uri");
-							}
-							if (columnIndex == -1)
-								return;
-							String path = completeCursor.getString(columnIndex);
-							completeCursor.close();
-							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-								path = cutPath(path);
-							}
-							src = new File(path);
-							String newPath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + src.getName();
-							if (!isFullAction() && null != src) {
-								try {
-									Util.copyFile(src, new File(newPath));
-									src.delete();
-									src = new File(newPath);
-								} catch (IOException e) {
-									Log.e(getClass().getSimpleName(), e.toString());
-								}
-							}
-							DownloadClickListener.this.song.path = isFullAction() ? path : newPath;
-							MusicMetadataSet src_set = null;
-							try {
-								src_set = new MyID3().read(src);
-							} catch (Exception exception) {
-								android.util.Log.d(getClass().getSimpleName(), "Don't read music metadata from file. " + exception);
-							}
-							if (null == src_set) {
-								this.cancel();
-								return;
-							}
-							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-							metadata.clearPictureList();
-							metadata.setSongTitle(songTitle);
-							metadata.setArtist(songArtist);
-							if (null != cover && useCover) {
-								ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-								cover.compress(CompressFormat.JPEG, 85, out);
-								metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-							}
-							File dst = new File(src.getParentFile(), src.getName() + "-1");
-							try {
-								new MyID3().write(src, dst, src_set, metadata);
-								dst.renameTo(src);
-							} catch (Exception e) {
-								android.util.Log.d(getClass().getSimpleName(), "don't write music metadata from file. " + e);
-							} finally {
-								if (dst.exists())
-									dst.delete();
-							}
-							notifyMediascanner(DownloadClickListener.this.song);
-							this.cancel();
-						}
-					}
-					completeCursor.close();
-					if (waitingForCover) {
-						return;
-					}
-				}
-
-				private String cutPath(String s) {
-					int index = s.indexOf('m');
-					return s.substring(index - 1);
-				}
-
-				private void notifyMediascanner(final RemoteSong song) {
-					String path = song.path;
-					final File file = new File(path);
-					MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-						public void onScanCompleted(String path, Uri uri) {
-							prepare(file, song);
-							if (null != listener)
-								listener.success();
-						}
-
-					});
-				}
-			};
-			new Timer().schedule(progresUpdateTask, 1000, 1000);
-
+			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, downloadId, useCover);
+			new Timer().schedule(progressUpdateTask, 1000, 1000);
 		}
 	}
 
@@ -266,7 +154,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		return downloadPath;
 	}
 
-	protected void prepare(final File src, RemoteSong song) {
+	protected void prepare(final File src, RemoteSong song, String path) {
 
 	}
 
@@ -278,5 +166,120 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	public void onBitmapReady(Bitmap bmp) {
 		this.cover = bmp;
 		this.waitingForCover = false;
+	}
+	
+	@SuppressLint("NewApi")
+	private final class UpdateTimerTask extends TimerTask {
+		
+		private RemoteSong song;
+		private File src;
+		private DownloadManager manager;
+		private long downloadId;
+		private boolean useCover;
+		
+		
+
+		public UpdateTimerTask(RemoteSong song, DownloadManager manager, long downloadId, boolean useCover) {
+			this.song = song;
+			this.manager = manager;
+			this.downloadId = downloadId;
+			this.useCover = useCover;
+		}
+
+		@Override
+		public void run() {
+			if (isFullAction() && waitingForCover) {
+				return;
+			}
+			Cursor cs = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_RUNNING));
+			if (cs.moveToFirst()) {
+				int sizeIndex = cs.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+				int downloadedIndex = cs.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+				long size = cs.getInt(sizeIndex);
+				long downloaded = cs.getInt(downloadedIndex);
+				currentDownloadId = downloadId;
+				currentDownloadingSongTitle = cs.getString(cs.getColumnIndex(DownloadManager.COLUMN_TITLE));
+				if (size != -1) {
+					progress = downloaded * 100.0 / size;
+				}
+				notifyDuringDownload(currentDownloadId, currentDownloadingSongTitle, progress);
+			}
+			cs.close();
+			Cursor completeCursor = manager.query(new DownloadManager.Query().setFilterById(downloadId).setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+			if (null != completeCursor && completeCursor.moveToFirst()) {
+				if (currentDownloadingSongTitle.equalsIgnoreCase(completeCursor.getString(completeCursor.getColumnIndex(DownloadManager.COLUMN_TITLE)))) {
+					progress = 100;
+					notifyDuringDownload(currentDownloadId, currentDownloadingSongTitle, progress);
+					int columnIndex = 0;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						columnIndex = completeCursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+					} else if (columnIndex != -1) {
+						columnIndex = completeCursor.getColumnIndex("local_uri");
+					}
+					if (columnIndex == -1)
+						return;
+					String path = completeCursor.getString(columnIndex);
+					completeCursor.close();
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+						path = cutPath(path);
+					}
+					src = new File(path);
+					song.path = path;
+					MusicMetadataSet src_set = null;
+					try {
+						src_set = new MyID3().read(src);
+					} catch (Exception exception) {
+						Log.d(getClass().getSimpleName(), "Don't read music metadata from file. " + exception);
+					}
+					if (null == src_set) {
+						return;
+					}
+					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+					metadata.clearPictureList();
+					metadata.setSongTitle(songTitle);
+					metadata.setArtist(songArtist);
+					if (null != cover && useCover) {
+						ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+						cover.compress(CompressFormat.JPEG, 85, out);
+						metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+					}
+					File dst = new File(src.getParentFile(), src.getName() + "-1");
+					try {
+						new MyID3().write(src, dst, src_set, metadata);
+						dst.renameTo(src);
+					} catch (Exception e) {
+						(getClass().getSimpleName(), "don't write music metadata from file. " + e);
+					} finally {
+						if (dst.exists())
+							dst.delete();
+					}
+					notifyMediascanner(song, path);
+					this.cancel();
+				}
+			}
+			completeCursor.close();
+			if (waitingForCover) {
+				return;
+			}
+		}
+
+		private String cutPath(String s) {
+			int index = s.indexOf('m');
+			return s.substring(index - 1);
+		}
+
+		private void notifyMediascanner(final RemoteSong song, final String pathToFile) {
+			final File file = new File(pathToFile);
+			MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+				public void onScanCompleted(String path, Uri uri) {
+					prepare(file, song, pathToFile);
+					if (null != listener)
+						listener.success();
+				}
+
+			});
+		}
+		
 	}
 }
