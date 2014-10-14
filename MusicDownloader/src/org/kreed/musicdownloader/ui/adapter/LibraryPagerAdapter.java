@@ -23,7 +23,6 @@ package org.kreed.musicdownloader.ui.adapter;
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 
 import org.kreed.musicdownloader.Constants;
@@ -37,7 +36,6 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -53,7 +51,6 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -286,29 +283,14 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				container.addView(downloadView);
 				return downloadView;
 			case MediaUtils.TYPE_LIBRARY:
-				File contentFile = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
-				if (!contentFile.exists()) {
-					contentFile.mkdirs();
-				}
-				final File tempFolder = new File(Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX);
-				if (!tempFolder.exists()) {
-					tempFolder.mkdirs();
-				}
-//				long contentFileLength = contentFile.listFiles().length;
-//				if (contentFileLength == 0) {
-//					view = (ListView) inflater.inflate(R.layout.listview, null);
-//					view.setAdapter(adapterLibrary);
-//					break;
-//				}
 				adapterLibrary = new LibraryTabAdapter(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
 				if (adapterLibrary.checkDeployFilter()) {
 					view.setVisibility(View.INVISIBLE);
 				}
-				FillLibraryTask task = new FillLibraryTask();
-				task.execute(contentFile, tempFolder);
-				break;
+				fillLibrary();
+				break;				
 			default:
 				break;
 			}
@@ -319,6 +301,20 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		}
 		container.addView(view);
 		return view;
+	}
+
+	public void fillLibrary() {
+		File contentFile = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
+		if (!contentFile.exists()) {
+			contentFile.mkdirs();
+		}
+		final File tempFolder = new File(Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX);
+		if (!tempFolder.exists()) {
+			tempFolder.mkdirs();
+		}
+		adapterLibrary.clear();						
+		FillLibraryTask task = new FillLibraryTask();
+		task.execute(contentFile, tempFolder);
 	}
 
 	private class FillLibraryTask extends AsyncTask<File, Void, Void> {

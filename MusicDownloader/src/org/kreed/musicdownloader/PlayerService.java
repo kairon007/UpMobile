@@ -7,10 +7,8 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 
 import android.app.Service;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.os.Binder;
 import android.os.IBinder;
-import android.provider.MediaStore;
 
 public class PlayerService extends Service {
 	

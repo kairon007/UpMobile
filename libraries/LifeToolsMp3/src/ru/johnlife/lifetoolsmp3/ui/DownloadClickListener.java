@@ -248,7 +248,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						new MyID3().write(src, dst, src_set, metadata);
 						dst.renameTo(src);
 					} catch (Exception e) {
-						(getClass().getSimpleName(), "don't write music metadata from file. " + e);
+						Log.e(getClass().getSimpleName(), "Unable to write music metadata from file. " + e);
 					} finally {
 						if (dst.exists())
 							dst.delete();

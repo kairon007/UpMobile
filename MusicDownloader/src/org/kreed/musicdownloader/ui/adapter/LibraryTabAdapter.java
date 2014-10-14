@@ -245,4 +245,13 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	public boolean checkDeployFilter() {
 		return isDeployFilter;
 	}
+	
+	@Override
+	public void clear() {
+		if (mOriginalValues != null) {
+			mOriginalValues.clear();
+		}
+		mObjects.clear();
+		activity.runOnUiThread(reDraw);
+	}
 }

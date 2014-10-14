@@ -11,7 +11,6 @@ import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.ballast.CompatHoneycomb;
 import org.kreed.musicdownloader.ballast.LibraryAdapter;
-import org.kreed.musicdownloader.ballast.MediaUtils;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.ui.Player;
@@ -712,9 +711,4 @@ public class MainActivity extends Activity {
 
 		}
 	}
-
-	public void refreshLibraryTab() {
-		mPagerAdapter.instantiateItem(null, MediaUtils.TYPE_LIBRARY);
-	}
-
 }
