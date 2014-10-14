@@ -290,9 +290,9 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				if (!contentFile.exists()) {
 					contentFile.mkdirs();
 				}
-				final File folder = new File(Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX);
-				if (!folder.exists()) {
-					folder.mkdirs();
+				final File tempFolder = new File(Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX);
+				if (!tempFolder.exists()) {
+					tempFolder.mkdirs();
 				}
 //				long contentFileLength = contentFile.listFiles().length;
 //				if (contentFileLength == 0) {
@@ -307,7 +307,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 					view.setVisibility(View.INVISIBLE);
 				}
 				FillLibraryTask task = new FillLibraryTask();
-				task.execute(contentFile, folder);
+				task.execute(contentFile, tempFolder);
 				break;
 			default:
 				break;
@@ -330,12 +330,10 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			}
 			if (!mActivity.isClearedTemp() && params[1].listFiles().length > 0) {
 				mActivity.setClearedTemp(true);
-				android.util.Log.d("logd", "doInBackground");
 				for (File file : params[1].listFiles()) {
 					try {
 						File movedFile = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX + file.getName() + ".mp3");
 						Util.copyFile(file, movedFile);
-						Log.d("logd", file.getName());
 						file.delete();
 						provisioninAdapter(movedFile);
 					} catch (IOException e) {
