@@ -30,7 +30,6 @@ import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.ballast.LibraryAdapter;
 import org.kreed.musicdownloader.ballast.MediaUtils;
-import org.kreed.musicdownloader.ballast.SortAdapter;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
@@ -71,7 +70,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	 * The human-readable title for each list. The positions correspond to the
 	 * MediaUtils ids, so e.g. TITLES[MediaUtils.TYPE_SONG] = R.string.songs
 	 */
-	public static final int[] TITLES = { R.string.search, R.string.downloads, R.string.library };
+	public static final int[] TITLES = { R.string.tab_search, R.string.tab_downloads, R.string.tab_library };
 	/**
 	 * Default tab order.
 	 */
@@ -432,41 +431,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 
 	@Override
 	public boolean handleMessage(Message message) {
-		switch (message.what) {
-		case MSG_RUN_QUERY: {
-			SortAdapter adapter = (SortAdapter) message.obj;
-			int index = adapter.getMediaType();
-			Handler handler = mUiHandler;
-			handler.sendMessage(handler.obtainMessage(MSG_COMMIT_QUERY, index, 0, adapter.query()));
-			break;
-		}
-		case MSG_COMMIT_QUERY: {
-			int index = message.arg1;
-			mAdapters[index].commitQuery(message.obj);
-			int pos;
-			if (mSavedPositions == null) {
-				pos = 0;
-			} else {
-				pos = mSavedPositions[index];
-				mSavedPositions[index] = 0;
-			}
-			mLists[index].setSelection(pos);
-			break;
-		}
-		case MSG_SAVE_SORT: {
-			SortAdapter adapter = (SortAdapter) message.obj;
-			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			editor.putInt(String.format("sort_%d_%d", adapter.getMediaType(), adapter.getLimiterType()), adapter.getSortMode());
-			editor.commit();
-			break;
-		}
-		case MSG_REQUEST_REQUERY:
-			requestRequery((LibraryAdapter) message.obj);
-			break;
-		default:
-			return false;
-		}
-
 		return true;
 	}
 
@@ -536,50 +500,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 			}
 		}
 	}
-
-	/**
-	 * Set the saved sort mode for the given adapter. The adapter should be
-	 * re-queried after calling this.
-	 * 
-	 * @param adapter
-	 *            The adapter to load for.
-	 */
-	public void loadSortOrder(SortAdapter adapter) {
-		String key = String.format("sort_%d_%d", adapter.getMediaType(), adapter.getLimiterType());
-		int def = adapter.getDefaultSortMode();
-		int sort = PreferenceManager.getDefaultSharedPreferences(context).getInt(key, def);
-		adapter.setSortMode(sort);
-	}
-
-	/**
-	 * Set the sort mode for the current adapter. Current adapter must be a
-	 * MediaAdapter. Saves this sort mode to preferences and updates the list
-	 * associated with the adapter to display the new sort mode.
-	 * 
-	 * @param mode
-	 *            The sort mode. See {@link MediaAdapter#setSortMode(int)} for
-	 *            details.
-	 */
-	public void setSortMode(int mode) {
-		SortAdapter adapter = (SortAdapter) mCurrentAdapter;// MediaAdapter
-															// adapter =
-															// (MediaAdapter)mCurrentAdapter;
-		if (mode == adapter.getSortMode())
-			return;
-
-		adapter.setSortMode(mode);
-		requestRequery(adapter);
-
-		// Force a new FastScroller to be created so the scroll sections
-		// are updated.
-		ListView view = mLists[mTabOrder[mCurrentPage]];
-		view.setFastScrollEnabled(false);
-		enableFastScroll(view);
-
-		Handler handler = mWorkerHandler;
-		handler.sendMessage(handler.obtainMessage(MSG_SAVE_SORT, adapter));
-	}
-
 	/**
 	 * Set a new filter on all the adapters.
 	 */

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="update_app_version">     نسخه جدید</string>
+<string name="update_app_description">     نسخه جدید، سریعتر و بهتر برنامه منتشر شد. لطفا همین حالا نسخه جدید را نصب کنید.</string>
+<string name="update_app_description2">     تمام فایل های شما به طور خودکار به نسخه جدید منتقل خواهد شد.</string>
+<string name="update_app_install_update">     نصب به روز رسانی</string>
+<string name="update_app_install_now">     هم اکنون نصب کنید</string>
+<string name="update_app_update_now">     هم اکنون به روز رسانی کنید</string>
+<string name="rate_title">     لطفا به برنامه ما امتیاز 5 ستاره بدهید</string>
+<string name="rate_description">     اگر برنامه ما را دوست دارید، لطفا با دادن امتیاز 5 ستاره ما را حمایت کنید. حمایت شما به ما کمک می کند این برنامه را هر روز بهتر و بهتر کنیم. متشکریم!</string>
+<string name="rate_yes">     امتیاز 5 ستاره</string>
+<string name="rate_no">    خیر</string>
+<string name="rate_thanks">    متشکریم!</string>
+ 
+<string name="tab_search">    جستجو</string>
+<string name="tab_downloads">    دانلودها</string>
+<string name="tab_library">    فهرست</string>
+ 
+<string name="message_please_wait">    لطفا صبر کنید...</string>
+<string name="message_loading">    در حال بارگذاری...</string>
+<string name="message_searching_for">    در حال جستجوی</string>
+ 
+<string name="hint_main_search">    عنوان، آلبوم یا هنرمند</string>
+<string name="hint_filter_artists">    هنرمندان خود را فیلتر کنید</string>
+<string name="hint_filter_songs">    آهنگ های خود را فیلتر کنید</string>
+<string name="hint_filter_playlists">    لیست های پخش خود را فیلتر کنید</string>
+<string name="hint_filter_genres">    ژانرهای خود را فیلتر کنید</string>
+<string name="hint_filter_files">    فایل های خود را فیلتر کنید</string>
+ 
+<string name="search_your_results_appear_here">    نتایج جستجوی شما در اینجا نشان داده خواهد شد</string>
+<string name="search_no_results_for">    فاقد نتیجه برای</string>
+<string name="search_try_different_query">    درخواست دیگری را امتحان کنید</string>
+<string name="search_please_enter_query">    لطفا درخواست دیگری را وارد کنید</string>
+ 
+<string name="download_dialog_download_location">    مکان دانلود</string>
+<string name="download_dialog_download">    دانلود</string>
+<string name="download_dialog_cancel">    لغو</string>
+<string name="download_dialog_show_lyrics">    نمایش متن آهنگ</string>
+<string name="download_dialog_no_lyrics">    متن آهنگی پیدا نشد برای</string>
+ 
+<string name="lyrics">    متن های آهنگ</string>
+ 
+<string name="edit_mp3">    ویرایش برچسب های MP3</string>
+<string name="edit_mp3_title">    عنوان</string>
+<string name="edit_mp3_artist">    هنرمند</string>
+<string name="edit_mp3_album">    آلبوم</string>
+<string name="edit_mp3_use_album_cover">    استفاده از جلد آلبوم</string>
+<string name="edit_mp3_ok">    قبول</string>
+<string name="edit_mp3_cancel">    لغو</string>
+</resources>

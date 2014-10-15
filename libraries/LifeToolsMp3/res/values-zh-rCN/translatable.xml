@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">新版本</string>
+    <string name="update_app_description">我们推出了该应用的一个更快、更好的新版本。请马上安装   新版本。</string>
+    <string name="update_app_description2">您的所有文件会自动传输至新版本。</string>
+    <string name="update_app_install_update">安装更新</string>
+    <string name="update_app_install_now">马上安装</string>
+    <string name="update_app_update_now">马上更新</string>
+    <string name="rate_title">请给我们的应用打5分</string>
+    <string name="rate_description">如果您喜欢我们的应用，请给它打5分以帮助我们。您的支持可以帮助我们让这款应用变得更好 。谢谢！</string>
+    <string name="rate_yes">打5分</string>
+    <string name="rate_no">不打分</string>
+    <string name="rate_thanks">谢谢！</string>
+    <string name="tab_search">搜索</string>
+    <string name="tab_downloads">下载</string>
+    <string name="tab_library">音乐库</string>
+    <string name="message_please_wait">请等待...</string>
+    <string name="message_loading">下载中...</string>
+    <string name="message_searching_for">正在搜索</string>
+    <string name="hint_main_search">曲名，专辑或者艺术家</string>
+    <string name="hint_filter_artists">过滤您的艺术家</string>
+    <string name="hint_filter_songs">过滤您的歌曲</string>
+    <string name="hint_filter_playlists">过滤您的播放列表</string>
+    <string name="hint_filter_genres">过滤您的流派</string>
+    <string name="hint_filter_files">过滤您的文件</string>
+    <string name="search_your_results_appear_here">您的搜索结果会在这里显示</string>
+    <string name="search_no_results_for">没有…的结果</string>
+    <string name="search_try_different_query">尝试不同的查询</string>
+    <string name="search_please_enter_query">请输入一个查询</string>
+    <string name="download_dialog_download_location">下载位置</string>
+    <string name="download_dialog_download">下载</string>
+    <string name="download_dialog_cancel">取消</string>
+    <string name="download_dialog_show_lyrics">显示歌词</string>
+    <string name="download_dialog_no_lyrics">没有找到…的歌词</string>
+    <string name="lyrics">歌词</string>
+    <string name="edit_mp3">编辑MP3标签</string>
+    <string name="edit_mp3_title">曲名</string>
+    <string name="edit_mp3_artist">艺术家</string>
+    <string name="edit_mp3_album">专辑</string>
+    <string name="edit_mp3_use_album_cover">使用专辑封面</string>
+    <string name="edit_mp3_ok">确定</string>
+    <string name="edit_mp3_cancel">取消</string>
+
+</resources>

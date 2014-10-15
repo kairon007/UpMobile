@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">VERSI BAHARU</string>
+    <string name="update_app_description">Kami telah melancarkan versi baharu aplikasi yang LEBIH PANTAS dan LEBIH BAIK. Sila pasang versi baharu sekarang.</string>
+    <string name="update_app_description2">Semua fail anda akan dipindahkan ke versi baharu secara automatik.</string>
+    <string name="update_app_install_update">PASANG PENGEMASKINIAN</string>
+    <string name="update_app_install_now">PASANG SEKARANG</string>
+    <string name="update_app_update_now">KEMAS KINI SEKARANG</string>
+    <string name="rate_title">Sila nilaikan aplikasi kami sebagai 5 bintang</string>
+    <string name="rate_description">Sekiranya anda menyukai aplikasi kami, sila bantu kami dengan menilaikannya sebagai 5 bintang. Sokongan anda membantu kami memperbaikkan lagi aplikasi ini. Terima kasih!</string>
+    <string name="rate_yes">Nilaikan 5 Bintang</string>
+    <string name="rate_no">Tidak</string>
+    <string name="rate_thanks">Terima kasih!</string>
+    <string name="tab_search">Cari</string>
+    <string name="tab_downloads">Muat Turun</string>
+    <string name="tab_library">Pustaka</string>
+
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">YENİ SÜRÜM</string>
+    <string name="update_app_description">Uygulamanın daha HIZLI ve daha İYİ bir sürümünü çıkardık. Lütfen yeni sürümü hemen kurun.</string>
+    <string name="update_app_description2">Tüm dosyalarınız otomatik olarak yeni sürüme transfer edilecektir.</string>
+    <string name="update_app_install_update">GÜNCELLEMEYİ KUR</string>
+    <string name="update_app_install_now">HEMEN KUR</string>
+    <string name="update_app_update_now">HEMEN GÜNCELLE</string>
+    <string name="rate_title">Lütfen uygulamamıza 5 yıldız vererek değerlendirin</string>
+    <string name="rate_description">Uygulamamızı beğendiyseniz lütfen 5 yıldız vererek bizi destekleyin. Desteğiniz uygulamayı daha iyi hale getirmemize yardım edecektir. Teşekkür ederiz!</string>
+    <string name="rate_yes">5 Yıldız Verin</string>
+    <string name="rate_no">Hayır</string>
+    <string name="rate_thanks">Teşekkür ederiz!</string>
+    <string name="tab_search">Ara</string>
+    <string name="tab_downloads">İndirmeler</string>
+    <string name="tab_library">Kitaplık</string>
+    <string name="message_please_wait">Lütfen Bekleyin...</string>
+    <string name="message_loading">Yükleniyor...</string>
+    <string name="message_searching_for">Şunu ara:</string>
+    <string name="hint_main_search">Başlık, Albüm ya da Sanatçı</string>
+    <string name="hint_filter_artists">Sanatçılarınızı filtreleyin</string>
+    <string name="hint_filter_songs">Şarkılarınızı filtreleyin</string>
+    <string name="hint_filter_playlists">Çalma listelerinizi filtreleyin</string>
+    <string name="hint_filter_genres">Türlerinizi filtreleyin</string>
+    <string name="hint_filter_files">Dosyalarınızı filtreleyin</string>
+    <string name="search_your_results_appear_here">Arama sonuçlarınız burada görüntülenir</string>
+    <string name="search_no_results_for">Şunun için herhangi bir sonuç bulunamadı:</string>
+    <string name="search_try_different_query">Farklı bir arama sorgusu deneyin</string>
+    <string name="search_please_enter_query">Lütfen bir sorgu girin</string>
+    <string name="download_dialog_download_location">İndirme Konumu</string>
+    <string name="download_dialog_download">İndir</string>
+    <string name="download_dialog_cancel">İptal</string>
+    <string name="download_dialog_show_lyrics">Şarkı Sözlerini Göster</string>
+    <string name="download_dialog_no_lyrics">Şunun için herhangi bir şarkı sözü bulunamadı:</string>
+    <string name="lyrics">Şarkı Sözleri</string>
+    <string name="edit_mp3">MP3 Etiketlerini Düzenle</string>
+    <string name="edit_mp3_title">Başlık</string>
+    <string name="edit_mp3_artist">Albüm</string>
+    <string name="edit_mp3_use_album_cover">Albüm Kapağını Kullan</string>
+    <string name="edit_mp3_ok">Tamam</string>
+    <string name="edit_mp3_cancel">İptal</string>
+
+</resources>

@@ -45,7 +45,7 @@ THE SOFTWARE.
                 android:id="@+id/filter_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/search_hint"
+                android:hint="@string/hint_main_search"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"

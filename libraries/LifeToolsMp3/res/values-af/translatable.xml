@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">NUWE WEERGAWE</string>
+    <string name="update_app_description">Ons het ’n nuwe VINNIGER en BETER weergawe van die app vrygestel. Installeer die nuwe weergawe nou, asseblief.</string>
+    <string name="update_app_description2">Al jou lêers sal outomaties na die nuwe weergawe oorgedra word.</string>
+    <string name="update_app_install_update">INSTALLEER BYWERKING</string>
+    <string name="update_app_install_now">INSTALLEER NOU</string>
+    <string name="update_app_update_now">WERK NOU BY</string>
+    <string name="rate_title">Gee ons app asseblief 5 sterre</string>
+    <string name="rate_description">As jy van ons app hou, help ons asseblief deur dit 5 sterre te gee. Jou ondersteuning help ons om hierdie app beter te maak. Dankie!</string>
+    <string name="rate_yes">Gee 5 sterre</string>
+    <string name="rate_no">Nee</string>
+    <string name="rate_thanks">Dankie!</string>
+    <string name="tab_search">Soek</string>
+    <string name="tab_downloads">Aflaaie</string>
+    <string name="tab_library">Biblioteek</string>
+    <string name="message_please_wait">Wag asseblief...</string>
+    <string name="message_loading">Laai...</string>
+    <string name="message_searching_for">Soek na</string>
+    <string name="hint_main_search">Titel, album of kunstenaar</string>
+    <string name="hint_filter_artists">Filter jou kunstenaars</string>
+    <string name="hint_filter_songs">Filter jou liedjies</string>
+    <string name="hint_filter_playlists">Filter jou speellyste</string>
+    <string name="hint_filter_genres">Filter jou genres</string>
+    <string name="hint_filter_files">Filter jou lêers</string>
+    <string name="search_your_results_appear_here">Jou soekresultate sal hier verskyn</string>
+    <string name="search_no_results_for">Geen resultate vir</string>
+    <string name="search_try_different_query">Probeer ’n ander versoek</string>
+    <string name="search_please_enter_query">Tik asseblief ’n versoek in</string>
+    <string name="download_dialog_download_location">Aflaaiplek</string>
+    <string name="download_dialog_download">Laai af</string>
+    <string name="download_dialog_cancel">Kanselleer</string>
+    <string name="download_dialog_show_lyrics">Wys lirieke</string>
+    <string name="download_dialog_no_lyrics">Geen lirieke gevind vir</string>
+    <string name="lyrics">Lirieke</string>
+    <string name="edit_mp3">Wysig MP3-etikette</string>
+    <string name="edit_mp3_title">Titel</string>
+    <string name="edit_mp3_artist">Kunstenaar</string>
+    <string name="edit_mp3_album">Album</string>
+    <string name="edit_mp3_use_album_cover">Gebruik albumomslag</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">Kanselleer</string>
+
+</resources>

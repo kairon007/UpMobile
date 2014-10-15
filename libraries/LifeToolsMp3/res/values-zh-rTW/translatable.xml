@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">新版本</string>
+    <string name="update_app_description">我們已經發佈該應用程式新的更快更好的版本。請馬上安裝新版本。</string>
+    <string name="update_app_description2">您的所有檔將自動轉移至新版本。</string>
+    <string name="update_app_install_update">安裝更新</string>
+    <string name="update_app_install_now">馬上安裝</string>
+    <string name="update_app_update_now">馬上更新</string>
+    <string name="rate_title">請給我們的應用打5分</string>
+    <string name="rate_description">如果喜歡我們的應用，請給它打5分以幫助我們。您的支持可以幫助我們讓這款應用變得更好。謝謝！</string>
+    <string name="rate_yes">打5分</string>
+    <string name="rate_no">不打分</string>
+    <string name="rate_thanks">謝謝！</string>
+    <string name="tab_search">搜索</string>
+    <string name="tab_downloads">下載</string>
+    <string name="tab_library">音樂庫</string>
+    <string name="message_please_wait">請等待...</string>
+    <string name="message_loading">載入中...</string>
+    <string name="message_searching_for">正在搜索</string>
+    <string name="hint_main_search">曲名，專輯或者藝術家</string>
+    <string name="hint_filter_artists">過濾您的藝術家</string>
+    <string name="hint_filter_songs">過濾您的歌曲</string>
+    <string name="hint_filter_playlists">過濾您的播放列表</string>
+    <string name="hint_filter_genres">過濾您的流派</string>
+    <string name="hint_filter_files">過濾您的文件</string>
+    <string name="search_your_results_appear_here">您的搜索結果會在這里顯示</string>
+    <string name="search_no_results_for">沒有…的結果</string>
+    <string name="search_try_different_query">嘗試不同的查詢</string>
+    <string name="search_please_enter_query">請輸入一個查詢</string>
+    <string name="download_dialog_download_location">下載位置</string>
+    <string name="download_dialog_download">下載</string>
+    <string name="download_dialog_cancel">取消</string>
+    <string name="download_dialog_show_lyrics">顯示歌詞</string>
+    <string name="download_dialog_no_lyrics">沒有找到…的歌詞</string>
+    <string name="lyrics">歌詞</string>
+    <string name="edit_mp3">編輯MP3標籤</string>
+    <string name="edit_mp3_title">曲名</string>
+    <string name="edit_mp3_artist">藝術家</string>
+    <string name="edit_mp3_album">專輯</string>
+    <string name="edit_mp3_use_album_cover">使用專輯封面</string>
+    <string name="edit_mp3_ok">確定</string>
+    <string name="edit_mp3_cancel">取消</string>
+
+</resources>

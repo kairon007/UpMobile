@@ -49,9 +49,6 @@ THE SOFTWARE.
 	<string name="_artist">artist</string>
 	<string name="_album">album</string>
 	<string name="_year">year</string>
-	
-	<!-- PreferencesActivity -->
-	<string name="rate_app">Rate app 5 stars if you like our app. Your support helps us develop improve this app.</string>
 
 	<!-- New Playlist Dialog -->
 	<string name="choose_playlist_name">Choose Playlist Name</string>
@@ -239,26 +236,13 @@ THE SOFTWARE.
 	<string name="enqueue_current_genre">Enqueue genre</string>
 	<string name="clear_queue">Clear queue</string>
 	<string name="toggle_controls">Toggle controls</string>
-	
-	<string name="search_hint">Title, Album or Artist</string>
-	<string name="filter_artists_hint">Filter your artists</string>
-	<string name="filter_songs_hint">Filter your songs</string>
-	<string name="filter_playlists_hint">Filter your playlists</string>
-	<string name="filter_genres_hint">Filter your genres</string>
-	<string name="filter_files_hint">Filter your files</string>
-	<string name="download">Download</string>
+
 	<string name="download_started">Download started for %s</string>
 	<string name="downloads">Downloads</string>
 	<string name="download_error">Please wait while song loads.</string>
-	<string name="search_message_default">No results yet.\nSearch for something.</string>
-	<string name="search_message_empty">No results for %s.\nSearch for something else.</string>
-	<string name="search_message_nothing">Please enter a query</string>
 	<string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
 	
 	<string name="fileName_unknown_mp3">unknown</string>
-	
-	<string name="loading_download_url_title">Please Wait...</string>
-	<string name="loading_download_url_message">Loading...</string>
 	
 	
 	<string-array name="tracks">
@@ -277,7 +261,6 @@ THE SOFTWARE.
 	<string name="customize_show_position_tab">Swich showing tabs at the top or at the bottom</string>
 	<string name="show_top">Top</string>
 	<string name="show_bottom">Bottom</string>
-
-	<string name="lyric_not_found">No Lyrics Found for %1$s</string>
+	
 	<string name="lyric_no_internet">No internet connection.\nLyrics can not be load.</string>
 </resources>

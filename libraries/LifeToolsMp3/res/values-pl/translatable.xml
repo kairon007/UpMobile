@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">NOWA WERSJA</string>
+    <string name="update_app_description">Wypuściliśmy nową SZYBSZĄ i LEPSZĄ wersję aplikacji. Proszę zainstalować nową wersję już teraz.</string>
+    <string name="update_app_description2">Wszystkie Twoje pliki zostaną automatycznie przeniesione do nowej wersji.</string>
+    <string name="update_app_install_update">ZAINSTALUJ AKTUALIZACJĘ</string>
+    <string name="update_app_install_now">ZAINSTALUJ JUŻ TERAZ</string>
+    <string name="update_app_update_now">UAKTUALNIJ JUŻ TERAZ</string>
+    <string name="rate_title">Prosimy o przyznanie naszej aplikacji 5 gwiazdek</string>
+    <string name="rate_description">Jeśli lubisz naszą aplikację, pomóż nam, przyznając jej 5 gwiazdek. Dzięki Twojemu wsparciu możemy nieustannie udoskonalać tę aplikację. Dziękujemy!</string>
+    <string name="rate_yes">Przyznaj 5 gwiazdek</string>
+    <string name="rate_no">Nie</string>
+    <string name="rate_thanks">Dziękujemy!</string>
+    <string name="tab_search">Wyszukaj</string>
+    <string name="tab_downloads">Pobrane</string>
+    <string name="tab_library">Biblioteka</string>
+    <string name="message_please_wait">Proszę czekać...</string>
+    <string name="message_loading">Wczytywanie...</string>
+    <string name="message_searching_for">Wyszukiwanie po</string>
+    <string name="hint_main_search">Tytuł, Album lub Wykonawca</string>
+    <string name="hint_filter_artists">Filtruj twoich wykonawców</string>
+    <string name="hint_filter_songs">Filtruj twoje utwory</string>
+    <string name="hint_filter_playlists"> Filtruj twoje listy odtwarzania</string>
+    <string name="hint_filter_genres">Filtruj twoje gatunki</string>
+    <string name="hint_filter_files">Filtruj twoje pliki</string>
+    <string name="search_your_results_appear_here">Twoje wyniki wyszukiwania pojawią się tutaj</string>
+    <string name="search_no_results_for">Brak wyników dla</string>
+    <string name="search_try_different_query">Spróbuj innego zapytania</string>
+    <string name="search_please_enter_query">Wprowadź zapytanie</string>
+    <string name="download_dialog_download_location">Lokalizacja pobierania</string>
+    <string name="download_dialog_download">Pobierz</string>
+    <string name="download_dialog_cancel">Anuluj</string>
+    <string name="download_dialog_show_lyrics">Pokaż tekst utworu</string>
+    <string name="download_dialog_no_lyrics">Nie znaleziono tekstu dla utworu</string>
+    <string name="lyrics">Teksty</string>
+    <string name="edit_mp3">Edytuj tagi mp3</string>
+    <string name="edit_mp3_title">Tytuł</string>
+    <string name="edit_mp3_artist">Wykonawca</string>
+    <string name="edit_mp3_album">Album</string>
+    <string name="edit_mp3_use_album_cover">Użyj okładki albumu</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">Anuluj</string>
+
+</resources>

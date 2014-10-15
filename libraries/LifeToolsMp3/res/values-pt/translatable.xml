@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_app_version">NOVA VERSÃO</string>
+<string name="update_app_description">Lançamos uma nova versão MELHORADA e MAIS RÁPIDA do aplicativo. Por favor, instale a nova versão agora.</string>
+<string name="update_app_description2">Todos os seus arquivos serão transferidos automaticamente para a nova versão.</string>
+<string name="update_app_install_update">INSTALAR ATUALIZAÇÃO</string>
+<string name="update_app_install_now">INSTALAR AGORA</string>
+<string name="update_app_update_now">ATUALIZAR AGORA</string>
+<string name="rate_title">Por favor, classifique nosso app com 5 estrelas</string>
+<string name="rate_description">Se você gosta do nosso app, ajude-nos ao classificá-lo com 5 estrelas. O seu apoio nos ajuda a tornar este app ainda melhor. Obrigado!</string>
+<string name="rate_yes">Classificar com 5 estrelas</string>
+<string name="rate_no">Não</string>
+<string name="rate_thanks">Obrigado!</string>
+ 
+<string name="tab_search">Pesquisar</string>
+<string name="tab_downloads">Downloads</string>
+<string name="tab_library">Biblioteca</string>
+ 
+<string name="message_please_wait">Por favor, aguarde…</string>
+<string name="message_loading">Carregando...</string>
+<string name="message_searching_for">Pesquisando por</string>
+ 
+<string name="hint_main_search">Título, Álbum ou Artista</string>
+<string name="hint_filter_artists">Filtre seus artistas</string>
+<string name="hint_filter_songs">Filtre suas músicas</string>
+<string name="hint_filter_playlists">Filtre suas listas de reprodução</string>
+<string name="hint_filter_genres">Filtre seus gêneros</string>
+<string name="hint_filter_files">Filtre seus arquivos</string>
+ 
+<string name="search_your_results_appear_here">Os resultados da sua pesquisa aparecerão aqui</string>
+<string name="search_no_results_for">Nenhum resultado para</string>
+<string name="search_try_different_query">Tente uma consulta diferente</string>
+<string name="search_please_enter_query">Digite uma consulta</string>
+ 
+<string name="download_dialog_download_location">Local de Download</string>
+<string name="download_dialog_download">Baixar</string>
+<string name="download_dialog_cancel">Cancelar</string>
+<string name="download_dialog_show_lyrics">Mostrar Letra</string>
+<string name="download_dialog_no_lyrics">Nenhuma letra encontrada para</string>
+ 
+<string name="lyrics">Letra</string>
+ 
+<string name="edit_mp3">Editar Tags do MP3</string>
+<string name="edit_mp3_title">Título</string>
+<string name="edit_mp3_artist">Artista</string>
+<string name="edit_mp3_album">Álbum</string>
+<string name="edit_mp3_use_album_cover">Usar Capa do Álbum</string>
+<string name="edit_mp3_ok">OK</string>
+<string name="edit_mp3_cancel">Cancelar</string>
+</resources>

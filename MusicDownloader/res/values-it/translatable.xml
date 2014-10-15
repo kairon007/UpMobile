@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">NUOVA VERSIONE</string>
+    <string name="update_app_description">Abbiamo introdotto una nuova versione MIGLIORATA e PIÙ RAPIDA dell\'app. Installa subito la nuova versione.</string>
+    <string name="update_app_description2">Tutti i tuoi file verranno trasferiti in automatico sulla nuova versione</string>
+    <string name="update_app_install_update">INSTALLA AGGIORNAMENTO</string>
+    <string name="update_app_install_now">INSTALLA ORA</string>
+    <string name="update_app_update_now">AGGIORNA ORA</string>
+    <string name="rate_title">Gentilmente, valuta la nostra app con 5 stelle</string>
+    <string name="rate_description">Se ti piace la nostra app, aiutaci valutandola con 5 stelle. Il tuo supporto ci aiuta a migliorare l\'app. Grazie!</string>
+    <string name="rate_yes">Valuta con 5 stelle</string>
+    <string name="rate_no">No</string>
+    <string name="rate_thanks">Grazie!</string>
+    <string name="tab_search">Cerca</string>
+    <string name="tab_downloads">Download</string>
+    <string name="tab_library">Libreria</string>
+
+</resources>

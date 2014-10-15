@@ -7,12 +7,5 @@
 	<string name="toast_loading">Loading stream for selected sound</string>
 	<string name="toast_playing">Selected sound is playing</string>
 	<string name="check_intertet_access">Please check connection on the Internet</string>
-
-	
-	<string name="rate_popup_title">Please rate our app 5 stars</string>
-	<string name="rate_popup_message">If you like our app, please help us by rating it 5 stars.\nYour support helps us make this app better. Thank you!</string>
-	<string name="rate_popup_positive_button">Rate Now</string>
-	<string name="rate_popup_negative_button">No</string>
-	<string name="rate_popup_toast">Thank you!</string>
-    
+   
 </resources>

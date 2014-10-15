@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">새 버전</string>
+    <string name="update_app_description">더 빠르고 더 좋은 새로운 버전의 앱을 출시했습니다. 지금 새 버전을 설치하세요.</string>
+    <string name="update_app_description2">모든 사용자 파일이 자동으로 새 버전으로 전송됩니다.</string>
+    <string name="update_app_install_update">업데이트 설치</string>
+    <string name="update_app_install_now">지금 설치</string>
+    <string name="update_app_update_now">지금 업데이트</string>
+    <string name="rate_title">저희 앱에 별 5개 평점을 주세요</string>
+    <string name="rate_description">앱이 마음에 드신다면 별 5개 평점으로 저희를 도와 주세요. 여러분의 지지는 더 나은 앱을 만드는데 도움이 됩니다. 감사합니다!</string>
+    <string name="rate_yes">별 5개 평점 주기</string>
+    <string name="rate_no">아니요</string>
+    <string name="rate_thanks">감사합니다!</string>
+    <string name="tab_search">검색</string>
+    <string name="tab_downloads">다운로드</string>
+    <string name="tab_library">라이브러리</string>
+    <string name="message_please_wait">기다리세요...</string>
+    <string name="message_loading">로딩...</string>
+    <string name="message_searching_for">검색 대상</string>
+    <string name="hint_main_search">제목, 앨범 또는 음악가</string>
+    <string name="hint_filter_artists">음악가 필터하기</string>
+    <string name="hint_filter_songs">노래 필터하기</string>
+    <string name="hint_filter_playlists">플레이리스트 필터하기</string>
+    <string name="hint_filter_genres">장르 필터하기</string>
+    <string name="hint_filter_files">파일 필터하기</string>
+    <string name="search_your_results_appear_here">검색 결과가 이곳에 표시됩니다</string>
+    <string name="search_no_results_for">검색 결과가 없습니다</string>
+    <string name="search_try_different_query">다른 검색어를 사용해 보세요</string>
+    <string name="search_please_enter_query">검색어를 입력하세요</string>
+    <string name="download_dialog_download_location">다운로드 위치</string>
+    <string name="download_dialog_download">다운로드</string>
+    <string name="download_dialog_cancel">취소</string>
+    <string name="download_dialog_show_lyrics">가사 표시</string>
+    <string name="download_dialog_no_lyrics">가사를 찾을 수 없습니다</string>
+    <string name="lyrics">가사</string>
+    <string name="edit_mp3">MP3 태그 편집</string>
+    <string name="edit_mp3_title">제목</string>
+    <string name="edit_mp3_artist">음악가</string>
+    <string name="edit_mp3_album">앨범</string>
+    <string name="edit_mp3_use_album_cover">앨범 표지 사용</string>
+    <string name="edit_mp3_ok">확인</string>
+    <string name="edit_mp3_cancel">취소</string>
+
+</resources>

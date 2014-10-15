@@ -158,7 +158,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:maxLines="2"
-                        android:text="@string/show_lyrics"
+                        android:text="@string/download_dialog_show_lyrics"
                         android:textSize="@dimen/dialog_default_text_size" />
                 </LinearLayout>
 
@@ -186,7 +186,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:maxLines="2"
-                        android:text="@string/edit_mp3_tags"
+                        android:text="@string/edit_mp3"
                         android:textSize="@dimen/dialog_default_text_size" />
                 </LinearLayout>
             </LinearLayout>
@@ -207,7 +207,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:gravity="left|center_vertical"
-                android:text="@string/header_download"
+                android:text="@string/download_dialog_download_location"
                 android:textSize="@dimen/dialog_default_text_size"
                 android:textStyle="bold" />
 
@@ -226,7 +226,7 @@
                 android:gravity="left|center_vertical"
                 android:paddingLeft="8dp"
                 android:singleLine="true"
-                android:text="@string/header_download"
+                android:text="@string/download_dialog_download_location"
                 android:textSize="@dimen/dialog_default_text_size" />
         </RelativeLayout>
     </LinearLayout>

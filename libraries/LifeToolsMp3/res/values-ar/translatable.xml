@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_app_version">نسخة جديدة</string>
+<string name="update_app_description">لقد أصدرنا نسخة جديدة أسرع وأفضل للتطبيق. يرجى تثبيت النسخة الجديدة الآن.</string>
+<string name="update_app_description2">كل ملفاتك سترسل تلقائيا إلى النسخة الجديدة.</string>
+<string name="update_app_install_update">تثبيت التحديث</string>
+<string name="update_app_install_now">التثبيت الآن</string>
+<string name="update_app_update_now">التحديث الآن</string>
+<string name="rate_title">نرجو منك تقييمنا وإعطائنا 5 نجمات</string>
+<string name="rate_description">إذا أعجبك تطبيقنا، ساعدنا بتقييمنا وإعطائنا 5 نجمات. دعمك يساعدنا في جعل هذا التطبيق أفضل. شكرا لك!</string>
+<string name="rate_yes">قيمنا بـ 5 نجمات</string>
+<string name="rate_no">لا</string>
+<string name="rate_thanks">شكرا لك!</string>
+ 
+<string name="tab_search">البحث</string>
+<string name="tab_downloads">التحميلات</string>
+<string name="tab_library">المكتبة</string>
+ 
+<string name="message_please_wait">يرجى الانتظار…</string>
+<string name="message_loading">قيد التحميل…</string>
+<string name="message_searching_for">قيد البحث عن</string>
+ 
+<string name="hint_main_search">العنوان، الألبوم، الفنان</string>
+<string name="hint_filter_artists">تصفية فنّانيك</string>
+<string name="hint_filter_songs">تصفية أغانيك</string>
+<string name="hint_filter_playlists">تصفية قوائم التشغيل خاصتك</string>
+<string name="hint_filter_genres">تصفية أنواعك الغنائية</string>
+<string name="hint_filter_files">تصفية ملفاتك</string>
+ 
+<string name="search_your_results_appear_here">نتائج بحثك ستظهر هنا</string>
+<string name="search_no_results_for">لا توجد نتائج لـ</string>
+<string name="search_try_different_query">جرّب استعلام آخر</string>
+<string name="search_please_enter_query">يرجى إدخال استعلامك</string>
+ 
+<string name="download_dialog_download_location">موقع التحميل</string>
+<string name="download_dialog_download">تحميل</string>
+<string name="download_dialog_cancel">إلغاء</string>
+<string name="download_dialog_show_lyrics">عرض كلمات الأغنية</string>
+<string name="download_dialog_no_lyrics">لا توجد كلمات للأغنية</string>
+ 
+<string name="lyrics">كلمات الأغنية</string>
+ 
+<string name="edit_mp3">تعديل علامات MP3</string>
+<string name="edit_mp3_title">العنوان</string>
+<string name="edit_mp3_artist">الفنّان</string>
+<string name="edit_mp3_album">الألبوم</string>
+<string name="edit_mp3_use_album_cover">استخدم غلاف الألبوم</string>
+<string name="edit_mp3_ok">موافق</string>
+<string name="edit_mp3_cancel">إلغاء</string>
+</resources>

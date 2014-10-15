@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_app_version">VERSI BARU</string>
+<string name="update_app_description">Kami telah merilis aplikasi dengan versi baru yang LEBIH CEPAT dan LEBIH BAIK. Silakan pasang versi baru tersebut sekarang juga.</string>
+<string name="update_app_description2">Semua berkas Anda secara otomatis akan dipindahkan ke versi baru.</string>
+<string name="update_app_install_update">PASANG PEMBARUAN</string>
+<string name="update_app_install_now">PASANG SEKARANG</string>
+<string name="update_app_update_now">PERBARUI SEKARANG</string>
+<string name="rate_title">Harap beri nilai 5 bintang untuk aplikasi kami</string>
+<string name="rate_description">Bila Anda menyukai aplikasi kami, harap membantu kami dengan memberikan nilai 5 bintang. Dukungan Anda membantu kami membuat aplikasi ini lebih baik. Terima kasih!</string>
+<string name="rate_yes">Beri Nilai 5 Bintang</string>
+<string name="rate_no">Tidak</string>
+<string name="rate_thanks">Terima kasih!</string>
+ 
+<string name="tab_search">Cari</string>
+<string name="tab_downloads">Unduhan</string>
+<string name="tab_library">Pustaka</string>
+ 
+<string name="message_please_wait">Harap Tunggu...</string>
+<string name="message_loading">Memuat...</string>
+<string name="message_searching_for">Mencari</string>
+ 
+<string name="hint_main_search">Judul, Album atau Artis</string>
+<string name="hint_filter_artists">Filter artis Anda</string>
+<string name="hint_filter_songs">Filter lagu Anda</string>
+<string name="hint_filter_playlists">Filter daftar putar Anda</string>
+<string name="hint_filter_genres">Filter genre Anda</string>
+<string name="hint_filter_files">Filter berkas Anda</string>
+ 
+<string name="search_your_results_appear_here">Hasil pencarian Anda akan muncul di sini</string>
+<string name="search_no_results_for">Tidak ada hasil untuk</string>
+<string name="search_try_different_query">Coba permintaan yang berbeda</string>
+<string name="search_please_enter_query">Harap masukkan permintaan</string>
+ 
+<string name="download_dialog_download_location">Lokasi Pengunduhan</string>
+<string name="download_dialog_download">Unduh</string>
+<string name="download_dialog_cancel">Batal</string>
+<string name="download_dialog_show_lyrics">Tampilkan Lirik</string>
+<string name="download_dialog_no_lyrics">Tidak ditemukan Lirik untuk</string>
+ 
+<string name="lyrics">Lirik</string>
+ 
+<string name="edit_mp3">Sunting Tag MP3</string>
+<string name="edit_mp3_title">Judul</string>
+<string name="edit_mp3_artist">Artis</string>
+<string name="edit_mp3_album">Album</string>
+<string name="edit_mp3_use_album_cover">Gunakan Sampul Album</string>
+<string name="edit_mp3_ok">OK</string>
+<string name="edit_mp3_cancel">Batal</string>
+</resources>

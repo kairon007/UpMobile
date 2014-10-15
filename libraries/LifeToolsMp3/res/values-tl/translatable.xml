@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">BAGONG BERSIYON</string>
+    <string name="update_app_description">Naglabas kami ng bagong MAS MABILIS at MAS MAHUSAY na bersiyon ng app. Paki-install ang bagong bersiyon ngayon.</string>
+    <string name="update_app_description2">Lahat ng files mo ay awtomatikong lilipat sa bagong bersiyon.</string>
+    <string name="update_app_install_update">MAG-INSTALL NG UPDATE</string>
+    <string name="update_app_install_now">MAG-INSTALL NGAYON</string>
+    <string name="update_app_update_now">MAG-UPDATE NGAYON</string>
+    <string name="rate_title">Paki-rate ang aming app nang 5 stars</string>
+    <string name="rate_description">Kung gusto mo ang aming app, mangyaring tulungan kami sa pamamagitan ng pagre-rate dito nang 5 stars. Ang iyong suporta ay tinutulungan kaming mapabuti ang app na ito. Salamat!</string>
+    <string name="rate_yes">I-rate nang 5 Stars</string>
+    <string name="rate_no">Hindi</string>
+    <string name="rate_thanks">Salamat!</string>
+    <string name="tab_search">Maghanap</string>
+    <string name="tab_downloads">Mga Download</string>
+    <string name="tab_library">Library</string>
+    <string name="message_please_wait">Pakihintay...</string>
+    <string name="message_loading">Naglo-load...</string>
+    <string name="message_searching_for">Hinahanap ang</string>
+    <string name="hint_main_search">Pamagat, Album o Artist</string>
+    <string name="hint_filter_artists">I-filter ang iyong mga artist</string>
+    <string name="hint_filter_songs">I-filter ang iyong mga kanta</string>
+    <string name="hint_filter_playlists">I-filter ang iyong mga playlist</string>
+    <string name="hint_filter_genres">I-filter ang iyong mga genre</string>
+    <string name="hint_filter_files">I-filter ang iyong mga file</string>
+    <string name="search_your_results_appear_here">Lalabas dito ang mga resulta ng iyong paghahanap</string>
+    <string name="search_no_results_for">Walang mga resulta para sa</string>
+    <string name="search_try_different_query">Sumubok ng ibang query</string>
+    <string name="search_please_enter_query">Mangyaring magpasok ng query</string>
+    <string name="download_dialog_download_location">Lokasyon ng Download</string>
+    <string name="download_dialog_download">I-download</string>
+    <string name="download_dialog_cancel">Kanselahin</string>
+    <string name="download_dialog_show_lyrics">Ipakita ang Lyrics</string>
+    <string name="download_dialog_no_lyrics">Walang nahanap na Lyrics para sa</string>
+    <string name="lyrics">Lyrics</string>
+    <string name="edit_mp3">I-edit ang mga MP3 tag</string>
+    <string name="edit_mp3_title">Pamagat</string>
+    <string name="edit_mp3_artist">Artist</string>
+    <string name="edit_mp3_album">Album</string>
+    <string name="edit_mp3_use_album_cover">Gamitin ang Album Cover</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">Kanselahin</string>
+
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">BAGONG BERSIYON</string>
+    <string name="update_app_description">Naglabas kami ng bagong MAS MABILIS at MAS MAHUSAY na bersiyon ng app. Paki-install ang bagong bersiyon ngayon.</string>
+    <string name="update_app_description2">Lahat ng files mo ay awtomatikong lilipat sa bagong bersiyon.</string>
+    <string name="update_app_install_update">MAG-INSTALL NG UPDATE</string>
+    <string name="update_app_install_now">MAG-INSTALL NGAYON</string>
+    <string name="update_app_update_now">MAG-UPDATE NGAYON</string>
+    <string name="rate_title">Paki-rate ang aming app nang 5 stars</string>
+    <string name="rate_description">Kung gusto mo ang aming app, mangyaring tulungan kami sa pamamagitan ng pagre-rate dito nang 5 stars. Ang iyong suporta ay tinutulungan kaming mapabuti ang app na ito. Salamat!</string>
+    <string name="rate_yes">I-rate nang 5 Stars</string>
+    <string name="rate_no">Hindi</string>
+    <string name="rate_thanks">Salamat!</string>
+    <string name="tab_search">Maghanap</string>
+    <string name="tab_downloads">Mga Download</string>
+    <string name="tab_library">Library</string>
+
+</resources>

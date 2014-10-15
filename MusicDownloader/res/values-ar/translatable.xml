@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_app_version">نسخة جديدة</string>
+<string name="update_app_description">لقد أصدرنا نسخة جديدة أسرع وأفضل للتطبيق. يرجى تثبيت النسخة الجديدة الآن.</string>
+<string name="update_app_description2">كل ملفاتك سترسل تلقائيا إلى النسخة الجديدة.</string>
+<string name="update_app_install_update">تثبيت التحديث</string>
+<string name="update_app_install_now">التثبيت الآن</string>
+<string name="update_app_update_now">التحديث الآن</string>
+<string name="rate_title">نرجو منك تقييمنا وإعطائنا 5 نجمات</string>
+<string name="rate_description">إذا أعجبك تطبيقنا، ساعدنا بتقييمنا وإعطائنا 5 نجمات. دعمك يساعدنا في جعل هذا التطبيق أفضل. شكرا لك!</string>
+<string name="rate_yes">قيمنا بـ 5 نجمات</string>
+<string name="rate_no">لا</string>
+<string name="rate_thanks">شكرا لك!</string>
+ 
+<string name="tab_search">البحث</string>
+<string name="tab_downloads">التحميلات</string>
+</resources>

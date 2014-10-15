@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">NUWE WEERGAWE</string>
+    <string name="update_app_description">Ons het ’n nuwe VINNIGER en BETER weergawe van die app vrygestel. Installeer die nuwe weergawe nou, asseblief.</string>
+    <string name="update_app_description2">Al jou lêers sal outomaties na die nuwe weergawe oorgedra word.</string>
+    <string name="update_app_install_update">INSTALLEER BYWERKING</string>
+    <string name="update_app_install_now">INSTALLEER NOU</string>
+    <string name="update_app_update_now">WERK NOU BY</string>
+    <string name="rate_title">Gee ons app asseblief 5 sterre</string>
+    <string name="rate_description">As jy van ons app hou, help ons asseblief deur dit 5 sterre te gee. Jou ondersteuning help ons om hierdie app beter te maak. Dankie!</string>
+    <string name="rate_yes">Gee 5 sterre</string>
+    <string name="rate_no">Nee</string>
+    <string name="rate_thanks">Dankie!</string>
+    <string name="tab_search">Soek</string>
+    <string name="tab_downloads">Aflaaie</string>
+    <string name="tab_library">Biblioteek</string>
+</resources>

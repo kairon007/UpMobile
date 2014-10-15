@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">新バージョン</string>
+    <string name="update_app_description">アプリのスピードアップされた改善バージョンがリリースされました。この新バージョンを今すぐインストールしてください。</string>
+    <string name="update_app_description2">全てのファイルが自動的に新バージョンに転送されます。</string>
+    <string name="update_app_install_update">アップデートをインストール</string>
+    <string name="update_app_install_now">今すぐインストール</string>
+    <string name="update_app_update_now">今すぐアップデート</string>
+    <string name="rate_title">当社のアプリを5つ星評価にしてください</string>
+    <string name="rate_description">アプリが気に入ったら5つ星評価にして支援してください。皆様のサポートがこのアプリをさらに良くするのに役立ちます。有り難うございます！</string>
+    <string name="rate_yes">5つ星評価にする</string>
+    <string name="rate_no">いいえ</string>
+    <string name="rate_thanks">有り難うございます！</string>
+    <string name="tab_search">検索</string>
+    <string name="tab_downloads">ダウンロード</string>
+    <string name="tab_library">ライブラリ</string>
+    <string name="message_please_wait">お待ちください…</string>
+    <string name="message_loading">ロード中…</string>
+    <string name="message_searching_for">以下を検索中：</string>
+    <string name="hint_main_search">タイトル、アルバムまたはアーティスト名</string>
+    <string name="hint_filter_artists">アーティストをフィルタ</string>
+    <string name="hint_filter_songs">曲をフィルタ</string>
+    <string name="hint_filter_playlists">プレイリストをフィルタ</string>
+    <string name="hint_filter_genres">ジャンルをフィルタ</string>
+    <string name="hint_filter_files">ファイルをフィルタ</string>
+    <string name="search_your_results_appear_here">検索結果がここに表示されます</string>
+    <string name="search_no_results_for">以下の結果無し：</string>
+    <string name="search_try_different_query">違うクエリを試してください</string>
+    <string name="search_please_enter_query">クエリを入力してください</string>
+    <string name="download_dialog_download_location">ダウンロードロケーション</string>
+    <string name="download_dialog_download">ダウンロード</string>
+    <string name="download_dialog_cancel">キャンセル</string>
+    <string name="download_dialog_show_lyrics">歌詞を表示</string>
+    <string name="download_dialog_no_lyrics">以下の歌詞は見つかりませんでした：</string>
+    <string name="lyrics">歌詞</string>
+    <string name="edit_mp3">MP3タグを編集</string>
+    <string name="edit_mp3_title">タイトル</string>
+    <string name="edit_mp3_artist">アーティスト</string>
+    <string name="edit_mp3_album">アルバム</string>
+    <string name="edit_mp3_use_album_cover">アルバムカバーを使う</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">キャンセル</string>
+
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">NOWA WERSJA</string>
+    <string name="update_app_description">Wypuściliśmy nową SZYBSZĄ i LEPSZĄ wersję aplikacji. Proszę zainstalować nową wersję już teraz.</string>
+    <string name="update_app_description2">Wszystkie Twoje pliki zostaną automatycznie przeniesione do nowej wersji.</string>
+    <string name="update_app_install_update">ZAINSTALUJ AKTUALIZACJĘ</string>
+    <string name="update_app_install_now">ZAINSTALUJ JUŻ TERAZ</string>
+    <string name="update_app_update_now">UAKTUALNIJ JUŻ TERAZ</string>
+    <string name="rate_title">Prosimy o przyznanie naszej aplikacji 5 gwiazdek</string>
+    <string name="rate_description">Jeśli lubisz naszą aplikację, pomóż nam, przyznając jej 5 gwiazdek. Dzięki Twojemu wsparciu możemy nieustannie udoskonalać tę aplikację. Dziękujemy!</string>
+    <string name="rate_yes">Przyznaj 5 gwiazdek</string>
+    <string name="rate_no">Nie</string>
+    <string name="rate_thanks">Dziękujemy!</string>
+    <string name="tab_search">Wyszukaj</string>
+    <string name="tab_downloads">Pobrane</string>
+    <string name="tab_library">Biblioteka</string>
+
+</resources>
