@@ -215,7 +215,7 @@ public class HomeActivity extends BaseActivity {
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putBoolean("rated", true).commit();  
 
-						Toast.makeText(getActivity(), "Thank you so much :) Your support means everything", Toast.LENGTH_LONG).show(); 
+						Toast.makeText(getActivity(), getString(R.string.rate_thanks), Toast.LENGTH_LONG).show(); 
 						
 						break;
 
@@ -227,8 +227,8 @@ public class HomeActivity extends BaseActivity {
 			};
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Like our music player?");
-			builder.setMessage("If you like it, please rate it 5 stars. Your support helps us a lot! THANK YOU!").setPositiveButton("Rate Now", dialogClickListener).setNegativeButton("No", dialogClickListener).setCancelable(false).show();
+			builder.setTitle(getActivity().getString(R.string.rate_title));
+			builder.setMessage(getActivity().getString(R.string.rate_description)).setPositiveButton(getString(R.string.rate_yes), dialogClickListener).setNegativeButton(getString(R.string.rate_no), dialogClickListener).setCancelable(false).show();
 		} 
 	}
 
