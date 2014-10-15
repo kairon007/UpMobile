@@ -320,7 +320,7 @@ public class Advertisement {
 					SharedPreferences.Editor editor = prefs.edit();
 					editor.putBoolean("rated", true).commit();  
 					
-					Toast.makeText(activity, activity.getString(R.string.rate_popup_toast), Toast.LENGTH_LONG).show(); 
+					Toast.makeText(activity, activity.getString(R.string.rate_thanks), Toast.LENGTH_LONG).show(); 
 
 					break;
 
@@ -332,13 +332,13 @@ public class Advertisement {
 		if (switchShowDialog) {
 			//TODO
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-			builder.setTitle(activity.getString(R.string.rate_popup_title));
-			builder.setMessage(activity.getString(R.string.rate_popup_message))
+			builder.setTitle(activity.getString(R.string.rate_title));
+			builder.setMessage(activity.getString(R.string.rate_description))
 					.setPositiveButton(
-							activity.getString(R.string.rate_popup_positive_button),
+							activity.getString(R.string.rate_yes),
 							dialogClickListener)
 					.setNegativeButton(
-							activity.getString(R.string.rate_popup_negative_button),
+							activity.getString(R.string.rate_no),
 							dialogClickListener).setCancelable(false).show();
 		}
 	

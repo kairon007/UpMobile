@@ -18,13 +18,13 @@
 
     <!-- Main TitlePageIndicator titles -->
     <string-array name="page_titles">
-        <item>@string/page_online_search</item>
-        <item>@string/page_artists</item>
-        <item>@string/page_songs</item>
-        <item>@string/page_playlists</item>
+        <item>@string/tab_search</item>
+        <item>@string/hint_filter_artists</item>
+        <item>@string/hint_filter_songs</item>
+        <item>@string/hint_filter_playlists</item>
         <item>@string/page_albums</item>        
         <item>@string/page_recent</item>       
-        <item>@string/page_genres</item>       
+        <item>@string/hint_filter_genres</item>       
     </string-array>
 
 </resources>

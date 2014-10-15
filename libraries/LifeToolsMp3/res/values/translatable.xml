@@ -7,11 +7,11 @@
 <string name="update_app_install_now">INSTALL NOW</string>
 <string name="update_app_update_now">UPDATE NOW</string>
 
-<string name="new_rate_title">Please rate our app 5 stars</string>
-<string name="new_rate_description">If you like our app, please help us by rating it 5 stars. Your support helps us make this app better. Thank you!</string>
-<string name="new_rate_yes">Rate 5 Stars</string>
-<string name="new_rate_no">No</string>
-<string name="new_rate_thanks">Thank you!</string>
+<string name="rate_title">Please rate our app 5 stars</string>
+<string name="rate_description">If you like our app, please help us by rating it 5 stars. Your support helps us make this app better. Thank you!</string>
+<string name="rate_yes">Rate 5 Stars</string>
+<string name="rate_no">No</string>
+<string name="rate_thanks">Thank you!</string>
  
 <string name="message_please_wait">Please Wait...</string>
 <string name="message_loading">Loading...</string>

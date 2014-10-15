@@ -333,12 +333,12 @@ public class Advertisement implements Advertisment {
 			//TODO
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setTitle(activity.getString(R.string.rate_title));
-			builder.setMessage(activity.getString(R.string.new_rate_description))
+			builder.setMessage(activity.getString(R.string.rate_description))
 					.setPositiveButton(
-							activity.getString(R.string.new_rate_yes),
+							activity.getString(R.string.rate_yes),
 							dialogClickListener)
 					.setNegativeButton(
-							activity.getString(R.string.new_rate_no),
+							activity.getString(R.string.rate_no),
 							dialogClickListener).setCancelable(false).show();
 		}
 	
