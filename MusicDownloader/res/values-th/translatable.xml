@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">เวอร์ชันใหม่</string>
+    <string name="update_app_description">เราได้ปล่อยแอปเวอร์ชันใหม่ที่เร็วขึ้นและดีขึ้นกว่าเดิม กรุณาติดตั้งเวอร์ชันใหม่ตอนนี้</string>
+    <string name="update_app_description2">ไฟล์ทั้งหมดของคุณจะได้รับการถ่ายโอนไปยังเวอร์ชันใหม่</string>
+    <string name="update_app_install_update">ติดตั้งอัปเดต</string>
+    <string name="update_app_install_now">ติดตั้งตอนนี้</string>
+    <string name="update_app_update_now">อัปเดตตอนนี้</string>
+    <string name="rate_title">โปรดให้คะแนนแอปเรา 5 ดาว</string>
+    <string name="rate_description">หากคุณชอบแอปของเรา โปรดช่วยเหลือเราโดยการให้คะแนน 5 ดาว การสนับสนุนของคุณช่วยให้เราสามารถทำให้แอปนี้ดียิ่งขึ้นได้ ขอบคุณ!</string>
+    <string name="rate_yes">ให้คะแนน 5 ดาว</string>
+    <string name="rate_no">ไม่</string>
+    <string name="rate_thanks">ขอบคุณ!</string>
+    <string name="tab_search">ค้นหา</string>
+    <string name="tab_downloads">ดาวน์โหลด</string>
+    <string name="tab_library">ไลบรารี</string>
+
+</resources>
