@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 public class DirectoryChooserDialog {
 	
+	private static final String STORAGE = "/storage/";
 	private boolean m_isNewFolderEnabled = true;
 	private ListView lvContent;
 	private String m_sdcardDirectory = "";
@@ -215,7 +216,7 @@ public class DirectoryChooserDialog {
 				if (m_dir.equals(m_sdcardDirectory)) {
 					return;
 				}
-				m_dir = parent.getPath();
+				m_dir = STORAGE;
 				updateDirectory();
 			}
 		});
