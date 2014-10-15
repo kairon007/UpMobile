@@ -27,9 +27,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface {
-	
+
 	private ListView listView;
 	private ProgressBar progress;
 	private DownloadsAdapter adapter;
@@ -40,8 +41,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private final static double DOWNLOAD_FINISHED = -1;
 	private Long currentDownloadingID;
 	private ImageButton clearAll;
-	
-	public final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener	{
+
+	public final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener {
 
 		private ArrayList<MusicData> mObjects;
 		private ArrayList<MusicData> mOriginalValues;
@@ -55,7 +56,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			DBHelper.getInstance(getContext()).getAll(this);
 		}
 
-		@SuppressLint("NewApi")
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			ViewHolder holder = null;
 			if (convertView == null) {
@@ -117,13 +117,13 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			ImageButton remove;
 			ProgressBar downloadProgress;
 		}
-		
+
 		@Override
 		public void success(ArrayList<MusicData> result) {
 			progress.setVisibility(View.GONE);
 			insertData(result);
 		}
-		
+
 		private void redraw() {
 			activity.runOnUiThread(new Runnable() {
 
@@ -149,7 +149,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			if (mOriginalValues != null) {
 				mOriginalValues.add(index, object);
 			}
-			if (mObjects == null) mObjects = new ArrayList<MusicData>();
+			if (mObjects == null){
+				mObjects = new ArrayList<MusicData>();}
 			mObjects.add(index, object);
 			redraw();
 		}
@@ -172,7 +173,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			mObjects.clear();
 			redraw();
 		}
-		
+
 		@Override
 		public void remove(MusicData object) {
 			if (mOriginalValues != null) {
@@ -207,7 +208,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			}
 			return filter;
 		}
-		
+
 		private class ResultFilter extends Filter {
 
 			@Override
@@ -246,23 +247,40 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			}
 		}
 	}
-	
-	@Override
-	public void insertProgress(double progress, long downloadId) {
-			for (int i = 0; i < adapter.getCount(); i++) {
-				if (adapter.getItem(i).getDownloadId() == downloadId) {
-					adapter.getItem(i).setDownloadProgress(progress);
-					if (progress > 99) {
-						adapter.getItem(i).setDownloadProgress(DOWNLOAD_FINISHED);
+
+	public void deleteItem(final long downloadId) {
+		for (int i = 0; i < adapter.getCount(); i++) {
+			MusicData buf = adapter.getItem(i);
+			if (buf.getDownloadId() == downloadId) {
+				adapter.remove(buf);
+				activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(activity, R.string.downloads_failed, Toast.LENGTH_LONG).show();
 					}
-					adapter.notifyDataSetChanged();
-				}
+				});
+				return;
 			}
 		}
+	}
+
+	@Override
+	public void insertProgress(double progress, long downloadId) {
+		for (int i = 0; i < adapter.getCount(); i++) {
+			if (adapter.getItem(i).getDownloadId() == downloadId) {
+				adapter.getItem(i).setDownloadProgress(progress);
+				if (progress > 99) {
+					adapter.getItem(i).setDownloadProgress(DOWNLOAD_FINISHED);
+				}
+				adapter.notifyDataSetChanged();
+			}
+		}
+	}
 
 	@Override
 	public void insertCover(Bitmap cover) {
-		for(int i = 0; i< adapter.getCount(); i++) {
+		for (int i = 0; i < adapter.getCount(); i++) {
 			if (adapter.getItem(i).getDownloadId() == currentDownloadingID) {
 				adapter.getItem(i).setSongBitmap(cover);
 				adapter.notifyDataSetChanged();
@@ -317,7 +335,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			public void onClick(View v) {
 				recreateAdaper();
 			}
-			
+
 		});
 	}
 
@@ -354,15 +372,15 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void recreateAdaper() {
 		ArrayList<MusicData> dataMusic = new ArrayList<MusicData>();
 		for (int i = 0; i < adapter.getCount(); i++) {
-			if (adapter.getItem(i).isDownloaded()){
+			if (adapter.getItem(i).isDownloaded()) {
 				dataMusic.add(adapter.getItem(i));
 			}
 		}
-		if(!dataMusic.isEmpty()) {
+		if (!dataMusic.isEmpty()) {
 			DBHelper.getInstance().deleteAll();
 		}
 		for (MusicData musicData : dataMusic) {

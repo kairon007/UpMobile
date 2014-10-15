@@ -129,11 +129,11 @@ public class MainActivity extends Activity {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
 
-	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX, FileObserver.DELETE) {
+	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX, FileObserver.DELETE) {
 
 		@Override
 		public void onEvent(int event, String file) {
-			String filePath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX + file;
+			String filePath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + file;
 			if (mPagerAdapter != null) {
 				mPagerAdapter.removeDeletedData(filePath);
 			}
