@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">NOVÁ VERZE</string>
+    <string name="update_app_description">Vydali jsme novou RYCHLEJŠÍ a LEPŠÍ verzi této aplikace. Nyní si prosím nainstalujte novou verzi.</string>
+    <string name="update_app_description2">Všechny Vaše soubory budou automaticky přesunuty do nové verze.</string>
+    <string name="update_app_install_update">NAINSTALOVAT AKTUALIZACI</string>
+    <string name="update_app_install_now">NAINSTALOVAT TEĎ</string>
+    <string name="update_app_update_now">AKTUALIZOVAT TEĎ</string>
+    <string name="rate_title">Ohodnoťte prosím naši aplikaci pěti hvězdičkami</string>
+    <string name="rate_description">Jestliže se Vám naše aplikace líbí, ohodnoťte ji prosím pěti hvězdičkami, pomůže nám to. Svou podporou nám pomáháte tuto aplikaci zlepšovat. Děkujeme Vám!</string>
+    <string name="rate_yes">Hodnotit 5 hvězdičkami</string>
+    <string name="rate_no">Ne</string>
+    <string name="rate_thanks">Děkujeme Vám!</string>
+    <string name="tab_search">Vyhledávání</string>
+    <string name="tab_downloads">Stahování</string>
+    <string name="tab_library">Knihovna</string>
+    <string name="message_please_wait">Čekejte, prosím...</string>
+    <string name="message_loading">Načítám...</string>
+    <string name="message_searching_for">Vyhledávám</string>
+    <string name="hint_main_search">Název, album nebo interpret</string>
+    <string name="hint_filter_artists">Filtrujte své interprety</string>
+    <string name="hint_filter_songs">Filtrujte své skladby</string>
+    <string name="hint_filter_playlists">Filtrujte své seznamy skladeb</string>
+    <string name="hint_filter_genres">Filtrujte své žánry</string>
+    <string name="hint_filter_files">Filtrujte své soubory</string>
+    <string name="search_your_results_appear_here">Zde se objeví výsledky vašeho vyhledávání</string>
+    <string name="search_no_results_for">Žádné výsledky pro</string>
+    <string name="search_try_different_query">Zkuste odlišný dotaz</string>
+    <string name="search_please_enter_query">Zadejte prosím nějaký dotaz</string>
+    <string name="download_dialog_download_location">Místo ke stažení</string>
+    <string name="download_dialog_download">Stáhnout</string>
+    <string name="download_dialog_cancel">Zrušit</string>
+    <string name="download_dialog_show_lyrics">Zobrazit texty</string>
+    <string name="download_dialog_no_lyrics">Nebyl nalezen žádný text pro</string>
+    <string name="lyrics">Texty</string>
+    <string name="edit_mp3">Změnit štítky MP3</string>
+    <string name="edit_mp3_title">Název</string>
+    <string name="edit_mp3_artist">Interpret</string>
+    <string name="edit_mp3_album">Album</string>
+    <string name="edit_mp3_use_album_cover">Použít obálku alba</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">Zrušit</string>
+
+</resources>

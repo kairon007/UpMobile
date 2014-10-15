@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">VERSI BAHARU</string>
+    <string name="update_app_description">Kami telah melancarkan versi baharu aplikasi yang LEBIH PANTAS dan LEBIH BAIK. Sila pasang versi baharu sekarang.</string>
+    <string name="update_app_description2">Semua fail anda akan dipindahkan ke versi baharu secara automatik.</string>
+    <string name="update_app_install_update">PASANG PENGEMASKINIAN</string>
+    <string name="update_app_install_now">PASANG SEKARANG</string>
+    <string name="update_app_update_now">KEMAS KINI SEKARANG</string>
+    <string name="rate_title">Sila nilaikan aplikasi kami sebagai 5 bintang</string>
+    <string name="rate_description">Sekiranya anda menyukai aplikasi kami, sila bantu kami dengan menilaikannya sebagai 5 bintang. Sokongan anda membantu kami memperbaikkan lagi aplikasi ini. Terima kasih!</string>
+    <string name="rate_yes">Nilaikan 5 Bintang</string>
+    <string name="rate_no">Tidak</string>
+    <string name="rate_thanks">Terima kasih!</string>
+    <string name="tab_search">Cari</string>
+    <string name="tab_downloads">Muat Turun</string>
+    <string name="tab_library">Pustaka</string>
+    <string name="message_please_wait">Sila Tunggu...</string>
+    <string name="message_loading">Sedang memuat...</string>
+    <string name="message_searching_for">Mencari</string>
+    <string name="hint_main_search">Judul, Album atau Artis</string>
+    <string name="hint_filter_artists">Tapis artis anda</string>
+    <string name="hint_filter_songs">Tapis lagu anda</string>
+    <string name="hint_filter_playlists">Tapis senarai main anda</string>
+    <string name="hint_filter_genres">Tapis genre anda</string>
+    <string name="hint_filter_files">Tapis fail anda</string>
+    <string name="search_your_results_appear_here">Keputusan carian anda akan muncul di sini</string>
+    <string name="search_no_results_for">Tiada keputusan untuk</string>
+    <string name="search_try_different_query">Cuba permintaan berbeza</string>
+    <string name="search_please_enter_query">Sila masukkan permintaan</string>
+    <string name="download_dialog_download_location">Muat Turun Lokasi</string>
+    <string name="download_dialog_download">Muat Turun</string>
+    <string name="download_dialog_cancel">Batal</string>
+    <string name="download_dialog_show_lyrics">Paparkan Lirik</string>
+    <string name="download_dialog_no_lyrics">Tiada lirik ditemui untuk</string>
+    <string name="lyrics">Lirik</string>
+    <string name="edit_mp3">Edit Tag MP3</string>
+    <string name="edit_mp3_title">Judul</string>
+    <string name="edit_mp3_artist">Artis</string>
+    <string name="edit_mp3_album">Album</string>
+    <string name="edit_mp3_use_album_cover">Gunakan Kulit Album</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">Batal</string>
+
+</resources>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_app_version">नया संस्करण</string>
+<string name="update_app_description">हमने ऐप का एक नया अधिक तेज और बेहतर संस्करण जारी किया है। कृपया नया संस्करण अभी इनस्टाल करें।</string>
+<string name="update_app_description2">आपकी सभी फाइलें नए संस्करण में स्वतः ही अंतरित हो जाएंगी।</string>
+<string name="update_app_install_update">अपडेट इनस्टाल करें</string>
+<string name="update_app_install_now">अभी इनस्टाल करें</string>
+<string name="update_app_update_now">अभी अपडेट करें</string>
+<string name="rate_title">कृपया हमारे ऐप्प को 5 सितारा रेटिंग प्रदान करें</string>
+<string name="rate_description">यदि आपको हमारा ऐप्प पसंद है, तो कृपया उसे 5 सितारा रेटिंग देकर हमारी मदद करें। आपका समर्थन हमें इस ऐप्प को बेहतर बनाने में मदद करता है। धन्यवाद!</string>
+<string name="rate_yes">5 सितारा रेटिंग दें</string>
+<string name="rate_no">नहीं</string>
+<string name="rate_thanks">धन्यवाद!</string>
+ 
+<string name="tab_search">खोज</string>
+<string name="tab_downloads">डाउनलोड</string>
+<string name="tab_library">लाइब्रेरी</string>
+ 
+<string name="message_please_wait">कृपया प्रतीक्षा करें...</string>
+<string name="message_loading">लोड हो रहा है ...</string>
+<string name="message_searching_for">को खोज रहे हैं</string>
+ 
+<string name="hint_main_search">शीर्षक, एल्बम या कलाकार</string>
+<string name="hint_filter_artists">अपने कलाकारों को फ़िल्टर करें</string>
+<string name="hint_filter_songs">अपने गीतों को फ़िल्टर करें</string>
+<string name="hint_filter_playlists">अपनी प्लेलिस्ट फ़िल्टर करें</string>
+<string name="hint_filter_genres">अपनी शैलियों को फ़िल्टर करें</string>
+<string name="hint_filter_files">अपनी फाइलें फ़िल्टर करें</string>
+ 
+<string name="search_your_results_appear_here">आपके खोज परिणाम यहां दिखाई देंगे</string>
+<string name="search_no_results_for">के लिए कोई परिणाम नहीं</string>
+<string name="search_try_different_query">कोई अन्य प्रश्न पूछें</string>
+<string name="search_please_enter_query">कृपया कोई प्रश्न दर्ज करें</string>
+ 
+<string name="download_dialog_download_location">डाउनलोड स्थान</string>
+<string name="download_dialog_download">डाउनलोड करें</string>
+<string name="download_dialog_cancel">रद्द करें</string>
+<string name="download_dialog_show_lyrics">गीतों के बोल दिखाएं</string>
+<string name="download_dialog_no_lyrics">के लिए कोई गीत नहीं मिला</string>
+ 
+<string name="lyrics">बोल</string>
+ 
+<string name="edit_mp3">एमपी3 टैग संपादित करें</string>
+<string name="edit_mp3_title">शीर्षक</string>
+<string name="edit_mp3_artist">कलाकार</string>
+<string name="edit_mp3_album">एल्बम</string>
+<string name="edit_mp3_use_album_cover">एल्बम कवर का इस्तेमाल करें</string>
+<string name="edit_mp3_ok">ठीक है</string>
+<string name="edit_mp3_cancel">रद्द करें</string>
+</resources>

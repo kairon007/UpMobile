@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/selected_folder_label"
+                android:text="@string/download_dialog_download_location"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView

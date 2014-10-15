@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">VERSIUNE NOUĂ</string>
+    <string name="update_app_description">Noi am lansat o versiune mai RAPIDĂ şi mai BUNĂ a aplicaţiei. Vă rugăm instalaţi noua versiune acum.</string>
+    <string name="update_app_description2">Toate fişierele vor fi transferate în mod automat la noua versiune.</string>
+    <string name="update_app_install_update">INSTALAŢI UPDATE</string>
+    <string name="update_app_install_now">INSTALAŢI ACUM</string>
+    <string name="update_app_update_now">UPDATE ACUM</string>
+    <string name="rate_title">Vă rugăm să acordați 5 stele aplicației noastre</string>
+    <string name="rate_description">Dacă vă place aplicația noastră, vă rugăm să ne ajutați, acordându-i 5 stele. Sprijinul dvs. ne ajută să îmbunătățim această aplicație. Vă mulțumim!</string>
+    <string name="rate_yes">Acord 5 Stele</string>
+    <string name="rate_no">Nu</string>
+    <string name="rate_thanks">Vă mulțumim!</string>
+    <string name="tab_search">Căutare</string>
+    <string name="tab_downloads">Descărcări</string>
+    <string name="tab_library">Bibliotecă</string>
+    <string name="message_please_wait">Vă rugăm să așteptați...</string>
+    <string name="message_loading">Se încarcă...</string>
+    <string name="message_searching_for">Caută</string>
+    <string name="hint_main_search">Titlu, album sau artist</string>
+    <string name="hint_filter_artists">Filtru artiști</string>
+    <string name="hint_filter_songs">Filtru melodii</string>
+    <string name="hint_filter_playlists">Filtru liste de melodii</string>
+    <string name="hint_filter_genres">Filtru genuri</string>
+    <string name="hint_filter_files">Filtru fișiere</string>
+    <string name="search_your_results_appear_here">Rezultatele căutării vor apărea aici</string>
+    <string name="search_no_results_for">Nu există rezultate pentru</string>
+    <string name="search_try_different_query">Încercați o altă interogare</string>
+    <string name="search_please_enter_query">Vă rugăm să introduceți o interogare</string>
+    <string name="download_dialog_download_location">Locația descărcării</string>
+    <string name="download_dialog_download">Descărcare</string>
+    <string name="download_dialog_cancel">Anulare</string>
+    <string name="download_dialog_show_lyrics">Afișare versuri</string>
+    <string name="download_dialog_no_lyrics">Nu au fost găsite versuri pentru</string>
+    <string name="lyrics">Versuri</string>
+    <string name="edit_mp3">Editare Tag-uri MP3</string>
+    <string name="edit_mp3_title">Titlu</string>
+    <string name="edit_mp3_artist">Artist</string>
+    <string name="edit_mp3_album">Album</string>
+    <string name="edit_mp3_use_album_cover">Utilizare copertă album</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">Anulare</string>
+
+</resources>

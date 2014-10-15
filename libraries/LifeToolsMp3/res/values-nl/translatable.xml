@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">NIEUWE VERSIE</string>
+    <string name="update_app_description">We hebben een nieuwe versie van de app uitgebracht die SNELLER en BETER is. Installeer nu de nieuwe versie.</string>
+    <string name="update_app_description2">Al uw bestanden zullen automatisch overgebracht worden naar de nieuwe versie.</string>
+    <string name="update_app_install_update">UPDATE INSTALLEREN</string>
+    <string name="update_app_install_now">NU INSTALLEREN</string>
+    <string name="update_app_update_now">NU UPDATEN</string>
+    <string name="rate_title">Waardeer onze app met 5 sterren</string>
+    <string name="rate_description">Als je onze app leuk vindt, help ons dan door hem te waarderen met 5 sterren. Met jouw steun kunnen we deze app verbeteren. Dank je wel!</string>
+    <string name="rate_yes">Waardeer met 5 sterren</string>
+    <string name="rate_no">Nee</string>
+    <string name="rate_thanks">Dank je wel!</string>
+    <string name="tab_search">Zoeken</string>
+    <string name="tab_downloads">Downloads</string>
+    <string name="tab_library">Bibliotheek</string>
+    <string name="message_please_wait">Even geduld a.j.b...</string>
+    <string name="message_loading">Laden...</string>
+    <string name="message_searching_for">Zoeken naar</string>
+    <string name="hint_main_search">Titel, album of artiest</string>
+    <string name="hint_filter_artists">Filter je artiesten</string>
+    <string name="hint_filter_songs">Filter je nummer</string>
+    <string name="hint_filter_playlists">Filter je afspeellijsten</string>
+    <string name="hint_filter_genres">Filter je genres</string>
+    <string name="hint_filter_files">Filter je bestanden</string>
+    <string name="search_your_results_appear_here">Je zoekresultaten worden hier weergegeven</string>
+    <string name="search_no_results_for">Er zijn geen resultaten voor</string>
+    <string name="search_try_different_query">Probeer een andere zoekopdracht</string>
+    <string name="search_please_enter_query">Voer een zoekopdracht in</string>
+    <string name="download_dialog_download_location">Downloadlocatie</string>
+    <string name="download_dialog_download">Download</string>
+    <string name="download_dialog_cancel">Annuleren</string>
+    <string name="download_dialog_show_lyrics">Toon liedteksten</string>
+    <string name="download_dialog_no_lyrics">Geen liedteksten gevonden voor</string>
+    <string name="lyrics">Liedteksten</string>
+    <string name="edit_mp3">Bewerk MP3-tags</string>
+    <string name="edit_mp3_title">Titel</string>
+    <string name="edit_mp3_artist">Artiest</string>
+    <string name="edit_mp3_album">Album</string>
+    <string name="edit_mp3_use_album_cover">Gebruik albumcover</string>
+    <string name="edit_mp3_ok">Ok</string>
+    <string name="edit_mp3_cancel">Annuleren</string>
+
+</resources>

@@ -559,7 +559,7 @@ public class MainActivity extends Activity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		menu.setHeaderTitle(music.getSongArtist() + " - " + music.getSongTitle());
 		menu.add(0, DELETE, 0, getResources().getString(R.string.delete_song));
-		menu.add(0, EDIT_TAG, 0, getResources().getString(R.string.edit_mp3_tags));
+		menu.add(0, EDIT_TAG, 0, getResources().getString(R.string.edit_mp3 ));
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 

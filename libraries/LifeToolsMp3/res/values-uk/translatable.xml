@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">НОВА ВЕРСІЯ</string>
+    <string name="update_app_description">Ми випустили нову ШВИДШУ та КРАЩУ версію цієї програми. Будь ласка, встановіть нову версію зараз.</string>
+    <string name="update_app_description2">Усі ваші файли автоматично перенесуться до нової версії.</string>
+    <string name="update_app_install_update">ВСТАНОВИТИ ОНОВЛЕННЯ</string>
+    <string name="update_app_install_now">ВСТАНОВИТИ ЗАРАЗ</string>
+    <string name="update_app_update_now">ОНОВИТИ ЗАРАЗ</string>
+    <string name="rate_title">Будь ласка, оцініть нашу програму 5-ма зірками</string>
+    <string name="rate_description">Якщо вам сподобалась програма, допоможіть нам, оцінивши її 5-ма зірками. Ваша підтримка допомагає зробити програму кращою. Дякуємо!</string>
+    <string name="rate_yes">Оцінити 5-ма зірками!</string>
+    <string name="rate_no">Ні</string>
+    <string name="rate_thanks">Дякую!</string>
+    <string name="tab_search">Пошук</string>
+    <string name="tab_downloads">Завантаження</string>
+    <string name="tab_library">Бібліотека</string>
+    <string name="message_please_wait">Будь ласка, зачекайте...</string>
+    <string name="message_loading">Звантаження...</string>
+    <string name="message_searching_for">Пошук для</string>
+    <string name="hint_main_search">Нзва, альбом або артист</string>
+    <string name="hint_filter_artists">Відфільтруйте своїх виконавців</string>
+    <string name="hint_filter_songs">Відфільтруйте свої пісні</string>
+    <string name="hint_filter_playlists">Відфільтруйте свої списки відтворення</string>
+    <string name="hint_filter_genres">Відфільтруйте жанри</string>
+    <string name="hint_filter_files">Відфільтруйте свої файли</string>
+    <string name="search_your_results_appear_here">Результати пошуку будуть відображені тут</string>
+    <string name="search_no_results_for">Немає результатів пошуку для</string>
+    <string name="search_try_different_query">Спробувати інший запит</string>
+    <string name="search_please_enter_query">Будь ласка, введіть запит</string>
+    <string name="download_dialog_download_location">Завантажити місцезнаходження</string>
+    <string name="download_dialog_download">Завантажити</string>
+    <string name="download_dialog_cancel">Відміна</string>
+    <string name="download_dialog_show_lyrics">Показати слова пісні</string>
+    <string name="download_dialog_no_lyrics">Слів пісні не знайдено для</string>
+    <string name="lyrics">Слова пісні</string>
+    <string name="edit_mp3">Редагувати MP3 теги</string>
+    <string name="edit_mp3_title">Назва</string>
+    <string name="edit_mp3_artist">Виконавець</string>
+    <string name="edit_mp3_album">Альбом</string>
+    <string name="edit_mp3_use_album_cover">Використати обкладинку альбому</string>
+    <string name="edit_mp3_ok">ОК</string>
+    <string name="edit_mp3_cancel">Відміна</string>
+
+</resources>

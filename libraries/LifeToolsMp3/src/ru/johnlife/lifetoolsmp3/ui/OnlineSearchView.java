@@ -209,7 +209,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onClick(View v) {
 				searchField.setText(null);
-				message.setText(R.string.search_message_default);
+				message.setText(R.string.search_your_results_appear_here);
 				resultAdapter.clear();
 				searchStopped = true;
 				progress.setVisibility(View.GONE);
@@ -407,7 +407,7 @@ public abstract class OnlineSearchView extends View {
 			if (songsList.isEmpty()) {
 				getNextResults();
 				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
-					message.setText(String.format(message.getContext().getString(R.string.search_message_empty), searchField.getText()));
+					message.setText(String.format(message.getContext().getString(R.string.search_no_results_for), searchField.getText()));
 					progress.setVisibility(View.GONE);
 				}
 			} else {
@@ -434,7 +434,7 @@ public abstract class OnlineSearchView extends View {
 			resultAdapter.clear();
 		} else if ((null == searchString) || ("".equals(searchString))) {
 			resultAdapter.clear();
-			message.setText(R.string.search_message_nothing);
+			message.setText(R.string.search_please_enter_query);
 		} else {
 			search(searchString);
 		}
@@ -572,9 +572,9 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			protected void onPreExecute() {
 				  progressDialog = new ProgressDialog(getContext());
-			      progressDialog.setTitle(R.string.please_wait);
+			      progressDialog.setTitle(R.string.message_please_wait);
 			      progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			      progressDialog.setMessage(getContext().getString(R.string.loading_song_details));
+			      progressDialog.setMessage(getContext().getString(R.string.message_loading));
 			      progressDialog.setOnCancelListener(new OnCancelListener() {	
 					@Override
 					public void onCancel(DialogInterface dialog) {
@@ -662,7 +662,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		stopSystemPlayer(getContext());
 		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
-		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+		b.setNegativeButton(R.string.download_dialog_cancel, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -677,7 +677,7 @@ public abstract class OnlineSearchView extends View {
 				}
 			}
 		});
-		b.setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
+		b.setPositiveButton(R.string.download_dialog_download, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

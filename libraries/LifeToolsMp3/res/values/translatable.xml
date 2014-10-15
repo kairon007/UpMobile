@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_app_version">NEW VERSION</string>
+<string name="update_app_description">We have released a new FASTER and BETTER version of the app. Please install the new version now.</string>
+<string name="update_app_description2">All of your files will automatically transfer over to the new version.</string>
+<string name="update_app_install_update">INSTALL UPDATE</string>
+<string name="update_app_install_now">INSTALL NOW</string>
+<string name="update_app_update_now">UPDATE NOW</string>
+ 
+<string name="message_please_wait">Please Wait...</string>
+<string name="message_loading">Loading...</string>
+<string name="message_searching_for">Searching for</string>
+ 
+<string name="hint_main_search">Title, Album or Artist</string>
+<string name="hint_filter_artists">Filter your artists</string>
+<string name="hint_filter_songs">Filter your songs</string>
+<string name="hint_filter_playlists">Filter your playlists</string>
+<string name="hint_filter_genres">Filter your genres</string>
+<string name="hint_filter_files">Filter your files</string>
+ 
+<string name="search_your_results_appear_here">Your search results will appear here</string>
+<string name="search_no_results_for">No results for %s.</string>
+<string name="search_try_different_query">Try a different query</string>
+<string name="search_please_enter_query">Please enter a query</string>
+ 
+<string name="download_dialog_download_location">Download Location</string>
+<string name="download_dialog_download">Download</string>
+<string name="download_dialog_cancel">Cancel</string>
+<string name="download_dialog_show_lyrics">Show Lyrics</string>
+<string name="download_dialog_no_lyrics">No Lyrics found for %1$s</string>
+ 
+<string name="lyrics">Lyrics</string>
+ 
+<string name="edit_mp3">Edit MP3 Tags</string>
+<string name="edit_mp3_title">Title</string>
+<string name="edit_mp3_artist">Artist</string>
+<string name="edit_mp3_album">Album</string>
+<string name="edit_mp3_use_album_cover">Use Album Cover</string>
+<string name="edit_mp3_ok">OK</string>
+<string name="edit_mp3_cancel">Cancel</string>
+</resources>

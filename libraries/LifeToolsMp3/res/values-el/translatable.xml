@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_app_version">ΝΕΑ ΕΚΔΟΣΗ</string>
+<string name="update_app_description">Έχουμε κυκλοφορήσει μια νέα ΓΡΗΓΟΡΟΤΕΡΗ και ΚΑΛΥΤΕΡΗ έκδοση της εφαρμογής. Παρακαλούμε εγκαταστήστε την νέα έκδοση τώρα.</string>
+<string name="update_app_description2">Όλα σας τα αρχεία θα μεταφερθούν αυτόματα στην καινούργια έκδοση.</string>
+<string name="update_app_install_update">ΕΓΚΑΤΑΣΤΑΣΗ ΕΝΗΜΕΡΩΣΗΣ</string>
+<string name="update_app_install_now">ΕΓΚΑΤΑΣΤΑΣΗ ΤΩΡΑ</string>
+<string name="update_app_update_now">ΕΝΗΜΕΡΩΣΗ ΤΩΡΑ</string>
+<string name="rate_title">Παρακαλούμε βαθμολογήστε την εφαρμογή μας με 5 αστέρια</string>
+<string name="rate_description">Εάν σας αρέσει η εφαρμογή μας, παρακαλούμε βοηθήστε μας  βαθμολογώντας την με 5 αστέρια. Η υποστήριξή σας, μας βοηθάει να κάνουμε αυτή την εφαρμογή καλύτερη. Σας ευχαριστούμε!</string>
+<string name="rate_yes">Βαθμολογήστε με 5 αστέρια</string>
+<string name="rate_no">Οχι</string>
+<string name="rate_thanks">Ευχαριστούμε!</string>
+ 
+<string name="tab_search">Αναζήτηση</string>
+<string name="tab_downloads">Λήψεις</string>
+<string name="tab_library">Βιβλιοθήκη</string>
+ 
+<string name="message_please_wait">Παρακαλούμε περιμένετε...</string>
+<string name="message_loading">Φορτώνει...</string>
+<string name="message_searching_for">Αναζήτηση για</string>
+ 
+<string name="hint_main_search">Τίτλος, Άλμπουμ ή Καλλιτέχνης</string>
+<string name="hint_filter_artists">Φιλτράρετε τους καλλιτέχνες σας</string>
+<string name="hint_filter_songs">Φιλτράρετε τα τραγούδια σας</string>
+<string name="hint_filter_playlists">Φιλτράρετε τις λίστες αναπαραγωγής σας</string>
+<string name="hint_filter_genres">Φιλτράρετε  τα είδη σας</string>
+<string name="hint_filter_files">Φιλτράρετε τα αρχεία σας</string>
+ 
+<string name="search_your_results_appear_here">Τα αποτελέσματα της αναζήτησής σας θα εμφανιστούν εδώ</string>
+<string name="search_no_results_for">Δεν βρέθηκαν αποτελέσματα για</string>
+<string name="search_try_different_query">Δοκιμάστε ένα διαφορετικό ερώτημα</string>
+<string name="search_please_enter_query">Παρακαλούμε εισάγετε ένα ερώτημα</string>
+ 
+<string name="download_dialog_download_location">Τοποθεσία Λήψης</string>
+<string name="download_dialog_download">Λήψη</string>
+<string name="download_dialog_cancel">Ακύρωση</string>
+<string name="download_dialog_show_lyrics">Προβολή στίχων</string>
+<string name="download_dialog_no_lyrics">Δεν βρέθηκαν στίχοι για</string>
+ 
+<string name="lyrics">Στίχοι</string>
+ 
+<string name="edit_mp3">Επεξεργασία Ετικετών MP3</string>
+<string name="edit_mp3_title">Τίτλος</string>
+<string name="edit_mp3_artist">Καλλιτέχνης</string>
+<string name="edit_mp3_album">Άλμπουμ</string>
+<string name="edit_mp3_use_album_cover">Χρήση Εξώφυλλου Άλμπουμ</string>
+<string name="edit_mp3_ok">OK</string>
+<string name="edit_mp3_cancel">Ακύρωση</string>
+</resources>

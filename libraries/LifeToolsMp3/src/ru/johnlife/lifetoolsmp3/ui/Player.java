@@ -237,14 +237,14 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 						SongArrayHolder.getInstance().setLyricsString(lyrics);
 					} else {
 						String songName = artist + " - " + title;
-						lyricsTextView.setText(view.getContext().getResources().getString(R.string.lyric_not_found, songName));
+						lyricsTextView.setText(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics, songName));
 					}
 				}
 			});
 		} else {
 			if (lyrics.equals("")) {
 				String songName = artist + " - " + title;
-				lyricsTextView.setText(view.getContext().getResources().getString(R.string.lyric_not_found, songName));
+				lyricsTextView.setText(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics, songName));
 			} else {
 				lyricsTextView.setText(Html.fromHtml(lyrics));
 			}

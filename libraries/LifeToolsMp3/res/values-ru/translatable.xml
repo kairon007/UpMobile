@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">НОВАЯ ВЕРСИЯ</string>
+    <string name="update_app_description">Мы выпустили новую, БОЛЕЕ БЫСТРУЮ и ЛУЧШУЮ версию приложения. Пожалуйста, установите новую версию сейчас.</string>
+    <string name="update_app_description2">Все ваши файлы будут автоматически перемещены на новую версию.</string>
+    <string name="update_app_install_update">УСТАНОВИТЬ ОБНОВЛЕНИЕ</string>
+    <string name="update_app_install_now">УСТАНОВИТЬ СЕЙЧАС</string>
+    <string name="update_app_update_now">ОБНОВИТЬ СЕЙЧАС</string>
+    <string name="rate_title">Пожалуйста, поставьте нашему приложению оценку 5 звезд</string>
+    <string name="rate_description">Если вам нравится наше приложение, поддержите нас, поставив ему оценку 5 звезд. Ваша поддержка помогает нам делать это приложение лучше. Спасибо!</string>
+    <string name="rate_yes">Поставить 5 звезд</string>
+    <string name="rate_no">Нет</string>
+    <string name="rate_thanks">Спасибо!</string>
+    <string name="tab_search">Поиск</string>
+    <string name="tab_downloads">Загрузки</string>
+    <string name="tab_library">Библиотека</string>
+    <string name="message_please_wait">Подождите...</string>
+    <string name="message_loading">Загрузка...</string>
+    <string name="message_searching_for">Поиск</string>
+    <string name="hint_main_search">Название, альбом или исполнитель</string>
+    <string name="hint_filter_artists">Отфильтровать исполнителей</string>
+    <string name="hint_filter_songs">Отфильтровать песни</string>
+    <string name="hint_filter_playlists">Отфильтровать плейлисты</string>
+    <string name="hint_filter_genres">Отфильтровать жанры</string>
+    <string name="hint_filter_files">Отфильтровать файлы</string>
+    <string name="search_your_results_appear_here">Результаты вашего поиска появятся здесь</string>
+    <string name="search_no_results_for">Нет результатов для</string>
+    <string name="search_try_different_query">Попробуйте другой запрос</string>
+    <string name="search_please_enter_query">Введите запрос</string>
+    <string name="download_dialog_download_location">Папка для скачивания</string>
+    <string name="download_dialog_download">Скачать</string>
+    <string name="download_dialog_cancel">Отмена</string>
+    <string name="download_dialog_show_lyrics">Показать слова песни</string>
+    <string name="download_dialog_no_lyrics">Не найдены слова песни для</string>
+    <string name="lyrics">Слова песни</string>
+    <string name="edit_mp3">Редактировать теги MP3</string>
+    <string name="edit_mp3_title">Название</string>
+    <string name="edit_mp3_artist">Исполнитель</string>
+    <string name="edit_mp3_album">Альбом</string>
+    <string name="edit_mp3_use_album_cover">Использовать обложку альбома</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">Отмена</string>
+
+</resources>
