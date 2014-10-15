@@ -35,6 +35,8 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
+import ru.johnlife.lifetoolsmp3.BaseConstants;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -303,17 +305,13 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	}
 
 	public void fillLibrary() {
-		File contentFile = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
+		File contentFile = new File(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX);
 		if (!contentFile.exists()) {
 			contentFile.mkdirs();
 		}
-		final File tempFolder = new File(Environment.getExternalStorageDirectory() + Constants.TEMP_PREFIX);
-		if (!tempFolder.exists()) {
-			tempFolder.mkdirs();
-		}
 		adapterLibrary.clear();						
 		FillLibraryTask task = new FillLibraryTask();
-		task.execute(contentFile, tempFolder);
+		task.execute(contentFile);
 	}
 
 	private class FillLibraryTask extends AsyncTask<File, Void, Void> {
@@ -323,13 +321,8 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 			for (File file : params[0].listFiles()) {
 				String string = file.getName();
 				if (string.endsWith(".mp3")) {
-					final MusicData musicData = new MusicData(file);
-					mActivity.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							adapterLibrary.add(musicData);
-						}
-					});
+					MusicData musicData = new MusicData(file);
+					adapterLibrary.add(musicData);
 				}
 			}
 			return null;

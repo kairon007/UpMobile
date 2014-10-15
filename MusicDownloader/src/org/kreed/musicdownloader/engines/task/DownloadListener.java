@@ -11,11 +11,13 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
+import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
 
 public class DownloadListener extends DownloadClickListener {
 
@@ -47,7 +49,7 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected String getDirectory() {
-		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+		return Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX;
 	}
 	
 	@Override
@@ -55,15 +57,20 @@ public class DownloadListener extends DownloadClickListener {
 		InsertDownloadItem insertDownloadItem = new InsertDownloadItem(songTitle, songArtist, duration, downloadsTab, downloadId, cover);
 		insertDownloadItem.insertData();
 	}
+	
+	@Override
+	protected void notifyAboutFailed(long downloadId) {
+		downloadsTab.deleteItem(downloadId);
+	}
 
 	@Override
-	protected void notifyDuringDownload(final long currentDownloadId, final String currentDownloadTitle, final double currentProgress) {
+	protected void notifyDuringDownload(final long downloadId, final String currentDownloadTitle, final double currentProgress) {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				downloadsTab.currentDownloadingID(currentDownloadId);
+				downloadsTab.currentDownloadingID(downloadId);
 				downloadsTab.currentDownloadingSongTitle(currentDownloadTitle);
-				downloadsTab.insertProgress(currentProgress, currentDownloadId);
+				downloadsTab.insertProgress(currentProgress, downloadId);
 				downloadsTab.insertCover(cover);
 			}
 		});
