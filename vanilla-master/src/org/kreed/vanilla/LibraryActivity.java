@@ -459,7 +459,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	}
 
 	public void setFilterHint(int type) {
-		int[] hintResIds = new int[] { R.string.filter_artists_hint, R.string.filter_songs_hint, R.string.filter_playlists_hint, R.string.filter_genres_hint, R.string.filter_files_hint };
+		int[] hintResIds = new int[] { R.string.hint_filter_artists, R.string.hint_filter_songs, R.string.hint_filter_playlists, R.string.hint_filter_genres, R.string.hint_filter_files };
 		mTextFilter.setHint(hintResIds[type - 1]);
 	}
 
@@ -977,7 +977,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				menu.add(0, MENU_MORE_FROM_ARTIST, 0, R.string.more_from_artist).setIntent(rowData);
 			if (type == MediaUtils.TYPE_SONG) {
 				menu.add(0, MENU_MORE_FROM_ALBUM, 0, R.string.more_from_album).setIntent(rowData);
-				menu.add(0, MENU_EDIT_MP3_TAGS, 0, R.string.edit_mp3_tags).setIntent(rowData);
+				menu.add(0, MENU_EDIT_MP3_TAGS, 0, R.string.edit_mp3).setIntent(rowData);
 				menu.add(0, MENU_REMOVE_ALBUM_COVER, 0, R.string.remove_album_cover).setIntent(rowData);
 			}
 			menu.addSubMenu(0, MENU_ADD_TO_PLAYLIST, 0, R.string.add_to_playlist).getItem().setIntent(rowData);

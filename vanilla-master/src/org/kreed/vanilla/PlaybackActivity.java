@@ -301,7 +301,7 @@ public abstract class PlaybackActivity extends Activity
 						mLyricsView.setText(Html.fromHtml(lyrics));
 					} else {
 						String songName = song.artist + " - " + song.title;
-						mLyricsView.setText(getResources().getString(R.string.lyric_not_found, songName));
+						mLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
 					}
 				}
 			});

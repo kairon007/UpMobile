@@ -4,7 +4,7 @@
         android:id="@+id/menu_lyrics"
         android:orderInCategory="3"
         android:showAsAction="always|withText"
-        android:title="@string/menu_lyrics"
+        android:title="@string/lyrics"
         />
 
 </menu>   
