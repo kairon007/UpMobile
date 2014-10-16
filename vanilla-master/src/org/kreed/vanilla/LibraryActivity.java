@@ -355,7 +355,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			if (null != state && state.containsKey(IS_FIRST_RUN)) {
 				isFirstRun = state.getBoolean(IS_FIRST_RUN);
 			}
-			Log.d("log", "start test, flag = " + isFirstRun);
 			if (isFirstRun) {
 				File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath());
 				String[] files = fileDir.list();
