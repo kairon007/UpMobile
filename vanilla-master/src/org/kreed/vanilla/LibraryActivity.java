@@ -34,6 +34,7 @@ import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
 import org.kreed.vanilla.equalizer.MyEqualizer;
 
+import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
@@ -60,6 +61,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -93,6 +96,8 @@ import com.viewpagerindicator.TabPageIndicator;
  * The library activity where songs to play can be selected from the library.
  */
 public class LibraryActivity extends PlaybackActivity implements TextWatcher, DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
+	
+	private static final String IS_FIRST_RUN = "is_first_run";
 	/**
 	 * Action for row click: play the row.
 	 */
@@ -159,6 +164,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private MP3Editor editor;
 	private int type;
 	private long id;
+	private boolean isFirstRun = true;
 
 	private HorizontalScrollView mLimiterScroller;
 	private ViewGroup mLimiterViews;
@@ -286,7 +292,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		// Advertisement.mobileCoreInit(this);
 		// Advertisement.moPubInit(this);
 		// Advertisement.airPushShow(this);
-
 		mSearchBox = findViewById(R.id.search_box);
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_white));
@@ -347,6 +352,26 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			controls.setOnClickListener(this);
 			mActionControls = controls;
 		} else {
+			if (null != state && state.containsKey(IS_FIRST_RUN)) {
+				isFirstRun = state.getBoolean(IS_FIRST_RUN);
+			}
+			Log.d("log", "start test, flag = " + isFirstRun);
+			if (isFirstRun) {
+				File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath());
+				String[] files = fileDir.list();
+				String[] absPathFiles = new String[files.length];
+				for (int i = 0; i < files.length; i++) {
+					String absolutePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + files[i];
+					absPathFiles[i] = absolutePath;
+				}
+				MediaScannerConnection.scanFile(this, absPathFiles, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+					public void onScanCompleted(String path, Uri uri) {
+					}
+
+				});
+			}
+			isFirstRun = false;
 			TabPageIndicator tabs = new TabPageIndicator(this);
 			tabs.setViewPager(pager);
 			tabs.setOnPageChangeListener(pagerAdapter);
@@ -405,13 +430,11 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			mEmptyQueue.setOnClickListener(this);
 			// }
 		}
-
 		loadTabOrder();
 		page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);
 		if (page != 0) {
 			pager.setCurrentItem(page);
 		}
-
 		// show cross promo box
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
@@ -425,7 +448,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		} catch (Exception e) {
 
 		}
-
 		// show or hide disclaimer
 		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
 		if (editTextDisclaimer != null) {
@@ -435,7 +457,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				editTextDisclaimer.setVisibility(View.GONE);
 			}
 		}
-
 		// initialize ad networks
 		try {
 			if (!Settings.getIsBlacklisted(this)) {
@@ -447,7 +468,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		} catch (Exception e) {
 
 		}
-
 		// load banner ad
 		try {
 			if (Settings.ENABLE_ADS) {
@@ -561,6 +581,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		}
 		outState.putInt(TYPE_FILE, type);
 		outState.putLong(ID_FILE, id);
+		outState.putBoolean(IS_FIRST_RUN, isFirstRun);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -1304,7 +1325,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		// if ("AppTheme.Black".equals(Util.getThemeName(this))) {
 		// setMenuBackgroundBlack();
 		// }
-		Log.d("log", "onCreateOptionsMenu");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			MenuItem controls = menu.add(null);
 			CompatHoneycomb.setActionView(controls, mActionControls);
@@ -1348,7 +1368,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		Log.d("log", "onPrepareOptionsMenu");
 		LibraryAdapter adapter = mCurrentAdapter;
 		menu.findItem(MENU_SORT).setEnabled(adapter != null);
 		return super.onPrepareOptionsMenu(menu);
@@ -1361,7 +1380,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.d("log", "onOptionsItemSelected");
 		switch (item.getItemId()) {
 		// removed
 		// case MENU_SEARCH:

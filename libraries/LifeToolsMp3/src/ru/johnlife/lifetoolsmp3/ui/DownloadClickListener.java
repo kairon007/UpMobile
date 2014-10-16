@@ -194,7 +194,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		@Override
 		public void run() {
-			if (isFullAction() && waitingForCover) {
+			if (waitingForCover) {
 				return;
 			}
 			Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId));
@@ -203,10 +203,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				switch (status) {
 				case DownloadManager.STATUS_FAILED:
 					notifyAboutFailed(downloadId);
+					Log.d("log", "FAILED");
 					c.close();
 					this.cancel();
 					return;
 				case DownloadManager.STATUS_RUNNING:
+					if (isFullAction()) {
+						return;
+					}
 					int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
 					int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 					long size = c.getInt(sizeIndex);
@@ -218,6 +222,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					notifyDuringDownload(downloadId, currentSongTitle, progress);
 					break;
 				case DownloadManager.STATUS_SUCCESSFUL:
+					if (isFullAction()) {
+						Log.d("log", "SUCCESS");
+//						c.close();
+//						this.cancel();
+					}
 					progress = 100;
 					notifyDuringDownload(downloadId, currentDownloadingSongTitle, progress);
 					int columnIndex = 0;
@@ -241,6 +250,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						Log.d("log", "Don't read music metadata from file. " + exception);
 					}
 					if (null == src_set) {
+						notifyMediascanner(song, path);
+						this.cancel();
 						return;
 					}
 					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
@@ -282,6 +293,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		private void notifyMediascanner(final RemoteSong song, final String pathToFile) {
 			final File file = new File(pathToFile);
+			Log.d("log", "path scanning file = " + pathToFile);
 			MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 				public void onScanCompleted(String path, Uri uri) {
