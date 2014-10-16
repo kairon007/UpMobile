@@ -8,6 +8,7 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -114,6 +115,9 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		String strTitle = music.getSongTitle();
 		String strDuration = music.getSongDuration();
 		Bitmap bitmap = music.getSongBitmap();
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+			holder.hButtonPlay.setBackgroundColor(Color.DKGRAY);
+		}
 		if (null != bitmap) {
 			holder.hCoverImage.setImageBitmap(bitmap);
 		} else {
