@@ -27,7 +27,9 @@ import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -123,6 +125,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		progress.postDelayed(action, 1000);
 		progress.setIndeterminate(indeterminate);
 		progress.setMax(duration);
+		progress.setOnTouchListener(touchListener);
 		time.setText(timeText);
 		textPath.setText(OnlineSearchView.getDownloadPath(view.getContext()));
 		if (coverBitmap != null) {
@@ -519,5 +522,16 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			onResumed();
 		}
 	}
+	
+	private OnTouchListener touchListener = new OnTouchListener() {
+		
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			int currentPosition = (int)(((double)event.getX()/(double)v.getWidth())*((int)((ProgressBar)v).getMax()));
+			mediaPlayer.seekTo(currentPosition);
+			progress.setProgress(currentPosition);
+			return true;
+		}
+	};
 
 }
