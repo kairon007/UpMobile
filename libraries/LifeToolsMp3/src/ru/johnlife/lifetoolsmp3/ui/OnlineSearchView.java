@@ -344,7 +344,7 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
-			builder.setLine1(song.getTitle(), fullAction ? null : Util.formatTimeSimple((int) song.getDuration()))
+			builder.setLine1(song.getTitle(),Util.formatTimeSimple((int) song.getDuration()))
 					.setLongClickable(false)
 					.setExpandable(false)
 					.setLine2(song.getArtist())
