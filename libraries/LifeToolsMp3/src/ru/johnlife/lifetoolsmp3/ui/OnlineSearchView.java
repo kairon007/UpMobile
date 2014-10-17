@@ -685,7 +685,7 @@ public abstract class OnlineSearchView extends View {
 				String artist = player.getArtist();
 				boolean useCover = player.isUseCover();
 				downloadClickListener.setUseAlbumCover(useCover);
-				downloadClickListener.downloadSond(artist, title, useCover);
+				downloadClickListener.downloadSond(artist, title, useCover, false);
 				player.cancel();
 				dialogDismisser.run();
 				getContext().unregisterReceiver(headsetReceiver);

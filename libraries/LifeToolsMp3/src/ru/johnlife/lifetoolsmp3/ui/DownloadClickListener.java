@@ -12,6 +12,9 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.DownloadCache;
+import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
+import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
@@ -32,6 +35,8 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -64,10 +69,28 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		duration = Util.formatTimeIsoDate(song.getDuration());
 		headers = song.getHeaders();
 	}
-
+	
 	@SuppressLint("NewApi")
-	public void downloadSond(String artist, String title, final boolean useCover) {
+	public void downloadSond(String artist, String title, final boolean useCover, boolean fromCallback) {
 		SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
+		boolean isCached = false;
+		if (!fromCallback) {
+			isCached = DownloadCache.getInstanse().put(artist, title, useCover, new DownloadCacheCallback() {
+				
+				@Override
+				public void callback(final Item item) {
+					Runnable callbackRun = new Runnable() {
+						
+						@Override
+						public void run() {
+							downloadSond(item.getArtist(), item.getTitle(), item.isUseCover(), true);			
+						}
+					};
+					new Handler(Looper.getMainLooper()).post(callbackRun);
+				}
+			});
+		}
+		if (isCached) return;
 		if (!this.songArtist.equals(artist)) {
 			songArtist = artist;
 		}
@@ -123,7 +146,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	@Override
 	public void onClick(View v) {
-		downloadSond(songArtist, songTitle, useAlbumCover);
+		downloadSond(songArtist, songTitle, useAlbumCover, false);
 	}
 
 	protected void notifyDuringDownload(final long downloadId, final double currentProgress) {
@@ -202,6 +225,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					notifyAboutFailed(downloadId, title);
 					c.close();
 					this.cancel();
+					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
 					return;
 				case DownloadManager.STATUS_RUNNING:
 					if (isFullAction()) {
@@ -242,6 +266,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					if (null == src_set) {
 						notifyMediascanner(song, path);
 						this.cancel();
+						DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
 						return;
 					}
 					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
@@ -267,6 +292,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					}
 					notifyMediascanner(song, path);
 					this.cancel();
+					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
 					return;
 				default:
 					break;

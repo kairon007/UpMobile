@@ -9,6 +9,7 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.interfaces.LoadPercentageInterface;
 import org.kreed.musicdownloader.interfaces.TaskSuccessListener;
 
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -258,7 +259,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 
 	public void deleteItem(final long downloadId, final String title) {
 		for (int i = 0; i < adapter.getCount(); i++) {
-			MusicData buf = adapter.getItem(i);
+			final MusicData buf = adapter.getItem(i);
 			if (buf.getDownloadId() == downloadId) {
 				adapter.remove(buf);
 				activity.runOnUiThread(new Runnable() {
@@ -267,6 +268,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 					public void run() {
 						String failedSong = activity.getResources().getString(R.string.downloads_failed);
 						Toast.makeText(activity, failedSong + " - " + title, Toast.LENGTH_SHORT).show();
+						DownloadCache.getInstanse().remove(buf.getSongArtist(), buf.getSongTitle());
 					}
 				});
 				return;
