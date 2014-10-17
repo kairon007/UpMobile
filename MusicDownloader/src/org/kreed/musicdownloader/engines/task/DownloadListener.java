@@ -52,7 +52,7 @@ public class DownloadListener extends DownloadClickListener {
 		downloadItem.setSongDuration(String.valueOf(duration));
 		downloadItem.setDownloadId(downloadId);
 		downloadItem.setDownloadProgress(0.0);
-		downloadsTab.insertData(downloadItem, true);
+		downloadsTab.insertData(downloadItem);
 		return new CoverReadyListener() {
 			
 			@Override

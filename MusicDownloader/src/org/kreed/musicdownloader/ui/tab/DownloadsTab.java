@@ -289,13 +289,12 @@ public class DownloadsTab implements LoadPercentageInterface {
 
 	public void insertData(ArrayList<MusicData> result) {
 		for (MusicData data : result) {
-			insertData(data, false);
+			insertData(data);
 		}
 	}
 	
-	public void insertData(MusicData data, boolean reDraw) {
+	public void insertData(MusicData data) {
 		adapter.insert(data, 0);
-		if (reDraw) adapter.redraw();
 	}
 
 	public static View getInstanceView(LayoutInflater layoutInflater, Activity activity) {
