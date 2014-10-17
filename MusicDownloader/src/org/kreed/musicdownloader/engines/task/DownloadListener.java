@@ -59,13 +59,14 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	protected void notifyAboutFailed(long downloadId) {
-		downloadsTab.deleteItem(downloadId);
+	protected void notifyAboutFailed(long downloadId, String title) {
+		downloadsTab.deleteItem(downloadId, title);
 	}
 
 	@Override
 	protected void notifyDuringDownload(final long downloadId, final String currentDownloadTitle, final double currentProgress) {
 		activity.runOnUiThread(new Runnable() {
+			
 			@Override
 			public void run() {
 				downloadsTab.currentDownloadingID(downloadId);

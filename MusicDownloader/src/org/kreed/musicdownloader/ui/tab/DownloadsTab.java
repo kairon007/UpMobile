@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface {
 
+	private final Object lock = new Object();
 	private ListView listView;
 	private ProgressBar progress;
 	private DownloadsAdapter adapter;
@@ -137,49 +138,60 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 
 		@Override
 		public void add(MusicData object) {
-			if (mOriginalValues != null) {
-				mOriginalValues.add(object);
+			synchronized (lock) {
+				if (mOriginalValues != null) {
+					mOriginalValues.add(object);
+				}
+				mObjects.add(object);
 			}
-			mObjects.add(object);
 			redraw();
 		}
 
 		@Override
 		public void insert(MusicData object, int index) {
-			if (mOriginalValues != null) {
-				mOriginalValues.add(index, object);
+			synchronized (lock) {
+				if (mOriginalValues != null) {
+					mOriginalValues.add(index, object);
+				}
+				if (mObjects == null) {
+					mObjects = new ArrayList<MusicData>();
+				}
+				mObjects.add(index, object);
 			}
-			if (mObjects == null){
-				mObjects = new ArrayList<MusicData>();}
-			mObjects.add(index, object);
 			redraw();
 		}
 
 		@SuppressLint("NewApi")
 		@Override
 		public void addAll(Collection<? extends MusicData> collection) {
-			if (mOriginalValues != null) {
-				mOriginalValues.addAll(collection);
+			synchronized (lock) {
+				if (mOriginalValues != null) {
+					mOriginalValues.addAll(collection);
+				}
+				mObjects.addAll(collection);
 			}
-			mObjects.addAll(collection);
 			redraw();
 		}
 
 		@Override
 		public void clear() {
-			if (mOriginalValues != null) {
-				mOriginalValues.clear();
+			synchronized (lock) {
+				if (mOriginalValues != null) {
+					mOriginalValues.clear();
+				}
+				mObjects.clear();
 			}
-			mObjects.clear();
 			redraw();
 		}
 
 		@Override
 		public void remove(MusicData object) {
-			if (mOriginalValues != null) {
-				mOriginalValues.remove(object);
+			synchronized (lock) {
+				if (mOriginalValues != null) {
+					mOriginalValues.remove(object);
+				}
+				mObjects.remove(object);
 			}
-			mObjects.remove(object);
 			redraw();
 		}
 
@@ -248,7 +260,7 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 		}
 	}
 
-	public void deleteItem(final long downloadId) {
+	public void deleteItem(final long downloadId, final String title) {
 		for (int i = 0; i < adapter.getCount(); i++) {
 			MusicData buf = adapter.getItem(i);
 			if (buf.getDownloadId() == downloadId) {
@@ -257,7 +269,8 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 
 					@Override
 					public void run() {
-						Toast.makeText(activity, R.string.downloads_failed, Toast.LENGTH_LONG).show();
+						String failedSong = activity.getResources().getString(R.string.downloads_failed);
+						Toast.makeText(activity, failedSong + " - " + title, Toast.LENGTH_SHORT).show();
 					}
 				});
 				return;

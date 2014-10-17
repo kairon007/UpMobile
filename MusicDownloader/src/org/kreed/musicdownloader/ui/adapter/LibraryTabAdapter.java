@@ -26,12 +26,15 @@ import android.widget.TextView;
 
 public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWatcher {
 
+	private final Object lock = new Object();
 	private ArrayList<MusicData> mObjects;
 	private ArrayList<MusicData> mOriginalValues;
 	private Filter filter;
 	private MainActivity activity;
 	private LayoutInflater inflater;
+	private ListView lv;
 	private EditText textFilter;
+	private boolean isDeployFilter;
 	private Runnable reDraw = new Runnable() {
 
 		@Override
@@ -39,8 +42,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			notifyDataSetChanged();
 		}
 	};
-	private boolean isDeployFilter;
-	private ListView lv;
+	
 
 	public LibraryTabAdapter(int resource, MainActivity activity) {
 		super(activity, resource);
@@ -57,22 +59,26 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	
 	@Override
 	public void add(MusicData object) {
-		if (mOriginalValues != null) {
-			mOriginalValues.add(object);
+		synchronized (lock) {
+			if (mOriginalValues != null) {
+				mOriginalValues.add(object);
+			}
+			if (null == mObjects) {
+				mObjects = new ArrayList<MusicData>();
+			}
+			mObjects.add(object);
 		}
-		if (null == mObjects) {
-			mObjects = new ArrayList<MusicData>();
-		}
-		mObjects.add(object);
 		activity.runOnUiThread(reDraw);
 	}
 	
 	@Override
 	public void remove(MusicData object) {
-		if (mOriginalValues != null) {
-			mOriginalValues.remove(object);
+		synchronized (lock) {
+			if (mOriginalValues != null) {
+				mOriginalValues.remove(object);
+			}
+			mObjects.remove(object);
 		}
-		mObjects.remove(object);
 		activity.runOnUiThread(reDraw);
 	}
 
@@ -172,7 +178,9 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	}
 
 	public void updateItem(int position, MusicData musicData) {
-		getItem(position).update(musicData);
+		synchronized (lock) {
+			getItem(position).update(musicData);
+		}
 		activity.runOnUiThread(reDraw);
 	}
 	
@@ -252,10 +260,12 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	
 	@Override
 	public void clear() {
-		if (mOriginalValues != null) {
-			mOriginalValues.clear();
+		synchronized (lock) {
+			if (mOriginalValues != null) {
+				mOriginalValues.clear();
+			}
+			mObjects.clear();
 		}
-		mObjects.clear();
 		activity.runOnUiThread(reDraw);
 	}
 }

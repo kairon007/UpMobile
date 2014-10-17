@@ -52,7 +52,6 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -212,7 +211,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
-		if (android.os.Build.VERSION.SDK_INT < 11) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
 		observer.startWatching();
@@ -223,47 +222,26 @@ public class MainActivity extends Activity {
 		HandlerThread thread = new HandlerThread(getClass().getName(), Process.THREAD_PRIORITY_LOWEST);
 		thread.start();
 		mLooper = thread.getLooper();
-		mSearchBox = findViewById(R.id.search_box);
 		setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
-		mTextFilter = (EditText) findViewById(R.id.filter_text);
+		init();
 		textWatcher = new CustomTextWatcher();
 		mTextFilter.addTextChangedListener(textWatcher);
-		mClearFilterEditText = (ImageButton) findViewById(R.id.clear_filter);
 		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				mTextFilter.setText("");
 			}
-
 		});
-		clearAll = (ImageButton) findViewById(R.id.clear_all_button);
-		clearAll.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				DownloadsTab.getInstance().recreateAdaper();
-			}
-
-		});
-		footer = (FrameLayout) findViewById(R.id.footer);
-
-		mLimiterScroller = (HorizontalScrollView) findViewById(R.id.limiter_scroller);
-		mLimiterViews = (ViewGroup) findViewById(R.id.limiter_layout);
-
 		ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(this, mLooper);
 		mPagerAdapter = pagerAdapter;
-
-		ViewPager pager = (ViewPager) findViewById(R.id.pager);
-		pager.setAdapter(pagerAdapter);
-		mViewPager = pager;
-		searchLayout = (LinearLayout) findViewById(R.id.search_box);
+		mViewPager.setAdapter(pagerAdapter);
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			pager.setOnPageChangeListener(pagerAdapter);
+			mViewPager.setOnPageChangeListener(pagerAdapter);
 		} else {
 			TabPageIndicator tabs = new TabPageIndicator(this);
-			tabs.setViewPager(pager);
+			tabs.setViewPager(mViewPager);
 			tabs.setOnPageChangeListener(pagerAdapter);
 			mTabs = tabs;
 			LinearLayout content = (LinearLayout) findViewById(R.id.content);
@@ -272,15 +250,15 @@ public class MainActivity extends Activity {
 		loadTabOrder();
 		page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);
 		if (page != 0) {
-			pager.setCurrentItem(page);
+			mViewPager.setCurrentItem(page);
 		}
-		if (pager.getCurrentItem() == 0) {
+		if (mViewPager.getCurrentItem() == 0) {
 			searchLayout.setVisibility(View.GONE);
 		}
-		if (pager.getCurrentItem() == 1) {
+		if (mViewPager.getCurrentItem() == 1) {
 			clearAll.setVisibility(View.VISIBLE);
 		}
-		if (pager.getCurrentItem() == 2) {
+		if (mViewPager.getCurrentItem() == 2) {
 			clearAll.setVisibility(View.GONE);
 		}
 		if (null != state) {
@@ -292,7 +270,6 @@ public class MainActivity extends Activity {
 			}
 			player = MusicDownloaderApp.getService().getPlayer();
 		}
-
 		// show cross promo box
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
@@ -304,9 +281,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		} catch (Exception e) {
-
 		}
-
 		// show or hide disclaimer
 		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
 		if (editTextDisclaimer != null) {
@@ -316,8 +291,6 @@ public class MainActivity extends Activity {
 				editTextDisclaimer.setVisibility(View.GONE);
 			}
 		}
-
-
 		// load banner ad
 		try {
 			if (Settings.ENABLE_ADS) {
@@ -326,23 +299,27 @@ public class MainActivity extends Activity {
 		} catch (Exception e) {
 
 		}
-
-
-
-		// show in the first activity
-
-
 		// initialize ad networks
 		try {
 			if (!Settings.getIsBlacklisted(this)) {
-				//Advertisement.start(this, false);
+				// Advertisement.start(this, false);
 			} else {
 				Advertisement.showDisclaimer(this);
 			}
 		} catch (Exception e) {
-
 		}
+	}
 
+	private void init() {
+		mLimiterScroller = (HorizontalScrollView) findViewById(R.id.limiter_scroller);
+		mLimiterViews = (ViewGroup) findViewById(R.id.limiter_layout);
+		mClearFilterEditText = (ImageButton) findViewById(R.id.clear_filter);
+		mSearchBox = findViewById(R.id.search_box);
+		mTextFilter = (EditText) findViewById(R.id.filter_text);
+		clearAll = (ImageButton) findViewById(R.id.clear_all_button);
+		footer = (FrameLayout) findViewById(R.id.footer);
+		searchLayout = (LinearLayout) findViewById(R.id.search_box);
+		mViewPager = (ViewPager) findViewById(R.id.pager);
 	}
 
 	@Override
@@ -414,7 +391,7 @@ public class MainActivity extends Activity {
 			out.putInt(SAVE_BUTTONPLAY_PROGRESS, player.getButtonProgressVisibility());
 			out.putBoolean(SAVE_PLAYER_VIEW, player.getPlayerVisibility() == View.VISIBLE);
 		}
-		if (lastPage == 0) { 
+		if (lastPage == 0) {
 			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		}
 		super.onSaveInstanceState(out);
@@ -444,9 +421,9 @@ public class MainActivity extends Activity {
 			CompatHoneycomb.selectTab(this, position);
 		}
 		if (lastPage != position && lastPage != -1) {
-			//mTextFilter.removeTextChangedListener(textWatcher);
+			// mTextFilter.removeTextChangedListener(textWatcher);
 			mTextFilter.setText("");
-			//mTextFilter.addTextChangedListener(textWatcher);
+			// mTextFilter.addTextChangedListener(textWatcher);
 		}
 		if (lastPage == 0) {
 			SongArrayHolder.getInstance().saveStateAdapter(((ViewPagerAdapter) mViewPager.getAdapter()).getSearchView());
@@ -559,7 +536,7 @@ public class MainActivity extends Activity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		menu.setHeaderTitle(music.getSongArtist() + " - " + music.getSongTitle());
 		menu.add(0, DELETE, 0, getResources().getString(R.string.delete_song));
-		menu.add(0, EDIT_TAG, 0, getResources().getString(R.string.edit_mp3 ));
+		menu.add(0, EDIT_TAG, 0, getResources().getString(R.string.edit_mp3));
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 

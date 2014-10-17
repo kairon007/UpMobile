@@ -137,7 +137,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	}
 
-	protected void notifyAboutFailed(long downloadId) {
+	protected void notifyAboutFailed(long downloadId, String title) {
 
 	}
 
@@ -202,14 +202,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 				switch (status) {
 				case DownloadManager.STATUS_FAILED:
-					notifyAboutFailed(downloadId);
-					Log.d("log", "FAILED");
+					String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
+					notifyAboutFailed(downloadId, title);
 					c.close();
 					this.cancel();
 					return;
 				case DownloadManager.STATUS_RUNNING:
 					if (isFullAction()) {
-						return;
+						break;
 					}
 					int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
 					int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
@@ -222,11 +222,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					notifyDuringDownload(downloadId, currentSongTitle, progress);
 					break;
 				case DownloadManager.STATUS_SUCCESSFUL:
-					if (isFullAction()) {
-						Log.d("log", "SUCCESS");
-//						c.close();
-//						this.cancel();
-					}
 					progress = 100;
 					notifyDuringDownload(downloadId, currentDownloadingSongTitle, progress);
 					int columnIndex = 0;
@@ -247,7 +242,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					try {
 						src_set = new MyID3().read(src);
 					} catch (Exception exception) {
-						Log.d("log", "Don't read music metadata from file. " + exception);
+						Log.d(getClass().getSimpleName(), "Don't read music metadata from file. " + exception);
 					}
 					if (null == src_set) {
 						notifyMediascanner(song, path);
@@ -276,7 +271,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 					}
 					notifyMediascanner(song, path);
-					boolean d = this.cancel();
+					this.cancel();
 					return;
 
 				default:
@@ -293,7 +288,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		private void notifyMediascanner(final RemoteSong song, final String pathToFile) {
 			final File file = new File(pathToFile);
-			Log.d("log", "path scanning file = " + pathToFile);
 			MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 				public void onScanCompleted(String path, Uri uri) {
