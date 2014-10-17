@@ -10,8 +10,6 @@ import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
-import org.cmc.music.myid3.MyID3v1;
-import org.cmc.music.myid3.MyID3v2Write;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
@@ -24,7 +22,6 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
-import android.app.DownloadManager.Query;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -49,7 +46,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected String songArtist;
 	private String url;
 	protected String duration;
-	private String currentDownloadingSongTitle;
 	protected Long currentDownloadId;
 	public Integer songId;
 	private boolean waitingForCover = true;
@@ -117,7 +113,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				request.allowScanningByMediaScanner();
 			}
 			final long downloadId = manager.enqueue(request);
-			notifyAboutDownload(downloadId);
+			CoverReadyListener coverListener = notifyStartDownload(downloadId);
+			song.setDownloaderListener(coverListener);
 			Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, downloadId, useCover);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
@@ -129,12 +126,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		downloadSond(songArtist, songTitle, useAlbumCover);
 	}
 
-	protected void notifyDuringDownload(final long downloadId, final String currentDownloadTitle, final double currentProgress) {
+	protected void notifyDuringDownload(final long downloadId, final double currentProgress) {
 
 	}
 
-	protected void notifyAboutDownload(long downloadId) {
-
+	protected CoverReadyListener notifyStartDownload(long downloadId) {
+		return null;
 	}
 
 	protected void notifyAboutFailed(long downloadId, String title) {
@@ -183,7 +180,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private DownloadManager manager;
 		private long downloadId;
 		private boolean useCover;
-		String currentSongTitle = "";
 
 		public UpdateTimerTask(RemoteSong song, DownloadManager manager, long downloadId, boolean useCover) {
 			this.song = song;
@@ -215,15 +211,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 					long size = c.getInt(sizeIndex);
 					long downloaded = c.getInt(downloadedIndex);
-					currentSongTitle = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
 					if (size != -1) {
 						progress = downloaded * 100.0 / size;
 					}
-					notifyDuringDownload(downloadId, currentSongTitle, progress);
+					notifyDuringDownload(downloadId, progress);
 					break;
 				case DownloadManager.STATUS_SUCCESSFUL:
 					progress = 100;
-					notifyDuringDownload(downloadId, currentDownloadingSongTitle, progress);
+					notifyDuringDownload(downloadId, progress);
 					int columnIndex = 0;
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
@@ -242,7 +237,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					try {
 						src_set = new MyID3().read(src);
 					} catch (Exception exception) {
-						Log.d(getClass().getSimpleName(), "Don't read music metadata from file. " + exception);
+						Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
 					}
 					if (null == src_set) {
 						notifyMediascanner(song, path);
@@ -273,7 +268,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					notifyMediascanner(song, path);
 					this.cancel();
 					return;
-
 				default:
 					break;
 				}
@@ -296,9 +290,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						listener.success();
 					}
 				}
-
 			});
 		}
-
+	}
+	
+	public interface CoverReadyListener {
+		
+		void onCoverReady(Bitmap cover);
 	}
 }

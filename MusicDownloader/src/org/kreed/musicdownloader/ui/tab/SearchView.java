@@ -42,7 +42,7 @@ public class SearchView  extends OnlineSearchView {
 		}
 		RemoteSong song = (RemoteSong) getResultAdapter().getItem(position);
 		if (view.getId() == R.id.btnDownload) {
-			DownloadListener listener = new DownloadListener(getContext(),song, parentAdapter, activity);
+			DownloadListener listener = new DownloadListener(getContext(),song, parentAdapter);
 			song.getCover(true, listener);
 			listener.onClick(view);
 			return;

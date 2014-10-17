@@ -6,9 +6,10 @@ import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.CoverReadyListener;
 import android.graphics.Bitmap;
 
 public class RemoteSong extends Song {
@@ -31,6 +32,7 @@ public class RemoteSong extends Song {
 		private void setCover(Bitmap bmp) {
 			synchronized (listeners) {
 				for (OnBitmapReadyListener listener : listeners) {
+					if (downloaderListener != null) downloaderListener.onCoverReady(bmp);
 					listener.onBitmapReady(bmp);
 					cover = new WeakReference<Bitmap>(bmp);
 					smallCover = new WeakReference<Bitmap>(bmp == null ? null : Util.resizeToSmall(bmp));
@@ -57,6 +59,7 @@ public class RemoteSong extends Song {
 	private WeakReference<Bitmap> cover;
 	private WeakReference<Bitmap> smallCover;
 	private boolean callFromPlayer;
+	private CoverReadyListener downloaderListener = null;
 	
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
@@ -155,5 +158,9 @@ public class RemoteSong extends Song {
 				listener.onBitmapReady(bmp == null ? null : Util.resizeToSmall(bmp));
 			}
 		});
+	}
+	
+	public void setDownloaderListener(CoverReadyListener downloaderListener) {
+		this.downloaderListener = downloaderListener;
 	}
 }

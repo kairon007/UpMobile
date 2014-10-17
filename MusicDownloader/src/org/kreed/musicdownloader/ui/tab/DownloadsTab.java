@@ -7,15 +7,12 @@ import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.interfaces.LoadPercentageInterface;
-import org.kreed.musicdownloader.interfaces.MusicDataInterface;
 import org.kreed.musicdownloader.interfaces.TaskSuccessListener;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface {
+public class DownloadsTab implements LoadPercentageInterface {
 
 	private final Object lock = new Object();
 	private ListView listView;
@@ -40,7 +37,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 	private Activity activity;
 	private long cancelledId;
 	private final static double DOWNLOAD_FINISHED = -1;
-	private Long currentDownloadingID;
 	private ImageButton clearAll;
 
 	public final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener {
@@ -286,27 +282,20 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 				if (progress > 99) {
 					adapter.getItem(i).setDownloadProgress(DOWNLOAD_FINISHED);
 				}
-				adapter.notifyDataSetChanged();
 			}
 		}
+		adapter.redraw();
 	}
 
-	@Override
-	public void insertCover(Bitmap cover) {
-		for (int i = 0; i < adapter.getCount(); i++) {
-			if (adapter.getItem(i).getDownloadId() == currentDownloadingID) {
-				adapter.getItem(i).setSongBitmap(cover);
-				adapter.notifyDataSetChanged();
-			}
-		}
-	}
-
-	@Override
 	public void insertData(ArrayList<MusicData> result) {
 		for (MusicData data : result) {
-			adapter.insert(data, 0);
+			insertData(data, false);
 		}
-		adapter.notifyDataSetChanged();
+	}
+	
+	public void insertData(MusicData data, boolean reDraw) {
+		adapter.insert(data, 0);
+		if (reDraw) adapter.redraw();
 	}
 
 	public static View getInstanceView(LayoutInflater layoutInflater, Activity activity) {
@@ -361,11 +350,6 @@ public class DownloadsTab implements LoadPercentageInterface, MusicDataInterface
 
 	@Override
 	public void currentDownloadingSongTitle(String currentDownloadingSongTitle) {
-	}
-
-	@Override
-	public void currentDownloadingID(Long currentDownloadingID) {
-		this.currentDownloadingID = currentDownloadingID;
 	}
 
 	@Override
