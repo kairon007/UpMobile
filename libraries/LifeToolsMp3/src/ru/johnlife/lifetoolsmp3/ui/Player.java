@@ -22,6 +22,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
@@ -421,23 +422,63 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(String... params) {
+		Log.d("log", "start run");
 		try {
 			// mediaPlayer.setDataSource(url);
 			HashMap<String, String> headers = new HashMap<String, String>();
 			headers.put("User-Agent",
 					"2.0.0.6 –≤ Debian GNU/Linux 4.0 ‚Äî Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 			mediaPlayer.setDataSource(view.getContext(), Uri.parse(url), headers);
-			mediaPlayer.prepare();
-			prepared = true;
 			if (isCancelled()) {
 				releasePlayer();
 			} else {
+				Log.d("log", "return true");
 				return true;
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), "Error buffering song", e);
 		}
 		return false;
+	}
+	
+	@Override
+	protected void onPostExecute(Boolean result) {
+		super.onPostExecute(result);
+		if (null == mediaPlayer)
+			return;
+		if (result) {
+			mediaPlayer.prepareAsync();
+			Log.d("log", "prepareAsync");
+			mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
+
+				@Override
+				public void onPrepared(MediaPlayer mp) {
+					Log.d("log", "prepare");
+					prepared = true;
+					mediaPlayer = mp;
+					mp.start();
+					mp.setOnCompletionListener(new OnCompletionListener() {
+						
+						@Override
+						public void onCompletion(MediaPlayer mp) {
+							mp.seekTo(0);
+							mediaPlayer = mp;
+							imagePause = R.drawable.play;
+							button.setImageResource(imagePause);
+							progress.setProgress(0);
+						}
+					});
+					rowLirycs.postDelayed(new Runnable() {
+						
+						public void run() {
+							if (null != mediaPlayer) {
+								Player.this.onPrepared();
+							}
+						}
+					}, 1000);
+				}
+			});
+		}
 	}
 
 	private void releasePlayer() {
@@ -456,31 +497,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		}
 	}
 
-	@Override
-	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);
-		if (null == mediaPlayer) return;
-		if (result && prepared) {
-			mediaPlayer.start();
-			mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-				@Override
-				public void onCompletion(MediaPlayer mp) {
-					mp.seekTo(0);
-					imagePause = R.drawable.play;
-					button.setImageResource(imagePause);
-					progress.setProgress(0);
-				}
-			});
-			rowLirycs.postDelayed(new Runnable() {
-				public void run() {
-					if (null != mediaPlayer) {
-						onPrepared();
-					}
-				}
-			}, 1000);
-
-		}
-	}
+	
 
 	public void cancel() {
 		super.cancel(true);
