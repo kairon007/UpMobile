@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
@@ -29,14 +30,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener {
-	
+
 	private static final int IMAGE_PLAY = R.drawable.play;
 	private static final int IMAGE_PAUSE = R.drawable.pause;
 	private ArrayList<String[]> header;
 	private MediaPlayer mediaPlayer;
 	private PlaySong downloadSong;
 	private MusicData data;
-	
+
 	private FrameLayout view;
 	private SeekBar songProgress;
 	private ProgressBar buttonProgress;
@@ -45,19 +46,19 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	private TextView songArtist;
 	private TextView songDuration;
 	private LinearLayout playerLayout;
-	
+
 	private String title;
 	private String artist;
 	private String duration;
 	private Integer currentImageButton;
 	private boolean prepared = false;
 	private byte playerState = 0;
-	
+
 	private Runnable progressAction = new Runnable() {
-		
+
 		@Override
 		public void run() {
-			try { 
+			try {
 				if (mediaPlayer != null) {
 					int current = mediaPlayer.getCurrentPosition();
 					int total = mediaPlayer.getDuration();
@@ -69,9 +70,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 				Log.d(getClass().getSimpleName(), e.getMessage());
 			}
 		}
-		
+
 	};
-	
+
 	public Player(ArrayList<String[]> header, MusicData data) {
 		title = data.getSongTitle();
 		artist = data.getSongArtist();
@@ -79,7 +80,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		this.data = data;
 		this.header = header;
 	}
-	
+
 	public void setData(ArrayList<String[]> headers, MusicData musicData) {
 		if (null != downloadSong && downloadSong.getStatus() != Status.PENDING) {
 			downloadSong.cancel(true);
@@ -90,7 +91,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		this.data = musicData;
 		this.header = headers;
 	}
-	
+
 	public void setActivatedButton(boolean value) {
 		if (value) {
 			songProgress.setIndeterminate(false);
@@ -105,16 +106,14 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 			buttonProgress.setVisibility(View.VISIBLE);
 		}
 	}
-	
-	
+
 	public MediaPlayer getMediaPlayer() {
 		return mediaPlayer;
 	}
-	
+
 	public MusicData getData() {
 		return data;
 	}
-	
 
 	public void stopDownloadSong() {
 		if (downloadSong != null && downloadSong.getStatus() != Status.PENDING) {
@@ -125,7 +124,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	public void getView(FrameLayout footer) {
 		view = footer;
 		init(view);
-		if (prepared){
+		if (prepared) {
 			int duration = mediaPlayer.getDuration();
 			songProgress.removeCallbacks(progressAction);
 			songProgress.setIndeterminate(false);
@@ -135,11 +134,11 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		songProgress.setOnSeekBarChangeListener(this);
 		songTitle.setText(title);
 		songArtist.setText(artist);
-		if(null != currentImageButton) {
+		if (null != currentImageButton) {
 			buttonPlay.setImageResource(currentImageButton);
 		}
 	}
-	
+
 	private void init(FrameLayout view) {
 		playerLayout = (LinearLayout) view.findViewById(R.id.player_layout);
 		playerLayout.setVisibility(View.VISIBLE);
@@ -149,7 +148,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		songArtist = (TextView) view.findViewById(R.id.player_artist);
 		songTitle = (TextView) view.findViewById(R.id.player_title);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) { 
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 			buttonPlay.setBackgroundColor(Color.DKGRAY);
 		}
 		buttonPlay.setOnClickListener(this);
@@ -183,19 +182,17 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 					inputStream.close();
 				} else {
 					HashMap<String, String> headers = new HashMap<String, String>();
-					headers.put(
-							"User-Agent",
+					headers.put("User-Agent",
 							"2.0.0.6 � Debian GNU/Linux 4.0 � Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
 					if (header != null && header.get(0) != null) {
 						for (int i = 0; i < header.size(); i++) {
 							headers.put(header.get(i)[0], header.get(i)[1]);
 						}
 					}
-					if (isCancelled()) return false;
+					if (isCancelled())
+						return false;
 					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
 				}
-				mediaPlayer.prepare();
-				prepared = true;
 				return true;
 			} catch (Exception e) {
 			}
@@ -204,31 +201,40 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
-			if (result && mediaPlayer!=null) {
-				onPrepared();
-				mediaPlayer.start();
-				setActivatedButton(true);
-				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-					
+			if (result && mediaPlayer != null) {
+				mediaPlayer.prepareAsync();
+				mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
+
 					@Override
-					public void onCompletion(MediaPlayer mp) {
-						mp.seekTo(0);
-						try {
-							mp.prepare();
-						} catch (Exception e) {
-						}
+					public void onPrepared(MediaPlayer mp) {
+						Player.this.onPrepared();
+						prepared = true;
 						mediaPlayer = mp;
-						playerState = Constants.PAUSE;
-						buttonPlay.setImageResource(IMAGE_PLAY);
-						currentImageButton = IMAGE_PLAY;
+						mp.start();
+						setActivatedButton(true);
+						mp.setOnCompletionListener(new OnCompletionListener() {
+
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								mp.seekTo(0);
+								try {
+									mp.prepare();
+								} catch (Exception e) {
+								}
+								mediaPlayer = mp;
+								playerState = Constants.PAUSE;
+								buttonPlay.setImageResource(IMAGE_PLAY);
+								currentImageButton = IMAGE_PLAY;
+							}
+
+						});
 					}
-					
 				});
 			}
+			super.onPostExecute(result);
 		}
 	}
-	
+
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (fromUser) {
@@ -253,24 +259,29 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	public void setPlayerState(byte playerState) {
 		this.playerState = playerState;
 	}
-	
+
 	public void stateManagementPlayer(byte state) {
 		this.playerState = state;
 		switch (state) {
-		case 0: //in progress
+		case 0: // in progress
 			break;
-		case 1: play();
+		case 1:
+			play();
 			break;
-		case 2: pause();
+		case 2:
+			pause();
 			break;
-		case 3: stop();
+		case 3:
+			stop();
 			break;
-		case 4: restart();
+		case 4:
+			restart();
 			break;
-		case 5: continuePlaying();
+		case 5:
+			continuePlaying();
 		}
 	}
-	
+
 	private void play() {
 		stopDownloadSong();
 		stop();
@@ -285,21 +296,22 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		downloadSong = new PlaySong();
 		downloadSong.execute();
 	}
-	
+
 	private void pause() {
 		buttonPlay.setImageResource(IMAGE_PLAY);
 		currentImageButton = IMAGE_PLAY;
 		mediaPlayer.pause();
 	}
-	
+
 	private void restart() {
 		if (mediaPlayer != null && prepared && getPlayerState() == Constants.RESTART) {
-				mediaPlayer.seekTo(0);
-				mediaPlayer.start();
-				setActivatedButton(true);
-		} else setActivatedButton(false);
+			mediaPlayer.seekTo(0);
+			mediaPlayer.start();
+			setActivatedButton(true);
+		} else
+			setActivatedButton(false);
 	}
-	
+
 	private void continuePlaying() {
 		mediaPlayer.start();
 		buttonPlay.setImageResource(IMAGE_PAUSE);
@@ -320,7 +332,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 			prepared = false;
 		}
 	}
-	
+
 	public void hidePlayerView() {
 		playerLayout.setVisibility(View.GONE);
 	}
@@ -353,10 +365,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 			}
 		}
 	}
-	
+
 	public int getPlayerVisibility() {
 		return playerLayout.getVisibility();
-		
+
 	}
 
 }
