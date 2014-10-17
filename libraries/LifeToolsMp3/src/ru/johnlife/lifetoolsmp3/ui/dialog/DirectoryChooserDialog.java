@@ -39,7 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class DirectoryChooserDialog {
-	
+
 	private static final String STORAGE = "/storage/";
 	private boolean m_isNewFolderEnabled = true;
 	private ListView lvContent;
@@ -51,7 +51,7 @@ public class DirectoryChooserDialog {
 	private List<String> m_subdirs = null;
 	private ChosenDirectoryListener m_chosenDirectoryListener = null;
 	private ArrayAdapter<String> m_listAdapter = null;
-	
+
 	private File parent;
 
 	OnShowListener showlistener = new OnShowListener() {
@@ -63,7 +63,7 @@ public class DirectoryChooserDialog {
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
-	
+
 	// ////////////////////////////////////////////////////
 	// Callback interface for selected directory
 	// ////////////////////////////////////////////////////
@@ -99,17 +99,15 @@ public class DirectoryChooserDialog {
 		if (!dirFile.exists() || !dirFile.isDirectory()) {
 			dir = m_sdcardDirectory;
 		}
-
 		try {
 			dir = new File(dir).getCanonicalPath();
 		} catch (IOException ioe) {
 			return;
 		}
-
 		m_dir = dir;
 		m_subdirs = getDirectories(dir);
-
 		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
+			
 			public void onClick(DialogInterface dialog, int item) {
 				String directory = (String) ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
 				if (directory.equals(""))
@@ -118,10 +116,9 @@ public class DirectoryChooserDialog {
 				updateDirectory();
 			}
 		}
-
 		AlertDialog.Builder dialogBuilder = createDirectoryChooserDialog(dir, m_subdirs, new DirectoryOnClickListener());
-
-		dialogBuilder.setPositiveButton("OK", new OnClickListener() {
+		dialogBuilder.setPositiveButton(android.R.string.ok, new OnClickListener() {
+			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				if (m_chosenDirectoryListener != null) {
@@ -129,7 +126,7 @@ public class DirectoryChooserDialog {
 				}
 				SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
 			}
-		}).setNegativeButton("Cancel", new OnClickListener() {
+		}).setNegativeButton(android.R.string.cancel, new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -140,6 +137,7 @@ public class DirectoryChooserDialog {
 		final AlertDialog dirsDialog = dialogBuilder.create();
 		dirsDialog.setOnShowListener(showlistener);
 		dirsDialog.setOnKeyListener(new OnKeyListener() {
+			
 			@Override
 			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -170,7 +168,6 @@ public class DirectoryChooserDialog {
 		List<String> dirs = new ArrayList<String>();
 		File system = new File(Environment.getExternalStorageDirectory().getPath() + "/Android");
 		parent = new File(dir).getParentFile();
-
 		try {
 			File dirFile = new File(dir);
 			if (!dirFile.exists() || !dirFile.isDirectory()) {
@@ -184,13 +181,11 @@ public class DirectoryChooserDialog {
 			}
 		} catch (Exception e) {
 		}
-
 		Collections.sort(dirs, new Comparator<String>() {
 			public int compare(String o1, String o2) {
 				return o1.compareTo(o2);
 			}
 		});
-
 		return dirs;
 	}
 
@@ -228,7 +223,7 @@ public class DirectoryChooserDialog {
 			m_listAdapter.add("");
 		}
 		dialogBuilder.setCancelable(false);
-		
+
 		lvContent.setAdapter(m_listAdapter);
 		lvContent.setOnItemClickListener(new OnItemClickListener() {
 
@@ -245,12 +240,11 @@ public class DirectoryChooserDialog {
 		return dialogBuilder;
 	}
 
-	@SuppressLint("NewApi")
 	public void createNewDirDialog(String name) {
 		SongArrayHolder.getInstance().setIsNewDirectoryOpened(true);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.new_folder_dialog, null);
-		
+
 		final EditText input = (EditText) view.findViewById(R.id.etNewFolder);
 		input.addTextChangedListener(new CustomWatcher(input));
 		if (null != name) {
@@ -259,8 +253,11 @@ public class DirectoryChooserDialog {
 		} else {
 			SongArrayHolder.getInstance().setNewDirName("");
 		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(m_context).setView(view).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(m_context).setView(view);
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
 			public void onClick(DialogInterface dialog, int whichButton) {
+				SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);
 				Editable newDir = input.getText();
 				String newDirName = newDir.toString();
 				// Create new directory
@@ -272,8 +269,15 @@ public class DirectoryChooserDialog {
 					Toast.makeText(m_context, "Failed to create '" + newDirName + "' folder", Toast.LENGTH_SHORT).show();
 				}
 			}
-		}).setNegativeButton("Cancel", null);
-		if (Build.VERSION.SDK_INT  > Build.VERSION_CODES.JELLY_BEAN_MR1) {
+		});
+		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);
+			}
+		});
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			builder.setOnDismissListener(new OnDismissListener() {
 
 				@Override
@@ -301,7 +305,7 @@ public class DirectoryChooserDialog {
 
 	private ArrayAdapter<String> createListAdapter(List<String> items) {
 		return new ArrayAdapter<String>(m_context, android.R.layout.select_dialog_item, android.R.id.text1, items) {
-			
+
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				View v = super.getView(position, convertView, parent);

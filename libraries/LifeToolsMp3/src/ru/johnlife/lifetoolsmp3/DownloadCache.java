@@ -11,7 +11,7 @@ public class DownloadCache {
 	private static DownloadCache instanse = null;
 	private ArrayList<Item> cache = new ArrayList<Item>();
 	
-	public DownloadCache() {
+	private DownloadCache() {
 		
 	}
 	
@@ -97,6 +97,11 @@ public class DownloadCache {
 
 		public void setCallback(DownloadCacheCallback callback) {
 			this.callback = callback;
+		}
+
+		@Override
+		public int hashCode() {
+			return super.hashCode();
 		}
 	}
 	

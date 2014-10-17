@@ -10,25 +10,30 @@ import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.os.Bundle;
 
 public class SongArrayHolder {
+	
 	private static SongArrayHolder instance = null;
-	private ArrayList<Song> results = null;
-	private String songName;
 	private Iterator<Engine> taskIterator;
-	private boolean isStreamDialogOpened = false;
-	private boolean isID3DialogOpened = false;
+	private ArrayList<Song> results = null;
+	private String[] titleArtistLyrics;
 	private String[] fields;
-	private boolean isCoverEnabled = true;
 	private Bundle streamDialogArgs;
 	private Player playerInstance;
-	private boolean isLyricsOpened;
-	private String[] titleArtistLyrics;
+	private String songName;
 	private String lyrics;
-	private boolean isDirectoryChooserOpened = false;
 	private String directoryChooserPath;
-	private boolean isSearchExecute = false;
-	private boolean isNewDirectoryOpened = false;
 	private String newDirName;
 	private int listViewPosition;
+	private boolean isStreamDialogOpened = false;
+	private boolean isID3DialogOpened = false;
+	private boolean isDirectoryChooserOpened = false;
+	private boolean isNewDirectoryOpened = false;
+	private boolean isLyricsOpened;
+	private boolean isSearchExecute = false;
+	private boolean isCoverEnabled = true;
+	
+	private SongArrayHolder() {
+
+	}
 
 	public static SongArrayHolder getInstance() {
 		if (instance == null) {
