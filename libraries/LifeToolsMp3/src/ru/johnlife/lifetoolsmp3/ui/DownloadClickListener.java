@@ -90,7 +90,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				}
 			});
 		}
-		if (isCached) return;
+		int id = artist.hashCode() + title.hashCode();
+		if (isCached)  {
+			song.setDownloaderListener(notifyStartDownload(id));
+			return;
+		}
 		if (!this.songArtist.equals(artist)) {
 			songArtist = artist;
 		}
@@ -136,8 +140,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				request.allowScanningByMediaScanner();
 			}
 			final long downloadId = manager.enqueue(request);
-			CoverReadyListener coverListener = notifyStartDownload(downloadId);
-			song.setDownloaderListener(coverListener);
+			boolean isUpdated = continueDownload(id, downloadId);
+			if (!isUpdated) {
+				song.setDownloaderListener(notifyStartDownload(downloadId));
+			}
 			Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, downloadId, useCover);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
@@ -155,6 +161,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	protected CoverReadyListener notifyStartDownload(long downloadId) {
 		return null;
+	}
+	
+	protected boolean continueDownload(long lastID, long newID) {
+		return false;
 	}
 
 	protected void notifyAboutFailed(long downloadId, String title) {
