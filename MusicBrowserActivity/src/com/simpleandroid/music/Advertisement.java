@@ -300,48 +300,49 @@ public class Advertisement {
 	
  
 	public static void showRateMePopup(final Activity activity, boolean switchShowDialog) { 
-		
-		setLastTimeAskedForRate(activity, System.currentTimeMillis()); 
-		
-		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) { 
-				switch (which) {
-				case DialogInterface.BUTTON_POSITIVE:
-
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, 
-							Uri.parse("market://details?id=" + activity.getPackageName()));
-					try {
-						activity.startActivity(browserIntent);
-					} catch (ActivityNotFoundException e) {
-
-					}
-
-					SharedPreferences prefs = activity.getSharedPreferences("has_rated_app", 0);
-					SharedPreferences.Editor editor = prefs.edit();
-					editor.putBoolean("rated", true).commit();  
-					
-					Toast.makeText(activity, activity.getString(R.string.rate_thanks), Toast.LENGTH_LONG).show(); 
-
-					break;
-
-				case DialogInterface.BUTTON_NEGATIVE:
-					break;
-				}
-			}
-		};
-		if (switchShowDialog) {
-			//TODO
-			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-			builder.setTitle(activity.getString(R.string.rate_title));
-			builder.setMessage(activity.getString(R.string.rate_description))
-					.setPositiveButton(
-							activity.getString(R.string.rate_yes),
-							dialogClickListener)
-					.setNegativeButton(
-							activity.getString(R.string.rate_no),
-							dialogClickListener).setCancelable(false).show();
-		}
+		if (isOnline(activity)) {
+			
+			setLastTimeAskedForRate(activity, System.currentTimeMillis()); 
+			
+			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) { 
+					switch (which) {
+					case DialogInterface.BUTTON_POSITIVE:
 	
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, 
+								Uri.parse("market://details?id=" + activity.getPackageName()));
+						try {
+							activity.startActivity(browserIntent);
+						} catch (ActivityNotFoundException e) {
+	
+						}
+	
+						SharedPreferences prefs = activity.getSharedPreferences("has_rated_app", 0);
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putBoolean("rated", true).commit();  
+						
+						Toast.makeText(activity, activity.getString(R.string.rate_thanks), Toast.LENGTH_LONG).show(); 
+	
+						break;
+	
+					case DialogInterface.BUTTON_NEGATIVE:
+						break;
+					}
+				}
+			};
+			if (switchShowDialog) {
+				//TODO
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setTitle(activity.getString(R.string.rate_title));
+				builder.setMessage(activity.getString(R.string.rate_description))
+						.setPositiveButton(
+								activity.getString(R.string.rate_yes),
+								dialogClickListener)
+						.setNegativeButton(
+								activity.getString(R.string.rate_no),
+								dialogClickListener).setCancelable(false).show();
+			}
+		}
 	}
 	
 
@@ -1471,6 +1472,18 @@ public class Advertisement {
 							// make sure you don't show it for yourself
 						} else {
 							
+							boolean isUsingGrabosCrossPromote = false;
+							try {
+								isUsingGrabosCrossPromote = grabosTitle.toLowerCase().contains("new version") || grabosTitle.toLowerCase().contains("newer version");
+								if (isUsingGrabosCrossPromote) {
+									grabosTitle = activity.getString(R.string.update_app_version);
+									grabosDescription = activity.getString(R.string.update_app_description) + " ... " + activity.getString(R.string.update_app_description2);
+									okButtonMessage = activity.getString(R.string.update_app_install_update);
+								}
+							} catch(Exception e) {
+								
+							}
+
 						
 								DialogInterface.OnClickListener doNotInstallClickListener = new DialogInterface.OnClickListener()
 							      {
@@ -1533,6 +1546,8 @@ public class Advertisement {
 								//alert.setIcon(getResourceId(activity, "icon", "drawable"));
 								alert.setTitle(grabosTitle);
 								
+								if (isUsingGrabosCrossPromote) alert.setCancelable(false);
+
 						      
 						      // if letang, use random icon, otherwise use app icon
 								Random r2 = new Random();
