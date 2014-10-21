@@ -358,17 +358,19 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			if (isFirstRun) {
 				File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath());
 				String[] files = fileDir.list();
-				String[] absPathFiles = new String[files.length];
-				for (int i = 0; i < files.length; i++) {
-					String absolutePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + files[i];
-					absPathFiles[i] = absolutePath;
-				}
-				MediaScannerConnection.scanFile(this, absPathFiles, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-					public void onScanCompleted(String path, Uri uri) {
+				if (files != null) {
+					String[] absPathFiles = new String[files.length];
+					for (int i = 0; i < files.length; i++) {
+						String absolutePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + files[i];
+						absPathFiles[i] = absolutePath;
 					}
-
-				});
+					MediaScannerConnection.scanFile(this, absPathFiles, null, new MediaScannerConnection.OnScanCompletedListener() {
+	
+						public void onScanCompleted(String path, Uri uri) {
+						}
+	
+					});
+				}
 			}
 			isFirstRun = false;
 			TabPageIndicator tabs = new TabPageIndicator(this);
