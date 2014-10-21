@@ -48,6 +48,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -127,18 +128,28 @@ public class MainActivity extends Activity {
 	public static boolean isAlphaNumeric(String input) {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
-
-	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX, FileObserver.DELETE) {
+	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX) {
 
 		@Override
 		public void onEvent(int event, String file) {
 			String filePath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + file;
 			if (mPagerAdapter != null) {
-				mPagerAdapter.removeDeletedData(filePath);
+				switch (event) {
+				case FileObserver.DELETE: 
+				case FileObserver.MOVED_FROM:
+					mPagerAdapter.removeDeletedData(filePath);
+					break;
+				case FileObserver.DELETE_SELF:
+					mPagerAdapter.fillLibrary();
+					break;
+				case FileObserver.MOVED_TO:
+					mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
+				}
 			}
+			
 		}
 	};
-
+	
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
 		private boolean flag = false;
@@ -192,15 +203,18 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		textFilterLibrary = mTextFilter.getText().toString();
+		observer.startWatching();
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
+		observer.stopWatching();
 		super.onResume();
 		if (page == 1 && null != textFilterDownload && !textFilterDownload.equals("")) {
 			mTextFilter.setText(textFilterDownload);
 		}
+		
 	}
 
 	@Override
@@ -214,7 +228,8 @@ public class MainActivity extends Activity {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
-		observer.startWatching();
+		
+		
 		telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -625,7 +640,7 @@ public class MainActivity extends Activity {
 						}
 						MusicData data = new MusicData(artistName, songTitle, null, null);
 						data.setSongAlbum(albumTitle);
-						observer.stopWatching();
+						//TODO hear 
 						music.rename(data);
 						notifyMediascanner(music);
 						showDialog = false;
@@ -662,7 +677,6 @@ public class MainActivity extends Activity {
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
-				observer.startWatching();
 				int i = getSelectedItem();
 				mPagerAdapter.updateMusicData(i, musicData);
 			}
