@@ -79,7 +79,9 @@ public class DownloadsTab implements LoadPercentageInterface {
 						if (getItem(position).getFileUri() != null) {
 							DBHelper.getInstance(getContext()).delete(getItem(position));
 						}
-						remove(getItem(position));
+						MusicData song = getItem(position);
+						remove(song);
+						DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
 					}
 				});
 			}
@@ -297,6 +299,16 @@ public class DownloadsTab implements LoadPercentageInterface {
 	
 	public void insertData(MusicData data) {
 		adapter.insert(data, 0);
+	}
+	
+	public boolean updateData(long lastID, long newID) {
+		for (int i = 0; i < adapter.getCount(); i++) {
+			if (adapter.getItem(i).getDownloadId() == lastID) {
+				adapter.getItem(i).setDownloadId(newID);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static View getInstanceView(LayoutInflater layoutInflater, Activity activity) {
