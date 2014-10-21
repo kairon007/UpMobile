@@ -210,6 +210,7 @@ public class Song implements Comparable<Song>, Parcelable {
 	{
 		Bitmap cover = null;
 		if (mDisableCoverArt || id == -1 || (flags & FLAG_NO_COVER) != 0) return null;
+		if (null == path) return null;
 		File file = new File(path);
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
