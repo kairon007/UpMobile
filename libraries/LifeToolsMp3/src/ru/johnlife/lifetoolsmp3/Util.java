@@ -36,6 +36,14 @@ public final class Util {
 		return String.format("%d:%02d", min, sec);
 	}
 	
+	public static long formatTime(String duration) {
+		long durationLong;
+		int min = Integer.valueOf(duration.substring(0, 2));
+		int sec = Integer.valueOf(duration.substring(3, 5));
+		durationLong = (min * 60 * 1000) +  (sec * 1000);
+		return durationLong;
+	}
+	
 	public static Bitmap resizeToSmall(Bitmap original) {
 		int originalSize = Math.max(original.getWidth(), original.getHeight());
 		float scale = 1;
