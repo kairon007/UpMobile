@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSpinnerAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
@@ -38,6 +39,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -61,35 +63,42 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public abstract class OnlineSearchView extends View {
 
+	public static List<Engine> engines = null;
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
 	private static final String KEY_POSITION = "position.song.vanilla";
-	public static List<Engine> engines = null;
+	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
+	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
+	private String SPREF_ENGINES ="shar_pref_key_engines_array";
+	private String SPREF_CURRENT_ENGINES ="pref_key_current_engines_array";
+	private Iterator<Engine> taskIterator;
+	private SharedPreferences sPref;
 	private AlertDialog alertDialog;
 	private RemoteSong downloadSong;
+	private CustomSpinnerAdapter adapter;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private LayoutInflater inflater;
-	private Iterator<Engine> taskIterator;
 	private String currentName = null;
 	private SongSearchAdapter resultAdapter;
 	private TextView message;
+	private Spinner spEnginesChoiser;
 	private View progress;
 	private TextView searchField;
-	private View view;
+	private ViewGroup view;
 	private Player player;
 	private boolean searchStopped = true;
-	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
-	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private ListView listView;
 	private DownloadClickListener downloadClickListener;
 	private Runnable dialogDismisser;
 	private String extraSearch = null;
+	private String keyEngines;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -129,6 +138,15 @@ public abstract class OnlineSearchView extends View {
 			super.onCallStateChanged(state, incomingNumber);
 		}
 	};
+	
+	OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
+		
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+			String value = sharedPreferences.getString(key, null);
+			initSearchEngines(getContext(), value);
+		}
+	};
 
 	protected abstract BaseSettings getSettings();
 
@@ -141,12 +159,17 @@ public abstract class OnlineSearchView extends View {
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
 		this.inflater = inflater;
-		this.view = inflater.inflate(R.layout.search, null);
+		this.view = (ViewGroup) inflater.inflate(R.layout.search, null);
+		initSearchEngines(getContext(), null);
+		sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
+		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
 	}
 
 	public View getView() {
 		final boolean fullAction = showFullElement();
 		resultAdapter = new SongSearchAdapter(getContext(), inflater, fullAction);
+		init();
 		if (!fullAction) {
 			view.findViewById(R.id.downloads).setVisibility(View.GONE);
 		} else {
@@ -157,11 +180,7 @@ public abstract class OnlineSearchView extends View {
 				}
 			});
 		}
-		initSearchEngines(getContext());
-		message = (TextView) view.findViewById(R.id.message);
-		progress = view.findViewById(R.id.progress);
 		progress.setVisibility(View.GONE);
-		listView = (ListView) view.findViewById(R.id.list);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setEmptyView(message);
@@ -181,7 +200,6 @@ public abstract class OnlineSearchView extends View {
 			}
 
 		});
-		searchField = (TextView) view.findViewById(R.id.text);
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -190,6 +208,38 @@ public abstract class OnlineSearchView extends View {
 					return true;
 				}
 				return false;
+			}
+		});
+		ArrayList<String> list = getSettings().getEnginesArray();
+		adapter = new CustomSpinnerAdapter(getContext(), 0, list);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spEnginesChoiser.setAdapter(adapter);
+		int id = adapter.getPosition(keyEngines);
+		spEnginesChoiser.setSelection(id);
+		final Context context = getContext(); 
+		spEnginesChoiser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				// TODO
+				keyEngines = (String) adapter.getItem(position);
+				sPref = context.getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+				SharedPreferences.Editor editor = sPref.edit();
+				if (keyEngines.equals(getTitleSearchEngine())) {
+					editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
+					keyEngines = getTitleSearchEngine();
+				} else if (keyEngines.equals(getTitleSearchEngine2())) {
+					editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine2());
+					keyEngines = getTitleSearchEngine2();
+				} else if (keyEngines.equals(getTitleSearchEngine3())) {
+					editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine3());
+					keyEngines = getTitleSearchEngine3();
+				}
+				editor.commit();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
@@ -243,10 +293,46 @@ public abstract class OnlineSearchView extends View {
 		return view;
 	}
 
-	public void initSearchEngines(Context context) {
-		if (null != engines)
-			return;
-		String[][] engineArray = getSettings().getSearchEnginesArray(context);
+	private void init() {
+		message = (TextView) view.findViewById(R.id.message);
+		progress = view.findViewById(R.id.progress);
+		listView = (ListView) view.findViewById(R.id.list);
+		searchField = (TextView) view.findViewById(R.id.text);
+		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
+	}
+	
+	public static String getTitleSearchEngine() {
+		return "Music";
+	}
+
+	public static String getTitleSearchEngine2() {
+		return "YouTube";
+	}
+
+	public static String getTitleSearchEngine3() {
+		return "SoundCloud";
+	}
+
+	public void initSearchEngines(Context context, String valueEngines) {
+		//TODO this set number engines
+		if (null == valueEngines) {
+			sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+			keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
+		} else {
+			keyEngines = valueEngines;
+		}
+		String[][] engineArray = null;
+		if (keyEngines.equals(getTitleSearchEngine())) {
+			engineArray = getSettings().getSearchEnginesArray(context);
+		} else if (keyEngines.equals(getTitleSearchEngine2())) {
+			engineArray = getSettings().getSearchEnginesSC(context);	
+		} else if (keyEngines.equals(getTitleSearchEngine3())) {
+			engineArray = getSettings().getSearchEnginesYT(context);
+		}
+		for (int i = 0; i < engineArray.length; i++) {
+			for (int j = 0; j < engineArray[i].length; j++) {
+			}
+		}
 		engines = new ArrayList<Engine>(engineArray.length);
 		for (int i = 0; i < engineArray.length; i++) {
 			try {
@@ -565,7 +651,6 @@ public abstract class OnlineSearchView extends View {
 			protected void onPostExecute(String downloadUrl) {
 				loadSong(downloadUrl);
 				progressDialog.cancel();
-				android.util.Log.d("logd", "1");
 				createStreamDialog(args).show();
 			}
 
@@ -599,7 +684,6 @@ public abstract class OnlineSearchView extends View {
 				String url = downloadSong.getParentUrl();
 				if (url != null) {
 					loadSong(url);
-					android.util.Log.d("logd", "2");
 					createStreamDialog(args).show();
 				} else {
 					urlTask.execute(downloadSong);

@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-
 import java.util.Iterator;
 
 import org.apache.http.HttpEntity;
@@ -21,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,35 +27,35 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 
 public class Settings implements BaseSettings {
 	
-	
-	
 	// if you need to access SEARCH_ENGINES, call the public static method GET_SEARCH_ENGINES()  
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
 		//{"SearchVmusice", "1"}, 
+		{"SearchMyFreeMp3", "1"},
 		{"SearchZaycev", "2"},
 		{"SearchPleer", "2"},
 		{"SearchPoisk", "1"}, 
 		{"SearchHulkShare", "1"}, 
 		{"SearchMp3skull", "1"},
 		{"SearchMp3World", "1"}, 
-		{"SearchSoundCloud", "1"},  
-		{"SearchSoundCloudV2", "1"}, 
 		{"SearchSogou", "1"},
 		{"SearchGrooveshark", "1"}, 
 		{"SearchTing", "1"}, 
 		{"SearchZaycev", "7"} 
 	};
+
+	private static final String [][] SEARCH_ENGINES_2 = new String [][]{
+//		{"SearchYouTube", "1"}
+	};
 	
-	
-	
-	
-	///////////////
- 
+	private static final String [][] SEARCH_ENGINES_3 = new String [][]{
+		{"SearchSoundCloud", "1"},
+		{"SearchSoundCloudV2", "1"},
+		{"SearchSoundCloudV3", "1"}
+	};
 
 	public static String REMOTE_SETTINGS_URL ="";   
 	public static boolean ENABLE_ADS = true; 
@@ -74,10 +72,7 @@ public class Settings implements BaseSettings {
 	public static String APPNEXT_ID = "e03e502a-671a-4565-b46c-c7d28708f539";
 	public static String STARTAPP_DEV_ID = "107671050";
 	public static String STARTAPP_APP_ID = "210262312";	
- 
 
-	
-	
 	// accessor methods
 	public static String GET_STARTAPP_APP_ID(Context context) {
 		String remoteId = getSharedPrefString(context, "startapp_app_id", "");
@@ -142,10 +137,6 @@ public class Settings implements BaseSettings {
 			return remoteId;
 		}
 	}
-
-	
-	
-	
 
 	public static String getDefaultValueForRemoteSettingIfSet(String property) { 
 		String value = null;
@@ -236,28 +227,22 @@ public class Settings implements BaseSettings {
 	// this method tries to return remote search_engines if it exists, otherwise, it returns the default search egnines (SEARCH_ENGINES)
 	public static String[][] GET_SEARCH_ENGINES(Context context) {
 		String[][] ret = SEARCH_ENGINES;
-		
 		ArrayList<String[]> searchEngineTuples = new ArrayList<String[]>();
 		if (Settings.getIsBlacklisted(context)) {
-			
 			String[] searchEngineTuple = {"SearchNothing", "1"};
 			searchEngineTuples.add(searchEngineTuple); 
-			
 		} else if (getIsRemoteSettingsOn()) {
-			
-			
 			// for remote settings
-			
-		
 			// get search engines from remote settings if it exists
 			ArrayList<String> searchEnginesNames = getSearchEngines(context);
-			 
-			
 			for (String searchEngineName : searchEnginesNames) {
 				try {
 					String[] searchEngineTuple = {"0", "0"};
 					if (searchEngineName != null) {
-						if (searchEngineName.equals("grooveshark")) {
+						if (searchEngineName.equals("SearchMyFreeMp3")) {
+							searchEngineTuple[0] = "SearchMyFreeMp3";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("grooveshark")) {
 							searchEngineTuple[0] = "SearchGrooveshark";
 							searchEngineTuple[1] = "1";
 						} else if (searchEngineName.equals("zaycev")) {
@@ -281,12 +266,6 @@ public class Settings implements BaseSettings {
 						} else if (searchEngineName.equals("sogou")) {
 							searchEngineTuple[0] = "SearchSogou";
 							searchEngineTuple[1] = "1";
-						} else if (searchEngineName.equals("soundcloud")) {
-							searchEngineTuple[0] = "SearchSoundCloud";
-							searchEngineTuple[1] = "1";
-						} else if (searchEngineName.equals("soundcloudv2")) {
-							searchEngineTuple[0] = "SearchSoundCloudV2";
-							searchEngineTuple[1] = "1";
 						} else if (searchEngineName.equals("baidu")) {
 							searchEngineTuple[0] = "SearchTing"; 
 							searchEngineTuple[1] = "1";
@@ -307,23 +286,94 @@ public class Settings implements BaseSettings {
 				}
 			}
 		}
-		
 		try {
 			if (searchEngineTuples != null && searchEngineTuples.size() > 0) {
 				ret = searchEngineTuples.toArray(new String[searchEngineTuples.size()][2]);
-				
 			}
 		} catch(Exception e) {
-			
 		}
+		return ret;
+	}
 	
+	public static String[][] GET_SEARCH_ENGINES_2(Context context) {
+		String[][] ret = SEARCH_ENGINES_2;
+		ArrayList<String[]> searchEngineTuples = new ArrayList<String[]>();
+		if (Settings.getIsBlacklisted(context)) {
+			String[] searchEngineTuple = {"SearchNothing", "1"};
+			searchEngineTuples.add(searchEngineTuple); 
+		} else if (getIsRemoteSettingsOn()) {
+			// for remote settings
+			// get search engines from remote settings if it exists
+			ArrayList<String> searchEnginesNames = getSearchEngines(context);
+			for (String searchEngineName : searchEnginesNames) {
+				try {
+					String[] searchEngineTuple = {"0", "0"};
+					if (searchEngineName != null) {
+						 if (searchEngineName.equals("soundcloud")) {
+							searchEngineTuple[0] = "SearchSoundCloud";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("soundcloudv2")) {
+							searchEngineTuple[0] = "SearchSoundCloudV2";
+							searchEngineTuple[1] = "1";
+						} else if (searchEngineName.equals("soundcloudv3")) {
+							searchEngineTuple[0] = "SearchSoundCloudV3"; 
+							searchEngineTuple[1] = "1";
+						} 
+					}
+					// if search engine is valid
+					if (searchEngineTuple[0] != null && searchEngineTuple[1] != null && !searchEngineTuple[0].equals("0") && !searchEngineTuple[1].equals("0")) {
+						searchEngineTuples.add(searchEngineTuple);
+					}
+				} catch(Exception e) {
+					
+				}
+			}
+		}
+		try {
+			if (searchEngineTuples != null && searchEngineTuples.size() > 0) {
+				ret = searchEngineTuples.toArray(new String[searchEngineTuples.size()][2]);
+			}
+		} catch(Exception e) {
+		}
 		return ret;
 	}
 
+	public static String[][] GET_SEARCH_ENGINES_3(Context context) {
+		String[][] ret = SEARCH_ENGINES_3;
+		ArrayList<String[]> searchEngineTuples = new ArrayList<String[]>();
+		if (Settings.getIsBlacklisted(context)) {
+			String[] searchEngineTuple = {"SearchNothing", "1"};
+			searchEngineTuples.add(searchEngineTuple); 
+		} else if (getIsRemoteSettingsOn()) {
+			// for remote settings
+			// get search engines from remote settings if it exists
+			ArrayList<String> searchEnginesNames = getSearchEngines(context);
+			for (String searchEngineName : searchEnginesNames) {
+				try {
+					String[] searchEngineTuple = { "0", "0" };
+					if (searchEngineName != null) {
+						if (searchEngineName.equals("youtube")) {
+							searchEngineTuple[0] = "SearchYouTube";
+							searchEngineTuple[1] = "1";
+						}
+					}
+					// if search engine is valid
+					if (searchEngineTuple[0] != null && searchEngineTuple[1] != null && !searchEngineTuple[0].equals("0") && !searchEngineTuple[1].equals("0")) {
+						searchEngineTuples.add(searchEngineTuple);
+					}
+				} catch (Exception e) {
 
-	
-	
-
+				}
+			}
+		}
+		try {
+			if (searchEngineTuples != null && searchEngineTuples.size() > 0) {
+				ret = searchEngineTuples.toArray(new String[searchEngineTuples.size()][2]);
+			}
+		} catch(Exception e) {
+		}
+		return ret;
+	}
 	
 	// paradise / maniac
 	public static ArrayList<String> getSearchEngines(Context context) {
@@ -386,12 +436,6 @@ public class Settings implements BaseSettings {
 		
 		return searchEngines;
 	}
-	
-	
-
-	
-	
-
 	
 	public static SharedPreferences getSharedPrefs(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
@@ -693,15 +737,6 @@ public class Settings implements BaseSettings {
 		else return true;
 		 
 	}
- 
-
-
-
-
-
-
-
-	
 
 	public static boolean getIsBlacklistedLocation(Context ctx) {
 		
@@ -714,17 +749,11 @@ public class Settings implements BaseSettings {
 		String isBlacklistedLocationString = getSharedPrefString(ctx, Settings.IS_BLACKLISTED_LOCATION_KEY, null);
 		if (isBlacklistedLocationString == null || isBlacklistedLocationString.equals("false")) return false;
 		else return true;
-		
 	}
-	
  
 	public static boolean getIsBlacklisted(Context ctx) {      
-		
 		return getIsBlacklistedIP(ctx) || getIsBlacklistedLocation(ctx);     
-		   
 	}
-
-	
 	
 	// KEY_REMOTE_SETTING_SETTINGs keys
 	public static String KEY_REMOTE_SETTING_INTERSTITIAL_START = "interstitial_start"; // also options: interstitial_start_options for all
@@ -781,12 +810,35 @@ public class Settings implements BaseSettings {
 	public String[][] getSearchEnginesArray(Context context) {
 		return GET_SEARCH_ENGINES(context);
 	}
+	
+	@Override
+	public String[][] getSearchEnginesSC(Context context) {
+		return GET_SEARCH_ENGINES_2(context);
+	}
 
-
-
+	@Override
+	public String[][] getSearchEnginesYT(Context context) {
+		return GET_SEARCH_ENGINES_3(context);
+	}
 
 	@Override
 	public boolean getIsCoversEnabled(Context context) {
 		return !Settings.getIsBlacklisted(context) && ENABLE_ALBUM_COVERS;
 	}
+
+	@Override
+	public ArrayList<String> getEnginesArray() {
+		ArrayList<String> result = new ArrayList<String>();
+		if(null != SEARCH_ENGINES && SEARCH_ENGINES.length >0){
+			result.add(OnlineSearchView.getTitleSearchEngine());
+		}
+		if(null != SEARCH_ENGINES_2 && SEARCH_ENGINES_2.length>0){
+			result.add(OnlineSearchView.getTitleSearchEngine2());
+		}
+		if(null != SEARCH_ENGINES_3 && SEARCH_ENGINES_3.length >0){
+			result.add(OnlineSearchView.getTitleSearchEngine3());
+		}
+		return result;
+	}
+	
 }
