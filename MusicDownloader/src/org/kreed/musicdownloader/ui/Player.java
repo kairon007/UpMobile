@@ -11,7 +11,7 @@ import org.kreed.musicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
-import android.graphics.Color;
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -149,7 +149,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		songTitle = (TextView) view.findViewById(R.id.player_title);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
 		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-			buttonPlay.setBackgroundColor(Color.DKGRAY);
+			Context context = view.getContext();
+			buttonPlay.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.selectable_item_bg_honeycomb));
 		}
 		buttonPlay.setOnClickListener(this);
 	}
