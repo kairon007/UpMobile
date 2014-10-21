@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
@@ -20,6 +21,7 @@ import android.content.DialogInterface.OnShowListener;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
+import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -40,12 +42,13 @@ import android.widget.Toast;
 
 public class DirectoryChooserDialog {
 
-	private static final String STORAGE = "/storage/";
+	private static final String STORAGE = "/storage";
 	private boolean m_isNewFolderEnabled = true;
 	private ListView lvContent;
 	private String m_sdcardDirectory = "";
 	private Context m_context;
 	private TextView titleText;
+	private DialogInterface dialog;
 
 	private String m_dir = "";
 	private List<String> m_subdirs = null;
@@ -59,10 +62,12 @@ public class DirectoryChooserDialog {
 		@Override
 		public void onShow(DialogInterface dialog) {
 			float textSize = 16f;
+			DirectoryChooserDialog.this.dialog = dialog;
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
+	private ImageButton newDirButton;
 
 	// ////////////////////////////////////////////////////
 	// Callback interface for selected directory
@@ -107,12 +112,13 @@ public class DirectoryChooserDialog {
 		m_dir = dir;
 		m_subdirs = getDirectories(dir);
 		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
-			
+
 			public void onClick(DialogInterface dialog, int item) {
 				String directory = (String) ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
 				if (directory.equals(""))
 					return;
 				m_dir += "/" + directory;
+				enableButtons(true);
 				updateDirectory();
 			}
 		}
@@ -197,7 +203,7 @@ public class DirectoryChooserDialog {
 		lvContent = (ListView) contentView.findViewById(R.id.lvPath);
 		titleText.setText(title);
 		ImageButton parentDirectory = (ImageButton) contentView.findViewById(R.id.imageButton1);
-		ImageButton newDirButton = (ImageButton) contentView.findViewById(R.id.imageButton2);
+		newDirButton = (ImageButton) contentView.findViewById(R.id.imageButton2);
 		newDirButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -208,10 +214,14 @@ public class DirectoryChooserDialog {
 		parentDirectory.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (m_dir.equals(m_sdcardDirectory)) {
+				if (m_dir.equals(STORAGE)) {
+					enableButtons(false);
 					return;
 				}
-				m_dir = STORAGE;
+				m_dir = parent.getPath();
+				if (m_dir.equals(STORAGE)) {
+					enableButtons(false);
+				}
 				updateDirectory();
 			}
 		});
@@ -223,7 +233,6 @@ public class DirectoryChooserDialog {
 			m_listAdapter.add("");
 		}
 		dialogBuilder.setCancelable(false);
-
 		lvContent.setAdapter(m_listAdapter);
 		lvContent.setOnItemClickListener(new OnItemClickListener() {
 
@@ -233,11 +242,19 @@ public class DirectoryChooserDialog {
 				if (directory.equals(""))
 					return;
 				m_dir += "/" + directory;
+				enableButtons(true);
 				updateDirectory();
 			}
 		});
 		dialogBuilder.setView(contentView);
 		return dialogBuilder;
+	}
+	
+	private void enableButtons(boolean enable) {
+		((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
+		((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setClickable(enable);
+		newDirButton.setEnabled(enable);
+		newDirButton.setClickable(enable);
 	}
 
 	public void createNewDirDialog(String name) {
