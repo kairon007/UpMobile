@@ -34,7 +34,6 @@ import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
 import org.kreed.vanilla.equalizer.MyEqualizer;
 
-import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
@@ -45,6 +44,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -62,7 +62,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -1242,10 +1241,21 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		});
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
 			builder.setOnDismissListener(new OnDismissListener() {
-				
+				 
 				@Override
 				public void onDismiss(DialogInterface dialog) {
 					holder.setID3DialogOpened(false, null, false);
+				}
+			});
+		} else {
+			builder.setOnKeyListener(new OnKeyListener() {
+				
+				@Override
+				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+					if (keyCode == KeyEvent.KEYCODE_BACK) {
+						SongArrayHolder.getInstance().setID3DialogOpened(false, null, false);
+					}
+					return false;
 				}
 			});
 		}
