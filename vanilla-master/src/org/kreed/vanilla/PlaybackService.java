@@ -56,6 +56,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Virtualizer;
@@ -304,7 +306,7 @@ public final class PlaybackService extends Service
 
 	private Looper mLooper;
 	private Handler mHandler;
-	MediaPlayer mMediaPlayer;
+	private MediaPlayer player;
 	private boolean mMediaPlayerInitialized;
 	private PowerManager.WakeLock mWakeLock;
 	private NotificationManager mNotificationManager;
@@ -383,7 +385,7 @@ public final class PlaybackService extends Service
 	 * of user settings.
 	 */
 	private boolean mForceNotificationVisible;
-
+	
 	@Override
 	public void onCreate()
 	{
@@ -394,16 +396,16 @@ public final class PlaybackService extends Service
 		mTimeline.setCallback(this);
 		int state = loadState();
 
-		mMediaPlayer = new MediaPlayer();
-		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		mMediaPlayer.setOnCompletionListener(this);
-		mMediaPlayer.setOnErrorListener(this);
+		player = new MediaPlayer();
+		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		player.setOnCompletionListener(this);
+		player.setOnErrorListener(this);
 		
 		setEqualizer(getApplicationContext());
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			try {
-				mEqualizer = new CompatEq(mMediaPlayer);
+				mEqualizer = new CompatEq(player);
 			} catch (IllegalArgumentException e) {
 				// equalizer not supported
 			}
@@ -556,10 +558,10 @@ public final class PlaybackService extends Service
 		// clear the notification
 		stopForeground(true);
 
-		if (mMediaPlayer != null) {
-			saveState(mMediaPlayer.getCurrentPosition());
-			mMediaPlayer.release();
-			mMediaPlayer = null;
+		if (player != null) {
+			saveState(player.getCurrentPosition());
+			player.release();
+			player = null;
 		}
 
 		MediaButtonReceiver.unregisterMediaButton(this);
@@ -627,8 +629,8 @@ public final class PlaybackService extends Service
 		}
 
 		mBaseVolume = base;
-		if (mMediaPlayer != null)
-			mMediaPlayer.setVolume(base, base);
+		if (player != null)
+			player.setVolume(base, base);
 	}
 
 	private void loadPreference(String key)
@@ -755,7 +757,7 @@ public final class PlaybackService extends Service
 		if ((toggled & FLAG_PLAYING) != 0) {
 			if ((state & FLAG_PLAYING) != 0) {
 				if (mMediaPlayerInitialized)
-					mMediaPlayer.start();
+					player.start();
 
 				if (mNotificationMode != NEVER)
 					startForeground(NOTIFICATION_ID, createNotification(mCurrentSong, mState));
@@ -773,7 +775,7 @@ public final class PlaybackService extends Service
 				}
 			} else {
 				if (mMediaPlayerInitialized)
-					mMediaPlayer.pause();
+					player.pause();
 
 				if (mNotificationMode == ALWAYS || mForceNotificationVisible) {
 					stopForeground(false);
@@ -794,7 +796,7 @@ public final class PlaybackService extends Service
 		if ((toggled & FLAG_NO_MEDIA) != 0 && (state & FLAG_NO_MEDIA) != 0) {
 			Song song = mCurrentSong;
 			if (song != null && mMediaPlayerInitialized) {
-				mPendingSeek = mMediaPlayer.getCurrentPosition();
+				mPendingSeek = player.getCurrentPosition();
 				mPendingSeekSong = song.id;
 			}
 		}
@@ -1014,11 +1016,11 @@ public final class PlaybackService extends Service
 	 */
 	private Song setCurrentSong(int delta)
 	{
-		if (mMediaPlayer == null)
+		if (player == null)
 			return null;
 
-		if (mMediaPlayer.isPlaying())
-			mMediaPlayer.stop();
+		if (player.isPlaying())
+			player.stop();
 
 		Song song;
 		if (delta == 0)
@@ -1045,51 +1047,50 @@ public final class PlaybackService extends Service
 				updateState(mState & ~(FLAG_EMPTY_QUEUE|FLAG_NO_MEDIA));
 			}
 		}
-
 		mHandler.removeMessages(PROCESS_SONG);
-
 		mMediaPlayerInitialized = false;
 		mHandler.sendMessage(mHandler.obtainMessage(PROCESS_SONG, song));
 		mHandler.sendMessage(mHandler.obtainMessage(BROADCAST_CHANGE, -1, 0, song));
 		return song;
 	}
 
-	private void processSong(Song song)
-	{
+	private void processSong(final Song song) {
 		try {
 			mMediaPlayerInitialized = false;
-			mMediaPlayer.reset();
-			mMediaPlayer.setDataSource(song.path);
-			mMediaPlayer.prepare();
-			mMediaPlayerInitialized = true;
+			player.reset();
+			player.setDataSource(song.path);
+			player.prepareAsync();
+			player.setOnPreparedListener(new OnPreparedListener() {
+				
+				@Override
+				public void onPrepared(MediaPlayer mp) {
+					mMediaPlayerInitialized = true;
+					if (mPendingSeek != 0 && mPendingSeekSong == song.id) {
+						player.seekTo(mPendingSeek);
+						mPendingSeek = 0;
+					}
 
-			if (mPendingSeek != 0 && mPendingSeekSong == song.id) {
-				mMediaPlayer.seekTo(mPendingSeek);
-				mPendingSeek = 0;
-			}
+					if ((mState & FLAG_PLAYING) != 0)
+						player.start();
 
-			if ((mState & FLAG_PLAYING) != 0)
-				mMediaPlayer.start();
-
-			if ((mState & FLAG_ERROR) != 0) {
-				mErrorMessage = null;
-				updateState(mState & ~FLAG_ERROR);
-			}
+					if ((mState & FLAG_ERROR) != 0) {
+						mErrorMessage = null;
+						updateState(mState & ~FLAG_ERROR);
+					}
+				}
+			});
 		} catch (IOException e) {
 			mErrorMessage = getResources().getString(R.string.song_load_failed, song.path);
 			updateState(mState | FLAG_ERROR);
 			Toast.makeText(this, mErrorMessage, Toast.LENGTH_LONG).show();
 			Log.e("VanillaMusic", "IOException", e);
 		}
-
 		updateNotification();
-
 		mTimeline.purge();
 	}
 
 	@Override
-	public void onCompletion(MediaPlayer player)
-	{
+	public void onCompletion(MediaPlayer player) {
 		if (finishAction(mState) == SongTimeline.FINISH_REPEAT_CURRENT) {
 			setCurrentSong(0);
 		} else if (finishAction(mState) == SongTimeline.FINISH_STOP_CURRENT) {
@@ -1270,8 +1271,8 @@ public final class PlaybackService extends Service
 				volume = Math.max((float)(Math.pow(progress / 100f, 4) * mBaseVolume), .01f);
 				mHandler.sendMessageDelayed(mHandler.obtainMessage(FADE_OUT, progress, 0), 50);
 			}
-			if (mMediaPlayer != null)
-				mMediaPlayer.setVolume(volume, volume);
+			if (player != null)
+				player.setVolume(volume, volume);
 			break;
 		}
 		case PROCESS_STATE:
@@ -1309,7 +1310,7 @@ public final class PlaybackService extends Service
 	{
 		if (!mMediaPlayerInitialized)
 			return 0;
-		return mMediaPlayer.getCurrentPosition();
+		return player.getCurrentPosition();
 	}
 
 	/**
@@ -1321,8 +1322,8 @@ public final class PlaybackService extends Service
 	{
 		if (!mMediaPlayerInitialized)
 			return;
-		long position = (long)mMediaPlayer.getDuration() * progress / 1000;
-		mMediaPlayer.seekTo((int)position);
+		long position = (long)player.getDuration() * progress / 1000;
+		player.seekTo((int)position);
 	}
 
 	@Override
@@ -1419,7 +1420,7 @@ public final class PlaybackService extends Service
 			mHandler.sendEmptyMessageDelayed(IDLE_TIMEOUT, mIdleTimeout * 1000);
 
 		if (mFadeInProgress) {
-			mMediaPlayer.setVolume(mBaseVolume, mBaseVolume);
+			player.setVolume(mBaseVolume, mBaseVolume);
 			mFadeInProgress = false;
 		}
 
@@ -1918,15 +1919,15 @@ public final class PlaybackService extends Service
 	}
 	
 	public Equalizer getEqualizer() {
-		return new Equalizer(1, mMediaPlayer.getAudioSessionId());
+		return new Equalizer(1, player.getAudioSessionId());
 	}
 	
 	public BassBoost getBassBoost() {
-		return new BassBoost(2, mMediaPlayer.getAudioSessionId());
+		return new BassBoost(2, player.getAudioSessionId());
 	}
 	
 	public Virtualizer getVirtualizer() {
-		return new Virtualizer(3, mMediaPlayer.getAudioSessionId());
+		return new Virtualizer(3, player.getAudioSessionId());
 	}
 	
 	public void setEqualizer(Context context) {
