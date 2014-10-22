@@ -202,8 +202,7 @@ public class FileSystemAdapter
 	{
 		File file = mFiles[pos];
 		boolean isDirectory = file.isDirectory();
-		boolean isWhiteTheme = Util.getThemeName(mActivity).equals("AppTheme.White");
-		ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, mInflater, isWhiteTheme);
+		ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, mInflater, false);
 		builder
 			.setArrowClickListener(this)
 			.setMainClickListener(this)

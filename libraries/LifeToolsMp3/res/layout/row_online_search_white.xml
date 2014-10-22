@@ -72,8 +72,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/padding_middle"
+            android:paddingBottom="@dimen/padding_layout"
             android:paddingLeft="@dimen/padding_middle"
+            android:paddingRight="@dimen/padding_middle"
             android:paddingTop="@dimen/padding_layout" >
 
             <TextView

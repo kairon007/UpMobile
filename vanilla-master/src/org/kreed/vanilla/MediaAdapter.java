@@ -455,8 +455,7 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		boolean isWhiteTheme = Util.getThemeName(mActivity).equals("AppTheme.White");
-		ViewBuilder builder = AdapterHelper.getViewBuilder(view, mInflater, isWhiteTheme);
+		ViewBuilder builder = AdapterHelper.getViewBuilder(view, mInflater, false);
 		Cursor cursor = mCursor;
 		cursor.moveToPosition(position);
 		int count = cursor.getColumnCount();
