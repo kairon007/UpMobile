@@ -145,7 +145,7 @@ public abstract class OnlineSearchView extends View {
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			String value = sharedPreferences.getString(key, null);
 			initSearchEngines(getContext(), value);
-			if (null != resultAdapter || resultAdapter.isEmpty()){
+			if (resultAdapter.isEmpty()){
 				trySearch();
 			}
 		}
