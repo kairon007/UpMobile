@@ -29,6 +29,7 @@ import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.media.RemoteControlClient;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
@@ -2430,7 +2431,7 @@ public class MusicPlaybackService extends Service {
          *            you want to play
          */
         public void setDataSource(final String path) {
-            mIsInitialized = setDataSourceImpl(mCurrentMediaPlayer, path);
+            setDataSourceImpl(mCurrentMediaPlayer, path);
             if (mIsInitialized) {
                 setNextDataSource(null);
             }
@@ -2453,7 +2454,7 @@ public class MusicPlaybackService extends Service {
                     player.setDataSource(path);
                 }
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.prepare();
+                player.prepareAsync();
             } catch (final IOException todo) {
                 // TODO: notify the user why the file couldn't be opened
                 return false;
@@ -2461,6 +2462,13 @@ public class MusicPlaybackService extends Service {
                 // TODO: notify the user why the file couldn't be opened
                 return false;
             }
+            player.setOnPreparedListener(new OnPreparedListener() {
+				
+				@Override
+				public void onPrepared(MediaPlayer mp) {
+					mIsInitialized = true;
+				}
+			});
             player.setOnCompletionListener(this);
             player.setOnErrorListener(this);
             final Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
