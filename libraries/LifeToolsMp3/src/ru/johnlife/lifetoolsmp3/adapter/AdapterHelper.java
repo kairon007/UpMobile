@@ -24,6 +24,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 public class AdapterHelper {
+	
 	private final static Bitmap[] cache = new Bitmap[2];
 
 	public static class ViewBuilder {
@@ -40,21 +41,28 @@ public class AdapterHelper {
 		private TextView caption;
 		private boolean fullAction = true;
 		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
+		private boolean whiteTheme = false;
+
 		
-		private ViewBuilder(View view) {
+		private ViewBuilder(View view, boolean whiteTheme) {
 			view.setTag(this);
 			this.view = view; 
+			this.whiteTheme = whiteTheme;
 			view.setLongClickable(true);
 			init(view);
 			titleLine.setTypeface(MusicApp.FONT_REGULAR);
-			artistLine.setTypeface(MusicApp.FONT_LIGHT);
+			if (artistLine != null) {
+				artistLine.setTypeface(MusicApp.FONT_LIGHT);
+			}
 			chunkTime.setTypeface(MusicApp.FONT_REGULAR);
 			number.setTypeface(MusicApp.FONT_LIGHT);
 			caption.setTypeface(MusicApp.FONT_LIGHT);
 		}
 
 		private void init(View view) {
-			artistLine = (TextView)view.findViewById(R.id.artistLine);
+			if (!whiteTheme) {
+				artistLine = (TextView)view.findViewById(R.id.artistLine);
+			}
 			titleLine = (TextView)view.findViewById(R.id.titleLine);
 			chunkTime = (TextView) view.findViewById(R.id.chunkTime);
 			number = (TextView)view.findViewById(R.id.number);
@@ -119,21 +127,26 @@ public class AdapterHelper {
 		}
 		
 		public ViewBuilder setLine1(String valueTitle, String valueTime) {
-			
+			if (!whiteTheme) {
+				artistLine.setText(valueTitle);
+				setVisibility(titleLine, "");
+			}
 			setVisibility(chunkTime, valueTime);
-			setVisibility(titleLine, valueTitle);
-			artistLine.setText(valueTitle);
+			title = valueTitle;
 			if (null != valueTime) {
 				fullAction = false;
 				chunkTime.setText(valueTime);
 			}
-			title = valueTitle;
 			return this;
 		}
 		
 		public ViewBuilder setLine2(String value) {
-			titleLine.setText(value);
-			setVisibility(titleLine, value);
+			if (!whiteTheme) {
+				titleLine.setText(value);
+				setVisibility(titleLine, value);
+			} else {
+				titleLine.setText(title + " - " + value);
+			}
 			return this;
 		}
 		
@@ -248,20 +261,23 @@ public class AdapterHelper {
 		}
 	}
 
-	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater) {
+	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater, boolean whiteTheme) {
 		View target = convertView;
 		ViewBuilder builder;
 		if (null == target) {
-			target = inflater.inflate(R.layout.row_online_search, null);
-			builder = new ViewBuilder(target);
+			if (whiteTheme) {
+				target = inflater.inflate(R.layout.row_online_search_white, null);
+			} else {
+				target = inflater.inflate(R.layout.row_online_search, null);
+			}
+			builder = new ViewBuilder(target, whiteTheme);
 		} else {
 			try {
 				builder = (ViewBuilder) target.getTag();
 			} catch (Exception e) {
-				return getViewBuilder(null, inflater); //something wrong with the supplied view - create new one 
+				return getViewBuilder(null, inflater, whiteTheme); //something wrong with the supplied view - create new one 
 			}
 		}
 		return builder;
 	}
- 
 }

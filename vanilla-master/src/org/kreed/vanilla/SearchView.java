@@ -1,10 +1,10 @@
 package org.kreed.vanilla;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
-import android.os.Build;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
@@ -42,5 +42,9 @@ public class SearchView extends OnlineSearchView {
 		service = PlaybackService.get(context);
 		service.pause();
 	}
-	
+
+	@Override
+	protected boolean isWhiteTheme(Context context) {
+		return Util.getThemeName(context).equals("AppTheme.White");
+	}
 }

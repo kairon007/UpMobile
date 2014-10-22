@@ -84,4 +84,9 @@ public class SearchView  extends OnlineSearchView {
 	protected void stopSystemPlayer(Context context) {
 		// do nothing, just for others projects
 	}
+
+	@Override
+	protected boolean isWhiteTheme(Context context) {
+		return Util.getThemeName(context).equals("AppTheme.White");
+	}
 }

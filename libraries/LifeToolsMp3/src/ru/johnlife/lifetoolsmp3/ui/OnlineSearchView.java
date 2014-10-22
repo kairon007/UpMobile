@@ -155,6 +155,8 @@ public abstract class OnlineSearchView extends View {
 	public abstract void refreshLibrary();
 		
 	protected abstract void stopSystemPlayer(Context context);
+	
+	protected abstract boolean isWhiteTheme(Context context);
 
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -183,6 +185,10 @@ public abstract class OnlineSearchView extends View {
 		progress.setVisibility(View.GONE);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
+		if (isWhiteTheme(getContext())) {
+			listView.setDividerHeight(0);
+			listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
+		}
 		listView.setEmptyView(message);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -429,7 +435,7 @@ public abstract class OnlineSearchView extends View {
 		@Override
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
-			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater);
+			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()));
 			builder.setLine1(song.getTitle(),Util.formatTimeSimple((int) song.getDuration()))
 					.setLongClickable(false)
 					.setExpandable(false)

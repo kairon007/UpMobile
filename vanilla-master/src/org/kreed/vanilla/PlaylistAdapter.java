@@ -22,6 +22,7 @@
 
 package org.kreed.vanilla;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
