@@ -32,7 +32,12 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 				Element info = element.getElementsByTag("a").first();
 				String[] src = info.text().split(" - ");
 				String artist = src[0];
-				String title = src[1].split(".mp")[0];
+				String title;
+				if (src[1].contains("mp3")) {
+					title = src[1].split(".mp")[0];
+				} else {
+					title = src[1];
+				}
 				String srcDuration = info.attr("data-duration");
 				long duration = Long.valueOf(srcDuration) * 1000;
 				String idSong = info.attr("data-aid");

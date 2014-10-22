@@ -145,6 +145,9 @@ public abstract class OnlineSearchView extends View {
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			String value = sharedPreferences.getString(key, null);
 			initSearchEngines(getContext(), value);
+			if (null != resultAdapter || resultAdapter.isEmpty()){
+				trySearch();
+			}
 		}
 	};
 
@@ -593,7 +596,6 @@ public abstract class OnlineSearchView extends View {
 	
 	public void search(String songName) {
 		searchStopped = false;
-		
 		if (isBlacklistedQuery(songName)) {
 			// if blacklisted query, then searchNothing			
 			ArrayList<Engine> nothingSearch = new ArrayList<Engine>();
