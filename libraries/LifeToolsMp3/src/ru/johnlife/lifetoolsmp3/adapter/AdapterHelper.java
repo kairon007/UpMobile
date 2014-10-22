@@ -119,6 +119,7 @@ public class AdapterHelper {
 		}
 		
 		public ViewBuilder setLine1(String valueTitle, String valueTime) {
+			
 			setVisibility(chunkTime, valueTime);
 			setVisibility(titleLine, valueTitle);
 			artistLine.setText(valueTitle);
@@ -225,7 +226,7 @@ public class AdapterHelper {
 		}
 		
 		private void setVisibility(View view, String value) {
-			boolean empty = value == null || "".equals(value);
+			boolean empty = value == null || "".equals(value) || "0:00".equals(value);
 			view.setVisibility(empty ? View.GONE : View.VISIBLE);
 		}
 
