@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import com.google.android.gms.internal.cu;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import android.content.Context;
@@ -454,8 +455,8 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		
-		ViewBuilder builder = AdapterHelper.getViewBuilder(view, mInflater);
+		boolean isWhiteTheme = Util.getThemeName(mActivity).equals("AppTheme.White");
+		ViewBuilder builder = AdapterHelper.getViewBuilder(view, mInflater, isWhiteTheme);
 		Cursor cursor = mCursor;
 		cursor.moveToPosition(position);
 		int count = cursor.getColumnCount();
