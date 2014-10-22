@@ -422,7 +422,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(String... params) {
-		Log.d("log", "start run");
 		try {
 			// mediaPlayer.setDataSource(url);
 			HashMap<String, String> headers = new HashMap<String, String>();
@@ -432,7 +431,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			if (isCancelled()) {
 				releasePlayer();
 			} else {
-				Log.d("log", "return true");
 				return true;
 			}
 		} catch (Exception e) {
@@ -448,34 +446,39 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			return;
 		if (result) {
 			mediaPlayer.prepareAsync();
-			Log.d("log", "prepareAsync");
 			mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
 
 				@Override
 				public void onPrepared(MediaPlayer mp) {
-					Log.d("log", "prepare");
-					prepared = true;
-					mediaPlayer = mp;
-					mp.start();
-					mp.setOnCompletionListener(new OnCompletionListener() {
-						
-						@Override
-						public void onCompletion(MediaPlayer mp) {
-							mp.seekTo(0);
-							mediaPlayer = mp;
-							imagePause = R.drawable.play;
-							button.setImageResource(imagePause);
-							progress.setProgress(0);
-						}
-					});
-					rowLirycs.postDelayed(new Runnable() {
-						
-						public void run() {
-							if (null != mediaPlayer) {
-								Player.this.onPrepared();
+					if (SongArrayHolder.getInstance().isStremDialogOpened() && mp.getDuration() == duration) {
+						prepared = true;
+						mediaPlayer = mp;
+						mp.start();
+						mp.setOnCompletionListener(new OnCompletionListener() {
+
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								mp.seekTo(0);
+								mediaPlayer = mp;
+								imagePause = R.drawable.play;
+								button.setImageResource(imagePause);
+								progress.setProgress(0);
 							}
+						});
+						rowLirycs.postDelayed(new Runnable() {
+
+							public void run() {
+								if (null != mediaPlayer) {
+									Player.this.onPrepared();
+								}
+							}
+						}, 1000);
+					} else {
+						if(null!=mediaPlayer) {
+							mediaPlayer.reset();
+							mediaPlayer = null;
 						}
-					}, 1000);
+					}
 				}
 			});
 		}
