@@ -72,7 +72,10 @@
         android:icon="@drawable/icon"
         android:label="@string/musicbrowserlabel"
         android:largeHeap="true"
+        android:theme="@style/AppTheme.White"
         android:taskAffinity="android.task.music" >
+	<!-- AppTheme.White to enable white theme -->
+        
         <meta-data
             android:name="android.app.default_searchable"
             android:value="com.simpleandroid.music.QueryBrowserActivity" />
