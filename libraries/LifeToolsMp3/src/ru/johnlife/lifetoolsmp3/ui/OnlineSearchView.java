@@ -99,6 +99,7 @@ public abstract class OnlineSearchView extends View {
 	private Runnable dialogDismisser;
 	private String extraSearch = null;
 	private String keyEngines;
+	private OnlineSearchView onlineView = this;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -243,7 +244,7 @@ public abstract class OnlineSearchView extends View {
 					keyEngines = getTitleSearchEngine2();
 				} else if (keyEngines.equals(getTitleSearchEngine3())) {
 					editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine3());
-					keyEngines = getTitleSearchEngine3();
+					keyEngines 	= getTitleSearchEngine3();
 				}
 				editor.commit();
 			}
@@ -299,7 +300,6 @@ public abstract class OnlineSearchView extends View {
 		}
 		holder.restoreState(this);
 		if (holder.isSearchExecute() && resultAdapter.isEmpty()) {
-			//TODO hire start
 			search(holder.getSongName());
 		}
 		return view;
@@ -501,8 +501,7 @@ public abstract class OnlineSearchView extends View {
 		public void onFinishParsing(List<Song> songsList) {
 			SongArrayHolder.getInstance().setSearchExecute(false);
 			resultAdapter.hideProgress();
-			if (searchStopped)
-				return;
+			if (searchStopped) return;
 			//TODO: set result
 			if (songsList.isEmpty()) {
 				getNextResults();
@@ -516,6 +515,7 @@ public abstract class OnlineSearchView extends View {
 				for (Song song : songsList) {
 					resultAdapter.add(song);
 				}
+				SongArrayHolder.getInstance().saveStateAdapter(onlineView);
 			}
 		}
 	};
@@ -527,20 +527,16 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public void trySearch() {
-		Log.d("log", "trySearch start");
 		InputMethodManager imm = (InputMethodManager) searchField.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
 		String searchString = searchField.getText().toString();
 		if (isOffline(searchField.getContext())) {
-			Log.d("log", "trySearch isOffline");
 			message.setText(R.string.search_message_no_internet);
 			resultAdapter.clear();
 		} else if ((null == searchString) || ("".equals(searchString))) {
-			Log.d("log", "trySearch null == searchString)(equals(searchString");
 			resultAdapter.clear();
 			message.setText(R.string.search_please_enter_query);
 		} else {
-			Log.d("log", "trySearch else twice if");
 			search(searchString);
 		}
 
@@ -605,7 +601,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public void search(String songName) {
-		Log.d("log", "search 1");
+		SongArrayHolder.getInstance().setSearchExecute(true);
 		searchStopped = false;
 		if (isBlacklistedQuery(songName)) {
 			// if blacklisted query, then searchNothing			
@@ -628,14 +624,11 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	private void getNextResults() {
-		Log.d("log", "getNextResults 1");
-		SongArrayHolder.getInstance().setSearchExecute(true);
 		if (!taskIterator.hasNext()) {
 			resultAdapter.hideProgress();
 			return;
 		}
 		try {
-			Log.d("log", "getNextResults 2 (try)");
 			Engine engine = taskIterator.next();
 			BaseSearchTask searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName });
 			if (searchTask instanceof SearchWithPages) {
