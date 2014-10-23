@@ -109,7 +109,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
 		}
-		StringBuilder sb = new StringBuilder(songArtist).append(" - ").append(songTitle);
+		StringBuilder sb = new StringBuilder(songArtist.replaceAll("\\\\", "-").replaceAll("/", "-")).append(" - ").append(songTitle.replaceAll("\\\\", "-").replaceAll("/", "-"));
 		if (songId != -1) {
 			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb.append(".mp3").toString(), context);
