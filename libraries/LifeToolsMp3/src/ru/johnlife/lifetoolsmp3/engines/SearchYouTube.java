@@ -13,9 +13,10 @@ import android.util.Log;
 
 public class SearchYouTube extends BaseSearchTask {
 	
-	private String watchLink = "https://www.youtube.com/watch?v=%s";
-	private String link = "https://content.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=%s&type=video&key=AIzaSyDUmb30N4rIk-3rrScwuki3219dcOF2nBE";
-	private String[] resolution = {"default" ,"medium", "high"};
+//	private String link = "https://content.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=%s&type=video&key=AIzaSyDUmb30N4rIk-3rrScwuki3219dcOF2nBE";
+	private String link = "https://gdata.youtube.com/feeds/api/videos?q=%s&v=2&alt=jsonc";
+//	private String[] resolution = {"default" ,"medium", "high", "standard", "maxres"};
+	private String[] resolution = {"sqDefault" ,"hqDefault"};
 
 	public SearchYouTube(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -25,18 +26,18 @@ public class SearchYouTube extends BaseSearchTask {
 	protected Void doInBackground(Void... arg0) {
 		try {
 			JSONObject parent = new JSONObject(readUrl(String.format(link, URLEncoder.encode(getSongName(), "UTF-8"))));
-			JSONArray items = parent.getJSONArray("items");
+			JSONObject data = parent.getJSONObject("data");
+			JSONArray items = data.getJSONArray("items");
 			for(int i = 0; i< items.length(); i++) {
 				if (items.getJSONObject(i) != null) {
 					JSONObject item = items.getJSONObject(i);
-					JSONObject snippetObject = item.getJSONObject("snippet");
-					String title = snippetObject.getString("title").substring((snippetObject.getString("title").contains("-") ? snippetObject.getString("title").indexOf("-") + 1 : snippetObject.getString("title").indexOf(" ") + 1), snippetObject.getString("title").length() - 1);
-					String author = snippetObject.getString("title").substring(0, (snippetObject.getString("title").contains("-") ? snippetObject.getString("title").indexOf("-") + 1 : snippetObject.getString("title").indexOf(" ") + 1)); 
-					String watchUrl = String.format(watchLink, URLEncoder.encode(item.getJSONObject("id").getString("videoId"), "UTF-8"));
-					JSONObject thumbnailsObject = snippetObject.getJSONObject("thumbnails");
+					String title = item.getString("title").substring((item.getString("title").contains("-") ? item.getString("title").indexOf("-") + 1 : item.getString("title").indexOf(" ") + 1), item.getString("title").length() - 1);
+					String author = item.getString("title").substring(0, (item.getString("title").contains("-") ? item.getString("title").indexOf("-") + 1 : item.getString("title").indexOf(" ") + 1)); 
+					String watchId = item.getString("id");
+					JSONObject thumbnailsObject = item.getJSONObject("thumbnail");
 					int pictureArrayLength = thumbnailsObject.length();
-					String imageUrl = thumbnailsObject.getJSONObject(resolution[pictureArrayLength - 1]).getString("url");
-					addSong(new YouTubeSong(watchUrl, imageUrl).setArtistName(author).setTitle(title));
+					String imageUrl = thumbnailsObject.getString(resolution[pictureArrayLength - 1]);
+					addSong(new YouTubeSong(watchId, imageUrl).setArtistName(author).setTitle(title));
 				}
 			}
 		} catch (Exception e) {
