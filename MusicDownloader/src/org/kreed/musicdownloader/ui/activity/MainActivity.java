@@ -19,6 +19,7 @@ import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -234,6 +235,9 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.library_content);
 		init();
 		textWatcher = new CustomTextWatcher();
+		if (Util.getThemeName(this).equals(Util.getThemeName(this).equals(Util.WHITE_THEME))); {
+			findViewById(R.id.search_box).setBackgroundResource(R.drawable.search_background_white);
+		}
 		mTextFilter.addTextChangedListener(textWatcher);
 		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
 

@@ -10,6 +10,7 @@ import org.kreed.musicdownloader.interfaces.LoadPercentageInterface;
 import org.kreed.musicdownloader.interfaces.TaskSuccessListener;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
+import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -86,14 +87,14 @@ public class DownloadsTab implements LoadPercentageInterface {
 								DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
 						}
 						catch (UnsupportedOperationException ex) {
-							Log.d("log",ex.getMessage());
+							Log.e(getClass().getSimpleName(), ex.getMessage());
 						}
 					}
-					
 				});
 			}
 			MusicData song = getItem(position);
 			if (song != null) {
+				boolean isWhiteTheme = Util.getThemeName(getContext()).equals(Util.WHITE_THEME);
 				holder.artist.setText(song.getSongArtist());
 				holder.title.setText(song.getSongTitle());
 				if (song.getSongBitmap() != null) {
@@ -103,12 +104,12 @@ public class DownloadsTab implements LoadPercentageInterface {
 				}
 				if (song.isDownloaded()) {
 					holder.downloadProgress.setVisibility(View.GONE);
-					holder.remove.setImageResource(R.drawable.icon_ok);
+					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
 				} else {
 					holder.downloadProgress.setVisibility(View.VISIBLE);
 					double progress = song.getDownloadProgress();
 					holder.downloadProgress.setProgress((int) progress);
-					holder.remove.setImageResource(R.drawable.icon_cancel);
+					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_cancel_black : R.drawable.icon_cancel);
 				}
 				holder.duration.setText(song.getSongDuration());
 			}
