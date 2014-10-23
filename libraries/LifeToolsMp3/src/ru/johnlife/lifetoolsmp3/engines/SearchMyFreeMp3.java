@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
@@ -24,15 +25,21 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 	protected Void doInBackground(Void... params) {
 		try {
 			Document document = Jsoup.connect(String.format(URL, URLEncoder.encode(getSongName(), "UTF-8"))).get();
-			Element playlist = document.getElementById("content")
-						.getElementsByClass("white").first()
-						.getElementsByClass("inner").first()
-						.getElementsByClass("playlist").first();
+			Element playlist = document.select("ul.playlist").first();
+			if (null == playlist || null == playlist.children()) {
+				Log.d("log", "request is invalid");
+				return null;
+			}
 			for (Element element : playlist.children()) {
 				Element info = element.getElementsByTag("a").first();
 				String[] src = info.text().split(" - ");
 				String artist = src[0];
-				String title = src[1].split(".mp")[0];
+				String title;
+				if (src[1].contains(".mp3")) {
+					title = src[1].split(".mp")[0];
+				} else {
+					title = src[1];
+				}
 				String srcDuration = info.attr("data-duration");
 				long duration = Long.valueOf(srcDuration) * 1000;
 				String idSong = info.attr("data-aid");

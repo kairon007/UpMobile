@@ -43,8 +43,6 @@ public class SongArrayHolder {
 	}
 
 	public ArrayList<Song> getResults() {
-		if (results != null) {
-		}
 		return results;
 	}
 

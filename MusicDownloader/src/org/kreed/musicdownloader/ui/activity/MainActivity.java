@@ -48,7 +48,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -71,7 +70,6 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public class MainActivity extends Activity {
 
-	private static final String SAVE_CLEAR_TEMP = "SAVE_CLEAR_TEMP";
 	private static final String SAVE_PLAYER_VIEW = "SAVE_PLAYER_VIEW";
 	private static final String SAVE_BUTTONPLAY_PROGRESS = "SAVE_BUTTONPLAY_PROGRESS";
 	private static final String SAVE_SEEKBAR_PROGRESS = "SAVE_SEEKBAR_PROGRESS";
@@ -90,7 +88,6 @@ public class MainActivity extends Activity {
 	private FrameLayout footer;
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
-	private View mSearchBox;
 	private EditText mTextFilter;
 	private CustomTextWatcher textWatcher;
 	private LinearLayout searchLayout;
@@ -99,7 +96,6 @@ public class MainActivity extends Activity {
 
 	private String textFilterDownload = "";
 	private String textFilterLibrary = "";
-	private long mLastActedId;
 	private int page;
 	private int selectedItem;
 	private int lastPage = -1;
@@ -128,7 +124,8 @@ public class MainActivity extends Activity {
 	public static boolean isAlphaNumeric(String input) {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
-	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX) {
+
+	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX, FileObserver.DELETE) {
 
 		@Override
 		public void onEvent(int event, String file) {
@@ -146,10 +143,9 @@ public class MainActivity extends Activity {
 					mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
 				}
 			}
-			
 		}
 	};
-	
+
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
 		private boolean flag = false;
@@ -214,7 +210,6 @@ public class MainActivity extends Activity {
 		if (page == 1 && null != textFilterDownload && !textFilterDownload.equals("")) {
 			mTextFilter.setText(textFilterDownload);
 		}
-		
 	}
 
 	@Override
@@ -228,8 +223,7 @@ public class MainActivity extends Activity {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
-		
-		
+		observer.startWatching();
 		telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -237,7 +231,7 @@ public class MainActivity extends Activity {
 		HandlerThread thread = new HandlerThread(getClass().getName(), Process.THREAD_PRIORITY_LOWEST);
 		thread.start();
 		mLooper = thread.getLooper();
-		setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
+		setContentView(R.layout.library_content);
 		init();
 		textWatcher = new CustomTextWatcher();
 		mTextFilter.addTextChangedListener(textWatcher);
@@ -329,7 +323,6 @@ public class MainActivity extends Activity {
 		mLimiterScroller = (HorizontalScrollView) findViewById(R.id.limiter_scroller);
 		mLimiterViews = (ViewGroup) findViewById(R.id.limiter_layout);
 		mClearFilterEditText = (ImageButton) findViewById(R.id.clear_filter);
-		mSearchBox = findViewById(R.id.search_box);
 		mTextFilter = (EditText) findViewById(R.id.filter_text);
 		clearAll = (ImageButton) findViewById(R.id.clear_all_button);
 		footer = (FrameLayout) findViewById(R.id.footer);
@@ -347,7 +340,6 @@ public class MainActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		mLastActedId = LibraryAdapter.INVALID_ID;
 	}
 
 	/**
@@ -430,7 +422,6 @@ public class MainActivity extends Activity {
 	 */
 	public void onPageChanged(int position, LibraryAdapter adapter) {
 		// mCurrentAdapter = adapter;
-		mLastActedId = LibraryAdapter.INVALID_ID;
 		updateLimiterViews();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			CompatHoneycomb.selectTab(this, position);
@@ -640,7 +631,7 @@ public class MainActivity extends Activity {
 						}
 						MusicData data = new MusicData(artistName, songTitle, null, null);
 						data.setSongAlbum(albumTitle);
-						//TODO hear 
+						observer.stopWatching();
 						music.rename(data);
 						notifyMediascanner(music);
 						showDialog = false;
@@ -677,6 +668,7 @@ public class MainActivity extends Activity {
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
+				observer.startWatching();
 				int i = getSelectedItem();
 				mPagerAdapter.updateMusicData(i, musicData);
 			}

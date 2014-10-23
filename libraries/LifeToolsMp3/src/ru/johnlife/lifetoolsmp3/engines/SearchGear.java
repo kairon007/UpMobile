@@ -1,10 +1,8 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.jsoup.Jsoup;
 
 import ru.johnlife.lifetoolsmp3.Util;
@@ -34,7 +32,7 @@ public class SearchGear extends SearchWithPages {
 					addSong(new GearSong(downloadUrl, coverUrl).setArtistName(author).setTitle(title).setDuration(Util.formatTime("0" + duration)));
 				}
 			}
-		} catch (JSONException | IOException e) {
+		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), "Something went wrong :(" + e.getMessage());
 		}
 		return null;

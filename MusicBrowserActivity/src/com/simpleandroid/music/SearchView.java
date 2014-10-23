@@ -58,4 +58,9 @@ public class SearchView extends OnlineSearchView {
 	protected void stopSystemPlayer(Context context) {
 		MusicUtils.bindToService(activity, osc);
 	}
+
+	@Override
+	protected boolean isWhiteTheme(Context context) {
+		return false;
+	}
 }

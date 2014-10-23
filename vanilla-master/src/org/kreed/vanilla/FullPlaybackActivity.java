@@ -30,6 +30,7 @@ import java.io.InputStream;
 
 import org.kreed.vanilla.equalizer.MyEqualizer;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
 import android.content.Intent;

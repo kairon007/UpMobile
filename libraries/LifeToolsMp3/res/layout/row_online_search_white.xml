@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/divider_color_white"
+    android:divider="@drawable/layout_divider"
+    android:dividerPadding="4dp"
+    android:minHeight="64dp"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/padding_little"
+    android:paddingLeft="@dimen/padding_little"
+    android:paddingRight="@dimen/padding_little"
+    android:paddingTop="@dimen/padding_little"
+    android:showDividers="middle" >
+
+    <LinearLayout
+        android:id="@+id/boxInfoItem"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/selectable_item_bg_white"
+        android:clickable="true"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp" >
+
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:minHeight="48dp" >
+
+            <RelativeLayout
+                android:id="@+id/RelativeLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:lines="1"
+                    android:text="29"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="22sp" />
+
+                <!-- android:textColor="@color/dimmed" -->
+
+                <TextView
+                    android:id="@+id/caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/number"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-10dp"
+                    android:gravity="center_horizontal"
+                    android:text="tracks"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/padding_layout"
+            android:paddingLeft="@dimen/padding_middle"
+            android:paddingRight="@dimen/padding_middle"
+            android:paddingTop="@dimen/padding_layout" >
+
+            <TextView
+                android:id="@+id/titleLine"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="In The End sdfvasdfadfasdfsadfsdafsadfsddsa"
+                android:textSize="@dimen/font_size_normal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="bottom" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingRight="@dimen/padding_layout"
+                    android:src="@drawable/watch" />
+
+                <TextView
+                    android:id="@+id/chunkTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-thin"
+                    android:singleLine="true"
+                    android:text="3:52"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/font_size_normal"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+            <!-- android:textColor="#ffff" -->
+
+
+            <!-- android:textColor="@color/dimmed" -->
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnDownload"
+        android:layout_width="56dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/selectable_item_bg_white"
+        android:contentDescription="@string/expand"
+        android:longClickable="true"
+        android:scaleType="center"
+        android:src="@drawable/icon_download_black" />
+
+</LinearLayout>

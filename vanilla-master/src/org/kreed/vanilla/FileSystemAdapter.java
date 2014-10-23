@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import android.content.Context;
@@ -201,7 +202,7 @@ public class FileSystemAdapter
 	{
 		File file = mFiles[pos];
 		boolean isDirectory = file.isDirectory();
-		ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, mInflater);
+		ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, mInflater, false);
 		builder
 			.setArrowClickListener(this)
 			.setMainClickListener(this)

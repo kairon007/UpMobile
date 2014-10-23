@@ -17,6 +17,9 @@
 
 package com.viewpagerindicator;
 
+import org.kreed.vanilla.R;
+
+import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
@@ -30,8 +33,6 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import org.kreed.vanilla.R;
-import org.kreed.vanilla.Util;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change

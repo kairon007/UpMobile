@@ -26,6 +26,7 @@ import java.util.Arrays;
 
 import org.kreed.vanilla.app.VanillaApp;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,7 +44,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;

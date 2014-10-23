@@ -58,4 +58,10 @@ public class SearchView extends OnlineSearchView {
 	protected void stopSystemPlayer(Context context) {
 		MusicUtils.pause();
 	}
+
+	@Override
+	protected boolean isWhiteTheme(Context context) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
