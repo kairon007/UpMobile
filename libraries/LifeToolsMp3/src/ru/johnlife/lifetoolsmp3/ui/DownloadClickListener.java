@@ -57,14 +57,15 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private double progress = 0.0;
 	private boolean useAlbumCover = true;
 	private RefreshListener listener;
+	private final static String ZAYCEV_TAG = "(zaycev.net)";
 
 	protected DownloadClickListener(Context context, RemoteSong song, RefreshListener listener) {
 		this.context = context;
 		this.song = song;
 		this.songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
 		this.listener = listener;
-		songTitle = song.getTitle();
-		songArtist = song.getArtist();
+		songTitle = removeSpecialCharacters(song.getTitle());
+		songArtist = removeSpecialCharacters(song.getArtist());
 		url = song.getDownloadUrl();
 		duration = Util.formatTimeIsoDate(song.getDuration());
 		headers = song.getHeaders();
@@ -96,10 +97,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			return;
 		}
 		if (!this.songArtist.equals(artist)) {
-			songArtist = artist;
+			songArtist = removeSpecialCharacters(artist);
 		}
 		if (!this.songTitle.equals(title)) {
-			songTitle = title;
+			songTitle = removeSpecialCharacters(title);
 		}
 		if (url == null) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
@@ -109,7 +110,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
 		}
-		StringBuilder sb = new StringBuilder(songArtist.replaceAll("\\\\", "-").replaceAll("/", "-")).append(" - ").append(songTitle.replaceAll("\\\\", "-").replaceAll("/", "-"));
+		StringBuilder sb = new StringBuilder(songArtist).append(" - ").append(songTitle);
 		if (songId != -1) {
 			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb.append(".mp3").toString(), context);
@@ -333,5 +334,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	public interface CoverReadyListener {
 		
 		void onCoverReady(Bitmap cover);
+	}
+	
+	private String removeSpecialCharacters(String str) {
+		return str.replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
 	}
 }
