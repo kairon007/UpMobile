@@ -25,6 +25,7 @@ import android.graphics.Matrix;
 
 public final class Util {
 	
+	public final static String WHITE_THEME = "AppTheme.White";
 	private final static DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
 	private final static int SMALL_BITMAP_SIZE = 100;
 	

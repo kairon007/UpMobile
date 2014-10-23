@@ -191,6 +191,7 @@ public abstract class OnlineSearchView extends View {
 		if (isWhiteTheme(getContext())) {
 			listView.setDividerHeight(0);
 			listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
+			view.findViewById(R.id.search_field).setBackgroundResource(R.drawable.search_background_white);
 		}
 		listView.setEmptyView(message);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -311,7 +312,8 @@ public abstract class OnlineSearchView extends View {
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
 	}
-		public static String getTitleSearchEngine() {
+	
+	public static String getTitleSearchEngine() {
 		return "Music";
 	}
 
