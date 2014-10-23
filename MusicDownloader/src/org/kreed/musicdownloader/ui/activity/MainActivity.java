@@ -235,8 +235,9 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.library_content);
 		init();
 		textWatcher = new CustomTextWatcher();
-		if (Util.getThemeName(this).equals(Util.getThemeName(this).equals(Util.WHITE_THEME))); {
+		if (Util.getThemeName(this).equals(Util.WHITE_THEME)) {
 			findViewById(R.id.search_box).setBackgroundResource(R.drawable.search_background_white);
+			clearAll.setImageResource(R.drawable.icon_cancel_black);
 		}
 		mTextFilter.addTextChangedListener(textWatcher);
 		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
