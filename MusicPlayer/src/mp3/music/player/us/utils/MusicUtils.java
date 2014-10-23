@@ -715,13 +715,16 @@ public final class MusicUtils {
      * @return The ID for an album.
      */
     public static final long getIdForAlbum(final Context context, final String name) {
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, new String[] {
-                    BaseColumns._ID
-                }, AlbumColumns.ALBUM + "=?", new String[] {
-                    name
-                }, AlbumColumns.ALBUM);
-        int id = -1;
+    	// TODO this null
+    	int id = -1;
+    	Cursor cursor = null;
+		if (null != name) {
+			cursor = context.getContentResolver().
+					query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+						  new String[] { BaseColumns._ID }, AlbumColumns.ALBUM + "=?",
+						  new String[] { name },
+						  AlbumColumns.ALBUM);
+		} 
         if (cursor != null) {
             cursor.moveToFirst();
             if (!cursor.isAfterLast()) {
