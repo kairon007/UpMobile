@@ -14,6 +14,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -75,14 +76,20 @@ public class DownloadsTab implements LoadPercentageInterface {
 					public void onClick(View v) {
 						DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 						cancelledId = adapter.getItem(position).getDownloadId();
-						manager.remove(cancelledId);
-						if (getItem(position).getFileUri() != null) {
-							DBHelper.getInstance(getContext()).delete(getItem(position));
+						try {
+							manager.remove(cancelledId);
+							if (getItem(position).getFileUri() != null) {
+								DBHelper.getInstance(getContext()).delete(getItem(position));
+							}
+							MusicData song = getItem(position);
+							remove(song);
+								DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
 						}
-						MusicData song = getItem(position);
-						remove(song);
-						DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
+						catch (UnsupportedOperationException ex) {
+							Log.d("log",ex.getMessage());
+						}
 					}
+					
 				});
 			}
 			MusicData song = getItem(position);
