@@ -1,6 +1,7 @@
 package com.simpleandroid.music;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
@@ -61,6 +62,6 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected boolean isWhiteTheme(Context context) {
-		return false;
+		return Util.getThemeName(context).equals(Util.WHITE_THEME);
 	}
 }

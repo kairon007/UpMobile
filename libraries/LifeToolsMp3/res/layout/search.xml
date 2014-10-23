@@ -84,9 +84,10 @@
             android:layout_gravity="center" />
 
         <LinearLayout
+            android:id="@+id/choise_engines_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/spinner_background"
+            android:background="@drawable/search_background"
             android:orientation="vertical" >
 
             <Spinner
