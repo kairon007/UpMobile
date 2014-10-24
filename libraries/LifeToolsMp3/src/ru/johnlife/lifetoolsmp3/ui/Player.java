@@ -101,6 +101,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		this.artist = artist;
 		this.title = title;
 		mediaPlayer = new MediaPlayer();
+		SongArrayHolder.getInstance().setCurrentPlayersId(mediaPlayer.hashCode());
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		initView(view);
 	}
@@ -450,9 +451,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 				@Override
 				public void onPrepared(MediaPlayer mp) {
-					if (SongArrayHolder.getInstance().isStremDialogOpened() && mp.getDuration() == duration) {
+					int last = SongArrayHolder.getInstance().getCurrentPlayersId();
+					int current = mp.hashCode();
+					if (SongArrayHolder.getInstance().isStremDialogOpened() && last == current) {
 						prepared = true;
-						mediaPlayer = mp;
 						mp.start();
 						mp.setOnCompletionListener(new OnCompletionListener() {
 
