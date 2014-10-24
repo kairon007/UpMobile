@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -153,6 +155,21 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	        }
 		}
 		return false;
+	}
+	
+	protected boolean checkConnection(String strLink) {
+		try {
+			URL url = new URL(strLink);
+			HttpsURLConnection connection  = (HttpsURLConnection) url.openConnection();
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_FORBIDDEN
+					|| connection.getResponseCode() == HttpsURLConnection.HTTP_NOT_FOUND){
+				Log.d("log", "response is bad, error #" + connection.getResponseCode());
+				return false;
+			}
+		} catch (Exception e) {
+			Log.d("log", "SearchMyFreeMp3.checkConnection; exeption - " + e.getMessage());
+		} 
+		return true;
 	}
 	
 	

@@ -1,15 +1,12 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-
 import android.util.Log;
 
 public class SearchMyFreeMp3 extends SearchWithPages {
@@ -24,19 +21,25 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 	@Override
 	protected Void doInBackground(Void... params) {
 		try {
-			Document document = Jsoup.connect(String.format(URL, URLEncoder.encode(getSongName(), "UTF-8"))).get();
+			String strLink = String.format(URL, URLEncoder.encode(getSongName(), "UTF-8"));
+			if(!checkConnection(strLink)) {
+				return null;
+			}
+			Document document = Jsoup.connect(strLink).get();
 			Element playlist = document.select("ul.playlist").first();
 			if (null == playlist || null == playlist.children()) {
 				Log.d("log", "request is invalid");
-				return null;
+				return null;	
 			}
 			for (Element element : playlist.children()) {
 				Element info = element.getElementsByTag("a").first();
 				String[] src = info.text().split(" - ");
 				String artist = src[0];
 				String title;
-				if (src[1].contains(".mp3")) {
-					title = src[1].split(".mp")[0];
+				if (src[1].contains("mp3")) {
+					title = src[1].replaceAll("mp3", "");
+				} else if (src[1].contains(".mp3")) {
+					title = src[1].replaceAll(".mp3", "");
 				} else {
 					title = src[1];
 				}
@@ -51,5 +54,4 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 		}
 		return null;
 	}
-
 }
