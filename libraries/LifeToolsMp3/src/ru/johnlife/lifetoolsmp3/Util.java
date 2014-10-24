@@ -22,6 +22,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.Log;
 
 public final class Util {
 	
@@ -79,7 +80,7 @@ public final class Util {
 		return result;
 	}
 	
-	public static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
+	public synchronized static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
 		if (maxWidth == 0) {
 			return null;
 		}
@@ -105,7 +106,14 @@ public final class Util {
 		}
 		opts = new BitmapFactory.Options();
 		opts.inSampleSize = scale;
-		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
+		Bitmap bitmap = null;
+		try {
+			bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
+		} catch (OutOfMemoryError e) {
+			Log.d("log", "ru.johnlife.lifetoolsmp3.Util.getArtworkImage :" + e.getMessage());
+			bitmap.recycle();
+			bitmap = null;
+		}
 		return bitmap;
 	}
 	
