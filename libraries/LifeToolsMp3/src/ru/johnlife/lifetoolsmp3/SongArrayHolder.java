@@ -23,6 +23,7 @@ public class SongArrayHolder {
 	private String directoryChooserPath;
 	private String newDirName;
 	private int listViewPosition;
+	private int currentPlayersId;
 	private boolean isStreamDialogOpened = false;
 	private boolean isID3DialogOpened = false;
 	private boolean isDirectoryChooserOpened = false;
@@ -49,6 +50,15 @@ public class SongArrayHolder {
 	public void setResults(ArrayList<Song> results) {
 		this.results = results;
 	}
+	
+	public int getCurrentPlayersId() {
+		return currentPlayersId;
+	}
+
+	public void setCurrentPlayersId(int currentAudioSessionId) {
+		this.currentPlayersId = currentAudioSessionId;
+	}
+	
 
 	public String getSongName() {
 		return songName;

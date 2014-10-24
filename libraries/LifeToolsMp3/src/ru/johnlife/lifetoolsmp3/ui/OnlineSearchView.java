@@ -223,37 +223,43 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 		ArrayList<String> list = getSettings().getEnginesArray();
-		adapter = new CustomSpinnerAdapter(getContext(), 0, list);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spEnginesChoiser.setAdapter(adapter);
-		int id = adapter.getPosition(keyEngines);
-		spEnginesChoiser.setSelection(id);
-		final Context context = getContext(); 
-		spEnginesChoiser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		if (list.size() > 1) {
+			adapter = new CustomSpinnerAdapter(getContext(), 0, list);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spEnginesChoiser.setAdapter(adapter);
+			int id = adapter.getPosition(keyEngines);
+			spEnginesChoiser.setSelection(id);
+			final Context context = getContext();
+			spEnginesChoiser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				// TODO
-				keyEngines = (String) adapter.getItem(position);
-				sPref = context.getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
-				SharedPreferences.Editor editor = sPref.edit();
-				if (keyEngines.equals(getTitleSearchEngine())) {
-					editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
-					keyEngines = getTitleSearchEngine();
-				} else if (keyEngines.equals(getTitleSearchEngine2())) {
-					editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine2());
-					keyEngines = getTitleSearchEngine2();
-				} else if (keyEngines.equals(getTitleSearchEngine3())) {
-					editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine3());
-					keyEngines 	= getTitleSearchEngine3();
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					// TODO
+					keyEngines = (String) adapter.getItem(position);
+					sPref = context.getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+					SharedPreferences.Editor editor = sPref.edit();
+					if (keyEngines.equals(getTitleSearchEngine())) {
+						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
+						keyEngines = getTitleSearchEngine();
+					} else if (keyEngines.equals(getTitleSearchEngine2())) {
+						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine2());
+						keyEngines = getTitleSearchEngine2();
+					} else if (keyEngines.equals(getTitleSearchEngine3())) {
+						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine3());
+						keyEngines = getTitleSearchEngine3();
+					}
+					editor.commit();
 				}
-				editor.commit();
-			}
 
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
-		});
+				@Override
+				public void onNothingSelected(AdapterView<?> parent) {
+				}
+			});
+
+		} else {
+			spEnginesChoiser.setVisibility(View.GONE);
+			sPref.unregisterOnSharedPreferenceChangeListener(sPrefListener);
+		}
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
