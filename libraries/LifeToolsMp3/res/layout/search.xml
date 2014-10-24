@@ -57,6 +57,21 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/choise_engines_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/search_background"
+        android:orientation="vertical" >
+
+        <Spinner
+            android:id="@+id/choise_engines"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:minWidth="72dp"
+            android:paddingRight="8dp" />
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -82,22 +97,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
-
-        <LinearLayout
-            android:id="@+id/choise_engines_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/search_background"
-            android:orientation="vertical" >
-
-            <Spinner
-                android:id="@+id/choise_engines"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:minWidth="72dp"
-                android:paddingRight="8dp" />
-
-        </LinearLayout>
 
     </FrameLayout>
 

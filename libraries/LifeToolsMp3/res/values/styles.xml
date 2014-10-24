@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -18,5 +18,11 @@
     </style>
 
     <style name="Dialog" parent="android:Theme.Dialog" />
-    
+
+    <style name="AppThemeBase.White" parent="android:Theme.Light.NoTitleBar" />
+
+    <style name="AppTheme.White" parent="AppThemeBase.White">
+        <item name="android:windowBackground">@color/window_background_light</item>
+    </style>
+
 </resources>
