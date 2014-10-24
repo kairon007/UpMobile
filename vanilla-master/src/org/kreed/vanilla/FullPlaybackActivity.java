@@ -75,10 +75,8 @@ import android.widget.Toast;
 /**
  * The primary playback screen with playback controls and large cover display.
  */
-public class FullPlaybackActivity extends PlaybackActivity
-	implements SeekBar.OnSeekBarChangeListener
-	         , View.OnLongClickListener
-{
+public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.OnSeekBarChangeListener, View.OnLongClickListener{
+	
 	public static final int DISPLAY_INFO_OVERLAP = 0;
 	public static final int DISPLAY_INFO_BELOW = 1;
 	public static final int DISPLAY_INFO_WIDGETS = 2;
