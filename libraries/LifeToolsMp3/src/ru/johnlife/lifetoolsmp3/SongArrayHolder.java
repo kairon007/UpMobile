@@ -24,6 +24,7 @@ public class SongArrayHolder {
 	private String newDirName;
 	private int listViewPosition;
 	private int currentPlayersId;
+	private boolean isPlaying = false;
 	private boolean isStreamDialogOpened = false;
 	private boolean isID3DialogOpened = false;
 	private boolean isDirectoryChooserOpened = false;
@@ -59,6 +60,13 @@ public class SongArrayHolder {
 		this.currentPlayersId = currentAudioSessionId;
 	}
 	
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+
+	public void setPlaying(boolean isPlauing) {
+		this.isPlaying = isPlauing;
+	}
 
 	public String getSongName() {
 		return songName;

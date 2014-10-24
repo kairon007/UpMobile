@@ -129,9 +129,10 @@ public abstract class OnlineSearchView extends View {
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
 				player.pause();
+				SongArrayHolder.getInstance().setPlaying(true);
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
-				player.play();
+				if(SongArrayHolder.getInstance().isPlaying()) player.play();
 				break;
 			default:
 				break;
@@ -571,7 +572,6 @@ public abstract class OnlineSearchView extends View {
 				}
 			}
 		}catch(Exception e) {
-			
 		}
 		
 		return searchEngines;
@@ -781,6 +781,7 @@ public abstract class OnlineSearchView extends View {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 				}
 			}
+
 		});
 		b.setPositiveButton(R.string.download_dialog_download, new DialogInterface.OnClickListener() {
 

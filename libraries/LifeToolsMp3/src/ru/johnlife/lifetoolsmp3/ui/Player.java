@@ -456,6 +456,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 					if (SongArrayHolder.getInstance().isStremDialogOpened() && last == current) {
 						prepared = true;
 						mp.start();
+						SongArrayHolder.getInstance().setPlaying(true);
 						mp.setOnCompletionListener(new OnCompletionListener() {
 
 							@Override
@@ -520,9 +521,11 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			return;
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
+			SongArrayHolder.getInstance().setPlaying(false);
 			onPaused();
 		} else {
 			mediaPlayer.start();
+			SongArrayHolder.getInstance().setPlaying(true);
 			onResumed();
 		}
 	}
@@ -531,6 +534,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (!prepared || null == mediaPlayer)
 			return;
 		if (mediaPlayer.isPlaying()) {
+			SongArrayHolder.getInstance().setPlaying(false);
 			mediaPlayer.pause();
 			onPaused();
 		}
@@ -540,6 +544,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (!prepared || null == mediaPlayer)
 			return;
 		if (!mediaPlayer.isPlaying()) {
+			SongArrayHolder.getInstance().setPlaying(true);
 			mediaPlayer.start();
 			onResumed();
 		}
