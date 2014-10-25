@@ -79,6 +79,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -1596,6 +1597,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				// res.getString(R.string.unknown): song.album;
 				mTitle.setText(title);
 				mArtist.setText(artist);
+				mTitle.startAnimation(AnimationUtils.loadAnimation(this, R.anim.move_text));
+				mArtist.startAnimation(AnimationUtils.loadAnimation(this, R.anim.move_text));
 				if (song.path == null) return;
 				File file = new File(song.path);
 				try {

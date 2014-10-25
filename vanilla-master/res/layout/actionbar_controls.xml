@@ -46,8 +46,9 @@ THE SOFTWARE.
             android:scaleType="fitCenter" />
 
         <LinearLayout
+            android:id="@+id/textLayout"
             android:layout_width="fill_parent"
-            android:minWidth="200dp"
+            android:minWidth="184dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="5dip"
@@ -57,7 +58,7 @@ THE SOFTWARE.
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
+                android:animateLayoutChanges="@anim/move_text"
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -66,7 +67,7 @@ THE SOFTWARE.
                 android:id="@+id/artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
+                android:animateLayoutChanges="@anim/move_text"
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textSize="12sp" />
@@ -85,7 +86,7 @@ THE SOFTWARE.
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="130dp"
+        android:layout_width="110dp"
         android:layout_weight="1"
         android:layout_height="match_parent" >
     </LinearLayout>
