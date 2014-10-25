@@ -24,6 +24,7 @@ import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListe
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadUrlGetterTask;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -277,7 +278,6 @@ public abstract class OnlineSearchView extends View {
 		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO clear search
 				searchField.setText(null);
 				message.setText(R.string.search_your_results_appear_here);
 				resultAdapter.clear();
@@ -579,32 +579,30 @@ public abstract class OnlineSearchView extends View {
 	
 
 	public boolean isBlacklistedQuery(String songName) {
-		
-	      ArrayList<String> dmcaSearchQueryBlacklist = getDMCABlacklistedItems("dmca_searchquery_blacklist");
-          
-          if (songName != null) {
-          	
-          	// serach blacklist
-	    	        for (String blacklistedSearchQuery : BaseSearchTask.blacklist) {
-	    	        	blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
-                  	if (songName.contains(blacklistedSearchQuery)) {
-                  		
-                      	return true;
-                      }
-	    	        }
-          	
-	    	        // serach dmca_searchquery blacklist
-              for (String blacklistedSearchQuery : dmcaSearchQueryBlacklist) {
-              	blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
-              	if (songName.contains(blacklistedSearchQuery)) {
-              		
-                  	return true;
-                  }
-              }
-          }
-          
-          
-          return false;
+
+		ArrayList<String> dmcaSearchQueryBlacklist = getDMCABlacklistedItems("dmca_searchquery_blacklist");
+
+		if (songName != null) {
+
+			// serach blacklist
+			for (String blacklistedSearchQuery : BaseSearchTask.blacklist) {
+				blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
+				if (songName.contains(blacklistedSearchQuery)) {
+					return true;
+				}
+			}
+
+			// serach dmca_searchquery blacklist
+			for (String blacklistedSearchQuery : dmcaSearchQueryBlacklist) {
+				blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
+				if (songName.contains(blacklistedSearchQuery)) {
+
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 	
 	public void search(String songName) {
@@ -665,19 +663,26 @@ public abstract class OnlineSearchView extends View {
 		final String artist = downloadSong.getArtist();
 		final Context context = view.getContext();
 		final boolean isDialogOpened = SongArrayHolder.getInstance().isStremDialogOpened();
-		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask() {
-			private ProgressDialog progressDialog;
-
+		final ProgressDialog progressDialog = new ProgressDialog(getContext());
+		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask(new DownloadUrlListener() {
+			
 			@Override
-			protected void onPostExecute(String downloadUrl) {
-				loadSong(downloadUrl);
-				progressDialog.cancel();
+			public void success(String url) {
+				loadSong(url);
+				progressDialog.dismiss();
 				createStreamDialog(args).show();
 			}
+			
+			@Override
+			public void error(String error) {
+				Toast toast = Toast.makeText(context, R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
+				toast.show();
+				
+			}
+		}) { 
 
 			@Override
 			protected void onPreExecute() {
-				  progressDialog = new ProgressDialog(getContext());
 			      progressDialog.setTitle(R.string.message_please_wait);
 			      progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			      progressDialog.setMessage(getContext().getString(R.string.message_loading));
@@ -703,7 +708,7 @@ public abstract class OnlineSearchView extends View {
 			}
 			try {
 				String url = downloadSong.getParentUrl();
-				if (url != null) {
+				if (url != null && !"".equals(url)) {
 					loadSong(url);
 					createStreamDialog(args).show();
 				} else {
@@ -791,7 +796,7 @@ public abstract class OnlineSearchView extends View {
 				String artist = player.getArtist();
 				boolean useCover = player.isUseCover();
 				downloadClickListener.setUseAlbumCover(useCover);
-				downloadClickListener.downloadSond(artist, title, useCover, false);
+				downloadClickListener.prepareDownloadSond(artist, title, useCover);
 				player.cancel();
 				dialogDismisser.run();
 				getContext().unregisterReceiver(headsetReceiver);
@@ -806,7 +811,6 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				dialogDismisser.run();
-				getContext().unregisterReceiver(headsetReceiver);
 				if (telephonyManager != null) {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 				}

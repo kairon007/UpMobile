@@ -16,11 +16,11 @@ public class GrooveSong extends SongWithCover {
 	}
 
 	@Override
-	public String getDownloadUrl() {
+	public void getDownloadUrl(DownloadUrlListener listener) {
+		super.getDownloadUrl(listener);
 		if (downloadUrl == null) {
 			downloadUrl = SearchGrooveshark.getDownloadUrl(songId);
 		}
-		return downloadUrl;
 	}
 
 	@Override

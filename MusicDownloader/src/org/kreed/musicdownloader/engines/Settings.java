@@ -47,10 +47,11 @@ public class Settings implements BaseSettings {
 		{"SearchZaycev", "7"} 
 	};
 
-	private static final String [][] SEARCH_ENGINES_2 = new String [][]{
-//		{"SearchYouTube", "1"}
+	private static final String[][] SEARCH_ENGINES_2 = new String[][] {
+		{ "SearchYouTube", "3" },
+		{ "SearchYouTubeMusic", "3" } 
 	};
-	
+
 	private static final String [][] SEARCH_ENGINES_3 = new String [][]{
 		{"SearchSoundCloud", "1"},
 		{"SearchSoundCloudV2", "1"},

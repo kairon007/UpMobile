@@ -12,11 +12,11 @@ public class TingSong extends RemoteSong {
 	}
 	
 	@Override
-	public String getDownloadUrl() {
+	public void getDownloadUrl(DownloadUrlListener listener) {
+		super.getDownloadUrl(listener);
 		if (downloadUrl == null) {
 			downloadUrl = SearchTing.getDownloadUrl(songId);
 		}
-		return downloadUrl;
 	}
 	
 }

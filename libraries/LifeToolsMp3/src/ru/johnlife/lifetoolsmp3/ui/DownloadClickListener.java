@@ -23,6 +23,7 @@ import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListe
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -66,9 +67,29 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		this.listener = listener;
 		songTitle = removeSpecialCharacters(song.getTitle());
 		songArtist = removeSpecialCharacters(song.getArtist());
-		url = song.getDownloadUrl();
 		duration = Util.formatTimeIsoDate(song.getDuration());
 		headers = song.getHeaders();
+	}
+	
+	public void prepareDownloadSond(final String artist, final String title, final boolean useCover) {
+//		if (song.getDownloadUrl().equals("") || song.getDownloadUrl() == null) {
+			song.getDownloadUrl(new DownloadUrlListener() {
+				
+				@Override
+				public void success(String url) {
+					DownloadClickListener.this.url = url;
+					downloadSond(artist, title, useCover, false);
+				}
+				
+				@Override
+				public void error(String error) {
+					
+				}
+			});
+//		} else {
+//			url = song.getDownloadUrl();
+//			downloadSond(artist, title, useCover, false);
+//		}
 	}
 	
 	@SuppressLint("NewApi")
@@ -101,8 +122,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		if (!this.songTitle.equals(title)) {
 			songTitle = removeSpecialCharacters(title);
-		}
-		if (url == null) {
+		} 
+		if (url == null || "".equals(url)) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -153,7 +174,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	@Override
 	public void onClick(View v) {
-		downloadSond(songArtist, songTitle, useAlbumCover, false);
+		prepareDownloadSond(songArtist, songTitle, useAlbumCover);
 	}
 
 	protected void notifyDuringDownload(final long downloadId, final double currentProgress) {

@@ -14,6 +14,7 @@ import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ public class SearchView  extends OnlineSearchView {
 	
 	private MainActivity activity;
 	private ViewPagerAdapter parentAdapter;
+	private String path;
 
 	public SearchView(LayoutInflater inflater, ViewPagerAdapter parentAdapter, MainActivity activity) {
 		super(inflater);
@@ -40,22 +42,33 @@ public class SearchView  extends OnlineSearchView {
 			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
 		}
-		RemoteSong song = (RemoteSong) getResultAdapter().getItem(position);
+		final RemoteSong song = (RemoteSong) getResultAdapter().getItem(position);
 		if (view.getId() == R.id.btnDownload) {
 			DownloadListener listener = new DownloadListener(getContext(),song, parentAdapter);
 			song.getCover(true, listener);
 			listener.onClick(view);
 			return;
 		}
-		String path = song.getDownloadUrl(); 
-		MusicData data = new MusicData();
+		final MusicData data = new MusicData();
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(Util.formatTimeIsoDate(song.getDuration()));
-		data.setFileUri(path);
-		ArrayList<String[]> headers = song.getHeaders();
-		Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
-		((MainActivity) activity).play(headers, data);
+		song.getDownloadUrl(new DownloadUrlListener() {
+			
+			@Override
+			public void success(String url) {
+				path = url;
+				ArrayList<String[]> headers = song.getHeaders();
+				Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
+				((MainActivity) activity).play(headers, data);
+				data.setFileUri(path);
+			}
+			
+			@Override
+			public void error(String error) {
+				
+			}
+		}); 
 	}
 
 	@Override

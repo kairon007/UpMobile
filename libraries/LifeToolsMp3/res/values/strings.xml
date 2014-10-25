@@ -34,5 +34,6 @@
      <string name="no_wi_fi">No Wi-Fi connection</string>
 	<string name="expand">Expand</string>
 	<string name="new_folder_dialog_title">New folder name</string>
-	<string name="downloads_failed">Downloads is failed</string>				
+	<string name="downloads_failed">Downloads is failed</string>
+	<string name="error_getting_url_songs">Error getting url songs.</string>				
 </resources>

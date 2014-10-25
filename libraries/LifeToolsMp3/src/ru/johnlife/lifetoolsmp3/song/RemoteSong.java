@@ -48,6 +48,12 @@ public class RemoteSong extends Song {
 			}
 		}
 	}
+	
+	public interface DownloadUrlListener {
+		
+		void success(String url);
+		void error(String error);
+	}
 
 	public static boolean tryMuzicBrainz = true;
 	
@@ -60,6 +66,7 @@ public class RemoteSong extends Song {
 	private WeakReference<Bitmap> smallCover;
 	private boolean callFromPlayer;
 	private CoverReadyListener downloaderListener = null;
+	protected DownloadUrlListener downloadUrlListener;
 	
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
@@ -86,8 +93,8 @@ public class RemoteSong extends Song {
 		return this;
 	}
 
-	public String getDownloadUrl() {
-		return downloadUrl;
+	public void getDownloadUrl(DownloadUrlListener listener) {
+		this.downloadUrlListener = listener;
 	}
 
 	public String getParentUrl() {
@@ -162,5 +169,14 @@ public class RemoteSong extends Song {
 	
 	public void setDownloaderListener(CoverReadyListener downloaderListener) {
 		this.downloaderListener = downloaderListener;
+	}
+	
+	public RemoteSong setDownloadUrl(String url) {
+		downloadUrl = url;
+		return this;
+	}
+
+	public String getDownloadUrl() {
+		return downloadUrl;
 	}
 }
