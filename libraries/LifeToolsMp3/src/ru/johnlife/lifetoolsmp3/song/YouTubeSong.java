@@ -62,7 +62,6 @@ public class YouTubeSong extends SongWithCover {
 			
 			@Override
 			protected void onPostExecute(String result) {
-				setDownloadUrl(result);
 				downloadUrlListener.success(result);
 			}
 			

@@ -33,7 +33,7 @@ public class Settings implements BaseSettings {
 	
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
 		//{"SearchVmusice", "1"}, 
-/*		{"SearchMyFreeMp3", "1"},
+		{"SearchMyFreeMp3", "1"},
 		{"SearchZaycev", "2"},
 		{"SearchPleer", "2"},
 		{"SearchPoisk", "1"}, 
@@ -42,7 +42,7 @@ public class Settings implements BaseSettings {
 		{"SearchMp3World", "1"}, 
 		{"SearchSogou", "1"},
 		{"SearchGrooveshark", "1"}, 
-		{"SearchTing", "1"}, */
+		{"SearchTing", "1"}, 
 		{"SearchYouTube", "7"} 
 	};
 

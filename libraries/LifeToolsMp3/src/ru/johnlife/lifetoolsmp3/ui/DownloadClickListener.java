@@ -72,7 +72,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 	
 	public void prepareDownloadSond(final String artist, final String title, final boolean useCover) {
-//		if (song.getDownloadUrl().equals("") || song.getDownloadUrl() == null) {
+		if ("".equals(song.getDownloadUrl()) || song.getDownloadUrl() == null) {
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
 				@Override
@@ -86,10 +86,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					
 				}
 			});
-//		} else {
-//			url = song.getDownloadUrl();
-//			downloadSond(artist, title, useCover, false);
-//		}
+		} else {
+			url = song.getDownloadUrl();
+			downloadSond(artist, title, useCover, false);
+		}
 	}
 	
 	@SuppressLint("NewApi")
