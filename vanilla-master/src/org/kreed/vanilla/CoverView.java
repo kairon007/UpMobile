@@ -364,10 +364,8 @@ public final class CoverView extends View implements Handler.Callback {
 	 *
 	 * @param i The position of the song in mSongs.
 	 */
-	private void generateBitmap(int i)
-	{
+	private void generateBitmap(int i) {
 		Song song = mSongs[i];
-
 		int style = mCoverStyle;
 		Context context = getContext();
 		Bitmap cover = song == null ? null : song.getCover(context);
@@ -378,9 +376,11 @@ public final class CoverView extends View implements Handler.Callback {
 			}
 			mBitmaps[i] = def;
 		} else {
+			if (null == cover) {
+				cover = CoverBitmap.generateDefaultCover(getWidth(), getHeight());
+			}
 			mBitmaps[i] = CoverBitmap.createBitmap(context, style, cover, song, getWidth(), getHeight());
 		}
-
 		postInvalidate();
 	}
 
@@ -405,15 +405,12 @@ public final class CoverView extends View implements Handler.Callback {
 	 *
 	 * @param service Service to query from.
 	 */
-	public void querySongs(PlaybackService service)
-	{
+	public void querySongs(PlaybackService service)	{
 		if (getWidth() == 0 || getHeight() == 0) {
 			mPendingQuery = true;
 			return;
 		}
-
 		mHandler.removeMessages(MSG_GENERATE_BITMAP);
-
 		Song[] songs = mSongs;
 		Bitmap[] bitmaps = mBitmaps;
 		Song[] newSongs = { service.getSong(-1), service.getSong(0), service.getSong(1) };
@@ -422,23 +419,19 @@ public final class CoverView extends View implements Handler.Callback {
 		mBitmaps = newBitmaps;
 		if (!mScrolling)
 			mActiveBitmaps = newBitmaps;
-
 		for (int i = 0; i != 3; ++i) {
 			if (newSongs[i] == null)
 				continue;
-
 			for (int j = 0; j != 3; ++j) {
 				if (newSongs[i] == songs[j]) {
 					newBitmaps[i] = bitmaps[j];
 					break;
 				}
 			}
-
 			if (newBitmaps[i] == null) {
 				mHandler.sendMessage(mHandler.obtainMessage(MSG_GENERATE_BITMAP, i, 0));
 			}
 		}
-
 		resetScroll();
 	}
 
