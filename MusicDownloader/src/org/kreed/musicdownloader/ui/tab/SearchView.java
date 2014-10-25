@@ -53,22 +53,24 @@ public class SearchView  extends OnlineSearchView {
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(Util.formatTimeIsoDate(song.getDuration()));
-		song.getDownloadUrl(new DownloadUrlListener() {
-			
-			@Override
-			public void success(String url) {
-				path = url;
-				ArrayList<String[]> headers = song.getHeaders();
-				Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
-				((MainActivity) activity).play(headers, data);
-				data.setFileUri(path);
-			}
-			
-			@Override
-			public void error(String error) {
+		if (null == song.getDownloadUrl() || "".equals(song.getDownloadUrl())) {
+			song.getDownloadUrl(new DownloadUrlListener() {
 				
-			}
-		}); 
+				@Override
+				public void success(String url) {
+					path = url;
+					startPlay(song, data);
+				}
+			
+				@Override
+				public void error(String error) {
+					
+				}
+			});
+		} else {
+			path = song.getDownloadUrl();
+			startPlay(song, data);
+		}
 	}
 
 	@Override
@@ -101,5 +103,12 @@ public class SearchView  extends OnlineSearchView {
 	@Override
 	protected boolean isWhiteTheme(Context context) {
 		return Util.getThemeName(context).equals(Util.WHITE_THEME);
+	}
+	
+	private void startPlay(final RemoteSong song, final MusicData data) {
+		ArrayList<String[]> headers = song.getHeaders();
+		Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
+		((MainActivity) activity).play(headers, data);
+		data.setFileUri(path);
 	}
 }
