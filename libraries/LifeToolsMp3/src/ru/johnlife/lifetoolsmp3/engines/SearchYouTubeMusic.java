@@ -14,7 +14,7 @@ import android.util.Log;
 public class SearchYouTubeMusic extends SearchWithPages {
 	
 //	private String link = "https://content.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=%s&type=video&key=AIzaSyDUmb30N4rIk-3rrScwuki3219dcOF2nBE";
-	private String link = "https://gdata.youtube.com/feeds/api/videos?q=%s&v=2&alt=jsonc&start-index=" + ((page * 25) - 24);
+	private String link = "https://gdata.youtube.com/feeds/api/videos/-/Music?q=%s&v=2&alt=jsonc&start-index=" + ((page * 25) - 24);
 //	private String[] resolution = {"default" ,"medium", "high", "standard", "maxres"};
 	private String[] resolution = {"sqDefault" ,"hqDefault"};
 	public SearchYouTubeMusic(FinishedParsingSongs dInterface, String songName) {
