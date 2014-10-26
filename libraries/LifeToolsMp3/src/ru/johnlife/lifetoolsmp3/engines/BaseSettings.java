@@ -13,5 +13,5 @@ public interface BaseSettings {
 	public String[][] getSearchEnginesArray7(Context context);
 	public String[][] getSearchEnginesArray8(Context context);
 	public boolean getIsCoversEnabled(Context context);
-	public ArrayList<String> getEnginesArray ();
+	public ArrayList<String> getEnginesArray (Context context);
 }

@@ -224,7 +224,7 @@ public abstract class OnlineSearchView extends View {
 				return false;
 			}
 		});
-		ArrayList<String> list = getSettings().getEnginesArray();
+		ArrayList<String> list = getSettings().getEnginesArray(getContext());
 		if (list.size() > 1) {
 			adapter = new CustomSpinnerAdapter(getContext(), 0, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
