@@ -322,13 +322,16 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	private void stop() {
 		if (mediaPlayer != null) {
 			songProgress.setProgress(0);
-			if (prepared) {
-				mediaPlayer.seekTo(0);
-				mediaPlayer.stop();
-				mediaPlayer.reset();
+			try {
 				mediaPlayer.release();
+				if (prepared) {
+					mediaPlayer.seekTo(0);
+					mediaPlayer.stop();
+					mediaPlayer.reset();
+				}
+			} catch (Exception e) {
 			}
-			mediaPlayer = null;
+			mediaPlayer = null; 
 			songProgress.removeCallbacks(progressAction);
 			prepared = false;
 		}
