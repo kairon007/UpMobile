@@ -30,7 +30,7 @@ public class SearchSoundCloudV2 extends BaseSearchTask {
 			ArrayList<Track> result = soundcloud.findTrack(songName);
 			if(result != null) {
 			    for(Track track : result) {
-			    		String downloadUrl = "http://api.soundcloud.com/tracks/" + track.getId() + "/stream?client_id=2Kf29hhC5mgWf62708A";
+			    		String downloadUrl = "http://api.soundcloud.com/tracks/" + track.getId() + "/stream?client_id=" + soundcloudClientId;
 				    	String largeCoverUrl = track.getArtworkUrl();
 				    	String[] pair = getPair(track.getTitle());
 				    	long duration = (long) track.getDuration();

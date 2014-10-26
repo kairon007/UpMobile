@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class SearchMyFreeMp3 extends SearchWithPages {
 
-	private String URL = "http://www.myfreemp3.cc/mp3/%s?page=" + page;
+	private String URL_PATTERN = "http://www.myfreemp3.cc/mp3/%s?page=%s";
 	private String partServer = "http://89.248.172.6/dvv.php?q=";
 
 	public SearchMyFreeMp3(FinishedParsingSongs dInterface, String songName) {
@@ -20,8 +20,11 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 
 	@Override
 	protected Void doInBackground(Void... params) {
+		
+		
 		try {
-			String strLink = String.format(URL, URLEncoder.encode(getSongName(), "UTF-8"));
+			String strLink = String.format(URL_PATTERN, URLEncoder.encode(getSongName(), "UTF-8"), page);
+			
 			if(!checkConnection(strLink)) {
 				return null;
 			}

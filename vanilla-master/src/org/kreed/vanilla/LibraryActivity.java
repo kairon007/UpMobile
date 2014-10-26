@@ -1597,8 +1597,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				// res.getString(R.string.unknown): song.album;
 				mTitle.setText(title);
 				mArtist.setText(artist);
-				mTitle.startAnimation(AnimationUtils.loadAnimation(this, R.anim.move_text));
-				mArtist.startAnimation(AnimationUtils.loadAnimation(this, R.anim.move_text));
+				//mTitle.startAnimation(AnimationUtils.loadAnimation(this, R.anim.move_text));
+				//mArtist.startAnimation(AnimationUtils.loadAnimation(this, R.anim.move_text));
 				if (song.path == null) return;
 				File file = new File(song.path);
 				try {

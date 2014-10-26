@@ -53,6 +53,7 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	public BaseSearchTask(FinishedParsingSongs dInterface, String songName) {
 		this.dInterface = dInterface;
 		this.songName = songName;
+		
 	}
 
 	
