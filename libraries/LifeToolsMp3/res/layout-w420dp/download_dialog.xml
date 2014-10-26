@@ -74,6 +74,13 @@
 	                android:layout_weight="1"
 	                android:animateLayoutChanges="true" >
 	
+	                <ProgressBar
+	                    android:id="@+id/spinner"
+	                    style="?android:attr/progressBarStyle"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center" />
+	
 	                <LinearLayout
 	                    android:id="@+id/box_player"
 	                    android:layout_width="match_parent"
@@ -153,13 +160,12 @@
 	
 	                    <TextView
 	                        android:id="@+id/tv_show_lyrics"
-	                        android:layout_width="80dp"
+	                        android:layout_width="match_parent"
 	                        android:layout_height="wrap_content"
 	                        android:layout_gravity="center_vertical"
 	                        android:maxLines="2"
 	                        android:text="@string/download_dialog_show_lyrics"
 	                        android:textSize="@dimen/dialog_default_text_size" />
-
 	                </LinearLayout>
 	
 	                <LinearLayout
@@ -182,7 +188,7 @@
 	
 	                    <TextView
 	                        android:id="@+id/tv_edit_mp3_tag"
-	                        android:layout_width="88dp"
+	                        android:layout_width="match_parent"
 	                        android:layout_height="wrap_content"
 	                        android:layout_gravity="center_vertical"
 	                        android:maxLines="2"
@@ -193,15 +199,6 @@
 	
 	
 	        </LinearLayout>
-
-	        <ProgressBar
-	            android:id="@+id/spinner"
-	            style="?android:attr/progressBarStyleHorizontal"
-	            android:layout_width="match_parent"
-	            android:layout_height="8dp"
-	            android:layout_gravity="center"
-	            android:indeterminate="true"
-	            android:indeterminateBehavior="cycle" />
 	
 	        <RelativeLayout
 	            android:id="@+id/download_location"
@@ -239,6 +236,7 @@
 	                android:singleLine="true"
 	                android:text="@string/download_dialog_download_location"
 	                android:textSize="@dimen/dialog_default_text_size" />
+
 	        </RelativeLayout>
 	       
 	    </LinearLayout>
