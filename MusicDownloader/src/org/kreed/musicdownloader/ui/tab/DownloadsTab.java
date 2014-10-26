@@ -57,72 +57,69 @@ public class DownloadsTab implements LoadPercentageInterface {
 		}
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			ViewHolder holder = null;
-			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.downloads_row, parent, false);
-				holder = new ViewHolder();
-				holder.artist = (TextView) convertView.findViewById(R.id.songArtist);
-				holder.title = (TextView) convertView.findViewById(R.id.songTitle);
-				holder.cover = (ImageView) convertView.findViewById(R.id.cover);
-				holder.duration = (TextView) convertView.findViewById(R.id.totalTime);
-				holder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.progressBar);
-				holder.remove = (ImageButton) convertView.findViewById(R.id.cancel);
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-			}
-			if (holder.remove != null) {
-				holder.remove.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						try {
-							v.setClickable(false);
-							v.setOnClickListener(null);
-							MusicData song = getItem(position);
-							remove(song);
-							
-							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-							cancelledId = adapter.getItem(position).getDownloadId();
-							manager.remove(cancelledId);
-							if (getItem(position).getFileUri() != null) {
-								DBHelper.getInstance(getContext()).delete(getItem(position));
-							}
-							
-							DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
-						}
-						catch (UnsupportedOperationException ex) {
+				ViewHolder holder = null;
+				if (convertView == null) {
+					convertView = inflater.inflate(R.layout.downloads_row, parent, false);
+					holder = new ViewHolder();
+					holder.artist = (TextView) convertView.findViewById(R.id.songArtist);
+					holder.title = (TextView) convertView.findViewById(R.id.songTitle);
+					holder.cover = (ImageView) convertView.findViewById(R.id.cover);
+					holder.duration = (TextView) convertView.findViewById(R.id.totalTime);
+					holder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.progressBar);
+					holder.remove = (ImageButton) convertView.findViewById(R.id.cancel);
+					convertView.setTag(holder);
+				} else {
+					holder = (ViewHolder) convertView.getTag();
+				}
+				if (holder.remove != null) {
+					holder.remove.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							try {
+								v.setClickable(false);
+								v.setOnClickListener(null);
+								MusicData song = getItem(position);
+								remove(song);
+								DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+								cancelledId = adapter.getItem(position).getDownloadId();
+								manager.remove(cancelledId);
+								if (getItem(position).getFileUri() != null) {
+									DBHelper.getInstance(getContext()).delete(getItem(position));
+								}
+								DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
+							} catch (UnsupportedOperationException ex) {
 								Log.e(getClass().getSimpleName(), ex.getMessage());
+							} catch (IndexOutOfBoundsException ex) {
+								Log.e(getClass().getSimpleName(), ex.getMessage());
+							}
 						}
-						catch (IndexOutOfBoundsException ex) {
-							Log.e(getClass().getSimpleName(), ex.getMessage());
-					}
-					}
-						
-				});
-			}
-			MusicData song = getItem(position);
-			if (song != null) {
-				boolean isWhiteTheme = Util.getThemeName(getContext()).equals(Util.WHITE_THEME);
-				holder.artist.setText(song.getSongArtist());
-				holder.title.setText(song.getSongTitle());
-				if (song.getSongBitmap() != null) {
-					holder.cover.setImageBitmap(song.getSongBitmap());
-				} else {
-					holder.cover.setImageResource(R.drawable.fallback_cover);
+
+					});
 				}
-				if (song.isDownloaded()) {
-					holder.downloadProgress.setVisibility(View.GONE);
-					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
-				} else {
-					holder.downloadProgress.setVisibility(View.VISIBLE);
-					double progress = song.getDownloadProgress();
-					holder.downloadProgress.setProgress((int) progress);
-					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_cancel_black : R.drawable.icon_cancel);
+				MusicData song = getItem(position);
+				if (song != null) {
+					boolean isWhiteTheme = Util.getThemeName(getContext()).equals(Util.WHITE_THEME);
+					holder.artist.setText(song.getSongArtist());
+					holder.title.setText(song.getSongTitle());
+					if (song.getSongBitmap() != null) {
+						holder.cover.setImageBitmap(song.getSongBitmap());
+					} else {
+						holder.cover.setImageResource(R.drawable.fallback_cover);
+					}
+					if (song.isDownloaded()) {
+						holder.downloadProgress.setVisibility(View.GONE);
+						holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
+					} else {
+						holder.downloadProgress.setVisibility(View.VISIBLE);
+						double progress = song.getDownloadProgress();
+						holder.downloadProgress.setProgress((int) progress);
+						holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_cancel_black : R.drawable.icon_cancel);
+					}
+					holder.duration.setText(song.getSongDuration());
 				}
-				holder.duration.setText(song.getSongDuration());
-			}
-			convertView.setTag(holder);
-			return convertView;
+				convertView.setTag(holder);
+				return convertView;
 		}
 
 		private class ViewHolder {
@@ -158,8 +155,8 @@ public class DownloadsTab implements LoadPercentageInterface {
 					mOriginalValues.add(object);
 				}
 				mObjects.add(object);
+				redraw();
 			}
-			redraw();
 		}
 
 		@Override
@@ -172,8 +169,8 @@ public class DownloadsTab implements LoadPercentageInterface {
 					mObjects = new ArrayList<MusicData>();
 				}
 				mObjects.add(index, object);
+				redraw();
 			}
-			redraw();
 		}
 
 		@SuppressLint("NewApi")
@@ -184,8 +181,8 @@ public class DownloadsTab implements LoadPercentageInterface {
 					mOriginalValues.addAll(collection);
 				}
 				mObjects.addAll(collection);
+				redraw();
 			}
-			redraw();
 		}
 
 		@Override
@@ -195,8 +192,8 @@ public class DownloadsTab implements LoadPercentageInterface {
 					mOriginalValues.clear();
 				}
 				mObjects.clear();
+				redraw();
 			}
-			redraw();
 		}
 
 		@Override
@@ -206,26 +203,32 @@ public class DownloadsTab implements LoadPercentageInterface {
 					mOriginalValues.remove(object);
 				}
 				mObjects.remove(object);
+				redraw();
 			}
-			redraw();
 		}
 
 		@Override
 		public int getCount() {
-			if (mObjects == null) {
-				return 0;
+			synchronized (lock) {
+				if (mObjects == null) {
+					return 0;
+				}
+				return mObjects.size();
 			}
-			return mObjects.size();
 		}
 
 		@Override
 		public MusicData getItem(int position) {
-			return mObjects.get(position);
+			synchronized (lock) {
+				return mObjects.get(position);
+			}
 		}
 
 		@Override
 		public int getPosition(MusicData item) {
-			return mObjects.indexOf(item);
+			synchronized (lock) {
+				return mObjects.indexOf(item);
+			}
 		}
 
 		@Override
@@ -296,15 +299,17 @@ public class DownloadsTab implements LoadPercentageInterface {
 
 	@Override
 	public void insertProgress(double progress, long downloadId) {
-		for (int i = 0; i < adapter.getCount(); i++) {
-			if (adapter.getItem(i).getDownloadId() == downloadId) {
-				adapter.getItem(i).setDownloadProgress(progress);
-				if (progress > 99) {
-					adapter.getItem(i).setDownloadProgress(DOWNLOAD_FINISHED);
+		synchronized (lock) {
+			for (int i = 0; i < adapter.getCount(); i++) {
+				if (adapter.getItem(i).getDownloadId() == downloadId) {
+					adapter.getItem(i).setDownloadProgress(progress);
+					if (progress > 99) {
+						adapter.getItem(i).setDownloadProgress(DOWNLOAD_FINISHED);
+					}
 				}
 			}
+			adapter.redraw();
 		}
-		adapter.redraw();
 	}
 
 	public void insertData(ArrayList<MusicData> result) {
@@ -312,11 +317,11 @@ public class DownloadsTab implements LoadPercentageInterface {
 			insertData(data);
 		}
 	}
-	
+
 	public void insertData(MusicData data) {
 		adapter.insert(data, 0);
 	}
-	
+
 	public boolean updateData(long lastID, long newID) {
 		for (int i = 0; i < adapter.getCount(); i++) {
 			if (adapter.getItem(i).getDownloadId() == lastID) {
