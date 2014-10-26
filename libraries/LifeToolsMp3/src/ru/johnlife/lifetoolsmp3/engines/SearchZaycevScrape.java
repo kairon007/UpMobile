@@ -15,7 +15,7 @@ import android.util.Log;
 
 public class SearchZaycevScrape extends SearchWithPages {
 	
-	private String url = "http://zaycev.net/search.html?query_search=%s&attempt=" + page + "&page=" + page;
+	private String URL_PATTERN = "http://zaycev.net/search.html?query_search=%s&attempt=%s&page=%s";
 	public SearchZaycevScrape(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -25,7 +25,9 @@ public class SearchZaycevScrape extends SearchWithPages {
 		Response response;
 
 		try {
-			response = Jsoup.connect(String.format(url, URLEncoder.encode(getSongName(), "UTF-8")))
+			String strLink = String.format(URL_PATTERN, URLEncoder.encode(getSongName(), "UTF-8"), page, page);
+					
+			response = Jsoup.connect(strLink)
 					.method(Method.GET)
 					.userAgent("Mozilla/5.0 (iPad; CPU OS 5_1 like Mac OS X; en-us) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B176 Safari/7534.48.3")
 					.referrer("http://zaycev.net/search.html?query_search=muse&attempt=1&page=1")

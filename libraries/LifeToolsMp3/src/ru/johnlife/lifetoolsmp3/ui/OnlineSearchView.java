@@ -249,7 +249,23 @@ public abstract class OnlineSearchView extends View {
 					} else if (keyEngines.equals(getTitleSearchEngine3())) {
 						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine3());
 						keyEngines = getTitleSearchEngine3();
+					} else if (keyEngines.equals(getTitleSearchEngine4())) {
+						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine4());
+						keyEngines = getTitleSearchEngine4();
+					} else if (keyEngines.equals(getTitleSearchEngine5())) {
+						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine5());
+						keyEngines = getTitleSearchEngine5();
+					} else if (keyEngines.equals(getTitleSearchEngine6())) {
+						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine6());
+						keyEngines = getTitleSearchEngine6();
+					} else if (keyEngines.equals(getTitleSearchEngine7())) {
+						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine7());
+						keyEngines = getTitleSearchEngine7();
+					} else if (keyEngines.equals(getTitleSearchEngine8())) {
+						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine8());
+						keyEngines = getTitleSearchEngine8();
 					}
+					
 					editor.commit();
 				}
 
@@ -322,16 +338,42 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public static String getTitleSearchEngine() {
-		return "Music";
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title", "Search Engine 1");
 	}
 
 	public static String getTitleSearchEngine2() {
-		return "YouTube";
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_2", "Search Engine 2");
 	}
 
 	public static String getTitleSearchEngine3() {
-		return "SoundCloud";
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_3", "Search Engine 3");
 	}
+	
+	public static String getTitleSearchEngine4() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_4", "Search Engine 4");
+	}
+	
+	public static String getTitleSearchEngine5() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_5", "Search Engine 5");
+	}
+	public static String getTitleSearchEngine6() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_6", "Search Engine 6");
+	}
+	public static String getTitleSearchEngine7() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_7", "Search Engine 7");
+	}
+	public static String getTitleSearchEngine8() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_8", "Search Engine 8");
+	}
+	
 
 	public void initSearchEngines(Context context, String valueEngines) {
 		//TODO this set number engines
@@ -345,10 +387,21 @@ public abstract class OnlineSearchView extends View {
 		if (keyEngines.equals(getTitleSearchEngine())) {
 			engineArray = getSettings().getSearchEnginesArray(context);
 		} else if (keyEngines.equals(getTitleSearchEngine2())) {
-			engineArray = getSettings().getSearchEnginesSC(context);	
+			engineArray = getSettings().getSearchEnginesArray2(context);	
 		} else if (keyEngines.equals(getTitleSearchEngine3())) {
-			engineArray = getSettings().getSearchEnginesYT(context);
+			engineArray = getSettings().getSearchEnginesArray3(context);
+		} else if (keyEngines.equals(getTitleSearchEngine4())) {
+			engineArray = getSettings().getSearchEnginesArray4(context);
+		} else if (keyEngines.equals(getTitleSearchEngine5())) {
+			engineArray = getSettings().getSearchEnginesArray5(context);
+		} else if (keyEngines.equals(getTitleSearchEngine6())) {
+			engineArray = getSettings().getSearchEnginesArray6(context);
+		} else if (keyEngines.equals(getTitleSearchEngine7())) {
+			engineArray = getSettings().getSearchEnginesArray7(context);
+		} else if (keyEngines.equals(getTitleSearchEngine8())) {
+			engineArray = getSettings().getSearchEnginesArray8(context);
 		}
+		
 		for (int i = 0; i < engineArray.length; i++) {
 			for (int j = 0; j < engineArray[i].length; j++) {
 			}
@@ -514,8 +567,12 @@ public abstract class OnlineSearchView extends View {
 			if (songsList.isEmpty()) {
 				getNextResults();
 				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
-					String src = getContext().getResources().getText(R.string.search_no_results_for).toString()+" "+ searchField.getText().toString();
-					message.setText(src);
+					try {
+						String src = getContext().getResources().getText(R.string.search_no_results_for).toString() + " " + searchField.getText().toString();
+						message.setText(src);
+					} catch(Exception e) {
+						
+					}
 					progress.setVisibility(View.GONE);
 				}
 			} else {

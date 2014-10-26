@@ -25,7 +25,7 @@
 <string name="hint_filter_files">Filter your files</string>
  
 <string name="search_your_results_appear_here">Your search results will appear here</string>
-<string name="search_no_results_for">No results for %s.</string>
+<string name="search_no_results_for">No results for </string>
 <string name="search_try_different_query">Try a different query</string>
 <string name="search_please_enter_query">Please enter a query</string>
  

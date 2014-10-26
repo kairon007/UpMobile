@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class SearchSoArdIyyin extends SearchWithPages {
 	
-	private String url = "http://so.ard.iyyin.com/v2/songs/search?size=50&page=" + page + "&q=%s";
+	private String URL_PATTERN = "http://so.ard.iyyin.com/v2/songs/search?size=50&page=%s&q=%s";
 
 	public SearchSoArdIyyin(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -23,7 +23,9 @@ public class SearchSoArdIyyin extends SearchWithPages {
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
-			JSONObject parent = new JSONObject(readUrl(String.format(url, URLEncoder.encode(getSongName(), "UTF-8"))));
+			String strLink = String.format(URL_PATTERN, page, URLEncoder.encode(getSongName(), "UTF-8"));
+			
+			JSONObject parent = new JSONObject(readUrl(strLink));
 			JSONArray items = parent.getJSONArray("data");
 			for (int i = 0; i < items.length(); i++) {
 				if (items.getJSONObject(i) != null) {
