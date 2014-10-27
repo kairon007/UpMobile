@@ -197,6 +197,7 @@ public class MainActivity extends Activity {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
 		Advertisement.onDestroy(this);
+		forDuplicateMusic = true;
 		super.onDestroy();
 	}
 
