@@ -310,6 +310,9 @@ public class DirectoryChooserDialog {
 	}
 
 	private void updateDirectory() {
+		if (!new File(m_dir).exists()) {
+			m_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
+		}
 		m_subdirs.clear();
 		m_subdirs.addAll(getDirectories(m_dir));
 		titleText.setText(m_dir);

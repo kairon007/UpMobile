@@ -1,5 +1,6 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -447,8 +448,11 @@ public abstract class OnlineSearchView extends View {
 				edit.clear();
 				edit.putString(OnlineSearchView.DOWNLOAD_DIR, downloadPath);
 				edit.commit();
-			} else
+			} else if (!new File(sharedDownloadPath).exists()) {
+				return downloadPath;
+			} else {
 				return sharedDownloadPath;
+			}
 		}
 		return downloadPath;
 	}
@@ -722,35 +726,34 @@ public abstract class OnlineSearchView extends View {
 		final boolean isDialogOpened = SongArrayHolder.getInstance().isStremDialogOpened();
 		final ProgressDialog progressDialog = new ProgressDialog(getContext());
 		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask(new DownloadUrlListener() {
-			
+
 			@Override
 			public void success(String url) {
 				loadSong(url);
 				progressDialog.dismiss();
 				createStreamDialog(args).show();
 			}
-			
+
 			@Override
 			public void error(String error) {
 				Toast toast = Toast.makeText(context, R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
 				toast.show();
-				
 			}
-		}) { 
+		}) {
 
 			@Override
 			protected void onPreExecute() {
-			      progressDialog.setTitle(R.string.message_please_wait);
-			      progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			      progressDialog.setMessage(getContext().getString(R.string.message_loading));
-			      progressDialog.setOnCancelListener(new OnCancelListener() {	
+				progressDialog.setTitle(R.string.message_please_wait);
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.setMessage(getContext().getString(R.string.message_loading));
+				progressDialog.setOnCancelListener(new OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
 						dialogDismisser.run();
 					}
 				});
-			      progressDialog.show();
-				
+				progressDialog.show();
+
 			}
 		};
 		if (force) {

@@ -83,7 +83,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				
 				@Override
 				public void error(String error) {
-					
+					Toast toast = Toast.makeText(context, R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
+					toast.show();
 				}
 			});
 		} else {
@@ -143,7 +144,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url)).addRequestHeader("User-Agent",
 					"Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
-			if (headers != null && headers.get(0) != null) {
+			if (headers != null && !headers.isEmpty()) {
 				for (int i = 0; i < headers.size(); i++) {
 					request.addRequestHeader(headers.get(i)[0], headers.get(i)[1]);
 				}
@@ -152,7 +153,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(fileName);
 			try {
 				request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb.append(".mp3").toString());
-			} catch (Exception e) {
+			} catch (Exception e) { 
 				Log.e(getClass().getSimpleName(), e.getMessage());
 				String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
 				Log.e(getClass().getSimpleName(), "Something wrong. Set default directory: " + dir);
