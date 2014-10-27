@@ -389,7 +389,7 @@ public class MainActivity extends Activity {
 			strings.add(editor.getStrings()[1]);
 			strings.add(editor.getStrings()[2]);
 			out.putStringArrayList(Constants.EDITOR_FIELDS, strings);
-			out.putBoolean(Constants.USE_COVER, editor.isShowCover());
+			out.putBoolean(Constants.USE_COVER, editor.useAlbumCover());
 		}
 		out.putBoolean(Constants.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		if (page == 1) {
@@ -605,7 +605,7 @@ public class MainActivity extends Activity {
 
 	@SuppressLint("NewApi")
 	public void showEditDialog() {
-		editor = new MP3Editor(this, useCover);
+		editor = new MP3Editor(this);
 		showDialog = true;
 		if (null != mStrings) {
 			String[] filds = mStrings.toArray(new String[mStrings.size()]);
