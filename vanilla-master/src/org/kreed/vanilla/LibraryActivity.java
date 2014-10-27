@@ -24,6 +24,7 @@ package org.kreed.vanilla;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.UnknownFormatConversionException;
 
 import junit.framework.Assert;
 
@@ -1059,8 +1060,12 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		} else if (type == MediaUtils.TYPE_PLAYLIST) {
 			Playlist.deletePlaylist(getContentResolver(), id);
 		} else {
-			int count = PlaybackService.get(this).deleteMedia(type, id);
-			message = res.getQuantityString(R.plurals.deleted, count, count);
+			try {
+				int count = PlaybackService.get(this).deleteMedia(type, id);
+				message = res.getQuantityString(R.plurals.deleted, count, count);
+			} catch (UnknownFormatConversionException ex) {
+				Log.d(getClass().getSimpleName(), ex.getConversion() + "\n" + ex.getMessage());
+			}
 		}
 
 		if (message == null) {
