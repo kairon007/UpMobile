@@ -82,15 +82,13 @@ public class DownloadsTab implements LoadPercentageInterface {
 								MusicData song = getItem(position);
 								remove(song);
 								DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-								cancelledId = adapter.getItem(position).getDownloadId();
+								cancelledId = song.getDownloadId();
 								manager.remove(cancelledId);
-								if (getItem(position).getFileUri() != null) {
-									DBHelper.getInstance(getContext()).delete(getItem(position));
+								if (song.getFileUri() != null) {
+									DBHelper.getInstance(getContext()).delete(song);
 								}
 								DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
 							} catch (UnsupportedOperationException ex) {
-								Log.e(getClass().getSimpleName(), ex.getMessage());
-							} catch (IndexOutOfBoundsException ex) {
 								Log.e(getClass().getSimpleName(), ex.getMessage());
 							}
 						}
