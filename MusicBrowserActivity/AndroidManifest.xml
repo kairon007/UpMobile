@@ -72,7 +72,6 @@
         android:icon="@drawable/icon"
         android:label="@string/musicbrowserlabel"
         android:largeHeap="true"
-        android:theme="@style/AppTheme.White"
         android:taskAffinity="android.task.music" >
 	<!-- AppTheme.White to enable white theme -->
         

@@ -1,7 +1,6 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
 import java.util.HashMap;
-
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -11,6 +10,7 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Service;
@@ -30,10 +30,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -116,12 +116,16 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (buttonVisible) {
 			boxPlayer.setVisibility(View.VISIBLE);
 			button.setImageResource(imagePause);
-			tvLyrics.setVisibility(View.GONE);
-			tvTags.setVisibility(View.GONE);
+			if (tvLyrics != null && tvTags != null) {
+				tvLyrics.setVisibility(View.GONE);
+				tvTags.setVisibility(View.GONE);
+			}
 		} else {
 			boxPlayer.setVisibility(View.GONE);
-			tvLyrics.setVisibility(View.VISIBLE);
-			tvTags.setVisibility(View.VISIBLE);
+			if (tvLyrics != null && tvTags != null) {
+				tvLyrics.setVisibility(View.VISIBLE);
+				tvTags.setVisibility(View.VISIBLE);
+			}
 		}
 		progress.setProgress(current);
 		progress.postDelayed(action, 1000);
@@ -392,8 +396,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void onPrepared() {
 		spinnerVisible = false;
-		rowLirycs.removeView(tvLyrics);
-		rowTags.removeView(tvTags);
+		if (tvLyrics != null && tvTags != null) {
+			rowLirycs.removeView(tvLyrics);
+			rowTags.removeView(tvTags);
+		}
 		spinner.setVisibility(View.GONE);
 		boxPlayer.setVisibility(View.VISIBLE);
 		buttonVisible = true;
@@ -421,6 +427,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		button.setImageResource(R.drawable.pause);
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	protected Boolean doInBackground(String... params) {
 		try {

@@ -139,14 +139,12 @@ public final class Util {
 	public static String getThemeName(Context context)
 	{
 	    PackageInfo packageInfo;
-	    try
-	    {
+	    try {
 	        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
 	        int themeResId = packageInfo.applicationInfo.theme;
 	        return context.getResources().getResourceEntryName(themeResId);
-	    }
-	    catch (NameNotFoundException e)
-	    {
+	    } catch (Exception e) {
+	    	Log.e(Util.class.getSimpleName(), e.getMessage());
 	        return null;
 	    }
 	}

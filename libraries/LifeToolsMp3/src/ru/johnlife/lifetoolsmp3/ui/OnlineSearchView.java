@@ -758,11 +758,14 @@ public abstract class OnlineSearchView extends View {
 		};
 		if (force) {
 			player = SongArrayHolder.getInstance().getPlayerInstance();
-			player.initView(inflate(context, R.layout.download_dialog, null));
+			player.initView(inflate(context, isWhiteTheme(getContext()) ? R.layout.download_dialog_white
+					: R.layout.download_dialog, null));
 		}
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			player = new Player(inflater.inflate(R.layout.download_dialog, null), title, artist);
+			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white
+					: R.layout.download_dialog, null);
+			player = new Player(v, title, artist);
 			if (downloadSong instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) downloadSong).getSongId());
 			}

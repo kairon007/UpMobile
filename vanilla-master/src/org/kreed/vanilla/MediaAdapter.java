@@ -25,9 +25,6 @@ package org.kreed.vanilla;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import com.google.android.gms.internal.cu;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import android.content.Context;
@@ -38,7 +35,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
