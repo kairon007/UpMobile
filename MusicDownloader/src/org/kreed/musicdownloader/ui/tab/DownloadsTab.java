@@ -76,18 +76,17 @@ public class DownloadsTab implements LoadPercentageInterface {
 
 						@Override
 						public void onClick(View v) {
+							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+							cancelledId = adapter.getItem(position).getDownloadId();
 							try {
-								v.setClickable(false);
-								v.setOnClickListener(null);
+								
+								if (getItem(position).getFileUri() != null) {
+									DBHelper.getInstance(getContext()).delete(getItem(position));
+								}
 								MusicData song = getItem(position);
 								remove(song);
-								DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-								cancelledId = song.getDownloadId();
 								manager.remove(cancelledId);
-								if (song.getFileUri() != null) {
-									DBHelper.getInstance(getContext()).delete(song);
-								}
-								DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
+									DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
 							} catch (UnsupportedOperationException ex) {
 								Log.e(getClass().getSimpleName(), ex.getMessage());
 							}
@@ -107,6 +106,14 @@ public class DownloadsTab implements LoadPercentageInterface {
 					}
 					if (song.isDownloaded()) {
 						holder.downloadProgress.setVisibility(View.GONE);
+						holder.remove.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								MusicData song = getItem(position);
+								remove(song);
+							}
+						});
 						holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
 					} else {
 						holder.downloadProgress.setVisibility(View.VISIBLE);
