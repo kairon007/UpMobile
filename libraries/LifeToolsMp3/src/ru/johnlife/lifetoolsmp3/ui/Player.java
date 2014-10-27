@@ -285,6 +285,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 				artist = editor.getNewArtistName();
 				title = editor.getNewSongTitle();
 				SongArrayHolder.getInstance().setID3DialogOpened(false, null);
+				SongArrayHolder.getInstance().setCoverEnabled(true);
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
