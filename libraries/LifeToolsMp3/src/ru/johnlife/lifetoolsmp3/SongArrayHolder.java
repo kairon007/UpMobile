@@ -34,7 +34,6 @@ public class SongArrayHolder {
 	private boolean isCoverEnabled = true;
 	
 	private SongArrayHolder() {
-
 	}
 
 	public static SongArrayHolder getInstance() {
@@ -103,10 +102,9 @@ public class SongArrayHolder {
 		this.playerInstance = player;
 	}
 	
-	public void setID3DialogOpened(boolean isID3DialogOpened, String[] fields, boolean isCoverEnabled) {
+	public void setID3DialogOpened(boolean isID3DialogOpened, String[] fields) {
 		this.isID3DialogOpened = isID3DialogOpened;
 		this.fields = fields;
-		this.isCoverEnabled = isCoverEnabled;
 	}
 
 	public Bundle getStreamDialogArgs() {
@@ -172,7 +170,7 @@ public class SongArrayHolder {
 			view.prepareSong(args, true);
 		}
 		if (isID3DialogOpened) {
-			view.createId3Dialog(getID3Fields(), isCoverEnabled());
+			view.createId3Dialog(getID3Fields());
 		}
 		if (isLyricsOpened) {
 			view.createLyricsDialog(getTitleArtistLyrics(), getLyrics());

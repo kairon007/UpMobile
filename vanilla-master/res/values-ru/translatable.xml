@@ -144,7 +144,7 @@
   </plurals>
   <plurals name="deleted">
     <item quantity="one">%d песня удалена.</item>
-    <item quantity="other">% песен удалено.</item>
+    <item quantity="other">%d песен удалено.</item>
   </plurals>
   <plurals name="seconds">
     <item quantity="one">%d секунда</item>

@@ -73,7 +73,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean indeterminate;
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
-	private boolean useCover = true;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -151,7 +150,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(View v) {
-				createId3dialog(null, true, false);
+				createId3dialog(null);
 			}
 		});
 		view.findViewById(R.id.download_location).setOnClickListener(new View.OnClickListener() {
@@ -266,20 +265,18 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		SongArrayHolder.getInstance().setLyricsString(null);
 	}
 
-	public void createId3dialog(String[] fields, boolean enableCover, boolean forse) {
+	public void createId3dialog(String[] fields) {
 		String[] arrayField = { artist, title, "" };
-		final MP3Editor editor = new MP3Editor(view.getContext(), enableCover);
+		final MP3Editor editor = new MP3Editor(view.getContext());
 		if (fields == null) {
 			editor.setStrings(arrayField);
-			SongArrayHolder.getInstance().setID3DialogOpened(true, arrayField, SongArrayHolder.getInstance().isCoverEnabled());
+			SongArrayHolder.getInstance().setID3DialogOpened(true, arrayField);
 		} else {
 			editor.setStrings(fields);
-			SongArrayHolder.getInstance().setID3DialogOpened(true, fields, SongArrayHolder.getInstance().isCoverEnabled());
-		}
-		if (!forse) {
-			editor.setShowCover(useCover);
+			SongArrayHolder.getInstance().setID3DialogOpened(true, fields);
 		}
 		View v = editor.getView();
+		final boolean temp = SongArrayHolder.getInstance().isCoverEnabled();
 		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(v);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
@@ -287,22 +284,21 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			public void onClick(DialogInterface dialog, int which) {
 				artist = editor.getNewArtistName();
 				title = editor.getNewSongTitle();
-				useCover = editor.useAlbumCover();
-				SongArrayHolder.getInstance().setID3DialogOpened(false, null, useCover);
+				SongArrayHolder.getInstance().setID3DialogOpened(false, null);
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				cancelMP3editor();
+				cancelMP3editor(temp);
 			}
 		});
 		builder.setOnCancelListener(new OnCancelListener() {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				cancelMP3editor();
+				cancelMP3editor(temp);
 			}
 		});
 		AlertDialog alertDialog = builder.create();
@@ -311,8 +307,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		alertDialog.show();
 	}
 
-	private void cancelMP3editor() {
-		SongArrayHolder.getInstance().setID3DialogOpened(false, null, useCover);
+	private void cancelMP3editor(boolean temp) {
+		SongArrayHolder.getInstance().setCoverEnabled(temp);
+		SongArrayHolder.getInstance().setID3DialogOpened(false, null);
 	}
 
 	public String getArtist() {
@@ -323,9 +320,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		return title == null ? "" : title;
 	}
 
-	public boolean isUseCover() {
-		return useCover;
-	}
 
 	public Integer getSongId() {
 		return songId;

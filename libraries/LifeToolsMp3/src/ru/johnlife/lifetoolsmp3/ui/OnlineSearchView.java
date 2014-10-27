@@ -857,7 +857,7 @@ public abstract class OnlineSearchView extends View {
 			public void onClick(DialogInterface dialog, int which) {
 				String title = player.getTitle();
 				String artist = player.getArtist();
-				boolean useCover = player.isUseCover();
+				boolean useCover = SongArrayHolder.getInstance().isCoverEnabled();
 				downloadClickListener.setUseAlbumCover(useCover);
 				downloadClickListener.prepareDownloadSond(artist, title, useCover);
 				player.cancel();
@@ -899,10 +899,10 @@ public abstract class OnlineSearchView extends View {
 		context.startActivity(dm);
 	}
 
-	public void createId3Dialog(String[] fields, boolean enableCover) {
+	public void createId3Dialog(String[] fields) {
 		if (null == player)
 			return;
-		player.createId3dialog(fields, enableCover, true);
+		player.createId3dialog(fields);
 	}
 
 	public void createLyricsDialog(String[] titleArtist, String lyrics) {

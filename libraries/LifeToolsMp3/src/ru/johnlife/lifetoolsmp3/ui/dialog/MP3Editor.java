@@ -27,11 +27,9 @@ public class MP3Editor {
 	private String oldSongTitle;
 	private String oldAlbumTitle;
 	public static final String UNKNOWN = "unknown";
-	private boolean showCover = true;
 
-	public MP3Editor(Context context, boolean isEnableCover) {
+	public MP3Editor(Context context) {
 		this.context = context;
-		this.showCover = isEnableCover;
 	}
 
 	public View getView() {
@@ -45,7 +43,7 @@ public class MP3Editor {
 		etAlbumTitle.addTextChangedListener(watcher);
 		etSongTitle.addTextChangedListener(watcher);
 		etArtistName.addTextChangedListener(watcher);
-		checkBox.setChecked(showCover);
+		checkBox.setChecked(SongArrayHolder.getInstance().isCoverEnabled());
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -82,7 +80,7 @@ public class MP3Editor {
 			newArtistName = etArtistName.getText().toString();
 			newSongTitle = etSongTitle.getText().toString();
 			newAlbumTitle = etAlbumTitle.getText().toString();
-			SongArrayHolder.getInstance().setID3DialogOpened(true, new String[] { newArtistName, newSongTitle, newAlbumTitle }, checkBox.isChecked());
+			SongArrayHolder.getInstance().setID3DialogOpened(true, new String[] { newArtistName, newSongTitle, newAlbumTitle });
 		}
 
 		@Override
@@ -170,14 +168,6 @@ public class MP3Editor {
 			return true;
 		}
 		return false;
-	}
-
-	public boolean isShowCover() {
-		return checkBox.isChecked();
-	}
-
-	public void setShowCover(boolean showCover) {
-		this.showCover = showCover;
 	}
 
 	public void setStrings(String[] strings) {
