@@ -107,6 +107,7 @@ public class MainActivity extends Activity {
 	private boolean showDialog = false;
 	private boolean useCover = false;
 	private boolean isPlayerHide;
+	private boolean forDuplicateMusic = true;  
 
 	// -------------------------------------------------------------------------
 
@@ -141,7 +142,9 @@ public class MainActivity extends Activity {
 					mPagerAdapter.fillLibrary();
 					break;
 				case FileObserver.MOVED_TO:
-					mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
+					if (forDuplicateMusic) {
+						mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
+					}
 				}
 			}
 		}
@@ -199,11 +202,12 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		textFilterLibrary = mTextFilter.getText().toString();
+		forDuplicateMusic = false;
 		observer.startWatching();
+		textFilterLibrary = mTextFilter.getText().toString();
 		super.onPause();
 	}
-
+	
 	@Override
 	public void onResume() {
 		observer.stopWatching();
