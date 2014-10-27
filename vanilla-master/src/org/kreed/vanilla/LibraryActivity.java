@@ -1146,11 +1146,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			updateLimiterViews();
 			break;
 		case MENU_EDIT_MP3_TAGS:
-			// TODO
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
 			String[] fields = { intent.getStringExtra("selected_file_path"), intent.getStringExtra("title"), "" };
-			editor = new MP3Editor(this, true);
+			editor = new MP3Editor(this);
 			editor.setStrings(fields);
 			createEditID3Dialog(type, id, editor);
 			break;
@@ -1197,7 +1196,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private void createEditID3Dialog(int type, long id, MP3Editor view) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		if (null == view) {
-			editor = new MP3Editor(this, true);
+			editor = new MP3Editor(this);
 		}
 		final SongArrayHolder holder = SongArrayHolder.getInstance();
 		if (holder.isID3Opened()) {
@@ -1209,7 +1208,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				holder.setID3DialogOpened(false, null, false);
+				holder.setID3DialogOpened(false, null);
 				final String artistName = editor.getNewArtistName();
 				final String albumTitle = editor.getNewAlbumTitle();
 				final String songTitle = editor.getNewSongTitle();
@@ -1237,7 +1236,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				holder.setID3DialogOpened(false, null, false);
+				holder.setID3DialogOpened(false, null);
 			}
 
 		});
@@ -1246,7 +1245,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				 
 				@Override
 				public void onDismiss(DialogInterface dialog) {
-					holder.setID3DialogOpened(false, null, false);
+					holder.setID3DialogOpened(false, null);
 				}
 			});
 		} else {
@@ -1255,7 +1254,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				@Override
 				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 					if (keyCode == KeyEvent.KEYCODE_BACK) {
-						SongArrayHolder.getInstance().setID3DialogOpened(false, null, false);
+						SongArrayHolder.getInstance().setID3DialogOpened(false, null);
 					}
 					return false;
 				}
@@ -1263,7 +1262,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		}
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
-		holder.setID3DialogOpened(true, editor.getStrings(), false);
+		holder.setID3DialogOpened(true, editor.getStrings());
 	}
 
 	private void deleteCover(File f) {
