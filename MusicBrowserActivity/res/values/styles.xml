@@ -3,7 +3,7 @@
 
     <style name="AppThemeBase.White" parent="android:Theme.Light.NoTitleBar" />
     
-    <style name="AppTheme.White" parent="AppThemeBase.White">
+    <style name="AppTheme.White" parent="AppBaseTheme">
         <item name="android:windowBackground">@color/window_background_light</item>
     </style>
 
