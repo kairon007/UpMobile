@@ -169,6 +169,13 @@ public class RemoteSong extends Song {
 	
 	public void setDownloaderListener(CoverReadyListener downloaderListener) {
 		this.downloaderListener = downloaderListener;
+		getSmallCover(false, new OnBitmapReadyListener() {
+			
+			@Override
+			public void onBitmapReady(Bitmap bmp) {
+				RemoteSong.this.downloaderListener.onCoverReady(bmp);
+			}
+		});
 	}
 	
 	public RemoteSong setDownloadUrl(String url) {
