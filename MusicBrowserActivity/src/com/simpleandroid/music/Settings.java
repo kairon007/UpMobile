@@ -32,8 +32,8 @@ import android.preference.PreferenceManager;
 public class Settings implements BaseSettings {
 	
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
-		{"SearchVmusice", "1"}, 
-		{"SearchSoArdIyyin", "3"},
+//		{"SearchVmusice", "1"}, 
+//		{"SearchSoArdIyyin", "3"},
 		{"SearchPleer", "3"},
 		{"SearchMyFreeMp3", "1"},
 		{"SearchZaycev", "2"},

@@ -69,9 +69,9 @@ public class DirectoryChooserDialog {
 	};
 	private ImageButton newDirButton;
 
-	// ////////////////////////////////////////////////////
-	// Callback interface for selected directory
-	// ////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////
+	// Callback interface for selected directory        //
+	//////////////////////////////////////////////////////
 	public interface ChosenDirectoryListener {
 		public void onChosenDir(String chosenDir);
 	}
@@ -257,6 +257,7 @@ public class DirectoryChooserDialog {
 		newDirButton.setClickable(enable);
 	}
 
+	@SuppressLint("NewApi")
 	public void createNewDirDialog(String name) {
 		SongArrayHolder.getInstance().setIsNewDirectoryOpened(true);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
