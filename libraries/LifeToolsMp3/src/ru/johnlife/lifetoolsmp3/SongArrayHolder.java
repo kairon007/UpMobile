@@ -30,6 +30,7 @@ public class SongArrayHolder {
 	private boolean isDirectoryChooserOpened = false;
 	private boolean isNewDirectoryOpened = false;
 	private boolean isLyricsOpened;
+	private boolean switchMode;
 	private boolean isSearchExecute = false;
 	private boolean isCoverEnabled = true;
 	
@@ -93,6 +94,7 @@ public class SongArrayHolder {
 			setListViewPosition(searchView.getListViewPosition());
 			setSongName(searchView.getSearchField().getText().toString());
 			setTaskIterator(searchView.getTaskIterator());
+			switchMode = searchView.isSwitchMode();
 		}
 	}
 
@@ -165,6 +167,7 @@ public class SongArrayHolder {
 	}
 	
 	public void restoreState(OnlineSearchView view) {
+		view.setSwitchMode(switchMode);
 		if (isStreamDialogOpened) {
 			Bundle args = getStreamDialogArgs();
 			view.prepareSong(args, true);

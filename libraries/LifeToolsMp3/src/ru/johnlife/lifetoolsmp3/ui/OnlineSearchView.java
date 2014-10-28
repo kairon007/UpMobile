@@ -103,6 +103,7 @@ public abstract class OnlineSearchView extends View {
 	private String extraSearch = null;
 	private String keyEngines;
 	private OnlineSearchView onlineView = this;
+	private boolean switchMode = false;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -150,7 +151,7 @@ public abstract class OnlineSearchView extends View {
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			String value = sharedPreferences.getString(key, null);
 			initSearchEngines(getContext(), value);
-			if (!resultAdapter.isEmpty()){
+			if (!resultAdapter.isEmpty() || switchMode){
 				trySearch();
 			}
 		}
@@ -472,6 +473,14 @@ public abstract class OnlineSearchView extends View {
 	public Iterator<Engine> getTaskIterator() {
 		return taskIterator;
 	}
+	
+	public boolean isSwitchMode() {
+		return switchMode;
+	}
+	
+	public void setSwitchMode(boolean switchMode) {
+		this.switchMode = switchMode;
+	}
 
 	public void setTaskIterator(Iterator<Engine> taskIterator) {
 		this.taskIterator = taskIterator;
@@ -580,6 +589,7 @@ public abstract class OnlineSearchView extends View {
 				getNextResults();
 				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
 					try {
+						switchMode = true;
 						String src = getContext().getResources().getText(R.string.search_no_results_for).toString() + " " + searchField.getText().toString();
 						message.setText(src);
 					} catch(Exception e) {
@@ -745,6 +755,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void error(String error) {
 				Toast toast = Toast.makeText(context, R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
+				switchMode = true;
 				toast.show();
 			}
 		}) {
