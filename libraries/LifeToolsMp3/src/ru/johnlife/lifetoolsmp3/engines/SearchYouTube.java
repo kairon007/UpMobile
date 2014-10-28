@@ -42,7 +42,7 @@ public class SearchYouTube extends SearchWithPages {
 							JSONObject thumbnailsObject = item.getJSONObject("thumbnail");
 							int pictureArrayLength = thumbnailsObject.length();
 							String imageUrl = thumbnailsObject.getString(resolution[pictureArrayLength - 1]);
-							addSong(new YouTubeSong(getUrlTask(watchId), imageUrl).setArtistName(author).setTitle(title).setDuration((long)(duartion * 1000)));
+							addSong(new YouTubeSong(getUrlTask(watchId), imageUrl).setArtistName(author.replace("-", "")).setTitle(title).setDuration((long)(duartion * 1000)));
 					}
 				}
 			}

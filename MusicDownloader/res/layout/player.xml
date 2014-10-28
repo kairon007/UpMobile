@@ -3,21 +3,11 @@
     android:id="@+id/player_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:divider="@drawable/layout_divider"
-    android:dividerPadding="4dp"
+    android:padding="8dp"
     android:minHeight="@dimen/layout_library_height"
-    android:orientation="horizontal"
-    android:showDividers="middle"
-    android:visibility="gone" >
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/selectable_item_bg"
-        android:paddingLeft="@dimen/player_pading_side"
-        android:paddingRight="@dimen/player_pading_side" >
-
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent" >
 
@@ -25,11 +15,7 @@
                 android:id="@+id/player_play_song"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:padding="@dimen/pading_button_play"
                 android:src="@drawable/play" />
 
             <ProgressBar
@@ -37,17 +23,16 @@
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center"
                 android:visibility="gone" />
-        </RelativeLayout>
+
+        </FrameLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center_vertical"
             android:orientation="vertical"
             android:padding="8dp" >
 
@@ -63,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:singleLine="true"
+                    android:maxLines="2"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold" />
 
@@ -80,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:singleLine="true"
+                    android:maxLines="2"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
@@ -88,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:singleLine="true"
+                    android:maxLines="2"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>
@@ -104,6 +89,5 @@
                 android:paddingTop="@dimen/pading_min"
                 android:visibility="visible" />
         </LinearLayout>
-    </LinearLayout>
 
 </LinearLayout>
