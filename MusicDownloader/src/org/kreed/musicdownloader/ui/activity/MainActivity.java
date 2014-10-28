@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 	private boolean showDialog = false;
 	private boolean useCover = false;
 	private boolean isPlayerHide;
-	private boolean forDuplicateMusic = true;  
+	private boolean forDuplicateMusic = true;
 
 	// -------------------------------------------------------------------------
 
@@ -373,7 +373,7 @@ public class MainActivity extends Activity {
 			File musicUri = new File(uri);
 			music = new MusicData(musicUri);
 			useCover = in.getBoolean(Constants.USE_COVER, false);
-			showEditDialog();
+			showEditDialog(true);
 		}
 		textFilterDownload = in.getString(Constants.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constants.FILTER_TEXT_LIBRARY);
@@ -541,7 +541,7 @@ public class MainActivity extends Activity {
 			if (null != music.getSongBitmap()) {
 				useCover = true;
 			}
-			showEditDialog();
+			showEditDialog(false);
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -609,7 +609,7 @@ public class MainActivity extends Activity {
 	}
 
 	@SuppressLint("NewApi")
-	public void showEditDialog() {
+	public void showEditDialog(boolean forse) {
 		editor = new MP3Editor(this);
 		showDialog = true;
 		if (null != mStrings) {
@@ -619,6 +619,10 @@ public class MainActivity extends Activity {
 		} else {
 			String[] filds = { music.getSongArtist(), music.getSongTitle(), "" };
 			editor.setStrings(filds);
+		}
+		editor.setSearchView(false);
+		if (forse) {
+			editor.setUseCover(useCover);
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -632,9 +636,9 @@ public class MainActivity extends Activity {
 						String artistName = editor.getNewArtistName();
 						String albumTitle = editor.getNewAlbumTitle();
 						String songTitle = editor.getNewSongTitle();
-						boolean showCover = editor.useAlbumCover();
-						music.setUseCover(showCover);
-						if (!editor.manipulateText() && showCover) {
+						useCover = editor.useAlbumCover();
+						music.setUseCover(useCover);
+						if (!editor.manipulateText() && useCover) {
 							cancel(true);
 							return null;
 						}

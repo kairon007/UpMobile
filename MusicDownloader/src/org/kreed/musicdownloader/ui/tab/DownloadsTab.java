@@ -89,9 +89,6 @@ public class DownloadsTab implements LoadPercentageInterface {
 								} else {
 									DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
 								}
-								if (song.getFileUri() != null) {
-									DBHelper.getInstance(getContext()).delete(song);
-								}
 							}
 						}).start();
 					}
@@ -114,8 +111,15 @@ public class DownloadsTab implements LoadPercentageInterface {
 
 						@Override
 						public void onClick(View v) {
-							MusicData song = getItem(position);
+							final MusicData song = getItem(position);
 							remove(song);
+							new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									DBHelper.getInstance(getContext()).delete(song);
+								}
+							}).start();
 						}
 					});
 					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);

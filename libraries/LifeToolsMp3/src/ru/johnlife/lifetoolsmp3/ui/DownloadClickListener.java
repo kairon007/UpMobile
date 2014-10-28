@@ -71,14 +71,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		headers = song.getHeaders();
 	}
 	
-	public void prepareDownloadSond(final String artist, final String title, final boolean useCover) {
+	public void prepareDownloadSond(final String artist, final String title) {
 		if ("".equals(song.getDownloadUrl()) || song.getDownloadUrl() == null) {
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
 				@Override
 				public void success(String url) {
 					DownloadClickListener.this.url = url;
-					downloadSond(artist, title, useCover, false);
+					downloadSond(artist, title, useAlbumCover, false);
 				}
 				
 				@Override
@@ -89,7 +89,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			});
 		} else {
 			url = song.getDownloadUrl();
-			downloadSond(artist, title, useCover, false);
+			downloadSond(artist, title, useAlbumCover, false);
 		}
 	}
 	
@@ -175,7 +175,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	@Override
 	public void onClick(View v) {
-		prepareDownloadSond(songArtist, songTitle, useAlbumCover);
+		prepareDownloadSond(songArtist, songTitle);
 	}
 
 	protected void notifyDuringDownload(final long downloadId, final double currentProgress) {

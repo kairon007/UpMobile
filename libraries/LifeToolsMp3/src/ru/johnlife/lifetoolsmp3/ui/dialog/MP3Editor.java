@@ -26,6 +26,7 @@ public class MP3Editor {
 	private String oldArtistName;
 	private String oldSongTitle;
 	private String oldAlbumTitle;
+	private boolean isSearchView = true;
 	public static final String UNKNOWN = "unknown";
 
 	public MP3Editor(Context context) {
@@ -43,7 +44,9 @@ public class MP3Editor {
 		etAlbumTitle.addTextChangedListener(watcher);
 		etSongTitle.addTextChangedListener(watcher);
 		etArtistName.addTextChangedListener(watcher);
-		checkBox.setChecked(SongArrayHolder.getInstance().isCoverEnabled());
+		if (isSearchView) {
+			checkBox.setChecked(SongArrayHolder.getInstance().isCoverEnabled());
+		}
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -88,6 +91,10 @@ public class MP3Editor {
 
 		}
 	}
+	
+	public void setSearchView(boolean isSearchView) {
+		this.isSearchView = isSearchView;
+	}
 
 	public void hideCheckBox(boolean isHide) {
 		if (isHide) {
@@ -100,6 +107,10 @@ public class MP3Editor {
 		return checkBox.isChecked();
 	}
 
+	public void setUseCover (boolean value) {
+		checkBox.setChecked(value);
+	}
+	
 	public String getNewArtistName() {
 		if (setArtistName()) {
 			return newArtistName;

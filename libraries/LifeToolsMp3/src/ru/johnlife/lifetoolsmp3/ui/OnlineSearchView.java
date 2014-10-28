@@ -794,6 +794,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void run() {
 				SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
+				SongArrayHolder.getInstance().setCoverEnabled(true);
 				if (player != null) {
 					player.cancel();
 					player = null;
@@ -859,13 +860,14 @@ public abstract class OnlineSearchView extends View {
 				String artist = player.getArtist();
 				boolean useCover = SongArrayHolder.getInstance().isCoverEnabled();
 				downloadClickListener.setUseAlbumCover(useCover);
-				downloadClickListener.prepareDownloadSond(artist, title, useCover);
+				downloadClickListener.prepareDownloadSond(artist, title);
 				player.cancel();
 				dialogDismisser.run();
 				getContext().unregisterReceiver(headsetReceiver);
 				if (telephonyManager != null) {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 				}
+				SongArrayHolder.getInstance().setCoverEnabled(true);
 			}
 
 		});
