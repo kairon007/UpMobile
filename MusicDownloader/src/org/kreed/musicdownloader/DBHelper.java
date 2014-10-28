@@ -20,6 +20,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -161,7 +162,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-			String s = data.getFileUri().replaceAll("[^a-zA-Z]+","");
+			String s = data.getFileUri();
+			Log.d("logd", "uri = " + s);
 			char[] mass = s.toCharArray();
 			StringBuilder s1 = null;
 			for (int i = 0; i < s.length(); i++) {
@@ -175,6 +177,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 			if (null != s1) {
 				s = s1.toString();
+				Log.d("logd", "uri = " + s);
 			}
 			getWritableDatabase().delete(DB_NAME,  "fileuri = " + "('" + s + "')", null); 
 			return null;
@@ -191,12 +194,11 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-			String fileUri = data.getFileUri().replaceAll("[^a-zA-Z]+","");
 			ContentValues cv = new ContentValues();
 			cv.put("artist", data.getSongArtist());
 			cv.put("title", data.getSongTitle());
 			cv.put("duration", data.getSongDuration());
-			cv.put("fileuri", fileUri);
+			cv.put("fileuri", data.getFileUri());
 			getWritableDatabase().insert(DB_NAME, null, cv);
 			return null;
 		}

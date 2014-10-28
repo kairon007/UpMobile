@@ -331,9 +331,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 					}
 					notifyMediascanner(song, path);
-					this.cancel();
 					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
 					setFileUri(downloadId, src.getAbsolutePath());
+					this.cancel();
 					return;
 				default:
 					break;
