@@ -4,9 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.json.JSONArray;
-
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
@@ -27,6 +25,7 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -62,6 +61,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.view.*;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -227,7 +228,17 @@ public abstract class OnlineSearchView extends View {
 		});
 		ArrayList<String> list = getSettings().getEnginesArray(getContext());
 		if (list.size() > 1) {
-			adapter = new CustomSpinnerAdapter(getContext(), 0, list);
+			
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+				android.view.ViewGroup.LayoutParams params = spEnginesChoiser.getLayoutParams();
+				params.width = 300;
+				spEnginesChoiser.setLayoutParams(params);
+				adapter = new CustomSpinnerAdapter(getContext(), 0, list);
+			}
+			else {
+				adapter = new CustomSpinnerAdapter(getContext(), 0, list);
+			}
+			
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spEnginesChoiser.setAdapter(adapter);
 			int id = adapter.getPosition(keyEngines);

@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,14 +22,19 @@ public class CustomSpinnerAdapter extends ArrayAdapter {
 		super(context, resource, objects);
 		this.context = context;
 	}
+	public CustomSpinnerAdapter(Context context, int resource, int resView, ArrayList<String> objects) {
+		super(context, resource, resView, objects);
+		this.context = context;
+		
+	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		TextView tvItem = new TextView(context);
 		tvItem.setTextSize(16);
-		tvItem.setGravity(Gravity.CENTER);
+		tvItem.setGravity(Gravity.LEFT);
 		tvItem.setText(getItem(position).toString());
 		return tvItem;
 	}
-
+	
 }
