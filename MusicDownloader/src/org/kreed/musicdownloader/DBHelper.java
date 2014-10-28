@@ -161,7 +161,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-			String s = data.getFileUri();
+			String s = data.getFileUri().replaceAll("[^a-zA-Z]+","");
 			char[] mass = s.toCharArray();
 			StringBuilder s1 = null;
 			for (int i = 0; i < s.length(); i++) {
@@ -191,11 +191,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
+			String fileUri = data.getFileUri().replaceAll("[^a-zA-Z]+","");
 			ContentValues cv = new ContentValues();
 			cv.put("artist", data.getSongArtist());
 			cv.put("title", data.getSongTitle());
 			cv.put("duration", data.getSongDuration());
-			cv.put("fileuri", data.getFileUri());
+			cv.put("fileuri", fileUri);
 			getWritableDatabase().insert(DB_NAME, null, cv);
 			return null;
 		}
