@@ -78,6 +78,11 @@ public class DownloadListener extends DownloadClickListener {
 	}
 
 	@Override
+	protected void setFileUri(long downloadId, String uri) {
+		downloadsTab.setFileUri(uri, downloadId);
+	}
+	
+	@Override
 	protected boolean isFullAction() {
 		return false;
 	}

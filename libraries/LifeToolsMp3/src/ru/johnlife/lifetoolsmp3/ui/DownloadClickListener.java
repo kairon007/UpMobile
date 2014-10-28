@@ -133,10 +133,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			musicDir.mkdirs();
 		}
 		StringBuilder sb = new StringBuilder(songArtist).append(" - ").append(songTitle);
+		String fileUri;
 		if (songId != -1) {
 			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb.append(".mp3").toString(), context);
 			manager.execute();
+			fileUri = musicDir.getAbsolutePath() + sb.toString();
 		} else {
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -170,7 +172,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, downloadId, useCover);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
+			fileUri = musicDir.getAbsolutePath() + sb.toString();
+//			setFileUri(downloadId, fileUri);
 		}
+		
 	}
 
 	@Override
@@ -178,6 +183,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		prepareDownloadSond(songArtist, songTitle);
 	}
 
+	protected void setFileUri(long downloadId, String uri) {
+		
+	}
+	
 	protected void notifyDuringDownload(final long downloadId, final double currentProgress) {
 
 	}
@@ -324,6 +333,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					notifyMediascanner(song, path);
 					this.cancel();
 					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
+					setFileUri(downloadId, src.getAbsolutePath());
 					return;
 				default:
 					break;

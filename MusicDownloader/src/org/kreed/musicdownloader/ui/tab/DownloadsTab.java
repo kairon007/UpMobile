@@ -15,7 +15,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -113,13 +112,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 						public void onClick(View v) {
 							final MusicData song = getItem(position);
 							remove(song);
-							new Thread(new Runnable() {
-
-								@Override
-								public void run() {
-									DBHelper.getInstance(getContext()).delete(song);
-								}
-							}).start();
+							DBHelper.getInstance(getContext()).delete(song);
 						}
 					});
 					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
