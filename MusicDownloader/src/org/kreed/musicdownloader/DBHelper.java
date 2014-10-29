@@ -163,7 +163,6 @@ public class DBHelper extends SQLiteOpenHelper {
 		@Override
 		protected Void doInBackground(Void... params) {
 			String s = data.getFileUri();
-			Log.d("logd", "uri = " + s);
 			char[] mass = s.toCharArray();
 			StringBuilder s1 = null;
 			for (int i = 0; i < s.length(); i++) {
@@ -177,7 +176,6 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 			if (null != s1) {
 				s = s1.toString();
-				Log.d("logd", "uri = " + s);
 			}
 			getWritableDatabase().delete(DB_NAME,  "fileuri = " + "('" + s + "')", null); 
 			return null;

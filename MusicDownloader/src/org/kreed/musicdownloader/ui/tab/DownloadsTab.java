@@ -15,6 +15,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,22 +77,14 @@ public class DownloadsTab implements LoadPercentageInterface {
 					@Override
 					public void onClick(View v) {
 						final MusicData song = getItem(position);
+						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
+							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+							cancelledId = song.getDownloadId();
+							manager.remove(cancelledId);
+							Log.d("logd", "remove from manager");
+						}
 						remove(song);
-						new Thread(new Runnable() {
-
-							@Override
-							public void run() {
-								if (song.getDownloadProgress() > 0) {
-									DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-									cancelledId = song.getDownloadId();
-									manager.remove(cancelledId);
-								} else {
-									DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle());
-								}
-							}
-						}).start();
 					}
-
 				});
 			}
 			MusicData song = getItem(position);

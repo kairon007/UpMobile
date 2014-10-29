@@ -2,6 +2,8 @@ package ru.johnlife.lifetoolsmp3;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class DownloadCache {
 	
 	private final int CACHE_CAPACITY = 3;
@@ -29,12 +31,16 @@ public class DownloadCache {
 	}
 	
 	public boolean remove(String artist, String title, boolean useCover) {
+		Log.d("logd", "remove from cache");
 		int position = cache.indexOf(new Item(artist, title, useCover, false));
 		boolean cached = cache.get(position).isCached;
 		cache.remove(position);
-		for (Item item : cache) {
-			if (item.isCached()) {
-				item.callback();
+		if (!cached) {
+			for (Item item : cache) {
+				if (item.isCached()) {
+					item.callback();
+					return cached;
+				}
 			}
 		}
 		return cached;
