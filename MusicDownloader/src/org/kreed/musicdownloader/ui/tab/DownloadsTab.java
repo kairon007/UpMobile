@@ -81,7 +81,6 @@ public class DownloadsTab implements LoadPercentageInterface {
 							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 							cancelledId = song.getDownloadId();
 							manager.remove(cancelledId);
-							Log.d("logd", "remove from manager");
 						}
 						remove(song);
 					}
@@ -112,6 +111,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 				} else {
 					holder.downloadProgress.setVisibility(View.VISIBLE);
 					double progress = song.getDownloadProgress();
+					holder.downloadProgress.setIndeterminate(progress == 0);
 					holder.downloadProgress.setProgress((int) progress);
 					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_cancel_black : R.drawable.icon_cancel);
 				}
