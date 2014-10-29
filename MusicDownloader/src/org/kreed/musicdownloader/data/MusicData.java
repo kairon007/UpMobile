@@ -25,7 +25,7 @@ public class MusicData {
 	private String songGenre;
 	private String songAlbum;
 	private String fileUri;
-	private long downloadId;
+	private long downloadId = -1;
 	private boolean useCover = true;
 
 	public MusicData() {

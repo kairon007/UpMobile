@@ -15,11 +15,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.Transformation;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageButton;
@@ -48,6 +50,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 		private ArrayList<MusicData> mOriginalValues;
 		private LayoutInflater inflater;
 		private Filter filter;
+		private final int ANIMATION_DURATION = 200;
 
 		private DownloadsAdapter(Context context, int resource) {
 			super(context, resource);
@@ -60,29 +63,54 @@ public class DownloadsTab implements LoadPercentageInterface {
 			ViewHolder holder = null;
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.downloads_row, parent, false);
-				holder = new ViewHolder();
-				holder.artist = (TextView) convertView.findViewById(R.id.songArtist);
-				holder.title = (TextView) convertView.findViewById(R.id.songTitle);
-				holder.cover = (ImageView) convertView.findViewById(R.id.cover);
-				holder.duration = (TextView) convertView.findViewById(R.id.totalTime);
-				holder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.progressBar);
-				holder.remove = (ImageButton) convertView.findViewById(R.id.cancel);
+				holder = createViewHolder(convertView);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
+				if (holder.needInvalidate) {
+					convertView = inflater.inflate(R.layout.downloads_row, parent, false);
+					holder = createViewHolder(convertView);
+					convertView.setTag(holder);
+				}
 			}
 			if (holder.remove != null) {
 				holder.remove.setOnClickListener(new OnClickListener() {
 
 					@Override
-					public void onClick(View v) {
+					public void onClick(final View v) {
+						v.setOnClickListener(null);
 						final MusicData song = getItem(position);
 						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
 							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 							cancelledId = song.getDownloadId();
-							manager.remove(cancelledId);
+							int cacheDownloadId = song.getSongArtist().hashCode() + song.getSongTitle().hashCode();
+							if (cancelledId != -1 && cacheDownloadId != cancelledId) {
+								manager.remove(cancelledId);
+							}
+							if (song.isDownloaded()) {
+								DBHelper.getInstance(getContext()).delete(song);
+							}
 						}
-						remove(song);
+						collapse((View)v.getParent(), new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								((ViewHolder)((View)v.getParent()).getTag()).needInvalidate = true;
+								remove(song);
+							}
+						});
 					}
 				});
 			}
@@ -98,15 +126,6 @@ public class DownloadsTab implements LoadPercentageInterface {
 				}
 				if (song.isDownloaded()) {
 					holder.downloadProgress.setVisibility(View.GONE);
-					holder.remove.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							final MusicData song = getItem(position);
-							remove(song);
-							DBHelper.getInstance(getContext()).delete(song);
-						}
-					});
 					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
 				} else {
 					holder.downloadProgress.setVisibility(View.VISIBLE);
@@ -121,6 +140,46 @@ public class DownloadsTab implements LoadPercentageInterface {
 			return convertView;
 		}
 
+		private ViewHolder createViewHolder(View convertView) {
+			ViewHolder holder;
+			holder = new ViewHolder();
+			holder.artist = (TextView) convertView.findViewById(R.id.songArtist);
+			holder.title = (TextView) convertView.findViewById(R.id.songTitle);
+			holder.cover = (ImageView) convertView.findViewById(R.id.cover);
+			holder.duration = (TextView) convertView.findViewById(R.id.totalTime);
+			holder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.progressBar);
+			holder.remove = (ImageButton) convertView.findViewById(R.id.cancel);
+			return holder;
+		}
+		
+		private void collapse(final View v, AnimationListener al) {
+			final int initialHeight = v.getMeasuredHeight();
+
+			Animation anim = new Animation() {
+				@Override
+				protected void applyTransformation(float interpolatedTime, Transformation t) {
+					if (interpolatedTime == 1) {
+						v.setVisibility(View.GONE);
+					}
+					else {
+						v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+						v.requestLayout();
+					}
+				}
+
+				@Override
+				public boolean willChangeBounds() {
+					return true;
+				}
+			};
+
+			if (al!=null) {
+				anim.setAnimationListener(al);
+			}
+			anim.setDuration(ANIMATION_DURATION);
+			v.startAnimation(anim);
+		}
+
 		private class ViewHolder {
 			TextView title;
 			TextView artist;
@@ -128,6 +187,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 			ImageView cover;
 			ImageButton remove;
 			ProgressBar downloadProgress;
+			boolean needInvalidate = false;
 		}
 
 		@Override
