@@ -54,7 +54,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected String duration;
 	protected Long currentDownloadId;
 	public Integer songId;
-	private boolean waitingForCover = true;
 	private double progress = 0.0;
 	private boolean useAlbumCover = true;
 	private RefreshListener listener;
@@ -228,7 +227,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	@Override
 	public void onBitmapReady(Bitmap bmp) {
 		this.cover = bmp;
-		this.waitingForCover = false;
 	}
 
 	private final class UpdateTimerTask extends TimerTask {
@@ -248,9 +246,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		@Override
 		public void run() {
-			if (waitingForCover) {
-				return;
-			}
 			Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId));
 			if (c.moveToFirst()) {
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
