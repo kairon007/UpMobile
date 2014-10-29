@@ -94,16 +94,10 @@ public class DownloadsTab implements LoadPercentageInterface {
 						collapse((View)v.getParent(), new AnimationListener() {
 							
 							@Override
-							public void onAnimationStart(Animation animation) {
-								// TODO Auto-generated method stub
-								
-							}
+							public void onAnimationStart(Animation animation) {}
 							
 							@Override
-							public void onAnimationRepeat(Animation animation) {
-								// TODO Auto-generated method stub
-								
-							}
+							public void onAnimationRepeat(Animation animation) {}
 							
 							@Override
 							public void onAnimationEnd(Animation animation) {
