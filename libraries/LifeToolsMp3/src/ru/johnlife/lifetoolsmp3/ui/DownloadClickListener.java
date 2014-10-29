@@ -237,7 +237,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		this.waitingForCover = false;
 	}
 
-	@SuppressLint("NewApi")
 	private final class UpdateTimerTask extends TimerTask {
 
 		private RemoteSong song;
@@ -289,14 +288,18 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
 					} else if (columnIndex != -1) {
-						columnIndex = c.getColumnIndex("local_uri");
+						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
 					}
-					if (columnIndex == -1)
+					if (columnIndex == -1){
 						return;
+					}
 					String path = c.getString(columnIndex);
 					c.close();
 					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 						path = cutPath(path);
+						if (path.contains("%20")) {
+							path.replaceAll("%20", " ");
+						}
 					}
 					src = new File(path);
 					MusicMetadataSet src_set = null;
@@ -307,6 +310,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					}
 					if (null == src_set) {
 						DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
+						notifyMediascanner(song, path);
 						this.cancel();
 					}
 					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();

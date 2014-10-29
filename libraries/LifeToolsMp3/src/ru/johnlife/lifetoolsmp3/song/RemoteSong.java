@@ -11,6 +11,7 @@ import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.CoverReadyListener;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 public class RemoteSong extends Song {
 	private final class WrapperCoverListener implements OnBitmapReadyListener {
@@ -173,7 +174,11 @@ public class RemoteSong extends Song {
 			
 			@Override
 			public void onBitmapReady(Bitmap bmp) {
-				RemoteSong.this.downloaderListener.onCoverReady(bmp);
+				if (null != RemoteSong.this.downloaderListener) {
+					RemoteSong.this.downloaderListener.onCoverReady(bmp);
+				} else {
+					Log.d("log", "RemoteSong.setDownloaderListener.onBitmapReady nullpoin...");
+				}
 			}
 		});
 	}
