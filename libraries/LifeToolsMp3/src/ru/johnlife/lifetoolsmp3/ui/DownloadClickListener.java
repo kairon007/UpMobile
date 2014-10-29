@@ -132,13 +132,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
 		}
-		StringBuilder sb = new StringBuilder(songArtist).append(" - ").append(songTitle);
-		String fileUri;
+		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(".mp3");
+		String sb = removeSpecialCharacters(stringBuilder.toString());
 		if (songId != -1) {
 			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
-			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb.append(".mp3").toString(), context);
+			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context);
 			manager.execute();
-			fileUri = musicDir.getAbsolutePath() + sb.toString();
 		} else {
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -151,15 +150,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					request.addRequestHeader(headers.get(i)[0], headers.get(i)[1]);
 				}
 			}
-			final String fileName = sb.toString();
-			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(fileName);
+			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(sb);
 			try {
-				request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb.append(".mp3").toString());
+				request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
 			} catch (Exception e) { 
 				Log.e(getClass().getSimpleName(), e.getMessage());
 				String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
-				Log.e(getClass().getSimpleName(), "Something wrong. Set default directory: " + dir);
-				request.setDestinationInExternalPublicDir(dir, sb.append(".mp3").toString());
+				request.setDestinationInExternalPublicDir(dir, sb);
 			}
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				request.allowScanningByMediaScanner();
@@ -169,13 +166,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			if (!isUpdated) {
 				song.setDownloaderListener(notifyStartDownload(downloadId));
 			}
-			Toast.makeText(context, String.format(context.getString(R.string.download_started), fileName), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, String.format(context.getString(R.string.download_started), sb), Toast.LENGTH_SHORT).show();
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, downloadId, useCover);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
-			fileUri = musicDir.getAbsolutePath() + sb.toString();
-//			setFileUri(downloadId, fileUri);
 		}
-		
 	}
 
 	@Override
@@ -290,9 +284,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					} else if (columnIndex != -1) {
 						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
 					}
-					if (columnIndex == -1){
-						return;
-					}
+					if (columnIndex == -1) return;
 					String path = c.getString(columnIndex);
 					c.close();
 					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -310,8 +302,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					}
 					if (null == src_set) {
 						DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
-						notifyMediascanner(song, path);
 						this.cancel();
+						return;
 					}
 					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 					metadata.clearPictureList();
@@ -371,6 +363,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 	
 	private String removeSpecialCharacters(String str) {
-		return str.replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
+		return str.replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "")
+				.replaceAll("[^\\dA-Za-z -.]", "");
 	}
 }

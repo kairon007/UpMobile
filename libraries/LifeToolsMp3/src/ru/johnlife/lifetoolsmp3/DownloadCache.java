@@ -32,6 +32,9 @@ public class DownloadCache {
 	
 	public boolean remove(String artist, String title, boolean useCover) {
 		int position = cache.indexOf(new Item(artist, title, useCover, false));
+		if (position < 0 || position >= cache.size()) {
+			return false;
+		}
 		boolean cached = cache.get(position).isCached;
 		cache.remove(position);
 		if (!cached) {
