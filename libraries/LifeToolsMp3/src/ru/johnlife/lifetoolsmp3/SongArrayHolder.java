@@ -8,6 +8,7 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.os.Bundle;
+import android.view.View;
 
 public class SongArrayHolder {
 	
@@ -33,6 +34,10 @@ public class SongArrayHolder {
 	private boolean switchMode;
 	private boolean isSearchExecute = false;
 	private boolean isCoverEnabled = true;
+	private boolean isProgressDialogOpened = false;
+	private boolean fullAction;
+	private int position;
+	private View view;
 	
 	private SongArrayHolder() {
 	}
@@ -168,6 +173,9 @@ public class SongArrayHolder {
 	
 	public void restoreState(OnlineSearchView view) {
 		view.setSwitchMode(switchMode);
+		if (isProgressDialogOpened) {
+			view.getDownloadUrl(fullAction, streamDialogArgs, this.view, listViewPosition);
+		}
 		if (isStreamDialogOpened) {
 			Bundle args = getStreamDialogArgs();
 			view.prepareSong(args, true);
@@ -208,5 +216,17 @@ public class SongArrayHolder {
 
 	public void setListViewPosition(int listViewPosition) {
 		this.listViewPosition = listViewPosition;
+	}
+
+	public boolean isProgressDialogOpened() {
+		return isProgressDialogOpened;
+	}
+
+	public void setProgressDialogOpened(boolean isProgressDialogOpened, boolean fullAction, Bundle bundle, View view, int position) {
+		this.isProgressDialogOpened = isProgressDialogOpened;
+		this.fullAction = fullAction;
+		this.streamDialogArgs = bundle;
+		this.view = view;
+		this.position = position;
 	}
 }
