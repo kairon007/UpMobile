@@ -378,7 +378,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 				current = mediaPlayer.getCurrentPosition();
 				int total = mediaPlayer.getDuration();
 				progress.setProgress(current);
-				timeText = Util.formatTimeSimple(current) + " / " + Util.formatTimeSimple(total);
+				timeText = Util.getFormatedStrDuration(current) + " / " + Util.getFormatedStrDuration(total);
 				time.setText(timeText);
 				action = this;
 				progress.postDelayed(action, 1000);
@@ -401,7 +401,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (duration == -1) {
 			progress.setIndeterminate(true);
 		} else {
-			time.setText(Util.formatTimeSimple(duration));
+			time.setText(Util.getFormatedStrDuration(duration));
 			progress.setIndeterminate(false);
 			current = 0;
 			progress.setProgress(current);

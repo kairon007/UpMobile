@@ -52,7 +52,7 @@ public class SearchView  extends OnlineSearchView {
 		final MusicData data = new MusicData();
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
-		data.setSongDuration(Util.formatTimeIsoDate(song.getDuration()));
+		data.setSongDuration(Util.getFormatedStrDuration(song.getDuration()));
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			if (view.getId() == R.id.btnDownload) {
 				setPosition.add(position);

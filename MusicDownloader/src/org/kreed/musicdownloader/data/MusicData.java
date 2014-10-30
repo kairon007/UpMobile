@@ -83,7 +83,7 @@ public class MusicData {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					songDuration = Util.formatTimeSimple(seconds * 1000);
+					songDuration = Util.getFormatedStrDuration(seconds * 1000);
 					if (metadata.containsKey("genre_id")) {
 						int genre_id = (Integer) metadata.get("genre_id");
 						songGenre = ID3v1Genre.get(genre_id);
@@ -110,7 +110,7 @@ public class MusicData {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					songDuration = Util.formatTimeSimple(seconds * 1000);
+					songDuration = Util.getFormatedStrDuration(seconds * 1000);
 					if (null != metadata.getAlbum()) {
 						songAlbum = metadata.getAlbum();
 					}
@@ -144,7 +144,7 @@ public class MusicData {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				temp.setSongDuration(Util.formatTimeSimple(seconds * 1000));
+				temp.setSongDuration(Util.getFormatedStrDuration(seconds * 1000));
 				Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
 				temp.setSongBitmap(bitmap);
 				if (null != metadata.getAlbum()) {

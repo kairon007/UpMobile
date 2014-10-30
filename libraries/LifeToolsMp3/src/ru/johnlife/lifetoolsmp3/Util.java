@@ -30,25 +30,36 @@ public final class Util {
 	private final static DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
 	private final static int SMALL_BITMAP_SIZE = 100;
 	
-	public static String formatTimeIsoDate(long date) {
-		return isoDateFormat.format(new Date(date));
-	}
-	
-	public static String formatTimeSimple(int duration) {
-		duration /= 1000;
-		int min = duration / 60;
-		int sec = duration % 60;
-		return String.format("%d:%02d", min, sec);
-	}
 	
 	public static long formatTime(String duration) {
 		long durationLong;
-		int min = Integer.valueOf(duration.substring(0, 2));
-		int sec = Integer.valueOf(duration.substring(3, 5));
-		durationLong = (min * 60 * 1000) +  (sec * 1000);
+	    int curSor = duration.indexOf(":");
+	    if (curSor == 2) {
+	    	int min = Integer.valueOf(duration.substring(0, 2));
+	    	int sec = Integer.valueOf(duration.substring(3, 5));
+			durationLong = (min * 60 * 1000) +  (sec * 1000);
+	    }
+	    else {
+	    	int min = Integer.valueOf(duration.substring(0, 3));
+	    	int sec = Integer.valueOf(duration.substring(4, 6));
+			durationLong = (min * 60 * 1000) +  (sec * 1000);
+	    }
 		return durationLong;
 	}
-	
+	public static String getFormatedStrDuration(long l) {
+		if (l > Integer.MAX_VALUE)
+			return "> 20 days";
+			int duration = (int) l;
+			duration /= 1000;
+			int min = duration / 60;
+			int sec = duration % 60;
+			int h = min / 60;
+			min = min % 60;
+			if (h>0)
+				return String.format("%d:%02d:%02d", h, min, sec);
+			else 
+				return String.format("%d:%02d", min, sec);
+	}
 	public static Bitmap resizeToSmall(Bitmap original) {
 		int originalSize = Math.max(original.getWidth(), original.getHeight());
 		float scale = 1;

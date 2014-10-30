@@ -66,7 +66,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		this.listener = listener;
 		songTitle = removeSpecialCharacters(song.getTitle());
 		songArtist = removeSpecialCharacters(song.getArtist());
-		duration = Util.formatTimeIsoDate(song.getDuration());
+		duration = Util.getFormatedStrDuration(song.getDuration());
 		headers = song.getHeaders();
 	}
 	

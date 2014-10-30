@@ -63,7 +63,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 					int current = mediaPlayer.getCurrentPosition();
 					int total = mediaPlayer.getDuration();
 					songProgress.setProgress(current);
-					songDuration.setText(Util.formatTimeSimple(current) + " / " + Util.formatTimeSimple(total));
+					songDuration.setText(Util.getFormatedStrDuration(current) + " / " + Util.getFormatedStrDuration(total));
 					songProgress.postDelayed(this, 1000);
 				}
 			} catch (Exception e) {
@@ -162,7 +162,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 			songProgress.setVisibility(View.INVISIBLE);
 		} else {
 			songProgress.setVisibility(View.VISIBLE);
-			songDuration.setText(Util.formatTimeSimple(duration));
+			songDuration.setText(Util.getFormatedStrDuration(duration));
 			songProgress.setIndeterminate(false);
 			songProgress.setMax(duration);
 			songProgress.postDelayed(progressAction, 1000);
