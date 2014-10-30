@@ -1,11 +1,23 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
@@ -26,7 +38,11 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -34,12 +50,15 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 public class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
@@ -138,6 +157,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context);
 			manager.execute();
 		} else {
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+				//new download task for device with api below 11 
+				String str = removeSpecialCharacters(songArtist) + " - " + removeSpecialCharacters(songTitle);
+				DownloadSongTask task = new DownloadSongTask(song, useCover, str);
+				String fileUri = musicDir.getAbsolutePath() + "/" + sb;
+				task.execute(url, fileUri);
+				return;
+			}
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				url = url.replaceFirst("https", "http");
@@ -289,42 +316,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 					}
 					src = new File(path);
-					MusicMetadataSet src_set = null;
-					try {
-						src_set = new MyID3().read(src);
-					} catch (Exception exception) {
-						Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
-					}
-					if (null == src_set) {
-						DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
+					if (!setMetadataToFile(path, src, useCover)) {
 						this.cancel();
-						return;
 					}
-					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-					metadata.clearPictureList();
-					metadata.setSongTitle(songTitle);
-					metadata.setArtist(songArtist);
-					if (null != cover && useCover) {
-						ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-						cover.compress(CompressFormat.JPEG, 85, out);
-						metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-					}
-					File dst = new File(src.getParentFile(), src.getName() + "-1");
-					boolean isRename = false;
-					try {
-						new MyID3().write(src, dst, src_set, metadata);
-						isRename = dst.renameTo(src);
-					} catch (Exception e) {
-						Log.e(getClass().getSimpleName(), "Unable to write music metadata from file. " + e);
-					} finally {
-						if (!isRename) {
-							dst.delete();
-						}
-					}
-					notifyMediascanner(song, path);
-					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
-					setFileUri(downloadId, src.getAbsolutePath());
-					this.cancel();
 					return;
 				default:
 					break;
@@ -352,13 +346,173 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 	}
 	
+	private void notifyMediascanner(final RemoteSong song, final String pathToFile) {
+		final File file = new File(pathToFile);
+		MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+			public void onScanCompleted(String path, Uri uri) {
+				prepare(file, song, pathToFile);
+				if (null != listener) {
+					listener.success();
+				}
+			}
+		});
+	}
+	
+	private boolean setMetadataToFile(String path, File src, boolean useCover) {
+		MusicMetadataSet src_set = null;
+		try {
+			src_set = new MyID3().read(src);
+		} catch (Exception exception) {
+			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
+		}
+		if (null == src_set) {
+			DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
+			notifyMediascanner(song, path);
+			return false;
+		}
+		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+		metadata.clearPictureList();
+		metadata.setSongTitle(songTitle);
+		metadata.setArtist(songArtist);
+		if (null != cover && useCover) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+			cover.compress(CompressFormat.JPEG, 85, out);
+			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+		}
+		File dst = new File(src.getParentFile(), src.getName() + "-1");
+		boolean isRename = false;
+		try {
+			new MyID3().write(src, dst, src_set, metadata);
+			isRename = dst.renameTo(src);
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), "Unable to write music metadata from file. " + e);
+		} finally {
+			if (!isRename) {
+				dst.delete();
+			}
+		}
+		return true;
+	}
+	
 	public interface CoverReadyListener {
 		
 		void onCoverReady(Bitmap cover);
 	}
 	
-	private String removeSpecialCharacters(String str) {
-		return str.replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "")
-				.replaceAll("[^\\dA-Za-z -.]", "");
+private class DownloadSongTask extends AsyncTask<String, Void, Void>{
+		
+		private Notification notification;
+		private NotificationCompat.Builder builder;
+		private RemoteSong song;
+		private boolean useCover;
+		private NotificationManager notificationManager;
+		private String notificationTitle;
+		
+		public DownloadSongTask ( RemoteSong song, boolean useCover, String notificationTitle){
+			this.notificationTitle = notificationTitle;
+			this.song = song;
+			this.useCover = useCover;
+		}
+
+		private void createNotification(int progress, boolean isStop) {
+			RemoteViews  notificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
+			notificationManager =(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE); 
+			Notification notification = new Notification(R.drawable.ic_download, notificationTitle, Calendar.getInstance().getTimeInMillis());
+			notification.flags |= Notification.FLAG_AUTO_CANCEL;
+			Intent intent = new Intent ();
+			PendingIntent pend = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			notification.number += 1;
+			notification.contentIntent = pend;
+			notification.contentView = notificationView;
+			notification.contentView.setTextViewText(R.id.tv_notification, songTitle);
+			notification.contentView.setProgressBar(R.id.progres_notification, 100, progress, false);
+			notificationManager.notify(1, notification);
+			if (isStop) {
+				notificationManager.cancel(1);
+			}
+		}
+		
+		/*
+		 * first params in execute() is url, second params is file path
+		 */
+		@Override
+		protected Void doInBackground(String... params) {
+			File file = null;
+			try {
+			    HttpParams httpParameters = new BasicHttpParams();
+			    HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
+			    URL url = new URL(params[0]);
+			    URLConnection connection = url.openConnection();
+			    HttpURLConnection httpConnection = (HttpURLConnection) connection;
+			    if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			        int size = connection.getContentLength();
+			        int index = 0;
+			        int current = 0;
+			        try {
+			        	file = new File(params[1]);
+			        	file.createNewFile();
+			        	file.setWritable(true);
+			        	file.setReadable(true);
+			            FileOutputStream output = new FileOutputStream(file);
+			            InputStream input = connection.getInputStream();
+			            BufferedInputStream buffer = new BufferedInputStream(input);
+			            byte[] bBuffer = new byte[10240];
+			            int i = 0;
+						while ((current = buffer.read(bBuffer)) != -1) {
+							if (isCancelled()) {
+								Log.d("log", "task is canceled");
+							}
+							output.write(bBuffer, 0, current);
+							index += current;
+							int p = index * 100 / size;
+							if (p % 5 == 0) {
+								i++;
+								if (i == 1) {
+									createNotification(p, false);
+								}
+								if (p == 100) {
+									createNotification(p, true);
+								}
+							} else {
+								i = 0;
+							}
+						}
+			            if (setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
+							this.cancel(true);
+						}
+			        } catch (SecurityException se) {
+			        	Log.d("log", "DownloadClickListener$DownloadSongTask exeption - " + se);
+			            se.printStackTrace();
+			            return null;
+			        } catch (FileNotFoundException e) {
+			        	Log.d("log", "DownloadClickListener$DownloadSongTask exeption - " + e);
+			            e.printStackTrace();
+			            return null;
+			        } catch (Exception e) {
+			        	Log.d("log", "DownloadClickListener$DownloadSongTask exeption - " + e);
+			            e.printStackTrace();
+			            return null;
+			        }
+			        notifyMediascanner(song, file.getAbsolutePath());
+			        return null;
+			    } else {
+			    	return null;
+			    }
+			} catch (IOException e) {
+				Log.d("log", "DownloadClickListener$DownloadSongTask exeption - " + e);
+				return null;
+			}
+		}
 	}
+
+	
+	private String removeSpecialCharacters(String str) {
+		while (str.endsWith(" ")) {
+			str.substring(0, str.length() -1);
+		}
+		return str.replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
+	}
+	
+	
 }

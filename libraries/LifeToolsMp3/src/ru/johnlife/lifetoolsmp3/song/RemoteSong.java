@@ -176,9 +176,7 @@ public class RemoteSong extends Song {
 			public void onBitmapReady(Bitmap bmp) {
 				if (null != RemoteSong.this.downloaderListener) {
 					RemoteSong.this.downloaderListener.onCoverReady(bmp);
-				} else {
-					Log.d("log", "RemoteSong.setDownloaderListener.onBitmapReady nullpoin...");
-				}
+				} 
 			}
 		});
 	}
