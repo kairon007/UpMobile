@@ -73,7 +73,7 @@
         android:label="@string/musicbrowserlabel"
         android:largeHeap="true"
         android:taskAffinity="android.task.music" >
-	<!-- AppTheme.White to enable white theme -->
+	<!-- AppTheme to enable white theme -->
         
         <meta-data
             android:name="android.app.default_searchable"
