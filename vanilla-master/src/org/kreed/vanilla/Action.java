@@ -29,7 +29,7 @@ import android.content.SharedPreferences;
  */
 enum Action {
 	/**
-	 * Dummy action: do nothing.
+	 * Dummy action: do nothing.     
 	 */
 	Nothing,
 	/**
