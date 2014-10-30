@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.json.JSONArray;
+
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
@@ -42,6 +44,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -84,7 +87,7 @@ public abstract class OnlineSearchView extends View {
 	private SharedPreferences sPref;
 	private AlertDialog alertDialog;
 	private RemoteSong downloadSong;
-	private CustomSpinnerAdapter adapter;
+	private ArrayAdapter adapter;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private LayoutInflater inflater;
@@ -231,14 +234,17 @@ public abstract class OnlineSearchView extends View {
 		if (list.size() > 1) {
 			
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+				adapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
+			}
+			else
+				adapter = new CustomSpinnerAdapter(getContext(), 0, list);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spEnginesChoiser.setAdapter(adapter);
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				android.view.ViewGroup.LayoutParams params = spEnginesChoiser.getLayoutParams();
 				params.width = 300;
 				spEnginesChoiser.setLayoutParams(params);
-				
 			}
-			adapter = new CustomSpinnerAdapter(getContext(), 0, list);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			spEnginesChoiser.setAdapter(adapter);
 			int id = adapter.getPosition(keyEngines);
 			spEnginesChoiser.setSelection(id);
 			final Context context = getContext();
