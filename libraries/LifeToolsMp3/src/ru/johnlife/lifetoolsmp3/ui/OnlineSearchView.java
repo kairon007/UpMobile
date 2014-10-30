@@ -726,7 +726,6 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public void getDownloadUrl(final boolean fullAction, final Bundle bundle, final View view, final int position) {
-		//TODO: HIGH priority task, save state progress dialog :)
 		if(isOffline(getContext())) {
 			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
@@ -746,6 +745,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				urlTask.cancel(false);
+				SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, bundle, view, position);
 			}
 		});
 		if (SongArrayHolder.getInstance().isProgressDialogOpened()) {
@@ -767,6 +767,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void error(String error) {
 				progressDialog.dismiss();
+				SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, bundle, view, position);
 				Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
 				switchMode = true;
 				toast.show();
@@ -779,7 +780,9 @@ public abstract class OnlineSearchView extends View {
 			}
 		};
 		downloadSong = (RemoteSong) resultAdapter.getItem(bundle.getInt(KEY_POSITION));
+		SongArrayHolder.getInstance().setProgressDialogOpened(true, fullAction, bundle, view, position);
 		if ("".equals(downloadSong.getDownloadUrl()) || null == downloadSong.getDownloadUrl() || !downloadSong.getDownloadUrl().contains("http")) {
+			//TODO: check, if task is running and parse url exactly for song, on what we click - do not execute again
 			urlTask.execute(downloadSong);
 		} else {
 			callDialogs(fullAction, bundle, view, position);
@@ -909,6 +912,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				dialogDismisser.run();
+				getContext().unregisterReceiver(headsetReceiver);
 				if (telephonyManager != null) {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 				}
