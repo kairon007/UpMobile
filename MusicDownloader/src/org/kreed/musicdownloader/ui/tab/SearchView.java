@@ -17,7 +17,10 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,13 +70,19 @@ public class SearchView  extends OnlineSearchView {
 				return;
 			}
 		}
-		if (null == song.getDownloadUrl() || "".equals(song.getDownloadUrl())) {
+		if (null == song.getDownloadUrl() || "".equals(song.getDownloadUrl()) || !song.getDownloadUrl().contains("http")) {
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
 				@Override
-				public void success(String url) {
-					path = url;
-					startPlay(song, data);
+				public void success(final String url) {
+					activity.runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							path = url;
+							startPlay(song, data);
+						}
+					});
 				}
 			
 				@Override

@@ -27,7 +27,7 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -44,7 +44,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -64,8 +63,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.view.*;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -208,8 +205,7 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				if (position == resultAdapter.getCount())
-					return; // progress click
+				if (position == resultAdapter.getCount()) return; // progress click
 				Bundle bundle = new Bundle(0);
 				bundle.putInt(KEY_POSITION, position);
 				if (fullAction) {
@@ -733,11 +729,11 @@ public abstract class OnlineSearchView extends View {
 
 	public void prepareSong(final Bundle args, boolean force) {
 		if(isOffline(getContext())) {
-			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
+			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
 		}
 		if(!onlyOnWifi()){
-			Toast.makeText(view.getContext(), view.getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
+			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
 		if (!(args.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
@@ -748,14 +744,18 @@ public abstract class OnlineSearchView extends View {
 		final String artist = downloadSong.getArtist();
 		final Context context = view.getContext();
 		final boolean isDialogOpened = SongArrayHolder.getInstance().isStremDialogOpened();
-		final ProgressDialog progressDialog = new ProgressDialog(getContext());
+		final ProgressDialog progressDialog = new ProgressDialog(context);
 		final DownloadUrlGetterTask urlTask = new DownloadUrlGetterTask(new DownloadUrlListener() {
 
 			@Override
-			public void success(String url) {
-				loadSong(url);
-				progressDialog.dismiss();
-				createStreamDialog(args).show();
+			public void success(final String url) {
+				((Activity) context).runOnUiThread(new Runnable() {
+					public void run() {
+						loadSong(url);
+						progressDialog.dismiss();
+						createStreamDialog(args).show();
+					}
+				});
 			}
 
 			@Override
@@ -783,20 +783,18 @@ public abstract class OnlineSearchView extends View {
 		};
 		if (force) {
 			player = SongArrayHolder.getInstance().getPlayerInstance();
-			player.initView(inflate(context, isWhiteTheme(getContext()) ? R.layout.download_dialog_white
-					: R.layout.download_dialog, null));
+			player.initView(inflate(context, isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null));
 		}
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white
-					: R.layout.download_dialog, null);
+			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
 			player = new Player(v, title, artist);
 			if (downloadSong instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) downloadSong).getSongId());
 			}
 			try {
 				String url = downloadSong.getParentUrl();
-				if (url != null && !"".equals(url)) {
+				if (url != null && !"".equals(url) && url.contains("http")) {
 					loadSong(url);
 					createStreamDialog(args).show();
 				} else {
