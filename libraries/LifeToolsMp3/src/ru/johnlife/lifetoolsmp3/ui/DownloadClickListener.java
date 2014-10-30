@@ -71,7 +71,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 	
 	public void prepareDownloadSond(final String artist, final String title) {
-		if ("".equals(song.getDownloadUrl()) || song.getDownloadUrl() == null) {
+		if ("".equals(song.getDownloadUrl()) || song.getDownloadUrl() == null || !song.getDownloadUrl().contains("http")) {
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
 				@Override
