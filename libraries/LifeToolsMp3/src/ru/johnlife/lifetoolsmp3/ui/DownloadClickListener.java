@@ -159,16 +159,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		} else {
 			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
 				//new download task for device with api below 11 
-				String str = removeSpecialCharacters(songArtist) + " - " + removeSpecialCharacters(songTitle);
-				DownloadSongTask task = new DownloadSongTask(song, useCover, str);
+				DownloadSongTask task = new DownloadSongTask(song, useCover);
 				String fileUri = musicDir.getAbsolutePath() + "/" + sb;
 				task.execute(url, fileUri);
 				return;
 			}
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-				url = url.replaceFirst("https", "http");
-			}
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url)).addRequestHeader("User-Agent",
 					"Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
 			if (headers != null && !headers.isEmpty()) {
@@ -184,9 +180,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
 				request.setDestinationInExternalPublicDir(dir, sb);
 			}
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				request.allowScanningByMediaScanner();
-			}
+			request.allowScanningByMediaScanner();
 			final long downloadId = manager.enqueue(request);
 			boolean isUpdated = continueDownload(id, downloadId);
 			if (!isUpdated) {
@@ -301,24 +295,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					progress = 100;
 					notifyDuringDownload(downloadId, progress);
 					int columnIndex = 0;
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-					} else if (columnIndex != -1) {
-						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-					}
+					columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
 					if (columnIndex == -1) return;
 					String path = c.getString(columnIndex);
 					c.close();
-					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-						path = cutPath(path);
-						if (path.contains("%20")) {
-							path.replaceAll("%20", " ");
-						}
-					}
 					src = new File(path);
 					if (!setMetadataToFile(path, src, useCover)) {
 						this.cancel();
 					}
+					notifyMediascanner(song, path);
+					this.cancel();
 					return;
 				default:
 					break;
@@ -400,39 +386,46 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		void onCoverReady(Bitmap cover);
 	}
 	
-private class DownloadSongTask extends AsyncTask<String, Void, Void>{
-		
-		private Notification notification;
-		private NotificationCompat.Builder builder;
-		private RemoteSong song;
-		private boolean useCover;
+	private class DownloadSongTask extends AsyncTask<String, Void, Void> {
+
+		private final String DOWNLOAD_ID_GINGERBREAD = "downloads_id_gingerbread";
+		private final String DOWNLOAD_KEY_GINGERBREAD = "downloads_key_gingerbread";
 		private NotificationManager notificationManager;
+		private SharedPreferences sPref;
+		private RemoteSong song;
 		private String notificationTitle;
-		
-		public DownloadSongTask ( RemoteSong song, boolean useCover, String notificationTitle){
-			this.notificationTitle = notificationTitle;
+		private boolean useCover;
+		private final int id;
+
+		public DownloadSongTask(RemoteSong song, boolean useCover) {
+			this.notificationTitle = removeSpecialCharacters(song.artist) + " - " + removeSpecialCharacters(song.title);
 			this.song = song;
 			this.useCover = useCover;
+			sPref = context.getSharedPreferences(DOWNLOAD_ID_GINGERBREAD, context.MODE_PRIVATE);
+			id = sPref.getInt(DOWNLOAD_KEY_GINGERBREAD, 1);
+			SharedPreferences.Editor editor = sPref.edit();
+			int i = id + 1;
+			editor.putInt(DOWNLOAD_KEY_GINGERBREAD, i);
+			editor.commit();
 		}
 
-		private void createNotification(int progress, boolean isStop) {
-			RemoteViews  notificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
-			notificationManager =(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE); 
-			Notification notification = new Notification(R.drawable.ic_download, notificationTitle, Calendar.getInstance().getTimeInMillis());
-			notification.flags |= Notification.FLAG_AUTO_CANCEL;
-			Intent intent = new Intent ();
+		private void sendNotification(int progress, boolean isStop) {
+			RemoteViews notificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
+			notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+			Notification notification = new Notification(android.R.drawable.stat_sys_download, notificationTitle, Calendar.getInstance().getTimeInMillis());
+			Intent intent = new Intent();
 			PendingIntent pend = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			notification.number += 1;
 			notification.contentIntent = pend;
 			notification.contentView = notificationView;
-			notification.contentView.setTextViewText(R.id.tv_notification, songTitle);
+			notification.contentView.setTextViewText(R.id.tv_notification, notificationTitle);
+			notification.contentView.setTextViewText(R.id.tv_notification_progress, progress + " %");
 			notification.contentView.setProgressBar(R.id.progres_notification, 100, progress, false);
-			notificationManager.notify(1, notification);
+			notificationManager.notify(id, notification);
 			if (isStop) {
-				notificationManager.cancel(1);
+				notificationManager.cancel(id);
 			}
 		}
-		
+
 		/*
 		 * first params in execute() is url, second params is file path
 		 */
@@ -440,79 +433,71 @@ private class DownloadSongTask extends AsyncTask<String, Void, Void>{
 		protected Void doInBackground(String... params) {
 			File file = null;
 			try {
-			    HttpParams httpParameters = new BasicHttpParams();
-			    HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
-			    URL url = new URL(params[0]);
-			    URLConnection connection = url.openConnection();
-			    HttpURLConnection httpConnection = (HttpURLConnection) connection;
-			    if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			        int size = connection.getContentLength();
-			        int index = 0;
-			        int current = 0;
-			        try {
-			        	file = new File(params[1]);
-			        	file.createNewFile();
-			        	file.setWritable(true);
-			        	file.setReadable(true);
-			            FileOutputStream output = new FileOutputStream(file);
-			            InputStream input = connection.getInputStream();
-			            BufferedInputStream buffer = new BufferedInputStream(input);
-			            byte[] bBuffer = new byte[10240];
-			            int i = 0;
+				HttpParams httpParameters = new BasicHttpParams();
+				HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
+				URL url = new URL(params[0]);
+				URLConnection connection = url.openConnection();
+				HttpURLConnection httpConnection = (HttpURLConnection) connection;
+				if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+					int size = connection.getContentLength();
+					int index = 0;
+					int current = 0;
+					try {
+						file = new File(params[1]);
+						file.createNewFile();
+						FileOutputStream output = new FileOutputStream(file);
+						InputStream input = connection.getInputStream();
+						BufferedInputStream buffer = new BufferedInputStream(input);
+						byte[] bBuffer = new byte[10240];
+						int i = 0;
+						notifyStartDownload(id);
 						while ((current = buffer.read(bBuffer)) != -1) {
 							if (isCancelled()) {
-								Log.d("log", "task is canceled");
+								notifyAboutFailed(id, notificationTitle);
+								sendNotification(0, true);
 							}
 							output.write(bBuffer, 0, current);
 							index += current;
 							int p = index * 100 / size;
 							if (p % 5 == 0) {
 								i++;
-								if (i == 1) {
-									createNotification(p, false);
+								if (i == 1){
+									sendNotification(p, false);
+									notifyDuringDownload(id , p);
 								}
-								if (p == 100) {
-									createNotification(p, true);
+								if (p == 100){
+									sendNotification(p, true);
 								}
 							} else {
 								i = 0;
 							}
 						}
-			            if (setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
+						if (setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
 							this.cancel(true);
 						}
-			        } catch (SecurityException se) {
-			        	Log.d("log", "DownloadClickListener$DownloadSongTask exeption - " + se);
-			            se.printStackTrace();
-			            return null;
-			        } catch (FileNotFoundException e) {
-			        	Log.d("log", "DownloadClickListener$DownloadSongTask exeption - " + e);
-			            e.printStackTrace();
-			            return null;
-			        } catch (Exception e) {
-			        	Log.d("log", "DownloadClickListener$DownloadSongTask exeption - " + e);
-			            e.printStackTrace();
-			            return null;
-			        }
-			        notifyMediascanner(song, file.getAbsolutePath());
-			        return null;
-			    } else {
-			    	return null;
-			    }
+					} catch (Exception e) {
+						notifyAboutFailed(id, notificationTitle);
+						sendNotification(0, true);
+						return null;
+					}
+					notifyMediascanner(song, file.getAbsolutePath());
+					return null;
+				} else {
+					return null;
+				}
 			} catch (IOException e) {
-				Log.d("log", "DownloadClickListener$DownloadSongTask exeption - " + e);
+				notifyAboutFailed(id, notificationTitle);
+				sendNotification(0, true);
 				return null;
 			}
 		}
 	}
-
 	
 	private String removeSpecialCharacters(String str) {
 		while (str.endsWith(" ")) {
-			str.substring(0, str.length() -1);
+			str = str.substring(0, str.length() -1);
 		}
-		return str.replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
+		return str = str.replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
 	}
-	
 	
 }
