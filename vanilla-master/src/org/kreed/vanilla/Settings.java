@@ -44,7 +44,8 @@ public class Settings implements BaseSettings {
 		{"SearchMp3World", "1"},  
 		{"SearchSogou", "1"},
 		{"SearchGrooveshark", "1"}, 
-		{"SearchTing", "1"}, 
+		{"SearchTing", "1"},
+		{"SearchJamendo","1"},
 		{"SearchYouTube", "7"}
 	};
 

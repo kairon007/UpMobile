@@ -4,11 +4,18 @@ import java.io.BufferedInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,11 +45,13 @@ public class CoverLoaderTask extends AsyncTask<Void, Void, Bitmap> {
 	protected Bitmap doInBackground(Void... params) {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			if (coverUrl == null || coverUrl.equals("NOT_FOUND")) {
+			if (coverUrl == null || coverUrl.equals("NOT_FOUND") || "".equals(coverUrl)) {
 				Log.e(getClass().getSimpleName(), "Error, cover not found from engines");
 				return null;
 			}
-			HttpGet httpget = new HttpGet(coverUrl);
+		    HttpParams httpParameters = new BasicHttpParams();
+		    HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
+			HttpGet httpget = new HttpGet(coverUrl.replace("https", "http"));
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 			BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent());

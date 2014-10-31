@@ -16,35 +16,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.kreed.musicdownloader.Advertisement;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
@@ -62,7 +33,7 @@ import android.preference.PreferenceManager;
 public class Settings implements BaseSettings {
 	
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
-//		{"SearchVmusice", "1"}, 
+//		{"SearchVmusice", "1"},
 		{"SearchSoArdIyyin", "3"},
 		{"SearchPleer", "3"},
 		{"SearchMyFreeMp3", "1"},
@@ -75,6 +46,7 @@ public class Settings implements BaseSettings {
 		{"SearchSogou", "1"},
 		{"SearchGrooveshark", "1"}, 
 		{"SearchTing", "1"}, 
+		{"SearchJamendo","1"},
 		{"SearchYouTube", "7"}
 	};
 
