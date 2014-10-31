@@ -744,7 +744,7 @@ public abstract class OnlineSearchView extends View {
 		progressDialog.setOnCancelListener(new OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				urlTask.cancel(false);
+				urlTask.cancel(true);
 				SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, bundle, view, position);
 			}
 		});
