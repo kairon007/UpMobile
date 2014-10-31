@@ -159,9 +159,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		} else {
 			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
 				//new download task for device with api below 11 
-				DownloadSongTask task = new DownloadSongTask(song, useCover);
 				String fileUri = musicDir.getAbsolutePath() + "/" + sb;
-				task.execute(url, fileUri);
+				DownloadSongTask task = new DownloadSongTask(song, useCover, url, fileUri);
+				task.start();
 				return;
 			}
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -386,7 +386,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		void onCoverReady(Bitmap cover);
 	}
 	
-	private class DownloadSongTask extends AsyncTask<String, Void, Void> {
+	private class DownloadSongTask extends Thread {
 
 		private final String DOWNLOAD_ID_GINGERBREAD = "downloads_id_gingerbread";
 		private final String DOWNLOAD_KEY_GINGERBREAD = "downloads_key_gingerbread";
@@ -396,8 +396,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private String notificationTitle;
 		private boolean useCover;
 		private final int id;
+		private String url;
+		private String filePath;
 
-		public DownloadSongTask(RemoteSong song, boolean useCover) {
+		public DownloadSongTask(RemoteSong song, boolean useCover, String url, String filePath) {
+			this.url = url;
+			this.filePath = filePath;
 			this.notificationTitle = removeSpecialCharacters(song.artist) + " - " + removeSpecialCharacters(song.title);
 			this.song = song;
 			this.useCover = useCover;
@@ -430,20 +434,20 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		 * first params in execute() is url, second params is file path
 		 */
 		@Override
-		protected Void doInBackground(String... params) {
+		public void run() {
 			File file = null;
 			try {
 				HttpParams httpParameters = new BasicHttpParams();
 				HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
-				URL url = new URL(params[0]);
-				URLConnection connection = url.openConnection();
+				URL u = new URL(url);
+				URLConnection connection = u.openConnection();
 				HttpURLConnection httpConnection = (HttpURLConnection) connection;
 				if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 					int size = connection.getContentLength();
 					int index = 0;
 					int current = 0;
 					try {
-						file = new File(params[1]);
+						file = new File(filePath);
 						file.createNewFile();
 						FileOutputStream output = new FileOutputStream(file);
 						InputStream input = connection.getInputStream();
@@ -452,10 +456,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						int i = 0;
 						notifyStartDownload(id);
 						while ((current = buffer.read(bBuffer)) != -1) {
-							if (isCancelled()) {
-								notifyAboutFailed(id, notificationTitle);
-								sendNotification(0, true);
-							}
 							output.write(bBuffer, 0, current);
 							index += current;
 							int p = index * 100 / size;
@@ -473,22 +473,22 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							}
 						}
 						if (setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
-							this.cancel(true);
+							return;
 						}
 					} catch (Exception e) {
 						notifyAboutFailed(id, notificationTitle);
 						sendNotification(0, true);
-						return null;
+						return;
 					}
 					notifyMediascanner(song, file.getAbsolutePath());
-					return null;
+					return;
 				} else {
-					return null;
+					return;
 				}
 			} catch (IOException e) {
 				notifyAboutFailed(id, notificationTitle);
 				sendNotification(0, true);
-				return null;
+				return;
 			}
 		}
 	}
