@@ -19,6 +19,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -124,6 +125,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	public void getView(FrameLayout footer) {
 		view = footer;
 		init(view);
+		playerLayout.setVisibility(View.VISIBLE);
+		buttonPlay.setVisibility(View.VISIBLE);
+		buttonPlay.setOnClickListener(this);
 		if (prepared) {
 			int duration = mediaPlayer.getDuration();
 			songProgress.removeCallbacks(progressAction);
@@ -137,22 +141,21 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		if (null != currentImageButton) {
 			buttonPlay.setImageResource(currentImageButton);
 		}
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			Context context = view.getContext();
+			buttonPlay.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.selectable_item_bg_honeycomb));
+			
+		}
 	}
 
 	private void init(FrameLayout view) {
 		playerLayout = (LinearLayout) view.findViewById(R.id.player_layout);
-		playerLayout.setVisibility(View.VISIBLE);
 		songProgress = (SeekBar) view.findViewById(R.id.player_progress_song);
 		buttonProgress = (ProgressBar) view.findViewById(R.id.player_progress_play);
 		buttonPlay = (ImageButton) view.findViewById(R.id.player_play_song);
 		songArtist = (TextView) view.findViewById(R.id.player_artist);
 		songTitle = (TextView) view.findViewById(R.id.player_title);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-			Context context = view.getContext();
-			buttonPlay.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.selectable_item_bg_honeycomb));
-		}
-		buttonPlay.setOnClickListener(this);
 	}
 
 	private void onPrepared() {

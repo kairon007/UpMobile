@@ -3,14 +3,15 @@
     android:id="@+id/player_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:visibility="gone" 
     android:minHeight="@dimen/layout_library_height"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:visibility="gone" >
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
 
             <ImageButton
                 android:id="@+id/player_play_song"
@@ -33,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:layout_weight="10"
             android:orientation="vertical"
             android:padding="8dp" >
 
