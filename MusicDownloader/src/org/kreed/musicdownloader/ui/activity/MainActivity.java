@@ -104,6 +104,7 @@ public class MainActivity extends Activity {
 	public boolean mFakeTarget;
 	private MP3Editor editor;
 	private ArrayList<String> mStrings;
+	private String strBuffer = "";
 	private boolean showDialog = false;
 	private boolean useCover = false;
 	private boolean isPlayerHide;
@@ -126,24 +127,27 @@ public class MainActivity extends Activity {
 	public static boolean isAlphaNumeric(String input) {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
-
 	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX) {
-
+		
 		@Override
 		public void onEvent(int event, String file) {
 			String filePath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + file;
 			if (mPagerAdapter != null) {
 				switch (event) {
-				case FileObserver.DELETE: 
+				case FileObserver.DELETE:
 				case FileObserver.MOVED_FROM:
+					if (file.endsWith(".mp3")) {
+						strBuffer = file;
+					}
 					mPagerAdapter.removeDeletedData(filePath);
 					break;
 				case FileObserver.DELETE_SELF:
 					mPagerAdapter.fillLibrary();
 					break;
 				case FileObserver.MOVED_TO:
-					if (forDuplicateMusic) {
+					if (forDuplicateMusic || !strBuffer.equals("")) {
 						mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
+						strBuffer = "";
 					}
 				}
 			}
