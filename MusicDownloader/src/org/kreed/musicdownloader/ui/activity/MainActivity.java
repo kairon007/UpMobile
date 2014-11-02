@@ -24,12 +24,15 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
@@ -49,6 +52,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -82,6 +86,7 @@ public class MainActivity extends Activity {
 	protected Looper mLooper;
 	private MusicData music;
 	private TelephonyManager telephonyManager;
+	private HeadphonesReceiver headphonesReceiver;
 
 	private ViewGroup mLimiterViews;
 	private Player player;
@@ -185,7 +190,23 @@ public class MainActivity extends Activity {
 		}
 
 	};
+	
+	private class HeadphonesReceiver extends BroadcastReceiver {
 
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String strAction = intent.getAction();
+			boolean isPlaying = player.getPlayerState() == Constants.PLAY;
+			boolean isContinuePlaying = player.getPlayerState() == Constants.CONTINUE_PLAY;
+			if(strAction.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
+				if (player != null && isPlaying || isContinuePlaying) {
+					player.stateManagementPlayer(Constants.PAUSE);
+				}
+			}
+		}
+		
+	}
+	
 	public static void logToast(Context context, String message) {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
@@ -200,6 +221,7 @@ public class MainActivity extends Activity {
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
+		unregisterReceiver(headphonesReceiver);
 		Advertisement.onDestroy(this);
 		forDuplicateMusic = true;
 		super.onDestroy();
@@ -237,6 +259,9 @@ public class MainActivity extends Activity {
 		if (telephonyManager != null) {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
+		headphonesReceiver = new HeadphonesReceiver();
+		IntentFilter filter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+		registerReceiver(headphonesReceiver, filter);
 		HandlerThread thread = new HandlerThread(getClass().getName(), Process.THREAD_PRIORITY_LOWEST);
 		thread.start();
 		mLooper = thread.getLooper();

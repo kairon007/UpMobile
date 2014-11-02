@@ -63,6 +63,8 @@ import android.widget.TextView;
  * PagerAdapter that manages the library media ListViews.
  */
 public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener {
+	
+	private static final String CURRENT_POSITION = "current_position_bundle";
 	/**
 	 * The number of unique list types. The number of visible lists may be
 	 * smaller.
@@ -375,7 +377,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	@Override
 	public void restoreState(Parcelable state, ClassLoader loader) {
 		Bundle in = (Bundle) state;
-		mSavedPositions = in.getIntArray("pos");
+		mSavedPositions = in.getIntArray(CURRENT_POSITION);
 	}
 
 	@Override
@@ -388,7 +390,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 				savedPositions[i] = lists[i].getFirstVisiblePosition();
 			}
 		}
-		out.putIntArray("pos", savedPositions);
+		out.putIntArray(CURRENT_POSITION, savedPositions);
 		return out;
 	}
 
