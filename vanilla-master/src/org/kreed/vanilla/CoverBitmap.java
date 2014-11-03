@@ -336,7 +336,7 @@ public final class CoverBitmap {
 	 */
 	public static Bitmap generateDefaultCover(int width, int height)
 	{
-		if (width < 0 && height < 0) {
+		if (width <= 0 && height <= 0) {
 			width = 8;
 			height = 8;
 		}
