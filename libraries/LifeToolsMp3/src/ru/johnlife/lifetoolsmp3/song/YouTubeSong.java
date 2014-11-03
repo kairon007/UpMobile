@@ -37,7 +37,6 @@ public class YouTubeSong extends SongWithCover {
 		@Override
 		public void run() {
 			String result = getUrlTask(watchId);
-			Log.d("logd", "wait... url = " + result);
 			if (!PENDING.equals(result) && result.startsWith("http")) {
 				downloadUrl = result;
 				downloadUrlListener.success(result);

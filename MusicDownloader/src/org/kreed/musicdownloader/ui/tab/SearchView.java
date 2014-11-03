@@ -16,6 +16,7 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,13 @@ public class SearchView  extends OnlineSearchView {
 				public void success(String url) {
 					song.getCover(true, listener);
 					DownloadsTab.getInstance().deleteItem(id);
-					listener.onClick(view);
+					((Activity)getContext()).runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							listener.onClick(view);							
+						}
+					});
 				}
 				
 				@Override

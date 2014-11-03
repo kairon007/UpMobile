@@ -53,7 +53,6 @@ public class DownloadCache {
 			}
 		}
 		if (null != deleteItem) {
-			Log.d("logd", "remove");
 			return remove(deleteItem.getArtist(), deleteItem.getTitle(), deleteItem.isUseCover());
 		} else return false;
 	}
