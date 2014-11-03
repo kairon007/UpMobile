@@ -3,7 +3,6 @@ package ru.johnlife.lifetoolsmp3.ui;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +34,8 @@ import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListe
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -50,12 +49,10 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -73,50 +70,28 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected String duration;
 	protected Long currentDownloadId;
 	public Integer songId;
-	private double progress = 0.0;
+	private long progress = 0;
 	private boolean useAlbumCover = true;
 	private RefreshListener listener;
-	private final static String ZAYCEV_TAG = "(zaycev.net)";
 
 	protected DownloadClickListener(Context context, RemoteSong song, RefreshListener listener) {
 		this.context = context;
 		this.song = song;
 		this.songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
 		this.listener = listener;
-		songTitle = removeSpecialCharacters(song.getTitle());
-		songArtist = removeSpecialCharacters(song.getArtist());
+		songTitle = Util.removeSpecialCharacters(song.getTitle());
+		songArtist = Util.removeSpecialCharacters(song.getArtist());
 		duration = Util.getFormatedStrDuration(song.getDuration());
 		headers = song.getHeaders();
 	}
 	
-	public void prepareDownloadSond(final String artist, final String title) {
-		if ("".equals(song.getDownloadUrl()) || song.getDownloadUrl() == null || !song.getDownloadUrl().contains("http")) {
-			song.getDownloadUrl(new DownloadUrlListener() {
-				
-				@Override
-				public void success(String url) {
-					DownloadClickListener.this.url = url;
-					downloadSond(artist, title, useAlbumCover, false);
-				}
-				
-				@Override
-				public void error(String error) {
-					Toast toast = Toast.makeText(context, R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
-					toast.show();
-				}
-			});
-		} else {
-			url = song.getDownloadUrl();
-			downloadSond(artist, title, useAlbumCover, false);
-		}
-	}
-	
 	@SuppressLint("NewApi")
-	public void downloadSond(String artist, String title, final boolean useCover, boolean fromCallback) {
+	public void downloadSong(boolean fromCallback) {
+		url = song.getUrl();
 		SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
 		boolean isCached = false;
 		if (!fromCallback) {
-			isCached = DownloadCache.getInstanse().put(artist, title, useCover, new DownloadCacheCallback() {
+			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, new DownloadCacheCallback() {
 				
 				@Override
 				public void callback(final Item item) {
@@ -124,24 +99,18 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						
 						@Override
 						public void run() {
-							downloadSond(item.getArtist(), item.getTitle(), item.isUseCover(), true);			
+							downloadSong(true);			
 						}
 					};
 					new Handler(Looper.getMainLooper()).post(callbackRun);
 				}
 			});
 		}
-		int id = artist.hashCode() + title.hashCode();
+		int id = songArtist.hashCode() + songTitle.hashCode();
 		if (isCached)  {
 			song.setDownloaderListener(notifyStartDownload(id));
 			return;
 		}
-		if (!this.songArtist.equals(artist)) {
-			songArtist = removeSpecialCharacters(artist);
-		}
-		if (!this.songTitle.equals(title)) {
-			songTitle = removeSpecialCharacters(title);
-		} 
 		if (url == null || "".equals(url)) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
@@ -151,20 +120,24 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			musicDir.mkdirs();
 		}
 		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(".mp3");
-		String sb = removeSpecialCharacters(stringBuilder.toString());
+		String sb = Util.removeSpecialCharacters(stringBuilder.toString());
 		if (songId != -1) {
 			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context);
 			manager.execute();
 		} else {
-			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && isFullAction()){
 				//new download task for device with api below 11 
+				String str = Util.removeSpecialCharacters(songArtist) + " - " + Util.removeSpecialCharacters(songTitle);
 				String fileUri = musicDir.getAbsolutePath() + "/" + sb;
-				DownloadSongTask task = new DownloadSongTask(song, useCover, url, fileUri);
+				DownloadSongTask task = new DownloadSongTask(song, useAlbumCover, url, fileUri);
 				task.start();
 				return;
 			}
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+				url = url.replaceFirst("https", "http");
+			}
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url)).addRequestHeader("User-Agent",
 					"Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
 			if (headers != null && !headers.isEmpty()) {
@@ -180,41 +153,52 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
 				request.setDestinationInExternalPublicDir(dir, sb);
 			}
-			request.allowScanningByMediaScanner();
-			final long downloadId = manager.enqueue(request);
-			boolean isUpdated = continueDownload(id, downloadId);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				request.allowScanningByMediaScanner();
+			}
+			currentDownloadId = manager.enqueue(request);
+			boolean isUpdated = continueDownload(id, currentDownloadId);
 			if (!isUpdated) {
-				song.setDownloaderListener(notifyStartDownload(downloadId));
+				song.setDownloaderListener(notifyStartDownload(currentDownloadId));
 			}
 			Toast.makeText(context, String.format(context.getString(R.string.download_started), sb), Toast.LENGTH_SHORT).show();
-			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, downloadId, useCover);
+			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
 		}
 	}
 
 	@Override
 	public void onClick(View v) {
-		prepareDownloadSond(songArtist, songTitle);
+		downloadSong(false);
 	}
 
 	protected void setFileUri(long downloadId, String uri) {
 		
 	}
 	
-	protected void notifyDuringDownload(final long downloadId, final double currentProgress) {
+	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {
 
 	}
 
-	protected CoverReadyListener notifyStartDownload(long downloadId) {
+	public CoverReadyListener notifyStartDownload(long downloadId) {
 		return null;
 	}
 	
-	protected boolean continueDownload(long lastID, long newID) {
+	protected boolean continueDownload(long lastID, long newId) {
 		return false;
 	}
 
-	protected void notifyAboutFailed(long downloadId, String title) {
+	protected void notifyAboutFailed(long downloadId) {
+		((Activity)context).runOnUiThread(new Runnable() {
 
+			@Override
+			public void run() {
+				String failedSong = context.getResources().getString(R.string.downloads_failed);
+				String title = song.getArtist() + " - " + song.getTitle();
+				Toast.makeText(context, failedSong + " - " + title, Toast.LENGTH_SHORT).show();
+				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+			}
+		});
 	}
 
 	public void setUseAlbumCover(boolean useAlbumCover) {
@@ -252,31 +236,29 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	private final class UpdateTimerTask extends TimerTask {
 
+		private static final int DEFAULT_SONG = 7340032; // 7 Mb
 		private RemoteSong song;
 		private File src;
 		private DownloadManager manager;
-		private long downloadId;
 		private boolean useCover;
 
-		public UpdateTimerTask(RemoteSong song, DownloadManager manager, long downloadId, boolean useCover) {
+		public UpdateTimerTask(RemoteSong song, DownloadManager manager, boolean useCover) {
 			this.song = song;
 			this.manager = manager;
-			this.downloadId = downloadId;
 			this.useCover = useCover;
 		}
 
 		@Override
 		public void run() {
-			Cursor c = manager.query(new DownloadManager.Query().setFilterById(downloadId));
+			Cursor c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
 			if (c.moveToFirst()) {
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 				switch (status) {
 				case DownloadManager.STATUS_FAILED:
-					String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
-					notifyAboutFailed(downloadId, title);
+					notifyAboutFailed(currentDownloadId);
 					c.close();
-					this.cancel();
 					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover);
+					this.cancel();
 					return;
 				case DownloadManager.STATUS_RUNNING:
 					if (isFullAction()) {
@@ -284,25 +266,40 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					}
 					int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
 					int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
-					long size = c.getInt(sizeIndex);
-					long downloaded = c.getInt(downloadedIndex);
+					int size = c.getInt(sizeIndex);
+					int downloaded = c.getInt(downloadedIndex);
 					if (size != -1) {
-						progress = downloaded * 100.0 / size;
+						progress = downloaded * 100 / size;
+					} else {
+						progress = downloaded * 100 / DEFAULT_SONG;
 					}
-					notifyDuringDownload(downloadId, progress);
+					notifyDuringDownload(currentDownloadId, progress);
 					break;
 				case DownloadManager.STATUS_SUCCESSFUL:
 					progress = 100;
-					notifyDuringDownload(downloadId, progress);
+					notifyDuringDownload(currentDownloadId, progress);
 					int columnIndex = 0;
-					columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+					} else if (columnIndex != -1) {
+						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+					}
 					if (columnIndex == -1) return;
 					String path = c.getString(columnIndex);
 					c.close();
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+						path = cutPath(path);
+						if (path.contains("%20")) {
+							path.replaceAll("%20", " ");
+						}
+					}
 					src = new File(path);
 					if (!setMetadataToFile(path, src, useCover)) {
+						setFileUri(currentDownloadId, src.getAbsolutePath());
 						this.cancel();
 					}
+					setFileUri(currentDownloadId, src.getAbsolutePath());
+					DownloadCache.getInstanse().remove(songArtist, songTitle);
 					notifyMediascanner(song, path);
 					this.cancel();
 					return;
@@ -402,7 +399,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		public DownloadSongTask(RemoteSong song, boolean useCover, String url, String filePath) {
 			this.url = url;
 			this.filePath = filePath;
-			this.notificationTitle = removeSpecialCharacters(song.artist) + " - " + removeSpecialCharacters(song.title);
+			this.notificationTitle = Util.removeSpecialCharacters(song.artist) + " - " + Util.removeSpecialCharacters(song.title);
 			this.song = song;
 			this.useCover = useCover;
 			sPref = context.getSharedPreferences(DOWNLOAD_ID_GINGERBREAD, context.MODE_PRIVATE);
@@ -476,7 +473,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							return;
 						}
 					} catch (Exception e) {
-						notifyAboutFailed(id, notificationTitle);
+						notifyAboutFailed(id);
 						sendNotification(0, true);
 						return;
 					}
@@ -486,18 +483,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					return;
 				}
 			} catch (IOException e) {
-				notifyAboutFailed(id, notificationTitle);
+				notifyAboutFailed(id);
 				sendNotification(0, true);
 				return;
 			}
 		}
 	}
-	
-	private String removeSpecialCharacters(String str) {
-		while (str.endsWith(" ")) {
-			str = str.substring(0, str.length() -1);
-		}
-		return str = str.replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
-	}
-	
 }

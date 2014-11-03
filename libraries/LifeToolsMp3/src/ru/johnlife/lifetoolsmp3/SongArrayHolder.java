@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import ru.johnlife.lifetoolsmp3.engines.Engine;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
-import android.os.Bundle;
 import android.view.View;
 
 public class SongArrayHolder {
@@ -17,7 +17,7 @@ public class SongArrayHolder {
 	private ArrayList<Song> results = null;
 	private String[] titleArtistLyrics;
 	private String[] fields;
-	private Bundle streamDialogArgs;
+	private RemoteSong song;
 	private Player playerInstance;
 	private String songName;
 	private String lyrics;
@@ -36,7 +36,6 @@ public class SongArrayHolder {
 	private boolean isCoverEnabled = true;
 	private boolean isProgressDialogOpened = false;
 	private boolean fullAction;
-	private int position;
 	private View view;
 	
 	private SongArrayHolder() {
@@ -103,9 +102,9 @@ public class SongArrayHolder {
 		}
 	}
 
-	public void setStreamDialogOpened(boolean isStreamDialogOpened, Bundle streamDialogArgs, Player player) {
+	public void setStreamDialogOpened(boolean isStreamDialogOpened, RemoteSong song, Player player) {
 		this.isStreamDialogOpened = isStreamDialogOpened;
-		this.streamDialogArgs = streamDialogArgs;
+		this.song = song;
 		this.playerInstance = player;
 	}
 	
@@ -114,8 +113,8 @@ public class SongArrayHolder {
 		this.fields = fields;
 	}
 
-	public Bundle getStreamDialogArgs() {
-		return streamDialogArgs;
+	public RemoteSong getStreamDialogSong() {
+		return song;
 	}
 	
 	public Player getPlayerInstance() {
@@ -174,11 +173,10 @@ public class SongArrayHolder {
 	public void restoreState(OnlineSearchView view) {
 		view.setSwitchMode(switchMode);
 		if (isProgressDialogOpened) {
-			view.getDownloadUrl(fullAction, streamDialogArgs, this.view, listViewPosition);
+			view.getDownloadUrl(fullAction, this.view, listViewPosition);
 		}
 		if (isStreamDialogOpened) {
-			Bundle args = getStreamDialogArgs();
-			view.prepareSong(args, true);
+			view.prepareSong(getStreamDialogSong(), true);
 		}
 		if (isID3DialogOpened) {
 			view.createId3Dialog(getID3Fields());
@@ -222,11 +220,9 @@ public class SongArrayHolder {
 		return isProgressDialogOpened;
 	}
 
-	public void setProgressDialogOpened(boolean isProgressDialogOpened, boolean fullAction, Bundle bundle, View view, int position) {
+	public void setProgressDialogOpened(boolean isProgressDialogOpened, boolean fullAction, View view) {
 		this.isProgressDialogOpened = isProgressDialogOpened;
 		this.fullAction = fullAction;
-		this.streamDialogArgs = bundle;
 		this.view = view;
-		this.position = position;
 	}
 }

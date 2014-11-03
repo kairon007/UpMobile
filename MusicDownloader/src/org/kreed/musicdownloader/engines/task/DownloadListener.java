@@ -45,13 +45,13 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	protected CoverReadyListener notifyStartDownload(long downloadId) {
+	public CoverReadyListener notifyStartDownload(long downloadId) {
 		final MusicData downloadItem = new MusicData();
 		downloadItem.setSongArtist(songArtist);
 		downloadItem.setSongTitle(songTitle);
 		downloadItem.setSongDuration(String.valueOf(duration));
 		downloadItem.setDownloadId(downloadId);
-		downloadItem.setDownloadProgress(0.0);
+		downloadItem.setDownloadProgress(0);
 		downloadsTab.insertData(downloadItem);
 		return new CoverReadyListener() {
 			
@@ -68,12 +68,13 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	protected void notifyAboutFailed(long downloadId, String title) {
-		downloadsTab.deleteItem(downloadId, title);
+	protected void notifyAboutFailed(long downloadId) {
+		super.notifyAboutFailed(downloadId);
+		downloadsTab.deleteItem(downloadId);
 	}
 
 	@Override
-	protected void notifyDuringDownload(final long downloadId, final double currentProgress) {
+	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {
 		downloadsTab.insertProgress(currentProgress, downloadId);
 	}
 

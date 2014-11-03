@@ -22,7 +22,6 @@ import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.task.DownloadUrlGetterTask;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
@@ -47,7 +46,6 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.os.Environment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -206,11 +204,8 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				if (position == resultAdapter.getCount()) return; // progress click
-				Bundle bundle = new Bundle(0);
-				bundle.putInt(KEY_POSITION, position);
-				getDownloadUrl(fullAction, bundle, view, position);
+				getDownloadUrl(fullAction, view, position);
 			}
-
 		});
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
@@ -439,11 +434,6 @@ public abstract class OnlineSearchView extends View {
 	protected boolean onlyOnWifi() {
 		return true;
 	}
-	
-	// protected DownloadClickListener createListener(RemoteSong song, Bitmap
-	// bitmap) {
-	// return new DownloadClickListener(getContext(), song, bitmap);
-	// }
 
 	public static String getDownloadPath(Context context) {
 		String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
@@ -604,8 +594,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	};
-	private ProgressDialog progressDialog;
-	private DownloadUrlGetterTask urlTask;
+	protected ProgressDialog progressDialog;
 
 	public static boolean isOffline(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -725,7 +714,7 @@ public abstract class OnlineSearchView extends View {
 		}
 	}
 	
-	public void getDownloadUrl(final boolean fullAction, final Bundle bundle, final View view, final int position) {
+	public void getDownloadUrl(final boolean fullAction, final View view, final int position) {
 		if(isOffline(getContext())) {
 			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
@@ -734,75 +723,67 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
-		if (!(bundle.containsKey(KEY_POSITION)) || resultAdapter.isEmpty()) {
-			return;
+		final RemoteSong downloadSong = (RemoteSong) resultAdapter.getItem(position);
+		if (view.getId() != R.id.btnDownload) {
+			showProgressDialog(fullAction, view, downloadSong);
 		}
+		if (fullAction) {
+			downloadSong.getDownloadUrl(new DownloadUrlListener() {
+	
+				@Override
+				public void success(final String url) {
+					if (null != progressDialog) {
+						progressDialog.dismiss();
+					}
+					downloadSong.setDownloadUrl(url);
+					SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, view);
+					((Activity)getContext()).runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							if (fullAction) {
+								prepareSong(downloadSong, false);
+							}
+						}
+					});
+				}
+	
+				@Override
+				public void error(String error) {
+					if (null != progressDialog) {
+						progressDialog.dismiss();
+					}
+					SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, view);
+					Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
+					switchMode = true;
+					toast.show();
+				}
+			});
+		} else {
+			click(view, position);
+		}
+		SongArrayHolder.getInstance().setProgressDialogOpened(true, fullAction, view);
+	}
+
+	protected void showProgressDialog(final boolean fullAction, final View view, final RemoteSong downloadSong) {
 		progressDialog = new ProgressDialog(getContext());
 		progressDialog.setTitle(R.string.message_please_wait);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage(getContext().getString(R.string.message_loading));
 		progressDialog.setOnCancelListener(new OnCancelListener() {
+			
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				urlTask.cancel(true);
-				SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, bundle, view, position);
+				downloadSong.cancelTasks();
+				SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, view);
 			}
 		});
-		if (SongArrayHolder.getInstance().isProgressDialogOpened()) {
-			progressDialog.show();
-		}
-		urlTask = new DownloadUrlGetterTask(new DownloadUrlListener() {
-
-			@Override
-			public void success(final String url) {
-				((Activity) getContext()).runOnUiThread(new Runnable() {
-					public void run() {
-						progressDialog.dismiss();
-						downloadSong.setDownloadUrl(url);
-						callDialogs(fullAction, bundle, view, position);
-					}
-				});
-			}
-
-			@Override
-			public void error(String error) {
-				progressDialog.dismiss();
-				SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, bundle, view, position);
-				Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
-				switchMode = true;
-				toast.show();
-			}
-		}) {
-
-			@Override
-			protected void onPreExecute() {
-				progressDialog.show();
-			}
-		};
-		downloadSong = (RemoteSong) resultAdapter.getItem(bundle.getInt(KEY_POSITION));
-		SongArrayHolder.getInstance().setProgressDialogOpened(true, fullAction, bundle, view, position);
-		if ("".equals(downloadSong.getDownloadUrl()) || null == downloadSong.getDownloadUrl() || !downloadSong.getDownloadUrl().contains("http")) {
-			//TODO: check, if task is running and parse url exactly for song, on what we click - do not execute again
-			urlTask.execute(downloadSong);
-		} else {
-			callDialogs(fullAction, bundle, view, position);
-		}
-	}
-	
-	private void callDialogs(final boolean fullAction, final Bundle bundle, final View view, final int position) {
-		SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, bundle, view, position);
-		if (fullAction) {
-			prepareSong(bundle, false);
-		} else {
-			click(view, position);
-		}
+		progressDialog.show();
 	}
 
-	public void prepareSong(final Bundle args, boolean force) {
-		downloadSong = (RemoteSong) resultAdapter.getItem(args.getInt(KEY_POSITION));
-		String title = downloadSong.getTitle();
-		String artist = downloadSong.getArtist();
-		String url = downloadSong.getDownloadUrl();
+	public void prepareSong(final RemoteSong song, boolean force) {
+		String title = song.getTitle();
+		String artist = song.getArtist();
 		final boolean isDialogOpened = SongArrayHolder.getInstance().isStremDialogOpened();
 		if (force) {
 			player = SongArrayHolder.getInstance().getPlayerInstance();
@@ -812,19 +793,19 @@ public abstract class OnlineSearchView extends View {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
 			player = new Player(v, title, artist);
-			if (downloadSong instanceof GrooveSong) {
-				player.setSongId(((GrooveSong) downloadSong).getSongId());
+			if (song instanceof GrooveSong) {
+				player.setSongId(((GrooveSong) song).getSongId());
 			}
-			loadSong(url);
-			createStreamDialog(args).show();
+			loadSong(song.getUrl());
+			createStreamDialog(song).show();
 			if (getSettings().getIsCoversEnabled(getContext())) {
-				player.setCoverFromSong(downloadSong);
+				player.setCoverFromSong(song);
 			} else {
 				player.hideCoverProgress();
 			}
 		} else {
 			if (force || !isDialogOpened) {
-				createStreamDialog(args).show();
+				createStreamDialog(song).show();
 			}
 		}
 		dialogDismisser = new Runnable() {
@@ -838,7 +819,7 @@ public abstract class OnlineSearchView extends View {
 				}
 			}
 		};
-		downloadClickListener = new DownloadClickListener(getContext(), (RemoteSong) downloadSong, new RefreshListener() {
+		downloadClickListener = new DownloadClickListener(getContext(), (RemoteSong) song, new RefreshListener() {
 			
 			@Override
 			public void success() {
@@ -852,7 +833,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		};
 		if (getSettings().getIsCoversEnabled(getContext())) {
-			boolean hasCover = ((RemoteSong) downloadSong).getCover(true, downloadClickListener);
+			boolean hasCover = ((RemoteSong) song).getCover(true, downloadClickListener);
 			if (!hasCover) {	
 					player.hideCoverProgress();
 					player.setCover(null);
@@ -861,7 +842,7 @@ public abstract class OnlineSearchView extends View {
 		player.setTitle(artist + " - " + title);
 	}
 	
-	public Dialog createStreamDialog(Bundle args) {
+	public Dialog createStreamDialog(RemoteSong song) {
 		headsetReceiver = new HeadsetIntentReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
@@ -892,11 +873,9 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				String title = player.getTitle();
-				String artist = player.getArtist();
 				boolean useCover = SongArrayHolder.getInstance().isCoverEnabled();
 				downloadClickListener.setUseAlbumCover(useCover);
-				downloadClickListener.prepareDownloadSond(artist, title);
+				downloadClickListener.downloadSong(false);
 				player.cancel();
 				dialogDismisser.run();
 				getContext().unregisterReceiver(headsetReceiver);
@@ -905,7 +884,6 @@ public abstract class OnlineSearchView extends View {
 				}
 				SongArrayHolder.getInstance().setCoverEnabled(true);
 			}
-
 		});
 		alertDialog = b.create();
 		alertDialog.setOnCancelListener(new OnCancelListener() {
@@ -920,7 +898,7 @@ public abstract class OnlineSearchView extends View {
 		});
 		alertDialog.setOnShowListener(dialogShowListener);
 		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		SongArrayHolder.getInstance().setStreamDialogOpened(true, args, player);
+		SongArrayHolder.getInstance().setStreamDialogOpened(true, song, player);
 		return alertDialog;
 	}
 
