@@ -19,6 +19,7 @@ public class YouTubeSong extends SongWithCover {
 	private static final String PENDING = "pending";
 	private String largeCoverUrl;
 	private String watchId;
+	private AsyncTask<Void, Void, String> getUrl;
 
 	public YouTubeSong(String watchId, String largeCoverUrl) {
 		super(watchId);
@@ -31,28 +32,38 @@ public class YouTubeSong extends SongWithCover {
 		return largeCoverUrl;
 	}
 
-	@Override
-	public void getDownloadUrl(DownloadUrlListener listener) {
-		super.getDownloadUrl(listener);
-		getDownloadUrl(watchId);
-	}
-
 	private class Updater extends TimerTask {
 
 		@Override
 		public void run() {
 			String result = getUrlTask(watchId);
-			if (!PENDING.equals(result)) {
+			Log.d("logd", "wait... url = " + result);
+			if (!PENDING.equals(result) && result.startsWith("http")) {
+				downloadUrl = result;
 				downloadUrlListener.success(result);
 				this.cancel();
 			}
 		}
-
+	}
+	
+	@Override
+	public void cancelTasks() {
+		if (null != getUrl) {
+			getUrl.cancel(true);
+		}
+		downloadUrlListener = null;
+	}
+	
+	@Override
+	public boolean getDownloadUrl(DownloadUrlListener listener) {
+		if (super.getDownloadUrl(listener)) return true;
+		getDownloadUrl(watchId);
+		return false;
 	}
 	
 	private void getDownloadUrl(final String watchId) {
 
-		new AsyncTask<Void, Void, String>() {
+		getUrl = new AsyncTask<Void, Void, String>() {
 			@Override
 			protected String doInBackground(Void... params) {
 				try {

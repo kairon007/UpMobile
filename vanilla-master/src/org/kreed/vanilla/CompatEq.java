@@ -38,8 +38,7 @@ public class CompatEq {
 	 * Create the equalizer and attach it to the given MediaPlayer's audio
 	 * session.
 	 */
-	public CompatEq(MediaPlayer player)
-	{
+	public CompatEq(MediaPlayer player) {
 		Equalizer eq = new Equalizer(0, player.getAudioSessionId());
 		eq.setEnabled(true);
 		mEq = eq;

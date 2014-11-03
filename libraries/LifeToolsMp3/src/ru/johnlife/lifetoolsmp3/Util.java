@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -18,7 +17,6 @@ import org.cmc.music.metadata.MusicMetadata;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -29,7 +27,7 @@ public final class Util {
 	public final static String WHITE_THEME = "AppTheme.White";
 	private final static DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
 	private final static int SMALL_BITMAP_SIZE = 100;
-	
+	private final static String ZAYCEV_TAG = "(zaycev.net)";
 	
 	public static long formatTime(String duration) {
 		long durationLong;
@@ -158,5 +156,12 @@ public final class Util {
 	    	Log.e(Util.class.getSimpleName(), e.getMessage());
 	        return null;
 	    }
+	}
+	
+	public static String removeSpecialCharacters(String str) {
+		while (str.endsWith(" ")) {
+			str = str.substring(0, str.length() - 1);
+		}
+		return str.toString().replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
 	}
 }

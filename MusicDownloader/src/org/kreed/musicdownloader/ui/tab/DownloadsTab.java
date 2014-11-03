@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DownloadsTab implements LoadPercentageInterface {
 
@@ -41,7 +40,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 	private View view;
 	private Activity activity;
 	private long cancelledId;
-	private final static double DOWNLOAD_FINISHED = -1;
+	private final long DOWNLOAD_FINISHED = -1;
 	private ImageButton clearAll;
 
 	public final class DownloadsAdapter extends ArrayAdapter<MusicData> implements TaskSuccessListener {
@@ -80,17 +79,6 @@ public class DownloadsTab implements LoadPercentageInterface {
 					public void onClick(final View v) {
 						v.setOnClickListener(null);
 						final MusicData song = getItem(position);
-						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
-							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-							cancelledId = song.getDownloadId();
-							int cacheDownloadId = song.getSongArtist().hashCode() + song.getSongTitle().hashCode();
-							if (cancelledId != -1 && cacheDownloadId != cancelledId) {
-								manager.remove(cancelledId);
-							}
-							if (song.isDownloaded()) {
-								DBHelper.getInstance(getContext()).delete(song);
-							}
-						}
 						collapse((View)v.getParent(), new AnimationListener() {
 							
 							@Override
@@ -105,6 +93,17 @@ public class DownloadsTab implements LoadPercentageInterface {
 								remove(song);
 							}
 						});
+						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
+							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+							cancelledId = song.getDownloadId();
+							int cacheDownloadId = song.getSongArtist().hashCode() + song.getSongTitle().hashCode();
+							if (cancelledId != -1 && cacheDownloadId != cancelledId) {
+								manager.remove(cancelledId);
+							}
+							if (song.isDownloaded()) {
+								DBHelper.getInstance(getContext()).delete(song);
+							}
+						}
 					}
 				});
 			}
@@ -123,7 +122,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
 				} else {
 					holder.downloadProgress.setVisibility(View.VISIBLE);
-					double progress = song.getDownloadProgress();
+					long progress = song.getDownloadProgress();
 					holder.downloadProgress.setIndeterminate(progress == 0);
 					holder.downloadProgress.setProgress((int) progress);
 					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_cancel_black : R.drawable.icon_cancel);
@@ -331,7 +330,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 		}
 	}
 
-	public void deleteItem(final long downloadId, final String title) {
+	public void deleteItem(final long downloadId) {
 		MusicData buf = null;
 		for (int i = 0; i < adapter.getCount(); i++) {
 			buf = adapter.getItem(i);
@@ -341,21 +340,10 @@ public class DownloadsTab implements LoadPercentageInterface {
 		}
 		if (null == buf) return;
 		adapter.remove(buf);
-		final String artistItem = buf.getSongArtist();
-		final String titleItem = buf.getSongTitle();
-		activity.runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				String failedSong = activity.getResources().getString(R.string.downloads_failed);
-				Toast.makeText(activity, failedSong + " - " + title, Toast.LENGTH_SHORT).show();
-				DownloadCache.getInstanse().remove(artistItem, titleItem);
-			}
-		});
 	}
 
 	@Override
-	public void insertProgress(double progress, long downloadId) {
+	public void insertProgress(long progress, long downloadId) {
 		synchronized (lock) {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (adapter.getItem(i).getDownloadId() == downloadId) {

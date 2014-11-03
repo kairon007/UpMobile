@@ -11,10 +11,6 @@ public class DownloadCache {
 	private static DownloadCache instanse = null;
 	private ArrayList<Item> cache = new ArrayList<Item>();
 	
-	private DownloadCache() {
-		
-	}
-	
 	public static DownloadCache getInstanse() {
 		if (null == instanse) {
 			instanse = new DownloadCache();
@@ -22,16 +18,16 @@ public class DownloadCache {
 		return instanse;
 	}
 	
-	public boolean put(String artist, String title, boolean useCover, DownloadCacheCallback callback) {
+	public boolean put(String artist, String title, DownloadCacheCallback callback) {
 		boolean isCached = cache.size() + 1 > CACHE_CAPACITY;
-		Item item = new Item(artist, title, useCover, isCached);
+		Item item = new Item(artist, title, isCached);
 		item.setCallback(callback);
 		cache.add(item);
 		return isCached;
 	}
 	
 	public boolean remove(String artist, String title, boolean useCover) {
-		int position = cache.indexOf(new Item(artist, title, useCover, false));
+		int position = cache.indexOf(new Item(artist, title, false));
 		if (position < 0 || position >= cache.size()) {
 			return false;
 		}
@@ -51,11 +47,13 @@ public class DownloadCache {
 	public boolean remove(String artist, String title) {
 		Item deleteItem = null;
 		for (Item item : cache) {
-			if (item.getArtist().equals(artist) && item.getTitle().equals(title)) {
-				deleteItem = new Item(artist, title, item.isUseCover(), false);
+			if (Util.removeSpecialCharacters(item.getArtist()).equals(artist) 
+					&& Util.removeSpecialCharacters(item.getTitle()).equals(title)) {
+				deleteItem = new Item(artist, title, false);
 			}
 		}
 		if (null != deleteItem) {
+			Log.d("logd", "remove");
 			return remove(deleteItem.getArtist(), deleteItem.getTitle(), deleteItem.isUseCover());
 		} else return false;
 	}
@@ -68,10 +66,9 @@ public class DownloadCache {
 		private boolean isCached;
 		private DownloadCacheCallback callback;
 		
-		public Item(String artist, String title, boolean useCover, boolean isCached) {
+		public Item(String artist, String title, boolean isCached) {
 			this.artist = artist;
 			this.title = title;
-			this.useCover = useCover;
 			this.isCached = isCached;
 		}
 		

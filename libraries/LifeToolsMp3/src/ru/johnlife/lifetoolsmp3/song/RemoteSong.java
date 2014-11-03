@@ -94,18 +94,26 @@ public class RemoteSong extends Song {
 		return this;
 	}
 
-	public void getDownloadUrl(DownloadUrlListener listener) {
-		this.downloadUrlListener = listener;
-	}
-
-	public String getParentUrl() {
-		return downloadUrl;
+	public String getUrl() {
+		if (null != downloadUrl && !downloadUrl.isEmpty()) {
+			return downloadUrl;
+		} else {
+			Log.e(getClass().getSimpleName(), "Call getDownloadUrl() first!");
+			return null;
+		}
 	}
 	
-//	public RemoteSong setSongCover (Bitmap songCover) {
-//		songBmp = songCover;
-//		return this;
-//	}
+	public boolean getDownloadUrl(DownloadUrlListener listener) {
+		this.downloadUrlListener = listener;
+		if (null != downloadUrl && !downloadUrl.isEmpty() && null != downloadUrlListener && downloadUrl.startsWith("http")) {
+			listener.success(downloadUrl);
+			return true;
+		} else return false;
+	}
+	
+	public void cancelTasks() {
+		//do nothing, only for childs
+	}
 	
 	public RemoteSong setHeader(ArrayList<String []> headers) {
 		this.headers = headers;
@@ -184,9 +192,5 @@ public class RemoteSong extends Song {
 	public RemoteSong setDownloadUrl(String url) {
 		downloadUrl = url;
 		return this;
-	}
-
-	public String getDownloadUrl() {
-		return downloadUrl;
 	}
 }
