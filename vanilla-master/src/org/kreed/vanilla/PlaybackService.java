@@ -406,7 +406,7 @@ public final class PlaybackService extends Service
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			try {
 				mEqualizer = new CompatEq(player);
-			} catch (IllegalArgumentException e) {
+			} catch (Exception e) {
 				// equalizer not supported
 			}
 		}
