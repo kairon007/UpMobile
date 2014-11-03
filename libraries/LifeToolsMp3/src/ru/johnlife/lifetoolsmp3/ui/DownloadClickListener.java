@@ -126,7 +126,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context);
 			manager.execute();
 		} else {
-			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && isFullAction()){
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()){
 				//new download task for device with api below 11 
 				String str = Util.removeSpecialCharacters(songArtist) + " - " + Util.removeSpecialCharacters(songTitle);
 				String fileUri = musicDir.getAbsolutePath() + "/" + sb;
