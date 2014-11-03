@@ -1,9 +1,6 @@
 package org.kreed.musicdownloader;
 
-import java.util.ArrayList;
-
 import org.kreed.musicdownloader.ui.Player;
-import org.kreed.musicdownloader.ui.activity.MainActivity;
 
 import android.app.Service;
 import android.content.Intent;
@@ -12,7 +9,6 @@ import android.os.IBinder;
 
 public class PlayerService extends Service {
 	
-	private static final ArrayList<MainActivity> sActivities = new ArrayList<MainActivity>(3);
 	private final PlayerBinder binder = new PlayerBinder();
 	private Player player;
 
