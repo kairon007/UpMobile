@@ -109,11 +109,9 @@ public class MainActivity extends Activity {
 	public boolean mFakeTarget;
 	private MP3Editor editor;
 	private ArrayList<String> mStrings;
-	private String strBuffer = "";
 	private boolean showDialog = false;
 	private boolean useCover = false;
 	private boolean isPlayerHide;
-	private boolean forDuplicateMusic = true;
 
 	// -------------------------------------------------------------------------
 
@@ -141,19 +139,14 @@ public class MainActivity extends Activity {
 				switch (event) {
 				case FileObserver.DELETE:
 				case FileObserver.MOVED_FROM:
-					if (file.endsWith(".mp3")) {
-						strBuffer = file;
-					}
 					mPagerAdapter.removeDeletedData(filePath);
 					break;
 				case FileObserver.DELETE_SELF:
 					mPagerAdapter.fillLibrary();
 					break;
 				case FileObserver.MOVED_TO:
-					if (forDuplicateMusic || !strBuffer.equals("")) {
-						mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
-						strBuffer = "";
-					}
+					mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
+					break;
 				}
 			}
 		}
@@ -228,21 +221,17 @@ public class MainActivity extends Activity {
 		}
 		unregisterReceiver(headphonesReceiver);
 		Advertisement.onDestroy(this);
-		forDuplicateMusic = true;
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
-		forDuplicateMusic = false;
-		observer.startWatching();
 		textFilterLibrary = mTextFilter.getText().toString();
 		super.onPause();
 	}
 	
 	@Override
 	public void onResume() {
-		observer.stopWatching();
 		super.onResume();
 		if (page == 1 && null != textFilterDownload && !textFilterDownload.equals("")) {
 			mTextFilter.setText(textFilterDownload);
@@ -257,6 +246,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
+		observer.startWatching();
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
@@ -678,6 +668,7 @@ public class MainActivity extends Activity {
 						}
 						MusicData data = new MusicData(artistName, songTitle, null, null);
 						data.setSongAlbum(albumTitle);
+						observer.stopWatching();
 						music.rename(data);
 						notifyMediascanner(music);
 						showDialog = false;
@@ -714,6 +705,7 @@ public class MainActivity extends Activity {
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
+				observer.startWatching();
 				int i = getSelectedItem();
 				mPagerAdapter.updateMusicData(i, musicData);
 			}
