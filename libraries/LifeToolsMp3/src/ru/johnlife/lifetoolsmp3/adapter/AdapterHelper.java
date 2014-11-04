@@ -41,13 +41,10 @@ public class AdapterHelper {
 		private TextView caption;
 		private boolean fullAction = true;
 		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
-		private boolean whiteTheme = false;
-
 		
 		private ViewBuilder(View view, boolean whiteTheme) {
 			view.setTag(this);
 			this.view = view; 
-			this.whiteTheme = whiteTheme;
 			view.setLongClickable(true);
 			init(view);
 			titleLine.setTypeface(MusicApp.FONT_REGULAR);
@@ -123,12 +120,9 @@ public class AdapterHelper {
 		}
 		
 		public ViewBuilder setLine1(String valueTitle, String valueTime) {
-			if (!whiteTheme) {
-				artistLine.setText(valueTitle);
-				setVisibility(titleLine, "");
-			}
+			artistLine.setText(valueTitle);
+			setVisibility(titleLine, "");
 			setVisibility(chunkTime, valueTime);
-			title = valueTitle;
 			if (null != valueTime) {
 				fullAction = false;
 				chunkTime.setText(valueTime);
@@ -137,12 +131,9 @@ public class AdapterHelper {
 		}
 		
 		public ViewBuilder setLine2(String value) {
-			if (!whiteTheme) {
-				titleLine.setText(value);
-				setVisibility(titleLine, value);
-			} else {
-				titleLine.setText(title + " - " + value);
-			}
+			titleLine.setText(value);
+			setVisibility(titleLine, value);
+			titleLine.setText(value);
 			return this;
 		}
 		
