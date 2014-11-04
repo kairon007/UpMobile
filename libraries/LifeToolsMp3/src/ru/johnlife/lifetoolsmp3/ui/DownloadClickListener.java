@@ -155,8 +155,15 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				request.allowScanningByMediaScanner();
+			} 
+			try {
+				currentDownloadId = manager.enqueue(request);
+			} catch (IllegalArgumentException e) {
+				Toast toast = Toast.makeText(context, R.string.turn_on_dm, Toast.LENGTH_LONG);
+				toast.show();
+				return;
 			}
-			currentDownloadId = manager.enqueue(request);
+			
 			boolean isUpdated = continueDownload(id, currentDownloadId);
 			if (!isUpdated) {
 				song.setDownloaderListener(notifyStartDownload(currentDownloadId));
