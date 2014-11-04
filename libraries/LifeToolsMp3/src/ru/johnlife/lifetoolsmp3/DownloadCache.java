@@ -24,13 +24,14 @@ public class DownloadCache {
 		return isCached;
 	}
 	
-	public boolean remove(String artist, String title, boolean useCover) {
-		int position = cache.indexOf(new Item(artist, title, false));
+	public boolean remove(String artist, String title, boolean useCover, boolean interrupted) {
+		int position = cache.indexOf(new Item(artist, title, useCover));
 		if (position < 0 || position >= cache.size()) {
 			return false;
 		}
 		boolean cached = cache.get(position).isCached;
 		cache.remove(position);
+		if (interrupted) return cached;
 		if (!cached) {
 			for (Item item : cache) {
 				if (item.isCached()) {
@@ -51,7 +52,7 @@ public class DownloadCache {
 			}
 		}
 		if (null != deleteItem) {
-			return remove(deleteItem.getArtist(), deleteItem.getTitle(), deleteItem.isUseCover());
+			return remove(deleteItem.getArtist(), deleteItem.getTitle(), deleteItem.isUseCover(), false);
 		} else return false;
 	}
 	

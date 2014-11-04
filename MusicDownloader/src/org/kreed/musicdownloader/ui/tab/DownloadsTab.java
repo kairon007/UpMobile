@@ -40,7 +40,6 @@ public class DownloadsTab implements LoadPercentageInterface {
 	private static DownloadsTab instance;
 	private View view;
 	private Activity activity;
-//	private long cancelledId;
 	private final long DOWNLOAD_FINISHED = -1;
 	private ImageButton clearAll;
 
@@ -94,7 +93,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 							@Override
 							public void onAnimationEnd(Animation animation) {}
 						});
-						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
+						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle(), false ,true)) {
 							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 							long cancelledId = song.getDownloadId();
 							try {
