@@ -891,12 +891,20 @@ public final class PlaybackService extends Service
 		sendBroadcast(intent);
 	}
 
-	private void updateNotification()
-	{
-		if ((mForceNotificationVisible || mNotificationMode == ALWAYS || mNotificationMode == WHEN_PLAYING && (mState & FLAG_PLAYING) != 0) && mCurrentSong != null)
-			mNotificationManager.notify(NOTIFICATION_ID, createNotification(mCurrentSong, mState));
-		else
-			mNotificationManager.cancel(NOTIFICATION_ID);
+	private void updateNotification() {
+		if ((mForceNotificationVisible || mNotificationMode == ALWAYS || mNotificationMode == WHEN_PLAYING && (mState & FLAG_PLAYING) != 0) && mCurrentSong != null) {
+			try {
+				mNotificationManager.notify(NOTIFICATION_ID, createNotification(mCurrentSong, mState));
+			} catch (Exception e) {
+				android.util.Log.d("log", "Appear problem: " + e);
+			}
+		} else {
+			try {
+				mNotificationManager.cancel(NOTIFICATION_ID);
+			} catch (Exception e) {
+				android.util.Log.d("log", "Appear problem: " + e);
+			}
+		}
 	}
 
 	/**
