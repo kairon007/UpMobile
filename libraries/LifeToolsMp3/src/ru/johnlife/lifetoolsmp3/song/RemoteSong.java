@@ -193,4 +193,13 @@ public class RemoteSong extends Song {
 		downloadUrl = url;
 		return this;
 	}
+	
+	public RemoteSong cloneSong() {
+		try {
+			return (RemoteSong) clone();
+		} catch (CloneNotSupportedException e) {
+			Log.e(getClass().getSimpleName(), "Can't clone RemoteSong: " + e.getMessage());
+		}
+		return null;
+	}
 }

@@ -83,6 +83,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
+	private RemoteSong song;
 
 	public void setSongId(Integer songId) {
 		this.songId = songId;
@@ -95,16 +96,16 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		}
 	}
 
-	public Player(final View view, final String title, final String artist) {
+	public Player(final View view, RemoteSong song) {
 		super();
-		this.artist = artist;
-		this.title = title;
+		this.song = song;
+		this.artist = song.getArtist();
+		this.title = song.getTitle();
 		mediaPlayer = new MediaPlayer();
 		SongArrayHolder.getInstance().setCurrentPlayersId(mediaPlayer.hashCode());
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		initView(view);
 	}
-
 	public void initView(final View view) {
 		this.view = view;
 		songId = -1;
@@ -283,8 +284,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				artist = editor.getNewArtistName();
-				title = editor.getNewSongTitle();
+				song.setArtistName(editor.getNewArtistName());
+				song.setTitle(editor.getNewSongTitle());
+				setTitle(editor.getNewArtistName() + " - " + editor.getNewSongTitle());
 				SongArrayHolder.getInstance().setID3DialogOpened(false, null);
 			}
 		});

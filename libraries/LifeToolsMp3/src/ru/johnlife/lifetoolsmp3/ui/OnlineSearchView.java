@@ -68,7 +68,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public abstract class OnlineSearchView extends View {
+public abstract class OnlineSearchView extends View implements Cloneable {
 
 	public static List<Engine> engines = null;
 	private static final Void[] NO_PARAMS = {};
@@ -651,7 +651,6 @@ public abstract class OnlineSearchView extends View {
 		ArrayList<String> dmcaSearchQueryBlacklist = getDMCABlacklistedItems("dmca_searchquery_blacklist");
 
 		if (songName != null) {
-
 			// serach blacklist
 			for (String blacklistedSearchQuery : BaseSearchTask.blacklist) {
 				blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
@@ -664,12 +663,10 @@ public abstract class OnlineSearchView extends View {
 			for (String blacklistedSearchQuery : dmcaSearchQueryBlacklist) {
 				blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
 				if (songName.contains(blacklistedSearchQuery)) {
-
 					return true;
 				}
 			}
 		}
-
 		return false;
 	}
 	
@@ -781,8 +778,10 @@ public abstract class OnlineSearchView extends View {
 		});
 		progressDialog.show();
 	}
+	
 
-	public void prepareSong(final RemoteSong song, boolean force) {
+	public void prepareSong(final RemoteSong remoteSong, boolean force) {
+		RemoteSong song = remoteSong.cloneSong();
 		String title = song.getTitle();
 		String artist = song.getArtist();
 		final boolean isDialogOpened = SongArrayHolder.getInstance().isStremDialogOpened();
@@ -793,7 +792,7 @@ public abstract class OnlineSearchView extends View {
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
-			player = new Player(v, title, artist);
+			player = new Player(v, song);
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());
 			}
@@ -820,7 +819,7 @@ public abstract class OnlineSearchView extends View {
 				}
 			}
 		};
-		downloadClickListener = new DownloadClickListener(getContext(), (RemoteSong) song, new RefreshListener() {
+		downloadClickListener = new DownloadClickListener(getContext(), song, new RefreshListener() {
 			
 			@Override
 			public void success() {
@@ -843,7 +842,7 @@ public abstract class OnlineSearchView extends View {
 		player.setTitle(artist + " - " + title);
 	}
 	
-	public Dialog createStreamDialog(RemoteSong song) {
+	public Dialog createStreamDialog(final RemoteSong song) {
 		headsetReceiver = new HeadsetIntentReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
@@ -874,6 +873,8 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				downloadClickListener.setSong(song);
+				android.util.Log.d("logd", "onClick: " + song.getTitle() + " - " + song.getArtist());
 				boolean useCover = SongArrayHolder.getInstance().isCoverEnabled();
 				downloadClickListener.setUseAlbumCover(useCover);
 				downloadClickListener.downloadSong(false);

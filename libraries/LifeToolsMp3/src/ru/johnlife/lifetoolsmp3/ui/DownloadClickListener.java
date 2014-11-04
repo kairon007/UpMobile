@@ -77,16 +77,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected DownloadClickListener(Context context, RemoteSong song, RefreshListener listener) {
 		this.context = context;
 		this.song = song;
-		this.songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
 		this.listener = listener;
-		songTitle = Util.removeSpecialCharacters(song.getTitle());
-		songArtist = Util.removeSpecialCharacters(song.getArtist());
-		duration = Util.getFormatedStrDuration(song.getDuration());
-		headers = song.getHeaders();
 	}
 	
 	@SuppressLint("NewApi")
 	public void downloadSong(boolean fromCallback) {
+		songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
+		songTitle = Util.removeSpecialCharacters(song.getTitle());
+		songArtist = Util.removeSpecialCharacters(song.getArtist());
+		duration = Util.getFormatedStrDuration(song.getDuration());
+		headers = song.getHeaders();
 		url = song.getUrl();
 		SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
 		boolean isCached = false;
@@ -488,5 +488,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				return;
 			}
 		}
+	}
+
+	public void setSong(RemoteSong song) {
+		this.song = song;
 	}
 }
