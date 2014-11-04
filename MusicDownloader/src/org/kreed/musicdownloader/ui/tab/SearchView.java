@@ -111,7 +111,7 @@ public class SearchView  extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
-		((MainActivity) activity).stopPlayer();
+		((MainActivity) activity).pausePlayer();
 	}
 
 	@Override

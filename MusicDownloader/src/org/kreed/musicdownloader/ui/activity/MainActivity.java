@@ -200,14 +200,16 @@ public class MainActivity extends Activity {
 			boolean isContinuePlaying = player.getPlayerState() == Constants.CONTINUE_PLAY;
 			if(strAction.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
 				if (player != null && isPlaying || isContinuePlaying) {
-					stopPlayer();
+					pausePlayer();
 				}
 			}
 		}
 	}
 	
-	public void stopPlayer() {
-		player.stateManagementPlayer(Constants.PAUSE);
+	public void pausePlayer() {
+		if (null != player) {
+			player.stateManagementPlayer(Constants.PAUSE);
+		}
 	}
 	
 	public static void logToast(Context context, String message) {
