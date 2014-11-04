@@ -35,5 +35,6 @@
 	<string name="expand">Expand</string>
 	<string name="new_folder_dialog_title">New folder name</string>
 	<string name="downloads_failed">Download failed</string>
-	<string name="error_getting_url_songs">Error getting url songs.</string>				
+	<string name="error_getting_url_songs">Error getting url songs.</string>
+	<string name="turn_on_dm">Please turn on Download Manager on your device to download the song.</string>				
 </resources>
