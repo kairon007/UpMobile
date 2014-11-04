@@ -51,18 +51,14 @@ public class AdapterHelper {
 			view.setLongClickable(true);
 			init(view);
 			titleLine.setTypeface(MusicApp.FONT_REGULAR);
-			if (artistLine != null) {
-				artistLine.setTypeface(MusicApp.FONT_LIGHT);
-			}
+			artistLine.setTypeface(MusicApp.FONT_LIGHT);
 			chunkTime.setTypeface(MusicApp.FONT_REGULAR);
 			number.setTypeface(MusicApp.FONT_LIGHT);
 			caption.setTypeface(MusicApp.FONT_LIGHT);
 		}
 
 		private void init(View view) {
-			if (!whiteTheme) {
-				artistLine = (TextView)view.findViewById(R.id.artistLine);
-			}
+			artistLine = (TextView)view.findViewById(R.id.artistLine);
 			titleLine = (TextView)view.findViewById(R.id.titleLine);
 			chunkTime = (TextView) view.findViewById(R.id.chunkTime);
 			number = (TextView)view.findViewById(R.id.number);
