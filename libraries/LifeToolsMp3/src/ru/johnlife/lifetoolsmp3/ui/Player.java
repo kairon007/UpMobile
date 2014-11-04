@@ -470,6 +470,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 								imagePause = R.drawable.play;
 								button.setImageResource(imagePause);
 								progress.setProgress(0);
+								SongArrayHolder.getInstance().setPlaying(false);
 							}
 						});
 						rowLirycs.postDelayed(new Runnable() {
