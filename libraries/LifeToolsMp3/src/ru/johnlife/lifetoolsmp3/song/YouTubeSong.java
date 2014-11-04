@@ -14,6 +14,7 @@ import android.util.Log;
 
 public class YouTubeSong extends SongWithCover {
 
+	private Timer timer = new Timer();
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.12 (KHTML, like Gecko) Maxthon/3.0 Chrome/26.0.1410.43 Safari/535.12";
 	private static final String YOUTUBE_MP3_URL = "http://www.youtube-mp3.org";
 	private static final String PENDING = "pending";
@@ -49,6 +50,7 @@ public class YouTubeSong extends SongWithCover {
 	public void cancelTasks() {
 		if (null != getUrl) {
 			getUrl.cancel(true);
+			timer.cancel();
 		}
 		downloadUrlListener = null;
 	}
@@ -82,11 +84,12 @@ public class YouTubeSong extends SongWithCover {
 							.header("Accept-Location", "*")
 							.header("Accept-Language", "ru-RU")
 							.referrer("http://www.youtube-mp3.org/?c")
-							.ignoreContentType(true).timeout(10000)
+							.ignoreContentType(true)
+							.timeout(10000)
 							.followRedirects(true)
 							.method(Method.GET)
 							.execute();
-					new Timer().schedule(new Updater(), 3000, 3000);
+					timer.schedule(new Updater(), 5000, 3000);
 					return watchId;
 				} catch (Exception e) {
 					Log.e(getClass().getSimpleName(), "Something went wrong :( " + e.getMessage());
@@ -96,11 +99,6 @@ public class YouTubeSong extends SongWithCover {
 
 			@Override
 			protected void onPostExecute(String result) {
-			}
-
-			@Override
-			protected void onCancelled(String result) {
-				downloadUrlListener.error(result);
 			}
 		}.execute();
 	}
