@@ -257,13 +257,8 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		}
 	}
 	
-	public void removeDeletedData(String filePath) {
-		for (int i = 0; i < adapterLibrary.getCount(); i++) {
-			MusicData data = adapterLibrary.getItem(i);
-			if(filePath.equals(data.getFileUri())){
-				adapterLibrary.remove(data);
-			}
-		}
+	public void removeDeletedData(String filePath) {	
+			adapterLibrary.removeByUri(filePath);
 	}
 
 	@Override

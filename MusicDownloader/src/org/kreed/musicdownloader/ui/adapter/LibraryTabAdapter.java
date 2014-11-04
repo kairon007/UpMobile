@@ -80,7 +80,29 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		}
 		activity.runOnUiThread(reDraw);
 	}
-
+	public void removeByUri(String filePath) {
+		synchronized (lock) {
+			if (mOriginalValues != null) {
+				for (int i = 0; i < mOriginalValues.size(); ++i) {
+					if (mOriginalValues.get(i).getFileUri().equals(filePath)) {
+						mOriginalValues.remove(i);
+						break;
+					}
+							
+				}
+			}
+			//кол-во операций, что и в remove(MusicData) но из-за невозможности(?) переписать equals пришлось так
+			for (int i = 0; i < mObjects.size(); ++i) {
+				if (mObjects.get(i).getFileUri().equals(filePath)) {
+					mObjects.remove(i);
+					break;
+				}
+						
+			}
+		}
+		activity.runOnUiThread(reDraw);
+	}
+	
 	@Override
 	public int getCount() {
 		synchronized (lock) {
@@ -273,4 +295,8 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		}
 		activity.runOnUiThread(reDraw);
 	}
+
+	
+
+	
 }
