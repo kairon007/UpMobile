@@ -13,7 +13,7 @@ import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.CoverReadyListener;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-public class RemoteSong extends Song {
+public class RemoteSong extends Song implements Cloneable {
 	private final class WrapperCoverListener implements OnBitmapReadyListener {
 		List<OnBitmapReadyListener> listeners = new ArrayList<OnBitmapReadyListener>();
 

@@ -68,12 +68,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public abstract class OnlineSearchView extends View implements Cloneable {
+public abstract class OnlineSearchView extends View {
 
 	public static List<Engine> engines = null;
 	private static final Void[] NO_PARAMS = {};
 	public static final int STREAM_DIALOG_ID = 1;
-	private static final String KEY_POSITION = "position.song.vanilla";
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private String SPREF_ENGINES ="shar_pref_key_engines_array";
@@ -874,7 +873,6 @@ public abstract class OnlineSearchView extends View implements Cloneable {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				downloadClickListener.setSong(song);
-				android.util.Log.d("logd", "onClick: " + song.getTitle() + " - " + song.getArtist());
 				boolean useCover = SongArrayHolder.getInstance().isCoverEnabled();
 				downloadClickListener.setUseAlbumCover(useCover);
 				downloadClickListener.downloadSong(false);
