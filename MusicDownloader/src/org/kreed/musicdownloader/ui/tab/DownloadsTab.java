@@ -15,6 +15,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,7 +40,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 	private static DownloadsTab instance;
 	private View view;
 	private Activity activity;
-	private long cancelledId;
+//	private long cancelledId;
 	private final long DOWNLOAD_FINISHED = -1;
 	private ImageButton clearAll;
 
@@ -82,23 +83,24 @@ public class DownloadsTab implements LoadPercentageInterface {
 						collapse((View)v.getParent(), new AnimationListener() {
 							
 							@Override
-							public void onAnimationStart(Animation animation) {}
+							public void onAnimationStart(Animation animation) {
+								((ViewHolder)((View)v.getParent()).getTag()).needInvalidate = true;
+								remove(song);
+							}
 							
 							@Override
 							public void onAnimationRepeat(Animation animation) {}
 							
 							@Override
-							public void onAnimationEnd(Animation animation) {
-								((ViewHolder)((View)v.getParent()).getTag()).needInvalidate = true;
-								remove(song);
-							}
+							public void onAnimationEnd(Animation animation) {}
 						});
 						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
 							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-							cancelledId = song.getDownloadId();
-							int cacheDownloadId = song.getSongArtist().hashCode() + song.getSongTitle().hashCode();
-							if (cancelledId != -1 && cacheDownloadId != cancelledId) {
-								manager.remove(cancelledId);
+							long cancelledId = song.getDownloadId();
+							try {
+								int i = manager.remove(cancelledId);
+							} catch (Exception e) {
+								android.util.Log.d("log", "" + e);
 							}
 							if (song.isDownloaded()) {
 								DBHelper.getInstance(getContext()).delete(song);
@@ -423,9 +425,9 @@ public class DownloadsTab implements LoadPercentageInterface {
 	public DownloadsTab() {
 	}
 
-	public long getCancelledId() {
-		return cancelledId;
-	}
+//	public long getCancelledId() {
+//		return cancelledId;
+//	}
 
 	@Override
 	public void currentDownloadingSongTitle(String currentDownloadingSongTitle) {

@@ -189,6 +189,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String strAction = intent.getAction();
+			if(player == null) return;
 			boolean isPlaying = player.getPlayerState() == Constants.PLAY;
 			boolean isContinuePlaying = player.getPlayerState() == Constants.CONTINUE_PLAY;
 			if(strAction.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {

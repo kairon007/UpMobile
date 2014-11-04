@@ -321,19 +321,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			int index = s.indexOf('m');
 			return s.substring(index - 1);
 		}
-
-		private void notifyMediascanner(final RemoteSong song, final String pathToFile) {
-			final File file = new File(pathToFile);
-			MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-				public void onScanCompleted(String path, Uri uri) {
-					prepare(file, song, pathToFile);
-					if (null != listener) {
-						listener.success();
-					}
-				}
-			});
-		}
 	}
 	
 	private void notifyMediascanner(final RemoteSong song, final String pathToFile) {

@@ -2,8 +2,6 @@ package ru.johnlife.lifetoolsmp3;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 public class DownloadCache {
 	
 	private final int CACHE_CAPACITY = 3;
