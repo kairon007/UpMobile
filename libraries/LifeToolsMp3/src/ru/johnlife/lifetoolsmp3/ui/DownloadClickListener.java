@@ -264,7 +264,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				case DownloadManager.STATUS_FAILED:
 					notifyAboutFailed(currentDownloadId);
 					c.close();
-					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover, false);
+					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 					this.cancel();
 					return;
 				case DownloadManager.STATUS_RUNNING:
@@ -344,7 +344,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
 		}
 		if (null == src_set) {
-			DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle(), useCover, false);
+			DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 			notifyMediascanner(song, path);
 			return false;
 		}

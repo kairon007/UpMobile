@@ -24,18 +24,17 @@ public class DownloadCache {
 		return isCached;
 	}
 	
-	public boolean remove(String artist, String title, boolean useCover, boolean interrupted) {
-		int position = cache.indexOf(new Item(artist, title, useCover));
+	private boolean remove(Item item) {
+		int position = cache.indexOf(item);
 		if (position < 0 || position >= cache.size()) {
 			return false;
 		}
 		boolean cached = cache.get(position).isCached;
 		cache.remove(position);
-		if (interrupted) return cached;
 		if (!cached) {
-			for (Item item : cache) {
-				if (item.isCached()) {
-					item.callback();
+			for (Item buf : cache) {
+				if (buf.isCached()) {
+					buf.callback();
 					return cached;
 				}
 			}
@@ -52,7 +51,7 @@ public class DownloadCache {
 			}
 		}
 		if (null != deleteItem) {
-			return remove(deleteItem.getArtist(), deleteItem.getTitle(), deleteItem.isUseCover(), false);
+			return remove(deleteItem);
 		} else return false;
 	}
 	
@@ -60,7 +59,6 @@ public class DownloadCache {
 		
 		private String artist;
 		private String title;
-		private boolean useCover;
 		private boolean isCached;
 		private DownloadCacheCallback callback;
 		
@@ -78,10 +76,6 @@ public class DownloadCache {
 			return title;
 		}
 		
-		public boolean isUseCover() {
-			return useCover;
-		}
-		
 		public boolean isCached() {
 			return isCached;
 		}
@@ -90,8 +84,7 @@ public class DownloadCache {
 		public boolean equals(Object o) {
 			return o instanceof Item 
 					&& ((Item)o).getArtist().equals(artist)
-					&& ((Item)o).getTitle().equals(title)
-					&& ((Item)o).isUseCover() == isUseCover();
+					&& ((Item)o).getTitle().equals(title);
 		}
 
 		public void callback() {
