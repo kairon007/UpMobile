@@ -723,6 +723,7 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
+		SongArrayHolder.getInstance().setProgressDialogOpened(true, fullAction, view);
 		stopSystemPlayer(getContext());
 		final RemoteSong downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
@@ -763,7 +764,6 @@ public abstract class OnlineSearchView extends View {
 		} else {
 			click(view, position);
 		}
-		SongArrayHolder.getInstance().setProgressDialogOpened(true, fullAction, view);
 	}
 
 	protected void showProgressDialog(final boolean fullAction, final View view, final RemoteSong downloadSong) {
