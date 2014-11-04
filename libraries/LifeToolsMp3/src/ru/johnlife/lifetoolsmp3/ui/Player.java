@@ -156,7 +156,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		view.findViewById(R.id.download_location).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				createDirectoryChooserDialog();
+				createDirectoryChooserDialog(true);
 			}
 		});
 		button.setOnClickListener(new View.OnClickListener() {
@@ -182,8 +182,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		tvTags = (TextView) view.findViewById(R.id.tv_edit_mp3_tag);
 	}
 
-	public void createDirectoryChooserDialog() {
-		SongArrayHolder.getInstance().setDirectoryChooserOpened(true);
+	public void createDirectoryChooserDialog(boolean isButtonsEnabled) {
+		SongArrayHolder.getInstance().setDirectoryChooserOpened(true, isButtonsEnabled);
 		directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
 			@Override
 			public void onChosenDir(String chDir) {
@@ -196,6 +196,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		} else {
 			directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(view.getContext()));
 		}
+		directoryChooserDialog.setEnable(isButtonsEnabled);
 	}
 
 	public void createNewDirDialog(String name) {
@@ -391,8 +392,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	public void onPrepared() {
 		spinnerVisible = false;
 		if (tvLyrics != null && tvTags != null) {
-			rowLirycs.removeView(tvLyrics);
-			rowTags.removeView(tvTags);
+			tvLyrics.setVisibility(View.GONE);
+			tvTags.setVisibility(View.GONE);
 		}
 		spinner.setVisibility(View.GONE);
 		boxPlayer.setVisibility(View.VISIBLE);

@@ -63,11 +63,13 @@ public class DirectoryChooserDialog {
 		public void onShow(DialogInterface dialog) {
 			float textSize = 16f;
 			DirectoryChooserDialog.this.dialog = dialog;
+			enableButtons(isEnable());
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
 	private ImageButton newDirButton;
+	private boolean enable;
 
 	//////////////////////////////////////////////////////
 	// Callback interface for selected directory        //
@@ -130,13 +132,13 @@ public class DirectoryChooserDialog {
 				if (m_chosenDirectoryListener != null) {
 					m_chosenDirectoryListener.onChosenDir(m_dir);
 				}
-				SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
+				SongArrayHolder.getInstance().setDirectoryChooserOpened(false, isEnable());
 			}
 		}).setNegativeButton(android.R.string.cancel, new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
+				SongArrayHolder.getInstance().setDirectoryChooserOpened(false, isEnable());
 				SongArrayHolder.getInstance().setDirectoryChooserPath(null);
 			}
 		});
@@ -148,7 +150,7 @@ public class DirectoryChooserDialog {
 			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
 					dirsDialog.dismiss();
-					SongArrayHolder.getInstance().setDirectoryChooserOpened(false);
+					SongArrayHolder.getInstance().setDirectoryChooserOpened(false, isEnable());
 					return true;
 				} else {
 					return false;
@@ -158,7 +160,7 @@ public class DirectoryChooserDialog {
 		dirsDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		// Show directory chooser dialog
 		dirsDialog.show();
-		SongArrayHolder.getInstance().setDirectoryChooserOpened(true);
+		SongArrayHolder.getInstance().setDirectoryChooserOpened(true, isEnable());
 	}
 
 	private boolean createSubDir(String newDir) {
@@ -250,7 +252,8 @@ public class DirectoryChooserDialog {
 		return dialogBuilder;
 	}
 	
-	private void enableButtons(boolean enable) {
+	public void enableButtons(boolean enable) {
+		this.setEnable(enable);
 		((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
 		((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setClickable(enable);
 		newDirButton.setEnabled(enable);
@@ -346,6 +349,14 @@ public class DirectoryChooserDialog {
 				return v;
 			}
 		};
+	}
+
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
 	private class CustomWatcher implements TextWatcher {

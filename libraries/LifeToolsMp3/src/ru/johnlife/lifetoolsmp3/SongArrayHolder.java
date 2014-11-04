@@ -37,6 +37,7 @@ public class SongArrayHolder {
 	private boolean isProgressDialogOpened = false;
 	private boolean fullAction;
 	private View view;
+	private boolean isButtonsEnabled;
 	
 	private SongArrayHolder() {
 	}
@@ -150,8 +151,9 @@ public class SongArrayHolder {
 		return titleArtistLyrics;
 	}
 
-	public void setDirectoryChooserOpened(boolean isDirectoryChooserOpened) {
+	public void setDirectoryChooserOpened(boolean isDirectoryChooserOpened, boolean isButtonsEnabled) {
 		this.isDirectoryChooserOpened = isDirectoryChooserOpened;
+		this.isButtonsEnabled = isButtonsEnabled;
 	}
 
 	public String getDirectoryChooserPath() {
@@ -185,7 +187,7 @@ public class SongArrayHolder {
 			view.createLyricsDialog(getTitleArtistLyrics(), getLyrics());
 		}
 		if (isDirectoryChooserOpened) {
-			view.getPlayer().createDirectoryChooserDialog();
+			view.getPlayer().createDirectoryChooserDialog(isButtonsEnabled);
 		}
 		if (isNewDirectoryOpened) {
 			view.getPlayer().createNewDirDialog(newDirName);
