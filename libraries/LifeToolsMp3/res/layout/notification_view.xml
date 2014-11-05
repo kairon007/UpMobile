@@ -36,7 +36,6 @@
                 android:layout_weight="1"
                 android:lines="1"
                 android:ellipsize="end"
-                android:text="TextViewddddddddddddddddddddddddddddddddddddddddd"
                 android:textSize="17sp" />
             
             <TextView
@@ -44,7 +43,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="4dp"
-                android:text="TextView"
                 android:textSize="17sp" />
 
         </LinearLayout>

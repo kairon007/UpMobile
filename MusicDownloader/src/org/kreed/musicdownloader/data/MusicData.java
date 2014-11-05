@@ -25,6 +25,7 @@ public class MusicData {
 	private String songGenre;
 	private String songAlbum;
 	private String fileUri;
+	private Object tag;
 	private long downloadId = -1;
 	private boolean useCover = true;
 
@@ -268,6 +269,14 @@ public class MusicData {
 
 	public void setUseCover(boolean useCover) {
 		this.useCover = useCover;
+	}
+	
+	public Object getTag() {
+		return tag;
+	}
+
+	public void setTag(Object tag) {
+		this.tag = tag;
 	}
 
 	public String getSongAlbum() {

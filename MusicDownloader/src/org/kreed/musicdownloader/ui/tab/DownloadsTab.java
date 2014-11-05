@@ -11,10 +11,12 @@ import org.kreed.musicdownloader.interfaces.TaskSuccessListener;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.CanceledCallback;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +60,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 			DBHelper.getInstance(getContext()).getAll(this);
 		}
 
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder = null;
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.downloads_row, parent, false);
@@ -73,12 +75,13 @@ public class DownloadsTab implements LoadPercentageInterface {
 				}
 			}
 			if (holder.remove != null) {
+				final int pos  = position;
 				holder.remove.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(final View v) {
 						v.setOnClickListener(null);
-						final MusicData song = getItem(position);
+						final MusicData song = getItem(pos);
 						collapse((View)v.getParent(), new AnimationListener() {
 							
 							@Override
@@ -88,14 +91,19 @@ public class DownloadsTab implements LoadPercentageInterface {
 									removeByUri(song.getFileUri());
 								else remove(song);
 							}
-
+							
 							@Override
 							public void onAnimationRepeat(Animation animation) {}
 							
 							@Override
 							public void onAnimationEnd(Animation animation) {}
 						});
-						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
+						if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+							CanceledCallback callback = (CanceledCallback) song.getTag();
+							if (null != callback) {
+								callback.cancel();
+							}
+						} else if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
 							if (song.isDownloaded()) {
 								DBHelper.getInstance(getContext()).delete(song);
 							} else {
@@ -123,7 +131,6 @@ public class DownloadsTab implements LoadPercentageInterface {
 				}
 				if (song.isDownloaded()) {
 					holder.downloadProgress.setVisibility(View.GONE);
-					
 					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
 				} else {
 					holder.downloadProgress.setVisibility(View.VISIBLE);
@@ -177,7 +184,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 			anim.setDuration(ANIMATION_DURATION);
 			v.startAnimation(anim);
 		}
-
+		
 		private class ViewHolder {
 			TextView title;
 			TextView artist;

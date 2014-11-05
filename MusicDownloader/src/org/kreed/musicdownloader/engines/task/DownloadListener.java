@@ -45,13 +45,14 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	public CoverReadyListener notifyStartDownload(long downloadId) {
+	public CoverReadyListener notifyStartDownload(long downloadId, CanceledCallback cancelDownload) {
 		final MusicData downloadItem = new MusicData();
 		downloadItem.setSongArtist(songArtist);
 		downloadItem.setSongTitle(songTitle);
 		downloadItem.setSongDuration(String.valueOf(duration));
 		downloadItem.setDownloadId(downloadId);
 		downloadItem.setDownloadProgress(0);
+		downloadItem.setTag(cancelDownload);
 		downloadsTab.insertData(downloadItem);
 		return new CoverReadyListener() {
 			

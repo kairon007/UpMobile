@@ -108,7 +108,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		int id = songArtist.hashCode() + songTitle.hashCode();
 		if (isCached)  {
-			song.setDownloaderListener(notifyStartDownload(id));
+			song.setDownloaderListener(notifyStartDownload(id, null));
 			return;
 		}
 		if (url == null || "".equals(url)) {
@@ -166,7 +166,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			
 			boolean isUpdated = continueDownload(id, currentDownloadId);
 			if (!isUpdated) {
-				song.setDownloaderListener(notifyStartDownload(currentDownloadId));
+				song.setDownloaderListener(notifyStartDownload(currentDownloadId, null));
 			}
 			Toast.makeText(context, String.format(context.getString(R.string.download_started), sb), Toast.LENGTH_SHORT).show();
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover);
@@ -187,7 +187,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	}
 
-	public CoverReadyListener notifyStartDownload(long downloadId) {
+	/**
+	 * @param downloadId - id of download
+	 * @param  canceleDownload  - this is callback then use for cancel downnload (use only for below 11 api).  
+	 *  If version above 11 insert null
+	 */
+	public CoverReadyListener notifyStartDownload(long downloadId, CanceledCallback canceleDownload) {
 		return null;
 	}
 	
@@ -377,6 +382,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		void onCoverReady(Bitmap cover);
 	}
 	
+	public interface CanceledCallback {
+			
+		public void cancel();	
+	}
+	
 	private class DownloadSongTask extends Thread {
 
 		private final String DOWNLOAD_ID_GINGERBREAD = "downloads_id_gingerbread";
@@ -389,6 +399,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private final int id;
 		private String url;
 		private String filePath;
+		private boolean interrupted = false;
+		private CanceledCallback cancelDownload = new CanceledCallback() {
+			
+			@Override
+			public void cancel() {
+				interrupted = true;
+			}
+		};
 
 		public DownloadSongTask(RemoteSong song, boolean useCover, String url, String filePath) {
 			this.url = url;
@@ -403,11 +421,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			editor.putInt(DOWNLOAD_KEY_GINGERBREAD, i);
 			editor.commit();
 		}
-
+		
 		private void sendNotification(int progress, boolean isStop) {
 			RemoteViews notificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
 			notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-			Notification notification = new Notification(android.R.drawable.stat_sys_download, notificationTitle, Calendar.getInstance().getTimeInMillis());
+			Notification notification;
+			if (!isStop) {
+				notification = new Notification(android.R.drawable.stat_sys_download, notificationTitle, Calendar.getInstance().getTimeInMillis());
+			} else {
+				notification = new Notification(android.R.drawable.stat_notify_error, "cancel of download", Calendar.getInstance().getTimeInMillis());
+			}
 			Intent intent = new Intent();
 			PendingIntent pend = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			notification.contentIntent = pend;
@@ -421,12 +444,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 		}
 
-		/*
-		 * first params in execute() is url, second params is file path
-		 */
 		@Override
 		public void run() {
 			File file = null;
+			FileOutputStream output = null;
+			InputStream input = null;
+			BufferedInputStream buffer = null;
 			try {
 				HttpParams httpParameters = new BasicHttpParams();
 				HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
@@ -440,13 +463,20 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					try {
 						file = new File(filePath);
 						file.createNewFile();
-						FileOutputStream output = new FileOutputStream(file);
-						InputStream input = connection.getInputStream();
-						BufferedInputStream buffer = new BufferedInputStream(input);
+						output = new FileOutputStream(file);
+						input = connection.getInputStream();
+						buffer = new BufferedInputStream(input);
 						byte[] bBuffer = new byte[10240];
 						int i = 0;
-						notifyStartDownload(id);
+						notifyStartDownload(id, cancelDownload);
 						while ((current = buffer.read(bBuffer)) != -1) {
+							if (interrupted) {
+								output.close();
+								input.close();
+								buffer.close();
+								sendNotification(0, true);
+								return;
+							}
 							output.write(bBuffer, 0, current);
 							index += current;
 							int p = index * 100 / size;
@@ -480,6 +510,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				notifyAboutFailed(id);
 				sendNotification(0, true);
 				return;
+			} finally {
+				try {
+					output.close();
+					input.close();
+					buffer.close();
+				} catch (Exception e2) {
+				}
 			}
 		}
 	}

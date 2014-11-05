@@ -58,7 +58,7 @@ public class SearchView  extends OnlineSearchView {
 				activity.setFileObserver();
 			final DownloadListener listener = new DownloadListener(getContext(), song, parentAdapter);
 			final int id = song.getArtist().hashCode() + song.getTitle().hashCode();
-			listener.notifyStartDownload(id);
+			listener.notifyStartDownload(id, null);
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
 				@Override
