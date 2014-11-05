@@ -94,15 +94,16 @@ public class DownloadsTab implements LoadPercentageInterface {
 							public void onAnimationEnd(Animation animation) {}
 						});
 						if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
-							DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-							long cancelledId = song.getDownloadId();
-							try {
-								int i = manager.remove(cancelledId);
-							} catch (Exception e) {
-								android.util.Log.d("log", "" + e);
-							}
 							if (song.isDownloaded()) {
 								DBHelper.getInstance(getContext()).delete(song);
+							} else {
+								DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+								long cancelledId = song.getDownloadId();
+								try {
+									int i = manager.remove(cancelledId);
+								} catch (Exception e) {
+									android.util.Log.d("log", "" + e);
+								}
 							}
 						}
 					}
