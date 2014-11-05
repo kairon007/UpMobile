@@ -3009,22 +3009,35 @@ public class Advertisement implements Advertisment {
 	
 	
 
+
 	public static void startappOnResume(final Activity activity) {
-		StartAppAd startappAd = getStartappAd(activity);
-		startappAd.onResume();
-		
+		try {
+			StartAppAd startappAd = getStartappAd(activity);
+			startappAd.onResume();	
+		} catch(Exception e) {
+			
+		}
 	}
 
 	public static void startappOnPause(final Activity activity) {
-		StartAppAd startappAd = getStartappAd(activity);
-		startappAd.onPause();
+		try {
+			StartAppAd startappAd = getStartappAd(activity);
+			startappAd.onPause();
+		} catch(Exception e) {
+			
+		}
 		
 	}
 	
 	public static void mobilecoreOnResume(final Activity activity) {
-		MobileCore.refreshOffers();
+		try {
+			MobileCore.refreshOffers();
+		} catch(Exception e) {
+			
+		}
 		
 	}
+	
 	
 	public static void mobilecoreShowInterstitial(final Activity activity, String adPositionKey) {
 		
