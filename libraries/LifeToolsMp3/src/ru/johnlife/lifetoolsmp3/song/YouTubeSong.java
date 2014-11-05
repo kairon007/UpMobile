@@ -133,77 +133,78 @@ public class YouTubeSong extends SongWithCover {
 		}
 		return c << 16 | b;
 	}
-
+	
 	public static boolean inValue(String str) {
-		switch (str) {
-			case "a": return true;
-			case "b": return true;
-			case "c": return true;
-			case "d": return true;
-			case "e": return true;
-			case "f": return true;
-			case "g": return true;
-			case "h": return true;
-			case "i": return true;
-			case "j": return true;
-			case "k": return true;
-			case "l": return true;
-			case "m": return true;
-			case "n": return true;
-			case "o": return true;
-			case "p": return true;
-			case "q": return true;
-			case "r": return true;
-			case "s": return true;
-			case "t": return true;
-			case "u": return true;
-			case "v": return true;
-			case "w": return true;
-			case "x": return true;
-			case "y": return true;
-			case "z": return true;
-			case "_": return true;
-			case "&": return true;
-			case "-": return true;
-			case "/": return true;
-			case "=": return true;
+		if (str != null) {
+			if (str.equals("a")) return true;
+			else if (str.equals("b")) return true;
+			else if (str.equals("c")) return true;
+			else if (str.equals("d")) return true;
+			else if (str.equals("e")) return true;
+			else if (str.equals("f")) return true;
+			else if (str.equals("g")) return true;
+			else if (str.equals("h")) return true;
+			else if (str.equals("i")) return true;
+			else if (str.equals("j")) return true;
+			else if (str.equals("k")) return true;
+			else if (str.equals("l")) return true;
+			else if (str.equals("m")) return true;
+			else if (str.equals("n")) return true;
+			else if (str.equals("o")) return true;
+			else if (str.equals("p")) return true;
+			else if (str.equals("q")) return true;
+			else if (str.equals("r")) return true;
+			else if (str.equals("s")) return true;
+			else if (str.equals("t")) return true;
+			else if (str.equals("u")) return true;
+			else if (str.equals("v")) return true;
+			else if (str.equals("w")) return true;
+			else if (str.equals("x")) return true;
+			else if (str.equals("y")) return true;
+			else if (str.equals("z")) return true;
+			else if (str.equals("_")) return true;
+			else if (str.equals("&")) return true;
+			else if (str.equals("-")) return true;
+			else if (str.equals("/")) return true;
+			else if (str.equals("=")) return true;
 		}
 		return false;
 	}
 
+
 	public static int value(String str) {
-		switch (str) {
-			case "a": return 870;
-			case "b": return 906;
-			case "c": return 167;
-			case "d": return 119;
-			case "e": return 130;
-			case "f": return 899;
-			case "g": return 248;
-			case "h": return 123;
-			case "i": return 627;
-			case "j": return 706;
-			case "k": return 694;
-			case "l": return 421;
-			case "m": return 214;
-			case "n": return 561;
-			case "o": return 819;
-			case "p": return 925;
-			case "q": return 857;
-			case "r": return 539;
-			case "s": return 898;
-			case "t": return 866;
-			case "u": return 433;
-			case "v": return 299;
-			case "w": return 137;
-			case "x": return 285;
-			case "y": return 613;
-			case "z": return 635;
-			case "_": return 638;
-			case "&": return 639;
-			case "-": return 880;
-			case "/": return 687;
-			case "=": return 721;
+		if (str != null) {
+			if (str.equals("a")) return 870;
+			else if (str.equals("b")) return 906;
+			else if (str.equals("c")) return 167;
+			else if (str.equals("d")) return 119;
+			else if (str.equals("e")) return 130;
+			else if (str.equals("f")) return 899;
+			else if (str.equals("g")) return 248;
+			else if (str.equals("h")) return 123;
+			else if (str.equals("i")) return 627;
+			else if (str.equals("j")) return 706;
+			else if (str.equals("k")) return 694;
+			else if (str.equals("l")) return 421;
+			else if (str.equals("m")) return 214;
+			else if (str.equals("n")) return 561;
+			else if (str.equals("o")) return 819;
+			else if (str.equals("p")) return 925;
+			else if (str.equals("q")) return 857;
+			else if (str.equals("r")) return 539;
+			else if (str.equals("s")) return 898;
+			else if (str.equals("t")) return 866;
+			else if (str.equals("u")) return 433;
+			else if (str.equals("v")) return 299;
+			else if (str.equals("w")) return 137;
+			else if (str.equals("x")) return 285;
+			else if (str.equals("y")) return 613;
+			else if (str.equals("z")) return 635;
+			else if (str.equals("_")) return 638;
+			else if (str.equals("&")) return 639;
+			else if (str.equals("-")) return 880;
+			else if (str.equals("/")) return 687;
+			else if (str.equals("=")) return 721;
 		}
 		return 0;
 	}
