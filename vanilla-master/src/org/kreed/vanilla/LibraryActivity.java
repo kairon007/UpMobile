@@ -69,6 +69,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -80,7 +81,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -483,7 +483,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	public void setFilterHint(int type) {
 		int[] hintResIds = new int[] { R.string.hint_filter_artists, R.string.hint_filter_songs, R.string.hint_filter_playlists, R.string.hint_filter_genres, R.string.hint_filter_files };
-		mTextFilter.setHint(hintResIds[type - 1]);
+		float width = mTextFilter.getPaint().measureText(getResources().getString(hintResIds[type - 1]));
+		if(mTextFilter.getWidth() - mClearFilterEditText.getWidth() < width) {
+			mTextFilter.setHint(Html.fromHtml("<small>" + getResources().getString(hintResIds[type - 1]) + "</small>"));
+		} else mTextFilter.setHint(hintResIds[type - 1]);
 	}
 
 	@Override
