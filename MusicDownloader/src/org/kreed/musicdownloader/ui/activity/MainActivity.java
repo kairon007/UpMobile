@@ -230,7 +230,6 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
-		observer.startWatching();
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
@@ -584,6 +583,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onCancelled() {
 			Toast.makeText(getApplicationContext(), "File " + music.getSongArtist() + " - " + music.getSongTitle() + " do not exists", Toast.LENGTH_LONG).show();
+			mPagerAdapter.removeDeletedData(music.getFileUri());
 			super.onCancelled();
 		}
 
@@ -655,6 +655,7 @@ public class MainActivity extends Activity {
 						observer.stopWatching();
 						music.rename(data);
 						notifyMediascanner(music);
+						observer.startWatching();
 						showDialog = false;
 						return null;
 					}
@@ -689,7 +690,6 @@ public class MainActivity extends Activity {
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
-				observer.startWatching();
 				int i = getSelectedItem();
 				mPagerAdapter.updateMusicData(i, musicData);
 			}
@@ -720,6 +720,8 @@ public class MainActivity extends Activity {
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
 		}
+		if (observer != null)
+			observer.stopWatching();
 		observer= new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX) {
 		@Override
 		public void onEvent(int event, String file) {
@@ -731,8 +733,7 @@ public class MainActivity extends Activity {
 					mPagerAdapter.removeDeletedData(filePath);
 					break;
 				case FileObserver.DELETE_SELF:
-					mPagerAdapter.fillLibrary();
-					setFileObserver();
+					mPagerAdapter.cleanLibrary();
 					break;
 				case FileObserver.MOVED_TO:
 					if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))

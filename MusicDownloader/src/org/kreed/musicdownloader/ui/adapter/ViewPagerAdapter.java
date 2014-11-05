@@ -310,6 +310,9 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		FillLibraryTask task = new FillLibraryTask();
 		task.execute(contentFile);
 	}
+	public void cleanLibrary() {
+		adapterLibrary.clear();
+	}
 
 	private class FillLibraryTask extends AsyncTask<File, Void, Void> {
 
