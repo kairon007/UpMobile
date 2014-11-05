@@ -1,5 +1,6 @@
 package org.kreed.musicdownloader.ui.tab;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.kreed.musicdownloader.Advertisement;
@@ -10,6 +11,7 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
@@ -18,6 +20,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -27,6 +30,7 @@ public class SearchView  extends OnlineSearchView {
 	private MainActivity activity;
 	private ViewPagerAdapter parentAdapter;
 	private String path;
+	private File directory = new File(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX);
 
 	public SearchView(LayoutInflater inflater, ViewPagerAdapter parentAdapter, MainActivity activity) {
 		super(inflater);
@@ -50,7 +54,8 @@ public class SearchView  extends OnlineSearchView {
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(Util.getFormatedStrDuration(song.getDuration()));
 		if (view.getId() == R.id.btnDownload) {
-			activity.setFileObserver();
+			if (!directory.exists())
+				activity.setFileObserver();
 			final DownloadListener listener = new DownloadListener(getContext(), song, parentAdapter);
 			final int id = song.getArtist().hashCode() + song.getTitle().hashCode();
 			listener.notifyStartDownload(id);

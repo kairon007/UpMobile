@@ -84,9 +84,11 @@ public class DownloadsTab implements LoadPercentageInterface {
 							@Override
 							public void onAnimationStart(Animation animation) {
 								((ViewHolder)((View)v.getParent()).getTag()).needInvalidate = true;
-								remove(song);
+								if (song.isDownloaded())
+									removeByUri(song.getFileUri());
+								else remove(song);
 							}
-							
+
 							@Override
 							public void onAnimationRepeat(Animation animation) {}
 							
@@ -121,6 +123,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 				}
 				if (song.isDownloaded()) {
 					holder.downloadProgress.setVisibility(View.GONE);
+					
 					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
 				} else {
 					holder.downloadProgress.setVisibility(View.VISIBLE);
@@ -249,7 +252,28 @@ public class DownloadsTab implements LoadPercentageInterface {
 				redraw();
 			}
 		}
-
+		public void removeByUri(String filePath) {
+			synchronized (lock) {
+				if (mOriginalValues != null) {
+					for (int i = 0; i < mOriginalValues.size(); ++i) {
+						if (mOriginalValues.get(i).getFileUri()!=null && mOriginalValues.get(i).getFileUri().equals(filePath)) {
+							mOriginalValues.remove(i);
+							break;
+							}
+											
+						}
+				}
+				
+				for (int i = 0; i < mObjects.size(); ++i) {
+					if (mObjects.get(i).getFileUri()!= null && mObjects.get(i).getFileUri().equals(filePath)) {
+						mObjects.remove(i);
+						break;
+					}
+										
+				}
+				redraw();
+			}
+		}
 		@Override
 		public void remove(MusicData object) {
 			synchronized (lock) {
