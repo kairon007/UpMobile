@@ -695,6 +695,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	private void getNextResults() {
+		resultAdapter.refreshSpinner.setVisibility(View.VISIBLE);
 		if (!taskIterator.hasNext()) {
 			resultAdapter.hideProgress();
 			return;
