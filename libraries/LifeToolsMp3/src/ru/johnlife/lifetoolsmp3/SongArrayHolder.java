@@ -38,6 +38,7 @@ public class SongArrayHolder {
 	private boolean fullAction;
 	private View view;
 	private boolean isButtonsEnabled;
+	private String message;
 	
 	private SongArrayHolder() {
 	}
@@ -100,6 +101,7 @@ public class SongArrayHolder {
 			setSongName(searchView.getSearchField().getText().toString());
 			setTaskIterator(searchView.getTaskIterator());
 			switchMode = searchView.isSwitchMode();
+			setMessage(searchView.getMessage());
 		}
 	}
 
@@ -226,5 +228,13 @@ public class SongArrayHolder {
 		this.isProgressDialogOpened = isProgressDialogOpened;
 		this.fullAction = fullAction;
 		this.view = view;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

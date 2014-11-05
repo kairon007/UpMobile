@@ -101,6 +101,7 @@ public abstract class OnlineSearchView extends View {
 	private String keyEngines;
 	private OnlineSearchView onlineView = this;
 	private boolean switchMode = false;
+	private SongArrayHolder holder = SongArrayHolder.getInstance();
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -130,10 +131,10 @@ public abstract class OnlineSearchView extends View {
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
 				player.pause();
-				SongArrayHolder.getInstance().setPlaying(true);
+				holder.setPlaying(true);
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
-				if(SongArrayHolder.getInstance().isPlaying()) player.play();
+				if(holder.isPlaying()) player.play();
 				break;
 			default:
 				break;
@@ -311,7 +312,6 @@ public abstract class OnlineSearchView extends View {
 			extraSearch = null;
 			return view;
 		}
-		SongArrayHolder holder = SongArrayHolder.getInstance();
 		if (holder.getResults() != null) {
 			for (Song song : holder.getResults()) {
 				getResultAdapter().add(song);
@@ -322,6 +322,7 @@ public abstract class OnlineSearchView extends View {
 				setCurrentName(holder.getSongName().toString());
 				getResultAdapter().notifyDataSetChanged();
 				setSearchStopped(false);
+				message.setText(holder.getMessage());
 				listView.setSelection(holder.getListViewPosition());
 			}
 		}
@@ -569,7 +570,7 @@ public abstract class OnlineSearchView extends View {
 		
 		@Override
 		public void onFinishParsing(List<Song> songsList) {
-			SongArrayHolder.getInstance().setSearchExecute(false);
+			holder.setSearchExecute(false);
 			resultAdapter.hideProgress();
 			if (searchStopped) return;
 			//TODO: set result
@@ -590,7 +591,7 @@ public abstract class OnlineSearchView extends View {
 				for (Song song : songsList) {
 					resultAdapter.add(song);
 				}
-				SongArrayHolder.getInstance().saveStateAdapter(onlineView);
+				holder.saveStateAdapter(onlineView);
 			}
 		}
 	};
@@ -671,7 +672,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public void search(String songName) {
-		SongArrayHolder.getInstance().setSearchExecute(true);
+		holder.setSearchExecute(true);
 		searchStopped = false;
 		if (isBlacklistedQuery(songName)) {
 			// if blacklisted query, then searchNothing			
@@ -720,7 +721,7 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
-		SongArrayHolder.getInstance().setProgressDialogOpened(true, fullAction, view);
+		holder.setProgressDialogOpened(true, fullAction, view);
 		stopSystemPlayer(getContext());
 		final RemoteSong downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
@@ -735,7 +736,7 @@ public abstract class OnlineSearchView extends View {
 						progressDialog.dismiss();
 					}
 					downloadSong.setDownloadUrl(url);
-					SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, view);
+					holder.setProgressDialogOpened(false, fullAction, view);
 					((Activity)getContext()).runOnUiThread(new Runnable() {
 						
 						@Override
@@ -752,7 +753,7 @@ public abstract class OnlineSearchView extends View {
 					if (null != progressDialog) {
 						progressDialog.dismiss();
 					}
-					SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, view);
+					holder.setProgressDialogOpened(false, fullAction, view);
 					Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
 					switchMode = true;
 					toast.show();
@@ -773,7 +774,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				downloadSong.cancelTasks();
-				SongArrayHolder.getInstance().setProgressDialogOpened(false, fullAction, view);
+				holder.setProgressDialogOpened(false, fullAction, view);
 			}
 		});
 		progressDialog.show();
@@ -784,9 +785,9 @@ public abstract class OnlineSearchView extends View {
 		RemoteSong song = remoteSong.cloneSong();
 		String title = song.getTitle();
 		String artist = song.getArtist();
-		final boolean isDialogOpened = SongArrayHolder.getInstance().isStremDialogOpened();
+		final boolean isDialogOpened = holder.isStremDialogOpened();
 		if (force) {
-			player = SongArrayHolder.getInstance().getPlayerInstance();
+			player = holder.getPlayerInstance();
 			player.initView(inflate(getContext(), isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null));
 		}
 		if (null == player) {
@@ -811,8 +812,8 @@ public abstract class OnlineSearchView extends View {
 		dialogDismisser = new Runnable() {
 			@Override
 			public void run() {
-				SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
-				SongArrayHolder.getInstance().setCoverEnabled(true);
+				holder.setStreamDialogOpened(false, null, null);
+				holder.setCoverEnabled(true);
 				if (player != null) {
 					player.cancel();
 					player = null;
@@ -874,7 +875,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				downloadClickListener.setSong(song);
-				boolean useCover = SongArrayHolder.getInstance().isCoverEnabled();
+				boolean useCover = holder.isCoverEnabled();
 				downloadClickListener.setUseAlbumCover(useCover);
 				downloadClickListener.downloadSong(false);
 				player.cancel();
@@ -883,7 +884,7 @@ public abstract class OnlineSearchView extends View {
 				if (telephonyManager != null) {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 				}
-				SongArrayHolder.getInstance().setCoverEnabled(true);
+				holder.setCoverEnabled(true);
 			}
 		});
 		alertDialog = b.create();
@@ -899,7 +900,7 @@ public abstract class OnlineSearchView extends View {
 		});
 		alertDialog.setOnShowListener(dialogShowListener);
 		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		SongArrayHolder.getInstance().setStreamDialogOpened(true, song, player);
+		holder.setStreamDialogOpened(true, song, player);
 		return alertDialog;
 	}
 
@@ -975,5 +976,11 @@ public abstract class OnlineSearchView extends View {
 	
 	public void notifyAdapter() {
 		resultAdapter.notifyDataSetChanged();
+	}
+	
+	public String getMessage() {
+		if (null != message) {
+			return message.getText().toString();
+		} else return getContext().getResources().getString(R.string.search_your_results_appear_here);
 	}
 }
