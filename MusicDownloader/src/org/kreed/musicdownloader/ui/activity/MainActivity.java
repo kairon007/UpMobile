@@ -145,7 +145,8 @@ public class MainActivity extends Activity {
 					mPagerAdapter.fillLibrary();
 					break;
 				case FileObserver.MOVED_TO:
-					mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
+					if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))
+						mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
 					break;
 				}
 			}
