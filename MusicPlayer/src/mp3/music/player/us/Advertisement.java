@@ -66,9 +66,6 @@ import android.widget.Toast;
 import com.appnext.appnextsdk.Appnext;
 import com.appnext.appnextsdk.NoAdsInterface;
 import com.appnext.appnextsdk.PopupClosedInterface; 
-import com.ibrif.higaz187743.AdListener;
-import com.ibrif.higaz187743.AdView;
-import com.ibrif.higaz187743.MA;
 
 
 import com.ironsource.mobilcore.CallbackResponse;
@@ -76,8 +73,6 @@ import com.ironsource.mobilcore.MobileCore;
 import com.ironsource.mobilcore.MobileCore.AD_UNITS;
 import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.ironsource.mobilcore.OnReadyListener;
-import com.mm1373233319.android.CheckAdStatusListener;
-import com.mm1373233319.android.MiniMob1373233319;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 
@@ -210,10 +205,10 @@ public class Advertisement implements Advertisment {
 				//initializeAppbrain(activity);
 				initializeMobileCore(activity, AD_UNITS.ALL_UNITS);
 				//initializeVungle(activity);
-				initializeAirpush(activity);
+				//initializeAirpush(activity);
 				initializeStartapp(activity);
 				//initializeApplovin(activity);
-				initializeMinimob(activity); 
+				//initializeMinimob(activity); 
 				 
 	
 				// if first time running
@@ -301,6 +296,7 @@ public class Advertisement implements Advertisment {
  
 	public static void showRateMePopup(final Activity activity, boolean switchShowDialog) { 
 		if (isOnline(activity)) {
+			
 			setLastTimeAskedForRate(activity, System.currentTimeMillis()); 
 			
 			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -1173,7 +1169,8 @@ public class Advertisement implements Advertisment {
 									
 									} else if (adNetworkName.equals("minimob_direct")) { 
 										
-										minimobDirectShowInterstitial(activity, adPositionKey); 
+										//minimobDirectShowInterstitial(activity, adPositionKey);
+										mobilecoreShowInterstitial(activity, adPositionKey);
 										isShowInterstitialRun = true;
 										
 									}else if (adNetworkName.equals("airpush_direct")) {
@@ -1672,7 +1669,7 @@ public class Advertisement implements Advertisment {
 
 
 
-
+	/*
 	public static void initializeAirpush(Activity activity) {
 		
 		
@@ -1685,6 +1682,7 @@ public class Advertisement implements Advertisment {
 		}
 		
 	}
+	*/
 	
 	public static void initializeStartapp(Activity activity) {
 		try {  
@@ -1694,24 +1692,6 @@ public class Advertisement implements Advertisment {
 			
 		}
 	}
-	
-	
-	public static void initializeMinimob(Activity activity) {
-		
-		try {
-			//
-			if (!Settings.getIsBlacklisted(activity) && activity != null) {
-				MiniMob1373233319.start(activity.getApplicationContext());
-				MiniMob1373233319.showDialog(activity.getApplicationContext());
-			}
-
-		} catch (Exception e) { 
- 
-		} 
-		
-		
-	}
-	
 	
 	
 
@@ -2102,7 +2082,7 @@ public class Advertisement implements Advertisment {
   
   public static void airpushShowBanner(final Activity activity) {
 	  
-	  
+	  /*
 	  
 	  try {
 		  
@@ -2180,6 +2160,9 @@ public class Advertisement implements Advertisment {
 		  
 		  startappShowBanner(activity);
 	  }
+	  */
+	  startappShowBanner(activity);
+	  
   }
   
   
@@ -2768,32 +2751,6 @@ public class Advertisement implements Advertisment {
 	
 	
 
-	public static void minimobDirectShowInterstitial(final Activity activity, String adPositionKey) { 
-		
-		try {
-
-			
-		    CheckAdStatusListener adStatusListener = new CheckAdStatusListener() {
-		        @Override
-		        public void adServed(boolean value){
-		        	
-		        }
-		    };
-			
-			MiniMob1373233319.openAdLink(activity, adStatusListener); 
-
-		} catch(Exception e) {
-			
-		}
-		
-		try {
-			closeActivityIfLetangOrDownloads(activity, adPositionKey);
-		} catch(Exception e) {
-			
-		}
-	}
-		
-	
 	
 	public static void startappDirectShowInterstitial(final Activity activity, String adPositionKey) { 
 		
@@ -2924,6 +2881,8 @@ public class Advertisement implements Advertisment {
 
 	
 	public static void airpushShowInterstitial(final Activity activity, final String adPositionKey) {
+		mobilecoreShowInterstitial(activity, adPositionKey);
+		/*
 		try {  
 			
 			
@@ -2982,10 +2941,14 @@ public class Advertisement implements Advertisment {
 		} catch (Exception e) {
 			
 		}
+		*/
+		
 	}
 	
 	
 	public static void airpushShowVideo(final Activity activity, String adPositionKey) {
+		mobilecoreShowInterstitial(activity, adPositionKey);
+		/*
 		try {  
 
 		     MA ma =new MA(activity, null, false); 
@@ -2994,9 +2957,12 @@ public class Advertisement implements Advertisment {
 		} catch (Exception e) {
 			
 		}
+		*/
 	}
 	
 	public static void airpushShowAppWall(final Activity activity, String adPositionKey) {
+		mobilecoreShowInterstitial(activity, adPositionKey);
+		/*
 		try {  
 
 		     MA ma =new MA(activity, null, false); 
@@ -3005,9 +2971,12 @@ public class Advertisement implements Advertisment {
 		} catch (Exception e) {
 			
 		}
+		*/
 	}
 	
 	public static void airpushShowOverlay(final Activity activity, String adPositionKey) {
+		mobilecoreShowInterstitial(activity, adPositionKey);
+		/*
 		try {  
 
 		     MA ma =new MA(activity, null, false); 
@@ -3016,9 +2985,13 @@ public class Advertisement implements Advertisment {
 		} catch (Exception e) {
 			
 		}
+		*/
 	}
 	
+	
 	public static void airpushDirectShowInterstitial(final Activity activity, String adPositionKey) {
+		mobilecoreShowInterstitial(activity, adPositionKey);
+		/*
 		try {  
 			
 			
@@ -3030,6 +3003,7 @@ public class Advertisement implements Advertisment {
 		} catch (Exception e) {
 			
 		}
+		*/
 	}
 	
 	
@@ -3056,8 +3030,8 @@ public class Advertisement implements Advertisment {
 
 		try {
 			if (adPositionKey != null && (adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
-				initializeMobileCore(activity, AD_UNITS.OFFERWALL);
-				MobileCore.showOfferWall(activity, 
+				initializeMobileCore(activity, AD_UNITS.INTERSTITIAL);
+				MobileCore.showInterstitial(activity, 
 						new CallbackResponse() {
 					@Override 
 					public void onConfirmation(TYPE type) {
@@ -3067,8 +3041,8 @@ public class Advertisement implements Advertisment {
 				});
 			} else {
 	
-				initializeMobileCore(activity, AD_UNITS.OFFERWALL);
-				MobileCore.showOfferWall(activity, null);
+				initializeMobileCore(activity, AD_UNITS.INTERSTITIAL);
+				MobileCore.showInterstitial(activity, null);
 				  
 			}
 		} catch(Exception e) {
@@ -4196,7 +4170,7 @@ if (notificationTitle != null && notificationDescription != null && notification
 
 	}
 	
-
+	
 	@Override
 	public void searchStartLib(Context context) {
 		searchStart((Activity)context);
@@ -4206,6 +4180,8 @@ if (notificationTitle != null && notificationDescription != null && notification
 	public boolean isOnlineLib(Context context) {
 		return isOnline(context);
 	}
+
+
 }
 
 
