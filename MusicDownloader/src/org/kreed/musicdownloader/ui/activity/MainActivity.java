@@ -112,6 +112,7 @@ public class MainActivity extends Activity {
 	private boolean showDialog = false;
 	private boolean useCover = false;
 	private boolean isPlayerHide;
+	
 
 	// -------------------------------------------------------------------------
 
@@ -130,29 +131,10 @@ public class MainActivity extends Activity {
 	public static boolean isAlphaNumeric(String input) {
 		return input.matches("^[a-zA-Z0-9-_]*$");
 	}
-	FileObserver observer = new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX) {
-		
-		@Override
-		public void onEvent(int event, String file) {
-			String filePath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + file;
-			if (mPagerAdapter != null) {
-				switch (event) {
-				case FileObserver.DELETE:
-				case FileObserver.MOVED_FROM:
-					mPagerAdapter.removeDeletedData(filePath);
-					break;
-				case FileObserver.DELETE_SELF:
-					mPagerAdapter.fillLibrary();
-					break;
-				case FileObserver.MOVED_TO:
-					if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))
-						mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
-					break;
-				}
-			}
-		}
-	};
-
+	
+	FileObserver observer; {
+		setFileObserver();
+	}
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
 		private boolean flag = false;
@@ -732,5 +714,34 @@ public class MainActivity extends Activity {
 		public void afterTextChanged(Editable s) {
 
 		}
+	}
+	public void setFileObserver() {
+		File musicDir = new File(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX);
+		if (!musicDir.exists()) {
+			musicDir.mkdirs();
+		}
+		observer= new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX) {
+		@Override
+		public void onEvent(int event, String file) {
+			String filePath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + file;
+			if (mPagerAdapter != null) {
+				switch (event) {
+				case FileObserver.DELETE:
+				case FileObserver.MOVED_FROM:
+					mPagerAdapter.removeDeletedData(filePath);
+					break;
+				case FileObserver.DELETE_SELF:
+					mPagerAdapter.fillLibrary();
+					setFileObserver();
+					break;
+				case FileObserver.MOVED_TO:
+					if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))
+						mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
+					break;
+				}
+			}
+		}
+	};
+	observer.startWatching();
 	}
 }

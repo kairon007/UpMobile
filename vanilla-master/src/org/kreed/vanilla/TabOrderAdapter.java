@@ -22,7 +22,13 @@
 
 package org.kreed.vanilla;
 
+import org.kreed.vanilla.app.VanillaApp;
+
+import ru.johnlife.lifetoolsmp3.Util;
+import android.R.color;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +125,16 @@ public class TabOrderAdapter extends BaseAdapter implements DragListView.DragAda
 			text = (DragTextView)convert;
 		}
 		text.setText(LibraryPagerAdapter.TITLES[mTabIds[position]]);
+		switch(Util.getThemeName(mActivity))
+		{
+		case "AppTheme.White":
+			text.setTextColor(Color.BLACK);
+			break;
+		case "AppTheme.Black":
+			text.setTextColor(Color.WHITE);
+			break;
+		}
+		
 		return text;
 	}
 
