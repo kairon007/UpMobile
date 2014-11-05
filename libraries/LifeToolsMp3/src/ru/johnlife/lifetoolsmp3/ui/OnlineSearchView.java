@@ -723,9 +723,9 @@ public abstract class OnlineSearchView extends View {
 			return;
 		}
 		holder.setProgressDialogOpened(true, fullAction, view);
-		stopSystemPlayer(getContext());
 		final RemoteSong downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
+			stopSystemPlayer(getContext());
 			showProgressDialog(fullAction, view, downloadSong);
 		}
 		if (fullAction) {

@@ -120,9 +120,15 @@ public class SearchView  extends OnlineSearchView {
 	}
 	
 	private void startPlay(final RemoteSong song, final MusicData data) {
-		ArrayList<String[]> headers = song.getHeaders();
-		Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
-		((MainActivity) activity).play(headers, data);
-		data.setFileUri(path);
+		activity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				ArrayList<String[]> headers = song.getHeaders();
+				Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
+				((MainActivity) activity).play(headers, data);
+				data.setFileUri(path);
+			}
+		});
 	}
 }
