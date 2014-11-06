@@ -1,7 +1,5 @@
 package org.kreed.musicdownloader.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,8 +15,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -30,13 +26,12 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener {
+public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener, OnPreparedListener, OnCompletionListener {
 
 	private static final int IMAGE_PLAY = R.drawable.play;
 	private static final int IMAGE_PAUSE = R.drawable.pause;
 	private ArrayList<String[]> header;
 	private MediaPlayer mediaPlayer;
-	private PlaySong downloadSong;
 	private MusicData data;
 
 	private FrameLayout view;
@@ -50,7 +45,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 
 	private String title;
 	private String artist;
-	private String duration;
 	private Integer currentImageButton;
 	private boolean prepared = false;
 	private byte playerState = 0;
@@ -77,18 +71,14 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 	public Player(ArrayList<String[]> header, MusicData data) {
 		title = data.getSongTitle();
 		artist = data.getSongArtist();
-		duration = data.getSongDuration();
 		this.data = data;
 		this.header = header;
 	}
 
 	public void setData(ArrayList<String[]> headers, MusicData musicData) {
-		if (null != downloadSong && downloadSong.getStatus() != Status.PENDING) {
-			downloadSong.cancel(true);
-		}
+		stateManagementPlayer(Constants.STOP);
 		title = data.getSongTitle();
 		artist = data.getSongArtist();
-		duration = data.getSongDuration();
 		this.data = musicData;
 		this.header = headers;
 	}
@@ -105,20 +95,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 			songProgress.setIndeterminate(true);
 			buttonPlay.setVisibility(View.GONE);
 			buttonProgress.setVisibility(View.VISIBLE);
-		}
-	}
-
-	public MediaPlayer getMediaPlayer() {
-		return mediaPlayer;
-	}
-
-	public MusicData getData() {
-		return data;
-	}
-
-	public void stopDownloadSong() {
-		if (downloadSong != null && downloadSong.getStatus() != Status.PENDING) {
-			downloadSong.cancel(true);
 		}
 	}
 
@@ -172,79 +148,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		}
 	}
 
-	private class PlaySong extends AsyncTask<String, Void, Boolean> {
-
-		@SuppressLint("NewApi")
-		@Override
-		protected Boolean doInBackground(String... params) {
-			try {
-				String path = data.getFileUri();
-				File songFile = new File(path);
-				if (songFile.exists()) {
-					FileInputStream inputStream = new FileInputStream(songFile);
-					mediaPlayer.setDataSource(inputStream.getFD());
-					inputStream.close();
-				} else {
-					HashMap<String, String> headers = new HashMap<String, String>();
-					headers.put("User-Agent",
-							"2.0.0.6 � Debian GNU/Linux 4.0 � Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
-					if (header != null && header.get(0) != null) {
-						for (int i = 0; i < header.size(); i++) {
-							headers.put(header.get(i)[0], header.get(i)[1]);
-						}
-					}
-					if (isCancelled())
-						return false;
-					mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
-				}
-				return true;
-			} catch (Exception e) {
-			}
-			return false;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (result && mediaPlayer != null) {
-				mediaPlayer.prepareAsync();
-				mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
-
-					@Override
-					public void onPrepared(MediaPlayer mp) {
-						Player.this.onPrepared();
-						prepared = true;
-						mediaPlayer = mp;
-						mp.start();
-						setActivatedButton(true);
-						mp.setOnCompletionListener(new OnCompletionListener() {
-
-							@Override
-							public void onCompletion(MediaPlayer mp) {
-								mp.seekTo(0);
-								try {
-									mp.prepare();
-								} catch (Exception e) {
-								}
-								mediaPlayer = mp;
-								playerState = Constants.PAUSE;
-								buttonPlay.setImageResource(IMAGE_PLAY);
-								currentImageButton = IMAGE_PLAY;
-							}
-
-						});
-					}
-				});
-			}
-			super.onPostExecute(result);
-		}
-	}
-
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		if (fromUser) {
-			if (mediaPlayer != null && prepared) {
+			if (mediaPlayer != null && prepared && fromUser) {
 				mediaPlayer.seekTo(progress);
-			}
 		}
 	}
 
@@ -286,8 +193,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		}
 	}
 
+	@SuppressLint("NewApi") 
 	private void play() {
-		stopDownloadSong();
 		stop();
 		songArtist.setText(data.getSongArtist());
 		songTitle.setText(data.getSongTitle());
@@ -297,8 +204,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		buttonProgress.setVisibility(View.VISIBLE);
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		downloadSong = new PlaySong();
-		downloadSong.execute();
+		onPrepareSong();
+		mediaPlayer.setOnCompletionListener(this);
+		mediaPlayer.setOnPreparedListener(this);
 	}
 
 	private void pause() {
@@ -326,18 +234,73 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		if (mediaPlayer != null) {
 			songProgress.setProgress(0);
 			try {
-				mediaPlayer.release();
 				if (prepared) {
 					mediaPlayer.seekTo(0);
 					mediaPlayer.stop();
 					mediaPlayer.reset();
 				}
+				mediaPlayer.release();
 			} catch (Exception e) {
 			}
 			mediaPlayer = null; 
 			songProgress.removeCallbacks(progressAction);
 			prepared = false;
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.player_play_song) {
+			if (getPlayerState() == Constants.PLAY || getPlayerState() == Constants.CONTINUE_PLAY || getPlayerState() == Constants.RESTART) {
+				stateManagementPlayer(Constants.PAUSE);
+			} else if (getPlayerState() == Constants.PAUSE) {
+				stateManagementPlayer(Constants.CONTINUE_PLAY);
+			}
+		}
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+		mp.seekTo(0);
+		try {
+			mp.prepare();
+		} catch (Exception e) {
+		}
+		mediaPlayer = mp;
+		playerState = Constants.PAUSE;
+		buttonPlay.setImageResource(IMAGE_PLAY);
+		currentImageButton = IMAGE_PLAY;
+	}
+
+	@Override
+	public void onPrepared(MediaPlayer mp) {
+		Player.this.onPrepared();
+		prepared = true;
+		mediaPlayer = mp;
+		mp.start();
+		setActivatedButton(true);
+	}
+	
+	@SuppressLint("NewApi") 
+	public void onPrepareSong() {
+		try {
+			String path = data.getFileUri();
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("User-Agent", "2.0.0.6 � Debian GNU/Linux 4.0 � Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
+				if (header != null && header.get(0) != null) {
+					for (int i = 0; i < header.size(); i++) {
+						headers.put(header.get(i)[0], header.get(i)[1]);
+					}
+				}
+				mediaPlayer.setDataSource(view.getContext(), Uri.parse(path), headers);
+				mediaPlayer.prepareAsync();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public int getPlayerVisibility() {
+		return playerLayout.getVisibility();
 	}
 
 	public void hidePlayerView() {
@@ -361,21 +324,12 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener 
 		buttonProgress.setVisibility(visibility);
 		buttonPlay.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
 	}
-
-	@Override
-	public void onClick(View v) {
-		if (v.getId() == R.id.player_play_song) {
-			if (getPlayerState() == Constants.PLAY || getPlayerState() == Constants.CONTINUE_PLAY || getPlayerState() == Constants.RESTART) {
-				stateManagementPlayer(Constants.PAUSE);
-			} else if (getPlayerState() == Constants.PAUSE) {
-				stateManagementPlayer(Constants.CONTINUE_PLAY);
-			}
-		}
+	
+	public MediaPlayer getMediaPlayer() {
+		return mediaPlayer;
 	}
 
-	public int getPlayerVisibility() {
-		return playerLayout.getVisibility();
-
+	public MusicData getData() {
+		return data;
 	}
-
 }
