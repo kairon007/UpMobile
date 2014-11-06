@@ -12,7 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="72dp"
         android:divider="@drawable/layout_divider"
         android:showDividers="middle" >
 
@@ -26,8 +26,7 @@
 
             <FrameLayout
                 android:layout_width="72dp"
-                android:layout_height="match_parent"
-                android:minHeight="64dp" >
+                android:layout_height="match_parent" >
 
                 <RelativeLayout
                     android:id="@+id/RelativeLayout1"
@@ -92,6 +91,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="In The End"
+                        android:textColor="@android:color/black"
                         android:textSize="@dimen/font_size_normal" />
 
                 </LinearLayout>
@@ -107,9 +107,10 @@
                         android:id="@+id/artistLine"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="1"
-                        android:text="Linkin Park" />
+                        android:maxLines="1"
+                        android:text="Linkin Park"
+                        android:textColor="@android:color/black" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -133,6 +134,7 @@
                             android:singleLine="true"
                             android:text="3:52"
                             android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@android:color/primary_text_light"
                             android:textSize="@dimen/font_size_normal"
                             android:visibility="visible" />
                     </LinearLayout>

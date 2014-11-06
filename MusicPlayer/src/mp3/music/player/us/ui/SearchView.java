@@ -1,11 +1,13 @@
 package mp3.music.player.us.ui;
 
 import mp3.music.player.us.Advertisement;
+import mp3.music.player.us.Constants;
 import mp3.music.player.us.Settings;
 import mp3.music.player.us.ui.activities.HomeActivity;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.PreferenceUtils;
 import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
@@ -58,10 +60,10 @@ public class SearchView extends OnlineSearchView {
 	protected void stopSystemPlayer(Context context) {
 		MusicUtils.pause();
 	}
-
+	
 	@Override
-	protected boolean isWhiteTheme(Context context) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isWhiteTheme(Context context) {
+		String theme = Util.getThemeName(context);
+		return null != theme && theme.equals(Constants.WHITE_THEME);
 	}
 }
