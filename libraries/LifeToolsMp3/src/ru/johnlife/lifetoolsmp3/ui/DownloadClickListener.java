@@ -493,7 +493,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 								i = 0;
 							}
 						}
-						if (setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
+						if (!setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
 							return;
 						}
 					} catch (Exception e) {
@@ -501,6 +501,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						sendNotification(0, true);
 						return;
 					}
+					setFileUri(id, file.getAbsolutePath());
 					notifyMediascanner(song, file.getAbsolutePath());
 					return;
 				} else {
