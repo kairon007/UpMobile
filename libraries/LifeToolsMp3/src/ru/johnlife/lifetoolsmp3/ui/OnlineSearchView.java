@@ -49,6 +49,7 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -62,6 +63,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -342,6 +344,10 @@ public abstract class OnlineSearchView extends View {
 		listView = (ListView) view.findViewById(R.id.list);
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
+		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
+		if(searchField.getWidth() - ((ImageView) view.findViewById(R.id.clear)).getWidth() < width) {
+			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
+		} else searchField.setHint(R.string.hint_main_search);
 	}
 	
 	public static String getTitleSearchEngine() {
