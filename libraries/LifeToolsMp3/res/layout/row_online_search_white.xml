@@ -27,7 +27,7 @@
             <FrameLayout
                 android:layout_width="72dp"
                 android:layout_height="match_parent"
-                android:minHeight="48dp" >
+                android:minHeight="64dp" >
 
                 <RelativeLayout
                     android:id="@+id/RelativeLayout1"
@@ -65,6 +65,7 @@
                     android:id="@+id/cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:scaleType="fitCenter" />
             </FrameLayout>
 
