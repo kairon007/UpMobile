@@ -67,12 +67,12 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private int songId;
 	private int duration;
 	private int imagePause;
-	private boolean isId3Show = false;
 	private boolean coverProgressVisible = true;
 	private boolean prepared = false;
 	private boolean indeterminate;
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
+	private boolean isWhiteTheme;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -96,11 +96,12 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		}
 	}
 
-	public Player(final View view, RemoteSong song) {
+	public Player(final View view, RemoteSong song, boolean isWhiteTheme) {
 		super();
 		this.song = song;
 		this.artist = song.getArtist();
 		this.title = song.getTitle();
+		this.isWhiteTheme = isWhiteTheme;
 		mediaPlayer = new MediaPlayer();
 		SongArrayHolder.getInstance().setCurrentPlayersId(mediaPlayer.hashCode());
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -185,7 +186,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void createDirectoryChooserDialog(boolean isButtonsEnabled) {
 		SongArrayHolder.getInstance().setDirectoryChooserOpened(true, isButtonsEnabled);
-		directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
+		directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), isWhiteTheme, new DirectoryChooserDialog.ChosenDirectoryListener() {
 			@Override
 			public void onChosenDir(String chDir) {
 				textPath.setText(chDir);

@@ -13,7 +13,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
@@ -21,7 +20,6 @@ import android.content.DialogInterface.OnShowListener;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
-import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -29,8 +27,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -49,6 +47,7 @@ public class DirectoryChooserDialog {
 	private Context m_context;
 	private TextView titleText;
 	private DialogInterface dialog;
+	private boolean isWhiteTheme;
 
 	private String m_dir = "";
 	private List<String> m_subdirs = null;
@@ -78,7 +77,8 @@ public class DirectoryChooserDialog {
 		public void onChosenDir(String chosenDir);
 	}
 
-	public DirectoryChooserDialog(Context context, ChosenDirectoryListener chosenDirectoryListener) {
+	public DirectoryChooserDialog(Context context, boolean isWhiteTheme, ChosenDirectoryListener chosenDirectoryListener) {
+		this.isWhiteTheme = isWhiteTheme;
 		m_context = context;
 		m_sdcardDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 		m_chosenDirectoryListener = chosenDirectoryListener;
@@ -198,7 +198,7 @@ public class DirectoryChooserDialog {
 	}
 
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(m_context);
+		AlertDialog.Builder dialogBuilder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View contentView = inflater.inflate(R.layout.dir_chooser_dialog, null);
 		titleText = (TextView) contentView.findViewById(R.id.directoryText);
@@ -274,7 +274,7 @@ public class DirectoryChooserDialog {
 		} else {
 			SongArrayHolder.getInstance().setNewDirName("");
 		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(m_context).setView(view);
+		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme).setView(view);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int whichButton) {

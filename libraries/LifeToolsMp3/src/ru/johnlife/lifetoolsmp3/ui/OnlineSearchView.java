@@ -26,6 +26,7 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -82,8 +83,7 @@ public abstract class OnlineSearchView extends View {
 	private Iterator<Engine> taskIterator;
 	private SharedPreferences sPref;
 	private AlertDialog alertDialog;
-	private RemoteSong downloadSong;
-	private ArrayAdapter adapter;
+	private ArrayAdapter<String> adapter;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private LayoutInflater inflater;
@@ -165,7 +165,7 @@ public abstract class OnlineSearchView extends View {
 		
 	protected abstract void stopSystemPlayer(Context context);
 	
-	protected abstract boolean isWhiteTheme(Context context);
+	public abstract boolean isWhiteTheme(Context context);
 
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -200,6 +200,9 @@ public abstract class OnlineSearchView extends View {
 			view.findViewById(R.id.search_field).setBackgroundResource(R.drawable.search_background_white);
 			view.findViewById(R.id.choise_engines_layout).setBackgroundResource(R.drawable.spinner_background);
 			view.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
+			int color = getContext().getResources().getColor(android.R.color.black);
+			searchField.setTextColor(color);
+			message.setTextColor(color);
 		}
 		listView.setEmptyView(message);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -803,7 +806,7 @@ public abstract class OnlineSearchView extends View {
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
-			player = new Player(v, song);
+			player = new Player(v, song, isWhiteTheme(getContext()));
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());
 			}
@@ -853,6 +856,7 @@ public abstract class OnlineSearchView extends View {
 		player.setTitle(artist + " - " + title);
 	}
 	
+	@SuppressLint("NewApi") 
 	public Dialog createStreamDialog(final RemoteSong song) {
 		headsetReceiver = new HeadsetIntentReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -863,7 +867,7 @@ public abstract class OnlineSearchView extends View {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 		stopSystemPlayer(getContext());
-		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
+		AlertDialog.Builder b = new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT).setView(player.getView());
 		b.setNegativeButton(R.string.download_dialog_cancel, new DialogInterface.OnClickListener() {
 
 			@Override
