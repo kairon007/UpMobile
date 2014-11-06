@@ -641,23 +641,27 @@ public class MainActivity extends Activity {
 
 					@Override
 					protected Void doInBackground(Void... params) {
-						String artistName = editor.getNewArtistName();
-						String albumTitle = editor.getNewAlbumTitle();
-						String songTitle = editor.getNewSongTitle();
-						useCover = editor.useAlbumCover();
-						music.setUseCover(useCover);
-						if (!editor.manipulateText() && useCover) {
+						if (editor.manipulateText() || editor.useAlbumCover()!=music.isUseCover()) {
+							String artistName = editor.getNewArtistName();
+							String albumTitle = editor.getNewAlbumTitle();
+							String songTitle = editor.getNewSongTitle();
+							useCover = editor.useAlbumCover();
+							music.setUseCover(useCover);
+							MusicData data = new MusicData(artistName, songTitle, null, null);
+							data.setSongAlbum(albumTitle);
+							observer.stopWatching();
+							music.rename(data);
+							notifyMediascanner(music);
+							observer.startWatching();
+							showDialog = false;
+							return null;
+						}
+						else {
+							showDialog = false;
 							cancel(true);
 							return null;
 						}
-						MusicData data = new MusicData(artistName, songTitle, null, null);
-						data.setSongAlbum(albumTitle);
-						observer.stopWatching();
-						music.rename(data);
-						notifyMediascanner(music);
-						observer.startWatching();
-						showDialog = false;
-						return null;
+						
 					}
 
 				}.execute();

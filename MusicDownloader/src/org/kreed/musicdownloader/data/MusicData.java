@@ -245,7 +245,7 @@ public class MusicData {
 			if (index < 1) {
 				newName = songArtist+ " - " + songTitle + ".mp3";
 			} else {
-				newName = songArtist + " - " + songTitle + "-<" + (index) + ">.mp3";
+				newName = songArtist + " - " + songTitle + "-[" + (index) + "].mp3";
 			}
 			newFile = new File(file.getParentFile(), newName);
 			fileUri = newFile.getAbsolutePath();
