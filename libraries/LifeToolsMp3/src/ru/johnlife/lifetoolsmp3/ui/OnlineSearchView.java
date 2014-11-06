@@ -220,11 +220,10 @@ public abstract class OnlineSearchView extends View {
 		});
 		ArrayList<String> list = getSettings().getEnginesArray(getContext());
 		if (list.size() > 1) {
-			
+
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				adapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
-			}
-			else
+			} else
 				adapter = new CustomSpinnerAdapter(getContext(), 0, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spEnginesChoiser.setAdapter(adapter);
@@ -240,7 +239,11 @@ public abstract class OnlineSearchView extends View {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					// TODO
+					if (Util.getThemeName(getContext()).equals("AppTheme.White")) {
+						((TextView)parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.black));
+					} else {
+						((TextView)parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.white));
+					}
 					keyEngines = (String) adapter.getItem(position);
 					sPref = context.getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
 					SharedPreferences.Editor editor = sPref.edit();
