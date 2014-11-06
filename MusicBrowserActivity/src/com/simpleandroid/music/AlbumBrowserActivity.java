@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -40,6 +41,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -109,14 +111,26 @@ public class AlbumBrowserActivity extends ListActivity
         mAdapter = (AlbumListAdapter) getLastNonConfigurationInstance();
         if (mAdapter == null) {
             //Log.i("@@@", "starting query");
-            mAdapter = new AlbumListAdapter(
-                    getApplication(),
-                    this,
-                    R.layout.track_list_item,
-                    mAlbumCursor,
-                    new String[] {},
-                    new int[] {});
-            setListAdapter(mAdapter);
+        	if (Util.getThemeName(this).equals("AppTheme.White")) {
+        		// here set text color in album page
+	            mAdapter = new AlbumListAdapter(
+	                    getApplication(),
+	                    this,
+	                    R.layout.track_list_item_white,
+	                    mAlbumCursor,
+	                    new String[] {},
+	                    new int[] {});
+	            setListAdapter(mAdapter);
+        	} else {
+        		mAdapter = new AlbumListAdapter(
+	                    getApplication(),
+	                    this,
+	                    R.layout.track_list_item,
+	                    mAlbumCursor,
+	                    new String[] {},
+	                    new int[] {});
+	            setListAdapter(mAdapter);
+        	}
             setTitle(R.string.working_albums);
             getAlbumCursor(mAdapter.getQueryHandler(), null);
         } else {

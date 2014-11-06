@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /*
-** Copyright 2008, The Android Open Source Project
+** Copyright 2007, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License"); 
 ** you may not use this file except in compliance with the License. 
@@ -16,24 +16,13 @@
 ** limitations under the License.
 */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="66dip"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:baselineAligned="false">
+    android:layout_height="64dip"
+    android:background="@drawable/list_selector_white"
+    android:gravity="center_vertical"
+    android:ignoreGravity="@+id/icon">
 
-    <RelativeLayout 
-        android:layout_width="match_parent"
-        android:layout_height="66dip"
-        android:gravity="center_vertical"
-        android:ignoreGravity="@+id/icon"
-        android:background="@drawable/playlist_tile"
-        android:paddingLeft="47dip"
-        >
+    <include layout="@layout/track_list_item_common_white" />
 
-        <include layout="@layout/track_list_item_common" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

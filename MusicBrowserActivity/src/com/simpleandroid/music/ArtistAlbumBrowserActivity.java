@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ExpandableListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -26,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.CursorWrapper;
@@ -106,17 +108,25 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         mAdapter = (ArtistAlbumListAdapter) getLastNonConfigurationInstance();
         if (mAdapter == null) {
             //Log.i("@@@", "starting query");
-            mAdapter = new ArtistAlbumListAdapter(
-                    getApplication(),
-                    this,
-                    null, // cursor
-                    R.layout.track_list_item_group,
-                    new String[] {},
-                    new int[] {},
-                    R.layout.track_list_item_child,
-                    new String[] {},
-                    new int[] {});
-            setListAdapter(mAdapter);
+			if (Util.getThemeName(this).equals("AppTheme.White")) {
+				// here set text color in artist page
+				mAdapter = new ArtistAlbumListAdapter(getApplication(), this, null, // cursor
+						R.layout.track_list_item_group_white,
+						new String[] {},
+						new int[] {},
+						R.layout.track_list_item_child_white,
+						new String[] {}, 
+						new int[] {});
+			} else {
+				mAdapter = new ArtistAlbumListAdapter(getApplication(), this, null, // cursor
+						R.layout.track_list_item_group,
+						new String[] {},
+						new int[] {},
+						R.layout.track_list_item_child,
+						new String[] {}, 
+						new int[] {});
+			}
+			setListAdapter(mAdapter);
             setTitle(R.string.working_artists);
             getArtistCursor(mAdapter.getQueryHandler(), null);
         } else {
@@ -304,6 +314,7 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+    	Log.d("log", "onOptionsItemSelected");
         Intent intent;
         Cursor cursor;
         switch (item.getItemId()) {
@@ -390,6 +401,7 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+    	Log.d("log", "onContextItemSelected");
         switch (item.getItemId()) {
             case PLAY_SELECTION: {
                 // play everything by the selected artist
@@ -691,7 +703,6 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
                     numalbums, numsongs, unknown);
             
             vh.line2.setText(songs_albums);
-            
             long currentartistid = MusicUtils.getCurrentArtistId();
             long artistid = cursor.getLong(mGroupArtistIdIdx);
             if (currentartistid == artistid && !isexpanded) {
@@ -713,7 +724,6 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
                 displayname = mUnknownAlbum;
             }
             vh.line1.setText(displayname);
-
             int numsongs = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
             int numartistsongs = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST));
 

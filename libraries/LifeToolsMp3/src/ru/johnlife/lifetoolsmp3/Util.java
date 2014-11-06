@@ -145,8 +145,7 @@ public final class Util {
 		}
 	}
 	
-	public static String getThemeName(Context context)
-	{
+	public static String getThemeName(Context context) {
 	    PackageInfo packageInfo;
 	    try {
 	        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);

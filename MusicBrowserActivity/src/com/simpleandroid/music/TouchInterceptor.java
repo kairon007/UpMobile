@@ -16,14 +16,17 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
@@ -82,6 +85,16 @@ public class TouchInterceptor extends ListView {
         mItemHeightNormal = res.getDimensionPixelSize(R.dimen.normal_height);
         mItemHeightHalf = mItemHeightNormal / 2;
         mItemHeightExpanded = res.getDimensionPixelSize(R.dimen.expanded_height);
+    }
+    
+    @Override
+    public void setBackgroundColor(int color) {
+    	if (Util.getThemeName(getContext()).equals("AppTheme.White")){
+    		int c = android.R.color.white;
+        	super.setBackgroundColor(c);
+    	} else {
+    		super.setBackgroundColor(color);
+    	}
     }
     
     @Override

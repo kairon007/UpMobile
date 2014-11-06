@@ -26,17 +26,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <TextView android:id="@+id/duration"
-        android:textSize="12sp"
-        android:textColor="?android:attr/textColorTertiary"
-        android:textStyle="bold"
-        android:paddingLeft="4dip"
-        android:paddingRight="11dip"
-        android:layout_alignParentRight="true"
+    <TextView
+        android:id="@+id/duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/line1"
-        android:singleLine="true" />
+        android:layout_alignParentRight="true"
+        android:paddingLeft="4dip"
+        android:paddingRight="11dip"
+        android:singleLine="true"
+        android:textColor="@color/text_white_theme"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
     <!-- The height is set to half the height of the parent, which is 64 dip -->
 
@@ -50,21 +51,26 @@
         android:ellipsize="marquee"
         android:paddingLeft="9dip"
         android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/text_white_theme" />
 
     <!-- The height is set to half the height of the parent, which is 64 dip -->
-    <TextView android:id="@+id/line2" android:visibility="visible"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:singleLine="true"
+
+    <TextView
+        android:id="@+id/line2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@id/line1"
+        android:layout_toLeftOf="@id/duration"
+        android:layout_toRightOf="@id/icon"
         android:ellipsize="end"
         android:paddingLeft="9dip"
         android:scrollHorizontally="true"
-        android:layout_below="@id/line1"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/icon"
-        android:layout_toLeftOf="@id/duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/text_white_theme"
+        android:visibility="visible" />
 
     <ImageView android:id="@+id/play_indicator"
         android:layout_alignParentRight="true"

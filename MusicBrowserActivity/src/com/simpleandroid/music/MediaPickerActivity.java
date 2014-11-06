@@ -18,6 +18,8 @@ package com.simpleandroid.music;
 
 import java.util.ArrayList;
 
+import ru.johnlife.lifetoolsmp3.Util;
+
 import android.app.ListActivity;
 import android.content.ContentUris;
 import android.content.Context;
@@ -27,6 +29,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -95,15 +98,24 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
         if (null == mCursor || 0 == mCursor.getCount()) {
             return;
         }
-
-        PickListAdapter adapter = new PickListAdapter(
-                this,
-                R.layout.track_list_item,
-                mCursor,
-                new String[] {},
-                new int[] {});
-
-        setListAdapter(adapter);
+        if (Util.getThemeName(this).equals("AppTheme.White")) {
+        	Log.d("log", "media picker activity");
+	        PickListAdapter adapter = new PickListAdapter(
+	                this,
+	                R.layout.track_list_item_white,
+	                mCursor,
+	                new String[] {},
+	                new int[] {});
+	        setListAdapter(adapter);
+        } else {
+        	PickListAdapter adapter = new PickListAdapter(
+	                this,
+	                R.layout.track_list_item,
+	                mCursor,
+	                new String[] {},
+	                new int[] {});
+	        setListAdapter(adapter);
+        }
     }
 
     @Override

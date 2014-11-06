@@ -19,6 +19,8 @@ package com.simpleandroid.music;
 import java.text.Collator;
 import java.util.ArrayList;
 
+import ru.johnlife.lifetoolsmp3.Util;
+
 import android.app.ListActivity;
 import android.content.AsyncQueryHandler;
 import android.content.BroadcastReceiver;
@@ -146,13 +148,23 @@ public class PlaylistBrowserActivity extends ListActivity
         mAdapter = (PlaylistListAdapter) getLastNonConfigurationInstance();
         if (mAdapter == null) {
             //Log.i("@@@", "starting query");
-            mAdapter = new PlaylistListAdapter(
-                    getApplication(),
-                    this,
-                    R.layout.track_list_item,
-                    mPlaylistCursor,
-                    new String[] { MediaStore.Audio.Playlists.NAME},
-                    new int[] { android.R.id.text1 });
+        	if (Util.getThemeName(this).equals("AppTheme.White")) {
+	            mAdapter = new PlaylistListAdapter(
+	                    getApplication(),
+	                    this,
+	                    R.layout.track_list_item_white,
+	                    mPlaylistCursor,
+	                    new String[] { MediaStore.Audio.Playlists.NAME},
+	                    new int[] { android.R.id.text1 });
+        	} else {
+        		mAdapter = new PlaylistListAdapter(
+	                    getApplication(),
+	                    this,
+	                    R.layout.track_list_item,
+	                    mPlaylistCursor,
+	                    new String[] { MediaStore.Audio.Playlists.NAME},
+	                    new int[] { android.R.id.text1 });
+        	}
             setListAdapter(mAdapter);
             setTitle(R.string.working_playlists);
             getPlaylistCursor(mAdapter.getQueryHandler(), null);
