@@ -109,8 +109,7 @@ public class TrackBrowserActivity extends ListActivity
 
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle icicle)
-    {
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Log.d("log", "TrackBrowserActivity");
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -159,8 +158,11 @@ public class TrackBrowserActivity extends ListActivity
                 MediaStore.Audio.Playlists.Members.AUDIO_ID,
                 MediaStore.Audio.Media.IS_MUSIC
         };
-
-        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
+        if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
+		} else {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
+		}
         mUseLastListPos = MusicUtils.updateButtonBar(this, R.id.songtab);
         mTrackList = getListView();
         mTrackList.setOnCreateContextMenuListener(this);

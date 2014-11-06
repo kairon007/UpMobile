@@ -91,9 +91,11 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
     }
 
     public void init() {
-
-        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
-
+    	if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
+		} else {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
+		}
         MakeCursor();
         if (null == mCursor || 0 == mCursor.getCount()) {
             return;

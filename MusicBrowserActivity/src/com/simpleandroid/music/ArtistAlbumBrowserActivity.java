@@ -98,8 +98,11 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         f.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
-
-        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_expanding_top:R.layout.media_picker_activity_expanding);
+		if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top_white : R.layout.media_picker_activity_expanding_white);
+		} else {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top : R.layout.media_picker_activity_expanding);
+		}
         MusicUtils.updateButtonBar(this, R.id.artisttab);
         ExpandableListView lv = getExpandableListView();
         lv.setOnCreateContextMenuListener(this);
@@ -342,9 +345,7 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         SubMenu sub = menu.addSubMenu(0, ADD_TO_PLAYLIST, 0, R.string.add_to_playlist);
         MusicUtils.makePlaylistMenu(this, sub);
         menu.add(0, DELETE_ITEM, 0, R.string.delete_item);
-        
         ExpandableListContextMenuInfo mi = (ExpandableListContextMenuInfo) menuInfoIn;
-        
         int itemtype = ExpandableListView.getPackedPositionType(mi.packedPosition);
         int gpos = ExpandableListView.getPackedPositionGroup(mi.packedPosition);
         int cpos = ExpandableListView.getPackedPositionChild(mi.packedPosition);

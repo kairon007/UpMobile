@@ -17,39 +17,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/prompt"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal" >
+        android:text="@string/create_playlist_create_text_prompt"
+        android:textColor="@color/white_theme_text" >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_slide_keyboard" />
-
-        <TextView
-            android:id="@+id/prompt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="@string/create_playlist_create_text_prompt" >
-        </TextView>
-    </LinearLayout>
+    </TextView>
 
     <EditText
         android:id="@+id/playlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:inputType="textCapSentences"
-        android:singleLine="true"
-        android:visibility="gone" >
+        android:singleLine="true" >
 
         <requestFocus />
     </EditText>
@@ -59,19 +51,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#ffffff"
+        android:orientation="horizontal"
         android:padding="6dp" >
 
         <Button
             android:id="@+id/create"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="@string/create_playlist_create_text" />
+            android:text="@string/create_playlist_create_text"
+            android:textColor="@color/white_theme_text" />
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:textColor="@color/white_theme_text" />
+
     </LinearLayout>
 
 </LinearLayout>
