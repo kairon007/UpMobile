@@ -52,7 +52,7 @@ public class PreferencesActivity extends PreferenceActivity {
 	 */
 
 	private static int colorBlack = R.color.window_background_black;
-	private static int colorWhite = R.color.window_background_light;
+	private static int colorWhite = android.R.color.white;
 	private static int colorDark = R.color.window_background_dark;
 
 	@SuppressWarnings("deprecation")
