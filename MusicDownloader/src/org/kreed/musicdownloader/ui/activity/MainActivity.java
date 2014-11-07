@@ -506,17 +506,6 @@ public class MainActivity extends Activity {
 		return false;
 	}
 
-	public void setFooterView(String strTitle) {
-		TextView tv = (TextView) findViewById(R.id.player_artist);
-		tv.setText(strTitle);
-		SeekBar sb = (SeekBar) findViewById(R.id.player_progress_song);
-		sb.setProgress(0);
-		ImageButton ib = (ImageButton) findViewById(R.id.player_play_song);
-		ib.setVisibility(View.GONE);
-		ProgressBar pb = (ProgressBar) findViewById(R.id.player_progress_play);
-		pb.setVisibility(View.VISIBLE);
-	}
-
 	public void play(ArrayList<String[]> headers, MusicData musicData) {
 		music = musicData;
 		if (player != null && player.getData().equals(musicData)) {

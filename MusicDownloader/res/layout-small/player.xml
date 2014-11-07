@@ -5,7 +5,7 @@
     android:layout_height="48dp"
     android:minHeight="@dimen/layout_library_height"
     android:orientation="horizontal"
-    android:visibility="visible" >
+    android:visibility="gone" >
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
                 android:layout_gravity="bottom"
                 android:layout_weight="1"
                 android:paddingTop="@dimen/pading_min"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
 
 </LinearLayout>

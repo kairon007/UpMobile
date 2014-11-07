@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>
@@ -89,7 +89,7 @@
                 android:layout_weight="1"
                 android:minHeight="@dimen/player_pading_side"
                 android:paddingTop="@dimen/pading_min"
-                android:visibility="visible" />
+                android:visibility="gone"/>
         </LinearLayout>
 
 </LinearLayout>

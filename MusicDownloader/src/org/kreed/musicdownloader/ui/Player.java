@@ -313,7 +313,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 
 	public void setSongProgressIndeterminate(boolean ind) {
 		songProgress.setIndeterminate(ind);
-
 	}
 
 	public int getButtonProgressVisibility() {
