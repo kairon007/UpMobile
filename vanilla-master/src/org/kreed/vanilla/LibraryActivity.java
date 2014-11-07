@@ -1156,9 +1156,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		case MENU_EDIT_MP3_TAGS:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			String[] fields = { intent.getStringExtra("selected_file_path"), intent.getStringExtra("title"), "" };
 			editor = new MP3Editor(this);
-			editor.setStrings(fields);
 			createEditID3Dialog(type, id, editor);
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
@@ -1206,6 +1204,22 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		if (null == view) {
 			editor = new MP3Editor(this);
 		}
+		String[] filds = { "", "", "" };
+		MusicMetadata metadata = null;
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			if (null != src_set) {
+				metadata = (MusicMetadata) src_set.getSimplified();
+			}
+			if (null != metadata) {
+				filds[0] = metadata.getArtist();
+				filds[1] = metadata.getSongTitle();
+				filds[2] = metadata.getAlbum() == null ? "" : metadata.getAlbum();
+			}
+			editor.setStrings(filds);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		final SongArrayHolder holder = SongArrayHolder.getInstance();
 		if (holder.isID3Opened()) {
 			editor.setStrings(holder.getID3Fields());
@@ -1221,6 +1235,11 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				final String albumTitle = editor.getNewAlbumTitle();
 				final String songTitle = editor.getNewSongTitle();
 				if (!editor.manipulateText()) {
+					return;
+				}
+				if(new File(file.getParentFile() + "/" + artistName + " - " + albumTitle + ".mp3").exists()) {
+					Toast toast = Toast.makeText(editor.getView().getContext(), "File with this name is already exists", Toast.LENGTH_SHORT);
+					toast.show();
 					return;
 				}
 				new AsyncTask<Void, Void, Void>() {
@@ -1305,7 +1324,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				isChange = true;
 				metadata.setAlbum(album);
 			}
-			if (!song.equals("")) {
+			if (!song.equals("")) {	
 				isChange = true;
 				metadata.setSongTitle(song);
 			}
@@ -1316,8 +1335,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			if (!isChange) {
 				return;
 			}
-			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file, artist, song);
+			File newFile = new File(file.getParentFile() + "/" + artist + " - " + album + ".mp3"); 
+			file.renameTo(newFile);
+			new MyID3().update(newFile, src_set, metadata);
+			notifyMediascanner(newFile, artist, song);
 		} catch (Exception e) {
 		}
 	}
