@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -34,60 +35,54 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RenamePlaylist extends Activity
-{
+public class RenamePlaylist extends Activity {
     private EditText mPlaylist;
     private TextView mPrompt;
     private Button mSaveButton;
     private long mRenameId;
     private String mOriginalName;
 
-    @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.create_playlist);
-        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                                    WindowManager.LayoutParams.WRAP_CONTENT);
-
-        mPrompt = (TextView)findViewById(R.id.prompt);
-        mPlaylist = (EditText)findViewById(R.id.playlist);
-        mSaveButton = (Button) findViewById(R.id.create);
-        mSaveButton.setOnClickListener(mOpenClicked);
-
-        ((Button)findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        mRenameId = icicle != null ? icicle.getLong("rename")
-                : getIntent().getLongExtra("rename", -1);
-        mOriginalName = nameForId(mRenameId);
-        String defaultname = icicle != null ? icicle.getString("defaultname") : mOriginalName;
-        
-        if (mRenameId < 0 || mOriginalName == null || defaultname == null) {
-            Log.i("@@@@", "Rename failed: " + mRenameId + "/" + defaultname);
-            finish();
-            return;
-        }
-        
-        String promptformat;
-        if (mOriginalName.equals(defaultname)) {
-            promptformat = getString(R.string.rename_playlist_same_prompt);
-        } else {
-            promptformat = getString(R.string.rename_playlist_diff_prompt);
-        }
-                
-        String prompt = String.format(promptformat, mOriginalName, defaultname);
-        mPrompt.setText(prompt);
-        mPlaylist.setText(defaultname);
-        mPlaylist.setSelection(defaultname.length());
-        mPlaylist.addTextChangedListener(mTextWatcher);
-        setSaveButton();
-    }
+	@Override
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(R.layout.create_playlist_white);
+		} else {
+			setContentView(R.layout.create_playlist);
+		}
+		getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+		mPrompt = (TextView) findViewById(R.id.prompt);
+		mPlaylist = (EditText) findViewById(R.id.playlist);
+		mSaveButton = (Button) findViewById(R.id.create);
+		mSaveButton.setOnClickListener(mOpenClicked);
+		((Button) findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		mRenameId = icicle != null ? icicle.getLong("rename") : getIntent().getLongExtra("rename", -1);
+		mOriginalName = nameForId(mRenameId);
+		String defaultname = icicle != null ? icicle.getString("defaultname") : mOriginalName;
+		if (mRenameId < 0 || mOriginalName == null || defaultname == null) {
+			Log.i("@@@@", "Rename failed: " + mRenameId + "/" + defaultname);
+			finish();
+			return;
+		}
+		String promptformat;
+		if (mOriginalName.equals(defaultname)) {
+			promptformat = getString(R.string.rename_playlist_same_prompt);
+		} else {
+			promptformat = getString(R.string.rename_playlist_diff_prompt);
+		}
+		String prompt = String.format(promptformat, mOriginalName, defaultname);
+		mPrompt.setText(prompt);
+		mPlaylist.setText(defaultname);
+		mPlaylist.setSelection(defaultname.length());
+		mPlaylist.addTextChangedListener(mTextWatcher);
+		setSaveButton();
+	}
     
     TextWatcher mTextWatcher = new TextWatcher() {
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

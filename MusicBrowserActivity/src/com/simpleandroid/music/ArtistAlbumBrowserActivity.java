@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ExpandableListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -26,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.CursorWrapper;
@@ -96,8 +98,11 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         f.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
-
-        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_expanding_top:R.layout.media_picker_activity_expanding);
+		if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top_white : R.layout.media_picker_activity_expanding_white);
+		} else {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top : R.layout.media_picker_activity_expanding);
+		}
         MusicUtils.updateButtonBar(this, R.id.artisttab);
         ExpandableListView lv = getExpandableListView();
         lv.setOnCreateContextMenuListener(this);
@@ -106,17 +111,25 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         mAdapter = (ArtistAlbumListAdapter) getLastNonConfigurationInstance();
         if (mAdapter == null) {
             //Log.i("@@@", "starting query");
-            mAdapter = new ArtistAlbumListAdapter(
-                    getApplication(),
-                    this,
-                    null, // cursor
-                    R.layout.track_list_item_group,
-                    new String[] {},
-                    new int[] {},
-                    R.layout.track_list_item_child,
-                    new String[] {},
-                    new int[] {});
-            setListAdapter(mAdapter);
+			if (Util.getThemeName(this).equals("AppTheme.White")) {
+				// here set text color in artist page
+				mAdapter = new ArtistAlbumListAdapter(getApplication(), this, null, // cursor
+						R.layout.track_list_item_group_white,
+						new String[] {},
+						new int[] {},
+						R.layout.track_list_item_child_white,
+						new String[] {}, 
+						new int[] {});
+			} else {
+				mAdapter = new ArtistAlbumListAdapter(getApplication(), this, null, // cursor
+						R.layout.track_list_item_group,
+						new String[] {},
+						new int[] {},
+						R.layout.track_list_item_child,
+						new String[] {}, 
+						new int[] {});
+			}
+			setListAdapter(mAdapter);
             setTitle(R.string.working_artists);
             getArtistCursor(mAdapter.getQueryHandler(), null);
         } else {
@@ -304,6 +317,7 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+    	Log.d("log", "onOptionsItemSelected");
         Intent intent;
         Cursor cursor;
         switch (item.getItemId()) {
@@ -331,9 +345,7 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         SubMenu sub = menu.addSubMenu(0, ADD_TO_PLAYLIST, 0, R.string.add_to_playlist);
         MusicUtils.makePlaylistMenu(this, sub);
         menu.add(0, DELETE_ITEM, 0, R.string.delete_item);
-        
         ExpandableListContextMenuInfo mi = (ExpandableListContextMenuInfo) menuInfoIn;
-        
         int itemtype = ExpandableListView.getPackedPositionType(mi.packedPosition);
         int gpos = ExpandableListView.getPackedPositionGroup(mi.packedPosition);
         int cpos = ExpandableListView.getPackedPositionChild(mi.packedPosition);
@@ -390,6 +402,7 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+    	Log.d("log", "onContextItemSelected");
         switch (item.getItemId()) {
             case PLAY_SELECTION: {
                 // play everything by the selected artist
@@ -691,7 +704,6 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
                     numalbums, numsongs, unknown);
             
             vh.line2.setText(songs_albums);
-            
             long currentartistid = MusicUtils.getCurrentArtistId();
             long artistid = cursor.getLong(mGroupArtistIdIdx);
             if (currentartistid == artistid && !isexpanded) {
@@ -713,7 +725,6 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
                 displayname = mUnknownAlbum;
             }
             vh.line1.setText(displayname);
-
             int numsongs = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
             int numartistsongs = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST));
 

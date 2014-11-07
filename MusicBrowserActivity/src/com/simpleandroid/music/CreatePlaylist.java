@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -45,23 +46,22 @@ public class CreatePlaylist extends Activity
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.create_playlist);
-        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                                    WindowManager.LayoutParams.WRAP_CONTENT);
-
+        if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(R.layout.create_playlist_white);
+		} else {
+			setContentView(R.layout.create_playlist);
+		}
+		getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         mPrompt = (TextView)findViewById(R.id.prompt);
         mPlaylist = (EditText)findViewById(R.id.playlist);
         mSaveButton = (Button) findViewById(R.id.create);
         mSaveButton.setOnClickListener(mOpenClicked);
-
         ((Button)findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
             }
         });
-        
         String defaultname = icicle != null ? icicle.getString("defaultname") : makePlaylistName();
         if (defaultname == null) {
             finish();

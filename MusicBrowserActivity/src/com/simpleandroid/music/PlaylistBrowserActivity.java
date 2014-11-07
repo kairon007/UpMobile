@@ -19,6 +19,8 @@ package com.simpleandroid.music;
 import java.text.Collator;
 import java.util.ArrayList;
 
+import ru.johnlife.lifetoolsmp3.Util;
+
 import android.app.ListActivity;
 import android.content.AsyncQueryHandler;
 import android.content.BroadcastReceiver;
@@ -136,8 +138,11 @@ public class PlaylistBrowserActivity extends ListActivity
         f.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
-
-        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
+        if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
+		} else {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
+		}
         MusicUtils.updateButtonBar(this, R.id.playlisttab);
         ListView lv = getListView();
         lv.setOnCreateContextMenuListener(this);
@@ -146,13 +151,23 @@ public class PlaylistBrowserActivity extends ListActivity
         mAdapter = (PlaylistListAdapter) getLastNonConfigurationInstance();
         if (mAdapter == null) {
             //Log.i("@@@", "starting query");
-            mAdapter = new PlaylistListAdapter(
-                    getApplication(),
-                    this,
-                    R.layout.track_list_item,
-                    mPlaylistCursor,
-                    new String[] { MediaStore.Audio.Playlists.NAME},
-                    new int[] { android.R.id.text1 });
+        	if (Util.getThemeName(this).equals("AppTheme.White")) {
+	            mAdapter = new PlaylistListAdapter(
+	                    getApplication(),
+	                    this,
+	                    R.layout.track_list_item_white,
+	                    mPlaylistCursor,
+	                    new String[] { MediaStore.Audio.Playlists.NAME},
+	                    new int[] { android.R.id.text1 });
+        	} else {
+        		mAdapter = new PlaylistListAdapter(
+	                    getApplication(),
+	                    this,
+	                    R.layout.track_list_item,
+	                    mPlaylistCursor,
+	                    new String[] { MediaStore.Audio.Playlists.NAME},
+	                    new int[] { android.R.id.text1 });
+        	}
             setListAdapter(mAdapter);
             setTitle(R.string.working_playlists);
             getPlaylistCursor(mAdapter.getQueryHandler(), null);
@@ -602,27 +617,29 @@ public class PlaylistBrowserActivity extends ListActivity
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            
             TextView tv = (TextView) view.findViewById(R.id.line1);
-            
             String name = cursor.getString(mTitleIdx);
             tv.setText(name);
-            
-            long id = cursor.getLong(mIdIdx);
-            
             ImageView iv = (ImageView) view.findViewById(R.id.icon);
-            if (id == RECENTLY_ADDED_PLAYLIST) {
-                iv.setImageResource(R.drawable.ic_mp_playlist_recently_added_list);
-            } else {
-                iv.setImageResource(R.drawable.ic_mp_playlist_list);
-            }
+            long id = cursor.getLong(mIdIdx);
+            if (Util.getThemeName(mActivity).equals("AppTheme.White")) {
+            	if (id == RECENTLY_ADDED_PLAYLIST) {
+					iv.setImageResource(R.drawable.ic_mp_playlist_recently_added_list_white);
+				} else {
+					iv.setImageResource(R.drawable.ic_mp_playlist_list_white);
+				}
+			} else {
+				if (id == RECENTLY_ADDED_PLAYLIST) {
+					iv.setImageResource(R.drawable.ic_mp_playlist_recently_added_list);
+				} else {
+					iv.setImageResource(R.drawable.ic_mp_playlist_list);
+				}
+			}
             ViewGroup.LayoutParams p = iv.getLayoutParams();
             p.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             p.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-
             iv = (ImageView) view.findViewById(R.id.play_indicator);
             iv.setVisibility(View.GONE);
-
             view.findViewById(R.id.line2).setVisibility(View.GONE);
         }
 

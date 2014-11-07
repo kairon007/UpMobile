@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2007 The Android Open Source Project
+<!--
+     Copyright (C) 2007 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,48 +14,54 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
-    <TextView android:id="@+id/prompt"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="@string/create_playlist_create_text_prompt"
-        android:layout_marginTop="8dip"
-        android:layout_marginBottom="8dip"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip">
+    <TextView
+        android:id="@+id/prompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/create_playlist_create_text_prompt" >
     </TextView>
 
-    <EditText android:id="@+id/playlist"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:singleLine="true"
+    <EditText
+        android:id="@+id/playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:inputType="textCapSentences"
-        android:layout_marginBottom="8dip"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip">
+        android:singleLine="true" >
+
         <requestFocus />
     </EditText>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="6dip"
-        android:background="#ffffff" >
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:padding="6dp" >
 
-        <Button android:id="@+id/create"
-            android:layout_width="120dip" android:layout_height="wrap_content" 
-            android:text="@string/create_playlist_create_text"
-            android:layout_alignParentLeft="true" />
+        <Button
+            android:id="@+id/create"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/create_playlist_create_text" />
 
-        <Button android:id="@+id/cancel"
-            android:layout_width="120dip" android:layout_height="wrap_content" 
-            android:text="@string/cancel"
-            android:layout_alignParentRight="true" />
-
-    </RelativeLayout>
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel" />
+    </LinearLayout>
 
 </LinearLayout>
-

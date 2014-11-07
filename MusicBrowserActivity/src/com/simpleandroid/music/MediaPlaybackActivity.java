@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
@@ -101,7 +102,11 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         mAlbumArtHandler = new AlbumArtHandler(mAlbumArtWorker.getLooper());
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.audio_player);
+        if (Util.getThemeName(this).equals("AppTheme.White")){
+        	setContentView(R.layout.audio_player_white);
+        } else {
+        	setContentView(R.layout.audio_player);
+        }
 
         mCurrentTime = (TextView) findViewById(R.id.currenttime);
         mTotalTime = (TextView) findViewById(R.id.totaltime);

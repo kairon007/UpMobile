@@ -18,6 +18,8 @@ package com.simpleandroid.music;
 
 import java.util.Arrays;
 
+import ru.johnlife.lifetoolsmp3.Util;
+
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -107,9 +109,9 @@ public class TrackBrowserActivity extends ListActivity
 
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle icicle)
-    {
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        Log.d("log", "TrackBrowserActivity");
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         Intent intent = getIntent();
         if (intent != null) {
@@ -156,8 +158,11 @@ public class TrackBrowserActivity extends ListActivity
                 MediaStore.Audio.Playlists.Members.AUDIO_ID,
                 MediaStore.Audio.Media.IS_MUSIC
         };
-
-        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
+        if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
+		} else {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
+		}
         mUseLastListPos = MusicUtils.updateButtonBar(this, R.id.songtab);
         mTrackList = getListView();
         mTrackList.setOnCreateContextMenuListener(this);
@@ -182,7 +187,11 @@ public class TrackBrowserActivity extends ListActivity
         mTrackList.post(new Runnable() {
 
             public void run() {
-                setAlbumArtBackground();
+            	if (Util.getThemeName(TrackBrowserActivity.this).equals("AppTheme.White")){
+            		setAlbumArtBackgroundWhite();
+            	} else {
+            		setAlbumArtBackground();
+            	}
             }
         });
 		// load banner ad
@@ -207,16 +216,29 @@ public class TrackBrowserActivity extends ListActivity
 
         if (mAdapter == null) {
             //Log.i("@@@", "starting query");
-            mAdapter = new TrackListAdapter(
-                    getApplication(), // need to use application context to avoid leaks
-                    this,
-                    mEditMode ? R.layout.edit_track_list_item : R.layout.track_list_item,
-                    null, // cursor
-                    new String[] {},
-                    new int[] {},
-                    "nowplaying".equals(mPlaylist),
-                    mPlaylist != null &&
-                    !(mPlaylist.equals("podcasts") || mPlaylist.equals("recentlyadded")));
+        	if (Util.getThemeName(this).equals("AppTheme.White")) {
+	            mAdapter = new TrackListAdapter(
+	                    getApplication(), // need to use application context to avoid leaks
+	                    this,
+	                    mEditMode ? R.layout.edit_track_list_item_white : R.layout.track_list_item_white,
+	                    null, // cursor
+	                    new String[] {},
+	                    new int[] {},
+	                    "nowplaying".equals(mPlaylist),
+	                    mPlaylist != null &&
+	                    !(mPlaylist.equals("podcasts") || mPlaylist.equals("recentlyadded")));
+        	} else {
+        		mAdapter = new TrackListAdapter(
+	                    getApplication(), // need to use application context to avoid leaks
+	                    this,
+	                    mEditMode ? R.layout.edit_track_list_item : R.layout.track_list_item,
+	                    null, // cursor
+	                    new String[] {},
+	                    new int[] {},
+	                    "nowplaying".equals(mPlaylist),
+	                    mPlaylist != null &&
+	                    !(mPlaylist.equals("podcasts") || mPlaylist.equals("recentlyadded")));
+        	}
             setListAdapter(mAdapter);
             setTitle(R.string.working_songs);
             getTrackCursor(mAdapter.getQueryHandler(), null, true);
@@ -447,6 +469,10 @@ public class TrackBrowserActivity extends ListActivity
             }
         }
         mTrackList.setBackgroundColor(0xff000000);
+        mTrackList.setCacheColorHint(0);
+    }
+    
+    private void setAlbumArtBackgroundWhite() {
         mTrackList.setCacheColorHint(0);
     }
 

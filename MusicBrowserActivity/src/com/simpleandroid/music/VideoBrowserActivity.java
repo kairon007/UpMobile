@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -53,13 +54,14 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
     }
 
     public void init() {
-
         // Set the layout for this activity.  You can find it
         // in assets/res/any/layout/media_picker_activity.xml
-        setContentView(Settings.SHOW_BANNER_ON_TOP?R.layout.media_picker_activity_top:R.layout.media_picker_activity);
-
-        MakeCursor();
-
+    	if (Util.getThemeName(this).equals("AppTheme.White")) {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
+		} else {
+			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
+		}
+        makeCursor();
         if (mCursor == null) {
             MusicUtils.displayDatabaseError(this);
             return;
@@ -93,7 +95,7 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
         startActivity(intent);
     }
 
-    private void MakeCursor() {
+    private void makeCursor() {
         String[] cols = new String[] {
                 MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.TITLE,
