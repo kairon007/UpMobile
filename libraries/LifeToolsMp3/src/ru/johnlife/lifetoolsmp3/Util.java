@@ -153,7 +153,7 @@ public final class Util {
 	        return context.getResources().getResourceEntryName(themeResId);
 	    } catch (Exception e) {
 	    	Log.e(Util.class.getSimpleName(), e.getMessage());
-	        return null;
+	        return "";
 	    }
 	}
 	

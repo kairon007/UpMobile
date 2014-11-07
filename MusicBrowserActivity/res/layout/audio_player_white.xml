@@ -147,6 +147,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/audio_player_common" />
+    <include layout="@layout/audio_player_common_white" />
 
 </LinearLayout>

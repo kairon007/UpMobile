@@ -530,7 +530,7 @@ public abstract class OnlineSearchView extends View {
 					.setExpandable(false)
 					.setLine2(song.getArtist())
 					.setId(position)
-					.setIcon(R.drawable.fallback_cover)
+					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : R.drawable.fallback_cover)
 					.setButtonVisible(fullAction ? false : true);
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
@@ -539,7 +539,7 @@ public abstract class OnlineSearchView extends View {
 						if (builder != null && builder.getId() == position) {
 							builder.setIcon(bmp);
 							if (bmp == null) {
-								builder.setIcon(R.drawable.fallback_cover);
+								builder.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : R.drawable.fallback_cover);
 							}
 						}
 					}

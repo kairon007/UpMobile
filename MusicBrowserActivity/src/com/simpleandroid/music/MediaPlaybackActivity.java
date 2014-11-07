@@ -560,7 +560,6 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             SubMenu sub = item.getSubMenu();
             MusicUtils.makePlaylistMenu(this, sub);
         }
-
         KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         menu.setGroupVisible(1, !km.inKeyguardRestrictedInputMode());
 

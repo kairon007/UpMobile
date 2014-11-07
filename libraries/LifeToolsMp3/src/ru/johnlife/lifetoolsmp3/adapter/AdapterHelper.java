@@ -9,6 +9,7 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
 import android.content.res.Resources;
@@ -194,7 +195,9 @@ public class AdapterHelper {
 						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 						Vector<ImageData> pictureList = metadata.getPictureList();
 						if ((pictureList == null) || (pictureList.size() == 0)) {
-							return  BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
+							return  Util.getThemeName(activity).equals("AppTheme.White") ? 
+									BitmapFactory.decodeResource(res, R.drawable.fallback_cover_white) :
+									BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
 						}
 						ImageData imageData = (ImageData) pictureList.get(0);
 						BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -215,7 +218,9 @@ public class AdapterHelper {
 					}
 					catch (Exception e) {
 					}
-					return BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
+					return Util.getThemeName(activity).equals("AppTheme.White") ? 
+							BitmapFactory.decodeResource(res, R.drawable.fallback_cover_white) :
+							BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
 				}
 				
 				@Override

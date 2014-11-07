@@ -22,7 +22,7 @@
 
     <include layout="@layout/sd_error" />
 
-    <include layout="@layout/buttonbar" />
+    <include layout="@layout/buttonbar_white" />
     
     <include layout="@layout/banner"/>
     

@@ -31,6 +31,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -616,7 +617,11 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
 
             Resources r = context.getResources();
             mNowPlayingOverlay = r.getDrawable(R.drawable.indicator_ic_mp_playing_list);
-            mDefaultAlbumIcon = (BitmapDrawable) r.getDrawable(R.drawable.albumart_mp_unknown_list);
+            if (Util.getThemeName(mActivity).equals("AppTheme.White")){
+            	mDefaultAlbumIcon = (BitmapDrawable) r.getDrawable(R.drawable.albumart_mp_unknown_list_white);
+            } else {
+            	mDefaultAlbumIcon = (BitmapDrawable) r.getDrawable(R.drawable.albumart_mp_unknown_list);
+            }
             // no filter or dither, it's a lot faster and we can't tell the difference
             mDefaultAlbumIcon.setFilterBitmap(false);
             mDefaultAlbumIcon.setDither(false);

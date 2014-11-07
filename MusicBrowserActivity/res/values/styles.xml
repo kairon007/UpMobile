@@ -2,9 +2,69 @@
 <resources>
 
     <style name="AppThemeBase.White" parent="android:Theme.Light.NoTitleBar" />
-    
-    <style name="AppTheme.White" parent="AppBaseTheme">
+
+<!--     <style name="AppTheme.White" parent="AppBaseTheme"> -->
+<!--         <item name="android:windowBackground">@color/window_background_light</item> -->
+<!--     </style> -->
+
+	<style name="AppTheme.White" parent="Theme.White_action_bar">
         <item name="android:windowBackground">@color/window_background_light</item>
+    </style>
+
+    <style name="Theme.White_action_bar" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_white_acton_bar</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.White_acton_bar</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.White_acton_bar</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.White_acton_bar</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.White_acton_bar</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Transparent.White_acton_bar</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_white_acton_bar</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_white_acton_bar</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.White_acton_bar</item>
+    </style>
+
+    <style name="ActionBar.Solid.White_acton_bar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:background">@drawable/ab_background_textured_white_acton_bar</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_white_acton_bar</item>
+        <item name="android:backgroundSplit">@drawable/ab_background_textured_white_acton_bar</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.White_acton_bar</item>
+    </style>
+
+    <style name="ActionBar.Transparent.White_acton_bar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_white_acton_bar</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.White_acton_bar</item>
+    </style>
+
+    <style name="PopupMenu.White_acton_bar" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_white_acton_bar</item>
+    </style>
+
+    <style name="DropDownListView.White_acton_bar" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_white_acton_bar</item>
+    </style>
+
+    <style name="ActionBarTabStyle.White_acton_bar" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_white_acton_bar</item>
+    </style>
+
+    <style name="DropDownNav.White_acton_bar" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_white_acton_bar</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_white_acton_bar</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_white_acton_bar</item>
+    </style>
+
+    <style name="ProgressBar.White_acton_bar" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_white_acton_bar</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.White_acton_bar" parent="@android:style/Widget.Holo.Light.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_white_acton_bar</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.White_acton_bar.Widget" parent="@android:style/Theme.Holo">
+        <item name="android:popupMenuStyle">@style/PopupMenu.White_acton_bar</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.White_acton_bar</item>
     </style>
 
 </resources>
