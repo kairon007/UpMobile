@@ -94,7 +94,6 @@ public class AlbumBrowserActivity extends ListActivity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         mToken = MusicUtils.bindToService(this, this);
-
         IntentFilter f = new IntentFilter();
         f.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
         f.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
@@ -110,7 +109,7 @@ public class AlbumBrowserActivity extends ListActivity
         ListView lv = getListView();
         lv.setOnCreateContextMenuListener(this);
         lv.setTextFilterEnabled(true);
-
+        lv.setCacheColorHint(0);
         mAdapter = (AlbumListAdapter) getLastNonConfigurationInstance();
         if (mAdapter == null) {
             //Log.i("@@@", "starting query");
@@ -213,14 +212,15 @@ public class AlbumBrowserActivity extends ListActivity
         f.addAction(MediaPlaybackService.QUEUE_CHANGED);
         registerReceiver(mTrackListListener, f);
         mTrackListListener.onReceive(null, null);
-
         MusicUtils.setSpinnerState(this);
     }
 
     private BroadcastReceiver mTrackListListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            getListView().invalidateViews();
+        	ListView lv = getListView();
+        	lv.setCacheColorHint(0);
+            lv.invalidateViews();
             MusicUtils.updateNowPlaying(AlbumBrowserActivity.this);
         }
     };
@@ -267,7 +267,9 @@ public class AlbumBrowserActivity extends ListActivity
 
         // restore previous position
         if (mLastListPosCourse >= 0) {
-            getListView().setSelectionFromTop(mLastListPosCourse, mLastListPosFine);
+        	ListView lv = getListView();
+        	lv.setCacheColorHint(0);
+            lv.setSelectionFromTop(mLastListPosCourse, mLastListPosFine);
             mLastListPosCourse = -1;
         }
 

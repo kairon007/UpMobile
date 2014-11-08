@@ -2,6 +2,7 @@ package ru.johnlife.lifetoolsmp3.ui.dialog;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,7 +36,11 @@ public class MP3Editor {
 
 	public View getView() {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		this.view = inflater.inflate(R.layout.editor_dialog, null);
+		if (Util.getThemeName(context).equals("AppTheme.White")) {
+			this.view = inflater.inflate(R.layout.editor_dialog_white, null);
+		} else {
+			this.view = inflater.inflate(R.layout.editor_dialog, null);
+		}
 		init();
 		etArtistName.setText(newArtistName);
 		etSongTitle.setText(newSongTitle);

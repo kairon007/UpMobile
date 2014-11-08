@@ -103,6 +103,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:textSize="18sp"
+        android:cacheColorHint="@android:color/transparent"
         android:drawSelectorOnTop="false"
         android:fastScrollEnabled="true"
         android:indicatorLeft="8dip"

@@ -869,7 +869,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		stopSystemPlayer(getContext());
 		AlertDialog.Builder b;
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB || !isWhiteTheme(getContext())) {
 			 b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		} else {
 			 b = new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT).setView(player.getView());

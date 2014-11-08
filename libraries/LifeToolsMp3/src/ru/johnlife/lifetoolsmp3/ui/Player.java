@@ -212,7 +212,12 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
 		}
-		final View lyricsView = inflater.inflate(R.layout.lyrics_view, null);
+		final View lyricsView;
+		if (Util.getThemeName(view.getContext()).equals("AppTheme.White")) {
+			lyricsView = inflater.inflate(R.layout.lyrics_view_white, null);
+		} else {
+			lyricsView = inflater.inflate(R.layout.lyrics_view, null);
+		}
 		AlertDialog.Builder b = new Builder(view.getContext());
 		b.setView(lyricsView);
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="8dp" >
+
+    <LinearLayout
+        android:id="@+id/editor_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/layout_divider_white"
+        android:orientation="vertical"
+        android:showDividers="middle" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:text="@string/edit_mp3"
+                android:textSize="@dimen/text_title_size" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/edit_mp3_title"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+            <EditText
+                android:id="@+id/editTextTitle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:textColor="@android:color/black"
+                android:layout_gravity="bottom"
+                android:inputType="textNoSuggestions"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/edit_mp3_artist"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+            <EditText
+                android:id="@+id/editTextArtist"
+                android:layout_width="match_parent"
+                android:textColor="@android:color/black"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:inputType="textNoSuggestions"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/edit_mp3_album"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+            <EditText
+                android:id="@+id/editTextAlbum"
+                android:layout_width="match_parent"
+                android:textColor="@android:color/black"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:inputType="textNoSuggestions"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <CheckBox
+                    android:id="@+id/isShowCover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:checked="true"
+                    android:textSize="@dimen/dialog_default_text_size" />
+
+                <TextView
+                    android:id="@+id/text_check_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:paddingLeft="8dp"
+                    android:text="@string/edit_mp3_use_album_cover"
+                    android:textSize="@dimen/dialog_default_text_size" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

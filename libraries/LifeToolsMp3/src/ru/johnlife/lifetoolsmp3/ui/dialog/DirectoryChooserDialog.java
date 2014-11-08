@@ -9,6 +9,7 @@ import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -200,7 +201,12 @@ public class DirectoryChooserDialog {
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
 		AlertDialog.Builder dialogBuilder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View contentView = inflater.inflate(R.layout.dir_chooser_dialog, null);
+		View contentView;
+		if(Util.getThemeName(m_context).equals("AppTheme.White")) {
+			contentView = inflater.inflate(R.layout.dir_chooser_dialog_white, null);
+		} else {
+			contentView = inflater.inflate(R.layout.dir_chooser_dialog, null);
+		}
 		titleText = (TextView) contentView.findViewById(R.id.directoryText);
 		lvContent = (ListView) contentView.findViewById(R.id.lvPath);
 		titleText.setText(title);
@@ -264,8 +270,12 @@ public class DirectoryChooserDialog {
 	public void createNewDirDialog(String name) {
 		SongArrayHolder.getInstance().setIsNewDirectoryOpened(true);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.new_folder_dialog, null);
-
+		View view;
+		if (Util.getThemeName(m_context).equals("AppTheme.White")){
+			view = inflater.inflate(R.layout.new_folder_dialog_white, null);
+		} else {
+			view = inflater.inflate(R.layout.new_folder_dialog, null);
+		}
 		final EditText input = (EditText) view.findViewById(R.id.etNewFolder);
 		input.addTextChangedListener(new CustomWatcher(input));
 		if (null != name) {
@@ -340,8 +350,13 @@ public class DirectoryChooserDialog {
 					tv.getLayoutParams().width = LayoutParams.MATCH_PARENT;
 					tv.setGravity(Gravity.CENTER_VERTICAL);
 					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-						int white = Color.WHITE;
-						tv.setTextColor(white);
+						if (Util.getThemeName(m_context).equals("AppTheme.White")) {
+							int white = Color.BLACK;
+							tv.setTextColor(white);
+						} else {
+							int white = Color.WHITE;
+							tv.setTextColor(white);
+						}
 					}
 					tv.setTextSize(16f);
 					tv.setEllipsize(null);
