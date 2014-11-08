@@ -22,7 +22,7 @@
 
     <include layout="@layout/sd_error" />
 
-    <include layout="@layout/buttonbar" />
+    <include layout="@layout/buttonbar_white" />
 
     <com.simpleandroid.music.TouchInterceptor
         android:id="@android:id/list"

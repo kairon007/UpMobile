@@ -23,7 +23,7 @@
 
     <include layout="@layout/sd_error" />
 
-    <include layout="@layout/buttonbar" />
+    <include layout="@layout/buttonbar_white" />
     
 	<FrameLayout
 		android:id="@+id/search"

@@ -16,6 +16,7 @@
 
 package com.simpleandroid.music;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -28,6 +29,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -409,7 +411,11 @@ implements MusicUtils.Defs, ServiceConnection
                 tv2.setText(songs_albums);
             
             } else if (mimetype.equals("album")) {
-                iv.setImageResource(R.drawable.albumart_mp_unknown_list);
+            	 if (Util.getThemeName(mActivity).equals("AppTheme.White")){
+            		iv.setImageResource(R.drawable.albumart_mp_unknown_list_white);
+                 } else {
+                	iv.setImageResource(R.drawable.albumart_mp_unknown_list);
+                 }
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(
                         MediaStore.Audio.Albums.ALBUM));
                 String displayname = name;

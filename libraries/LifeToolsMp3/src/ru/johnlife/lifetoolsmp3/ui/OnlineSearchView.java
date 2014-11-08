@@ -47,6 +47,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Environment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -530,7 +531,7 @@ public abstract class OnlineSearchView extends View {
 					.setExpandable(false)
 					.setLine2(song.getArtist())
 					.setId(position)
-					.setIcon(R.drawable.fallback_cover)
+					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : R.drawable.fallback_cover)
 					.setButtonVisible(fullAction ? false : true);
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
@@ -539,7 +540,7 @@ public abstract class OnlineSearchView extends View {
 						if (builder != null && builder.getId() == position) {
 							builder.setIcon(bmp);
 							if (bmp == null) {
-								builder.setIcon(R.drawable.fallback_cover);
+								builder.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : R.drawable.fallback_cover);
 							}
 						}
 					}
@@ -867,7 +868,12 @@ public abstract class OnlineSearchView extends View {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 		stopSystemPlayer(getContext());
-		AlertDialog.Builder b = new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT).setView(player.getView());
+		AlertDialog.Builder b;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			 b = new AlertDialog.Builder(getContext()).setView(player.getView());
+		} else {
+			 b = new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT).setView(player.getView());
+		}
 		b.setNegativeButton(R.string.download_dialog_cancel, new DialogInterface.OnClickListener() {
 
 			@Override
