@@ -190,4 +190,9 @@ public class MP3Editor {
 	public String[] getStrings() {
 		return new String[] {newArtistName, newSongTitle, newAlbumTitle};
 	}
+	
+	public void disableChekBox() {
+		checkBox.setClickable(false);
+		checkBox.setEnabled(false);
+	}
 }

@@ -281,6 +281,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		View v = editor.getView();
 		final boolean temp = SongArrayHolder.getInstance().isCoverEnabled();
 		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(v);
+		if (null == coverBitmap) {
+			editor.disableChekBox();
+		}
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override

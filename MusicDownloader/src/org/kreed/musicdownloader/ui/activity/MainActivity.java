@@ -618,10 +618,13 @@ public class MainActivity extends Activity {
 			editor.setStrings(filds);
 		}
 		editor.setSearchView(false);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		if (forse) {
 			editor.setUseCover(useCover);
 		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
+		if (null == music.getSongBitmap()) {
+			editor.disableChekBox();
+		}
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
