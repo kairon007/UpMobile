@@ -3,6 +3,7 @@ package org.kreed.musicdownloader.engines.task;
 import java.io.File;
 
 import org.kreed.musicdownloader.DBHelper;
+import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
@@ -10,9 +11,12 @@ import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
 public class DownloadListener extends DownloadClickListener {
 
@@ -29,6 +33,15 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected void prepare(File src, RemoteSong song, String pathToFile) {
+		((Activity)context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				String chuck = context.getString(R.string.download_finished);
+				String message = chuck + " " + songArtist + " - " +songTitle;
+				Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+			}
+		});
 		MusicData data = new MusicData();
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());

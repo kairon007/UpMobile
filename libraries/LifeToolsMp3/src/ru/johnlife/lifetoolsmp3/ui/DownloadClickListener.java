@@ -189,10 +189,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	/**
 	 * @param downloadId - id of download
-	 * @param  canceleDownload  - this is callback then use for cancel downnload (use only for below 11 api).  
+	 * @param  canceledDownload  - this is callback then use for cancel downnload (use only for below 11 api).  
 	 *  If version above 11 insert null
 	 */
-	public CoverReadyListener notifyStartDownload(long downloadId, CanceledCallback canceleDownload) {
+	public CoverReadyListener notifyStartDownload(long downloadId, CanceledCallback canceledDownload) {
 		return null;
 	}
 	
@@ -205,10 +205,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 			@Override
 			public void run() {
-				String failedSong = context.getResources().getString(R.string.downloads_failed);
+				String failedSong = context.getResources().getString(R.string.download_failed);
 				String title = song.getArtist() + " - " + song.getTitle();
 				Toast.makeText(context, failedSong + " - " + title, Toast.LENGTH_SHORT).show();
-				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 			}
 		});
 	}
@@ -308,6 +307,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					src = new File(path);
 					if (!setMetadataToFile(path, src, useCover)) {
 						setFileUri(currentDownloadId, src.getAbsolutePath());
+						DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 						this.cancel();
 					}
 					setFileUri(currentDownloadId, src.getAbsolutePath());
@@ -349,7 +349,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
 		}
 		if (null == src_set) {
-			DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 			notifyMediascanner(song, path);
 			return false;
 		}
@@ -425,11 +424,20 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private void sendNotification(int progress, boolean isStop) {
 			RemoteViews notificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
 			notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-			Notification notification;
+			Notification notification = null;
 			if (!isStop) {
 				notification = new Notification(android.R.drawable.stat_sys_download, notificationTitle, Calendar.getInstance().getTimeInMillis());
+			} else if (progress < 100 && isStop && !interrupted){
+				String message = context.getString(R.string.download_failed);
+				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
+			} else if (progress < 100 && isStop && interrupted) {
+				String message = context.getString(R.string.download_canceled);
+				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
 			} else {
-				notification = new Notification(android.R.drawable.stat_notify_error, "cancel of download", Calendar.getInstance().getTimeInMillis());
+				String message = context.getString(R.string.download_finished);
+				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
 			}
 			Intent intent = new Intent();
 			PendingIntent pend = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -513,6 +521,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				return;
 			} finally {
 				try {
+					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 					output.close();
 					input.close();
 					buffer.close();

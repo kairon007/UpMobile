@@ -41,8 +41,6 @@ THE SOFTWARE.
     <!--  -->
 
     <string name="download">Download</string>
-    <string name="download_started">Download started for %s</string>
-    <string name="download_error">Please wait while song loads.</string>
     <string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
     <string name="fileName_unknown_mp3">unknown</string>
     <string name="delete_song">Delete song</string>

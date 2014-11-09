@@ -28,13 +28,15 @@
     <string name="loading_song_details">Loading song details...</string>
     <string name="please_wait">Please Wait...</string>
     -->
-        <string name="download_started">Download started for %s</string>
+    <string name="download_failed">Download is failed</string>
+    <string name="download_finished">Download is finished</string>
+    <string name="download_started">Download started for </string>
 	<string name="download_error">Please wait while song loads.</string>
+	<string name="download_canceled">Download is canceled</string>	
     <string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
-     <string name="no_wi_fi">No Wi-Fi connection</string>
+    <string name="no_wi_fi">No Wi-Fi connection</string>
 	<string name="expand">Expand</string>
 	<string name="new_folder_dialog_title">New folder name</string>
-	<string name="downloads_failed">Download failed</string>
 	<string name="error_getting_url_songs">Error getting url songs.</string>
-	<string name="turn_on_dm">Please turn on Download Manager on your device to download the song.</string>				
+	<string name="turn_on_dm">Please turn on Download Manager on your device to download the song.</string>
 </resources>
