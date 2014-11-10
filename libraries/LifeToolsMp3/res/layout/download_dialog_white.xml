@@ -27,6 +27,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="marquee"
+                android:textColor="@android:color/black"
                 android:gravity="left|center_vertical"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:maxLines="1"
