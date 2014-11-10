@@ -245,11 +245,6 @@ public abstract class OnlineSearchView extends View {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					if (Util.getThemeName(getContext()).equals("AppTheme.White")) {
-						((TextView)parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.black));
-					} else {
-						((TextView)parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.white));
-					}
 					keyEngines = (String) adapter.getItem(position);
 					sPref = context.getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
 					SharedPreferences.Editor editor = sPref.edit();
@@ -278,7 +273,11 @@ public abstract class OnlineSearchView extends View {
 						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine8());
 						keyEngines = getTitleSearchEngine8();
 					}
-					
+					if (Util.getThemeName(getContext()).equals("AppTheme.White")) {
+						((TextView) parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.black));
+					} else {
+						((TextView) parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.white));
+					}
 					editor.commit();
 				}
 
