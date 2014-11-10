@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -66,7 +67,7 @@ public class SearchView  extends OnlineSearchView {
 			if (!directory.exists())
 				activity.setFileObserver();
 			final DownloadListener listener = new DownloadListener(getContext(), song, parentAdapter);
-			final int id = song.getArtist().hashCode() + song.getTitle().hashCode();
+			final int id = (int)(System.currentTimeMillis()%(Integer.MAX_VALUE-1));
 			listener.notifyStartDownload(id, null);
 			song.getDownloadUrl(new DownloadUrlListener() {
 				

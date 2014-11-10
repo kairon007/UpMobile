@@ -33,15 +33,6 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected void prepare(File src, RemoteSong song, String pathToFile) {
-		((Activity)context).runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				String chuck = context.getString(R.string.download_finished);
-				String message = chuck + " " + songArtist + " - " +songTitle;
-				Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-			}
-		});
 		MusicData data = new MusicData();
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());

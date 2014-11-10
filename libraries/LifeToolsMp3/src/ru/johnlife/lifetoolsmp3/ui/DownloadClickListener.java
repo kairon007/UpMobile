@@ -168,7 +168,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			if (!isUpdated) {
 				song.setDownloaderListener(notifyStartDownload(currentDownloadId, null));
 			}
-			Toast.makeText(context, String.format(context.getString(R.string.download_started), sb), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, context.getString(R.string.download_started) +" "+sb, Toast.LENGTH_SHORT).show();
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
 		}
