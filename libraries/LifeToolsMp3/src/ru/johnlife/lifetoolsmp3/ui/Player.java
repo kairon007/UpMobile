@@ -73,6 +73,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
 	private boolean isWhiteTheme;
+	private View editorView;
+	private AlertDialog id3Dialog;
+	private MP3Editor editor;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -275,7 +278,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void createId3dialog(String[] fields) {
 		String[] arrayField = { artist, title, "" };
-		final MP3Editor editor = new MP3Editor(view.getContext());
+		editor = new MP3Editor(view.getContext());
 		if (fields == null) {
 			editor.setStrings(arrayField);
 			SongArrayHolder.getInstance().setID3DialogOpened(true, arrayField);
@@ -283,9 +286,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			editor.setStrings(fields);
 			SongArrayHolder.getInstance().setID3DialogOpened(true, fields);
 		}
-		View v = editor.getView();
+		editorView = editor.getView();
 		final boolean temp = SongArrayHolder.getInstance().isCoverEnabled();
-		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(v);
+		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editorView);
 		if (null == coverBitmap) {
 			editor.disableChekBox();
 		}
@@ -313,10 +316,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 				cancelMP3editor(temp);
 			}
 		});
-		AlertDialog alertDialog = builder.create();
-		alertDialog.setOnShowListener(dialogShowListener);
-		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		alertDialog.show();
+		id3Dialog = builder.create();
+		id3Dialog.setOnShowListener(dialogShowListener);
+		id3Dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		id3Dialog.show();
 	}
 
 	private void cancelMP3editor(boolean temp) {
@@ -359,6 +362,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onBitmapReady(Bitmap bmp) {
+				if (id3Dialog !=null && id3Dialog.isShowing()) {
+					editor.enableChekBox();
+					editorView.invalidate();
+				}
 				setCover(bmp);
 			}
 		});
@@ -574,5 +581,4 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			return true;
 		}
 	};
-
 }

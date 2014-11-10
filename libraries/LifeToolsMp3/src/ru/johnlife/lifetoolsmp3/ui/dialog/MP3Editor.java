@@ -200,4 +200,9 @@ public class MP3Editor {
 		checkBox.setClickable(false);
 		checkBox.setEnabled(false);
 	}
+	
+	public void enableChekBox() {
+		checkBox.setClickable(true);
+		checkBox.setEnabled(true);
+	}
 }
