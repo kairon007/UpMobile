@@ -55,15 +55,6 @@ public class SearchView  extends OnlineSearchView {
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(Util.getFormatedStrDuration(song.getDuration()));
 		if (view.getId() == R.id.btnDownload) {
-			activity.runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					String chuck = activity.getString(R.string.download_started);
-					String message = chuck + " " + song.artist + " " + song.title;
-					Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
-				}
-			});
 			if (!directory.exists())
 				activity.setFileObserver();
 			final DownloadListener listener = new DownloadListener(getContext(), song, parentAdapter);
