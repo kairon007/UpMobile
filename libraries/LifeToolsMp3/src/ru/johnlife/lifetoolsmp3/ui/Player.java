@@ -76,6 +76,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private View editorView;
 	private AlertDialog id3Dialog;
 	private MP3Editor editor;
+	private boolean isDefaultCover = true;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -289,7 +290,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		editorView = editor.getView();
 		final boolean temp = SongArrayHolder.getInstance().isCoverEnabled();
 		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editorView);
-		if (null == coverBitmap) {
+		if (isDefaultCover) {
 			editor.disableChekBox();
 		}
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -352,8 +353,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		coverProgress.setVisibility(View.GONE);
 		coverProgressVisible = false;
 		if (null != bmp) {
+			isDefaultCover = false;
 			coverImage.setImageBitmap(bmp);
 			coverBitmap = bmp;
+			if (id3Dialog !=null && id3Dialog.isShowing()) {
+				editor.enableChekBox();
+				editorView.invalidate();
+			}
 		}
 	}
 
@@ -362,10 +368,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onBitmapReady(Bitmap bmp) {
-				if (id3Dialog !=null && id3Dialog.isShowing()) {
-					editor.enableChekBox();
-					editorView.invalidate();
-				}
 				setCover(bmp);
 			}
 		});
