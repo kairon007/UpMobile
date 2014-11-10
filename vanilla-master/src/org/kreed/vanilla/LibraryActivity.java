@@ -1154,9 +1154,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			updateLimiterViews();
 			break;
 		case MENU_EDIT_MP3_TAGS:
+			boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			editor = new MP3Editor(this);
+			editor = new MP3Editor(this, isWhiteTheme);
 			createEditID3Dialog(type, id, editor);
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
@@ -1202,7 +1203,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private void createEditID3Dialog(int type, long id, MP3Editor view) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		if (null == view) {
-			editor = new MP3Editor(this);
+			boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
+			editor = new MP3Editor(this, isWhiteTheme);
 		}
 		String[] filds = { "", "", "" };
 		MusicMetadata metadata = null;

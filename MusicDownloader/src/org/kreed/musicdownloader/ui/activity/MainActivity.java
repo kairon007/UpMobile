@@ -607,7 +607,8 @@ public class MainActivity extends Activity {
 
 	@SuppressLint("NewApi")
 	public void showEditDialog(boolean forse) {
-		editor = new MP3Editor(this);
+		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
+		editor = new MP3Editor(this, isWhiteTheme);
 		showDialog = true;
 		if (null != mStrings) {
 			String[] filds = mStrings.toArray(new String[mStrings.size()]);

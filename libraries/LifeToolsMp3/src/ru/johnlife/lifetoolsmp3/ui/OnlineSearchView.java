@@ -26,6 +26,7 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -230,7 +231,7 @@ public abstract class OnlineSearchView extends View {
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				adapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
 			} else {
-				adapter = new CustomSpinnerAdapter(getContext(), 0, list);
+				adapter = new CustomSpinnerAdapter(getContext(), 0, list, isWhiteTheme(getContext()));
 			}
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spEnginesChoiser.setAdapter(adapter);
@@ -246,6 +247,11 @@ public abstract class OnlineSearchView extends View {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					if (isWhiteTheme(context)) {
+						((TextView)parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.black));
+					} else {
+						((TextView)parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.white));
+					}
 					keyEngines = (String) adapter.getItem(position);
 					sPref = context.getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
 					SharedPreferences.Editor editor = sPref.edit();
@@ -863,12 +869,7 @@ public abstract class OnlineSearchView extends View {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 		stopSystemPlayer(getContext());
-		AlertDialog.Builder b;
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB || !isWhiteTheme(getContext())) {
-			 b = new AlertDialog.Builder(getContext()).setView(player.getView());
-		} else {
-			 b = new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT).setView(player.getView());
-		}
+		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(getContext(), isWhiteTheme(getContext())).setView(player.getView());
 		b.setNegativeButton(R.string.download_dialog_cancel, new DialogInterface.OnClickListener() {
 
 			@Override

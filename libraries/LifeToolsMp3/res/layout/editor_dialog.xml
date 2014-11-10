@@ -18,6 +18,7 @@
             android:layout_height="48dp" >
 
             <TextView
+                android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -30,10 +31,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="8dp"
             android:visibility="visible" >
 
             <TextView
+                android:id="@+id/title_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -48,9 +49,11 @@
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
                 android:inputType="textNoSuggestions"
+                android:textCursorDrawable="@null"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
+                android:id="@+id/title_artist"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -65,9 +68,11 @@
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
                 android:inputType="textNoSuggestions"
+                android:textCursorDrawable="@null"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
+                android:id="@+id/title_album"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -82,6 +87,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
                 android:inputType="textNoSuggestions"
+                android:textCursorDrawable="@null"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <LinearLayout
@@ -102,7 +108,6 @@
                     android:paddingLeft="8dp"
                     android:text="@string/edit_mp3_use_album_cover"
                     android:textSize="@dimen/dialog_default_text_size" />
-
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

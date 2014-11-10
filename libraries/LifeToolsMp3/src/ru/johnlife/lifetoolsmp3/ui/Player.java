@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
 import java.util.HashMap;
+
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -8,11 +9,11 @@ import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListe
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -217,12 +218,12 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			return;
 		}
 		final View lyricsView;
-		if (Util.getThemeName(view.getContext()).equals("AppTheme.White")) {
+		if (isWhiteTheme) {
 			lyricsView = inflater.inflate(R.layout.lyrics_view_white, null);
 		} else {
 			lyricsView = inflater.inflate(R.layout.lyrics_view, null);
 		}
-		AlertDialog.Builder b = new Builder(view.getContext());
+		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme);
 		b.setView(lyricsView);
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 			@Override
@@ -279,7 +280,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void createId3dialog(String[] fields) {
 		String[] arrayField = { artist, title, "" };
-		editor = new MP3Editor(view.getContext());
+		editor = new MP3Editor(view.getContext(), isWhiteTheme);
 		if (fields == null) {
 			editor.setStrings(arrayField);
 			SongArrayHolder.getInstance().setID3DialogOpened(true, arrayField);
@@ -289,7 +290,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		}
 		editorView = editor.getView();
 		final boolean temp = SongArrayHolder.getInstance().isCoverEnabled();
-		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editorView);
+		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme).setView(editorView);
 		if (isDefaultCover) {
 			editor.disableChekBox();
 		}
