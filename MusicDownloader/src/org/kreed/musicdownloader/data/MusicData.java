@@ -382,12 +382,14 @@ public class MusicData {
 			return false;
 		}
 		MusicData another = (MusicData) o;
-		if (!this.songArtist.equals(another.songArtist)) {
-			return false;
-		}
-		if (!this.songTitle.equals(another.songTitle)) {
-			return false;
-		}
+		if (this.songArtist != null && another.songArtist != null)
+			if (!this.songArtist.equals(another.songArtist)) {
+				return false;
+			}
+		if (this.songTitle != null && another.songTitle != null)
+			if (!this.songTitle.equals(another.songTitle)) {
+				return false;
+			}
 		if (this.hashCode() != o.hashCode()){
 			return false;
 		}
