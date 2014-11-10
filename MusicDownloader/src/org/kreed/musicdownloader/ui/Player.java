@@ -1,5 +1,6 @@
 package org.kreed.musicdownloader.ui;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener, OnPreparedListener, OnCompletionListener {
 
@@ -278,6 +280,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		prepared = true;
 		mediaPlayer = mp;
 		mp.start();
+		if (data.getFileUri().contains("http")) {
+			Toast.makeText(view.getContext(), MessageFormat.format("{0} - {1} is playing", artist, title), Toast.LENGTH_SHORT).show();
+		}
 		setActivatedButton(true);
 	}
 	

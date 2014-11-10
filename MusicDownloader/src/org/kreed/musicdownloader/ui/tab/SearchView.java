@@ -141,7 +141,6 @@ public class SearchView  extends OnlineSearchView {
 			public void run() {
 				data.setFileUri(path);
 				ArrayList<String[]> headers = song.getHeaders();
-				Toast.makeText(activity, org.kreed.musicdownloader.R.string.toast_playing, Toast.LENGTH_SHORT).show();
 				((MainActivity) activity).play(headers, data);
 			}
 		});
