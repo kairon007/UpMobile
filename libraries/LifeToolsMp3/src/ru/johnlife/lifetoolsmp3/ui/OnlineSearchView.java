@@ -229,8 +229,9 @@ public abstract class OnlineSearchView extends View {
 
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				adapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
-			} else
+			} else {
 				adapter = new CustomSpinnerAdapter(getContext(), 0, list);
+			}
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spEnginesChoiser.setAdapter(adapter);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -272,11 +273,6 @@ public abstract class OnlineSearchView extends View {
 					} else if (keyEngines.equals(getTitleSearchEngine8())) {
 						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine8());
 						keyEngines = getTitleSearchEngine8();
-					}
-					if (Util.getThemeName(getContext()).equals("AppTheme.White")) {
-						((TextView) parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.black));
-					} else {
-						((TextView) parent.getChildAt(0)).setTextColor(getContext().getResources().getColor(android.R.color.white));
 					}
 					editor.commit();
 				}
