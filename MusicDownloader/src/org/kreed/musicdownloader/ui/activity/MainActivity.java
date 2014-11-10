@@ -572,7 +572,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onCancelled() {
 			Toast.makeText(getApplicationContext(), "File " + music.getSongArtist() + " - " + music.getSongTitle() + " do not exists", Toast.LENGTH_LONG).show();
-			mPagerAdapter.removeDeletedData(music.getFileUri());
+			mPagerAdapter.removeMusicData(music);
 			super.onCancelled();
 		}
 
@@ -594,7 +594,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			Toast.makeText(getApplicationContext(), music.getSongArtist() + " - " + music.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
-			mPagerAdapter.removeDeletedData(music.getFileUri());
+			mPagerAdapter.removeMusicData(music);
 			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(music.getFileUri())) {
 				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
@@ -726,7 +726,9 @@ public class MainActivity extends Activity {
 				switch (event) {
 				case FileObserver.DELETE:
 				case FileObserver.MOVED_FROM:
-					mPagerAdapter.removeDeletedData(filePath);
+					File f = new File(filePath);
+					MusicData data = new MusicData(f);
+					mPagerAdapter.removeMusicData(data);
 					break;
 				case FileObserver.DELETE_SELF:
 					mPagerAdapter.cleanLibrary();

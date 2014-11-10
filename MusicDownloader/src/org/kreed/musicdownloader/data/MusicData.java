@@ -14,6 +14,7 @@ import org.kreed.musicdownloader.DBHelper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 public class MusicData {
 
@@ -22,6 +23,10 @@ public class MusicData {
 	private String songTitle;
 	private String songDuration;
 	private long downloadProgress = -1;
+	/**
+	 * use only for the same song
+	 */
+	private int index = 0;
 	private String songGenre;
 	private String songAlbum;
 	private String fileUri;
@@ -64,14 +69,17 @@ public class MusicData {
 				if (metadata.isEmpty()) {
 					String nameFile = musicFile.getName().split(".mp3")[0];
 					String[] nameFileArray;
-					if (!nameFile.contains("-<")) {
+					if (!nameFile.contains("-[")) {
 						nameFileArray = nameFile.split(" - ");
 					} else {
-						nameFileArray = nameFile.split("-<")[0].split(" - ");
+						String[] buf = nameFile.split("-[");
+						nameFileArray = buf[0].split(" - ");
+						index = Integer.valueOf(buf[1].split("]")[0]);
 					}
 					if (nameFileArray.length > 0) {
 						songTitle = nameFileArray[1];
 						songArtist = nameFileArray[0];
+						
 					} else {
 						songTitle = MP3Editor.UNKNOWN;
 						songArtist = MP3Editor.UNKNOWN;
@@ -230,7 +238,7 @@ public class MusicData {
 	private void renameBoundFile() {
 		File file = new File(fileUri);
 		String strCompare = songArtist + " - "  +songTitle;
-		int index = Util.existFile(file.getParent(), strCompare);
+		index = Util.existFile(file.getParent(), strCompare);
 		File newFile = null;
 		MusicMetadataSet src_set = null;
 		try {
@@ -374,20 +382,28 @@ public class MusicData {
 			return false;
 		}
 		MusicData another = (MusicData) o;
-		if (this.songArtist!=null && another.songArtist!=null)
-			if (!this.songArtist.equals(another.songArtist)) {
-				return false;
+		if (!this.songArtist.equals(another.songArtist)) {
+			return false;
 		}
-		if (this.songTitle!=null && another.songTitle!=null)
-			if (!this.songTitle.equals(another.songTitle)) {
-				return false;
+		if (!this.songTitle.equals(another.songTitle)) {
+			return false;
+		}
+		if (this.hashCode() != o.hashCode()){
+			return false;
 		}
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		int hash = songArtist.hashCode() * songTitle.hashCode();
+		if (null != fileUri && !fileUri.equals("")) {
+			hash *= fileUri.hashCode();
+		}
+		if (index > 0) {
+			hash *= index;
+		}
+		return hash;
 	}
 
 }
