@@ -72,7 +72,8 @@
         android:label="@string/musicbrowserlabel"
         android:largeHeap="true"
         android:taskAffinity="android.task.music"
-        android:theme="@style/AppTheme.White" >
+        android:theme="@style/AppTheme.White">
+<!--         android:theme="@style/AppTheme" -->
 	<!-- AppTheme to enable white theme -->
         
         <meta-data
@@ -124,7 +125,6 @@
             android:label="@string/mediaplaybacklabel"
             android:launchMode="singleTask"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
