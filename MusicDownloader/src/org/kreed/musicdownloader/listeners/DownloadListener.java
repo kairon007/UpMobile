@@ -1,6 +1,7 @@
 package org.kreed.musicdownloader.listeners;
 
 import java.io.File;
+import java.util.Random;
 
 import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.R;
@@ -23,6 +24,7 @@ public class DownloadListener extends DownloadClickListener {
 	private DownloadsTab downloadsTab;
 	private ViewPagerAdapter adapter;
 	private Context context;
+	private Random rand = new Random(System.currentTimeMillis());
 
 	public DownloadListener(Context context, RemoteSong song, ViewPagerAdapter adapter) {
 		super(context, song, null);
@@ -57,15 +59,23 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	public CoverReadyListener notifyStartDownload(long downloadId, CanceledCallback cancelDownload) {
+	protected void setCanceledListener(long id, CanceledCallback callback) {
+		downloadsTab.insertTag(callback, id);
+	} 
+	
+	@Override
+	public CoverReadyListener notifyStartDownload(long downloadId) {
 		final MusicData downloadItem = new MusicData();
 		downloadItem.setSongArtist(songArtist);
 		downloadItem.setSongTitle(songTitle);
 		downloadItem.setSongDuration(String.valueOf(duration));
 		downloadItem.setDownloadId(downloadId);
 		downloadItem.setDownloadProgress(0);
-		downloadItem.setTag(cancelDownload);
 		downloadsTab.insertData(downloadItem);
+		/**
+		 * while song is loaded, fileUri is ID for DownloadClickListener
+		 */
+		downloadItem.setFileUri(url+"__"+rand.nextInt());
 		return new CoverReadyListener() {
 			
 			@Override

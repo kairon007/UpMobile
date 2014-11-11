@@ -265,7 +265,7 @@ public class MusicData {
 	}
 
 	public boolean isDownloaded() {
-		if (null != fileUri || downloadProgress == -1.0 || downloadProgress > 99.0) {
+		if (downloadProgress == -1.0 || downloadProgress > 99.0) {
 			return true;
 		}
 		return false;
@@ -398,7 +398,13 @@ public class MusicData {
 
 	@Override
 	public int hashCode() {
-		int hash = songArtist.hashCode() * songTitle.hashCode();
+		int hash = 1;
+		if (songArtist != null) {
+			hash *= songArtist.hashCode();
+		}
+		if (songTitle != null) {
+			hash *= songTitle.hashCode();
+		}
 		if (null != fileUri && !fileUri.equals("")) {
 			hash *= fileUri.hashCode();
 		}

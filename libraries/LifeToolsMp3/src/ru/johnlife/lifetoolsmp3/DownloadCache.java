@@ -45,14 +45,15 @@ public class DownloadCache {
 	public boolean remove(String artist, String title) {
 		Item deleteItem = null;
 		for (Item item : cache) {
-			if (Util.removeSpecialCharacters(item.getArtist()).equals(artist) 
-					&& Util.removeSpecialCharacters(item.getTitle()).equals(title)) {
+			if (item.getArtist().equals(artist) && item.getTitle().equals(title)) {
 				deleteItem = new Item(artist, title, false);
 			}
 		}
 		if (null != deleteItem) {
 			return remove(deleteItem);
-		} else return false;
+		} else {
+			return false;
+		}
 	}
 	
 	public class Item {

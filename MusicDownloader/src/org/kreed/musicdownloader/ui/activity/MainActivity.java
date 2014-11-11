@@ -715,9 +715,7 @@ public class MainActivity extends Activity {
 				switch (event) {
 				case FileObserver.DELETE:
 				case FileObserver.MOVED_FROM:
-					File f = new File(filePath);
-					MusicData data = new MusicData(f);
-					mPagerAdapter.removeMusicData(data);
+					mPagerAdapter.removeDataByPath(file);
 					break;
 				case FileObserver.DELETE_SELF:
 					mPagerAdapter.cleanLibrary();

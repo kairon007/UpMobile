@@ -66,7 +66,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected Bitmap cover;
 	protected String songTitle;
 	protected String songArtist;
-	private String url;
+	protected String url;
 	protected String duration;
 	protected Long currentDownloadId;
 	public Integer songId;
@@ -106,11 +106,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				}
 			});
 		}
-		int id = songArtist.hashCode() + songTitle.hashCode();
-		if (isCached)  {
-			song.setDownloaderListener(notifyStartDownload(id, null));
-			return;
+		final int id = songArtist.hashCode() + songTitle.hashCode();
+		if (!fromCallback && !isFullAction() && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			notifyStartDownload(id);
 		}
+		if (isCached)  {
+			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+				song.setDownloaderListener(notifyStartDownload(id));
+			}
+			return;
+		} 
 		if (url == null || "".equals(url)) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
@@ -127,10 +132,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			manager.execute();
 		} else {
 			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()){
-				//new download task for device with api below 11 
+				//new download task for device with below 11 
 				String str = Util.removeSpecialCharacters(songArtist) + " - " + Util.removeSpecialCharacters(songTitle);
 				String fileUri = musicDir.getAbsolutePath() + "/" + sb;
-				DownloadSongTask task = new DownloadSongTask(song, useAlbumCover, url, fileUri);
+				DownloadSongTask task = new DownloadSongTask(song, useAlbumCover, url, fileUri, id);
 				task.start();
 				return;
 			}
@@ -163,10 +168,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				toast.show();
 				return;
 			}
-			
 			boolean isUpdated = continueDownload(id, currentDownloadId);
 			if (!isUpdated) {
-				song.setDownloaderListener(notifyStartDownload(currentDownloadId, null));
+				song.setDownloaderListener(notifyStartDownload(currentDownloadId));
 			}
 			Toast.makeText(context, context.getString(R.string.download_started) +" "+sb, Toast.LENGTH_SHORT).show();
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover);
@@ -192,8 +196,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	 * @param  canceledDownload  - this is callback then use for cancel downnload (use only for below 11 api).  
 	 *  If version above 11 insert null
 	 */
-	public CoverReadyListener notifyStartDownload(long downloadId, CanceledCallback canceledDownload) {
+	public CoverReadyListener notifyStartDownload(long downloadId) {
 		return null;
+	}
+	
+	protected void setCanceledListener(long downloadId, CanceledCallback callback) {
+		
 	}
 	
 	protected boolean continueDownload(long lastID, long newId) {
@@ -395,7 +403,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private RemoteSong song;
 		private String notificationTitle;
 		private boolean useCover;
-		private final int id;
+		private final int idNotification;
+		private final int idDownload;
 		private String url;
 		private String filePath;
 		private boolean interrupted = false;
@@ -407,16 +416,17 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 		};
 
-		public DownloadSongTask(RemoteSong song, boolean useCover, String url, String filePath) {
+		public DownloadSongTask(RemoteSong song, boolean useCover, String url, String filePath, int idDownload) {
 			this.url = url;
+			this.idDownload = idDownload;
 			this.filePath = filePath;
 			this.notificationTitle = Util.removeSpecialCharacters(song.artist) + " - " + Util.removeSpecialCharacters(song.title);
 			this.song = song;
 			this.useCover = useCover;
 			sPref = context.getSharedPreferences(DOWNLOAD_ID_GINGERBREAD, context.MODE_PRIVATE);
-			id = sPref.getInt(DOWNLOAD_KEY_GINGERBREAD, 1);
+			idNotification = sPref.getInt(DOWNLOAD_KEY_GINGERBREAD, 1);
 			SharedPreferences.Editor editor = sPref.edit();
-			int i = id + 1;
+			int i = idNotification + 1;
 			editor.putInt(DOWNLOAD_KEY_GINGERBREAD, i);
 			editor.commit();
 		}
@@ -431,12 +441,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				String message = context.getString(R.string.download_failed);
 				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
-			} else if (progress < 100 && isStop && interrupted) {
+			} else if (progress == 0 && isStop && interrupted) {
 				String message = context.getString(R.string.download_canceled);
 				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
 			} else {
 				String message = context.getString(R.string.download_finished);
+				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
 			}
 			Intent intent = new Intent();
@@ -446,9 +457,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			notification.contentView.setTextViewText(R.id.tv_notification, notificationTitle);
 			notification.contentView.setTextViewText(R.id.tv_notification_progress, progress + " %");
 			notification.contentView.setProgressBar(R.id.progres_notification, 100, progress, false);
-			notificationManager.notify(id, notification);
+			notificationManager.notify(idNotification, notification);
 			if (isStop) {
-				notificationManager.cancel(id);
+				notificationManager.cancel(idNotification);
 			}
 		}
 
@@ -458,77 +469,80 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			FileOutputStream output = null;
 			InputStream input = null;
 			BufferedInputStream buffer = null;
+			URLConnection connection = null;
 			try {
 				HttpParams httpParameters = new BasicHttpParams();
 				HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
 				URL u = new URL(url);
-				URLConnection connection = u.openConnection();
-				HttpURLConnection httpConnection = (HttpURLConnection) connection;
-				if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-					int size = connection.getContentLength();
-					int index = 0;
-					int current = 0;
-					try {
-						file = new File(filePath);
-						file.createNewFile();
-						output = new FileOutputStream(file);
-						input = connection.getInputStream();
-						buffer = new BufferedInputStream(input);
-						byte[] bBuffer = new byte[10240];
-						int i = 0;
-						notifyStartDownload(id, cancelDownload);
-						while ((current = buffer.read(bBuffer)) != -1) {
-							if (interrupted) {
-								output.close();
-								input.close();
-								buffer.close();
-								sendNotification(0, true);
-								return;
-							}
-							output.write(bBuffer, 0, current);
-							index += current;
-							int p = index * 100 / size;
-							if (p % 5 == 0) {
-								i++;
-								if (i == 1){
-									sendNotification(p, false);
-									notifyDuringDownload(id , p);
-								}
-								if (p == 100){
-									sendNotification(p, true);
-								}
-							} else {
-								i = 0;
-							}
-						}
-						if (!setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
-							return;
-						}
-					} catch (Exception e) {
-						notifyAboutFailed(id);
+				connection = u.openConnection();
+			} catch (Exception e) {
+				notifyAboutFailed(idDownload);
+				return;
+			}
+			int size = connection.getContentLength();
+			int index = 0;
+			int current = 0;
+			try {
+				file = new File(filePath);
+				file.createNewFile();
+				output = new FileOutputStream(file);
+				input = connection.getInputStream();
+				buffer = new BufferedInputStream(input);
+				byte[] bBuffer = new byte[10240];
+				int i = 0;
+				setCanceledListener(idDownload, cancelDownload);
+				notifyDuringDownload(idDownload, 3);
+				while ((current = buffer.read(bBuffer)) != -1) {
+					if (interrupted) {
+						output.close();
+						input.close();
+						buffer.close();
 						sendNotification(0, true);
 						return;
 					}
-					setFileUri(id, file.getAbsolutePath());
-					notifyMediascanner(song, file.getAbsolutePath());
-					return;
-				} else {
+					output.write(bBuffer, 0, current);
+					index += current;
+					int p = index * 100 / size;
+					if (p % 5 == 0) {
+						i++;
+						if (i == 1) {
+							sendNotification(p, false);
+							notifyDuringDownload(idDownload, p);
+						}
+						if (p == 100) {
+							notifyDuringDownload(idDownload, p);
+						}
+					} else {
+						i = 0;
+					}
+				}
+				if (!setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
+					notifyAboutFailed(idDownload);
+					sendNotification(0, true);
+					output.close();
+					input.close();
+					buffer.close();
 					return;
 				}
-			} catch (IOException e) {
-				notifyAboutFailed(id);
+			} catch (Exception e) {
+				notifyAboutFailed(idDownload);
 				sendNotification(0, true);
 				return;
 			} finally {
 				try {
-					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 					output.close();
 					input.close();
 					buffer.close();
-				} catch (Exception e2) {
+				} catch (Exception e) {
+					android.util.Log.d("log", "Appear problem: " + e);
 				}
 			}
+			sendNotification(100, true);
+			setFileUri(idDownload, file.getAbsolutePath());
+			notifyMediascanner(song, file.getAbsolutePath());
+			return;
 		}
+		
 	}
 
 	public void setSong(RemoteSong song) {

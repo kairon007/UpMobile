@@ -199,11 +199,13 @@ public abstract class OnlineSearchView extends View {
 			listView.setDividerHeight(0);
 			listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
 			view.findViewById(R.id.search_field).setBackgroundResource(R.drawable.search_background_white);
-			view.findViewById(R.id.choise_engines_layout).setBackgroundResource(R.drawable.spinner_background);
 			view.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
 			int color = getContext().getResources().getColor(android.R.color.black);
 			searchField.setTextColor(color);
 			message.setTextColor(color);
+			if (null != view.findViewById(R.id.choise_engines_layout)) {
+				view.findViewById(R.id.choise_engines_layout).setBackgroundResource(R.drawable.spinner_background);
+			}
 		}
 		listView.setEmptyView(message);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -236,7 +238,7 @@ public abstract class OnlineSearchView extends View {
 			spEnginesChoiser.setAdapter(adapter);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				android.view.ViewGroup.LayoutParams params = spEnginesChoiser.getLayoutParams();
-				params.width = 300;
+				params.width = 170;
 				spEnginesChoiser.setLayoutParams(params);
 			}
 			int id = adapter.getPosition(keyEngines);
