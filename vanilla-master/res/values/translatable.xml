@@ -237,7 +237,6 @@ THE SOFTWARE.
 	<string name="clear_queue">Clear queue</string>
 	<string name="toggle_controls">Toggle controls</string>
 
-	<string name="download_started">Download started for %s</string>
 	<string name="downloads">Downloads</string>
 	<string name="download_error">Please wait while song loads.</string>
 	<string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>

@@ -1242,7 +1242,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					return;
 				}
 				if(new File(file.getParentFile() + "/" + artistName + " - " + albumTitle + ".mp3").exists()) {
-					Toast toast = Toast.makeText(editor.getView().getContext(), "File with this name is already exists", Toast.LENGTH_SHORT);
+					Toast toast = Toast.makeText(editor.getView().getContext(), "File with the same name already exists", Toast.LENGTH_SHORT);
 					toast.show();
 					return;
 				}
