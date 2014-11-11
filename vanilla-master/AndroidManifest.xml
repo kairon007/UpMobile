@@ -133,7 +133,7 @@ THE SOFTWARE.
             android:name="TabOrderActivity" />
         
         <activity
-            android:name="org.kreed.vanilla.equalizer.MyEqualizer" />
+            android:name=".CustomEqualizer" />
         
         <activity
             android:name="com.mopub.mobileads.MoPubActivity"

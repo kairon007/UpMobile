@@ -106,7 +106,7 @@
                         android:text="@string/h60hz"
                         android:textSize="15sp" />
 
-                    <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
+                    <ru.johnlife.lifetoolsmp3.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -141,7 +141,7 @@
                         android:text="@string/h230hz"
                         android:textSize="15sp" />
 
-                    <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
+                    <ru.johnlife.lifetoolsmp3.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar2"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -176,7 +176,7 @@
                         android:text="@string/h910hz"
                         android:textSize="15sp" />
 
-                    <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
+                    <ru.johnlife.lifetoolsmp3.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar3"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -211,7 +211,7 @@
                         android:text="@string/h3d60hz"
                         android:textSize="15sp" />
 
-                    <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
+                    <ru.johnlife.lifetoolsmp3.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar4"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -246,7 +246,7 @@
                         android:text="@string/h14d0hz"
                         android:textSize="15sp" />
 
-                    <org.kreed.vanilla.equalizer.widget.VerticalSeekBar
+                    <ru.johnlife.lifetoolsmp3.equalizer.widget.VerticalSeekBar
                         android:id="@+id/seekBar5"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"

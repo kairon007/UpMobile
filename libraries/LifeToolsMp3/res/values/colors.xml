@@ -7,5 +7,6 @@
 	<color name="window_background_dark">#333</color>
 	<color name="window_background_light">#fff</color>
 	<color name="transparent_grey">#608f8f8f</color>
-    
+    <color name="trasparent_black">#99000000</color>
+	
 </resources>

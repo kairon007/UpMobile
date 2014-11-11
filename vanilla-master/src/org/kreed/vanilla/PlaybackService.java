@@ -30,10 +30,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kreed.vanilla.equalizer.ProgressClass;
-import org.kreed.vanilla.equalizer.ProgressDataSource;
-import org.kreed.vanilla.equalizer.widget.Utils;
-
+import ru.johnlife.lifetoolsmp3.equalizer.ProgressClass;
+import ru.johnlife.lifetoolsmp3.equalizer.ProgressDataSource;
+import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -56,7 +55,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;

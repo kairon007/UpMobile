@@ -1,4 +1,4 @@
-package org.kreed.vanilla.equalizer;
+package ru.johnlife.lifetoolsmp3.equalizer;
 
 import android.app.Service;
 import android.content.Intent;

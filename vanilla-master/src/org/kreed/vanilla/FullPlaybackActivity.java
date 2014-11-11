@@ -28,8 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.kreed.vanilla.equalizer.MyEqualizer;
-
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
@@ -615,7 +613,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			mHandler.sendEmptyMessage(MSG_SAVE_CONTROLS);
 			break;
 		case R.id.menu_equalizer:
-			Intent intent = new Intent(this, MyEqualizer.class);
+			Intent intent = new Intent(this, CustomEqualizer.class);
 			startActivity(intent);
 			break;
 		case R.id.menu_lyrics:

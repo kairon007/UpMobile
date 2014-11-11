@@ -1,13 +1,11 @@
-package org.kreed.vanilla.equalizer;
+package ru.johnlife.lifetoolsmp3.equalizer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kreed.vanilla.PlaybackService;
-import org.kreed.vanilla.R;
-import org.kreed.vanilla.equalizer.widget.Utils;
-import org.kreed.vanilla.equalizer.widget.VerticalSeekBar;
-
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
+import ru.johnlife.lifetoolsmp3.equalizer.widget.VerticalSeekBar;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -44,7 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MyEqualizer extends Activity implements
+public abstract class MyEqualizer extends Activity implements
 		OnSeekBarChangeListener {// , OnSeekArcChangeListener {
 
 	public static final String SERVICECMD = "com.android.music.musicservicecommand";
@@ -91,6 +89,12 @@ public class MyEqualizer extends Activity implements
 	private ProgressDataSource myProgressDataSource;
 	private List<ProgressClass> values;
 
+	protected abstract BassBoost getBassBoost();
+	
+	protected abstract Virtualizer getVirtualizer();
+	
+	protected abstract Equalizer getEqualizer();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.equalizer_main);
@@ -205,7 +209,7 @@ public class MyEqualizer extends Activity implements
 	public void initBassBoost() {
 
 		try {
-			bassBoost = PlaybackService.get(this).getBassBoost();
+			bassBoost = getBassBoost();
 			bassBoost.setEnabled(true);
 			BassBoost.Settings bassBoostSettingTemp = bassBoost.getProperties();
 			BassBoost.Settings bassBoostSetting = new BassBoost.Settings(
@@ -223,7 +227,7 @@ public class MyEqualizer extends Activity implements
 	public void initVirtualizer() {
 
 		try {
-			virtualizer = PlaybackService.get(this).getVirtualizer();
+			virtualizer = getVirtualizer();
 			virtualizer.setEnabled(true);
 			virtualizer.setStrength((short) 0);
 		} catch (Exception localException) {
@@ -263,7 +267,7 @@ public class MyEqualizer extends Activity implements
 
 			manager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-			equalizer = PlaybackService.get(this).getEqualizer();
+			equalizer = getEqualizer();
 			int val = equalizer.setEnabled(true);
 			if (val != Equalizer.SUCCESS)
 				Log.e("A", "EQUALIZER NON ATTIVO");

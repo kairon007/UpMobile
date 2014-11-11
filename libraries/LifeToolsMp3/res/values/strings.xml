@@ -39,4 +39,41 @@
 	<string name="new_folder_dialog_title">New folder name</string>
 	<string name="error_getting_url_songs">Error getting url songs.</string>
 	<string name="turn_on_dm">Please turn on Download Manager on your device to download the song.</string>
+	
+    <string name="zero">0</string>
+    <string name="plus15">+15 dB</string>
+    <string name="minus15">-15 dB</string>
+    
+    <string name="h60hz">60Hz</string>
+    <string name="h230hz">230Hz</string>
+    <string name="h910hz">910Hz</string>
+    <string name="h3d60hz">3.6Hz</string>
+    <string name="h14d0hz">14.0Hz</string>
+    
+    <string name="user">Custom</string>
+    <string name="normal">Normal</string>
+    <string name="hiphop">HipHop</string>
+    <string name="rock">Rock</string>
+    <string name="dance">Dance</string>
+    <string name="pop">Pop</string>    
+    <string name="jazz">Jazz</string>
+    <string name="metal">Metal</string>
+    <string name="classical">Classical</string>
+    <string name="flat">Flat</string>
+    <string name="folk">Folk</string>
+    
+    <string name="bass">Bass</string>
+    <string name="virtualizer">Virtualizer</string>
+    <string-array name="presets">
+		<item>Normal</item>
+        <item>Classical</item>
+        <item>Dance</item>
+        <item>Flat</item>
+        <item>Folk</item>
+        <item>Metal</item>
+		<item>HipHop</item>
+	    <item>Jazz</item>
+        <item>Pop</item>
+        <item>Rock</item>
+    </string-array>
 </resources>

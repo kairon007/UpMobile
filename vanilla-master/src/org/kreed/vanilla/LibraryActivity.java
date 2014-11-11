@@ -33,7 +33,6 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
-import org.kreed.vanilla.equalizer.MyEqualizer;
 
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -46,10 +45,10 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.IntentFilter;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
@@ -853,7 +852,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			// mTextFilter.setText("");
 			openSortDialog();
 		} else if (view == mEqualizerButton) {
-			Intent intent = new Intent(this, MyEqualizer.class);
+			Intent intent = new Intent(this, CustomEqualizer.class);
 			startActivity(intent);
 		} else if (view == mCover || view == mActionControls) {
 			openPlaybackActivity();

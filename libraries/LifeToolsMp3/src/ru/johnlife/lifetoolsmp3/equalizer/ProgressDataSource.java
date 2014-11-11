@@ -1,4 +1,4 @@
-package org.kreed.vanilla.equalizer;
+package ru.johnlife.lifetoolsmp3.equalizer;
 
 import java.util.ArrayList;
 import java.util.List;

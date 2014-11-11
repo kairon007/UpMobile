@@ -1,4 +1,4 @@
-package org.kreed.vanilla.equalizer.widget;
+package ru.johnlife.lifetoolsmp3.equalizer.widget;
 
 import android.content.Context;
 import android.content.SharedPreferences;
