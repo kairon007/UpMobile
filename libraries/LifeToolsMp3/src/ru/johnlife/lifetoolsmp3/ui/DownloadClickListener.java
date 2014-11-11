@@ -4,9 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -88,9 +86,19 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		duration = Util.getFormatedStrDuration(song.getDuration());
 		headers = song.getHeaders();
 		url = song.getUrl();
+		if (url == null || "".equals(url)) {
+			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		File musicDir = new File(getDirectory());
+		if (!musicDir.exists()) {
+			musicDir.mkdirs();
+		}
 		SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
+		final int id = songArtist.hashCode() + songTitle.hashCode();
 		boolean isCached = false;
 		if (!fromCallback) {
+			song.setDownloaderListener(notifyStartDownload(id));
 			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, new DownloadCacheCallback() {
 				
 				@Override
@@ -106,23 +114,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				}
 			});
 		}
-		final int id = songArtist.hashCode() + songTitle.hashCode();
-		if (!fromCallback && !isFullAction() && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			notifyStartDownload(id);
-		}
 		if (isCached)  {
-			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-				song.setDownloaderListener(notifyStartDownload(id));
-			}
 			return;
-		} 
-		if (url == null || "".equals(url)) {
-			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
-			return;
-		}
-		File musicDir = new File(getDirectory());
-		if (!musicDir.exists()) {
-			musicDir.mkdirs();
 		}
 		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(".mp3");
 		String sb = Util.removeSpecialCharacters(stringBuilder.toString());
@@ -133,7 +126,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		} else {
 			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()){
 				//new download task for device with below 11 
-				String str = Util.removeSpecialCharacters(songArtist) + " - " + Util.removeSpecialCharacters(songTitle);
 				String fileUri = musicDir.getAbsolutePath() + "/" + sb;
 				DownloadSongTask task = new DownloadSongTask(song, useAlbumCover, url, fileUri, id);
 				task.start();
@@ -183,26 +175,15 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		downloadSong(false);
 	}
 
-	protected void setFileUri(long downloadId, String uri) {
-		
-	}
+	protected void setFileUri(long downloadId, String uri) {}
 	
-	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {
-
-	}
-
-	/**
-	 * @param downloadId - id of download
-	 * @param  canceledDownload  - this is callback then use for cancel downnload (use only for below 11 api).  
-	 *  If version above 11 insert null
-	 */
+	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {}
+ 
 	public CoverReadyListener notifyStartDownload(long downloadId) {
 		return null;
 	}
 	
-	protected void setCanceledListener(long downloadId, CanceledCallback callback) {
-		
-	}
+	protected void setCanceledListener(long downloadId, CanceledCallback callback) {}
 	
 	protected boolean continueDownload(long lastID, long newId) {
 		return false;
@@ -240,9 +221,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		return downloadPath;
 	}
 
-	protected void prepare(final File src, RemoteSong song, String path) {
-
-	}
+	protected void prepare(final File src, RemoteSong song, String path) {}
 
 	protected boolean isFullAction() {
 		return true;
@@ -252,7 +231,69 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	public void onBitmapReady(Bitmap bmp) {
 		this.cover = bmp;
 	}
+	
+	public void setSong(RemoteSong song) {
+		this.song = song;
+	}
 
+	private void notifyMediascanner(final RemoteSong song, final String pathToFile) {
+		final File file = new File(pathToFile);
+		MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+			public void onScanCompleted(String path, Uri uri) {
+				prepare(file, song, pathToFile);
+				if (null != listener) {
+					listener.success();
+				}
+			}
+		});
+	}
+	
+	private boolean setMetadataToFile(String path, File src, boolean useCover) {
+		MusicMetadataSet src_set = null;
+		try {
+			src_set = new MyID3().read(src);
+		} catch (Exception exception) {
+			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
+		}
+		if (null == src_set) {
+			notifyMediascanner(song, path);
+			return false;
+		}
+		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+		metadata.clearPictureList();
+		metadata.setSongTitle(songTitle);
+		metadata.setArtist(songArtist);
+		if (null != cover && useCover) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+			cover.compress(CompressFormat.JPEG, 85, out);
+			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+		}
+		File dst = new File(src.getParentFile(), src.getName() + "-1");
+		boolean isRename = false;
+		try {
+			new MyID3().write(src, dst, src_set, metadata);
+			isRename = dst.renameTo(src);
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), "Unable to write music metadata from file. " + e);
+		} finally {
+			if (!isRename) {
+				dst.delete();
+			}
+		}
+		return true;
+	}
+	
+	public interface CoverReadyListener {
+		
+		void onCoverReady(Bitmap cover);
+	}
+	
+	public interface CanceledCallback {
+			
+		public void cancel();	
+	}
+	
 	private final class UpdateTimerTask extends TimerTask {
 
 		private static final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -334,64 +375,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			int index = s.indexOf('m');
 			return s.substring(index - 1);
 		}
-	}
-	
-	private void notifyMediascanner(final RemoteSong song, final String pathToFile) {
-		final File file = new File(pathToFile);
-		MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-			public void onScanCompleted(String path, Uri uri) {
-				prepare(file, song, pathToFile);
-				if (null != listener) {
-					listener.success();
-				}
-			}
-		});
-	}
-	
-	private boolean setMetadataToFile(String path, File src, boolean useCover) {
-		MusicMetadataSet src_set = null;
-		try {
-			src_set = new MyID3().read(src);
-		} catch (Exception exception) {
-			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
-		}
-		if (null == src_set) {
-			notifyMediascanner(song, path);
-			return false;
-		}
-		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-		metadata.clearPictureList();
-		metadata.setSongTitle(songTitle);
-		metadata.setArtist(songArtist);
-		if (null != cover && useCover) {
-			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-			cover.compress(CompressFormat.JPEG, 85, out);
-			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-		}
-		File dst = new File(src.getParentFile(), src.getName() + "-1");
-		boolean isRename = false;
-		try {
-			new MyID3().write(src, dst, src_set, metadata);
-			isRename = dst.renameTo(src);
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Unable to write music metadata from file. " + e);
-		} finally {
-			if (!isRename) {
-				dst.delete();
-			}
-		}
-		return true;
-	}
-	
-	public interface CoverReadyListener {
-		
-		void onCoverReady(Bitmap cover);
-	}
-	
-	public interface CanceledCallback {
-			
-		public void cancel();	
 	}
 	
 	private class DownloadSongTask extends Thread {
@@ -545,7 +528,4 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		
 	}
 
-	public void setSong(RemoteSong song) {
-		this.song = song;
-	}
 }

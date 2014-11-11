@@ -418,12 +418,14 @@ public class DownloadsTab implements LoadPercentageInterface {
 	}
 
 	public boolean updateData(long lastID, long newID) {
+		Log.d("log", "I'm  search on items");
 		for (int i = 0; i < adapter.getCount(); i++) {
 			if (adapter.getItem(i).getDownloadId() == lastID) {
 				adapter.getItem(i).setDownloadId(newID);
 				return true;
 			}
 		}
+		Log.d("log", "HE HALLIEJI");
 		return false;
 	}
 

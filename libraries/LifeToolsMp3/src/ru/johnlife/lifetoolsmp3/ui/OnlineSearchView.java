@@ -79,32 +79,31 @@ public abstract class OnlineSearchView extends View {
 	public static final int STREAM_DIALOG_ID = 1;
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
-	private String SPREF_ENGINES ="shar_pref_key_engines_array";
-	private String SPREF_CURRENT_ENGINES ="pref_key_current_engines_array";
-	private Iterator<Engine> taskIterator;
-	private SharedPreferences sPref;
-	private AlertDialog alertDialog;
+	private final String SPREF_ENGINES ="shar_pref_key_engines_array";
+	private final String SPREF_CURRENT_ENGINES ="pref_key_current_engines_array";
 	private ArrayAdapter<String> adapter;
+	private Iterator<Engine> taskIterator;
+	private Runnable dialogDismisser;
+	private SharedPreferences sPref;
+	private LayoutInflater inflater;
+	private ViewGroup view;
+	protected DownloadClickListener downloadListener;
+	private SongArrayHolder holder = SongArrayHolder.getInstance();
+	private AlertDialog alertDialog;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
-	private LayoutInflater inflater;
 	private String currentName = null;
 	private SongSearchAdapter resultAdapter;
 	private TextView message;
 	private Spinner spEnginesChoiser;
 	private View progress;
 	private TextView searchField;
-	private ViewGroup view;
 	private Player player;
-	private boolean searchStopped = true;
 	private ListView listView;
-	private DownloadClickListener downloadClickListener;
-	private Runnable dialogDismisser;
 	private String extraSearch = null;
 	private String keyEngines;
-	private OnlineSearchView onlineView = this;
 	private boolean switchMode = false;
-	private SongArrayHolder holder = SongArrayHolder.getInstance();
+	private boolean searchStopped = true;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -601,7 +600,7 @@ public abstract class OnlineSearchView extends View {
 				for (Song song : songsList) {
 					resultAdapter.add(song);
 				}
-				holder.saveStateAdapter(onlineView);
+				holder.saveStateAdapter(OnlineSearchView.this);
 			}
 		}
 	};
@@ -831,7 +830,7 @@ public abstract class OnlineSearchView extends View {
 				}
 			}
 		};
-		downloadClickListener = new DownloadClickListener(getContext(), song, new RefreshListener() {
+		downloadListener = new DownloadClickListener(getContext(), song, new RefreshListener() {
 			
 			@Override
 			public void success() {
@@ -845,7 +844,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		};
 		if (getSettings().getIsCoversEnabled(getContext())) {
-			boolean hasCover = ((RemoteSong) song).getCover(true, downloadClickListener);
+			boolean hasCover = ((RemoteSong) song).getCover(true, downloadListener);
 			if (!hasCover) {	
 					player.hideCoverProgress();
 					player.setCover(null);
@@ -886,10 +885,10 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				downloadClickListener.setSong(song);
+				downloadListener.setSong(song);
 				boolean useCover = holder.isCoverEnabled();
-				downloadClickListener.setUseAlbumCover(useCover);
-				downloadClickListener.downloadSong(false);
+				downloadListener.setUseAlbumCover(useCover);
+				downloadListener.downloadSong(false);
 				player.cancel();
 				dialogDismisser.run();
 				getContext().unregisterReceiver(headsetReceiver);
