@@ -196,7 +196,6 @@ public abstract class OnlineSearchView extends View {
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
-			Log.d("logd", "white");
 			listView.setDividerHeight(0);
 			listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
 			view.findViewById(R.id.search_field).setBackgroundResource(R.drawable.search_background_white);
@@ -239,7 +238,7 @@ public abstract class OnlineSearchView extends View {
 			spEnginesChoiser.setAdapter(adapter);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				android.view.ViewGroup.LayoutParams params = spEnginesChoiser.getLayoutParams();
-				params.width = 300;
+				params.width = 170;
 				spEnginesChoiser.setLayoutParams(params);
 			}
 			int id = adapter.getPosition(keyEngines);
