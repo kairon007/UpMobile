@@ -559,7 +559,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onCancelled() {
-			Toast.makeText(getApplicationContext(), "File " + music.getSongArtist() + " - " + music.getSongTitle() + " do not exists", Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "File " + music.getSongArtist() + " - " + music.getSongTitle() + " does not exist", Toast.LENGTH_LONG).show();
 			mPagerAdapter.removeMusicData(music);
 			super.onCancelled();
 		}
