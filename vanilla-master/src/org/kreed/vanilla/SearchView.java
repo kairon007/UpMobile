@@ -45,6 +45,6 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	public boolean isWhiteTheme(Context context) {
-		return Util.getThemeName(context).equals("AppTheme.White");
+		return Util.isDifferentApp(context);
 	}
 }

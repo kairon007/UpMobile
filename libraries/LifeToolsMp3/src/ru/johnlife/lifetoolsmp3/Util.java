@@ -24,6 +24,7 @@ import android.util.Log;
 
 public final class Util {
 	
+	public final static String WHITE_THEME2 = "AppTheme.White2";
 	public final static String WHITE_THEME = "AppTheme.White";
 	private final static DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
 	private final static int SMALL_BITMAP_SIZE = 100;
@@ -146,6 +147,25 @@ public final class Util {
 	}
 	
 	public static String getThemeName(Context context) {
+		String themeName = getSimpleThemeName(context);
+		if (themeName.equals(WHITE_THEME2)) {
+			themeName = WHITE_THEME;
+		}
+		return themeName;
+	}
+	
+	public static boolean isDifferentApp(Context context) {
+		return getSimpleThemeName(context).equals(WHITE_THEME2);
+	}
+	
+	public static String removeSpecialCharacters(String str) {
+		while (str.endsWith(" ")) {
+			str = str.substring(0, str.length() - 1);
+		}
+		return str.toString().replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
+	}
+	
+	private static String getSimpleThemeName(Context context) {
 	    PackageInfo packageInfo;
 	    try {
 	        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
@@ -155,12 +175,5 @@ public final class Util {
 	    	Log.e(Util.class.getSimpleName(), e.getMessage());
 	        return "";
 	    }
-	}
-	
-	public static String removeSpecialCharacters(String str) {
-		while (str.endsWith(" ")) {
-			str = str.substring(0, str.length() - 1);
-		}
-		return str.toString().replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
 	}
 }

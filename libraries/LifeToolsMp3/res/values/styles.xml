@@ -25,4 +25,7 @@
         <item name="android:windowBackground">@color/window_background_light</item>
     </style>
 
+	<style name="AppTheme.White2" parent="AppThemeBase.White">
+        <item name="android:windowBackground">@color/window_background_light</item>
+    </style>
 </resources>

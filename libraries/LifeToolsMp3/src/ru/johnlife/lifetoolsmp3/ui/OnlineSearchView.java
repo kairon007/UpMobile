@@ -48,7 +48,6 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Environment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -205,6 +204,8 @@ public abstract class OnlineSearchView extends View {
 			int color = getContext().getResources().getColor(android.R.color.black);
 			searchField.setTextColor(color);
 			message.setTextColor(color);
+		} else if (Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
+			view.findViewById(R.id.choise_engines_layout).setBackgroundResource(R.drawable.spinner_background);
 		}
 		listView.setEmptyView(message);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
