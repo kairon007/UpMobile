@@ -76,7 +76,6 @@ public class DownloadListener extends DownloadClickListener {
 		 * while song is loaded, fileUri is ID for DownloadClickListener
 		 */
 		downloadItem.setFileUri(url+"__"+rand.nextInt());
-		Log.e("id", ""+songId);
 		return new CoverReadyListener() {
 			
 			@Override
