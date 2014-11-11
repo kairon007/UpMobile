@@ -42,9 +42,11 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
@@ -1312,6 +1314,15 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		} catch (Exception e) {
 		}
 	}
+	
+	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
+				context.unregisterReceiver(this);
+			}
+		}
+	};
 
 	private void rename(File f, String artist, String album, String song) {
 		File file = new File(f.getParentFile(), f.getName());
@@ -1326,7 +1337,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				isChange = true;
 				metadata.setAlbum(album);
 			}
-			if (!song.equals("")) {	
+			if (!song.equals("")) {
 				isChange = true;
 				metadata.setSongTitle(song);
 			}
@@ -1337,11 +1348,25 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			if (!isChange) {
 				return;
 			}
-			File newFile = new File(file.getParentFile() + "/" + artist + " - " + album + ".mp3"); 
-			file.renameTo(newFile);
-			new MyID3().update(newFile, src_set, metadata);
-			notifyMediascanner(newFile, artist, song);
+			File newFile = new File(file.getParentFile() + "/" + artist + " - " + song + ".mp3");
+			if (file.renameTo(newFile)) {
+				new MyID3().update(newFile, src_set, metadata);
+				notifyMediascanner(newFile, artist, song);
+				try {
+					IntentFilter intentFilter = new IntentFilter();
+					intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+					intentFilter.addDataScheme("file");
+					getActivity().getApplicationContext().registerReceiver(mReceiver, intentFilter);
+					Uri storage = Uri.parse("file://" + Environment.getExternalStorageDirectory());
+					getActivity().getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, storage));
+				} catch (Exception e) {
+					Log.e(getClass().getSimpleName(), "Scan Flash Card");
+				}
+			} else {
+				newFile.delete();
+			}
 		} catch (Exception e) {
+			Log.d(getClass().getSimpleName(), e.getMessage());
 		}
 	}
 
