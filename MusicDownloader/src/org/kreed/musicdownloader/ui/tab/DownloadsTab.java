@@ -87,8 +87,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 							@Override
 							public void onAnimationStart(Animation animation) {
 								((ViewHolder)((View)v.getParent()).getTag()).needInvalidate = true;
-								if (song.isDownloaded())
-									removeByUri(song.getFileUri());
+								if (song.isDownloaded()) removeByUri(song.getFileUri());
 								else remove(song);
 							}
 							
@@ -236,6 +235,12 @@ public class DownloadsTab implements LoadPercentageInterface {
 				redraw();
 			}
 		}
+		
+		@SuppressLint("NewApi")
+		@Override
+		public void addAll(MusicData... items) {
+			super.addAll(items);
+		}
 
 		@SuppressLint("NewApi")
 		@Override
@@ -259,6 +264,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 				redraw();
 			}
 		}
+		
 		public void removeByUri(String filePath) {
 			synchronized (lock) {
 				if (mOriginalValues != null) {
@@ -281,6 +287,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 				redraw();
 			}
 		}
+		
 		@Override
 		public void remove(MusicData object) {
 			synchronized (lock) {
@@ -387,6 +394,16 @@ public class DownloadsTab implements LoadPercentageInterface {
 				}
 			}
 			adapter.redraw();
+		}
+	}
+	
+	public void insertTag(CanceledCallback callback, long downloadId) {
+		synchronized (lock) {
+			for (int i = 0; i < adapter.getCount(); i++) {
+				if (adapter.getItem(i).getDownloadId() == downloadId) {
+					adapter.getItem(i).setTag(callback);
+				}
+			}
 		}
 	}
 

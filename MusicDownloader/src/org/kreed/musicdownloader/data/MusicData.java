@@ -398,7 +398,13 @@ public class MusicData {
 
 	@Override
 	public int hashCode() {
-		int hash = songArtist.hashCode() * songTitle.hashCode();
+		int hash = 1;
+		if (songArtist != null) {
+			hash *= songArtist.hashCode();
+		}
+		if (songTitle != null) {
+			hash *= songTitle.hashCode();
+		}
 		if (null != fileUri && !fileUri.equals("")) {
 			hash *= fileUri.hashCode();
 		}

@@ -20,6 +20,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,11 @@ public class SearchView  extends OnlineSearchView {
 	protected boolean showFullElement() {
 		return false;
 	}
-
+	
+	public boolean isBelowHoneycomb() {
+		return Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB;
+	}
+	
 	@Override
 	protected void click(final View view, int position) {
 		if (isOffline(getContext())) {
@@ -58,13 +63,17 @@ public class SearchView  extends OnlineSearchView {
 				activity.setFileObserver();
 			final DownloadListener listener = new DownloadListener(getContext(), song, parentAdapter);
 			final int id = (int)(System.currentTimeMillis()%(Integer.MAX_VALUE-1));
-			listener.notifyStartDownload(id, null);
+			if (!isBelowHoneycomb()) {
+				listener.notifyStartDownload(id);
+			}
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
 				@Override
 				public void success(String url) {
 					song.getCover(true, listener);
-					DownloadsTab.getInstance().deleteItem(id);
+					if (!isBelowHoneycomb()) {
+						DownloadsTab.getInstance().deleteItem(id);
+					}
 					((Activity)getContext()).runOnUiThread(new Runnable() {
 						
 						@Override
