@@ -66,7 +66,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected Bitmap cover;
 	protected String songTitle;
 	protected String songArtist;
-	private String url;
+	protected String url;
 	protected String duration;
 	protected Long currentDownloadId;
 	public Integer songId;

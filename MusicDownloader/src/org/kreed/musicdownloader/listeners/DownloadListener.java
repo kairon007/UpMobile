@@ -70,6 +70,7 @@ public class DownloadListener extends DownloadClickListener {
 		downloadItem.setDownloadId(downloadId);
 		downloadItem.setDownloadProgress(0);
 		downloadsTab.insertData(downloadItem);
+		downloadItem.setFileUri(url);
 		return new CoverReadyListener() {
 			
 			@Override

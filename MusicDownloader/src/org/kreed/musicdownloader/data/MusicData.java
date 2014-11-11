@@ -265,7 +265,7 @@ public class MusicData {
 	}
 
 	public boolean isDownloaded() {
-		if (null != fileUri || downloadProgress == -1.0 || downloadProgress > 99.0) {
+		if (downloadProgress == -1.0 || downloadProgress > 99.0) {
 			return true;
 		}
 		return false;
