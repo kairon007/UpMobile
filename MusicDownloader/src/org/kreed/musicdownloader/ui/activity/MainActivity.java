@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.kreed.musicdownloader.Advertisement;
+import org.kreed.musicdownloader.CompatHoneycomb;
 import org.kreed.musicdownloader.Constants;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
+import org.kreed.musicdownloader.Settings;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
-import org.kreed.musicdownloader.ballast.CompatHoneycomb;
-import org.kreed.musicdownloader.ballast.LibraryAdapter;
 import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.engines.Settings;
 import org.kreed.musicdownloader.ui.Player;
 import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
@@ -52,7 +51,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -66,8 +64,6 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -258,7 +254,7 @@ public class MainActivity extends Activity {
 				mTextFilter.setText("");
 			}
 		});
-		ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(this, mLooper);
+		ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(this);
 		mPagerAdapter = pagerAdapter;
 		mViewPager.setAdapter(pagerAdapter);
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -428,15 +424,7 @@ public class MainActivity extends Activity {
 		mLimiterScroller.setVisibility(View.VISIBLE);
 	}
 
-	/**
-	 * Called when a new page becomes visible.
-	 * 
-	 * @param position
-	 *            The position of the new page.
-	 * @param adapter
-	 *            The new visible adapter.
-	 */
-	public void onPageChanged(int position, LibraryAdapter adapter) {
+	public void onPageChanged(int position) {
 		// mCurrentAdapter = adapter;
 		updateLimiterViews();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

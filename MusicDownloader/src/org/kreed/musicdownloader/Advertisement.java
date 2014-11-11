@@ -16,10 +16,11 @@ import java.util.Random;
  
 
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.kreed.musicdownloader.engines.Settings;
+
 
 
 
@@ -63,12 +64,9 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.appnext.appnextsdk.Appnext;
 import com.appnext.appnextsdk.NoAdsInterface;
 import com.appnext.appnextsdk.PopupClosedInterface; 
-
-
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
 import com.ironsource.mobilcore.MobileCore.AD_UNITS;
@@ -76,7 +74,6 @@ import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.ironsource.mobilcore.OnReadyListener;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
-
 import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
 import com.mopub.mobileads.MoPubView.BannerAdListener;
@@ -97,6 +94,7 @@ import com.startapp.android.publish.nativead.NativeAdDetails;
 import com.startapp.android.publish.nativead.NativeAdPreferences;
 import com.startapp.android.publish.nativead.NativeAdPreferences.NativeAdBitmapSize;
 import com.startapp.android.publish.nativead.StartAppNativeAd;
+
 
 
 

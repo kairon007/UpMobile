@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.kreed.musicdownloader.Advertisement;
+import org.kreed.musicdownloader.Settings;
 import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.engines.Settings;
-import org.kreed.musicdownloader.engines.task.DownloadListener;
+import org.kreed.musicdownloader.listeners.DownloadListener;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 

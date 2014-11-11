@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package org.kreed.musicdownloader.ballast;
+package org.kreed.musicdownloader;
 
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;

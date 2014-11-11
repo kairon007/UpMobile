@@ -18,8 +18,8 @@
 package com.viewpagerindicator;
 
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.ballast.Utils;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
@@ -122,10 +122,10 @@ public class TabPageIndicator extends HorizontalScrollView
 		tabView.setBackgroundResource(R.drawable.vpi__tab_indicator);
 		tabView.setPadding(padX, padY, padX, padY);
 		tabView.setGravity(Gravity.CENTER);
-		if ("AppTheme".equals(Utils.getThemeName(getContext()))) {
+		if ("AppTheme".equals(Util.getThemeName(getContext()))) {
 			tabView.setTextColor(getResources().getColor(R.color
 					.tab_page_indicator_textview));
-		} else if ("AppTheme.Black".equals(Utils.getThemeName(getContext()))){
+		} else if ("AppTheme.Black".equals(Util.getThemeName(getContext()))){
 			tabView.setTextColor(getResources().getColor(R.color
 					.tab_page_indicator_textview_white));
 		}
