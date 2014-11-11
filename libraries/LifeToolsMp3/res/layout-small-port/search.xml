@@ -8,9 +8,9 @@
         android:id="@+id/search_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/search_background"
         android:divider="@drawable/layout_divider"
         android:dividerPadding="4dp"
+        android:background="@drawable/search_background"
         android:orientation="horizontal"
         android:showDividers="middle" >
 
@@ -27,8 +27,8 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"
-                android:paddingRight="50dp"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:paddingRight="50dp" />
 
             <ImageButton
                 android:id="@+id/clear"
@@ -37,14 +37,8 @@
                 android:layout_gravity="center_vertical|right"
                 android:background="@drawable/selectable_item_bg"
                 android:src="@drawable/close" />
-        </FrameLayout>
 
-        <Spinner
-            android:id="@+id/choise_engines"
-            android:layout_width="72dp"
-            android:layout_height="48dp"
-            android:animateLayoutChanges="true">
-        </Spinner>
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/search"
@@ -60,6 +54,24 @@
             android:layout_gravity="center"
             android:background="@drawable/selectable_item_bg"
             android:src="@drawable/ic_download" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/choise_engines_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/search_background"
+        android:orientation="vertical" >
+
+        <Spinner
+            android:id="@+id/choise_engines"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:minWidth="72dp"
+            android:background="@android:color/transparent"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp" />
     </LinearLayout>
 
     <FrameLayout
@@ -87,6 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
+
     </FrameLayout>
 
 </LinearLayout>
