@@ -84,7 +84,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		synchronized (lock) {
 			if (mOriginalValues != null) {
 				for (int i = 0; i < mOriginalValues.size(); ++i) {
-					if (mOriginalValues.get(i).getFileUri().equals(filePath)) {
+					if (mOriginalValues.get(i).getFileUri().endsWith(filePath)) {
 						mOriginalValues.remove(i);
 						break;
 					}
@@ -93,7 +93,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			}
 			//кол-во операций, что и в remove(MusicData) но из-за невозможности(?) переписать equals пришлось так
 			for (int i = 0; i < mObjects.size(); ++i) {
-				if (mObjects.get(i).getFileUri().equals(filePath)) {
+				if (mObjects.get(i).getFileUri().endsWith(filePath)) {
 					mObjects.remove(i);
 					break;
 				}
