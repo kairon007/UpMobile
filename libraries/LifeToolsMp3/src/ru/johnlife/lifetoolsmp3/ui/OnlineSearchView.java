@@ -195,7 +195,8 @@ public abstract class OnlineSearchView extends View {
 		progress.setVisibility(View.GONE);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
-		if (isWhiteTheme(getContext())) {
+		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
+			Log.d("logd", "white");
 			listView.setDividerHeight(0);
 			listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
 			view.findViewById(R.id.search_field).setBackgroundResource(R.drawable.search_background_white);
@@ -204,8 +205,6 @@ public abstract class OnlineSearchView extends View {
 			int color = getContext().getResources().getColor(android.R.color.black);
 			searchField.setTextColor(color);
 			message.setTextColor(color);
-		} else if (Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
-			view.findViewById(R.id.choise_engines_layout).setBackgroundResource(R.drawable.spinner_background);
 		}
 		listView.setEmptyView(message);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

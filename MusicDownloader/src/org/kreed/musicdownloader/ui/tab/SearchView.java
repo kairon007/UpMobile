@@ -21,7 +21,6 @@ import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -123,7 +122,7 @@ public class SearchView  extends OnlineSearchView {
 
 	@Override
 	public boolean isWhiteTheme(Context context) {
-		return Util.getThemeName(context).equals(Util.WHITE_THEME);
+		return Util.isDifferentApp(context);
 	}
 	
 	private void startPlay(final RemoteSong song, final MusicData data) {
