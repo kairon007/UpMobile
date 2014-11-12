@@ -719,6 +719,10 @@ public class MainActivity extends Activity {
 					break;
 				case FileObserver.DELETE_SELF:
 					mPagerAdapter.cleanLibrary();
+					/**
+					 * if user delete folder while program is working, all files will be deleted, but folder will be recreated
+					 */
+					setFileObserver();
 					break;
 				case FileObserver.MOVED_TO:
 					if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))

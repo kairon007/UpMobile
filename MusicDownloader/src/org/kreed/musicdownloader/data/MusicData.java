@@ -390,9 +390,11 @@ public class MusicData {
 			if (!this.songTitle.equals(another.songTitle)) {
 				return false;
 			}
-		if (this.hashCode() != o.hashCode()){
+		if (fileUri!=null && another.fileUri!=null) 
+			if (!fileUri.equals(another.fileUri))
+				return false;
+		if (this.downloadId != another.downloadId)
 			return false;
-		}
 		return true;
 	}
 
