@@ -296,6 +296,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		Player.this.onPrepared();
 		prepared = true;
 		mediaPlayer = mp;
+		setEqualizer(view.getContext());
 		mp.start();
 		if (data.getFileUri().contains("http")) {
 			Toast.makeText(view.getContext(), MessageFormat.format("{0} - {1} is playing", artist, title), Toast.LENGTH_SHORT).show();
@@ -341,18 +342,18 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			equalizer.setEnabled(true);
 			bassBoost.setEnabled(true);
 			virtualizer.setEnabled(true);
-			ProgressDataSource myProgressDataSource = new ProgressDataSource(view.getContext());
+			ProgressDataSource myProgressDataSource = new ProgressDataSource(context);
 			myProgressDataSource.open();
 			List<ProgressClass> values = myProgressDataSource.getAllPgs();
 			if (values.size() == 0)
 				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
 			else {
 				//Set equalizer
-				Utils.changeAtBand(equalizer, (short)0, values.get(0).getProgress(1) - 15);
-				Utils.changeAtBand(equalizer, (short)1, values.get(0).getProgress(2) - 15);
-				Utils.changeAtBand(equalizer, (short)2, values.get(0).getProgress(3) - 15);
-				Utils.changeAtBand(equalizer, (short)3, values.get(0).getProgress(4) - 15);
-				Utils.changeAtBand(equalizer, (short)4, values.get(0).getProgress(5) - 15);
+				Utils.changeAtBand(equalizer, (short) 0, values.get(0).getProgress(1) - 15);
+				Utils.changeAtBand(equalizer, (short) 1, values.get(0).getProgress(2) - 15);
+				Utils.changeAtBand(equalizer, (short) 2, values.get(0).getProgress(3) - 15);
+				Utils.changeAtBand(equalizer, (short) 3, values.get(0).getProgress(4) - 15);
+				Utils.changeAtBand(equalizer, (short) 4, values.get(0).getProgress(5) - 15);
 				//Set bassboost
 				bassBoost.setStrength((short)(values.get(0).getArc(1) * 10));
 				//Set virtualizer
