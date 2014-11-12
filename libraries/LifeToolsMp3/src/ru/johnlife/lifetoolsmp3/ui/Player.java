@@ -26,6 +26,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -350,12 +351,19 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		return url;
 	}
 
+	@SuppressLint("NewApi")
 	public void setCover(Bitmap bmp) {
 		coverProgress.setVisibility(View.GONE);
 		coverProgressVisible = false;
 		if (null != bmp) {
 			isDefaultCover = false;
 			coverImage.setImageBitmap(bmp);
+			if (isWhiteTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				float h = view.getContext().getResources().getDimension(R.dimen.min_hight_layout_player);
+				float scale = (float) h / bmp.getHeight();
+				coverImage.setScaleX(scale);
+				coverImage.setScaleY(scale);
+			}
 			coverBitmap = bmp;
 			if (id3Dialog !=null && id3Dialog.isShowing()) {
 				editor.enableChekBox();
@@ -434,12 +442,12 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void onPaused() {
-		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
+		imagePause = (isWhiteTheme) ? R.drawable.play_white : R.drawable.play;
 		button.setImageResource(imagePause);
 	}
 
 	public void onResumed() {
-		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
+		imagePause = (isWhiteTheme) ? R.drawable.pause_white : R.drawable.pause;
 		button.setImageResource(imagePause);
 	}
 
