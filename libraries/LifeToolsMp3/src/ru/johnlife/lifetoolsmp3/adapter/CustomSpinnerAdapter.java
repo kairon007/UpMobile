@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,9 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 		}
 		tvItem.setGravity(Gravity.LEFT);
 		tvItem.setText(getItem(position).toString());
+		tvItem.setEllipsize(TruncateAt.START);
+		tvItem.setLines(1);
+		tvItem.setSingleLine(true);
 		return tvItem;
 	}
 }

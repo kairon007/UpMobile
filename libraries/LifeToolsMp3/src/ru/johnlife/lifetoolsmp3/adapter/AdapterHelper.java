@@ -12,6 +12,7 @@ import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,7 +26,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 public class AdapterHelper {
-	
+	private Context context;
 	private final static Bitmap[] cache = new Bitmap[2];
 
 	public static class ViewBuilder {
@@ -45,7 +46,7 @@ public class AdapterHelper {
 		
 		private ViewBuilder(View view, boolean whiteTheme) {
 			view.setTag(this);
-			this.view = view; 
+			this.view = view;
 			view.setLongClickable(true);
 			init(view);
 			titleLine.setTypeface(MusicApp.FONT_REGULAR);
@@ -258,16 +259,20 @@ public class AdapterHelper {
 		ViewBuilder builder;
 		if (null == target) {
 			if (whiteTheme) {
-				target = inflater.inflate(R.layout.row_online_search_white, null);
+				target = inflater.inflate(R.layout.row_online_search_white2, null);
 			} else {
-				target = inflater.inflate(R.layout.row_online_search, null);
+				if (Util.getSimpleThemeName(inflater.getContext()).equals("AppTheme.White")) {
+					target = inflater.inflate(R.layout.row_online_search_white, null);
+				} else {
+					target = inflater.inflate(R.layout.row_online_search, null);
+				}
 			}
 			builder = new ViewBuilder(target, whiteTheme);
 		} else {
 			try {
 				builder = (ViewBuilder) target.getTag();
 			} catch (Exception e) {
-				return getViewBuilder(null, inflater, whiteTheme); //something wrong with the supplied view - create new one 
+				return getViewBuilder(null, inflater, whiteTheme); // something wrong with the supplied view - create new one
 			}
 		}
 		return builder;

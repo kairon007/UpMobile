@@ -165,7 +165,7 @@ public final class Util {
 		return str.toString().replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
 	}
 	
-	private static String getSimpleThemeName(Context context) {
+	public static String getSimpleThemeName(Context context) {
 	    PackageInfo packageInfo;
 	    try {
 	        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);

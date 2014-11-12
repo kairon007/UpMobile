@@ -41,7 +41,7 @@
 
         <Spinner
             android:id="@+id/choise_engines"
-            android:layout_width="72dp"
+            android:layout_width="88dp"
             android:layout_height="48dp"
             android:animateLayoutChanges="true">
         </Spinner>
