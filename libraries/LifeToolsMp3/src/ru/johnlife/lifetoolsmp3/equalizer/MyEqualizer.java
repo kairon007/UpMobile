@@ -95,6 +95,34 @@ public abstract class MyEqualizer extends Activity implements
 	
 	protected abstract Equalizer getEqualizer();
 	
+	public static void setEqualizer(Context context, int audioSessionId) {
+		if (Utils.getEqPrefs(context)) {
+			Equalizer equalizer = new Equalizer(1, audioSessionId);
+			BassBoost bassBoost = new BassBoost(2, audioSessionId);
+			Virtualizer virtualizer = new Virtualizer(3, audioSessionId);
+			equalizer.setEnabled(true);
+			bassBoost.setEnabled(true);
+			virtualizer.setEnabled(true);
+			ProgressDataSource myProgressDataSource = new ProgressDataSource(context);
+			myProgressDataSource.open();
+			List<ProgressClass> values = myProgressDataSource.getAllPgs();
+			if (values.size() == 0)
+				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
+			else {
+				//Set equalizer
+				Utils.changeAtBand(equalizer, (short)0, values.get(0).getProgress(1) - 15);
+				Utils.changeAtBand(equalizer, (short)1, values.get(0).getProgress(2) - 15);
+				Utils.changeAtBand(equalizer, (short)2, values.get(0).getProgress(3) - 15);
+				Utils.changeAtBand(equalizer, (short)3, values.get(0).getProgress(4) - 15);
+				Utils.changeAtBand(equalizer, (short)4, values.get(0).getProgress(5) - 15);
+				//Set bassboost
+				bassBoost.setStrength((short)(values.get(0).getArc(1) * 10));
+				//Set virtualizer
+				virtualizer.setStrength((short)(values.get(0).getArc(2) * 10));
+			}
+		}
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.equalizer_main);

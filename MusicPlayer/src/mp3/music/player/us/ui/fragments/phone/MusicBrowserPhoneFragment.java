@@ -15,6 +15,7 @@ import mp3.music.player.us.Constants;
 import mp3.music.player.us.R;
 import mp3.music.player.us.adapters.PagerAdapter;
 import mp3.music.player.us.adapters.PagerAdapter.MusicFragments;
+import mp3.music.player.us.ui.activities.CustomEqualizer;
 import mp3.music.player.us.ui.fragments.AlbumFragment;
 import mp3.music.player.us.ui.fragments.ArtistFragment;
 import mp3.music.player.us.ui.fragments.SongFragment;
@@ -194,6 +195,8 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
         super.onCreateOptionsMenu(menu, inflater);
         // Favorite action
         inflater.inflate(R.menu.favorite, menu);
+        // Equalizer action
+        inflater.inflate(R.menu.equalizer, menu);
         // Shuffle all
         inflater.inflate(R.menu.shuffle, menu);
         // Sort orders
@@ -226,6 +229,10 @@ public class MusicBrowserPhoneFragment extends SherlockFragment implements OnCen
                 MusicUtils.toggleFavorite();
                 getSherlockActivity().supportInvalidateOptionsMenu();
                 return true;
+            case R.id.menu_equalizer:
+            	Intent intent = new Intent(getActivity().getApplicationContext(), CustomEqualizer.class);
+            	startActivity(intent);
+            	return true;
             case R.id.menu_sort_by_az:
                 if (isArtistPage()) {
                     mPreferences.setArtistSortOrder(SortOrder.ArtistSortOrder.ARTIST_A_Z);

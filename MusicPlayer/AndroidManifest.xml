@@ -118,6 +118,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- Equalizer -->
+        <activity android:name=".ui.activities.CustomEqualizer" />
         <!-- Now playing -->
         <activity
             android:name=".ui.activities.AudioPlayerActivity"

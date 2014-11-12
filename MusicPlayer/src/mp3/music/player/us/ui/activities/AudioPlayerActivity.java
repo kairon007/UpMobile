@@ -350,8 +350,8 @@ import java.lang.ref.WeakReference;
                 shareCurrentTrack();
                 return true;
             case R.id.menu_audio_player_equalizer:
-                // Sound effects
-                NavUtils.openEffectsPanel(this);
+                Intent intent = new Intent(this, CustomEqualizer.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_settings:
                 // Settings

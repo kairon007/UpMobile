@@ -28,11 +28,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-import ru.johnlife.lifetoolsmp3.equalizer.ProgressClass;
-import ru.johnlife.lifetoolsmp3.equalizer.ProgressDataSource;
-import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -399,7 +395,7 @@ public final class PlaybackService extends Service
 		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
 		
-		setEqualizer(getApplicationContext());
+		CustomEqualizer.setEqualizer(getApplicationContext(), player.getAudioSessionId());
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			try {
@@ -1934,33 +1930,5 @@ public final class PlaybackService extends Service
 	
 	public Virtualizer getVirtualizer() {
 		return new Virtualizer(3, player.getAudioSessionId());
-	}
-	
-	public void setEqualizer(Context context) {
-		if (Utils.getEqPrefs(context)) {
-			Equalizer equalizer = getEqualizer();
-			BassBoost bassBoost = getBassBoost();
-			Virtualizer virtualizer = getVirtualizer();
-			equalizer.setEnabled(true);
-			bassBoost.setEnabled(true);
-			virtualizer.setEnabled(true);
-			ProgressDataSource myProgressDataSource = new ProgressDataSource(getApplicationContext());
-			myProgressDataSource.open();
-			List<ProgressClass> values = myProgressDataSource.getAllPgs();
-			if (values.size() == 0)
-				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
-			else {
-				//Set equalizer
-				Utils.changeAtBand(equalizer, (short)0, values.get(0).getProgress(1) - 15);
-				Utils.changeAtBand(equalizer, (short)1, values.get(0).getProgress(2) - 15);
-				Utils.changeAtBand(equalizer, (short)2, values.get(0).getProgress(3) - 15);
-				Utils.changeAtBand(equalizer, (short)3, values.get(0).getProgress(4) - 15);
-				Utils.changeAtBand(equalizer, (short)4, values.get(0).getProgress(5) - 15);
-				//Set bassboost
-				bassBoost.setStrength((short)(values.get(0).getArc(1) * 10));
-				//Set virtualizer
-				virtualizer.setStrength((short)(values.get(0).getArc(2) * 10));
-			}
-		}
 	}
 }

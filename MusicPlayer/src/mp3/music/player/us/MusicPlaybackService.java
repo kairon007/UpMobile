@@ -11,6 +11,26 @@
 
 package mp3.music.player.us;
 
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.TreeSet;
+
+import mp3.music.player.us.appwidgets.AppWidgetLarge;
+import mp3.music.player.us.appwidgets.AppWidgetLargeAlternate;
+import mp3.music.player.us.appwidgets.AppWidgetSmall;
+import mp3.music.player.us.appwidgets.RecentWidgetProvider;
+import mp3.music.player.us.cache.ImageCache;
+import mp3.music.player.us.cache.ImageFetcher;
+import mp3.music.player.us.provider.FavoritesStore;
+import mp3.music.player.us.provider.RecentStore;
+import mp3.music.player.us.ui.activities.CustomEqualizer;
+import mp3.music.player.us.utils.ApolloUtils;
+import mp3.music.player.us.utils.Lists;
+import mp3.music.player.us.utils.MusicUtils;
+import mp3.music.player.us.utils.PreferenceUtils;
+import mp3.music.player.us.utils.SharedPreferencesCompat;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -43,26 +63,6 @@ import android.os.RemoteException;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
-
-import mp3.music.player.us.appwidgets.AppWidgetLarge;
-import mp3.music.player.us.appwidgets.AppWidgetLargeAlternate;
-import mp3.music.player.us.appwidgets.AppWidgetSmall;
-import mp3.music.player.us.appwidgets.RecentWidgetProvider;
-import mp3.music.player.us.cache.ImageCache;
-import mp3.music.player.us.cache.ImageFetcher;
-import mp3.music.player.us.provider.FavoritesStore;
-import mp3.music.player.us.provider.RecentStore;
-import mp3.music.player.us.utils.ApolloUtils;
-import mp3.music.player.us.utils.Lists;
-import mp3.music.player.us.utils.MusicUtils;
-import mp3.music.player.us.utils.PreferenceUtils;
-import mp3.music.player.us.utils.SharedPreferencesCompat;
-
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.TreeSet;
 
 /**
  * A backbround {@link Service} used to keep music playing between activities
@@ -568,8 +568,9 @@ public class MusicPlaybackService extends Service {
         // Listen for the idle state
         final Message message = mDelayedStopHandler.obtainMessage();
         mDelayedStopHandler.sendMessageDelayed(message, IDLE_DELAY);
+        CustomEqualizer.setEqualizer(getApplicationContext(), getAudioSessionId());
     }
-
+    
     /**
      * Initializes the remote control client
      */
