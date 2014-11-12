@@ -25,15 +25,12 @@ package org.kreed.vanilla;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.UnknownFormatConversionException;
-
 import junit.framework.Assert;
-
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
-
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -92,7 +89,6 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -1241,7 +1237,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					return;
 				}
 				if(new File(file.getParentFile() + "/" + artistName + " - " + albumTitle + ".mp3").exists()) {
-					Toast toast = Toast.makeText(editor.getView().getContext(), "File with the same name already exists", Toast.LENGTH_SHORT);
+					Toast toast = Toast.makeText(editor.getView().getContext(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
 					toast.show();
 					return;
 				}
