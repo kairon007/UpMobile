@@ -44,6 +44,7 @@ public class MP3Editor {
 		etSongTitle.setText(newSongTitle);
 		etAlbumTitle.setText(newAlbumTitle);
 		if (isWhiteTheme) {
+			view.setBackgroundColor(context.getResources().getColor(android.R.color.white));
 			int black = context.getResources().getColor(android.R.color.black);
 			etArtistName.setTextColor(black);
 			etSongTitle.setTextColor(black);
