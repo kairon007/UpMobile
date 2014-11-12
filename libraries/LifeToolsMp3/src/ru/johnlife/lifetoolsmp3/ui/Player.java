@@ -434,13 +434,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void onPaused() {
-		imagePause = R.drawable.play;
-		button.setImageResource(R.drawable.play);
+		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
+		button.setImageResource(imagePause);
 	}
 
 	public void onResumed() {
-		imagePause = R.drawable.pause;
-		button.setImageResource(R.drawable.pause);
+		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
+		button.setImageResource(imagePause);
 	}
 
 	@SuppressLint("NewApi")
