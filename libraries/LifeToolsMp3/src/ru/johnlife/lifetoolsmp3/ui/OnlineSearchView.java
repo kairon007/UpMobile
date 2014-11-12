@@ -325,7 +325,7 @@ public abstract class OnlineSearchView extends View {
 				setTaskIterator(holder.getTaskIterator());
 				setSearchField(holder.getSongName().toString());
 				setCurrentName(holder.getSongName().toString());
-				getResultAdapter().notifyDataSetChanged();
+				notifyAdapter();
 				setSearchStopped(false);
 				message.setText(holder.getMessage());
 				listView.setSelection(holder.getListViewPosition());

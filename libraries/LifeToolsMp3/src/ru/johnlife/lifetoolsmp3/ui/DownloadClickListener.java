@@ -68,6 +68,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected String duration;
 	protected Long currentDownloadId;
 	public Integer songId;
+	private int id;
 	private long progress = 0;
 	private boolean useAlbumCover = true;
 	private RefreshListener listener;
@@ -95,9 +96,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			musicDir.mkdirs();
 		}
 		SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
-		final int id = songArtist.hashCode() + songTitle.hashCode();
 		boolean isCached = false;
 		if (!fromCallback) {
+			id = songArtist.hashCode() * songTitle.hashCode() * (int) System.currentTimeMillis();
 			song.setDownloaderListener(notifyStartDownload(id));
 			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, new DownloadCacheCallback() {
 				
@@ -130,7 +131,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				DownloadSongTask task = new DownloadSongTask(song, useAlbumCover, url, fileUri, id);
 				task.start();
 				return;
-			}
+			} 
 			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				url = url.replaceFirst("https", "http");
@@ -431,7 +432,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			} else {
 				String message = context.getString(R.string.download_finished);
 				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
-				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
+				notification = new Notification(android.R.drawable.stat_sys_download_done, message, Calendar.getInstance().getTimeInMillis());
 			}
 			Intent intent = new Intent();
 			PendingIntent pend = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -459,10 +460,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				URL u = new URL(url);
 				connection = u.openConnection();
 			} catch (Exception e) {
+				sendNotification(0, true);
 				notifyAboutFailed(idDownload);
 				return;
 			}
-			int size = connection.getContentLength();
+			int size = 0;
 			int index = 0;
 			int current = 0;
 			try {
@@ -470,6 +472,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				file.createNewFile();
 				output = new FileOutputStream(file);
 				input = connection.getInputStream();
+				size = connection.getContentLength();
 				buffer = new BufferedInputStream(input);
 				byte[] bBuffer = new byte[10240];
 				int i = 0;
