@@ -26,17 +26,13 @@ public class SearchJamendo extends SearchWithPages {
 			JSONObject json = new JSONObject(Jsoup.connect(String.format(url, URLEncoder.encode(getSongName(), "UTF-8"))).ignoreContentType(true).followRedirects(true).get().body().text());
 			JSONArray results = json.getJSONArray("results");
 			for (int i = 0; i < results.length(); i++) {
-				JSONObject trackMassive = results.getJSONObject(i);
-				String author = trackMassive.getString("name");
-				JSONArray tracks = trackMassive.getJSONArray("tracks");
-				for(int j = 0; j< tracks.length(); j++) {
-					JSONObject track = tracks.getJSONObject(j);
+				JSONObject track = results.getJSONObject(i);
+					String author = track.getString("artist_name");
 					String title = track.getString("name");
-					long duration = 1000 * track.getLong("duration");
+//					long duration = 1000 * track.getLong("duration");
 					String downloadUrl = track.getString("audiodownload");
 					String coverUrl = track.getString("album_image");
-					addSong(new JamendoSong(downloadUrl, coverUrl).setArtistName(author).setDuration(duration).setTitle(title));
-				}
+					addSong(new JamendoSong(downloadUrl, coverUrl).setArtistName(author).setTitle(title));
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
