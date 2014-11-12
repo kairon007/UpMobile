@@ -21,32 +21,29 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
-    
 
     <!-- This is needed for isWiredHeadsetOn() to work in some cases. (bug?) -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-       
-      <!-- AD NETWORK PERMISSIONS -->
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-	<uses-permission android:name="android.permission.GET_TASKS" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	
-	<uses-permission android:name="android.permission.WAKE_LOCK" /> 
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
-	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/> 
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- AD NETWORK PERMISSIONS -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="org.kreed.musicdownloader.app.MusicDownloaderApp"
@@ -54,14 +51,15 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <!-- AppTheme.White to enable white theme -->
-        
+
         <activity
             android:name="org.kreed.musicdownloader.ui.activity.MainActivity"
+            android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden"
             android:uiOptions="splitActionBarWhenNarrow"
-            android:configChanges="orientation|screenSize" >
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -76,8 +74,8 @@
         <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
 
         <meta-data
-           android:name="com.google.android.gms.version"
-           android:value="google_play_services_version" />
+            android:name="com.google.android.gms.version"
+            android:value="google_play_services_version" />
 
         <!-- mopub ad -->
         <activity
@@ -95,72 +93,57 @@
         <activity
             android:name="com.google.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        <activity android:name=".CustomEqualizer" />
 
-        
-		<!-- Google play services integration start -->
-		<!-- the addition of this element is required for supporting Google play services. Please ensure not to use it twice -->
-<meta-data
+        <!-- Google play services integration start -->
+        <!-- the addition of this element is required for supporting Google play services. Please ensure not to use it twice -->
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="5077000" />
-		<!-- Google play services integration end -->
-		
+        <!-- Google play services integration end -->
 
 
-	<!-- Appnext -->
-	<service android:name="com.appnext.appnextsdk.DownloadService"/>
-	
+        <!-- Appnext -->
+        <service android:name="com.appnext.appnextsdk.DownloadService" />
+        <service android:name="PlayerService" >
+        </service>
 
-
-	
-	
-		<service android:name="PlayerService"></service>
-	
-	
-        
-		<!-- Mobilecore Manifest declaration start -->
-		<service
+        <!-- Mobilecore Manifest declaration start -->
+        <service
             android:name="com.ironsource.mobilcore.MobileCoreReport"
             android:enabled="true"
             android:exported="false"
             android:process=":mcServiceProcess" />
-		
 
         <receiver
             android:name="com.ironsource.mobilcore.InstallationTracker"
             android:enabled="true"
             android:process=":installationTracker" />
-		
-        <activity android:name="com.ironsource.mobilcore.InterstitialVideoActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:keepScreenOn="true"/>
-        
-        
-        
-		<!-- Revmob -->
-		<meta-data android:name="com.revmob.app.id" android:value="5433b352053d33220787aa51"/>
-        <activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+
+        <activity
+            android:name="com.ironsource.mobilcore.InterstitialVideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:keepScreenOn="true" />
+
+        <!-- Revmob -->
+        <meta-data
+            android:name="com.revmob.app.id"
+            android:value="5433b352053d33220787aa51" />
+
+        <activity
+            android:name="com.revmob.ads.fullscreen.FullscreenActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Translucent">
+            android:theme="@android:style/Theme.Translucent" >
         </activity>
-		
-        
+
         <!-- Startapp -->
-        <activity android:name="com.startapp.android.publish.list3d.List3DActivity"
-          android:theme="@android:style/Theme" />
-
-<activity android:name="com.startapp.android.publish.AppWallActivity"
-          android:theme="@android:style/Theme.Translucent"
-          android:configChanges="orientation|keyboardHidden|screenSize" />
-        
-
-
+        <activity
+            android:name="com.startapp.android.publish.list3d.List3DActivity"
+            android:theme="@android:style/Theme" />
+        <activity
+            android:name="com.startapp.android.publish.AppWallActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent" />
     </application>
 
 </manifest>

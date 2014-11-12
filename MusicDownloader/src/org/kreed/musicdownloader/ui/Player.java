@@ -3,18 +3,28 @@ package org.kreed.musicdownloader.ui;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.kreed.musicdownloader.Constants;
+import org.kreed.musicdownloader.CustomEqualizer;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
+import org.kreed.musicdownloader.ui.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.equalizer.ProgressClass;
+import ru.johnlife.lifetoolsmp3.equalizer.ProgressDataSource;
+import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.media.audiofx.BassBoost;
+import android.media.audiofx.Equalizer;
+import android.media.audiofx.Virtualizer;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -22,6 +32,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -44,7 +55,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	private TextView songArtist;
 	private TextView songDuration;
 	private LinearLayout playerLayout;
-
+	private ImageView equalizer;
 	private String title;
 	private String artist;
 	private Integer currentImageButton;
@@ -124,6 +135,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			buttonPlay.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.selectable_item_bg_honeycomb));
 			
 		}
+		equalizer.setOnClickListener(this);
 	}
 
 	private void init(FrameLayout view) {
@@ -134,6 +146,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		songArtist = (TextView) view.findViewById(R.id.player_artist);
 		songTitle = (TextView) view.findViewById(R.id.player_title);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
+		equalizer = (ImageView) view.findViewById(R.id.equalizer);
 	}
 
 	private void onPrepared() {
@@ -259,6 +272,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 				stateManagementPlayer(Constants.CONTINUE_PLAY);
 			}
 		}
+		if (v.getId() == R.id.equalizer) {
+			Intent intent = new Intent(((MainActivity) view.getContext()), CustomEqualizer.class);
+			((MainActivity) view.getContext()).startActivity(intent);
+		}
 	}
 
 	@Override
@@ -301,6 +318,46 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 				mediaPlayer.prepareAsync();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public Equalizer getEqualizer() {
+		return new Equalizer(1, mediaPlayer.getAudioSessionId());
+	}
+	
+	public BassBoost getBassBoost() {
+		return new BassBoost(2, mediaPlayer.getAudioSessionId());
+	}
+	
+	public Virtualizer getVirtualizer() {
+		return new Virtualizer(3, mediaPlayer.getAudioSessionId());
+	}
+	
+	public void setEqualizer(Context context) {
+		if (Utils.getEqPrefs(context)) {
+			Equalizer equalizer = getEqualizer();
+			BassBoost bassBoost = getBassBoost();
+			Virtualizer virtualizer = getVirtualizer();
+			equalizer.setEnabled(true);
+			bassBoost.setEnabled(true);
+			virtualizer.setEnabled(true);
+			ProgressDataSource myProgressDataSource = new ProgressDataSource(view.getContext());
+			myProgressDataSource.open();
+			List<ProgressClass> values = myProgressDataSource.getAllPgs();
+			if (values.size() == 0)
+				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
+			else {
+				//Set equalizer
+				Utils.changeAtBand(equalizer, (short)0, values.get(0).getProgress(1) - 15);
+				Utils.changeAtBand(equalizer, (short)1, values.get(0).getProgress(2) - 15);
+				Utils.changeAtBand(equalizer, (short)2, values.get(0).getProgress(3) - 15);
+				Utils.changeAtBand(equalizer, (short)3, values.get(0).getProgress(4) - 15);
+				Utils.changeAtBand(equalizer, (short)4, values.get(0).getProgress(5) - 15);
+				//Set bassboost
+				bassBoost.setStrength((short)(values.get(0).getArc(1) * 10));
+				//Set virtualizer
+				virtualizer.setStrength((short)(values.get(0).getArc(2) * 10));
+			}
 		}
 	}
 	

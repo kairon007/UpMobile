@@ -84,4 +84,13 @@
                 android:visibility="gone" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/equalizer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/selectable_item_bg"
+            android:src="@drawable/ic_menu_equalizer" />
+
 </LinearLayout>
