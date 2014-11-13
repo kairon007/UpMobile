@@ -4,15 +4,12 @@ import java.io.FileDescriptor;
 
 import org.kreed.musicdownloader.PlayerService;
 
-
-
-
-
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -25,7 +22,6 @@ import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
 import android.util.Log;
-import android.view.accessibility.CaptioningManager.CaptioningChangeListener;
 
 public class MusicDownloaderApp extends Application {
 	private static final BitmapFactory.Options BITMAP_OPTIONS = new BitmapFactory.Options();
@@ -91,16 +87,22 @@ public class MusicDownloaderApp extends Application {
 	
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 
-		public void onServiceConnected(ComponentName name, IBinder binder) {
+		@Override
+		public void onServiceDisconnected(ComponentName paramComponentName) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onServiceConnected(ComponentName paramComponentName, IBinder paramIBinder) {
+			android.util.Log.d("logd", "onServiceConnected: ");
 			try {
-				service = ((PlayerService.PlayerBinder) binder).getService();
+				service = ((PlayerService.PlayerBinder) paramIBinder).getService();
 			} catch (Exception e) {
 				Log.e(getClass().getSimpleName(), e.getMessage());
 			}
+
 		}
 
-		public void onServiceDisconnected(ComponentName name) {
-		}
 	};
 
 
@@ -115,7 +117,9 @@ public class MusicDownloaderApp extends Application {
 //		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		MusicApp.setSharedPreferences(prefs);
+		android.util.Log.d("logd", "onCreate: " + 1);
 		bindService(new Intent(this, PlayerService.class), serviceConnection, BIND_AUTO_CREATE);
+		android.util.Log.d("logd", "onCreate: " + 2);
 	}
 	
 	public static SharedPreferences getSharedPreferences() {

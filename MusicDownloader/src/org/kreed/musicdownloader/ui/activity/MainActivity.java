@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.kreed.musicdownloader.Advertisement;
 import org.kreed.musicdownloader.CompatHoneycomb;
 import org.kreed.musicdownloader.Constants;
+import org.kreed.musicdownloader.CustomEqualizer;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.Settings;
@@ -53,6 +54,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -290,6 +293,7 @@ public class MainActivity extends Activity {
 				MusicDownloaderApp.getService().getPlayer().getView(footer);
 			}
 			player = MusicDownloaderApp.getService().getPlayer();
+			player.setEqualizer(this);
 		}
 		// show cross promo box
 		try {
@@ -405,7 +409,7 @@ public class MainActivity extends Activity {
 		} else if (page == 2) {
 			out.putString(Constants.FILTER_TEXT_LIBRARY, textFilterLibrary);
 		}
-		if (null != player) {
+		if (null != player && player.getCustomAudioSessionId() == -1) {
 			out.putBoolean(SAVE_SEEKBAR_PROGRESS, player.isSongProgressIndeterminate());
 			out.putInt(SAVE_BUTTONPLAY_PROGRESS, player.getButtonProgressVisibility());
 			out.putBoolean(SAVE_PLAYER_VIEW, player.getPlayerVisibility() == View.VISIBLE);
@@ -496,7 +500,7 @@ public class MainActivity extends Activity {
 
 	public void play(ArrayList<String[]> headers, MusicData musicData) {
 		music = musicData;
-		if (player != null && player.getData().equals(musicData)) {
+		if (player != null && player.getCustomAudioSessionId() == -1 && player.getData().equals(musicData)) {
 			player.stateManagementPlayer(Constants.RESTART);
 			return;
 		}
@@ -509,6 +513,28 @@ public class MainActivity extends Activity {
 		}
 		player.getView(footer);
 		player.stateManagementPlayer(Constants.PLAY);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (MusicDownloaderApp.getService().containsPlayer()) {
+			Intent intent = new Intent(this, CustomEqualizer.class);
+			startActivity(intent);
+		} else {
+			player = new Player();
+			player.setCustomAudioSessionId((int) System.currentTimeMillis());
+			MusicDownloaderApp.getService().setPlayer(player);
+			Intent intent = new Intent(this, CustomEqualizer.class);
+			startActivity(intent);
+		}
+			return super.onOptionsItemSelected(item);
 	}
 
 	public LinearLayout getSearchLayout() {

@@ -55,12 +55,12 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	private TextView songArtist;
 	private TextView songDuration;
 	private LinearLayout playerLayout;
-	private ImageView equalizer;
 	private String title;
 	private String artist;
 	private Integer currentImageButton;
 	private boolean prepared = false;
 	private byte playerState = 0;
+	private int customAudioSessionId = -1;
 
 	private Runnable progressAction = new Runnable() {
 
@@ -88,12 +88,15 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		this.header = header;
 	}
 
+	public Player() {
+	}
+
 	public void setData(ArrayList<String[]> headers, MusicData musicData) {
 		stateManagementPlayer(Constants.STOP);
-		title = data.getSongTitle();
-		artist = data.getSongArtist();
 		this.data = musicData;
 		this.header = headers;
+		title = data.getSongTitle();
+		artist = data.getSongArtist();
 	}
 
 	public void setActivatedButton(boolean value) {
@@ -135,7 +138,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			buttonPlay.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.selectable_item_bg_honeycomb));
 			
 		}
-		equalizer.setOnClickListener(this);
 	}
 
 	private void init(FrameLayout view) {
@@ -146,7 +148,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		songArtist = (TextView) view.findViewById(R.id.player_artist);
 		songTitle = (TextView) view.findViewById(R.id.player_title);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
-		equalizer = (ImageView) view.findViewById(R.id.equalizer);
 	}
 
 	private void onPrepared() {
@@ -165,6 +166,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		android.util.Log.d("logd", "onProgressChanged: "  + mediaPlayer.getAudioSessionId());
 			if (mediaPlayer != null && prepared && fromUser) {
 				mediaPlayer.seekTo(progress);
 		}
@@ -272,10 +274,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 				stateManagementPlayer(Constants.CONTINUE_PLAY);
 			}
 		}
-		if (v.getId() == R.id.equalizer) {
-			Intent intent = new Intent(((MainActivity) view.getContext()), CustomEqualizer.class);
-			((MainActivity) view.getContext()).startActivity(intent);
-		}
 	}
 
 	@Override
@@ -293,10 +291,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		Player.this.onPrepared();
-		prepared = true;
 		mediaPlayer = mp;
 		setEqualizer(view.getContext());
+		Player.this.onPrepared();
+//		if (customAudioSessionId != -1) {
+//			mp.setAudioSessionId(customAudioSessionId);
+//		}
+		prepared = true;
 		mp.start();
 		if (data.getFileUri().contains("http")) {
 			Toast.makeText(view.getContext(), MessageFormat.format("{0} - {1} is playing", artist, title), Toast.LENGTH_SHORT).show();
@@ -323,15 +324,21 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	}
 	
 	public Equalizer getEqualizer() {
-		return new Equalizer(1, mediaPlayer.getAudioSessionId());
+		if (null == mediaPlayer) {
+			return new Equalizer(1, customAudioSessionId);
+		} else return new Equalizer(1, mediaPlayer.getAudioSessionId());
 	}
 	
 	public BassBoost getBassBoost() {
-		return new BassBoost(2, mediaPlayer.getAudioSessionId());
+		if (null == mediaPlayer) {
+			return new BassBoost(2, customAudioSessionId);
+		} else return new BassBoost(2, mediaPlayer.getAudioSessionId());
 	}
-	
+	 	
 	public Virtualizer getVirtualizer() {
-		return new Virtualizer(3, mediaPlayer.getAudioSessionId());
+		if (null == mediaPlayer) {
+			return new Virtualizer(3, customAudioSessionId);
+		} else return new Virtualizer(3, mediaPlayer.getAudioSessionId());
 	}
 	
 	public void setEqualizer(Context context) {
@@ -339,6 +346,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			Equalizer equalizer = getEqualizer();
 			BassBoost bassBoost = getBassBoost();
 			Virtualizer virtualizer = getVirtualizer();
+			android.util.Log.d("logd", "setEqualizer: " + virtualizer.getId());
 			equalizer.setEnabled(true);
 			bassBoost.setEnabled(true);
 			virtualizer.setEnabled(true);
@@ -393,5 +401,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 
 	public MusicData getData() {
 		return data;
+	}
+
+	public void setCustomAudioSessionId(int customAudioSessionId) {
+		this.customAudioSessionId = customAudioSessionId;
+	}
+	
+	public int getCustomAudioSessionId() {
+		return customAudioSessionId;
 	}
 }
