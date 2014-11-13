@@ -442,12 +442,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void onPaused() {
-		imagePause = (isWhiteTheme) ? R.drawable.play_white : R.drawable.play;
+		//TODO
+		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
 		button.setImageResource(imagePause);
 	}
 
 	public void onResumed() {
-		imagePause = (isWhiteTheme) ? R.drawable.pause_white : R.drawable.pause;
+		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
 		button.setImageResource(imagePause);
 	}
 
@@ -494,7 +495,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 							public void onCompletion(MediaPlayer mp) {
 								mp.seekTo(0);
 								mediaPlayer = mp;
-								imagePause = R.drawable.play;
+								imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.play_white : R.drawable.play;
 								button.setImageResource(imagePause);
 								progress.setProgress(0);
 								SongArrayHolder.getInstance().setPlaying(false);
