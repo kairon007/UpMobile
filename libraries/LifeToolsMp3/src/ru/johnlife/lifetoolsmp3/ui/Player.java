@@ -290,7 +290,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			SongArrayHolder.getInstance().setID3DialogOpened(true, fields);
 		}
 		editorView = editor.getView();
-		final boolean temp = SongArrayHolder.getInstance().isCoverEnabled();
 		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme).setView(editorView);
 		if (isDefaultCover) {
 			editor.disableChekBox();
@@ -309,14 +308,14 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				cancelMP3editor(temp);
+				cancelMP3editor();
 			}
 		});
 		builder.setOnCancelListener(new OnCancelListener() {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				cancelMP3editor(temp);
+				cancelMP3editor();
 			}
 		});
 		id3Dialog = builder.create();
@@ -325,8 +324,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		id3Dialog.show();
 	}
 
-	private void cancelMP3editor(boolean temp) {
-		SongArrayHolder.getInstance().setCoverEnabled(temp);
+	private void cancelMP3editor() {
+		SongArrayHolder.getInstance().setCoverEnabled(true);
 		SongArrayHolder.getInstance().setID3DialogOpened(false, null);
 	}
 
