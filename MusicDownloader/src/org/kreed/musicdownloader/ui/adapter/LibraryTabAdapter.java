@@ -91,7 +91,6 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 							
 				}
 			}
-			//кол-во операций, что и в remove(MusicData) но из-за невозможности(?) переписать equals пришлось так
 			for (int i = 0; i < mObjects.size(); ++i) {
 				if (mObjects.get(i).getFileUri().endsWith(filePath)) {
 					mObjects.remove(i);
