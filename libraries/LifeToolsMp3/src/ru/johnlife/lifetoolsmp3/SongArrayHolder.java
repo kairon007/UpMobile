@@ -39,6 +39,7 @@ public class SongArrayHolder {
 	private View view;
 	private boolean isButtonsEnabled;
 	private String message;
+	private int position;
 	
 	private SongArrayHolder() {
 	}
@@ -177,7 +178,7 @@ public class SongArrayHolder {
 	public void restoreState(OnlineSearchView view) {
 		view.setSwitchMode(switchMode);
 		if (isProgressDialogOpened) {
-			view.getDownloadUrl(fullAction, this.view, listViewPosition);
+			view.getDownloadUrl(fullAction, this.view, position);
 		}
 		if (isStreamDialogOpened) {
 			view.prepareSong(getStreamDialogSong(), true);
@@ -224,10 +225,11 @@ public class SongArrayHolder {
 		return isProgressDialogOpened;
 	}
 
-	public void setProgressDialogOpened(boolean isProgressDialogOpened, boolean fullAction, View view) {
+	public void setProgressDialogOpened(boolean isProgressDialogOpened, boolean fullAction, View view, int position) {
 		this.isProgressDialogOpened = isProgressDialogOpened;
 		this.fullAction = fullAction;
 		this.view = view;
+		this.position = position;
 	}
 
 	public String getMessage() {

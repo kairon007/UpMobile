@@ -330,7 +330,7 @@ public abstract class OnlineSearchView extends View {
 				message.setText(holder.getMessage());
 				listView.setSelection(holder.getListViewPosition());
 			}
-		}
+		}		
 		holder.restoreState(this);
 		if (holder.isSearchExecute() && resultAdapter.isEmpty()) {
 			search(holder.getSongName());
@@ -604,7 +604,8 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	};
-	protected ProgressDialog progressDialog;
+	protected AlertDialog.Builder progressDialog;
+	protected AlertDialog alertProgressDialog;
 
 	public static boolean isOffline(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -723,74 +724,89 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public void getDownloadUrl(final boolean fullAction, final View view, final int position) {
-		if(isOffline(getContext())) {
+		if (isOffline(getContext())) {
 			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
 		}
-		if(!onlyOnWifi()){
+		if (!onlyOnWifi()) {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
-		holder.setProgressDialogOpened(true, fullAction, view);
+		boolean isRestored = holder.isProgressDialogOpened();
+		holder.setProgressDialogOpened(true, fullAction, view, position);
 		final RemoteSong downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
 			stopSystemPlayer(getContext());
-			showProgressDialog(fullAction, view, downloadSong);
+			showProgressDialog(fullAction, view, downloadSong, position);
 		}
-		if (fullAction) {
-			downloadSong.getDownloadUrl(new DownloadUrlListener() {
-	
-				@Override
-				public void success(final String url) {
-					if (null != progressDialog) {
-						progressDialog.dismiss();
-					}
-					downloadSong.setDownloadUrl(url);
-					holder.setProgressDialogOpened(false, fullAction, view);
-					((Activity)getContext()).runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							if (fullAction) {
-								prepareSong(downloadSong, false);
+		if (!isRestored) {
+			if (fullAction) {
+				downloadSong.getDownloadUrl(new DownloadUrlListener() {
+
+					@Override
+					public void success(final String url) {
+						downloadSong.setDownloadUrl(url);
+						holder.setProgressDialogOpened(false, fullAction, view, position);
+						((Activity) getContext()).runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								dismissProgressDialog();
+								if (fullAction) {
+									prepareSong(downloadSong, false);
+								}
 							}
-						}
-					});
-				}
-	
-				@Override
-				public void error(String error) {
-					if (null != progressDialog) {
-						progressDialog.dismiss();
+						});
 					}
-					holder.setProgressDialogOpened(false, fullAction, view);
-					Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
-					switchMode = true;
-					toast.show();
-				}
-			});
-		} else {
-			click(view, position);
+
+					@Override
+					public void error(String error) {
+						((Activity) getContext()).runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								dismissProgressDialog();
+								holder.setProgressDialogOpened(false, fullAction, view, position);
+								Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
+								switchMode = true;
+								toast.show();
+							}
+						});
+
+					}
+				});
+			} else {
+				click(view, position);
+			}
 		}
 	}
 
-	protected void showProgressDialog(final boolean fullAction, final View view, final RemoteSong downloadSong) {
-		progressDialog = new ProgressDialog(getContext());
-		progressDialog.setTitle(R.string.message_please_wait);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		progressDialog.setMessage(getContext().getString(R.string.message_loading));
+	protected void dismissProgressDialog() {
+		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
+			try {
+				alertProgressDialog.cancel();
+			} catch (Exception e) {
+				Log.e(getClass().getSimpleName(), e.getMessage());
+			}
+		}
+	}
+
+	protected void showProgressDialog(final boolean fullAction, final View view, final RemoteSong downloadSong, final int position) {
+		View dialoglayout = inflater.inflate(R.layout.progress_dialog, null);
+		progressDialog = new AlertDialog.Builder(getContext());
+		progressDialog.setView(dialoglayout);
 		progressDialog.setOnCancelListener(new OnCancelListener() {
-			
+
 			@Override
-			public void onCancel(DialogInterface dialog) {
+			public void onCancel(DialogInterface paramDialogInterface) {
 				downloadSong.cancelTasks();
-				holder.setProgressDialogOpened(false, fullAction, view);
+				holder.setProgressDialogOpened(false, fullAction, view, position);
 			}
 		});
-		progressDialog.show();
+		alertProgressDialog = progressDialog.create();
+		alertProgressDialog.show();
 	}
 	
-
 	public void prepareSong(final RemoteSong remoteSong, boolean force) {
 		RemoteSong song = remoteSong.cloneSong();
 		String title = song.getTitle();
