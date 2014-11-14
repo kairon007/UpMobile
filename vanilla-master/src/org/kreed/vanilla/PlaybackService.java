@@ -1727,7 +1727,7 @@ public final class PlaybackService extends Service
 		String title = song.title;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			int playButton = playing ? R.drawable.pause : R.drawable.play;
+			int playButton = playing ? R.drawable.notification_pause : R.drawable.notification_play;
 			views.setImageViewResource(R.id.play_pause, playButton);
 
 			ComponentName service = new ComponentName(this, PlaybackService.class);
