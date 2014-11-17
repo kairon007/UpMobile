@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
 	private String textFilterDownload = "";
 	private String textFilterLibrary = "";
 	private int page;
-	private int selectedItem;
+	private SelectedData selectedItem;
 	private int lastPage = -1;
 	private boolean mSearchBoxVisible;
 	public boolean mFakeTarget;
@@ -134,6 +134,7 @@ public class MainActivity extends Activity {
 	FileObserver observer; {
 		setFileObserver();
 	}
+	
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
 		private boolean flag = false;
@@ -380,7 +381,10 @@ public class MainActivity extends Activity {
 			File musicUri = new File(uri);
 			music = new MusicData(musicUri);
 			useCover = in.getBoolean(Constants.USE_COVER, false);
-			showEditDialog(true);
+			File file = new File(in.getString(Constants.FILE_PATH_BUNDLE));
+			MusicData data = new MusicData(file);
+			int i = in.getInt(Constants.ITEM_BUNDLE);
+			showEditDialog(true, new SelectedData(i, data));
 		}
 		textFilterDownload = in.getString(Constants.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constants.FILTER_TEXT_LIBRARY);
@@ -402,6 +406,8 @@ public class MainActivity extends Activity {
 			strings.add(editor.getStrings()[2]);
 			out.putStringArrayList(Constants.EDITOR_FIELDS, strings);
 			out.putBoolean(Constants.USE_COVER, editor.useAlbumCover());
+			out.putString(Constants.FILE_PATH_BUNDLE, selectedItem.data.getFileUri());
+			out.putInt(Constants.ITEM_BUNDLE, selectedItem.position);
 		}
 		out.putBoolean(Constants.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		if (page == 1) {
@@ -548,10 +554,10 @@ public class MainActivity extends Activity {
 			new DeleteTask().execute();
 			break;
 		case EDIT_TAG:
-			if (null != music.getSongBitmap()) {
+			showEditDialog(false, selectedItem);
+			if (null != selectedItem.data.getSongBitmap()) {
 				useCover = true;
 			}
-			showEditDialog(false);
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -565,20 +571,16 @@ public class MainActivity extends Activity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 
-	public MusicData getMusic() {
-		return music;
-	}
-
 	public void setMusic(MusicData music) {
 		this.music = music;
 	}
 
-	public int getSelectedItem() {
+	public SelectedData getSelectedItem() {
 		return selectedItem;
 	}
 
-	public void setSelectedItem(int selectedItem) {
-		this.selectedItem = selectedItem;
+	public void setSelectedItem(int selectedItem, MusicData data) {
+		this.selectedItem = new SelectedData(selectedItem, data);
 	}
 
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {
@@ -620,7 +622,7 @@ public class MainActivity extends Activity {
 	}
 
 	@SuppressLint("NewApi")
-	public void showEditDialog(boolean forse) {
+	public void showEditDialog(boolean forse, final SelectedData selectedData) {
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme);
 		showDialog = true;
@@ -648,22 +650,22 @@ public class MainActivity extends Activity {
 
 					@Override
 					protected Void doInBackground(Void... params) {
-						if (editor.manipulateText() || editor.useAlbumCover()!=music.isUseCover()) {
+						MusicData bufData = selectedData.data;
+						if (editor.manipulateText() || editor.useAlbumCover() != bufData.isUseCover()) {
 							String artistName = editor.getNewArtistName();
 							String albumTitle = editor.getNewAlbumTitle();
 							String songTitle = editor.getNewSongTitle();
 							useCover = editor.useAlbumCover();
-							music.setUseCover(useCover);
+							bufData.setUseCover(useCover);
 							MusicData data = new MusicData(artistName, songTitle, null, null);
 							data.setSongAlbum(albumTitle);
 							observer.stopWatching();
-							music.rename(data);
-							notifyMediascanner(music);
-							observer.startWatching();
+							//TODO this use file
+							bufData.rename(data);
+							notifyMediascanner(bufData, selectedData.position);
 							showDialog = false;
 							return null;
-						}
-						else {
+						} else {
 							showDialog = false;
 							cancel(true);
 							return null;
@@ -696,13 +698,13 @@ public class MainActivity extends Activity {
 		alertDialog.show();
 	}
 
-	private void notifyMediascanner(final MusicData musicData) {
+	private void notifyMediascanner(final MusicData musicData, final int position) {
 		File file = new File(musicData.getFileUri());
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
-				int i = getSelectedItem();
-				mPagerAdapter.updateMusicData(i, musicData);
+				mPagerAdapter.updateMusicData(position, musicData);
+				observer.startWatching();
 			}
 
 		});
@@ -726,6 +728,7 @@ public class MainActivity extends Activity {
 
 		}
 	}
+	
 	public void setFileObserver() {
 		File musicDir = new File(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX);
 		if (!musicDir.exists()) {
@@ -733,31 +736,44 @@ public class MainActivity extends Activity {
 		}
 		if (observer != null)
 			observer.stopWatching();
-		observer= new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX) {
-		@Override
-		public void onEvent(int event, String file) {
-			String filePath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + file;
-			if (mPagerAdapter != null) {
-				switch (event) {
-				case FileObserver.DELETE:
-				case FileObserver.MOVED_FROM:
-					mPagerAdapter.removeDataByPath(file);
-					break;
-				case FileObserver.DELETE_SELF:
-					mPagerAdapter.cleanLibrary();
-					/**
-					 * if user delete folder while program is working, all files will be deleted, but folder will be recreated
-					 */
-					setFileObserver();
-					break;
-				case FileObserver.MOVED_TO:
-					if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))
-						mPagerAdapter.changeArrayMusicData(new MusicData(new File(filePath)));
-					break;
+		observer = new FileObserver(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX) {
+			@Override
+			public void onEvent(int event, String file) {
+				String filePath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + file;
+				if (mPagerAdapter != null) {
+					switch (event) {
+					case FileObserver.DELETE:
+					case FileObserver.MOVED_FROM:
+						mPagerAdapter.removeDataByPath(file);
+						break;
+					case FileObserver.DELETE_SELF:
+						mPagerAdapter.cleanLibrary();
+						/**
+						 * if user delete folder while program is working, all
+						 * files will be deleted, but folder will be recreated
+						 */
+						setFileObserver();
+						break;
+					case FileObserver.MOVED_TO:
+						if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))
+							mPagerAdapter.addMusicData(new MusicData(new File(filePath)));
+						break;
+					}
 				}
 			}
+		};
+		observer.startWatching();
+	}
+	
+	private class SelectedData {
+		
+		int position;
+		MusicData data;
+		
+		public SelectedData(int position, MusicData data) {
+			this.position = position;
+			this.data = data;
 		}
-	};
-	observer.startWatching();
+		
 	}
 }

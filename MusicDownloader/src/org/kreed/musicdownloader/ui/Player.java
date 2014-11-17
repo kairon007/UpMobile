@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.kreed.musicdownloader.Constants;
-import org.kreed.musicdownloader.CustomEqualizer;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.ui.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.equalizer.ProgressClass;
@@ -17,7 +15,6 @@ import ru.johnlife.lifetoolsmp3.equalizer.ProgressDataSource;
 import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -32,7 +29,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -166,9 +162,8 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		android.util.Log.d("logd", "onProgressChanged: "  + mediaPlayer.getAudioSessionId());
-			if (mediaPlayer != null && prepared && fromUser) {
-				mediaPlayer.seekTo(progress);
+		if (mediaPlayer != null && prepared && fromUser) {
+			mediaPlayer.seekTo(progress);
 		}
 	}
 
@@ -256,7 +251,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 					mediaPlayer.stop();
 					mediaPlayer.reset();
 				}
-				mediaPlayer.release();
+				mediaPlayer.reset();
 			} catch (Exception e) {
 			}
 			mediaPlayer = null; 

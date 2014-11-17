@@ -14,7 +14,6 @@ import org.kreed.musicdownloader.DBHelper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 public class MusicData {
 
@@ -104,7 +103,6 @@ public class MusicData {
 						new MyID3().write(musicFile, dst, src_set, metadata);
 						dst.renameTo(musicFile);
 					} catch (Exception e) {
-						android.util.Log.d("log", "don't write music metadata from file. " + e);
 					} finally {
 						if (dst.exists())
 							dst.delete();

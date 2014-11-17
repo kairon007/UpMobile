@@ -15,5 +15,7 @@ public class Constants {
 	public static final byte CONTINUE_PLAY = 5;
 	public static final String EDITOR_FIELDS = "aditor_fields";
 	public static final String USE_COVER = "use_cover";
+	public static final String FILE_PATH_BUNDLE = "file_path_to_bundle";
+	public static final String ITEM_BUNDLE = "get_selected_item_to_bundle";
 	public static final String MUSIC_URI = "music_uri";
 }

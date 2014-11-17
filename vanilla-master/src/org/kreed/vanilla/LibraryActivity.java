@@ -587,10 +587,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		outState.putBoolean(IS_FIRST_RUN, isFirstRun);
 		super.onSaveInstanceState(outState);
 	}
-
-	public Activity getActivity() {
-		return this;
-	}
 	
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -600,7 +596,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			//onBackPressed();
 			
             try {
-            	Advertisement.exit(getActivity());
+            	Advertisement.exit(this);
             } catch(Exception e) {
             	
             }
@@ -1351,9 +1347,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					IntentFilter intentFilter = new IntentFilter();
 					intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
 					intentFilter.addDataScheme("file");
-					getActivity().getApplicationContext().registerReceiver(mReceiver, intentFilter);
+					getApplicationContext().registerReceiver(mReceiver, intentFilter);
 					Uri storage = Uri.parse("file://" + Environment.getExternalStorageDirectory());
-					getActivity().getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, storage));
+					getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, storage));
 				} catch (Exception e) {
 					Log.e(getClass().getSimpleName(), "Scan Flash Card");
 				}
