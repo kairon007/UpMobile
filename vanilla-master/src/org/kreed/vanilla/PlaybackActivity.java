@@ -289,7 +289,7 @@ public abstract class PlaybackActivity extends Activity
 	}
 
 	public void loaderLyrics(final Song song) {
-		if (null != song) {
+		if (null != song && null != song.title && null != song.artist) {
 			enableProgress();
 			LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
 			lyricsFetcher.fetchLyrics(song.title, song.artist);
