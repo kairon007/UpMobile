@@ -9,6 +9,7 @@ import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -201,7 +202,7 @@ public class DirectoryChooserDialog {
 		AlertDialog.Builder dialogBuilder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View contentView;
-		if(isWhiteTheme) {
+		if(isWhiteTheme || Util.getThemeName(m_context).equals(Util.WHITE_THEME)) {
 			contentView = inflater.inflate(R.layout.dir_chooser_dialog_white, null);
 		} else {
 			contentView = inflater.inflate(R.layout.dir_chooser_dialog, null);
@@ -349,7 +350,7 @@ public class DirectoryChooserDialog {
 					tv.getLayoutParams().width = LayoutParams.MATCH_PARENT;
 					tv.setGravity(Gravity.CENTER_VERTICAL);
 					if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-						if (isWhiteTheme) {
+						if (isWhiteTheme || Util.getThemeName(m_context).equals(Util.WHITE_THEME)) {
 							int white = Color.BLACK;
 							tv.setTextColor(white);
 						} else {
