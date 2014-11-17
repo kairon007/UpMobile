@@ -113,6 +113,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		initView(view);
 	}
+	
 	public void initView(final View view) {
 		this.view = view;
 		songId = -1;
@@ -323,6 +324,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		id3Dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		id3Dialog.show();
 	}
+	
+	
 
 	private void cancelMP3editor() {
 		SongArrayHolder.getInstance().setCoverEnabled(true);
@@ -441,7 +444,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void onPaused() {
-		//TODO
 		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
 		button.setImageResource(imagePause);
 	}
@@ -450,6 +452,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
 		button.setImageResource(imagePause);
 	}
+
 
 	@SuppressLint("NewApi")
 	@Override
@@ -474,8 +477,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		if (null == mediaPlayer)
+		if (null == mediaPlayer){
 			return;
+		}
 		if (result) {
 			mediaPlayer.prepareAsync();
 			mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
@@ -486,6 +490,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 					int current = mp.hashCode();
 					if (SongArrayHolder.getInstance().isStremDialogOpened() && last == current) {
 						prepared = true;
+						imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.pause_white : R.drawable.pause;
+						button.setImageResource(imagePause);
 						mp.start();
 						SongArrayHolder.getInstance().setPlaying(true);
 						mp.setOnCompletionListener(new OnCompletionListener() {
