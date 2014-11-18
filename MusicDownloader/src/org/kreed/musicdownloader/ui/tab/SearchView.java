@@ -62,7 +62,7 @@ public class SearchView  extends OnlineSearchView {
 				@Override
 				public void success(String url) {
 					path = url;
-					SearchView.this.progressDialog.dismiss();
+					SearchView.this.alertProgressDialog.dismiss();
 					startPlay(song, data);
 				}
 				
