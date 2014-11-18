@@ -17,7 +17,6 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -459,6 +458,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 		adapter = new DownloadsAdapter(inflateView.getContext(), R.layout.downloads_row);
 		listView = (ListView) inflateView.findViewById(R.id.list_downloads);
 		listView.setAdapter(adapter);
+		listView.setDivider(activity.getResources().getDrawable(R.drawable.layout_divider));
 		progress = (ProgressBar) inflateView.findViewById(R.id.progress);
 		clearAll.setOnClickListener(new OnClickListener() {
 

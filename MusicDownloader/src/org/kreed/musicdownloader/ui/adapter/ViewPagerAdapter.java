@@ -234,6 +234,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 				adapterLibrary = new LibraryTabAdapter(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
+				view.setDivider(context.getResources().getDrawable(R.drawable.layout_divider));
 				if (adapterLibrary.checkDeployFilter()) {
 					view.setVisibility(View.INVISIBLE);
 				}
