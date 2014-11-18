@@ -58,6 +58,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -108,6 +110,7 @@ public abstract class OnlineSearchView extends View {
 	private RemoteSong downloadSong;
 	private int clickPosition;
 	private SuccessGettingUrlReceiver successGettingUrlReceiver;
+	private int initialHeight ;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -232,6 +235,13 @@ public abstract class OnlineSearchView extends View {
 				return false;
 			}
 		});
+		searchField.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				expandEngines();
+			}
+		});
 		ArrayList<String> list = getSettings().getEnginesArray(getContext());
 		if (list.size() > 1) {
 
@@ -249,13 +259,13 @@ public abstract class OnlineSearchView extends View {
 			}
 			int id = adapter.getPosition(keyEngines);
 			spEnginesChoiser.setSelection(id);
-			final Context context = getContext();
 			spEnginesChoiser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					collapseEngines();
 					keyEngines = (String) adapter.getItem(position);
-					sPref = context.getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+					sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
 					SharedPreferences.Editor editor = sPref.edit();
 					if (keyEngines.equals(getTitleSearchEngine())) {
 						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
@@ -298,8 +308,8 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onClick(View v) {
 				trySearch();
+				collapseEngines();
 			}
-
 		});
 		view.findViewById(R.id.downloads).setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -315,6 +325,7 @@ public abstract class OnlineSearchView extends View {
 				resultAdapter.clear();
 				searchStopped = true;
 				progress.setVisibility(View.GONE);
+				expandEngines();
 			}
 		});
 		if (extraSearch != null) {
@@ -355,6 +366,53 @@ public abstract class OnlineSearchView extends View {
 		if(searchField.getWidth() - ((ImageView) view.findViewById(R.id.clear)).getWidth() < width) {
 			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
 		} else searchField.setHint(R.string.hint_main_search);
+	}
+	
+	private void collapseEngines() {
+		if (spEnginesChoiser.getVisibility() == View.GONE) return;
+		initialHeight = spEnginesChoiser.getMeasuredHeight();
+		if (!searchField.getText().toString().isEmpty()) {
+			Animation anim = new Animation() {
+				
+				@Override
+				protected void applyTransformation(float interpolatedTime, Transformation t) {
+					if (interpolatedTime == 1) {
+						spEnginesChoiser.setVisibility(View.GONE);
+					}
+					else {
+						spEnginesChoiser.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+						spEnginesChoiser.requestLayout();
+					}
+				}
+				
+				@Override
+				public boolean willChangeBounds() {
+					return true;
+				}
+			};
+			anim.setDuration(200);
+			spEnginesChoiser.startAnimation(anim);
+		}
+	}
+	
+	private void expandEngines() {
+		if (spEnginesChoiser.getVisibility() == View.VISIBLE) return;
+		spEnginesChoiser.setVisibility(View.VISIBLE);
+		Animation anim = new Animation() {
+			
+			@Override
+			protected void applyTransformation(float interpolatedTime, Transformation t) {
+				spEnginesChoiser.getLayoutParams().height = (int)(initialHeight * interpolatedTime);
+				spEnginesChoiser.requestLayout();
+			}
+
+			@Override
+			public boolean willChangeBounds() {
+				return true;
+			}
+		};
+		anim.setDuration(200);
+		spEnginesChoiser.startAnimation(anim);
 	}
 	
 	public static String getTitleSearchEngine() {
