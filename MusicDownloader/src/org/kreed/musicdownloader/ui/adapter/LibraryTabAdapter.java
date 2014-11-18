@@ -102,6 +102,13 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		activity.runOnUiThread(reDraw);
 	}
 	
+	public void updateItem(int position, MusicData musicData) {
+		synchronized (lock) {
+			getItem(position).update(musicData);
+		}
+		activity.runOnUiThread(reDraw);
+	}
+	
 	@Override
 	public int getCount() {
 		synchronized (lock) {
@@ -124,6 +131,17 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		synchronized (lock) {
 			return mObjects.indexOf(item);
 		}
+	}
+	
+	@Override
+	public void clear() {
+		synchronized (lock) {
+			if (mOriginalValues != null) {
+				mOriginalValues.clear();
+			}
+			mObjects.clear();
+		}
+		activity.runOnUiThread(reDraw);
 	}
 
 	@Override
@@ -203,13 +221,6 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		ImageButton hThreedot;
 	}
 
-	public void updateItem(int position, MusicData musicData) {
-		synchronized (lock) {
-			getItem(position).update(musicData);
-		}
-		activity.runOnUiThread(reDraw);
-	}
-	
 	@Override
 	public Filter getFilter() {
 		if (filter == null) {
@@ -284,15 +295,4 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		return isDeployFilter;
 	}
 	
-	@Override
-	public void clear() {
-		synchronized (lock) {
-			if (mOriginalValues != null) {
-				mOriginalValues.clear();
-			}
-			mObjects.clear();
-		}
-		activity.runOnUiThread(reDraw);
-	}
-
 }
