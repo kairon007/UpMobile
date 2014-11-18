@@ -466,7 +466,7 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 			title = title.replace(zaycevTag, "");
 		}
 		builder.setArrowClickListener(this).setMainClickListener(this).setId(cursor.getLong(0)).setExpandable(mExpandable).setLine1(title, null)
-				.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? cursor.getString(2) : null)
+				.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? removeLastChar(cursor.getString(2)) : null)
 				.setNumber(count > 3 && mType != MediaUtils.TYPE_SONG ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
 		// if (mType == MediaUtils.TYPE_SONG &&
 		// Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
@@ -475,6 +475,13 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 		// builder.startLoadCover(2, mActivity, file);
 		// }
 		return builder.build();
+	}
+
+	private String removeLastChar (String artist) {
+		if (null != artist && artist.endsWith("?")) {
+			artist = artist.substring(0, artist.length() - 1);
+		}
+		return artist;
 	}
 
 	/**

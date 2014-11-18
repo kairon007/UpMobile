@@ -162,6 +162,9 @@ public final class Util {
 		while (str.endsWith(" ")) {
 			str = str.substring(0, str.length() - 1);
 		}
+		while (str.startsWith(" ")) {
+			str = str.replace(" ", "");
+		}
 		return str.toString().replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
 	}
 	
