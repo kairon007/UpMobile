@@ -251,7 +251,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 					mediaPlayer.stop();
 					mediaPlayer.reset();
 				}
-				mediaPlayer.reset();
+				mediaPlayer.release();
 			} catch (Exception e) {
 			}
 			mediaPlayer = null; 
@@ -289,9 +289,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		mediaPlayer = mp;
 		setEqualizer(view.getContext());
 		Player.this.onPrepared();
-//		if (customAudioSessionId != -1) {
-//			mp.setAudioSessionId(customAudioSessionId);
-//		}
 		prepared = true;
 		mp.start();
 		if (data.getFileUri().contains("http")) {
@@ -319,21 +316,33 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	}
 	
 	public Equalizer getEqualizer() {
-		if (null == mediaPlayer) {
-			return new Equalizer(1, customAudioSessionId);
-		} else return new Equalizer(1, mediaPlayer.getAudioSessionId());
+		try {
+			if (null == mediaPlayer) {
+				return new Equalizer(1, customAudioSessionId);
+			} else return new Equalizer(1, mediaPlayer.getAudioSessionId());
+		} catch (Exception e) {
+		}
+		return null;
 	}
 	
 	public BassBoost getBassBoost() {
-		if (null == mediaPlayer) {
-			return new BassBoost(2, customAudioSessionId);
-		} else return new BassBoost(2, mediaPlayer.getAudioSessionId());
+		try {
+			if (null == mediaPlayer) {
+				return new BassBoost(2, customAudioSessionId);
+			} else return new BassBoost(2, mediaPlayer.getAudioSessionId());
+		} catch (Exception e) {
+		}
+		return null;
 	}
 	 	
 	public Virtualizer getVirtualizer() {
-		if (null == mediaPlayer) {
-			return new Virtualizer(3, customAudioSessionId);
-		} else return new Virtualizer(3, mediaPlayer.getAudioSessionId());
+		try {
+			if (null == mediaPlayer) {
+				return new Virtualizer(3, customAudioSessionId);
+			} else return new Virtualizer(3, mediaPlayer.getAudioSessionId());
+		} catch (Exception e) {
+		}
+		return null;
 	}
 	
 	public void setEqualizer(Context context) {
@@ -341,7 +350,6 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			Equalizer equalizer = getEqualizer();
 			BassBoost bassBoost = getBassBoost();
 			Virtualizer virtualizer = getVirtualizer();
-			android.util.Log.d("logd", "setEqualizer: " + virtualizer.getId());
 			equalizer.setEnabled(true);
 			bassBoost.setEnabled(true);
 			virtualizer.setEnabled(true);
@@ -351,16 +359,22 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			if (values.size() == 0)
 				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
 			else {
-				//Set equalizer
-				Utils.changeAtBand(equalizer, (short) 0, values.get(0).getProgress(1) - 15);
-				Utils.changeAtBand(equalizer, (short) 1, values.get(0).getProgress(2) - 15);
-				Utils.changeAtBand(equalizer, (short) 2, values.get(0).getProgress(3) - 15);
-				Utils.changeAtBand(equalizer, (short) 3, values.get(0).getProgress(4) - 15);
-				Utils.changeAtBand(equalizer, (short) 4, values.get(0).getProgress(5) - 15);
-				//Set bassboost
-				bassBoost.setStrength((short)(values.get(0).getArc(1) * 10));
-				//Set virtualizer
-				virtualizer.setStrength((short)(values.get(0).getArc(2) * 10));
+				if (null != equalizer) {
+					//Set equalizer
+					Utils.changeAtBand(equalizer, (short) 0, values.get(0).getProgress(1) - 15);
+					Utils.changeAtBand(equalizer, (short) 1, values.get(0).getProgress(2) - 15);
+					Utils.changeAtBand(equalizer, (short) 2, values.get(0).getProgress(3) - 15);
+					Utils.changeAtBand(equalizer, (short) 3, values.get(0).getProgress(4) - 15);
+					Utils.changeAtBand(equalizer, (short) 4, values.get(0).getProgress(5) - 15);
+				}
+				if (null != bassBoost) {
+					//Set bassboost
+					bassBoost.setStrength((short)(values.get(0).getArc(1) * 10));
+				}
+				if (null != virtualizer) {
+					//Set virtualizer
+					virtualizer.setStrength((short)(values.get(0).getArc(2) * 10));
+				}
 			}
 		}
 	}
