@@ -9,9 +9,6 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import ru.johnlife.lifetoolsmp3.BaseConstants;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -24,7 +21,6 @@ public class YouTubeSong extends SongWithCover {
 	private String largeCoverUrl;
 	private String watchId;
 	private AsyncTask<Void, Void, String> getUrl;
-	private Context context;
 
 	public YouTubeSong(String watchId, String largeCoverUrl) {
 		super(watchId);
@@ -42,12 +38,10 @@ public class YouTubeSong extends SongWithCover {
 		@Override
 		public void run() {
 			String result = getUrlTask(watchId);
+			android.util.Log.d("logd", "run: " + result);
 			if (!PENDING.equals(result) && result.startsWith("http")) {
 				downloadUrl = result;
-				Intent intent=new Intent();
-				intent.setAction(BaseConstants.INTENT_ACTION_LOAD_URL);
-				intent.putExtra("url",result);
-				context.sendBroadcast(intent);
+				downloadUrlListener.success(result);
 				this.cancel();
 			}
 		}
@@ -63,9 +57,8 @@ public class YouTubeSong extends SongWithCover {
 	}
 	
 	@Override
-	public boolean getDownloadUrl(Context context) {
-		this.context = context;
-		if (super.getDownloadUrl(context)) return true;
+	public boolean getDownloadUrl(DownloadUrlListener listener) {
+		if (super.getDownloadUrl(listener)) return true;
 		getDownloadUrl(watchId);
 		return false;
 	}

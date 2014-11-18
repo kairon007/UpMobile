@@ -25,6 +25,7 @@ import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import android.annotation.SuppressLint;
@@ -105,12 +106,7 @@ public abstract class OnlineSearchView extends View {
 	private String keyEngines;
 	private boolean switchMode = false;
 	private boolean searchStopped = true;
-	protected AlertDialog.Builder progressDialog;
-	protected AlertDialog alertProgressDialog;
-	private RemoteSong downloadSong;
-	private int clickPosition;
-	private SuccessGettingUrlReceiver successGettingUrlReceiver;
-	private int initialHeight ;
+	private int initialHeight;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -667,6 +663,8 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	};
+	protected AlertDialog.Builder progressDialog;
+	protected AlertDialog alertProgressDialog;
 
 	public static boolean isOffline(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -784,28 +782,7 @@ public abstract class OnlineSearchView extends View {
 		}
 	}
 	
-	private class SuccessGettingUrlReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context arg0, Intent intent) {
-			downloadSong.setDownloadUrl(intent.getStringExtra("url"));
-			holder.setProgressDialogOpened(false, showFullElement(), view, clickPosition);
-			((Activity) getContext()).runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					dismissProgressDialog();
-					if (showFullElement()) {
-						prepareSong(downloadSong, false);
-					}
-				}
-			});
-		}
-		
-	}
-	
 	public void getDownloadUrl(final boolean fullAction, final View view, final int position) {
-		this.clickPosition = position;
 		if (isOffline(getContext())) {
 			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
@@ -814,19 +791,49 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
-	    IntentFilter filter = new IntentFilter(BaseConstants.INTENT_ACTION_LOAD_URL);
-	    successGettingUrlReceiver = new SuccessGettingUrlReceiver();
-		getContext().registerReceiver(successGettingUrlReceiver, filter);
 		boolean isRestored = holder.isProgressDialogOpened();
 		holder.setProgressDialogOpened(true, fullAction, view, position);
-		downloadSong = (RemoteSong) resultAdapter.getItem(position);
+		final RemoteSong downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
 			stopSystemPlayer(getContext());
 			showProgressDialog(fullAction, view, downloadSong, position);
 		}
 		if (!isRestored) {
 			if (fullAction) {
-				downloadSong.getDownloadUrl(getContext());
+				downloadSong.getDownloadUrl(new DownloadUrlListener() {
+
+					@Override
+					public void success(final String url) {
+						downloadSong.setDownloadUrl(url);
+						holder.setProgressDialogOpened(false, fullAction, view, position);
+						((Activity) getContext()).runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								dismissProgressDialog();
+								if (fullAction) {
+									prepareSong(downloadSong, false);
+								}
+							}
+						});
+					}
+
+					@Override
+					public void error(String error) {
+						((Activity) getContext()).runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								dismissProgressDialog();
+								holder.setProgressDialogOpened(false, fullAction, view, position);
+								Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
+								switchMode = true;
+								toast.show();
+							}
+						});
+
+					}
+				});
 			} else {
 				click(view, position);
 			}
@@ -837,7 +844,6 @@ public abstract class OnlineSearchView extends View {
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
 			try {
 				alertProgressDialog.cancel();
-				getContext().unregisterReceiver(successGettingUrlReceiver); 
 			} catch (Exception e) {
 				Log.e(getClass().getSimpleName(), e.getMessage());
 			}

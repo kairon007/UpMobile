@@ -10,16 +10,13 @@ import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
-import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -28,10 +25,6 @@ public class SearchView  extends OnlineSearchView {
 	private MainActivity activity;
 	private ViewPagerAdapter parentAdapter;
 	private String path;
-	private SuccessGettingUrlReceiver successGettingUrlReceiver;
-	private View clickView;
-	private MusicData data;
-	private RemoteSong song;
 
 	public SearchView(LayoutInflater inflater, ViewPagerAdapter parentAdapter, MainActivity activity) {
 		super(inflater);
@@ -42,39 +35,41 @@ public class SearchView  extends OnlineSearchView {
 	protected boolean showFullElement() {
 		return false;
 	}
-	
-	private class SuccessGettingUrlReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context arg0, Intent intent) {
-			if (clickView.getId() == R.id.btnDownload) {
-				song.getCover(true, downloadListener);
-				downloadListener.onClick(clickView);	
-			} else {
-				path = intent.getStringExtra("url");
-				SearchView.this.alertProgressDialog.dismiss();
-				startPlay(song, data);
-			}
-			activity.unregisterReceiver(successGettingUrlReceiver);
-		}
-		
-	}
 
 	@Override
 	protected void click(final View view, int position) {
-		clickView = view;
-		song = (RemoteSong) getResultAdapter().getItem(position);
-		data = new MusicData();
-	    IntentFilter filter = new IntentFilter(BaseConstants.INTENT_ACTION_LOAD_URL);
-	    successGettingUrlReceiver = new SuccessGettingUrlReceiver();
-		getContext().registerReceiver(successGettingUrlReceiver, filter);
+		final RemoteSong song = (RemoteSong) getResultAdapter().getItem(position);
+		final MusicData data = new MusicData();
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(Util.getFormatedStrDuration(song.getDuration()));
 		if (view.getId() == R.id.btnDownload) {
 			downloadListener = new DownloadListener(getContext(), song, parentAdapter);
+			song.getDownloadUrl(new DownloadUrlListener() {
+				
+				@Override
+				public void success(String url) {
+					song.getCover(true, downloadListener);
+					downloadListener.onClick(view);	
+				}
+				
+				@Override
+				public void error(String error) {}
+			});
+		} else {
+			song.getDownloadUrl(new DownloadUrlListener() {
+				
+				@Override
+				public void success(String url) {
+					path = url;
+					SearchView.this.alertProgressDialog.dismiss();
+					startPlay(song, data);
+				}
+				
+				@Override
+				public void error(String error) {}
+			});
 		}
-		song.getDownloadUrl(getContext());
 	}
 
 	@Override
