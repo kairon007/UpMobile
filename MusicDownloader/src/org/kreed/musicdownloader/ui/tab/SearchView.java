@@ -52,7 +52,7 @@ public class SearchView  extends OnlineSearchView {
 				downloadListener.onClick(clickView);	
 			} else {
 				path = intent.getStringExtra("url");
-				SearchView.this.alertProgressDialog.cancel();
+				SearchView.this.alertProgressDialog.dismiss();
 				startPlay(song, data);
 			}
 			activity.unregisterReceiver(successGettingUrlReceiver);

@@ -94,7 +94,6 @@ public class MusicDownloaderApp extends Application {
 
 		@Override
 		public void onServiceConnected(ComponentName paramComponentName, IBinder paramIBinder) {
-			android.util.Log.d("logd", "onServiceConnected: ");
 			try {
 				service = ((PlayerService.PlayerBinder) paramIBinder).getService();
 			} catch (Exception e) {
@@ -117,9 +116,7 @@ public class MusicDownloaderApp extends Application {
 //		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		MusicApp.setSharedPreferences(prefs);
-		android.util.Log.d("logd", "onCreate: " + 1);
 		bindService(new Intent(this, PlayerService.class), serviceConnection, BIND_AUTO_CREATE);
-		android.util.Log.d("logd", "onCreate: " + 2);
 	}
 	
 	public static SharedPreferences getSharedPreferences() {
