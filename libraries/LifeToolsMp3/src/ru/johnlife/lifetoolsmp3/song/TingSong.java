@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.song;
 
 import ru.johnlife.lifetoolsmp3.engines.SearchTing;
+import android.content.Context;
 
 public class TingSong extends RemoteSong {
 	
@@ -12,8 +13,8 @@ public class TingSong extends RemoteSong {
 	}
 	
 	@Override
-	public boolean getDownloadUrl(DownloadUrlListener listener) {
-		super.getDownloadUrl(listener);
+	public boolean getDownloadUrl(Context context) {
+		super.getDownloadUrl(context);
 		if (downloadUrl == null) {
 			downloadUrl = SearchTing.getDownloadUrl(songId);
 			return true;

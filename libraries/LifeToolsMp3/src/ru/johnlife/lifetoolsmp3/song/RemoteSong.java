@@ -4,12 +4,15 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.CoverReadyListener;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -103,10 +106,12 @@ public class RemoteSong extends Song implements Cloneable {
 		}
 	}
 	
-	public boolean getDownloadUrl(DownloadUrlListener listener) {
-		this.downloadUrlListener = listener;
-		if (null != downloadUrl && !downloadUrl.isEmpty() && null != downloadUrlListener && downloadUrl.startsWith("http")) {
-			listener.success(downloadUrl);
+	public boolean getDownloadUrl(Context context) {
+		if (null != downloadUrl && !downloadUrl.isEmpty() && downloadUrl.startsWith("http")) {
+			Intent intent=new Intent();
+			intent.setAction(BaseConstants.INTENT_ACTION_LOAD_URL);
+			intent.putExtra("url",downloadUrl);
+			context.sendBroadcast(intent);
 			return true;
 		} else return false;
 	}

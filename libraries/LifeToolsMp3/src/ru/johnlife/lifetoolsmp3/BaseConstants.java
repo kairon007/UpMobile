@@ -10,4 +10,5 @@ public interface BaseConstants {
 	public static final String USE_ALBUM_COVER = "use_album_cover";
 	public static final String DOWNLOAD_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
 	public static final String DIRECTORY_PREFIX = "/MusicDownloader/";
+	public static final String INTENT_ACTION_LOAD_URL = "intent_action_load_url";
 }

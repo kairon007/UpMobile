@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.song;
 
 import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
+import android.content.Context;
 
 
 public class GrooveSong extends SongWithCover {
@@ -16,8 +17,8 @@ public class GrooveSong extends SongWithCover {
 	}
 
 	@Override
-	public boolean getDownloadUrl(DownloadUrlListener listener) {
-		super.getDownloadUrl(listener);
+	public boolean getDownloadUrl(Context context) {
+		super.getDownloadUrl(context);
 		if (downloadUrl == null) {
 			downloadUrl = SearchGrooveshark.getDownloadUrl(songId);
 			return true;
