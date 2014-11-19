@@ -499,7 +499,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 						imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.pause_white : R.drawable.pause;
 						button.setImageResource(imagePause);
 						mp.start();
-						StateKeeper.getInstance().setPlaying(true);
+						keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
+//						StateKeeper.getInstance().setPlaying(true);
 						mp.setOnCompletionListener(new OnCompletionListener() {
 
 							@Override
@@ -509,7 +510,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 								imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.play_white : R.drawable.play;
 								button.setImageResource(imagePause);
 								progress.setProgress(0);
-								StateKeeper.getInstance().setPlaying(false);
+								keeper.deactivateOptions(StateKeeper.IS_PLAYING_OPTION);
+//								StateKeeper.getInstance().setPlaying(false);
 							}
 						});
 						rowLirycs.postDelayed(new Runnable() {
@@ -565,11 +567,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			return;
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
-			StateKeeper.getInstance().setPlaying(false);
+			keeper.deactivateOptions(StateKeeper.IS_PLAYING_OPTION);
+//			StateKeeper.getInstance().setPlaying(false);
 			onPaused();
 		} else {
 			mediaPlayer.start();
-			StateKeeper.getInstance().setPlaying(true);
+			keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
+//			StateKeeper.getInstance().setPlaying(true);
 			onResumed();
 		}
 	}
@@ -578,7 +582,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (!prepared || null == mediaPlayer)
 			return;
 		if (mediaPlayer.isPlaying()) {
-			StateKeeper.getInstance().setPlaying(false);
+			keeper.deactivateOptions(StateKeeper.IS_PLAYING_OPTION);
+//			StateKeeper.getInstance().setPlaying(false);
 			mediaPlayer.pause();
 			onPaused();
 		}
@@ -588,7 +593,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (!prepared || null == mediaPlayer)
 			return;
 		if (!mediaPlayer.isPlaying()) {
-			StateKeeper.getInstance().setPlaying(true);
+			keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
+//			StateKeeper.getInstance().setPlaying(true);
 			mediaPlayer.start();
 			onResumed();
 		}

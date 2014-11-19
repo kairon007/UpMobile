@@ -79,7 +79,6 @@ public abstract class OnlineSearchView extends View {
 
 	public static List<Engine> engines = null;
 	private static final Void[] NO_PARAMS = {};
-	public static final int STREAM_DIALOG_ID = 1;
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private final String SPREF_ENGINES ="shar_pref_key_engines_array";
@@ -104,11 +103,8 @@ public abstract class OnlineSearchView extends View {
 	private TextView searchField;
 	private Player player;
 	private ListView listView;
-	private String extraSearch = null;
 	private String keyEngines;
-	private boolean searchStopped = true;
 	private int initialHeight;
-	private byte isExapnding = 1;
 	protected AlertDialog.Builder progressDialog;
 	protected AlertDialog alertProgressDialog;
 	private RemoteSong downloadSong;
@@ -141,10 +137,10 @@ public abstract class OnlineSearchView extends View {
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
 				player.pause();
-				keeper.setPlaying(true);
+				keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
-				if(keeper.isPlaying()) player.play();
+				if(keeper.checkState(StateKeeper.IS_PLAYING_OPTION)) player.play();
 				break;
 			default:
 				break;
@@ -160,9 +156,7 @@ public abstract class OnlineSearchView extends View {
 			String value = sharedPreferences.getString(key, null);
 			initSearchEngines(getContext(), value);
 			String str = Util.removeSpecialCharacters(searchField.getText().toString());
-			android.util.Log.d("log", "OnlineSearchView, onSharedPreferenceChanged: str =" + str);
 			if (!resultAdapter.isEmpty() && !str.equals("")){
-				android.util.Log.d("log", "oops");
 				trySearch();
 			}
 		}
@@ -181,6 +175,7 @@ public abstract class OnlineSearchView extends View {
 	public OnlineSearchView(final LayoutInflater inflater) {
 		super(inflater.getContext());
 		keeper = StateKeeper.getInstance();
+		keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 		this.inflater = inflater;
 		this.view = (ViewGroup) inflater.inflate(R.layout.search, null);
 		initSearchEngines(getContext(), null);
@@ -190,8 +185,13 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public View getView() {
-		resultAdapter = new SongSearchAdapter(getContext(), inflater);
 		init();
+		resultAdapter = new SongSearchAdapter(getContext(), inflater);
+		keeper.restoreState(this);
+		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
+		if(searchField.getWidth() - ((ImageView) view.findViewById(R.id.clear)).getWidth() < width) {
+			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
+		} else searchField.setHint(R.string.hint_main_search);
 		if (!showFullElement()) {
 			view.findViewById(R.id.downloads).setVisibility(View.GONE);
 		} else {
@@ -222,7 +222,6 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 		listView.setEmptyView(message);
-		
 		listView.setOnScrollListener(new OnScrollListener() {
 			int lastFirstVisibleItem;
 
@@ -232,9 +231,9 @@ public abstract class OnlineSearchView extends View {
 			
 			@Override
 			public void onScroll(AbsListView view, int currentFirstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (currentFirstVisibleItem > lastFirstVisibleItem && isExapnding == 1) {
+				if (currentFirstVisibleItem > lastFirstVisibleItem && keeper.checkState(StateKeeper.IS_EXPANDING_OPTION)) {
 					collapseEngines();
-				} else if (currentFirstVisibleItem < lastFirstVisibleItem && isExapnding == 0) {
+				} else if (currentFirstVisibleItem < lastFirstVisibleItem && !keeper.checkState(StateKeeper.IS_EXPANDING_OPTION)) {
 					expandEngines();
 				}
 				lastFirstVisibleItem = currentFirstVisibleItem;
@@ -348,35 +347,28 @@ public abstract class OnlineSearchView extends View {
 				searchField.setText(null);
 				message.setText(R.string.search_your_results_appear_here);
 				resultAdapter.clear();
-				searchStopped = true;
+				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 				progress.setVisibility(View.GONE);
 				expandEngines();
 			}
 		});
-		if (extraSearch != null) {
-			currentName = extraSearch;
-			setSearchField(currentName);
-			trySearch();
-			extraSearch = null;
-			return view;
-		}
+//		if (currentName != null) {
+//			trySearch();
+//			return view;
+//		}
 		if (keeper.getResults() != null) {
 			for (Song song : keeper.getResults()) {
 				getResultAdapter().add(song);
 			}
-			if (keeper.getSongName() != null) {
-				setTaskIterator(keeper.getTaskIterator());
-				currentName = extraSearch;
-				setSearchField(currentName);
+			if (currentName != null) {
 				notifyAdapter();
-				setSearchStopped(false);
+				keeper.deactivateOptions(StateKeeper.SEARCH_STOP_OPTION);
 				message.setText(keeper.getMessage());
 				listView.setSelection(keeper.getListViewPosition());
 			}
 		}		
-		keeper.restoreState(this);
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) {
-			search(keeper.getSongName());
+			search(searchField.getText().toString());
 		}
 		return view;
 	}
@@ -387,10 +379,6 @@ public abstract class OnlineSearchView extends View {
 		listView = (ListView) view.findViewById(R.id.list);
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
-		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
-		if(searchField.getWidth() - ((ImageView) view.findViewById(R.id.clear)).getWidth() < width) {
-			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
-		} else searchField.setHint(R.string.hint_main_search);
 	}
 	
 	public RemoteSong getDownloadSong() {
@@ -398,7 +386,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void collapseEngines() {
-		isExapnding = 0;
+		keeper.deactivateOptions(StateKeeper.IS_EXPANDING_OPTION);
 		if (spEnginesChoiser.getVisibility() == View.GONE) return;
 		initialHeight = spEnginesChoiser.getMeasuredHeight();
 		if (!searchField.getText().toString().isEmpty()) {
@@ -426,7 +414,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void expandEngines() {
-		isExapnding = 1;
+		keeper.activateOptions(StateKeeper.IS_EXPANDING_OPTION);
 		if (spEnginesChoiser.getVisibility() == View.VISIBLE) return;
 		spEnginesChoiser.setVisibility(View.VISIBLE);
 		Animation anim = new Animation() {
@@ -667,13 +655,12 @@ public abstract class OnlineSearchView extends View {
 		public void onFinishParsing(List<Song> songsList) {
 			keeper.activateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			resultAdapter.hideProgress();
-			if (searchStopped) return;
+			if (keeper.checkState(StateKeeper.SEARCH_STOP_OPTION)) return;
 			//TODO: set result
 			if (songsList.isEmpty()) {
 				getNextResults();
 				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
 					try {
-						keeper.activateOptions(StateKeeper.SEARCH_MODE_OPTION);
 						String src = getContext().getResources().getText(R.string.search_no_results_for).toString() + " " + searchField.getText().toString();
 						message.setText(src);
 					} catch(Exception e) {
@@ -765,7 +752,7 @@ public abstract class OnlineSearchView extends View {
 	
 	public void search(String songName) {
 		keeper.activateOptions(StateKeeper.SEARCH_EXE_OPTION);
-		searchStopped = false;
+		keeper.deactivateOptions(StateKeeper.SEARCH_STOP_OPTION);
 		if (isBlacklistedQuery(songName)) {
 			ArrayList<Engine> nothingSearch = new ArrayList<Engine>();
 			try {
@@ -814,7 +801,7 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
-		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
+	  boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
 		keeper.openDialog(StateKeeper.PROGRESS_DIALOG);
 		downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
@@ -1060,22 +1047,6 @@ public abstract class OnlineSearchView extends View {
 		return searchField;
 	}
 
-	public String getCurrentName() {
-		return currentName;
-	}
-	
-	public void setCurrentName(String currentName) {
-		this.currentName = currentName;
-	}
-
-	public boolean isSearchStopped() {
-		return searchStopped;
-	}
-
-	public void setSearchStopped(boolean searchStopped) {
-		this.searchStopped = searchStopped;
-	}
-
 	public static String getDOWNLOAD_DETAIL() {
 		return DOWNLOAD_DETAIL;
 	}
@@ -1086,10 +1057,6 @@ public abstract class OnlineSearchView extends View {
 	
 	public Player getPlayer() {
 		return player;
-	}
-
-	public void setExtraSearch(String extraSearch) {
-		this.extraSearch = extraSearch;
 	}
 
 	public View getViewItem() {

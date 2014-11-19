@@ -27,7 +27,6 @@ public class StateKeeper {
 	private String newDirName;
 	private int listViewPosition;
 	private int currentPlayersId;
-	private boolean isPlaying = false;
 	
 	/**
 	 * The class flags hold various states.
@@ -69,7 +68,7 @@ public class StateKeeper {
 	/**
 	 * It use for switch engines. If it is true then after change engines search is resumed
 	 */
-	public static final int SEARCH_MODE_OPTION = 128;
+	public static final int SEARCH_STOP_OPTION = 128;
 	/**
 	 * It indicates search is executed or not
 	 */
@@ -78,15 +77,22 @@ public class StateKeeper {
 	 * Song download with cover or not
 	 */
 	public static final int USE_COVER_OPTION = 512;
-	
+	/**
+	 * Indicate state media player in stream dialog 
+	 */
+	public static final int IS_PLAYING_OPTION = 1024;
+	/**
+	 * Indicate state spinner
+	 */
+	public static final int IS_EXPANDING_OPTION = 2048;
 	/**
      * Mask for use with setFlags indicating bits used for search options.
      */
-	private static final int OPTIONS_MASKS = 896;
+	private static final int OPTIONS_MASKS = 3968;
 	/**
 	 * Mask for close selected options.
 	 */
-	private static final int CLOSE_FLAG = 0;
+	private static final int CLOSE_MASKS = 0;
 	
 	
 	private StateKeeper() {
@@ -118,10 +124,6 @@ public class StateKeeper {
 			} 
 		}
 	}
-
-	public ArrayList<Song> getResults() {
-		return results;
-	}
 	
 	/**
 	 * @param dialog - use constants from this class which have ending _DIALOG or BTN_ENABLED
@@ -137,7 +139,7 @@ public class StateKeeper {
 	 * set state as close in selected dialog
 	 */
 	public void closeDialog(int dialog) {
-		setFlags(dialog, CLOSE_FLAG, false);
+		setFlags(dialog, CLOSE_MASKS, false);
 	}
 	/**
 	 * @param options - use constants from this class which have ending _OPTION
@@ -153,7 +155,7 @@ public class StateKeeper {
 	 * set state state as disabled in selected options
 	 */
 	public void deactivateOptions(int options) {
-		setFlags(options, CLOSE_FLAG, false);
+		setFlags(options, CLOSE_MASKS, false);
 	}
 	/**
 	 * @param flag - use needed constant from this class
@@ -166,36 +168,11 @@ public class StateKeeper {
 		return result;
 	}
 
-	public int getCurrentPlayersId() {
-		return currentPlayersId;
-	}
-
-	public void setCurrentPlayersId(int currentAudioSessionId) {
-		this.currentPlayersId = currentAudioSessionId;
-	}
-	
-	public boolean isPlaying() {
-		return isPlaying;
-	}
-
-	public void setPlaying(boolean isPlauing) {
-		this.isPlaying = isPlauing;
-	}
-
-	public String getSongName() {
-		return songName;
-	}
-
-	public Iterator<Engine> getTaskIterator() {
-		return taskIterator;
-	}
-
 	public void saveStateAdapter(OnlineSearchView searchView) {
 		//TODO savestate
 		results = new ArrayList<Song>();
 		if (searchView != null && searchView.getResultAdapter() != null) {
 			songName = searchView.getSearchField().getText().toString();
-			searchView.setCurrentName(songName);
 			for (int i = 0; i < searchView.getResultAdapter().getCount(); i++) {
 				Song song = searchView.getResultAdapter().getItem(i);
 				results.add(song);
@@ -212,6 +189,12 @@ public class StateKeeper {
 	}
 	
 	public void restoreState(OnlineSearchView view) {
+		if (taskIterator != null) {
+			view.setTaskIterator(taskIterator);
+		}
+		if (null != songName && !Util.removeSpecialCharacters(songName).equals("")) {
+			view.setSearchField(songName);
+		}
 		if(checkState(PROGRESS_DIALOG)){
 			//TODO что это за position и listViewPosition, откуда они вызывались и для чего нужны
 			view.getDownloadUrl(viewItem, listViewPosition);
@@ -233,11 +216,28 @@ public class StateKeeper {
 		}
 		
 	}
+	
+	public int getCurrentPlayersId() {
+		return currentPlayersId;
+	}
 
 	public RemoteSong getDownloadSong() {
 		return downloadSong;
 	}
+
+	public void setCurrentPlayersId(int currentAudioSessionId) {
+		this.currentPlayersId = currentAudioSessionId;
+	}
 	
+	public ArrayList<Song> getResults() {
+		return results;
+	}
+
+	public Iterator<Engine> getTaskIterator() {
+		return taskIterator;
+	}
+
+
 	public Player getPlayerInstance() {
 		return playerInstance;
 	}
@@ -277,7 +277,6 @@ public class StateKeeper {
 	public void setDirectoryChooserPath(String directoryChooserPath) {
 		this.directoryChooserPath = directoryChooserPath;
 	}
-	
 
 	public void setNewDirName(String name) {
 		newDirName = name;
