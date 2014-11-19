@@ -8,7 +8,6 @@ import java.util.List;
 import org.json.JSONArray;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
-import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.SongArrayHolder;
@@ -63,12 +62,12 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -109,6 +108,7 @@ public abstract class OnlineSearchView extends View {
 	private boolean switchMode = false;
 	private boolean searchStopped = true;
 	private int initialHeight;
+	private byte isExapnding = 1;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -215,16 +215,24 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 		listView.setEmptyView(message);
+		
 		listView.setOnScrollListener(new OnScrollListener() {
-			
+			int lastFirstVisibleItem;
+
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				collapseEngines();
 			}
 			
 			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			public void onScroll(AbsListView view, int currentFirstVisibleItem, int visibleItemCount, int totalItemCount) {
+				if (currentFirstVisibleItem > lastFirstVisibleItem && isExapnding == 1) {
+					collapseEngines();
+				} else if (currentFirstVisibleItem < lastFirstVisibleItem && isExapnding == 0) {
+					expandEngines();
+				}
+				lastFirstVisibleItem = currentFirstVisibleItem;
 			}
+			
 		});
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -378,6 +386,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void collapseEngines() {
+		isExapnding = 0;
 		if (spEnginesChoiser.getVisibility() == View.GONE) return;
 		initialHeight = spEnginesChoiser.getMeasuredHeight();
 		if (!searchField.getText().toString().isEmpty()) {
@@ -405,6 +414,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void expandEngines() {
+		isExapnding = 1;
 		if (spEnginesChoiser.getVisibility() == View.VISIBLE) return;
 		spEnginesChoiser.setVisibility(View.VISIBLE);
 		Animation anim = new Animation() {
@@ -854,6 +864,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	protected void dismissProgressDialog() {
+		
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
 			try {
 				alertProgressDialog.cancel();
