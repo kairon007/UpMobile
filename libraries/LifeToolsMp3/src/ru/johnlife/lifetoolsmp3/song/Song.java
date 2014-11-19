@@ -282,11 +282,6 @@ public class Song implements Comparable<Song>, Parcelable {
 		parcel.writeInt(trackNumber);
 	
 	}
-	 
-	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
 
 	private Song (Parcel parcel) {
 		id = parcel.readLong();

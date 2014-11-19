@@ -17,7 +17,7 @@ public class StateKeeper {
 	private ArrayList<Song> results = null;
 	private String[] titleArtistLyrics;
 	private String[] fields;
-	private RemoteSong song;
+	private RemoteSong song, downloadSong;
 	private Player playerInstance;
 	private View viewItem;
 	private String message;
@@ -234,6 +234,10 @@ public class StateKeeper {
 		
 	}
 
+	public RemoteSong getDownloadSong() {
+		return downloadSong;
+	}
+	
 	public Player getPlayerInstance() {
 		return playerInstance;
 	}
@@ -266,6 +270,10 @@ public class StateKeeper {
 		return directoryChooserPath;
 	}
 
+	public void setDownloadSong(RemoteSong downloadSong) {
+		this.downloadSong = downloadSong;
+	}
+	
 	public void setDirectoryChooserPath(String directoryChooserPath) {
 		this.directoryChooserPath = directoryChooserPath;
 	}

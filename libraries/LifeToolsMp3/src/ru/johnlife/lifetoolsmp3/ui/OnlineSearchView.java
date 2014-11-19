@@ -814,7 +814,7 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
-	  boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
+		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
 		keeper.openDialog(StateKeeper.PROGRESS_DIALOG);
 		downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
@@ -823,6 +823,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		if (!isRestored) {
 			if (showFullElement()) {
+				keeper.setDownloadSong(downloadSong);
 				downloadSong.getDownloadUrl(new DownloadUrlListener() {
 
 					@Override
@@ -859,6 +860,20 @@ public abstract class OnlineSearchView extends View {
 			} else {
 				click(view, position);
 			}
+		} else {
+			downloadSong = keeper.getDownloadSong();
+			downloadSong.addListener(new DownloadUrlListener() {
+				
+				@Override
+				public void success(String url) {
+					dismissProgressDialog();
+				}
+				
+				@Override
+				public void error(String error) {
+					dismissProgressDialog();
+				}
+			});
 		}
 	}
 
