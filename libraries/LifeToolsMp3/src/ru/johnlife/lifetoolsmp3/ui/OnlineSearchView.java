@@ -63,10 +63,12 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -213,6 +215,17 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 		listView.setEmptyView(message);
+		listView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				collapseEngines();
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			}
+		});
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -842,6 +855,7 @@ public abstract class OnlineSearchView extends View {
 
 	protected void dismissProgressDialog() {
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
+				alertProgressDialog.setContentView(this);
 			try {
 				alertProgressDialog.cancel();
 			} catch (Exception e) {
@@ -953,6 +967,7 @@ public abstract class OnlineSearchView extends View {
 				if (telephonyManager != null) {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 				}
+				alertProgressDialog.cancel();
 			}
 
 		});
