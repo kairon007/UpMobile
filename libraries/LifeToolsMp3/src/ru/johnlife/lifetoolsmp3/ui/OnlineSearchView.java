@@ -855,7 +855,6 @@ public abstract class OnlineSearchView extends View {
 
 	protected void dismissProgressDialog() {
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
-				alertProgressDialog.setContentView(this);
 			try {
 				alertProgressDialog.cancel();
 			} catch (Exception e) {
