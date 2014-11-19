@@ -100,6 +100,7 @@ public abstract class OnlineSearchView extends View {
 	private TextView message;
 	private Spinner spEnginesChoiser;
 	private View progress;
+	private View viewItem;
 	private TextView searchField;
 	private Player player;
 	private ListView listView;
@@ -159,7 +160,9 @@ public abstract class OnlineSearchView extends View {
 			String value = sharedPreferences.getString(key, null);
 			initSearchEngines(getContext(), value);
 			String str = Util.removeSpecialCharacters(searchField.getText().toString());
-			if (!resultAdapter.isEmpty() && !searchField.equals("")){
+			android.util.Log.d("log", "OnlineSearchView, onSharedPreferenceChanged: str =" + str);
+			if (!resultAdapter.isEmpty() && !str.equals("")){
+				android.util.Log.d("log", "oops");
 				trySearch();
 			}
 		}
@@ -243,6 +246,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				if (position == resultAdapter.getCount()) return; // progress click
+				viewItem = view;
 				getDownloadUrl(view, position);
 			}
 		});
@@ -1044,6 +1048,10 @@ public abstract class OnlineSearchView extends View {
 	public String getCurrentName() {
 		return currentName;
 	}
+	
+	public void setCurrentName(String currentName) {
+		this.currentName = currentName;
+	}
 
 	public boolean isSearchStopped() {
 		return searchStopped;
@@ -1069,6 +1077,10 @@ public abstract class OnlineSearchView extends View {
 		this.extraSearch = extraSearch;
 	}
 
+	public View getViewItem() {
+		return viewItem;
+	}
+	
 	public int getListViewPosition() {
 		return listView.getFirstVisiblePosition();
 	}

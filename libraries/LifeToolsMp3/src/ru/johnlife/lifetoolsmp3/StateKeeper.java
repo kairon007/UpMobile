@@ -19,7 +19,7 @@ public class StateKeeper {
 	private String[] fields;
 	private RemoteSong song;
 	private Player playerInstance;
-	private View view;
+	private View viewItem;
 	private String message;
 	private String songName;
 	private String lyrics;
@@ -194,12 +194,14 @@ public class StateKeeper {
 		//TODO savestate
 		results = new ArrayList<Song>();
 		if (searchView != null && searchView.getResultAdapter() != null) {
+			songName = searchView.getSearchField().getText().toString();
+			searchView.setCurrentName(songName);
 			for (int i = 0; i < searchView.getResultAdapter().getCount(); i++) {
 				Song song = searchView.getResultAdapter().getItem(i);
 				results.add(song);
 			}
 			listViewPosition = searchView.getListViewPosition();
-			songName = searchView.getSearchField().getText().toString();
+			viewItem = searchView.getViewItem();
 			taskIterator = searchView.getTaskIterator();
 			message = searchView.getMessage();
 			if (song == null) {
@@ -207,6 +209,29 @@ public class StateKeeper {
 			}
 			playerInstance = searchView.getPlayer();
 		}
+	}
+	
+	public void restoreState(OnlineSearchView view) {
+		if(checkState(PROGRESS_DIALOG)){
+			//TODO что это за position и listViewPosition, откуда они вызывались и для чего нужны
+			view.getDownloadUrl(viewItem, listViewPosition);
+		}
+		if(checkState(STREAM_DIALOG)){
+			view.prepareSong(song, true, "restoreState");
+		}
+		if(checkState(EDITTAG_DIALOG)){
+			view.createId3Dialog(getID3Fields());
+		} else if (checkState(LYRICS_DIALOG)) {
+			view.createLyricsDialog(getTitleArtistLyrics(), getLyrics());
+		} else {
+			if (checkState(DIRCHOOSE_DIALOG)){
+				view.getPlayer().createDirectoryChooserDialog();
+			}
+			if (checkState(NEWDIR_DIALOG)) {
+				view.getPlayer().createNewDirDialog(newDirName);
+			}
+		}
+		
 	}
 
 	public Player getPlayerInstance() {
@@ -245,28 +270,6 @@ public class StateKeeper {
 		this.directoryChooserPath = directoryChooserPath;
 	}
 	
-	public void restoreState(OnlineSearchView view) {
-		if(checkState(PROGRESS_DIALOG)){
-			//TODO что это за position и listViewPosition, откуда они вызывались и для чего нужны
-			view.getDownloadUrl(this.view, listViewPosition);
-		}
-		if(checkState(STREAM_DIALOG)){
-			view.prepareSong(song, true, "restoreState");
-		}
-		if(checkState(EDITTAG_DIALOG)){
-			view.createId3Dialog(getID3Fields());
-		} else if (checkState(LYRICS_DIALOG)) {
-			view.createLyricsDialog(getTitleArtistLyrics(), getLyrics());
-		} else {
-			if (checkState(DIRCHOOSE_DIALOG)){
-				view.getPlayer().createDirectoryChooserDialog();
-			}
-			if (checkState(NEWDIR_DIALOG)) {
-				view.getPlayer().createNewDirDialog(newDirName);
-			}
-		}
-		
-	}
 
 	public void setNewDirName(String name) {
 		newDirName = name;
