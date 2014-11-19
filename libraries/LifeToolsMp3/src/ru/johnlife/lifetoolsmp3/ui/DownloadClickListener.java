@@ -26,7 +26,7 @@ import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
@@ -95,7 +95,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
 		}
-		SongArrayHolder.getInstance().setStreamDialogOpened(false, null, null);
 		boolean isCached = false;
 		if (!fromCallback) {
 			id = songArtist.hashCode() * songTitle.hashCode() * (int) System.currentTimeMillis();

@@ -18,7 +18,7 @@ import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
@@ -421,7 +421,7 @@ public class MainActivity extends Activity {
 			out.putBoolean(SAVE_PLAYER_VIEW, player.getPlayerVisibility() == View.VISIBLE);
 		}
 		if (lastPage == 0) {
-			SongArrayHolder.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
+			StateKeeper.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		}
 		super.onSaveInstanceState(out);
 	}
@@ -446,7 +446,7 @@ public class MainActivity extends Activity {
 			// mTextFilter.addTextChangedListener(textWatcher);
 		}
 		if (lastPage == 0) {
-			SongArrayHolder.getInstance().saveStateAdapter(((ViewPagerAdapter) mViewPager.getAdapter()).getSearchView());
+			StateKeeper.getInstance().saveStateAdapter(((ViewPagerAdapter) mViewPager.getAdapter()).getSearchView());
 		}
 		lastPage = position;
 	}

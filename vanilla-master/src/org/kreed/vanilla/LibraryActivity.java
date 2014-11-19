@@ -31,7 +31,7 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
@@ -143,7 +143,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	public ViewPager mViewPager;
 	private TabPageIndicator mTabs;
-
+	private StateKeeper keeper;
 	private View mSearchBox;
 	private boolean mSearchBoxVisible;
 	private boolean swichShowDialogRate = true;
@@ -570,7 +570,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			if (in.getBoolean(SEARCH_BOX_VISIBLE)) {
 		 		setSearchBoxVisible(true);
 			}
-			if (SongArrayHolder.getInstance().isID3Opened() && mPagerAdapter.getCurrentType() == MediaUtils.TYPE_SONG) {
+			if (keeper.checkState(StateKeeper.EDITTAG_DIALOG) && mPagerAdapter.getCurrentType() == MediaUtils.TYPE_SONG) {
 				createEditID3Dialog(type, id, null);
 			}
 			setSearchBoxVisible(true);
@@ -580,7 +580,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		if (lastPage == 0) {
-			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
+			StateKeeper.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
 		}
 		outState.putInt(TYPE_FILE, type);
 		outState.putLong(ID_FILE, id);
@@ -1215,9 +1215,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		final SongArrayHolder holder = SongArrayHolder.getInstance();
-		if (holder.isID3Opened()) {
-			editor.setStrings(holder.getID3Fields());
+		if (keeper.checkState(StateKeeper.EDITTAG_DIALOG)) {
+			editor.setStrings(keeper.getID3Fields());
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		editor.hideCheckBox(true);
@@ -1225,7 +1224,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				holder.setID3DialogOpened(false, null);
+				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 				final String artistName = editor.getNewArtistName();
 				final String albumTitle = editor.getNewAlbumTitle();
 				final String songTitle = editor.getNewSongTitle();
@@ -1258,7 +1257,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				holder.setID3DialogOpened(false, null);
+				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 			}
 
 		});
@@ -1267,7 +1266,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				 
 				@Override
 				public void onDismiss(DialogInterface dialog) {
-					holder.setID3DialogOpened(false, null);
+					keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 				}
 			});
 		} else {
@@ -1276,7 +1275,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				@Override
 				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 					if (keyCode == KeyEvent.KEYCODE_BACK) {
-						SongArrayHolder.getInstance().setID3DialogOpened(false, null);
+						keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 					}
 					return false;
 				}
@@ -1284,7 +1283,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		}
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
-		holder.setID3DialogOpened(true, editor.getStrings());
+		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 	}
 
 	private void deleteCover(File f) {
@@ -1342,6 +1341,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			File newFile = new File(file.getParentFile() + "/" + artist + " - " + song + ".mp3");
 			if (file.renameTo(newFile)) {
 				new MyID3().update(newFile, src_set, metadata);
+				android.util.Log.d("log", "new file = " + newFile.getAbsolutePath());
+				android.util.Log.d("log", "file = " + file.getAbsolutePath());
 				notifyMediascanner(newFile, artist, song);
 				try {
 					IntentFilter intentFilter = new IntentFilter();
@@ -1710,7 +1711,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			mTextFilter.setText("");
 		}
 		if (lastPage == 0) {
-			SongArrayHolder.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
+			StateKeeper.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
 		}
 		lastPage = position;
 		if (position == 0) {

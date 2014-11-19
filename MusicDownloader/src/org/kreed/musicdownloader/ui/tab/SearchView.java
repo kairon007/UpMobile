@@ -32,6 +32,7 @@ public class SearchView  extends OnlineSearchView {
 		this.activity = activity;
 	}
 	
+	@Override
 	protected boolean showFullElement() {
 		return false;
 	}

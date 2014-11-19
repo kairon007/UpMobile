@@ -1,7 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui.dialog;
 
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -63,13 +63,16 @@ public class MP3Editor {
 		etSongTitle.addTextChangedListener(watcher);
 		etArtistName.addTextChangedListener(watcher);
 		if (isSearchView) {
-			checkBox.setChecked(SongArrayHolder.getInstance().isCoverEnabled());
+			checkBox.setChecked(StateKeeper.getInstance().checkState(StateKeeper.USE_COVER_OPTION));
 		}
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				SongArrayHolder.getInstance().setCoverEnabled(isChecked);
+				if (isSearchView) {
+					if (isChecked) StateKeeper.getInstance().activateOptions(StateKeeper.USE_COVER_OPTION);
+					else StateKeeper.getInstance().deactivateOptions(StateKeeper.USE_COVER_OPTION);
+				}
 			}
 		});
 		clearFocus();
@@ -101,7 +104,9 @@ public class MP3Editor {
 			newArtistName = etArtistName.getText().toString();
 			newSongTitle = etSongTitle.getText().toString();
 			newAlbumTitle = etAlbumTitle.getText().toString();
-			SongArrayHolder.getInstance().setID3DialogOpened(true, new String[] { newArtistName, newSongTitle, newAlbumTitle });
+			if (isSearchView) {
+				StateKeeper.getInstance().setID3Fields( new String[] { newArtistName, newSongTitle, newAlbumTitle });
+			}
 		}
 
 		@Override

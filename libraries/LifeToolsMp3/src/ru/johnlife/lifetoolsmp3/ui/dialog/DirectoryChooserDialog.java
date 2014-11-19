@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -40,36 +40,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class DirectoryChooserDialog {
-
+	
 	private static final String STORAGE = "/storage";
-	private boolean m_isNewFolderEnabled = true;
-	private ListView lvContent;
-	private String m_sdcardDirectory = "";
-	private Context m_context;
-	private TextView titleText;
-	private DialogInterface dialog;
-	private boolean isWhiteTheme;
-
-	private String m_dir = "";
 	private List<String> m_subdirs = null;
-	private ChosenDirectoryListener m_chosenDirectoryListener = null;
 	private ArrayAdapter<String> m_listAdapter = null;
-
+	private DialogInterface dialog;
+	private ChosenDirectoryListener m_chosenDirectoryListener = null;
+	private Context m_context;
+	private StateKeeper keeper;
 	private File parent;
-
+	private ListView lvContent;
+	private ImageButton newDirButton;
+	private TextView titleText;
+	private String m_sdcardDirectory = "";
+	private String m_dir = "";
+	private boolean isWhiteTheme;
+	private boolean m_isNewFolderEnabled = true;
 	OnShowListener showlistener = new OnShowListener() {
 
 		@Override
 		public void onShow(DialogInterface dialog) {
 			float textSize = 16f;
 			DirectoryChooserDialog.this.dialog = dialog;
-			enableButtons(isEnable());
+			enableButtons();
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
-	private ImageButton newDirButton;
-	private boolean enable;
 
 	//////////////////////////////////////////////////////
 	// Callback interface for selected directory        //
@@ -79,6 +76,8 @@ public class DirectoryChooserDialog {
 	}
 
 	public DirectoryChooserDialog(Context context, boolean isWhiteTheme, ChosenDirectoryListener chosenDirectoryListener) {
+		keeper = StateKeeper.getInstance();
+		keeper.activateOptions(StateKeeper.BTN_ENABLED);
 		this.isWhiteTheme = isWhiteTheme;
 		m_context = context;
 		m_sdcardDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -121,7 +120,7 @@ public class DirectoryChooserDialog {
 				if (directory.equals(""))
 					return;
 				m_dir += "/" + directory;
-				enableButtons(true);
+				enableButtons();
 				updateDirectory();
 			}
 		}
@@ -133,14 +132,14 @@ public class DirectoryChooserDialog {
 				if (m_chosenDirectoryListener != null) {
 					m_chosenDirectoryListener.onChosenDir(m_dir);
 				}
-				SongArrayHolder.getInstance().setDirectoryChooserOpened(false, isEnable());
+				keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
 			}
 		}).setNegativeButton(android.R.string.cancel, new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				SongArrayHolder.getInstance().setDirectoryChooserOpened(false, isEnable());
-				SongArrayHolder.getInstance().setDirectoryChooserPath(null);
+				keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
+				StateKeeper.getInstance().setDirectoryChooserPath(null);
 			}
 		});
 		final AlertDialog dirsDialog = dialogBuilder.create();
@@ -151,7 +150,7 @@ public class DirectoryChooserDialog {
 			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
 					dirsDialog.dismiss();
-					SongArrayHolder.getInstance().setDirectoryChooserOpened(false, isEnable());
+					keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
 					return true;
 				} else {
 					return false;
@@ -161,7 +160,7 @@ public class DirectoryChooserDialog {
 		dirsDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		// Show directory chooser dialog
 		dirsDialog.show();
-		SongArrayHolder.getInstance().setDirectoryChooserOpened(true, isEnable());
+		keeper.openDialog(StateKeeper.DIRCHOOSE_DIALOG);
 	}
 
 	private boolean createSubDir(String newDir) {
@@ -223,12 +222,14 @@ public class DirectoryChooserDialog {
 			@Override
 			public void onClick(View v) {
 				if (m_dir.equals(STORAGE)) {
-					enableButtons(false);
+					keeper.deactivateOptions(StateKeeper.BTN_ENABLED);
+					enableButtons();
 					return;
 				}
 				m_dir = parent.getPath();
 				if (m_dir.equals(STORAGE)) {
-					enableButtons(false);
+					keeper.deactivateOptions(StateKeeper.BTN_ENABLED);
+					enableButtons();
 				}
 				updateDirectory();
 			}
@@ -250,7 +251,7 @@ public class DirectoryChooserDialog {
 				if (directory.equals(""))
 					return;
 				m_dir += "/" + directory;
-				enableButtons(true);
+				enableButtons();
 				updateDirectory();
 			}
 		});
@@ -258,8 +259,8 @@ public class DirectoryChooserDialog {
 		return dialogBuilder;
 	}
 	
-	public void enableButtons(boolean enable) {
-		this.setEnable(enable);
+	public void enableButtons() {
+		boolean enable = keeper.checkState(StateKeeper.BTN_ENABLED);
 		((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
 		((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setClickable(enable);
 		newDirButton.setEnabled(enable);
@@ -268,7 +269,7 @@ public class DirectoryChooserDialog {
 
 	@SuppressLint("NewApi")
 	public void createNewDirDialog(String name) {
-		SongArrayHolder.getInstance().setIsNewDirectoryOpened(true);
+		keeper.openDialog(StateKeeper.NEWDIR_DIALOG);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view;
 		if (isWhiteTheme){
@@ -279,16 +280,16 @@ public class DirectoryChooserDialog {
 		final EditText input = (EditText) view.findViewById(R.id.etNewFolder);
 		input.addTextChangedListener(new CustomWatcher(input));
 		if (null != name) {
-			SongArrayHolder.getInstance().setNewDirName(name);
+			StateKeeper.getInstance().setNewDirName(name);
 			input.setText(name);
 		} else {
-			SongArrayHolder.getInstance().setNewDirName("");
+			StateKeeper.getInstance().setNewDirName("");
 		}
 		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme).setView(view);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int whichButton) {
-				SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);
+				keeper.closeDialog(StateKeeper.NEWDIR_DIALOG);
 				Editable newDir = input.getText();
 				String newDirName = newDir.toString();
 				// Create new directory
@@ -305,7 +306,7 @@ public class DirectoryChooserDialog {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);
+				keeper.closeDialog(StateKeeper.NEWDIR_DIALOG);
 			}
 		});
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -313,7 +314,7 @@ public class DirectoryChooserDialog {
 
 				@Override
 				public void onDismiss(DialogInterface dialog) {
-					SongArrayHolder.getInstance().setIsNewDirectoryOpened(false);
+					keeper.closeDialog(StateKeeper.NEWDIR_DIALOG);
 				}
 			});
 		}
@@ -334,7 +335,7 @@ public class DirectoryChooserDialog {
 		if (m_listAdapter.isEmpty()) {
 			m_listAdapter.add("");
 		}
-		SongArrayHolder.getInstance().setDirectoryChooserPath(m_dir);
+		StateKeeper.getInstance().setDirectoryChooserPath(m_dir);
 	}
 
 	private ArrayAdapter<String> createListAdapter(List<String> items) {
@@ -366,14 +367,6 @@ public class DirectoryChooserDialog {
 		};
 	}
 
-	public boolean isEnable() {
-		return enable;
-	}
-
-	public void setEnable(boolean enable) {
-		this.enable = enable;
-	}
-
 	private class CustomWatcher implements TextWatcher {
 
 		private EditText linkToInput;
@@ -388,7 +381,7 @@ public class DirectoryChooserDialog {
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			SongArrayHolder.getInstance().setNewDirName(linkToInput.getText().toString());
+			StateKeeper.getInstance().setNewDirName(linkToInput.getText().toString());
 		}
 
 		@Override

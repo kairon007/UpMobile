@@ -10,7 +10,7 @@
  */
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.SongArrayHolder;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.os.Bundle;
@@ -115,7 +115,7 @@ public class SearchBrowserActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		SongArrayHolder.getInstance().saveStateAdapter(searchView);
+		StateKeeper.getInstance().saveStateAdapter(searchView);
 		super.onPause();
 	}	
 	
