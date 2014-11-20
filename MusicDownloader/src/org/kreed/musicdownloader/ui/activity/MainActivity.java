@@ -77,6 +77,7 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public class MainActivity extends Activity {
 
+	private static final String RENAME_PROGRESS_VISIBLE = "RENAME_PROGRESS_VISIBLE";
 	private static final String SAVE_PLAYER_VIEW = "SAVE_PLAYER_VIEW";
 	private static final String SAVE_BUTTONPLAY_PROGRESS = "SAVE_BUTTONPLAY_PROGRESS";
 	private static final String SAVE_SEEKBAR_PROGRESS = "SAVE_SEEKBAR_PROGRESS";
@@ -115,6 +116,7 @@ public class MainActivity extends Activity {
 	private boolean useCover = false;
 	private boolean isPlayerHide;
 	private StateKeeper keeper;
+	private RenameTask renameTask;
 	
 
 	// -------------------------------------------------------------------------
@@ -208,6 +210,9 @@ public class MainActivity extends Activity {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
 		unregisterReceiver(headphonesReceiver);
+		if (null != renameTask) {
+			renameTask.cancelProgress();
+		}
 		Advertisement.onDestroy(this);
 		super.onDestroy();
 	}
@@ -293,6 +298,9 @@ public class MainActivity extends Activity {
 		}
 		if (null != state) {
 			isPlayerHide = state.getBoolean(SAVE_PLAYER_VIEW);
+			if (state.getBoolean(RENAME_PROGRESS_VISIBLE)) {
+				new RenameTask(this).showProgress();				
+			}
 		}
 		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().containsPlayer()) {
 			if (isPlayerHide) {
@@ -426,6 +434,9 @@ public class MainActivity extends Activity {
 		}
 		if (lastPage == 0) {
 			StateKeeper.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
+		}
+		if (null != renameTask && renameTask.isShow()) {
+			out.putBoolean(RENAME_PROGRESS_VISIBLE, true);
 		}
 		super.onSaveInstanceState(out);
 	}
@@ -667,7 +678,7 @@ public class MainActivity extends Activity {
 					toast.show();
 					return;
 				}
-				new RenameTask(file, context, artistName, songTitle, albumTitle, editor.useAlbumCover(), new RenameTaskSuccessListener() {
+				renameTask = new RenameTask(file, context, artistName, songTitle, albumTitle, editor.useAlbumCover(), new RenameTaskSuccessListener() {
 					
 					@Override
 					public void success() {
@@ -678,7 +689,8 @@ public class MainActivity extends Activity {
 							MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle);
 						}
 					}
-				}).execute();
+				});
+				renameTask.execute();
 			}
 		});
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

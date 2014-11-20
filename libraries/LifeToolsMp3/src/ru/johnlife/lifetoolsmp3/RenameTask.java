@@ -15,8 +15,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
-public class RenameTask extends AsyncTask<String, Void, Void> {
+public class RenameTask extends AsyncTask<String, Void, Boolean> {
 	private File file;
 	private Context context;
 	private ProgressDialog progress;
@@ -26,6 +27,11 @@ public class RenameTask extends AsyncTask<String, Void, Void> {
 	private String album;
 	private boolean useCover;
 	private RenameTaskSuccessListener listener;
+	
+	public RenameTask(Context context) {
+		this.context = context;
+		initProgress();
+	}
 
 	public RenameTask(File file, Context context, String artist, String title, String album, boolean useCover, RenameTaskSuccessListener listener) {
 		this.file = file;
@@ -48,20 +54,23 @@ public class RenameTask extends AsyncTask<String, Void, Void> {
 
 	@Override
 	protected void onPreExecute() {
-		progress.show();
+		showProgress();
 		super.onPreExecute();
 	}
 
 	@Override
-	protected Void doInBackground(String... params) {
+	protected Boolean doInBackground(String... params) {
 		boolean isChange = false;
 		try {
+			if (null != file && !file.exists()) {
+				return false;
+			}
 			if (!useCover) {
 				deleteCoverFromFile(file);
 			}
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (src_set == null) {
-				return null;
+				return false;
 			}
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			if (!album.equals("")) {
@@ -77,7 +86,7 @@ public class RenameTask extends AsyncTask<String, Void, Void> {
 				metadata.setArtist(artist);
 			}
 			if (!isChange) {
-				return null;
+				return false;
 			}
 			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist, title));
 			if (file.renameTo(newFile)) {
@@ -91,9 +100,19 @@ public class RenameTask extends AsyncTask<String, Void, Void> {
 		} catch (Exception e) {
 			Log.d(getClass().getSimpleName(), e.getMessage());
 		}
-		return null;
+		return true;
 	}
 
+	@Override
+	protected void onPostExecute(Boolean result) {
+		if (!result) {
+			Toast toast = Toast.makeText(context, R.string.bad_file, Toast.LENGTH_SHORT);
+			toast.show();
+			cancelProgress();
+		}
+		super.onPostExecute(result);
+	}
+	
 	private void notifyMediaScanner(File file) {
 		MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
@@ -101,10 +120,27 @@ public class RenameTask extends AsyncTask<String, Void, Void> {
 				if (newFile.getAbsolutePath().equals(path)) {
 					if (null != listener)
 						listener.success();
-					progress.cancel();
+					cancelProgress();
 				}
 			}
 		});
+	}
+	
+	public void showProgress() {
+		if (null != progress) {
+			progress.show();
+		}
+	}
+	
+
+	public void cancelProgress() {
+		if (null != progress && progress.isShowing()) {
+			progress.cancel();
+		}
+	}
+	
+	public boolean isShow() {
+		return progress.isShowing();
 	}
 
 	private void deleteCoverFromFile(File file) {

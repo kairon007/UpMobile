@@ -36,6 +36,7 @@ import org.kreed.vanilla.app.VanillaApp;
 
 import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
+import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -138,7 +139,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	 * The SongTimeline add song modes corresponding to each relevant action.
 	 */
 	private static final int[] modeForAction = { SongTimeline.MODE_PLAY, SongTimeline.MODE_ENQUEUE, -1, SongTimeline.MODE_PLAY_ID_FIRST, SongTimeline.MODE_ENQUEUE_ID_FIRST };
-
+	
+	private static final String RENAME_PROGRESS_VISIBLE = "RENAME_PROGRESS_VISIBLE";
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
 	private static final String SWICH_SHOW_DIALOG_RATE = "swich_show_dialog_rate";
 	private static final String TYPE_FILE = "type_file";
@@ -172,6 +174,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private ViewGroup mLimiterViews;
 
 	private int page;
+	private RenameTask renameTask;
 
 	/**
 	 * The action to execute when a row is tapped.
@@ -257,6 +260,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	@Override
 	public void onDestroy() {
 		Advertisement.onDestroy(this);
+		if (null != renameTask) {
+			renameTask.cancelProgress();
+		}
 		super.onDestroy();
 	}
 
@@ -294,6 +300,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		// Advertisement.mobileCoreInit(this);
 		// Advertisement.moPubInit(this);
 		// Advertisement.airPushShow(this);
+		if (state != null && state.getBoolean(RENAME_PROGRESS_VISIBLE)) {
+			renameTask = new RenameTask(this);
+		}
 		mSearchBox = findViewById(R.id.search_box);
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_white));
@@ -589,6 +598,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		outState.putInt(TYPE_FILE, type);
 		outState.putLong(ID_FILE, id);
 		outState.putBoolean(IS_FIRST_RUN, isFirstRun);
+		if (null != renameTask && renameTask.isShow()) {
+			outState.putBoolean(RENAME_PROGRESS_VISIBLE, true);
+		}
 		super.onSaveInstanceState(outState);
 	}
 	
@@ -1241,7 +1253,16 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					toast.show();
 					return;
 				}
-				new RenameTask(file, context, artistName, songTitle, albumTitle, true, null).execute();
+				renameTask = new RenameTask(file, context, artistName, songTitle, albumTitle, true, new RenameTaskSuccessListener() {
+					
+					@Override
+					public void success() {
+						if (null != renameTask) {
+							renameTask.cancelProgress();
+						}
+					}
+				});
+				renameTask.execute();
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1664,7 +1685,5 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	public void success() {
-		// TODO Auto-generated method stub
-		
 	}
 }

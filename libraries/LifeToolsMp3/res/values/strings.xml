@@ -76,4 +76,5 @@
         <item>Pop</item>
         <item>Rock</item>
     </string-array>
+        <string name="bad_file">Bad file</string>
 </resources>
