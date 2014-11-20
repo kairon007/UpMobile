@@ -98,6 +98,7 @@ public abstract class OnlineSearchView extends View {
 	private SongSearchAdapter resultAdapter;
 	private TextView message;
 	private Spinner spEnginesChoiser;
+	private View spEnginesChoiserLayout;
 	private View progress;
 	private View viewItem;
 	private TextView searchField;
@@ -217,28 +218,49 @@ public abstract class OnlineSearchView extends View {
 			int color = getContext().getResources().getColor(android.R.color.black);
 			searchField.setTextColor(color);
 			message.setTextColor(color);
-			if (null != view.findViewById(R.id.choise_engines_layout)) {
-				view.findViewById(R.id.choise_engines_layout).setBackgroundResource(R.drawable.spinner_background);
+			if (null != spEnginesChoiserLayout) {
+				spEnginesChoiserLayout.setBackgroundResource(R.drawable.spinner_background);
 			}
 		}
 		listView.setEmptyView(message);
+		initialHeight = spEnginesChoiserLayout.getMeasuredHeight();
 		listView.setOnScrollListener(new OnScrollListener() {
-			int lastFirstVisibleItem;
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
+			
+			int lastScroll = 0;
+			int lastVisibleItem = 0;
+			int defaultHeight = spEnginesChoiserLayout.getLayoutParams().height;
 			
 			@Override
-			public void onScroll(AbsListView view, int currentFirstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (currentFirstVisibleItem > lastFirstVisibleItem && keeper.checkState(StateKeeper.IS_EXPANDING_OPTION)) {
-					collapseEngines();
-				} else if (currentFirstVisibleItem < lastFirstVisibleItem && !keeper.checkState(StateKeeper.IS_EXPANDING_OPTION)) {
-					expandEngines();
+			public void onScrollStateChanged(AbsListView view, int scrollState) {}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				View firstItem = listView.getChildAt(0);
+				if (null == firstItem) return;
+				int itemHeight = firstItem.getHeight();
+				int scrollBy = 0;
+				if (firstVisibleItem == lastVisibleItem) {
+					scrollBy = firstItem.getTop() - lastScroll;
+				} else if (firstVisibleItem < lastVisibleItem) {
+					scrollBy = firstItem.getTop() - lastScroll + itemHeight;
+					Log.d("logd", "scroll up");
+				} else if (firstVisibleItem > lastVisibleItem) {
+					scrollBy = firstItem.getTop() - lastScroll - itemHeight;
+					Log.d("logd", "scroll down");
 				}
-				lastFirstVisibleItem = currentFirstVisibleItem;
+				int resultHeight = spEnginesChoiserLayout.getLayoutParams().height + scrollBy;
+				if (resultHeight < 0) {
+					spEnginesChoiserLayout.getLayoutParams().height = 0;
+				} else if (resultHeight > defaultHeight) {
+					spEnginesChoiserLayout.getLayoutParams().height = defaultHeight;
+				} else {
+					spEnginesChoiserLayout.getLayoutParams().height += scrollBy;
+				}
+				spEnginesChoiserLayout.requestLayout();
+				Log.d("logd", "onScroll = " + scrollBy);
+				lastVisibleItem = firstVisibleItem;
+				lastScroll = firstItem.getTop();
 			}
-			
 		});
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -379,6 +401,7 @@ public abstract class OnlineSearchView extends View {
 		listView = (ListView) view.findViewById(R.id.list);
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
+		spEnginesChoiserLayout = (View) view.findViewById(R.id.choise_engines_layout);
 	}
 	
 	public RemoteSong getDownloadSong() {
@@ -387,19 +410,16 @@ public abstract class OnlineSearchView extends View {
 	
 	private void collapseEngines() {
 		keeper.deactivateOptions(StateKeeper.IS_EXPANDING_OPTION);
-		if (spEnginesChoiser.getVisibility() == View.GONE) return;
-		initialHeight = spEnginesChoiser.getMeasuredHeight();
 		if (!searchField.getText().toString().isEmpty()) {
 			Animation anim = new Animation() {
 				
 				@Override
 				protected void applyTransformation(float interpolatedTime, Transformation t) {
 					if (interpolatedTime == 1) {
-						spEnginesChoiser.setVisibility(View.GONE);
-					}
+						spEnginesChoiserLayout.getLayoutParams().height = 0;					}
 					else {
-						spEnginesChoiser.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
-						spEnginesChoiser.requestLayout();
+						spEnginesChoiserLayout.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+						spEnginesChoiserLayout.requestLayout();
 					}
 				}
 				
@@ -409,20 +429,18 @@ public abstract class OnlineSearchView extends View {
 				}
 			};
 			anim.setDuration(200);
-			spEnginesChoiser.startAnimation(anim);
+			spEnginesChoiserLayout.startAnimation(anim);
 		}
 	}
 	
 	private void expandEngines() {
 		keeper.activateOptions(StateKeeper.IS_EXPANDING_OPTION);
-		if (spEnginesChoiser.getVisibility() == View.VISIBLE) return;
-		spEnginesChoiser.setVisibility(View.VISIBLE);
 		Animation anim = new Animation() {
 			
 			@Override
 			protected void applyTransformation(float interpolatedTime, Transformation t) {
-				spEnginesChoiser.getLayoutParams().height = (int)(initialHeight * interpolatedTime);
-				spEnginesChoiser.requestLayout();
+				spEnginesChoiserLayout.getLayoutParams().height = (int)(initialHeight * interpolatedTime);
+				spEnginesChoiserLayout.requestLayout();
 			}
 
 			@Override
@@ -431,7 +449,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		};
 		anim.setDuration(200);
-		spEnginesChoiser.startAnimation(anim);
+		spEnginesChoiserLayout.startAnimation(anim);
 	}
 	
 	public static String getTitleSearchEngine() {
