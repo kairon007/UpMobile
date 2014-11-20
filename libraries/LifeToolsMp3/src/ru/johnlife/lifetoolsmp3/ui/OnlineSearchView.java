@@ -268,6 +268,7 @@ public abstract class OnlineSearchView extends View {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				if (position == resultAdapter.getCount()) return; // progress click
 				viewItem = view;
+				keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 				getDownloadUrl(view, position);
 			}
 		});
@@ -834,7 +835,6 @@ public abstract class OnlineSearchView extends View {
 					@Override
 					public void success(final String url) {
 						downloadSong.setDownloadUrl(url);
-						keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 						((Activity) getContext()).runOnUiThread(new Runnable() {
 
 							@Override
@@ -854,7 +854,6 @@ public abstract class OnlineSearchView extends View {
 							@Override
 							public void run() {
 								dismissProgressDialog();
-								keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 								Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
 								toast.show();
 							}
@@ -883,6 +882,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	protected void dismissProgressDialog() {
+		keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
 			try {
 				alertProgressDialog.cancel();
