@@ -201,9 +201,9 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		}
 	}
 
-	public void updateMusicData(final int i, MusicData musicData) {
+	public void updateMusicData(MusicData oldData, MusicData newData) {
 		if (null != adapterLibrary) {
-			adapterLibrary.updateItem(i, musicData);
+			adapterLibrary.updateItem(oldData, newData);
 		}
 	}
 	

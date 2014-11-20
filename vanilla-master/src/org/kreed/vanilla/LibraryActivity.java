@@ -25,27 +25,29 @@ package org.kreed.vanilla;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.UnknownFormatConversionException;
+
 import junit.framework.Assert;
+
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
+
+import ru.johnlife.lifetoolsmp3.RefreshListener;
+import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
@@ -89,12 +91,13 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
  * The library activity where songs to play can be selected from the library.
  */
-public class LibraryActivity extends PlaybackActivity implements TextWatcher, DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
+public class LibraryActivity extends PlaybackActivity implements TextWatcher, DialogInterface.OnClickListener, DialogInterface.OnDismissListener, RefreshListener {
 	
 	private static final String IS_FIRST_RUN = "is_first_run";
 	/**
@@ -297,6 +300,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
 		}
+		keeper = StateKeeper.getInstance();
 		mTextFilter = (TextView) findViewById(R.id.filter_text);
 		mTextFilter.addTextChangedListener(this);
 		mClearFilterEditText = (ImageButton) findViewById(R.id.clear_filter);
@@ -1195,6 +1199,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	@SuppressLint("NewApi") 
 	private void createEditID3Dialog(int type, long id, MP3Editor view) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
+		final Context context = this;
 		if (null == view) {
 			boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 			editor = new MP3Editor(this, isWhiteTheme);
@@ -1236,20 +1241,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					toast.show();
 					return;
 				}
-				new AsyncTask<Void, Void, Void>() {
-
-					@Override
-					protected Void doInBackground(Void... params) {
-						rename(file, artistName, albumTitle, songTitle);
-						return null;
-					}
-					
-					@Override
-					protected void onPostExecute(Void result) {
-						((LibraryPagerAdapter) mViewPager.getAdapter()).notifySongAdapter();
-					};
-
-				}.execute();
+				new RenameTask(file, context, artistName, songTitle, albumTitle, true, null).execute();
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1300,81 +1292,16 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			cover.compress(CompressFormat.JPEG, 85, out);
 			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
 			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file, null, null);
+			notifyMediascanner(file);
 		} catch (Exception e) {
 		}
 	}
-	
-	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction().equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
-				context.unregisterReceiver(this);
-			}
-		}
-	};
 
-	private void rename(File f, String artist, String album, String song) {
-		File file = new File(f.getParentFile(), f.getName());
-		boolean isChange = false;
-		try {
-			MusicMetadataSet src_set = new MyID3().read(file);
-			if (src_set == null) {
-				return;
-			}
-			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-			if (!album.equals("")) {
-				isChange = true;
-				metadata.setAlbum(album);
-			}
-			if (!song.equals("")) {
-				isChange = true;
-				metadata.setSongTitle(song);
-			}
-			if (!artist.equals("")) {
-				isChange = true;
-				metadata.setArtist(artist);
-			}
-			if (!isChange) {
-				return;
-			}
-			File newFile = new File(file.getParentFile() + "/" + artist + " - " + song + ".mp3");
-			if (file.renameTo(newFile)) {
-				new MyID3().update(newFile, src_set, metadata);
-				android.util.Log.d("log", "new file = " + newFile.getAbsolutePath());
-				android.util.Log.d("log", "file = " + file.getAbsolutePath());
-				notifyMediascanner(newFile, artist, song);
-				try {
-					IntentFilter intentFilter = new IntentFilter();
-					intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
-					intentFilter.addDataScheme("file");
-					getApplicationContext().registerReceiver(mReceiver, intentFilter);
-					Uri storage = Uri.parse("file://" + Environment.getExternalStorageDirectory());
-					getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, storage));
-				} catch (Exception e) {
-					Log.e(getClass().getSimpleName(), "Scan Flash Card");
-				}
-			} else {
-				newFile.delete();
-			}
-		} catch (Exception e) {
-			Log.d(getClass().getSimpleName(), e.getMessage());
-		}
-	}
-
-	private void notifyMediascanner(File file, final String artist, final String title) {
+	private void notifyMediascanner(File file) {
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
-				Song song = new Song(id);
-				if (null != artist || artist.equals("")) {
-					song.artist = artist;
-				}
-				if (null != title || title.equals("")) {
-					song.title = title;
-				}
 				onMediaChange();
-				onSongChange(song);
 			}
 
 		});
@@ -1733,5 +1660,11 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			info = super.getApplicationInfo();
 		}
 		return info;
+	}
+
+	@Override
+	public void success() {
+		// TODO Auto-generated method stub
+		
 	}
 }

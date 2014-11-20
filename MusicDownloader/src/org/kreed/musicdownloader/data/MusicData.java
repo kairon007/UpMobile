@@ -169,96 +169,22 @@ public class MusicData {
 		}
 		return temp;
 	}
-
-	public void update(MusicData newTag) {
-		update(newTag, false);
-	}
-
-	public void rename(MusicData newTag) {
-		update(newTag, false);
-	}
-
-	private void update(MusicData newTag, boolean flag) {
-		boolean switcher = false;
-		if (null != newTag.fileUri) {
-			fileUri = newTag.fileUri;
+	
+	public void update(MusicData newData) { 
+		if (null != newData.fileUri) {
+			fileUri = newData.fileUri;
 		}
-		if (!useCover) {
-			if (null != songBitmap) {
-				switcher = true;
-			}
+		if (null == newData.getSongBitmap()) {
 			songBitmap = null;
 		}
-		if (null != newTag.songGenre && !newTag.songGenre.equals(songGenre)) {
-			songGenre = newTag.songGenre;
+		if (null != newData.songGenre && !newData.songGenre.equals(songGenre)) {
+			songGenre = newData.songGenre;
 		}
-		if (!newTag.songArtist.equals(songArtist)) {
-			songArtist = newTag.songArtist;
-			flag = true;
+		if (!newData.songArtist.equals(songArtist)) {
+			songArtist = newData.songArtist;
 		}
-		if (!newTag.songTitle.equals(songTitle)) {
-			songTitle = newTag.songTitle;
-			flag = true;
-		}
-		if (switcher) {
-			deleteCoverFromFile();
-		}
-		if (flag) {
-			renameBoundFile();
-		}
-	}
-
-	private void deleteCoverFromFile() {
-		File file = new File(fileUri);
-		try {
-			MusicMetadataSet src_set = new MyID3().read(file);
-			if (null == src_set) {
-				return;
-			}
-			MusicMetadata m = (MusicMetadata) src_set.merged;
-			m.clearPictureList();
-			MusicMetadata metadata = new MusicMetadata("");
-			metadata.setArtist(m.getArtist());
-			metadata.setSongTitle(m.getSongTitle());
-			metadata.setGenre(m.getGenre());
-			metadata.setAlbum(m.getAlbum());
-			File temp = new File(file.getParent(), file.getName() + ".temp");
-			new MyID3().removeTags(file, temp);
-			temp.renameTo(file);
-			MusicMetadataSet src = new MyID3().read(file);
-			File temp1 = new File(file.getParent(), file.getName() + ".temp1");
-			new MyID3().write(file, temp1, src, metadata);
-			temp1.renameTo(file);
-		} catch (Exception e) {
-		}
-	}
-
-	private void renameBoundFile() {
-		File file = new File(fileUri);
-		String strCompare = songArtist + " - "  +songTitle;
-		index = Util.existFile(file.getParent(), strCompare);
-		File newFile = null;
-		MusicMetadataSet src_set = null;
-		try {
-			src_set = new MyID3().read(file);
-			String newName = "";
-			MusicMetadata metadata = src_set.merged;
-			if (null != songAlbum && !songAlbum.equals("")) {
-				metadata.setAlbum(songAlbum);
-			}
-			metadata.setSongTitle(songTitle);
-			metadata.setArtist(songArtist);
-			if (index < 1) {
-				newName = songArtist+ " - " + songTitle + ".mp3";
-			} else {
-				newName = songArtist + " - " + songTitle + "-[" + (index) + "].mp3";
-			}
-			newFile = new File(file.getParentFile(), newName);
-			fileUri = newFile.getAbsolutePath();
-			new MyID3().write(file, newFile, src_set, metadata);
-		} catch (Exception e) {
-		} finally {
-			file.delete();
+		if (!newData.songTitle.equals(songTitle)) {
+			songTitle = newData.songTitle;
 		}
 	}
 

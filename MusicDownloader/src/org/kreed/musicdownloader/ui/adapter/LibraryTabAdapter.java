@@ -102,9 +102,9 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		activity.runOnUiThread(reDraw);
 	}
 	
-	public void updateItem(int position, MusicData musicData) {
+	public void updateItem(MusicData oldData, MusicData newData) {
 		synchronized (lock) {
-			getItem(position).update(musicData);
+			getItem(getPosition(oldData)).update(newData);
 		}
 		activity.runOnUiThread(reDraw);
 	}

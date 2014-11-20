@@ -1,6 +1,7 @@
 package org.kreed.musicdownloader.ui.activity;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -18,6 +19,8 @@ import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.RenameTask;
+import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
@@ -111,6 +114,7 @@ public class MainActivity extends Activity {
 	private boolean showDialog = false;
 	private boolean useCover = false;
 	private boolean isPlayerHide;
+	private StateKeeper keeper;
 	
 
 	// -------------------------------------------------------------------------
@@ -245,6 +249,7 @@ public class MainActivity extends Activity {
 		mLooper = thread.getLooper();
 		setContentView(R.layout.library_content);
 		init();
+		keeper = StateKeeper.getInstance();
 		textWatcher = new CustomTextWatcher();
 		if (Util.getThemeName(this).equals(Util.WHITE_THEME)) {
 			findViewById(R.id.search_box).setBackgroundResource(R.drawable.search_background_white);
@@ -407,7 +412,6 @@ public class MainActivity extends Activity {
 			out.putStringArrayList(Constants.EDITOR_FIELDS, strings);
 			out.putBoolean(Constants.USE_COVER, editor.useAlbumCover());
 			out.putString(Constants.FILE_PATH_BUNDLE, selectedItem.data.getFileUri());
-			out.putInt(Constants.ITEM_BUNDLE, selectedItem.position);
 		}
 		out.putBoolean(Constants.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		if (page == 1) {
@@ -603,6 +607,7 @@ public class MainActivity extends Activity {
 				cancel(true);
 			} else {
 				file.delete();
+				notifyMediascanner(file);
 			}
 			return null;
 		}
@@ -623,6 +628,8 @@ public class MainActivity extends Activity {
 
 	@SuppressLint("NewApi")
 	public void showEditDialog(boolean forse, final SelectedData selectedData) {
+		final File file = new File(selectedData.data.getFileUri());
+		final Context context = this;
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme);
 		showDialog = true;
@@ -642,40 +649,37 @@ public class MainActivity extends Activity {
 		if (null == music.getSongBitmap()) {
 			editor.disableChekBox();
 		}
+		final boolean defCover = editor.useAlbumCover();
+		observer.stopWatching();
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				new AsyncTask<Void, Void, Void>() {
-
+				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
+				final String artistName = editor.getNewArtistName();
+				final String albumTitle = editor.getNewAlbumTitle();
+				final String songTitle = editor.getNewSongTitle();
+				if (!editor.manipulateText()) {
+					return;
+				}
+				if (new File(file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3").exists() && defCover == editor.useAlbumCover()) {
+					Toast toast = Toast.makeText(editor.getView().getContext(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
+					toast.show();
+					return;
+				}
+				new RenameTask(file, context, artistName, songTitle, albumTitle, editor.useAlbumCover(), new RenameTaskSuccessListener() {
+					
 					@Override
-					protected Void doInBackground(Void... params) {
-						MusicData bufData = selectedData.data;
-						if (editor.manipulateText() || editor.useAlbumCover() != bufData.isUseCover()) {
-							String artistName = editor.getNewArtistName();
-							String albumTitle = editor.getNewAlbumTitle();
-							String songTitle = editor.getNewSongTitle();
-							useCover = editor.useAlbumCover();
-							bufData.setUseCover(useCover);
-							MusicData data = new MusicData(artistName, songTitle, null, null);
-							data.setSongAlbum(albumTitle);
-							observer.stopWatching();
-							//TODO this use file
-							bufData.rename(data);
-							notifyMediascanner(bufData, selectedData.position);
-							showDialog = false;
-							return null;
-						} else {
-							showDialog = false;
-							cancel(true);
-							return null;
+					public void success() {
+						MusicData newData = new MusicData(new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artistName, songTitle)));
+						mPagerAdapter.updateMusicData(selectedData.data, newData);
+						observer.startWatching();
+						if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(newData.getFileUri())) {
+							MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle);
 						}
-						
 					}
-
-				}.execute();
+				}).execute();
 			}
-
 		});
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			builder.setOnDismissListener(new OnDismissListener() {
@@ -690,6 +694,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				showDialog = false;
+				observer.startWatching();
 			}
 
 		});
@@ -698,15 +703,11 @@ public class MainActivity extends Activity {
 		alertDialog.show();
 	}
 
-	private void notifyMediascanner(final MusicData musicData, final int position) {
-		File file = new File(musicData.getFileUri());
+	private void notifyMediascanner(final File file) {
 		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
-				mPagerAdapter.updateMusicData(position, musicData);
-				observer.startWatching();
 			}
-
 		});
 	}
 
@@ -767,13 +768,10 @@ public class MainActivity extends Activity {
 	
 	private class SelectedData {
 		
-		int position;
 		MusicData data;
 		
 		public SelectedData(int position, MusicData data) {
-			this.position = position;
 			this.data = data;
 		}
-		
 	}
 }

@@ -8,5 +8,6 @@
     <string name="toast_playing">Selected sound is playing</string>
     <string name="check_intertet_access">Please check connection on the Internet</string>
     <string name="menu_equalizer">Equalizer</string>
+    <string name="file_with_the_same_name_already_exists">File with the same name already exists</string>
 
 </resources>

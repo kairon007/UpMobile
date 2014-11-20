@@ -14,6 +14,7 @@ import ru.johnlife.lifetoolsmp3.equalizer.ProgressClass;
 import ru.johnlife.lifetoolsmp3.equalizer.ProgressDataSource;
 import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -377,6 +378,19 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 				}
 			}
 		}
+	}
+	
+	public void setNewName (final String artist, final String title) {
+		((Activity) view.getContext()).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				if (null != songArtist && null != songTitle) {
+					songArtist.setText(artist);
+					songTitle.setText(title);
+				}
+			}
+		});
 	}
 	
 	public int getPlayerVisibility() {

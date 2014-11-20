@@ -79,8 +79,8 @@ public final class Util {
 		for (int i = 0; i < fileArray.length; i++) {
 			File f = fileArray[i];
 			String fName = f.getName().split(".mp3")[0];
-			if(fName.contains("-<")){
-				fName = fName.split("-<")[0];
+			if(fName.contains("-[")){
+				fName = fName.split("-[")[0];
 			}
 			if (fileName.equals(fName)){
 				result++;
