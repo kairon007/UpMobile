@@ -67,8 +67,8 @@ public class MP3Editor {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isSearchView) {
-					if (isChecked) StateKeeper.getInstance().setTempUseCover(1);
-					else StateKeeper.getInstance().setTempUseCover(-1);
+					if (isChecked) StateKeeper.getInstance().setTempID3UseCover(1);
+					else StateKeeper.getInstance().setTempID3UseCover(-1);
 				}
 			}
 		});
@@ -102,7 +102,7 @@ public class MP3Editor {
 			newSongTitle = etSongTitle.getText().toString();
 			newAlbumTitle = etAlbumTitle.getText().toString();
 			if (isSearchView) {
-				StateKeeper.getInstance().setID3Fields( new String[] { newArtistName, newSongTitle, newAlbumTitle });
+				StateKeeper.getInstance().setTempID3Fields( new String[] { newArtistName, newSongTitle, newAlbumTitle });
 			}
 		}
 

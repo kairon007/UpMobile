@@ -896,6 +896,7 @@ public abstract class OnlineSearchView extends View {
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(final RemoteSong song) {
 		keeper.openDialog(StateKeeper.STREAM_DIALOG);
+		keeper.setTitleArtistLyrics( new String[] {song.getTitle(), song.getArtist()});
 		headsetReceiver = new HeadsetIntentReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);

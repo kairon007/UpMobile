@@ -19,7 +19,7 @@ public class StateKeeper {
 	private RemoteSong downloadSong;
 	private View viewItem;
 	private String[] titleArtistLyrics;
-	private String[] templateFields;
+	private String[] tempID3Fields;
 	private String songField;
 	private String message;
 	private String lyrics;
@@ -27,7 +27,7 @@ public class StateKeeper {
 	private String newDirName;
 	private int listViewPosition;
 	private int currentPlayersId;
-	private int tempUseCover;
+	private int tempID3UseCover;
 	private boolean useCover = true;
 	/**
 	 * The class flags hold various states.
@@ -124,12 +124,12 @@ public class StateKeeper {
 			directoryChooserPath = null;
 			newDirName = null;
 			downloadSong = null;
+			titleArtistLyrics = null;
 			currentPlayersId = 0;
-		} else if (flag == LYRICS_DIALOG) {
 			lyrics = null;
 		} else if (flag == EDITTAG_DIALOG) {
-			tempUseCover = 0;
-			templateFields = null;
+			tempID3UseCover = 0;
+			tempID3Fields = null;
 		}
 	}
 	
@@ -213,13 +213,13 @@ public class StateKeeper {
 			view.prepareSong(downloadSong, true);
 		}
 		if(checkState(EDITTAG_DIALOG)){
-			if (null == templateFields) {
+			if (null == tempID3Fields) {
 				playerInstance.createId3dialog(new String[] {downloadSong.getArtist(), downloadSong.getTitle(), downloadSong.album});
 			} else {
-				playerInstance.createId3dialog(templateFields);
+				playerInstance.createId3dialog(tempID3Fields);
 			}
 		} else if (checkState(LYRICS_DIALOG)) {
-			playerInstance.createLyricsDialog(titleArtistLyrics[0], titleArtistLyrics[1], lyrics);
+			playerInstance.createLyricsDialog();
 		} else {
 			if (checkState(DIRCHOOSE_DIALOG)){
 				playerInstance.createDirectoryChooserDialog();
@@ -230,17 +230,24 @@ public class StateKeeper {
 		}
 	}
 	
+	public int getTempID3UseCover() {
+		return tempID3UseCover;
+	}
+
+	public void setTempID3UseCover(int tempUseCover) {
+		if (tempUseCover > 0) this.tempID3UseCover = 1;
+		else if (tempUseCover < 0) this.tempID3UseCover = -1;
+		else this.tempID3UseCover = 0;
+	}
+
+	public void setTempID3Fields(String[] strings) {
+		tempID3Fields = strings;
+	}
 	
-	public int getTempUseCover() {
-		return tempUseCover;
+	public String[] getTempID3Fields() {
+		return tempID3Fields;
 	}
-
-	public void setTempUseCover(int tempUseCover) {
-		if (tempUseCover > 0) this.tempUseCover = 1;
-		else if (tempUseCover < 0) this.tempUseCover = -1;
-		else this.tempUseCover = 0;
-	}
-
+	
 	public boolean isUseCover() {
 		return useCover;
 	}
@@ -249,10 +256,6 @@ public class StateKeeper {
 		this.useCover = useCover;
 	}
 
-	public String[] getTemplateFields() {
-		return templateFields;
-	}
-	
 	public void setDownloadSong(RemoteSong downloadSong) {
 		this.downloadSong = downloadSong;
 	}
@@ -313,7 +316,4 @@ public class StateKeeper {
 		return message;
 	}
 
-	public void setID3Fields(String[] strings) {
-		templateFields = strings;
-	}
 }

@@ -157,14 +157,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(View v) {
-				String[] param;
-				if (keeper.getTitleArtistLyrics() == null) {
-					param = new String[] {downloadSong.getTitle(), downloadSong.getArtist()};
-					keeper.setTitleArtistLyrics(param);
-				} else {
-					param = keeper.getTitleArtistLyrics();
-				}
-				createLyricsDialog(param[0], param[1], null);
+				createLyricsDialog();
 			}
 		});
 		rowTags.setOnClickListener(new OnClickListener() {
@@ -225,7 +218,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		directoryChooserDialog.createNewDirDialog(name);
 	}
 	
-	public void createLyricsDialog(final String title, final String artist, String lyrics) {
+	public void createLyricsDialog() {
 		keeper.openDialog(StateKeeper.LYRICS_DIALOG);
 		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
 		if (OnlineSearchView.isOffline(view.getContext())) {
@@ -258,11 +251,14 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		dialog.setOnShowListener(dialogShowListener);
 		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		dialog.show();
-		LyricsFetcher lyricsFetcher = new LyricsFetcher(view.getContext());
-		lyricsFetcher.fetchLyrics(title, artist);
 		final TextView lyricsTextView = (TextView) lyricsView.findViewById(R.id.lyrics);
 		final LinearLayout progressLayout = (LinearLayout) lyricsView.findViewById(R.id.download_progress);
+		String lyrics = keeper.getLyrics();
+		final String strTitle = keeper.getTitleArtistLyrics()[0];
+		final String strArtist = keeper.getTitleArtistLyrics()[1];
 		if (null == lyrics) {
+		LyricsFetcher lyricsFetcher = new LyricsFetcher(view.getContext());
+		lyricsFetcher.fetchLyrics(strTitle, strArtist);
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
 				
 				@Override
@@ -272,19 +268,19 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 						lyricsTextView.setText(Html.fromHtml(lyrics));
 						StateKeeper.getInstance().setLyricsString(lyrics);
 					} else {
-						String message = view.getContext().getResources().getString(R.string.download_dialog_no_lyrics) + " " + artist + " - " + title;
+						String message = view.getContext().getResources().getString(R.string.download_dialog_no_lyrics) + " " + strArtist + " - " + strTitle;
 						lyricsTextView.setText(message);
 					}
 				}
 			});
 		} else {
+			progressLayout.setVisibility(View.GONE);
 			if (lyrics.equals("")) {
-				String message = view.getContext().getResources().getString(R.string.download_dialog_no_lyrics) + " " + artist + " - " + title;
+				String message = view.getContext().getResources().getString(R.string.download_dialog_no_lyrics) + " " + strArtist + " - " + strTitle;
 				lyricsTextView.setText(message);
 			} else {
 				lyricsTextView.setText(Html.fromHtml(lyrics));
 			}
-			progressLayout.setVisibility(View.GONE);
 		}
 	}
 
@@ -293,8 +289,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		editor = new MP3Editor(view.getContext(), isWhiteTheme);
 		editor.setStrings(fields);
 		editorView = editor.getView();
-		if (keeper.getTempUseCover() != 0) {
-			editor.setUseCover(keeper.getTempUseCover() > 0);
+		if (keeper.getTempID3UseCover() != 0) {
+			editor.setUseCover(keeper.getTempID3UseCover() > 0);
 		} else {
 			editor.setUseCover(keeper.isUseCover());
 		}
