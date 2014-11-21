@@ -652,7 +652,6 @@ public class MainActivity extends Activity {
 			String[] filds = { music.getSongArtist(), music.getSongTitle(), "" };
 			editor.setStrings(filds);
 		}
-		editor.setSearchView(false);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		if (forse) {
 			editor.setUseCover(useCover);

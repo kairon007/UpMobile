@@ -69,10 +69,10 @@ public class StateKeeper {
 	 * It indicates search is executed or not
 	 */
 	public static final int SEARCH_EXE_OPTION = 0x00000100;// 9
-//	/**
-//	 * Song download with cover or not
-//	 */
-//	public static final int USE_COVER_OPTION = 0x00000200;// 10
+	/**
+	 * Indicate has been any change tag of song in EditMp3Tags Dialog or not
+	 */
+	public static final int MANIPULATE_TEXT_OPTION = 0x00000200;// 10
 	/**
 	 * Indicate state media player in stream dialog 
 	 */
@@ -128,6 +128,7 @@ public class StateKeeper {
 			currentPlayersId = 0;
 			lyrics = null;
 		} else if (flag == EDITTAG_DIALOG) {
+			deactivateOptions(MANIPULATE_TEXT_OPTION);
 			tempID3UseCover = 0;
 			tempID3Fields = null;
 		}

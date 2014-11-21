@@ -584,7 +584,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		 		setSearchBoxVisible(true);
 			}
 			if (keeper.checkState(StateKeeper.EDITTAG_DIALOG) && mPagerAdapter.getCurrentType() == MediaUtils.TYPE_SONG) {
-				createEditID3Dialog(type, id, null);
+				createEditID3Dialog(type, id);
 			}
 			setSearchBoxVisible(true);
 			super.onRestoreInstanceState(in);
@@ -619,38 +619,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 			
 			break;
-		// case KeyEvent.KEYCODE_BACK:
-		// if (mSearchBoxVisible) {
-		// mTextFilter.setText("");
-		// setSearchBoxVisible(false);
-		// } else {
-		// Limiter limiter = mPagerAdapter.getCurrentLimiter();
-		// if (limiter != null && limiter.type != MediaUtils.TYPE_FILE) {
-		// int pos = -1;
-		// switch (limiter.type) {
-		// case MediaUtils.TYPE_ALBUM:
-		// setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
-		// pos = mPagerAdapter.mAlbumsPosition;
-		// break;
-		// case MediaUtils.TYPE_ARTIST:
-		// mPagerAdapter.clearLimiter(MediaUtils.TYPE_ARTIST);
-		// pos = mPagerAdapter.mArtistsPosition;
-		// break;
-		// case MediaUtils.TYPE_GENRE:
-		// mPagerAdapter.clearLimiter(MediaUtils.TYPE_GENRE);
-		// pos = mPagerAdapter.mGenresPosition;
-		// break;
-		// }
-		// if (pos == -1) {
-		// updateLimiterViews();
-		// } else {
-		// mViewPager.setCurrentItem(pos);
-		// }
-		// } else {
-		// finish();
-		// }
-		// }
-		// break;
 		case KeyEvent.KEYCODE_SEARCH:
 			setSearchBoxVisible(!mSearchBoxVisible);
 			break;
@@ -1163,11 +1131,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			updateLimiterViews();
 			break;
 		case MENU_EDIT_MP3_TAGS:
-			boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			editor = new MP3Editor(this, isWhiteTheme);
-			createEditID3Dialog(type, id, editor);
+			createEditID3Dialog(type, id);
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
@@ -1209,51 +1175,60 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	}
 
 	@SuppressLint("NewApi") 
-	private void createEditID3Dialog(int type, long id, MP3Editor view) {
+	private void createEditID3Dialog(int type, long id) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
-		final Context context = this;
-		if (null == view) {
-			boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
-			editor = new MP3Editor(this, isWhiteTheme);
-		}
-		String[] filds = { "", "", "" };
-		MusicMetadata metadata = null;
-		try {
-			MusicMetadataSet src_set = new MyID3().read(file);
-			if (null != src_set) {
-				metadata = (MusicMetadata) src_set.getSimplified();
+		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
+		editor = new MP3Editor(this, isWhiteTheme);
+		if (keeper.getTempID3Fields() == null) {
+			String[] filds = new String[3];
+			MusicMetadata metadata = null;
+			try {
+				MusicMetadataSet src_set = new MyID3().read(file);
+				if (null != src_set) {
+					metadata = (MusicMetadata) src_set.getSimplified();
+					
+				}
+				if (null != metadata) {
+					filds[0] = metadata.getArtist();
+					filds[1] = metadata.getSongTitle();
+					filds[2] = metadata.getAlbum() == null ? "" : metadata.getAlbum();
+				} else {
+					String s =  file.getName();
+					if (s.contains(".mp3")) s = s.split(".mp3")[0];
+					String[] str = s.split(" - ");
+					filds[0] = str[0].trim();
+					filds[1] = str[1].trim();
+					filds[2] = "";
+				}
+				editor.setStrings(filds);
+				keeper.setTempID3Fields(filds);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if (null != metadata) {
-				filds[0] = metadata.getArtist();
-				filds[1] = metadata.getSongTitle();
-				filds[2] = metadata.getAlbum() == null ? "" : metadata.getAlbum();
-			}
-			editor.setStrings(filds);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (keeper.checkState(StateKeeper.EDITTAG_DIALOG)) {
+		} else {
 			editor.setStrings(keeper.getTempID3Fields());
 		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
+		View view = editor.getView();
 		editor.hideCheckBox(true);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(view);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 				final String artistName = editor.getNewArtistName();
 				final String albumTitle = editor.getNewAlbumTitle();
 				final String songTitle = editor.getNewSongTitle();
-				if (!editor.manipulateText()) {
+				if(!keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION)) {
+					releaseID3Dialog();
 					return;
-				}
-				if(new File(file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3").exists()) {
+				} 
+				if (new File(file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3").exists()) {
 					Toast toast = Toast.makeText(editor.getView().getContext(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
 					toast.show();
+					releaseID3Dialog();
 					return;
 				}
-				renameTask = new RenameTask(file, context, artistName, songTitle, albumTitle, true, new RenameTaskSuccessListener() {
+				renameTask = new RenameTask(file, LibraryActivity.this, artistName, songTitle, albumTitle, true, new RenameTaskSuccessListener() {
 					
 					@Override
 					public void success() {
@@ -1262,15 +1237,17 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 						}
 					}
 				});
+				releaseID3Dialog();
 				renameTask.execute();
 			}
+
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
+				releaseID3Dialog();
 			}
 
 		});
@@ -1279,7 +1256,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				 
 				@Override
 				public void onDismiss(DialogInterface dialog) {
-					keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
+					releaseID3Dialog();
 				}
 			});
 		} else {
@@ -1288,7 +1265,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				@Override
 				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 					if (keyCode == KeyEvent.KEYCODE_BACK) {
-						keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
+						releaseID3Dialog();
 					}
 					return false;
 				}
@@ -1299,6 +1276,11 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 	}
 
+	private void releaseID3Dialog() {
+		keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
+		editor = null;
+	}
+	
 	private void deleteCover(File f) {
 		File file = new File(f.getParentFile(), f.getName());
 		try {
@@ -1330,49 +1312,16 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-		// setMenuBackgroundBlack();
-		// }
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			MenuItem controls = menu.add(null);
 			CompatHoneycomb.setActionView(controls, mActionControls);
 			CompatHoneycomb.setShowAsAction(controls, MenuItem.SHOW_AS_ACTION_ALWAYS);
-			// removed
-			// MenuItem search = menu.add(0, MENU_SEARCH, 0,
-			// R.string.search).setIcon(R.drawable.ic_menu_search);
-			// CompatHoneycomb.setShowAsAction(search,
-			// MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		} else {
-			// removed
-			// menu.add(0, MENU_SEARCH, 0,
-			// R.string.search).setIcon(R.drawable.ic_menu_search);
 			menu.add(0, MENU_PLAYBACK, 0, R.string.playback_view).setIcon(R.drawable.ic_menu_gallery);
 		}
 		menu.add(0, MENU_SORT, 0, R.string.sort_by).setIcon(R.drawable.ic_menu_sort_alphabetically);
 		return super.onCreateOptionsMenu(menu);
 	}
-
-	// protected void setMenuBackgroundBlack() {
-	// Log.d("log", "setMenuBackgroundBlack");
-	// getLayoutInflater().setFactory(new Factory() {
-	// public View onCreateView(String name, Context context,
-	// AttributeSet attrs) {
-	// try {
-	// LayoutInflater f = getLayoutInflater();
-	// final View view = f.createView(name, null, attrs);
-	// new Handler().post(new Runnable() {
-	// public void run() {
-	// view.setBackgroundResource(R.color.window_background_black);
-	// }
-	// });
-	// return view;
-	// } catch (InflateException e) {
-	// } catch (ClassNotFoundException e) {
-	// }
-	// return null;
-	// }
-	// });
-	// }
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -1381,24 +1330,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	// removed
-	// public boolean isSearchBoxVisible() {
-	// return mSearchBoxVisible;
-	// }
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		// removed
-		// case MENU_SEARCH:
-		// int position = mPagerAdapter.getCurrentType();
-		// if (position == -1) {
-		// position = page;
-		// }
-		// if (position != 0) {
-		// setSearchBoxVisible(!mSearchBoxVisible);
-		// }
-		// return true;
 		case MENU_PLAYBACK:
 			openPlaybackActivity();
 			return true;
@@ -1528,28 +1462,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	protected void setSearchBoxVisible(boolean visible) {
 		mSearchBoxVisible = visible;
 		mSearchBox.setVisibility(visible ? View.VISIBLE : View.GONE);
-		// if (mControls != null) {
-		// mControls.setVisibility(visible || (mState &
-		// PlaybackService.FLAG_NO_MEDIA) != 0 ? View.GONE : View.VISIBLE);
-		// } else if (mActionControls != null) {
-		// // try to hide the bottom action bar
-		// ViewParent parent = mActionControls.getParent();
-		// if (parent != null)
-		// parent = parent.getParent();
-		// if (parent != null && parent instanceof ViewGroup) {
-		// ViewGroup ab = (ViewGroup)parent;
-		// if (ab.getChildCount() == 1) {
-		// ab.setVisibility(visible ? View.GONE : View.VISIBLE);
-		// }
-		// }
-		// }
-
-		// removed
-		// if (visible) {
-		// mTextFilter.requestFocus();
-		// ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(mTextFilter,
-		// 0);
-		// }
 	}
 
 	@Override
@@ -1629,7 +1541,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		RadioGroup group = (RadioGroup) list.findViewById(R.id.sort_direction);
 		if (group.getCheckedRadioButtonId() == R.id.descending)
 			which = ~which;
-
 		mPagerAdapter.setSortMode(which);
 	}
 

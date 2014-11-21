@@ -27,7 +27,6 @@ public class MP3Editor {
 	private String oldArtistName;
 	private String oldSongTitle;
 	private String oldAlbumTitle;
-	private boolean isSearchView = true;
 	public static final String UNKNOWN = "unknown";
 	private boolean isWhiteTheme;
 
@@ -66,10 +65,8 @@ public class MP3Editor {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isSearchView) {
-					if (isChecked) StateKeeper.getInstance().setTempID3UseCover(1);
-					else StateKeeper.getInstance().setTempID3UseCover(-1);
-				}
+				if (isChecked) StateKeeper.getInstance().setTempID3UseCover(1);
+				else StateKeeper.getInstance().setTempID3UseCover(-1);
 			}
 		});
 		clearFocus();
@@ -98,22 +95,17 @@ public class MP3Editor {
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			StateKeeper.getInstance().activateOptions(StateKeeper.MANIPULATE_TEXT_OPTION);
 			newArtistName = etArtistName.getText().toString();
 			newSongTitle = etSongTitle.getText().toString();
 			newAlbumTitle = etAlbumTitle.getText().toString();
-			if (isSearchView) {
-				StateKeeper.getInstance().setTempID3Fields( new String[] { newArtistName, newSongTitle, newAlbumTitle });
-			}
+			StateKeeper.getInstance().setTempID3Fields( new String[] { newArtistName, newSongTitle, newAlbumTitle });
 		}
 
 		@Override
 		public void afterTextChanged(Editable s) {
 
 		}
-	}
-	
-	public void setSearchView(boolean isSearchView) {
-		this.isSearchView = isSearchView;
 	}
 
 	public void hideCheckBox(boolean isHide) {

@@ -302,11 +302,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				downloadSong.setArtistName(editor.getNewArtistName());
-				downloadSong.setTitle(editor.getNewSongTitle());
-				keeper.setDownloadSong(downloadSong);
-				keeper.setUseCover(editor.useAlbumCover());
-				setTitle(downloadSong.getArtist() + " - " + downloadSong.getTitle());
+				if(keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION)) {
+					downloadSong.setArtistName(editor.getNewArtistName());
+					downloadSong.setTitle(editor.getNewSongTitle());
+					keeper.setDownloadSong(downloadSong);
+					keeper.setUseCover(editor.useAlbumCover());
+					setTitle(downloadSong.getArtist() + " - " + downloadSong.getTitle());
+				}
 				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
 		});
