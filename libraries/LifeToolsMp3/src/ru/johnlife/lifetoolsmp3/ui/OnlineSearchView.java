@@ -321,7 +321,7 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(View v) {
-				showDownloadsList();
+				expandEngines();
 			}
 		});
 		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
