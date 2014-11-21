@@ -1248,7 +1248,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				if (!editor.manipulateText()) {
 					return;
 				}
-				if(new File(file.getParentFile() + "/" + artistName + " - " + albumTitle + ".mp3").exists()) {
+				if(new File(file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3").exists()) {
 					Toast toast = Toast.makeText(editor.getView().getContext(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
 					toast.show();
 					return;
