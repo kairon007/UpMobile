@@ -34,59 +34,59 @@ public class StateKeeper {
 	/**
 	 * It indicates Stream Dialog is opened or not
 	 */
-	public static final int STREAM_DIALOG = 1;// 1
+	public static final int STREAM_DIALOG = 0x00000001;// 1
 	/**
 	 * It indicates ID3Edit Dialog is opened or not
 	 */
-	public static final int EDITTAG_DIALOG = 2;// 2
+	public static final int EDITTAG_DIALOG = 0x00000002;// 2
 	/**
 	 * It indicates Directory Chooser Dialog is opened or not
 	 */
-	public static final int DIRCHOOSE_DIALOG = 4;// 3
+	public static final int DIRCHOOSE_DIALOG = 0x00000004;// 3
 	/**
 	 * It indicates New Directory Dialog is opened or not
 	 */
-	public static final int NEWDIR_DIALOG = 8;// 4
+	public static final int NEWDIR_DIALOG = 0x00000008;// 4
 	/**
 	 * It indicates Lyrics Dialog is opened or not
 	 */
-	public static final int LYRICS_DIALOG = 16;// 5
+	public static final int LYRICS_DIALOG = 0x00000010;// 5
 	/**
 	 * It indicates Progress Dialog is opened or not
 	 */
-	public static final int PROGRESS_DIALOG = 32;// 6
+	public static final int PROGRESS_DIALOG = 0x00000020;// 6
 	/**
 	 * It indicates button in Directory Chooser Dialog is enabled or not
 	 */
-	public static final int BTN_ENABLED = 64;// 7
+	public static final int BTN_ENABLED = 0x00000040;// 7
 	/**
 	 * It use for switch engines. If it is true then after change engines search is resumed
 	 */
-	public static final int SEARCH_STOP_OPTION = 128;// 8
+	public static final int SEARCH_STOP_OPTION = 0x00000080;// 8
 	/**
 	 * It indicates search is executed or not
 	 */
-	public static final int SEARCH_EXE_OPTION = 256;// 9
+	public static final int SEARCH_EXE_OPTION = 0x00000100;// 9
 	/**
 	 * Song download with cover or not
 	 */
-	public static final int USE_COVER_OPTION = 512;// 10
+	public static final int USE_COVER_OPTION = 0x00000200;// 10
 	/**
 	 * Indicate state media player in stream dialog 
 	 */
-	public static final int IS_PLAYING_OPTION = 1024;// 11
+	public static final int IS_PLAYING_OPTION = 0x00000400;// 11
 	/**
 	 * Indicate state spinner
 	 */
-	public static final int IS_EXPANDING_OPTION = 2048;// 12
+	public static final int IS_EXPANDING_OPTION = 0x00000800;// 12
 	/**
      * Mask for use with setFlags indicating bits used for search options.
      */
-	private static final int OPEN_MASKS = 4095;
+	private static final int OPEN_MASKS = 0x00000FFF;
 	/**
 	 * Mask for close selected options.
 	 */
-	private static final int CLOSE_MASKS = 0;
+	private static final int CLOSE_MASKS = 0x00000000;
 	
 	
 	private StateKeeper() {
@@ -121,6 +121,7 @@ public class StateKeeper {
 			playerInstance = null;
 			directoryChooserPath = null;
 			newDirName = null;
+			downloadSong = null;
 			currentPlayersId = 0;
 			generalFlags  = generalFlags ^ USE_COVER_OPTION;
 		} else if (flag == LYRICS_DIALOG) {
@@ -183,7 +184,7 @@ public class StateKeeper {
 			Song song = searchView.getResultAdapter().getItem(i);
 			results.add(song);
 		}
-		if (checkState(STREAM_DIALOG)) downloadSong = searchView.getDownloadSong();
+		if (checkState(STREAM_DIALOG) && downloadSong == null) downloadSong = searchView.getDownloadSong();
 		listViewPosition = searchView.getListViewPosition();
 		viewItem = searchView.getViewItem();
 		message = searchView.getMessage();

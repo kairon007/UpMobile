@@ -303,9 +303,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			public void onClick(DialogInterface dialog, int which) {
 				downloadSong.setArtistName(editor.getNewArtistName());
 				downloadSong.setTitle(editor.getNewSongTitle());
+				keeper.setDownloadSong(downloadSong);
 				if (editor.useAlbumCover()) keeper.activateOptions(StateKeeper.USE_COVER_OPTION);
 				else keeper.deactivateOptions(StateKeeper.USE_COVER_OPTION);
-				setTitle(editor.getNewArtistName() + " - " + editor.getNewSongTitle());
+				setTitle(downloadSong.getArtist() + " - " + downloadSong.getTitle());
 				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
 		});
@@ -443,7 +444,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		try {
-			// mediaPlayer.setDataSource(url);
+			mediaPlayer.setDataSource(params[0]);
 			HashMap<String, String> headers = new HashMap<String, String>();
 			headers.put("User-Agent",
 					"2.0.0.6 –≤ Debian GNU/Linux 4.0 ‚Äî Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
