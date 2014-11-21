@@ -159,7 +159,7 @@ public final class Util {
 	}
 	
 	public static String removeSpecialCharacters(String str) {
-		str.trim();
+		str = str.trim();
 		return str.toString().replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
 	}
 	
