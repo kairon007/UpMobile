@@ -261,7 +261,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 		listView.setEmptyView(message);
-		initialHeight = spEnginesChoiserLayout.getMeasuredHeight();
+		initialHeight = spEnginesChoiserLayout.getLayoutParams().height;
 		listView.setOnScrollListener(new OnScrollListener() {
 			
 			int lastScroll = 0;
@@ -281,10 +281,8 @@ public abstract class OnlineSearchView extends View {
 					scrollBy = firstItem.getTop() - lastScroll;
 				} else if (firstVisibleItem < lastVisibleItem) {
 					scrollBy = firstItem.getTop() - lastScroll + itemHeight;
-					Log.d("logd", "scroll up");
 				} else if (firstVisibleItem > lastVisibleItem) {
 					scrollBy = firstItem.getTop() - lastScroll - itemHeight;
-					Log.d("logd", "scroll down");
 				}
 				int resultHeight = spEnginesChoiserLayout.getLayoutParams().height + scrollBy;
 				if (resultHeight < 0) {
@@ -476,6 +474,7 @@ public abstract class OnlineSearchView extends View {
 		listView = (ListView) view.findViewById(R.id.list);
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
+		spEnginesChoiserLayout = (View) view.findViewById(R.id.choise_engines_layout);
 	}
 
 	private void collapseEngines() {
@@ -486,8 +485,8 @@ public abstract class OnlineSearchView extends View {
 				@Override
 				protected void applyTransformation(float interpolatedTime, Transformation t) {
 					if (interpolatedTime == 1) {
-						spEnginesChoiserLayout.getLayoutParams().height = 0;					}
-					else {
+						spEnginesChoiserLayout.getLayoutParams().height = 0;
+					} else {
 						spEnginesChoiserLayout.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
 						spEnginesChoiserLayout.requestLayout();
 					}
@@ -505,9 +504,6 @@ public abstract class OnlineSearchView extends View {
 
 	private void expandEngines() {
 		keeper.activateOptions(StateKeeper.IS_EXPANDING_OPTION);
-		if (spEnginesChoiser.getVisibility() == View.VISIBLE)
-			return;
-		spEnginesChoiser.setVisibility(View.VISIBLE);
 		Animation anim = new Animation() {
 
 			@Override
@@ -522,7 +518,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		};
 		anim.setDuration(200);
-		spEnginesChoiser.startAnimation(anim);
+		spEnginesChoiserLayout.startAnimation(anim);
 	}
 
 	public static String getDownloadPath(Context context) {
