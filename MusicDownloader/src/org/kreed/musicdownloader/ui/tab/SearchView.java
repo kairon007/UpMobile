@@ -11,6 +11,7 @@ import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -55,7 +56,9 @@ public class SearchView  extends OnlineSearchView {
 				}
 				
 				@Override
-				public void error(String error) {}
+				public void error(String error) {
+					
+				}
 			});
 		} else {
 			song.getDownloadUrl(new DownloadUrlListener() {
@@ -63,7 +66,7 @@ public class SearchView  extends OnlineSearchView {
 				@Override
 				public void success(String url) {
 					path = url;
-					SearchView.this.alertProgressDialog.dismiss();
+					if (StateKeeper.getInstance().checkState(StateKeeper.PROGRESS_DIALOG)) SearchView.this.alertProgressDialog.dismiss();
 					startPlay(song, data);
 				}
 				

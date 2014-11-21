@@ -764,51 +764,50 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
+		if (!showFullElement()) {
+			click(view, position);
+			return;
+		}
 		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
-		keeper.openDialog(StateKeeper.PROGRESS_DIALOG);
 		downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
 			stopSystemPlayer(getContext());
 			showProgressDialog(view, downloadSong, position);
 		}
 		if (!isRestored) {
-			if (showFullElement()) {
-				downloadSong.getDownloadUrl(new DownloadUrlListener() {
+			downloadSong.getDownloadUrl(new DownloadUrlListener() {
 
-					@Override
-					public void success(final String url) {
-						downloadSong.setDownloadUrl(url);
-						keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
-						((Activity) getContext()).runOnUiThread(new Runnable() {
+				@Override
+				public void success(final String url) {
+					downloadSong.setDownloadUrl(url);
+					keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
+					((Activity) getContext()).runOnUiThread(new Runnable() {
 
-							@Override
-							public void run() {
-								dismissProgressDialog();
-								if (showFullElement()) {
-									prepareSong(downloadSong, false);
-								}
+						@Override
+						public void run() {
+							dismissProgressDialog();
+							if (showFullElement()) {
+								prepareSong(downloadSong, false);
 							}
-						});
-					}
+						}
+					});
+				}
 
-					@Override
-					public void error(String error) {
-						((Activity) getContext()).runOnUiThread(new Runnable() {
+				@Override
+				public void error(String error) {
+					((Activity) getContext()).runOnUiThread(new Runnable() {
 
-							@Override
-							public void run() {
-								dismissProgressDialog();
-								keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
-								Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
-								toast.show();
-							}
-						});
+						@Override
+						public void run() {
+							dismissProgressDialog();
+							keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
+							Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
+							toast.show();
+						}
+					});
 
-					}
-				});
-			} else {
-				click(view, position);
-			}
+				}
+			});
 		} else {
 			downloadSong.addListener(new DownloadUrlListener() {
 
@@ -837,6 +836,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	protected void showProgressDialog(final View view, final RemoteSong downloadSong, final int position) {
+		keeper.openDialog(StateKeeper.PROGRESS_DIALOG);
 		View dialoglayout = LayoutInflater.from(getContext()).inflate(R.layout.progress_dialog, null);
 		progressDialog = new AlertDialog.Builder(getContext());
 		progressDialog.setView(dialoglayout);
