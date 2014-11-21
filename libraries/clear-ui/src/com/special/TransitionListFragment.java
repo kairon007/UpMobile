@@ -30,7 +30,7 @@ public class TransitionListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
         listView   = (UISwipableList) parentView.findViewById(R.id.listView);
-        MainActivity parentActivity = (MainActivity) getActivity();
+        BaseClearActivity parentActivity = (BaseClearActivity) getActivity();
         resideMenu = parentActivity.getResideMenu();
         initView();
         return parentView;

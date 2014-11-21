@@ -31,7 +31,7 @@ public class ElementsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	final ScrollView v =  (ScrollView) inflater.inflate(R.layout.fragment_elements, container, false);
     	
-    	MainActivity parentActivity = (MainActivity) getActivity();
+    	BaseClearActivity parentActivity = (BaseClearActivity) getActivity();
         resideMenu = parentActivity.getResideMenu();
     	
         //Adding a view to be ignored by the menu for horizontal finger movements 

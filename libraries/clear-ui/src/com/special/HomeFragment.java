@@ -24,7 +24,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setUpViews() {
-        MainActivity parentActivity = (MainActivity) getActivity();
+        BaseClearActivity parentActivity = (BaseClearActivity) getActivity();
         resideMenu = parentActivity.getResideMenu();
 
         parentView.findViewById(R.id.btn_open_menu).setOnClickListener(new View.OnClickListener() {

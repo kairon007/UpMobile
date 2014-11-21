@@ -147,17 +147,15 @@ public class TransitionDetailActivity extends Activity {
 	    tab.setOnCheckedChangeListener(new OnCheckedChangeListener() 
 	    {
 	        public void onCheckedChanged(RadioGroup group, int checkedId) {
-	        	switch (checkedId) {
-	        
-	        	case R.id.toggle1:
-	        		mTextView.setVisibility(View.GONE);
-	        		listView.setVisibility(LinearLayout.VISIBLE);
-	        		return;
-	        	case R.id.toggle2:
-	        		mTextView.setVisibility(View.VISIBLE);
-	        		listView.setVisibility(LinearLayout.GONE);
-	        		return;
-	        	}
+	        	if (checkedId == R.id.toggle1) {
+					mTextView.setVisibility(View.GONE);
+					listView.setVisibility(LinearLayout.VISIBLE);
+					return;
+				} else if (checkedId == R.id.toggle2) {
+					mTextView.setVisibility(View.VISIBLE);
+					listView.setVisibility(LinearLayout.GONE);
+					return;
+				}
 	        }
 	    });
     }
