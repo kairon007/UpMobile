@@ -27,6 +27,8 @@ public class StateKeeper {
 	private String newDirName;
 	private int listViewPosition;
 	private int currentPlayersId;
+	private int tempUseCover;
+	private boolean useCover = true;
 	/**
 	 * The class flags hold various states.
 	 */
@@ -67,10 +69,10 @@ public class StateKeeper {
 	 * It indicates search is executed or not
 	 */
 	public static final int SEARCH_EXE_OPTION = 0x00000100;// 9
-	/**
-	 * Song download with cover or not
-	 */
-	public static final int USE_COVER_OPTION = 0x00000200;// 10
+//	/**
+//	 * Song download with cover or not
+//	 */
+//	public static final int USE_COVER_OPTION = 0x00000200;// 10
 	/**
 	 * Indicate state media player in stream dialog 
 	 */
@@ -123,10 +125,10 @@ public class StateKeeper {
 			newDirName = null;
 			downloadSong = null;
 			currentPlayersId = 0;
-			generalFlags  = generalFlags ^ USE_COVER_OPTION;
 		} else if (flag == LYRICS_DIALOG) {
 			lyrics = null;
 		} else if (flag == EDITTAG_DIALOG) {
+			tempUseCover = 0;
 			templateFields = null;
 		}
 	}
@@ -176,7 +178,7 @@ public class StateKeeper {
 
 	public void saveStateAdapter(OnlineSearchView searchView) {
 		//TODO save state
-		if (songField != null) songField = searchView.getSearchField().getText().toString();
+		songField = searchView.getSearchField().getText().toString();
 		if (searchView != null) taskIterator = searchView.getTaskIterator();
 		if (generalFlags == 0 || generalFlags == 2048) return;
 		results = new ArrayList<Song>();
@@ -228,6 +230,25 @@ public class StateKeeper {
 		}
 	}
 	
+	
+	public int getTempUseCover() {
+		return tempUseCover;
+	}
+
+	public void setTempUseCover(int tempUseCover) {
+		if (tempUseCover > 0) this.tempUseCover = 1;
+		else if (tempUseCover < 0) this.tempUseCover = -1;
+		else this.tempUseCover = 0;
+	}
+
+	public boolean isUseCover() {
+		return useCover;
+	}
+
+	public void setUseCover(boolean useCover) {
+		this.useCover = useCover;
+	}
+
 	public String[] getTemplateFields() {
 		return templateFields;
 	}

@@ -62,16 +62,13 @@ public class MP3Editor {
 		etAlbumTitle.addTextChangedListener(watcher);
 		etSongTitle.addTextChangedListener(watcher);
 		etArtistName.addTextChangedListener(watcher);
-		if (isSearchView) {
-			checkBox.setChecked(StateKeeper.getInstance().checkState(StateKeeper.USE_COVER_OPTION));
-		}
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isSearchView) {
-					if (isChecked) StateKeeper.getInstance().activateOptions(StateKeeper.USE_COVER_OPTION);
-					else StateKeeper.getInstance().deactivateOptions(StateKeeper.USE_COVER_OPTION);
+					if (isChecked) StateKeeper.getInstance().setTempUseCover(1);
+					else StateKeeper.getInstance().setTempUseCover(-1);
 				}
 			}
 		});

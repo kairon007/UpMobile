@@ -293,6 +293,11 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		editor = new MP3Editor(view.getContext(), isWhiteTheme);
 		editor.setStrings(fields);
 		editorView = editor.getView();
+		if (keeper.getTempUseCover() != 0) {
+			editor.setUseCover(keeper.getTempUseCover() > 0);
+		} else {
+			editor.setUseCover(keeper.isUseCover());
+		}
 		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme).setView(editorView);
 		if (isDefaultCover) {
 			editor.disableChekBox();
@@ -304,8 +309,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 				downloadSong.setArtistName(editor.getNewArtistName());
 				downloadSong.setTitle(editor.getNewSongTitle());
 				keeper.setDownloadSong(downloadSong);
-				if (editor.useAlbumCover()) keeper.activateOptions(StateKeeper.USE_COVER_OPTION);
-				else keeper.deactivateOptions(StateKeeper.USE_COVER_OPTION);
+				keeper.setUseCover(editor.useAlbumCover());
 				setTitle(downloadSong.getArtist() + " - " + downloadSong.getTitle());
 				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
@@ -480,7 +484,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 						button.setImageResource(imagePause);
 						mp.start();
 						keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
-//						StateKeeper.getInstance().setPlaying(true);
 						mp.setOnCompletionListener(new OnCompletionListener() {
 
 							@Override
@@ -491,7 +494,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 								button.setImageResource(imagePause);
 								progress.setProgress(0);
 								keeper.deactivateOptions(StateKeeper.IS_PLAYING_OPTION);
-//								StateKeeper.getInstance().setPlaying(false);
 							}
 						});
 						rowLirycs.postDelayed(new Runnable() {

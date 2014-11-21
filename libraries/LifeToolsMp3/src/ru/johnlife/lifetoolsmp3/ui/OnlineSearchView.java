@@ -919,7 +919,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				downloadListener.setSong(song);
-				downloadListener.setUseAlbumCover(keeper.checkState(StateKeeper.USE_COVER_OPTION));
+				downloadListener.setUseAlbumCover(keeper.isUseCover());
 				downloadListener.downloadSong(false);
 				dialog.cancel();
 			}
