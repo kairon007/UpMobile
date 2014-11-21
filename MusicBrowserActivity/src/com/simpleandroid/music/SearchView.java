@@ -57,7 +57,7 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
-		MusicUtils.bindToService(activity, osc);
+		if (activity != null) MusicUtils.bindToService(activity, osc);
 	}
 
 	@Override

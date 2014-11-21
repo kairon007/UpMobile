@@ -1233,7 +1233,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			e.printStackTrace();
 		}
 		if (keeper.checkState(StateKeeper.EDITTAG_DIALOG)) {
-			editor.setStrings(keeper.getID3Fields());
+			editor.setStrings(keeper.getTemplateFields());
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
 		editor.hideCheckBox(true);

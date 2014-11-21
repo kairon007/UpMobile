@@ -62,7 +62,7 @@ public class DirectoryChooserDialog {
 		public void onShow(DialogInterface dialog) {
 			float textSize = 16f;
 			DirectoryChooserDialog.this.dialog = dialog;
-			enableButtons();
+//			enableButtons();
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}

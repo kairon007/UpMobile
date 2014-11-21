@@ -15,19 +15,18 @@ public class StateKeeper {
 	private static StateKeeper instance = null;
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
-	private String[] titleArtistLyrics;
-	private String[] fields;
-	private RemoteSong song, downloadSong;
 	private Player playerInstance;
+	private RemoteSong downloadSong;
 	private View viewItem;
+	private String[] titleArtistLyrics;
+	private String[] templateFields;
+	private String songField;
 	private String message;
-	private String songName;
 	private String lyrics;
 	private String directoryChooserPath;
 	private String newDirName;
 	private int listViewPosition;
 	private int currentPlayersId;
-	
 	/**
 	 * The class flags hold various states.
 	 */
@@ -35,60 +34,55 @@ public class StateKeeper {
 	/**
 	 * It indicates Stream Dialog is opened or not
 	 */
-	public static final int STREAM_DIALOG = 1;
+	public static final int STREAM_DIALOG = 1;// 1
 	/**
 	 * It indicates ID3Edit Dialog is opened or not
 	 */
-	public static final int EDITTAG_DIALOG = 2;
+	public static final int EDITTAG_DIALOG = 2;// 2
 	/**
 	 * It indicates Directory Chooser Dialog is opened or not
 	 */
-	public static final int DIRCHOOSE_DIALOG = 4;
+	public static final int DIRCHOOSE_DIALOG = 4;// 3
 	/**
 	 * It indicates New Directory Dialog is opened or not
 	 */
-	public static final int NEWDIR_DIALOG = 8;
+	public static final int NEWDIR_DIALOG = 8;// 4
 	/**
 	 * It indicates Lyrics Dialog is opened or not
 	 */
-	public static final int LYRICS_DIALOG = 16;
+	public static final int LYRICS_DIALOG = 16;// 5
 	/**
 	 * It indicates Progress Dialog is opened or not
 	 */
-	public static final int PROGRESS_DIALOG = 32;
+	public static final int PROGRESS_DIALOG = 32;// 6
 	/**
 	 * It indicates button in Directory Chooser Dialog is enabled or not
 	 */
-	public static final int BTN_ENABLED = 64;
-	/**
-     * Mask for use with setFlags indicating bits used for state 
-     * of dialog (for open dialog).
-     */
-	private static final int DIALOG_OPEN_MASKS = 127;
+	public static final int BTN_ENABLED = 64;// 7
 	/**
 	 * It use for switch engines. If it is true then after change engines search is resumed
 	 */
-	public static final int SEARCH_STOP_OPTION = 128;
+	public static final int SEARCH_STOP_OPTION = 128;// 8
 	/**
 	 * It indicates search is executed or not
 	 */
-	public static final int SEARCH_EXE_OPTION = 256;
+	public static final int SEARCH_EXE_OPTION = 256;// 9
 	/**
 	 * Song download with cover or not
 	 */
-	public static final int USE_COVER_OPTION = 512;
+	public static final int USE_COVER_OPTION = 512;// 10
 	/**
 	 * Indicate state media player in stream dialog 
 	 */
-	public static final int IS_PLAYING_OPTION = 1024;
+	public static final int IS_PLAYING_OPTION = 1024;// 11
 	/**
 	 * Indicate state spinner
 	 */
-	public static final int IS_EXPANDING_OPTION = 2048;
+	public static final int IS_EXPANDING_OPTION = 2048;// 12
 	/**
      * Mask for use with setFlags indicating bits used for search options.
      */
-	private static final int OPTIONS_MASKS = 3968;
+	private static final int OPEN_MASKS = 4095;
 	/**
 	 * Mask for close selected options.
 	 */
@@ -123,6 +117,17 @@ public class StateKeeper {
 				generalFlags = Integer.valueOf(old);
 			} 
 		}
+		if (flag == STREAM_DIALOG) {
+			playerInstance = null;
+			directoryChooserPath = null;
+			newDirName = null;
+			currentPlayersId = 0;
+			generalFlags  = generalFlags ^ USE_COVER_OPTION;
+		} else if (flag == LYRICS_DIALOG) {
+			lyrics = null;
+		} else if (flag == EDITTAG_DIALOG) {
+			templateFields = null;
+		}
 	}
 	
 	/**
@@ -131,7 +136,7 @@ public class StateKeeper {
 	 * set state as open in selected dialog 
 	 */
 	public void openDialog(int dialog) {
-		setFlags(dialog, DIALOG_OPEN_MASKS, true);
+		setFlags(dialog, OPEN_MASKS, true);
 	}
 	/**
 	 * @param dialog - use constants from this class which have ending _DIALOG or BTN_ENABLED
@@ -147,7 +152,7 @@ public class StateKeeper {
 	 * set state as enabled in selected options
 	 */
 	public void activateOptions(int options) {
-		setFlags(options, OPTIONS_MASKS, true);
+		setFlags(options, OPEN_MASKS, true);
 	}
 	/**
 	 * @param options - use constants from this class which have ending _OPTION
@@ -169,60 +174,69 @@ public class StateKeeper {
 	}
 
 	public void saveStateAdapter(OnlineSearchView searchView) {
-		//TODO savestate
+		//TODO save state
+		if (songField != null) songField = searchView.getSearchField().getText().toString();
+		if (searchView != null) taskIterator = searchView.getTaskIterator();
+		if (generalFlags == 0 || generalFlags == 2048) return;
 		results = new ArrayList<Song>();
-		if (searchView != null && searchView.getResultAdapter() != null) {
-			songName = searchView.getSearchField().getText().toString();
-			for (int i = 0; i < searchView.getResultAdapter().getCount(); i++) {
-				Song song = searchView.getResultAdapter().getItem(i);
-				results.add(song);
-			}
-			listViewPosition = searchView.getListViewPosition();
-			viewItem = searchView.getViewItem();
-			taskIterator = searchView.getTaskIterator();
-			message = searchView.getMessage();
-			if (song == null) {
-				song = searchView.getDownloadSong();
-			}
-			playerInstance = searchView.getPlayer();
+		for (int i = 0; i < searchView.getResultAdapter().getCount(); i++) {
+			Song song = searchView.getResultAdapter().getItem(i);
+			results.add(song);
 		}
+		if (checkState(STREAM_DIALOG)) downloadSong = searchView.getDownloadSong();
+		listViewPosition = searchView.getListViewPosition();
+		viewItem = searchView.getViewItem();
+		message = searchView.getMessage();
+		playerInstance = searchView.getPlayer();
 	}
 	
 	public void restoreState(OnlineSearchView view) {
+		if (null != songField && !Util.removeSpecialCharacters(songField).equals("")) {
+			view.setSearchField(songField);
+		}
+		if (generalFlags == 0) return;
+		if (checkState(STREAM_DIALOG)) {
+			view.setDownloadSong(downloadSong);
+			playerInstance.setDownloadSong(downloadSong);
+		}
 		if (taskIterator != null) {
 			view.setTaskIterator(taskIterator);
 		}
-		if (null != songName && !Util.removeSpecialCharacters(songName).equals("")) {
-			view.setSearchField(songName);
-		}
 		if(checkState(PROGRESS_DIALOG)){
-			//TODO что это за position и listViewPosition, откуда они вызывались и для чего нужны
 			view.getDownloadUrl(viewItem, listViewPosition);
 		}
 		if(checkState(STREAM_DIALOG)){
-			view.prepareSong(song, true, "restoreState");
+			view.setPlayer(playerInstance);
+			view.prepareSong(downloadSong, true);
 		}
 		if(checkState(EDITTAG_DIALOG)){
-			view.createId3Dialog(getID3Fields());
+			if (null == templateFields) {
+				playerInstance.createId3dialog(new String[] {downloadSong.getArtist(), downloadSong.getTitle(), downloadSong.album});
+			} else {
+				playerInstance.createId3dialog(templateFields);
+			}
 		} else if (checkState(LYRICS_DIALOG)) {
-			view.createLyricsDialog(getTitleArtistLyrics(), getLyrics());
+			playerInstance.createLyricsDialog(titleArtistLyrics[0], titleArtistLyrics[1], lyrics);
 		} else {
 			if (checkState(DIRCHOOSE_DIALOG)){
-				view.getPlayer().createDirectoryChooserDialog();
+				playerInstance.createDirectoryChooserDialog();
 			}
 			if (checkState(NEWDIR_DIALOG)) {
-				view.getPlayer().createNewDirDialog(newDirName);
+				playerInstance.createNewDirDialog(newDirName);
 			}
 		}
-		
+	}
+	
+	public String[] getTemplateFields() {
+		return templateFields;
+	}
+	
+	public void setDownloadSong(RemoteSong downloadSong) {
+		this.downloadSong = downloadSong;
 	}
 	
 	public int getCurrentPlayersId() {
 		return currentPlayersId;
-	}
-
-	public RemoteSong getDownloadSong() {
-		return downloadSong;
 	}
 
 	public void setCurrentPlayersId(int currentAudioSessionId) {
@@ -237,17 +251,8 @@ public class StateKeeper {
 		return taskIterator;
 	}
 
-
 	public Player getPlayerInstance() {
 		return playerInstance;
-	}
-	
-	public String[] getID3Fields() {
-		return fields;
-	}
-	
-	public void setID3Fields(String[] fields) {
-		this.fields = fields;
 	}
 
 	public String getLyrics() {
@@ -269,10 +274,6 @@ public class StateKeeper {
 	public String getDirectoryChooserPath() {
 		return directoryChooserPath;
 	}
-
-	public void setDownloadSong(RemoteSong downloadSong) {
-		this.downloadSong = downloadSong;
-	}
 	
 	public void setDirectoryChooserPath(String directoryChooserPath) {
 		this.directoryChooserPath = directoryChooserPath;
@@ -288,5 +289,9 @@ public class StateKeeper {
 
 	public String getMessage() {
 		return message;
+	}
+
+	public void setID3Fields(String[] strings) {
+		templateFields = strings;
 	}
 }

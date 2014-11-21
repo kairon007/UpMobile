@@ -81,20 +81,17 @@ public abstract class OnlineSearchView extends View {
 	private static final Void[] NO_PARAMS = {};
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
-	private final String SPREF_ENGINES ="shar_pref_key_engines_array";
-	private final String SPREF_CURRENT_ENGINES ="pref_key_current_engines_array";
+	private final String SPREF_ENGINES = "shar_pref_key_engines_array";
+	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
 	private ArrayAdapter<String> adapter;
 	private Iterator<Engine> taskIterator;
-	private Runnable dialogDismisser;
 	private SharedPreferences sPref;
-	private LayoutInflater inflater;
 	private ViewGroup view;
 	protected DownloadClickListener downloadListener;
-	private StateKeeper keeper ;
+	private StateKeeper keeper;
 	private AlertDialog alertDialog;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
-	private String currentName = null;
 	private SongSearchAdapter resultAdapter;
 	private TextView message;
 	private Spinner spEnginesChoiser;
@@ -109,7 +106,8 @@ public abstract class OnlineSearchView extends View {
 	protected AlertDialog.Builder progressDialog;
 	protected AlertDialog alertProgressDialog;
 	private RemoteSong downloadSong;
-	
+	private String extraSearch = null;
+
 	OnShowListener dialogShowListener = new OnShowListener() {
 
 		@Override
@@ -119,9 +117,9 @@ public abstract class OnlineSearchView extends View {
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
-	
+
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
@@ -130,7 +128,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	};
-	
+
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
 		@Override
@@ -149,16 +147,45 @@ public abstract class OnlineSearchView extends View {
 			super.onCallStateChanged(state, incomingNumber);
 		}
 	};
+
 	
 	OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
-		
+
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			String value = sharedPreferences.getString(key, null);
 			initSearchEngines(getContext(), value);
 			String str = Util.removeSpecialCharacters(searchField.getText().toString());
-			if (!resultAdapter.isEmpty() && !str.equals("")){
+			if (!resultAdapter.isEmpty() && !str.equals("")) {
 				trySearch();
+			}
+		}
+	};
+
+	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
+
+		@Override
+		public void onFinishParsing(List<Song> songsList) {
+			resultAdapter.hideProgress();
+			if (keeper.checkState(StateKeeper.SEARCH_STOP_OPTION)) return;
+			//TODO: set result
+			if (songsList.isEmpty()) {
+				getNextResults();
+				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
+					try {
+						String src = getContext().getResources().getText(R.string.search_no_results_for).toString() + " " + searchField.getText().toString();
+						message.setText(src);
+					} catch(Exception e) {
+						
+					}
+					progress.setVisibility(View.GONE);
+				}
+			} else {
+				progress.setVisibility(View.GONE);
+				for (Song song : songsList) {
+					resultAdapter.add(song);
+				}
+				keeper.saveStateAdapter(OnlineSearchView.this);
 			}
 		}
 	};
@@ -166,44 +193,55 @@ public abstract class OnlineSearchView extends View {
 	protected abstract BaseSettings getSettings();
 
 	protected abstract Advertisment getAdvertisment();
-	
-	public abstract void refreshLibrary();
-		
+
 	protected abstract void stopSystemPlayer(Context context);
 	
+	public abstract void refreshLibrary();
+
 	public abstract boolean isWhiteTheme(Context context);
 
-	public OnlineSearchView(final LayoutInflater inflater) {
+	protected boolean showFullElement() {
+		return true;
+	}
+
+	protected void click(View view, int position) {
+
+	}
+
+	protected boolean onlyOnWifi() {
+		return true;
+	}
+	
+	public OnlineSearchView(LayoutInflater inflater) {
 		super(inflater.getContext());
-		keeper = StateKeeper.getInstance();
-		keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
-		this.inflater = inflater;
-		this.view = (ViewGroup) inflater.inflate(R.layout.search, null);
+		init(inflater);
 		initSearchEngines(getContext(), null);
+		keeper = StateKeeper.getInstance();
+		keeper.restoreState(this);
+		resultAdapter = new SongSearchAdapter(getContext(), inflater);
 		sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
 		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
 		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
+		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
+		if (searchField.getWidth() - ((ImageView) view.findViewById(R.id.clear)).getWidth() < width) {
+			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
+		} else searchField.setHint(R.string.hint_main_search);
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) search(searchField.getText().toString());
+		initBoxEngines();
 	}
 
 	public View getView() {
-		init();
-		resultAdapter = new SongSearchAdapter(getContext(), inflater);
-		keeper.restoreState(this);
-		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
-		if(searchField.getWidth() - ((ImageView) view.findViewById(R.id.clear)).getWidth() < width) {
-			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
-		} else searchField.setHint(R.string.hint_main_search);
 		if (!showFullElement()) {
 			view.findViewById(R.id.downloads).setVisibility(View.GONE);
 		} else {
 			view.findViewById(R.id.downloads).setOnClickListener(new View.OnClickListener() {
+
 				@Override
 				public void onClick(View v) {
 					showDownloadsList();
 				}
 			});
 		}
-		progress.setVisibility(View.GONE);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
@@ -257,7 +295,6 @@ public abstract class OnlineSearchView extends View {
 					spEnginesChoiserLayout.getLayoutParams().height += scrollBy;
 				}
 				spEnginesChoiserLayout.requestLayout();
-				Log.d("logd", "onScroll = " + scrollBy);
 				lastVisibleItem = firstVisibleItem;
 				lastScroll = firstItem.getTop();
 			}
@@ -268,11 +305,11 @@ public abstract class OnlineSearchView extends View {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				if (position == resultAdapter.getCount()) return; // progress click
 				viewItem = view;
-				keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 				getDownloadUrl(view, position);
 			}
 		});
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -283,15 +320,94 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 		searchField.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
+				showDownloadsList();
+			}
+		});
+		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				searchField.setText(null);
+				message.setText(R.string.search_your_results_appear_here);
+				resultAdapter.clear();
+				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
+				keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
+				progress.setVisibility(View.GONE);
 				expandEngines();
 			}
 		});
+		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				trySearch();
+				collapseEngines();
+			}
+		});
+		if (extraSearch != null) {
+			trySearch();
+			return view;
+		}
+		if (keeper.getResults() != null) {
+			for (Song song : keeper.getResults()) {
+				resultAdapter.add(song);
+			}
+			listView.setSelection(keeper.getListViewPosition());
+		}
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) progress.setVisibility(View.VISIBLE);
+		else progress.setVisibility(View.GONE);
+		return view;
+	}
+
+	public void initSearchEngines(Context context, String valueEngines) {
+		// TODO this set number engines
+		if (null == valueEngines) {
+			sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+			keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
+		} else {
+			keyEngines = valueEngines;
+		}
+		String[][] engineArray = null;
+		if (keyEngines.equals(getTitleSearchEngine())) {
+			engineArray = getSettings().getSearchEnginesArray(context);
+		} else if (keyEngines.equals(getTitleSearchEngine2())) {
+			engineArray = getSettings().getSearchEnginesArray2(context);
+		} else if (keyEngines.equals(getTitleSearchEngine3())) {
+			engineArray = getSettings().getSearchEnginesArray3(context);
+		} else if (keyEngines.equals(getTitleSearchEngine4())) {
+			engineArray = getSettings().getSearchEnginesArray4(context);
+		} else if (keyEngines.equals(getTitleSearchEngine5())) {
+			engineArray = getSettings().getSearchEnginesArray5(context);
+		} else if (keyEngines.equals(getTitleSearchEngine6())) {
+			engineArray = getSettings().getSearchEnginesArray6(context);
+		} else if (keyEngines.equals(getTitleSearchEngine7())) {
+			engineArray = getSettings().getSearchEnginesArray7(context);
+		} else if (keyEngines.equals(getTitleSearchEngine8())) {
+			engineArray = getSettings().getSearchEnginesArray8(context);
+		}
+
+		for (int i = 0; i < engineArray.length; i++) {
+			for (int j = 0; j < engineArray[i].length; j++) {
+			}
+		}
+		engines = new ArrayList<Engine>(engineArray.length);
+		for (int i = 0; i < engineArray.length; i++) {
+			try {
+				Class<? extends BaseSearchTask> engineClass = (Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineArray[i][0]);
+				int maxPages = Integer.parseInt(engineArray[i][1]);
+				for (int page = 1; page <= maxPages; page++) {
+					engines.add(new Engine(engineClass, page));
+				}
+			} catch (ClassNotFoundException e) {
+
+			}
+		}
+	}
+	
+	private void initBoxEngines() {
 		ArrayList<String> list = getSettings().getEnginesArray(getContext());
 		if (list.size() > 1) {
-
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				adapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
 			} else {
@@ -351,69 +467,22 @@ public abstract class OnlineSearchView extends View {
 			spEnginesChoiser.setVisibility(View.GONE);
 			sPref.unregisterOnSharedPreferenceChangeListener(sPrefListener);
 		}
-		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				trySearch();
-				collapseEngines();
-			}
-		});
-		view.findViewById(R.id.downloads).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showDownloadsList();
-			}
-		});
-		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				searchField.setText(null);
-				message.setText(R.string.search_your_results_appear_here);
-				resultAdapter.clear();
-				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
-				progress.setVisibility(View.GONE);
-				expandEngines();
-			}
-		});
-//		if (currentName != null) {
-//			trySearch();
-//			return view;
-//		}
-		if (keeper.getResults() != null) {
-			for (Song song : keeper.getResults()) {
-				getResultAdapter().add(song);
-			}
-			if (currentName != null) {
-				notifyAdapter();
-				keeper.deactivateOptions(StateKeeper.SEARCH_STOP_OPTION);
-				message.setText(keeper.getMessage());
-				listView.setSelection(keeper.getListViewPosition());
-			}
-		}		
-		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) {
-			search(searchField.getText().toString());
-		}
-		return view;
 	}
 
-	private void init() {
+	private void init(LayoutInflater inflater) {
+		view = (ViewGroup) inflater.inflate(R.layout.search, null);
 		message = (TextView) view.findViewById(R.id.message);
 		progress = view.findViewById(R.id.progress);
 		listView = (ListView) view.findViewById(R.id.list);
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
-		spEnginesChoiserLayout = (View) view.findViewById(R.id.choise_engines_layout);
 	}
-	
-	public RemoteSong getDownloadSong() {
-		return downloadSong;
-	}
-	
+
 	private void collapseEngines() {
 		keeper.deactivateOptions(StateKeeper.IS_EXPANDING_OPTION);
 		if (!searchField.getText().toString().isEmpty()) {
 			Animation anim = new Animation() {
-				
+
 				@Override
 				protected void applyTransformation(float interpolatedTime, Transformation t) {
 					if (interpolatedTime == 1) {
@@ -423,7 +492,7 @@ public abstract class OnlineSearchView extends View {
 						spEnginesChoiserLayout.requestLayout();
 					}
 				}
-				
+
 				@Override
 				public boolean willChangeBounds() {
 					return true;
@@ -433,11 +502,14 @@ public abstract class OnlineSearchView extends View {
 			spEnginesChoiserLayout.startAnimation(anim);
 		}
 	}
-	
+
 	private void expandEngines() {
 		keeper.activateOptions(StateKeeper.IS_EXPANDING_OPTION);
+		if (spEnginesChoiser.getVisibility() == View.VISIBLE)
+			return;
+		spEnginesChoiser.setVisibility(View.VISIBLE);
 		Animation anim = new Animation() {
-			
+
 			@Override
 			protected void applyTransformation(float interpolatedTime, Transformation t) {
 				spEnginesChoiserLayout.getLayoutParams().height = (int)(initialHeight * interpolatedTime);
@@ -450,102 +522,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		};
 		anim.setDuration(200);
-		spEnginesChoiserLayout.startAnimation(anim);
-	}
-	
-	public static String getTitleSearchEngine() {
-		SharedPreferences prefs = MusicApp.getSharedPreferences();
-		return prefs.getString("search_engines_title", "Search Engine 1");
-	}
-
-	public static String getTitleSearchEngine2() {
-		SharedPreferences prefs = MusicApp.getSharedPreferences();
-		return prefs.getString("search_engines_title_2", "Search Engine 2");
-	}
-
-	public static String getTitleSearchEngine3() {
-		SharedPreferences prefs = MusicApp.getSharedPreferences();
-		return prefs.getString("search_engines_title_3", "Search Engine 3");
-	}
-	
-	public static String getTitleSearchEngine4() {
-		SharedPreferences prefs = MusicApp.getSharedPreferences();
-		return prefs.getString("search_engines_title_4", "Search Engine 4");
-	}
-	
-	public static String getTitleSearchEngine5() {
-		SharedPreferences prefs = MusicApp.getSharedPreferences();
-		return prefs.getString("search_engines_title_5", "Search Engine 5");
-	}
-	public static String getTitleSearchEngine6() {
-		SharedPreferences prefs = MusicApp.getSharedPreferences();
-		return prefs.getString("search_engines_title_6", "Search Engine 6");
-	}
-	public static String getTitleSearchEngine7() {
-		SharedPreferences prefs = MusicApp.getSharedPreferences();
-		return prefs.getString("search_engines_title_7", "Search Engine 7");
-	}
-	public static String getTitleSearchEngine8() {
-		SharedPreferences prefs = MusicApp.getSharedPreferences();
-		return prefs.getString("search_engines_title_8", "Search Engine 8");
-	}
-	
-
-	public void initSearchEngines(Context context, String valueEngines) {
-		//TODO this set number engines
-		if (null == valueEngines) {
-			sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
-			keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
-		} else {
-			keyEngines = valueEngines;
-		}
-		String[][] engineArray = null;
-		if (keyEngines.equals(getTitleSearchEngine())) {
-			engineArray = getSettings().getSearchEnginesArray(context);
-		} else if (keyEngines.equals(getTitleSearchEngine2())) {
-			engineArray = getSettings().getSearchEnginesArray2(context);	
-		} else if (keyEngines.equals(getTitleSearchEngine3())) {
-			engineArray = getSettings().getSearchEnginesArray3(context);
-		} else if (keyEngines.equals(getTitleSearchEngine4())) {
-			engineArray = getSettings().getSearchEnginesArray4(context);
-		} else if (keyEngines.equals(getTitleSearchEngine5())) {
-			engineArray = getSettings().getSearchEnginesArray5(context);
-		} else if (keyEngines.equals(getTitleSearchEngine6())) {
-			engineArray = getSettings().getSearchEnginesArray6(context);
-		} else if (keyEngines.equals(getTitleSearchEngine7())) {
-			engineArray = getSettings().getSearchEnginesArray7(context);
-		} else if (keyEngines.equals(getTitleSearchEngine8())) {
-			engineArray = getSettings().getSearchEnginesArray8(context);
-		}
-		
-		for (int i = 0; i < engineArray.length; i++) {
-			for (int j = 0; j < engineArray[i].length; j++) {
-			}
-		}
-		engines = new ArrayList<Engine>(engineArray.length);
-		for (int i = 0; i < engineArray.length; i++) {
-			try {
-				Class<? extends BaseSearchTask> engineClass = (Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineArray[i][0]);
-				int maxPages = Integer.parseInt(engineArray[i][1]);
-				for (int page = 1; page <= maxPages; page++) {
-					engines.add(new Engine(engineClass, page));
-				}
-			} catch (ClassNotFoundException e) {
-				
-			}
-		}
-	}
-
-	protected boolean showFullElement() {
-		return true;
-	}
-
-	protected void click(View view, int position) {
-
-	}
-	
-	protected boolean onlyOnWifi() {
-		return true;
+		spEnginesChoiser.startAnimation(anim);
 	}
 
 	public static String getDownloadPath(Context context) {
@@ -668,41 +645,12 @@ public abstract class OnlineSearchView extends View {
 		}
 	}
 
-	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
-		
-		@Override
-		public void onFinishParsing(List<Song> songsList) {
-			keeper.activateOptions(StateKeeper.SEARCH_EXE_OPTION);
-			resultAdapter.hideProgress();
-			if (keeper.checkState(StateKeeper.SEARCH_STOP_OPTION)) return;
-			//TODO: set result
-			if (songsList.isEmpty()) {
-				getNextResults();
-				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
-					try {
-						String src = getContext().getResources().getText(R.string.search_no_results_for).toString() + " " + searchField.getText().toString();
-						message.setText(src);
-					} catch(Exception e) {
-						
-					}
-					progress.setVisibility(View.GONE);
-				}
-			} else {
-				progress.setVisibility(View.GONE);
-				for (Song song : songsList) {
-					resultAdapter.add(song);
-				}
-				keeper.saveStateAdapter(OnlineSearchView.this);
-			}
-		}
-	};
-
 	public static boolean isOffline(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo == null;
 	}
-	
+
 	public void trySearch() {
 		InputMethodManager imm = (InputMethodManager) searchField.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
@@ -724,7 +672,7 @@ public abstract class OnlineSearchView extends View {
 
 		}
 	}
-	
+
 	public ArrayList<String> getDMCABlacklistedItems(String remoteSetting) {
 		ArrayList<String> searchEngines = new ArrayList<String>();
 		try {
@@ -734,16 +682,15 @@ public abstract class OnlineSearchView extends View {
 			for (int i = 0; i < jsonArray.length(); i++) {
 				try {
 					String searchEngine = jsonArray.getString(i);
-					searchEngines.add(searchEngine); 
-				}catch(Exception e) { 
+					searchEngines.add(searchEngine);
+				} catch (Exception e) {
 				}
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 		}
-		
+
 		return searchEngines;
 	}
-	
 
 	public boolean isBlacklistedQuery(String songName) {
 
@@ -768,7 +715,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		return false;
 	}
-	
+
 	public void search(String songName) {
 		keeper.activateOptions(StateKeeper.SEARCH_EXE_OPTION);
 		keeper.deactivateOptions(StateKeeper.SEARCH_STOP_OPTION);
@@ -785,7 +732,6 @@ public abstract class OnlineSearchView extends View {
 			taskIterator = engines.iterator();
 		}
 		resultAdapter.clear();
-		currentName = songName;
 		message.setText("");
 		progress.setVisibility(View.VISIBLE);
 		getNextResults();
@@ -795,11 +741,14 @@ public abstract class OnlineSearchView extends View {
 		resultAdapter.refreshSpinner.setVisibility(View.VISIBLE);
 		if (!taskIterator.hasNext()) {
 			resultAdapter.hideProgress();
+			keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			return;
 		}
 		try {
 			Engine engine = taskIterator.next();
-			BaseSearchTask searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, currentName });
+			String str = null != extraSearch ? extraSearch : searchField.getText().toString();
+			extraSearch = null;
+			BaseSearchTask searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, str});
 			if (searchTask instanceof SearchWithPages) {
 				int page = engine.getPage();
 				((SearchWithPages) searchTask).setPage(page);
@@ -809,8 +758,7 @@ public abstract class OnlineSearchView extends View {
 			getNextResults();
 		}
 	}
-	
-	
+
 	public void getDownloadUrl(final View view, final int position) {
 		if (isOffline(getContext())) {
 			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
@@ -820,7 +768,7 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
-	  boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
+		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
 		keeper.openDialog(StateKeeper.PROGRESS_DIALOG);
 		downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
@@ -829,19 +777,19 @@ public abstract class OnlineSearchView extends View {
 		}
 		if (!isRestored) {
 			if (showFullElement()) {
-				keeper.setDownloadSong(downloadSong);
 				downloadSong.getDownloadUrl(new DownloadUrlListener() {
 
 					@Override
 					public void success(final String url) {
 						downloadSong.setDownloadUrl(url);
+						keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 						((Activity) getContext()).runOnUiThread(new Runnable() {
 
 							@Override
 							public void run() {
 								dismissProgressDialog();
 								if (showFullElement()) {
-									prepareSong(downloadSong, false, "getDownloadUrl");
+									prepareSong(downloadSong, false);
 								}
 							}
 						});
@@ -854,6 +802,7 @@ public abstract class OnlineSearchView extends View {
 							@Override
 							public void run() {
 								dismissProgressDialog();
+								keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 								Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
 								toast.show();
 							}
@@ -865,14 +814,13 @@ public abstract class OnlineSearchView extends View {
 				click(view, position);
 			}
 		} else {
-			downloadSong = keeper.getDownloadSong();
 			downloadSong.addListener(new DownloadUrlListener() {
-				
+
 				@Override
 				public void success(String url) {
 					dismissProgressDialog();
 				}
-				
+
 				@Override
 				public void error(String error) {
 					dismissProgressDialog();
@@ -893,7 +841,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	protected void showProgressDialog(final View view, final RemoteSong downloadSong, final int position) {
-		View dialoglayout = inflater.inflate(R.layout.progress_dialog, null);
+		View dialoglayout = LayoutInflater.from(getContext()).inflate(R.layout.progress_dialog, null);
 		progressDialog = new AlertDialog.Builder(getContext());
 		progressDialog.setView(dialoglayout);
 		progressDialog.setOnCancelListener(new OnCancelListener() {
@@ -907,72 +855,51 @@ public abstract class OnlineSearchView extends View {
 		alertProgressDialog = progressDialog.create();
 		alertProgressDialog.show();
 	}
-	
-	public void prepareSong(final RemoteSong remoteSong, boolean force, String from) {
+
+	public void prepareSong(final RemoteSong remoteSong, boolean force) {
+		if (keeper.checkState(StateKeeper.STREAM_DIALOG) && !force) return;
 		RemoteSong song = remoteSong.cloneSong();
-		String title = song.getTitle();
-		String artist = song.getArtist();
+		keeper.setDownloadSong(song);
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
 			player = new Player(v, song, isWhiteTheme(getContext()));
+			player.setTitle(song.getArtist() + " - " + song.getTitle());
+			player.execute(song.getUrl());
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());
 			}
-			loadSong(song.getUrl());
-			Dialog d =  createStreamDialog(song);
-			d.show();
+			createStreamDialog(song).show();
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				player.setCoverFromSong(song);
 			} else {
 				player.hideCoverProgress();
 			}
 		} else {
-			if (!keeper.checkState(StateKeeper.STREAM_DIALOG)) {
+			if (keeper.checkState(StateKeeper.STREAM_DIALOG)) {
 				createStreamDialog(song).show();
-				if (force) {
-					player.initView(inflate(getContext(), isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null));
-				}
+				player.setTitle(song.getArtist() + " - " + song.getTitle());
 			}
 		}
-		dialogDismisser = new Runnable() {
-			
-			@Override
-			public void run() {
-				keeper.closeDialog(StateKeeper.STREAM_DIALOG);
-				//TODO узнать зачем мы тут имеем дело с кавером
-//				keeper.setCoverEnabled(true);
-				if (player != null) {
-					player.cancel();
-					player = null;
-				}
-			}
-		};
 		downloadListener = new DownloadClickListener(getContext(), song, new RefreshListener() {
-			
+
 			@Override
 			public void success() {
 				refreshLibrary();
 			}
-		}) {
-			@Override
-			public void onClick(View v) {
-				super.onClick(v);
-				dialogDismisser.run();
-			}
-		};
+		});
 		if (getSettings().getIsCoversEnabled(getContext())) {
 			boolean hasCover = ((RemoteSong) song).getCover(true, downloadListener);
-			if (!hasCover) {	
-					player.hideCoverProgress();
-					player.setCover(null);
-				}
+			if (!hasCover) {
+				player.hideCoverProgress();
+				player.setCover(null);
+			}
 		}
-		player.setTitle(artist + " - " + title);
 	}
-	
-	@SuppressLint("NewApi") 
+
+	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(final RemoteSong song) {
+		keeper.openDialog(StateKeeper.STREAM_DIALOG);
 		headsetReceiver = new HeadsetIntentReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
@@ -987,15 +914,7 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				if (dialogDismisser != null) {
-					dialogDismisser.run();
-				} else {
-					dialog.dismiss();
-				}
-				getContext().unregisterReceiver(headsetReceiver);
-				if (telephonyManager != null) {
-					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-				}
+					dialog.cancel();
 			}
 
 		});
@@ -1003,39 +922,32 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				player.cancel();
-				dialogDismisser.run();
-				getContext().unregisterReceiver(headsetReceiver);
-				if (telephonyManager != null) {
-					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-				}
 				downloadListener.setSong(song);
 				downloadListener.setUseAlbumCover(keeper.checkState(StateKeeper.USE_COVER_OPTION));
 				downloadListener.downloadSong(false);
+				dialog.cancel();
 			}
 		});
 		alertDialog = b.create();
 		alertDialog.setOnCancelListener(new OnCancelListener() {
+			
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				dialogDismisser.run();
+				keeper.closeDialog(StateKeeper.STREAM_DIALOG);
 				getContext().unregisterReceiver(headsetReceiver);
 				if (telephonyManager != null) {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 				}
+				if (player != null) {
+					player.cancel();
+					player = null;
+				}
+				dialog.dismiss();
 			}
 		});
 		alertDialog.setOnShowListener(dialogShowListener);
 		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		keeper.openDialog(StateKeeper.STREAM_DIALOG);
 		return alertDialog;
-	}
-
-	private void loadSong(String downloadUrl) {
-		if (player != null) {
-			player.setDownloadUrl(downloadUrl);
-			player.execute();
-		}
 	}
 
 	private void showDownloadsList() {
@@ -1045,20 +957,16 @@ public abstract class OnlineSearchView extends View {
 		context.startActivity(dm);
 	}
 
-	public void createId3Dialog(String[] fields) {
-		if (null == player)
-			return;
-		player.createId3dialog(fields);
-	}
-
-	public void createLyricsDialog(String[] titleArtist, String lyrics) {
-		if (null == player)
-			return;
-		player.createLyricsDialog(titleArtist[0], titleArtist[1], lyrics);
-	}
-
 	public void setSearchField(String str) {
 		searchField.setText(str);
+	}
+	
+	public RemoteSong getDownloadSong() {
+		return downloadSong;
+	}
+	
+	public void setDownloadSong(RemoteSong downloadSong) {
+		this.downloadSong = downloadSong;
 	}
 
 	public TextView getSearchField() {
@@ -1072,26 +980,75 @@ public abstract class OnlineSearchView extends View {
 	public static String getDOWNLOAD_DIR() {
 		return DOWNLOAD_DIR;
 	}
-	
+
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public View getViewItem() {
 		return viewItem;
 	}
-	
+
+	public void setExtraSearch(String extraSearch) {
+		this.extraSearch = extraSearch;
+	}
+
 	public int getListViewPosition() {
 		return listView.getFirstVisiblePosition();
 	}
-	
+
 	public void notifyAdapter() {
 		resultAdapter.notifyDataSetChanged();
 	}
-	
+
 	public String getMessage() {
 		if (null != message) {
 			return message.getText().toString();
-		} else return getContext().getResources().getString(R.string.search_your_results_appear_here);
+		} else
+			return getContext().getResources().getString(R.string.search_your_results_appear_here);
+	}
+	
+	public static String getTitleSearchEngine() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title", "Search Engine 1");
+	}
+
+	public static String getTitleSearchEngine2() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_2", "Search Engine 2");
+	}
+
+	public static String getTitleSearchEngine3() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_3", "Search Engine 3");
+	}
+
+	public static String getTitleSearchEngine4() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_4", "Search Engine 4");
+	}
+
+	public static String getTitleSearchEngine5() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_5", "Search Engine 5");
+	}
+
+	public static String getTitleSearchEngine6() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_6", "Search Engine 6");
+	}
+
+	public static String getTitleSearchEngine7() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_7", "Search Engine 7");
+	}
+
+	public static String getTitleSearchEngine8() {
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		return prefs.getString("search_engines_title_8", "Search Engine 8");
 	}
 }

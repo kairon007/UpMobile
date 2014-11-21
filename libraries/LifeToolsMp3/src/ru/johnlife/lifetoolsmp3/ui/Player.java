@@ -14,6 +14,7 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -46,25 +47,27 @@ import android.widget.Toast;
 public class Player extends AsyncTask<String, Void, Boolean> {
 
 	private Runnable action;
+	private ViewGroup rowLirycs;
+	private ViewGroup rowTags;
 	private DirectoryChooserDialog directoryChooserDialog;
+	private AlertDialog id3Dialog;
+	private MP3Editor editor;
+	private StateKeeper keeper;
+	private RemoteSong downloadSong;
 	private MediaPlayer mediaPlayer;
 	private Bitmap coverBitmap;
 	private View view;
-	private StateKeeper keeper;
+	private View editorView;
 	private LinearLayout boxPlayer;
 	private ProgressBar coverProgress;
 	private ProgressBar spinner;
 	private ProgressBar progress;
 	private ImageButton button;
 	private ImageView coverImage;
-	private ViewGroup rowLirycs;
-	private ViewGroup rowTags;
 	private TextView tvTags;
 	private TextView tvLyrics;
 	private TextView time;
 	private TextView textPath;
-	private String url = null;
-	private String title, artist;
 	private String timeText;
 	private int current;
 	private int songId;
@@ -76,9 +79,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
 	private boolean isWhiteTheme;
-	private View editorView;
-	private AlertDialog id3Dialog;
-	private MP3Editor editor;
 	private boolean isDefaultCover = true;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
@@ -90,7 +90,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
-	private RemoteSong song;
+	
 
 	public void setSongId(Integer songId) {
 		this.songId = songId;
@@ -102,13 +102,15 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			textView.setText(title);
 		}
 	}
+	
+	public void setDownloadSong(RemoteSong downloadSong) {
+		this.downloadSong = downloadSong;
+	}
 
 	public Player(final View view, RemoteSong song, boolean isWhiteTheme) {
 		super();
 		keeper = StateKeeper.getInstance();
-		this.song = song;
-		this.artist = song.getArtist();
-		this.title = song.getTitle();
+		this.downloadSong = song;
 		this.isWhiteTheme = isWhiteTheme;
 		mediaPlayer = new MediaPlayer();
 		keeper.setCurrentPlayersId(mediaPlayer.hashCode());
@@ -120,6 +122,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		this.view = view;
 		songId = -1;
 		init(view);
+		if(current == 0 && mediaPlayer.getCurrentPosition() > 0) current = mediaPlayer.getCurrentPosition();
 		if (!spinnerVisible) {
 			spinner.setVisibility(View.GONE);
 		}
@@ -154,17 +157,25 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(View v) {
-				createLyricsDialog(title, artist, null);
+				String[] param;
+				if (keeper.getTitleArtistLyrics() == null) {
+					param = new String[] {downloadSong.getTitle(), downloadSong.getArtist()};
+					keeper.setTitleArtistLyrics(param);
+				} else {
+					param = keeper.getTitleArtistLyrics();
+				}
+				createLyricsDialog(param[0], param[1], null);
 			}
 		});
 		rowTags.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				createId3dialog(null);
+				createId3dialog(new String[] {downloadSong.getArtist(), downloadSong.getTitle(), downloadSong.album});
 			}
 		});
 		view.findViewById(R.id.download_location).setOnClickListener(new View.OnClickListener() {
+			
 			@Override
 			public void onClick(View v) {
 				createDirectoryChooserDialog();
@@ -196,13 +207,14 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	public void createDirectoryChooserDialog() {
 		keeper.openDialog(StateKeeper.DIRCHOOSE_DIALOG);
 		directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), isWhiteTheme, new DirectoryChooserDialog.ChosenDirectoryListener() {
+			
 			@Override
 			public void onChosenDir(String chDir) {
 				textPath.setText(chDir);
 				OnlineSearchView.setDownloadPath(view.getContext(), chDir);
 			}
 		});
-		if (null != StateKeeper.getInstance().getDirectoryChooserPath()) {
+		if (null != keeper.getDirectoryChooserPath()) {
 			directoryChooserDialog.chooseDirectory(StateKeeper.getInstance().getDirectoryChooserPath());
 		} else {
 			directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(view.getContext()));
@@ -212,10 +224,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	public void createNewDirDialog(String name) {
 		directoryChooserDialog.createNewDirDialog(name);
 	}
-
+	
 	public void createLyricsDialog(final String title, final String artist, String lyrics) {
 		keeper.openDialog(StateKeeper.LYRICS_DIALOG);
-		keeper.setTitleArtistLyrics( new String[] { title, artist });
 		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
 		if (OnlineSearchView.isOffline(view.getContext())) {
 			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
@@ -230,18 +241,17 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme);
 		b.setView(lyricsView);
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				cancelLirycs();
+				cancelDialog(dialog, StateKeeper.LYRICS_DIALOG);
 			}
 		});
 		b.setOnCancelListener(new OnCancelListener() {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				dialog.dismiss();
-				cancelLirycs();
+				cancelDialog(dialog, StateKeeper.LYRICS_DIALOG);
 			}
 		});
 		AlertDialog dialog = b.create();
@@ -254,6 +264,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		final LinearLayout progressLayout = (LinearLayout) lyricsView.findViewById(R.id.download_progress);
 		if (null == lyrics) {
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+				
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
 					progressLayout.setVisibility(View.GONE);
@@ -261,15 +272,15 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 						lyricsTextView.setText(Html.fromHtml(lyrics));
 						StateKeeper.getInstance().setLyricsString(lyrics);
 					} else {
-						String songName = artist + " - " + title;
-						lyricsTextView.setText(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics, songName));
+						String message = view.getContext().getResources().getString(R.string.download_dialog_no_lyrics) + " " + artist + " - " + title;
+						lyricsTextView.setText(message);
 					}
 				}
 			});
 		} else {
 			if (lyrics.equals("")) {
-				String songName = artist + " - " + title;
-				lyricsTextView.setText(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics, songName));
+				String message = view.getContext().getResources().getString(R.string.download_dialog_no_lyrics) + " " + artist + " - " + title;
+				lyricsTextView.setText(message);
 			} else {
 				lyricsTextView.setText(Html.fromHtml(lyrics));
 			}
@@ -277,22 +288,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		}
 	}
 
-	private void cancelLirycs() {
-		keeper.closeDialog(StateKeeper.LYRICS_DIALOG);
-		StateKeeper.getInstance().setLyricsString(null);
-	}
-
 	public void createId3dialog(String[] fields) {
-		String[] arrayField = { artist, title, "" };
-		editor = new MP3Editor(view.getContext(), isWhiteTheme);
 		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
-		if (fields == null) {
-			editor.setStrings(arrayField);
-			keeper.setID3Fields(arrayField);
-		} else {
-			editor.setStrings(fields);
-			keeper.setID3Fields(fields);
-		}
+		editor = new MP3Editor(view.getContext(), isWhiteTheme);
+		editor.setStrings(fields);
 		editorView = editor.getView();
 		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme).setView(editorView);
 		if (isDefaultCover) {
@@ -302,24 +301,26 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				song.setArtistName(editor.getNewArtistName());
-				song.setTitle(editor.getNewSongTitle());
+				downloadSong.setArtistName(editor.getNewArtistName());
+				downloadSong.setTitle(editor.getNewSongTitle());
+				if (editor.useAlbumCover()) keeper.activateOptions(StateKeeper.USE_COVER_OPTION);
+				else keeper.deactivateOptions(StateKeeper.USE_COVER_OPTION);
 				setTitle(editor.getNewArtistName() + " - " + editor.getNewSongTitle());
-				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
+				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				cancelMP3editor();
+				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
 		});
 		builder.setOnCancelListener(new OnCancelListener() {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				cancelMP3editor();
+				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
 		});
 		id3Dialog = builder.create();
@@ -328,34 +329,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		id3Dialog.show();
 	}
 	
-	
-
-	private void cancelMP3editor() {
-		// TODO здесь что-то не так
-//		StateKeeper.getInstance().setCoverEnabled(true);
-		keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
-//		StateKeeper.getInstance().setID3DialogOpened(false, null);
+	private void cancelDialog(DialogInterface dialog, int flag) {
+		keeper.closeDialog(flag);
+		dialog.dismiss();
 	}
-
-	public String getArtist() {
-		return artist == null ? "" : artist;
-	}
-
-	public String getTitle() {
-		return title == null ? "" : title;
-	}
-
 
 	public Integer getSongId() {
 		return songId;
-	}
-
-	void setDownloadUrl(String downloadUrl) {
-		url = downloadUrl;
-	}
-
-	String getDownloadUrl() {
-		return url;
 	}
 
 	@SuppressLint("NewApi")
@@ -365,7 +345,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (null != bmp) {
 			isDefaultCover = false;
 			coverImage.setImageBitmap(bmp);
-			if (isWhiteTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			if (isWhiteTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && view != null) {
 				float h = view.getContext().getResources().getDimension(R.dimen.min_hight_layout_player);
 				float scale = (float) h / bmp.getHeight();
 				coverImage.setScaleX(scale);
@@ -467,7 +447,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			HashMap<String, String> headers = new HashMap<String, String>();
 			headers.put("User-Agent",
 					"2.0.0.6 вЂ“в‰¤ Debian GNU/Linux 4.0 вЂљГ„Г® Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
-			mediaPlayer.setDataSource(view.getContext(), Uri.parse(url), headers);
+			mediaPlayer.setDataSource(view.getContext(), Uri.parse(params[0]), headers);
 			if (isCancelled()) {
 				releasePlayer();
 			} else {
@@ -494,7 +474,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 					int last = StateKeeper.getInstance().getCurrentPlayersId();
 					int current = mp.hashCode();
 					if (keeper.checkState(StateKeeper.STREAM_DIALOG) && last == current) {
-//					if (StateKeeper.getInstance().isStremDialogOpened() && last == current) {
 						prepared = true;
 						imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.pause_white : R.drawable.pause;
 						button.setImageResource(imagePause);
@@ -551,15 +530,19 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	
 
-	public void cancel() {
-		super.cancel(true);
+	public boolean cancel() {
+		boolean result; 
+		result = super.cancel(true);
 		releasePlayer();
+		view = null;
+		return result;
 	}
 
 	@Override
 	protected void onCancelled() {
-		super.onCancelled();
+		
 		releasePlayer();
+		super.onCancelled();
 	}
 
 	public void playPause() {
@@ -568,12 +551,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
 			keeper.deactivateOptions(StateKeeper.IS_PLAYING_OPTION);
-//			StateKeeper.getInstance().setPlaying(false);
 			onPaused();
 		} else {
 			mediaPlayer.start();
 			keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
-//			StateKeeper.getInstance().setPlaying(true);
 			onResumed();
 		}
 	}
@@ -583,7 +564,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			return;
 		if (mediaPlayer.isPlaying()) {
 			keeper.deactivateOptions(StateKeeper.IS_PLAYING_OPTION);
-//			StateKeeper.getInstance().setPlaying(false);
 			mediaPlayer.pause();
 			onPaused();
 		}
@@ -594,7 +574,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			return;
 		if (!mediaPlayer.isPlaying()) {
 			keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
-//			StateKeeper.getInstance().setPlaying(true);
 			mediaPlayer.start();
 			onResumed();
 		}
