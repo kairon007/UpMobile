@@ -86,13 +86,13 @@ public abstract class OnlineSearchView extends View {
 	private ArrayAdapter<String> adapter;
 	private Iterator<Engine> taskIterator;
 	private SharedPreferences sPref;
-	private ViewGroup view;
 	protected DownloadClickListener downloadListener;
 	private StateKeeper keeper;
-	private AlertDialog alertDialog;
+	private RemoteSong downloadSong;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private SongSearchAdapter resultAdapter;
+	private ViewGroup view;
 	private TextView message;
 	private Spinner spEnginesChoiser;
 	private View spEnginesChoiserLayout;
@@ -101,13 +101,14 @@ public abstract class OnlineSearchView extends View {
 	private TextView searchField;
 	private Player player;
 	private ListView listView;
-	private String keyEngines;
-	private int initialHeight;
 	protected AlertDialog.Builder progressDialog;
 	protected AlertDialog alertProgressDialog;
-	private RemoteSong downloadSong;
+	private AlertDialog alertDialog;
 	private String extraSearch = null;
-
+	private String keyEngines;
+	private int initialHeight;
+	private int clickPosition;
+	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
 		@Override
@@ -218,7 +219,9 @@ public abstract class OnlineSearchView extends View {
 		initSearchEngines(getContext(), null);
 		keeper = StateKeeper.getInstance();
 		keeper.restoreState(this);
-		resultAdapter = new SongSearchAdapter(getContext(), inflater);
+		if (resultAdapter == null) {
+			resultAdapter = new SongSearchAdapter(getContext());
+		}
 		sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
 		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
 		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
@@ -303,6 +306,7 @@ public abstract class OnlineSearchView extends View {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				if (position == resultAdapter.getCount()) return; // progress click
 				viewItem = view;
+				clickPosition = position;
 				getDownloadUrl(view, position);
 			}
 		});
@@ -346,12 +350,6 @@ public abstract class OnlineSearchView extends View {
 		if (extraSearch != null) {
 			trySearch();
 			return view;
-		}
-		if (keeper.getResults() != null) {
-			for (Song song : keeper.getResults()) {
-				resultAdapter.add(song);
-			}
-			listView.setSelection(keeper.getListViewPosition());
 		}
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) progress.setVisibility(View.VISIBLE);
 		else progress.setVisibility(View.GONE);
@@ -574,14 +572,22 @@ public abstract class OnlineSearchView extends View {
 		private FrameLayout footer;
 		private ProgressBar refreshSpinner;
 
-		private SongSearchAdapter(Context context, LayoutInflater inflater) {
+		private SongSearchAdapter(Context context) {
 			super(context, -1, new ArrayList<Song>());
-			this.inflater = inflater;
+			this.inflater = LayoutInflater.from(getContext());
 			this.footer = new FrameLayout(context);
 			this.refreshSpinner = new ProgressBar(context);
 			refreshSpinner.setIndeterminate(true);
 			footer.addView(refreshSpinner, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
 			refreshSpinner.setVisibility(View.GONE);
+		}
+		
+		public ArrayList<Song> getAll() {
+			ArrayList<Song> list = new ArrayList<Song>();
+			for (int i = 0; i < getCount(); i++) {
+				list.add(getItem(i));
+			}
+			return list;
 		}
 
 		@Override
@@ -958,6 +964,18 @@ public abstract class OnlineSearchView extends View {
 		searchField.setText(str);
 	}
 	
+	public int getClickPosition() {
+		return clickPosition;
+	}
+	
+	public void restoreAdapter(ArrayList<Song> list, int position) {
+		resultAdapter = new SongSearchAdapter(getContext());
+		for (Song song : list) {
+			resultAdapter.add(song);
+		}
+		listView.setSelection(position);
+	}
+	
 	public RemoteSong getDownloadSong() {
 		return downloadSong;
 	}
@@ -1002,16 +1020,17 @@ public abstract class OnlineSearchView extends View {
 		resultAdapter.notifyDataSetChanged();
 	}
 
-	public String getMessage() {
-		if (null != message) {
-			return message.getText().toString();
-		} else
-			return getContext().getResources().getString(R.string.search_your_results_appear_here);
-	}
-	
 	public static String getTitleSearchEngine() {
 		SharedPreferences prefs = MusicApp.getSharedPreferences();
 		return prefs.getString("search_engines_title", "Search Engine 1");
+	}
+	
+	public String getMessage() {
+		return message.getText().toString();
+	}
+	
+	public void setMessage(String msg) {
+		message.setText(msg);
 	}
 
 	public static String getTitleSearchEngine2() {

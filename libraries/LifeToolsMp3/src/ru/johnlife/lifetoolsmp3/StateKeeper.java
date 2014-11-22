@@ -26,6 +26,7 @@ public class StateKeeper {
 	private String directoryChooserPath;
 	private String newDirName;
 	private int listViewPosition;
+	private int clickPosition;
 	private int currentPlayersId;
 	private int tempID3UseCover;
 	private boolean useCover = true;
@@ -131,6 +132,9 @@ public class StateKeeper {
 			deactivateOptions(MANIPULATE_TEXT_OPTION);
 			tempID3UseCover = 0;
 			tempID3Fields = null;
+		} else  if (flag == PROGRESS_DIALOG){
+			clickPosition = 0;
+			viewItem = null;
 		}
 	}
 	
@@ -180,53 +184,57 @@ public class StateKeeper {
 	public void saveStateAdapter(OnlineSearchView searchView) {
 		//TODO save state
 		songField = searchView.getSearchField().getText().toString();
+		results = searchView.getResultAdapter().getAll();
+		if (results != null && !results.isEmpty()) listViewPosition = searchView.getListViewPosition();
+		else message = searchView.getMessage();
 		if (searchView != null) taskIterator = searchView.getTaskIterator();
 		if (generalFlags == 0 || generalFlags == 2048) return;
-		results = new ArrayList<Song>();
-		for (int i = 0; i < searchView.getResultAdapter().getCount(); i++) {
-			Song song = searchView.getResultAdapter().getItem(i);
-			results.add(song);
-		}
-		if (checkState(STREAM_DIALOG) && downloadSong == null) downloadSong = searchView.getDownloadSong();
-		listViewPosition = searchView.getListViewPosition();
-		viewItem = searchView.getViewItem();
-		message = searchView.getMessage();
-		playerInstance = searchView.getPlayer();
+		if (viewItem == null) viewItem = searchView.getViewItem();
+		if (checkState(STREAM_DIALOG)) {
+			if (downloadSong == null) downloadSong = searchView.getDownloadSong();
+			playerInstance = searchView.getPlayer();
+		} else if (checkState(PROGRESS_DIALOG)) clickPosition = searchView.getClickPosition();
 	}
 	
 	public void restoreState(OnlineSearchView view) {
 		if (null != songField && !Util.removeSpecialCharacters(songField).equals("")) {
 			view.setSearchField(songField);
 		}
-		if (generalFlags == 0) return;
-		if (checkState(STREAM_DIALOG)) {
-			view.setDownloadSong(downloadSong);
-			playerInstance.setDownloadSong(downloadSong);
+		
+		if (results == null || results.isEmpty()) {
+			view.setMessage(message);
+			if (generalFlags == 0) return;
+		} else {
+			view.restoreAdapter(results, listViewPosition);
+			results = null;
 		}
 		if (taskIterator != null) {
 			view.setTaskIterator(taskIterator);
 		}
-		if(checkState(PROGRESS_DIALOG)){
-			view.getDownloadUrl(viewItem, listViewPosition);
-		}
-		if(checkState(STREAM_DIALOG)){
-			view.setPlayer(playerInstance);
-			view.prepareSong(downloadSong, true);
-		}
-		if(checkState(EDITTAG_DIALOG)){
-			if (null == tempID3Fields) {
-				playerInstance.createId3dialog(new String[] {downloadSong.getArtist(), downloadSong.getTitle(), downloadSong.album});
-			} else {
-				playerInstance.createId3dialog(tempID3Fields);
-			}
-		} else if (checkState(LYRICS_DIALOG)) {
-			playerInstance.createLyricsDialog();
+		if (checkState(PROGRESS_DIALOG)) {
+			view.getDownloadUrl(viewItem, clickPosition);
 		} else {
-			if (checkState(DIRCHOOSE_DIALOG)){
-				playerInstance.createDirectoryChooserDialog();
+			if (checkState(STREAM_DIALOG)) {
+				view.setDownloadSong(downloadSong);
+				playerInstance.setDownloadSong(downloadSong);
+				view.setPlayer(playerInstance);
+				view.prepareSong(downloadSong, true);
 			}
-			if (checkState(NEWDIR_DIALOG)) {
-				playerInstance.createNewDirDialog(newDirName);
+			if (checkState(EDITTAG_DIALOG)) {
+				if (null == tempID3Fields) {
+					playerInstance.createId3dialog(new String[] { downloadSong.getArtist(), downloadSong.getTitle(), downloadSong.album });
+				} else {
+					playerInstance.createId3dialog(tempID3Fields);
+				}
+			} else if (checkState(LYRICS_DIALOG)) {
+				playerInstance.createLyricsDialog();
+			} else {
+				if (checkState(DIRCHOOSE_DIALOG)) {
+					playerInstance.createDirectoryChooserDialog();
+				}
+				if (checkState(NEWDIR_DIALOG)) {
+					playerInstance.createNewDirDialog(newDirName);
+				}
 			}
 		}
 	}
@@ -268,18 +276,6 @@ public class StateKeeper {
 	public void setCurrentPlayersId(int currentAudioSessionId) {
 		this.currentPlayersId = currentAudioSessionId;
 	}
-	
-	public ArrayList<Song> getResults() {
-		return results;
-	}
-
-	public Iterator<Engine> getTaskIterator() {
-		return taskIterator;
-	}
-
-	public Player getPlayerInstance() {
-		return playerInstance;
-	}
 
 	public String getLyrics() {
 		return lyrics;
@@ -307,14 +303,6 @@ public class StateKeeper {
 
 	public void setNewDirName(String name) {
 		newDirName = name;
-	}
-
-	public int getListViewPosition() {
-		return listViewPosition;
-	}
-
-	public String getMessage() {
-		return message;
 	}
 
 }
