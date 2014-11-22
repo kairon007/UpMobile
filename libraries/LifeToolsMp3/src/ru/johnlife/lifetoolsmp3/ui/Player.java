@@ -446,7 +446,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		try {
-			mediaPlayer.setDataSource(params[0]);
 			HashMap<String, String> headers = new HashMap<String, String>();
 			headers.put("User-Agent",
 					"2.0.0.6 –≤ Debian GNU/Linux 4.0 ‚Äî Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.6) Gecko/2007072300 Iceweasel/2.0.0.6 (Debian-2.0.0.6-0etch1+lenny1)");
@@ -487,7 +486,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 							@Override
 							public void onCompletion(MediaPlayer mp) {
 								mp.seekTo(0);
-								mediaPlayer = mp;
 								imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.play_white : R.drawable.play;
 								button.setImageResource(imagePause);
 								progress.setProgress(0);
