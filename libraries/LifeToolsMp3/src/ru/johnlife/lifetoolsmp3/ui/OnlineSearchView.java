@@ -186,7 +186,6 @@ public abstract class OnlineSearchView extends View {
 				for (Song song : songsList) {
 					resultAdapter.add(song);
 				}
-				keeper.saveStateAdapter(OnlineSearchView.this);
 			}
 		}
 	};
