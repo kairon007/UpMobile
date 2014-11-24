@@ -61,6 +61,8 @@ public class SearchView  extends OnlineSearchView {
 				}
 			});
 		} else {
+			showProgressDialog(view, song, position);
+			((MainActivity) activity).stopPlayer();
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
 				@Override
@@ -100,7 +102,6 @@ public class SearchView  extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
-		((MainActivity) activity).pausePlayer();
 	}
 
 	@Override

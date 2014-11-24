@@ -189,6 +189,12 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	public void stopPlayer() {
+		if (null != player) {
+			player.stateManagementPlayer(Constants.STOP);
+		}
+	}
+	
 	public void pausePlayer() {
 		if (null != player) {
 			player.stateManagementPlayer(Constants.PAUSE);
