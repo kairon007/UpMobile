@@ -484,9 +484,14 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		Intent showOptions = new Intent(Intent.ACTION_MAIN);
-		showOptions.addCategory(Intent.CATEGORY_HOME);
-		startActivity(showOptions);
+		if (null != MusicDownloaderApp.getService().getPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
+			MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
+			MusicDownloaderApp.getService().getPlayer().hidePlayerView();
+		} else {
+			Intent showOptions = new Intent(Intent.ACTION_MAIN);
+			showOptions.addCategory(Intent.CATEGORY_HOME);
+			startActivity(showOptions);
+		}
 	}
 
 	public String getTextFilterLibrary() {

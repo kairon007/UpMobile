@@ -117,7 +117,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		playerLayout.setVisibility(View.VISIBLE);
 		buttonPlay.setVisibility(View.VISIBLE);
 		buttonPlay.setOnClickListener(this);
-		if (prepared) {
+		if (isPrepared()) {
 			int duration = mediaPlayer.getDuration();
 			songProgress.removeCallbacks(progressAction);
 			songProgress.setIndeterminate(false);
@@ -163,7 +163,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		if (mediaPlayer != null && prepared && fromUser) {
+		if (mediaPlayer != null && isPrepared() && fromUser) {
 			mediaPlayer.seekTo(progress);
 		}
 	}
@@ -229,7 +229,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	}
 
 	private void restart() {
-		if (mediaPlayer != null && prepared && getPlayerState() == Constants.RESTART) {
+		if (mediaPlayer != null && isPrepared() && getPlayerState() == Constants.RESTART) {
 			mediaPlayer.seekTo(0);
 			mediaPlayer.start();
 			setActivatedButton(true);
@@ -247,7 +247,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		if (mediaPlayer != null) {
 			songProgress.setProgress(0);
 			try {
-				if (prepared) {
+				if (isPrepared()) {
 					mediaPlayer.seekTo(0);
 					mediaPlayer.stop();
 					mediaPlayer.reset();
@@ -257,7 +257,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			}
 			mediaPlayer = null; 
 			songProgress.removeCallbacks(progressAction);
-			prepared = false;
+			setPrepared(false);
 		}
 	}
 
@@ -290,7 +290,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		mediaPlayer = mp;
 		setEqualizer(view.getContext());
 		Player.this.onPrepared();
-		prepared = true;
+		setPrepared(true);
 		mp.start();
 		if (data.getFileUri().contains("http")) {
 			Toast.makeText(view.getContext(), MessageFormat.format("{0} - {1} is playing", artist, title), Toast.LENGTH_SHORT).show();
@@ -432,5 +432,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	
 	public int getCustomAudioSessionId() {
 		return customAudioSessionId;
+	}
+
+	public boolean isPrepared() {
+		return prepared;
+	}
+
+	public void setPrepared(boolean prepared) {
+		this.prepared = prepared;
 	}
 }
