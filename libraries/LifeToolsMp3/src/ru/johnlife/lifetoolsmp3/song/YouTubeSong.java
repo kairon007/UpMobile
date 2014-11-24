@@ -40,9 +40,7 @@ public class YouTubeSong extends SongWithCover {
 			String result = getUrlTask(watchId);
 			if (!PENDING.equals(result) && result.startsWith("http")) {
 				downloadUrl = result;
-				for (DownloadUrlListener listener : downloadUrlListeners) {
-					listener.success(result);
-				}
+				downloadUrlListeners.success(result);
 				this.cancel();
 			}
 		}
@@ -57,7 +55,7 @@ public class YouTubeSong extends SongWithCover {
 		if (null != timer) {
 			timer.cancel();
 		}
-		downloadUrlListeners.clear();
+		downloadUrlListeners = null;
 	}
 	
 	@Override
