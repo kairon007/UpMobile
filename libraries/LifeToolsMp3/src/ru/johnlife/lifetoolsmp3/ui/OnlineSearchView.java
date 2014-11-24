@@ -108,6 +108,7 @@ public abstract class OnlineSearchView extends View {
 	private String keyEngines;
 	private int initialHeight;
 	private int clickPosition;
+	private boolean isRestored = false;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -245,7 +246,7 @@ public abstract class OnlineSearchView extends View {
 			});
 		}
 		listView.addFooterView(resultAdapter.getProgress());
-		listView.setAdapter(resultAdapter);
+		if (!isRestored) listView.setAdapter(resultAdapter);
 		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
 			if (isWhiteTheme(getContext())) {
 				listView.setDividerHeight(0);
@@ -972,7 +973,9 @@ public abstract class OnlineSearchView extends View {
 		for (Song song : list) {
 			resultAdapter.add(song);
 		}
+		listView.setAdapter(resultAdapter);
 		listView.setSelection(position);
+		isRestored = true;
 	}
 	
 	public RemoteSong getDownloadSong() {
