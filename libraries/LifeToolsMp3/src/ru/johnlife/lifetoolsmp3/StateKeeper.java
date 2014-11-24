@@ -219,7 +219,7 @@ public class StateKeeper {
 				view.setDownloadSong(downloadSong);
 				playerInstance.setDownloadSong(downloadSong);
 				view.setPlayer(playerInstance);
-				view.prepareSong(downloadSong, true);
+				view.prepareSong(downloadSong, true, null);
 			}
 			if (checkState(EDITTAG_DIALOG)) {
 				if (null == tempID3Fields) {

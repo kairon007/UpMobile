@@ -44,6 +44,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -190,6 +193,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	};
+	private Bitmap listViewImage;
 
 	protected abstract BaseSettings getSettings();
 
@@ -607,9 +611,6 @@ public abstract class OnlineSearchView extends View {
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {
 							builder.setIcon(bmp);
-							if (bmp == null) {
-								builder.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : R.drawable.fallback_cover);
-							}
 						}
 					}
 				});
@@ -774,6 +775,11 @@ public abstract class OnlineSearchView extends View {
 			click(view, position);
 			return;
 		}
+		listViewImage = null;
+		if (!((ImageView) view.findViewById(R.id.cover)).getContentDescription().toString().equals(String.valueOf(R.drawable.fallback_cover))) {
+			Drawable draw = ((ImageView) view.findViewById(R.id.cover)).getDrawable();
+			listViewImage = ((BitmapDrawable) draw).getBitmap();
+		}
 		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
 		downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {
@@ -793,7 +799,7 @@ public abstract class OnlineSearchView extends View {
 						public void run() {
 							dismissProgressDialog();
 							if (showFullElement()) {
-								prepareSong(downloadSong, false);
+								prepareSong(downloadSong, false, listViewImage);
 							}
 						}
 					});
@@ -858,7 +864,7 @@ public abstract class OnlineSearchView extends View {
 		alertProgressDialog.show();
 	}
 
-	public void prepareSong(final RemoteSong remoteSong, boolean force) {
+	public void prepareSong(final RemoteSong remoteSong, boolean force, Bitmap listViewImage) {
 		if (keeper.checkState(StateKeeper.STREAM_DIALOG) && !force) return;
 		RemoteSong song = remoteSong.cloneSong();
 		keeper.setDownloadSong(song);
@@ -873,7 +879,12 @@ public abstract class OnlineSearchView extends View {
 			}
 			createStreamDialog(song).show();
 			if (getSettings().getIsCoversEnabled(getContext())) {
-				player.setCoverFromSong(song);
+				if (null != listViewImage) {
+					player.setCover(getResizedBitmap(listViewImage, 200, 200));
+					listViewImage = null;
+				} else {
+					player.setCoverFromSong(song);
+				}
 			} else {
 				player.hideCoverProgress();
 			}
@@ -899,6 +910,17 @@ public abstract class OnlineSearchView extends View {
 		}
 	}
 
+	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+	    int width = bm.getWidth();
+	    int height = bm.getHeight();
+	    float scaleWidth = ((float) newWidth) / width;
+	    float scaleHeight = ((float) newHeight) / height;
+	    Matrix matrix = new Matrix();
+	    matrix.postScale(scaleWidth, scaleHeight);
+	    Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+	    return resizedBitmap;
+	}
+	
 	@SuppressLint("NewApi")
 	public Dialog createStreamDialog(final RemoteSong song) {
 		keeper.openDialog(StateKeeper.STREAM_DIALOG);

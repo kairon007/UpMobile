@@ -177,6 +177,7 @@ public class AdapterHelper {
 					cover.setVisibility(View.VISIBLE);
 					cover.setImageBitmap((Bitmap) value);
 				}
+				cover.setContentDescription(String.valueOf(value));
 			}
 			determineLeftVisibility();
 			return this;
