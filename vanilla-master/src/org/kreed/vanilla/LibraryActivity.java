@@ -141,7 +141,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	 */
 	private static final int[] modeForAction = { SongTimeline.MODE_PLAY, SongTimeline.MODE_ENQUEUE, -1, SongTimeline.MODE_PLAY_ID_FIRST, SongTimeline.MODE_ENQUEUE_ID_FIRST };
 	
-	private static final String RENAME_PROGRESS_VISIBLE = "RENAME_PROGRESS_VISIBLE";
 	private static final String SEARCH_BOX_VISIBLE = "search_box_visible";
 	private static final String SWICH_SHOW_DIALOG_RATE = "swich_show_dialog_rate";
 	private static final String TYPE_FILE = "type_file";
@@ -301,9 +300,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		// Advertisement.mobileCoreInit(this);
 		// Advertisement.moPubInit(this);
 		// Advertisement.airPushShow(this);
-		if (state != null && state.getBoolean(RENAME_PROGRESS_VISIBLE)) {
-			renameTask = new RenameTask(this);
-		}
 		mSearchBox = findViewById(R.id.search_box);
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_white));
@@ -599,9 +595,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		outState.putInt(TYPE_FILE, type);
 		outState.putLong(ID_FILE, id);
 		outState.putBoolean(IS_FIRST_RUN, isFirstRun);
-		if (null != renameTask && renameTask.isShow()) {
-			outState.putBoolean(RENAME_PROGRESS_VISIBLE, true);
-		}
 		super.onSaveInstanceState(outState);
 	}
 	
