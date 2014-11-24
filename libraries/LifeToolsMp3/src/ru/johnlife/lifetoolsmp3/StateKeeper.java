@@ -134,7 +134,7 @@ public class StateKeeper {
 			tempID3UseCover = 0;
 			tempID3Fields = null;
 		} else  if (flag == PROGRESS_DIALOG){
-			clickPosition = 0;
+			setClickPosition(0);
 			viewItem = null;
 		}
 	}
@@ -194,7 +194,7 @@ public class StateKeeper {
 		if (checkState(STREAM_DIALOG)) {
 			if (downloadSong == null) downloadSong = searchView.getDownloadSong();
 			playerInstance = searchView.getPlayer();
-		} else if (checkState(PROGRESS_DIALOG)) clickPosition = searchView.getClickPosition();
+		} else if (checkState(PROGRESS_DIALOG)) setClickPosition(searchView.getClickPosition());
 	}
 	
 	public void restoreState(OnlineSearchView view) {
@@ -213,7 +213,7 @@ public class StateKeeper {
 			view.setTaskIterator(taskIterator);
 		}
 		if (checkState(PROGRESS_DIALOG)) {
-			view.getDownloadUrl(viewItem, clickPosition);
+			view.getDownloadUrl(viewItem, getClickPosition());
 		} else {
 			if (checkState(STREAM_DIALOG)) {
 				view.setDownloadSong(downloadSong);
@@ -304,6 +304,14 @@ public class StateKeeper {
 
 	public void setNewDirName(String name) {
 		newDirName = name;
+	}
+
+	public int getClickPosition() {
+		return clickPosition;
+	}
+
+	public void setClickPosition(int clickPosition) {
+		this.clickPosition = clickPosition;
 	}
 
 }

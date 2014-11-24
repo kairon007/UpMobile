@@ -490,11 +490,10 @@ public final class SongTimeline {
 	 */
 	public Song getSong(int delta)
 	{
-		Assert.assertTrue(delta >= -1 && delta <= 1);
-
+//		Assert.assertTrue(delta >= -1 && delta <= 1);
+		
 		ArrayList<Song> timeline = mSongs;
 		Song song;
-
 		synchronized (this) {
 			int pos = mCurrentPos + delta;
 			int size = timeline.size();
@@ -826,5 +825,10 @@ public final class SongTimeline {
 	public int getLength()
 	{
 		return mSongs.size();
+	}
+	
+	public Song getSongObj(int position) {
+		android.util.Log.d("logd", "getSongObj: " + mSongs.get(position).artist  + " " + mSongs.get(position).title);
+		return mSongs.get(position);
 	}
 }

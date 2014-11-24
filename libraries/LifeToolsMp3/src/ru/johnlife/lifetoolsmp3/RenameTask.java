@@ -91,8 +91,7 @@ public class RenameTask extends AsyncTask<String, Void, Boolean> {
 			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist, title));
 			if (file.renameTo(newFile)) {
 				new MyID3().update(newFile, src_set, metadata);
-				notifyMediaScanner(file);
-				notifyMediaScanner(newFile);
+				notifyMediaScanner(file, newFile);
 				context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 			} else {
 				newFile.delete();
@@ -113,8 +112,8 @@ public class RenameTask extends AsyncTask<String, Void, Boolean> {
 		super.onPostExecute(result);
 	}
 	
-	private void notifyMediaScanner(File file) {
-		MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+	private void notifyMediaScanner(File file, final File newFile) {
+		MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath(), newFile.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
 
 			public void onScanCompleted(String path, Uri uri) {
 				if (newFile.getAbsolutePath().equals(path)) {

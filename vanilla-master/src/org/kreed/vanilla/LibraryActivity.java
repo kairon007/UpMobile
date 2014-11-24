@@ -83,6 +83,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -584,7 +585,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		 		setSearchBoxVisible(true);
 			}
 			if (keeper.checkState(StateKeeper.EDITTAG_DIALOG) && mPagerAdapter.getCurrentType() == MediaUtils.TYPE_SONG) {
-				createEditID3Dialog(type, id);
+				createEditID3Dialog(type, id, keeper.getClickPosition());
 			}
 			setSearchBoxVisible(true);
 			super.onRestoreInstanceState(in);
@@ -1133,7 +1134,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		case MENU_EDIT_MP3_TAGS:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			createEditID3Dialog(type, id);
+			createEditID3Dialog(type, id, ((AdapterContextMenuInfo) item.getMenuInfo()).position);
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
@@ -1175,7 +1176,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	}
 
 	@SuppressLint("NewApi") 
-	private void createEditID3Dialog(int type, long id) {
+	private void createEditID3Dialog(int type, long id, final int position) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme);
@@ -1222,7 +1223,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					releaseID3Dialog();
 					return;
 				} 
-				if (new File(file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3").exists()) {
+				final String newFileName = file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3";
+				if (new File(newFileName).exists()) {
 					Toast toast = Toast.makeText(editor.getView().getContext(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
 					toast.show();
 					releaseID3Dialog();
@@ -1234,6 +1236,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					public void success() {
 						if (null != renameTask) {
 							renameTask.cancelProgress();
+							updatePlayer(position, artistName, albumTitle, songTitle, newFileName);
 						}
 					}
 				});
@@ -1279,6 +1282,19 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private void releaseID3Dialog() {
 		keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 		editor = null;
+	}
+
+	private void updatePlayer(final int position, final String artistName, final String albumTitle, final String songTitle, final String newFileName) {
+		try {
+			if (PlaybackService.get(this).getTimelineLength() > 1) {
+				PlaybackService.get(this).getSongObj(position - 1).artist = artistName;
+				PlaybackService.get(this).getSongObj(position - 1).title = songTitle;
+				PlaybackService.get(this).getSongObj(position - 1).album = albumTitle;
+				PlaybackService.get(this).getSongObj(position - 1).path = newFileName;
+			}
+		} catch (Exception e) {
+		}
+		keeper.deactivateOptions(StateKeeper.PROGRESS_DIALOG);
 	}
 	
 	private void deleteCover(File f) {

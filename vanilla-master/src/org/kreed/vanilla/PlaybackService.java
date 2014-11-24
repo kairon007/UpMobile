@@ -1931,4 +1931,8 @@ public final class PlaybackService extends Service
 	public Virtualizer getVirtualizer() {
 		return new Virtualizer(3, player.getAudioSessionId());
 	}
+	
+	public Song getSongObj (int position) {
+		return mTimeline.getSongObj(position);
+	}
 }
