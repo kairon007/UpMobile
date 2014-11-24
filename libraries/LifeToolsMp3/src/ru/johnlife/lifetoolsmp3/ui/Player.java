@@ -289,15 +289,16 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		editor = new MP3Editor(view.getContext(), isWhiteTheme);
 		editor.setStrings(fields);
 		editorView = editor.getView();
-		if (keeper.getTempID3UseCover() != 0) {
-			editor.setUseCover(keeper.getTempID3UseCover() > 0);
-		} else {
-			editor.setUseCover(keeper.isUseCover());
-		}
-		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme).setView(editorView);
 		if (isDefaultCover) {
 			editor.disableChekBox();
+		} else {
+			if (keeper.getTempID3UseCover() != 0) {
+				editor.setUseCover(keeper.getTempID3UseCover() > 0);
+			} else {
+				editor.setUseCover(keeper.isUseCover());
+			}
 		}
+		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme).setView(editorView);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
@@ -306,9 +307,9 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 					downloadSong.setArtistName(editor.getNewArtistName());
 					downloadSong.setTitle(editor.getNewSongTitle());
 					keeper.setDownloadSong(downloadSong);
-					keeper.setUseCover(editor.useAlbumCover());
 					setTitle(downloadSong.getArtist() + " - " + downloadSong.getTitle());
 				}
+				keeper.setUseCover(editor.useAlbumCover());
 				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
 		});

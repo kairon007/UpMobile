@@ -128,6 +128,7 @@ public class StateKeeper {
 			titleArtistLyrics = null;
 			currentPlayersId = 0;
 			lyrics = null;
+			useCover = true;
 		} else if (flag == EDITTAG_DIALOG) {
 			deactivateOptions(MANIPULATE_TEXT_OPTION);
 			tempID3UseCover = 0;
