@@ -2156,6 +2156,7 @@ public class MediaPlaybackService extends Service {
             return mService.get().getPath();
         }
         public long getAudioId() {
+        	if (null == mService.get()) return -1;
             return mService.get().getAudioId();
         }
         public long position() {
