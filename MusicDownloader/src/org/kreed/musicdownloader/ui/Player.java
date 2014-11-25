@@ -57,7 +57,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	private Integer currentImageButton;
 	private boolean prepared = false;
 	private byte playerState = 0;
-	private int customAudioSessionId = -1;
+	private int customAudioSessionId = (int) System.currentTimeMillis();
 
 	private Runnable progressAction = new Runnable() {
 
