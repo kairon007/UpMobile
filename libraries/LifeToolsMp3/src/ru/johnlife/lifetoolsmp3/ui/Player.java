@@ -268,7 +268,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 						lyricsTextView.setText(Html.fromHtml(lyrics));
 						StateKeeper.getInstance().setLyricsString(lyrics);
 					} else {
-						String message = view.getContext().getResources().getString(R.string.download_dialog_no_lyrics) + " " + strArtist + " - " + strTitle;
+						String message = String.format(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics),strArtist + " - " + strTitle);
 						lyricsTextView.setText(message);
 					}
 				}
@@ -276,7 +276,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		} else {
 			progressLayout.setVisibility(View.GONE);
 			if (lyrics.equals("")) {
-				String message = view.getContext().getResources().getString(R.string.download_dialog_no_lyrics) + " " + strArtist + " - " + strTitle;
+				String message = String.format(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics),strArtist + " - " + strTitle);
 				lyricsTextView.setText(message);
 			} else {
 				lyricsTextView.setText(Html.fromHtml(lyrics));

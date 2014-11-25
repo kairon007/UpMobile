@@ -33,7 +33,7 @@
 <string name="download_dialog_download">Download</string>
 <string name="download_dialog_cancel">Cancel</string>
 <string name="download_dialog_show_lyrics">Show Lyrics</string>
-<string name="download_dialog_no_lyrics">No Lyrics found for %1$s</string>
+<string name="download_dialog_no_lyrics">No Lyrics found for %s</string>
  
 <string name="lyrics">Lyrics</string>
  

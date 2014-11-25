@@ -32,7 +32,7 @@
     <string name="download_dialog_download">Скачать</string>
     <string name="download_dialog_cancel">Отмена</string>
     <string name="download_dialog_show_lyrics">Показать слова песни</string>
-    <string name="download_dialog_no_lyrics">Не найдены слова песни для</string>
+    <string name="download_dialog_no_lyrics">Не найдены слова песни для %s</string>
     <string name="lyrics">Слова песни</string>
     <string name="edit_mp3">Редактировать теги MP3</string>
     <string name="edit_mp3_title">Название</string>
