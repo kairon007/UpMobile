@@ -517,6 +517,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		}
 
 		mCurrentSong = song;
+		loadLyrics(song);
 		updateElapsedTime();
 
 		if (mExtraInfoVisible) {
@@ -525,7 +526,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	}
 	
 	public void loadLyrics(final Song song) {
-		if (mLyricsView != null && Settings.ENABLE_LYRICS && mLyricsView.getText().equals("") && mLyricsView.getVisibility() == View.VISIBLE) {
+		if (mLyricsView != null && Settings.ENABLE_LYRICS && mLyricsView.getVisibility() == View.VISIBLE) {
 			loaderLyrics(song);
 		}
 	}
