@@ -83,7 +83,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -581,7 +580,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		 		setSearchBoxVisible(true);
 			}
 			if (keeper.checkState(StateKeeper.EDITTAG_DIALOG) && mPagerAdapter.getCurrentType() == MediaUtils.TYPE_SONG) {
-				createEditID3Dialog(type, id, keeper.getClickPosition());
+				createEditID3Dialog(type, id);
 			}
 			setSearchBoxVisible(true);
 			super.onRestoreInstanceState(in);
@@ -1127,7 +1126,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		case MENU_EDIT_MP3_TAGS:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			createEditID3Dialog(type, id, ((AdapterContextMenuInfo) item.getMenuInfo()).position);
+			createEditID3Dialog(type, id);
 			break;
 		case MENU_REMOVE_ALBUM_COVER:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
@@ -1169,7 +1168,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	}
 
 	@SuppressLint("NewApi") 
-	private void createEditID3Dialog(int type, long id, final int position) {
+	private void createEditID3Dialog(int type, final long id) {
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme);
@@ -1229,7 +1228,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					public void success() {
 						if (null != renameTask) {
 							renameTask.cancelProgress();
-							updatePlayer(position, artistName, albumTitle, songTitle, newFileName);
+							updatePlayer(id, artistName, albumTitle, songTitle, newFileName);
 						}
 					}
 				});
@@ -1277,17 +1276,17 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		editor = null;
 	}
 
-	private void updatePlayer(final int position, final String artistName, final String albumTitle, final String songTitle, final String newFileName) {
+	private void updatePlayer(long id, final String artistName, final String albumTitle, final String songTitle, final String newFileName) {
+		Song newSong = PlaybackService.get(this).getSongObj(new Song(id));
 		try {
-			if (PlaybackService.get(this).getTimelineLength() > 1) {
-				PlaybackService.get(this).getSongObj(position - 1).artist = artistName;
-				PlaybackService.get(this).getSongObj(position - 1).title = songTitle;
-				PlaybackService.get(this).getSongObj(position - 1).album = albumTitle;
-				PlaybackService.get(this).getSongObj(position - 1).path = newFileName;
+			if (null != newSong) {
+				newSong.artist = artistName;
+				newSong.title = songTitle;
+				newSong.album = albumTitle;
+				newSong.path = newFileName;
 			}
 		} catch (Exception e) {
 		}
-		keeper.deactivateOptions(StateKeeper.PROGRESS_DIALOG);
 	}
 	
 	private void deleteCover(File f) {

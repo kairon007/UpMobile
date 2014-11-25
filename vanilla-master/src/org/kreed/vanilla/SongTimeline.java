@@ -827,8 +827,7 @@ public final class SongTimeline {
 		return mSongs.size();
 	}
 	
-	public Song getSongObj(int position) {
-		android.util.Log.d("logd", "getSongObj: " + mSongs.get(position).artist  + " " + mSongs.get(position).title);
-		return mSongs.get(position);
+	public Song getSongObj(Song song) {
+		return mSongs.indexOf(song) != -1 ? mSongs.get(mSongs.indexOf(song)) : null;
 	}
 }

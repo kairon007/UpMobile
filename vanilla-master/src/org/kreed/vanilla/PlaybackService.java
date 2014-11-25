@@ -1932,7 +1932,7 @@ public final class PlaybackService extends Service
 		return new Virtualizer(3, player.getAudioSessionId());
 	}
 	
-	public Song getSongObj (int position) {
-		return mTimeline.getSongObj(position);
+	public Song getSongObj (Song song) {
+		return mTimeline.getSongObj(song);
 	}
 }
