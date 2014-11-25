@@ -34,6 +34,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 
 /**
@@ -315,15 +316,23 @@ public final class CoverBitmap {
 	 * @param height Maximum height of image
 	 * @return The scaled bitmap.
 	 */
-	private static Bitmap createScaledBitmap(Bitmap source, int width, int height)
-	{
-		int sourceWidth = source.getWidth();
-		int sourceHeight = source.getHeight();
+	private static Bitmap createScaledBitmap(Bitmap src, int width, int height) {
+		int sourceWidth = src.getWidth();
+		int sourceHeight = src.getHeight();
 		float scale = Math.min((float)width / sourceWidth, (float)height / sourceHeight);
 		sourceWidth *= scale;
 		sourceHeight *= scale;
 		if (sourceHeight <= 0 || sourceWidth <= 0) return null;
-		return Bitmap.createScaledBitmap(source, sourceWidth, sourceHeight, false);
+		Bitmap bmp = null;
+		try {
+			bmp = Bitmap.createScaledBitmap(src, sourceWidth, sourceHeight, false);
+		} catch (Exception e) {
+			Log.d("log", "org.kreed.vanilla.createScaledBitmap: " + e.getMessage());
+			bmp.recycle();
+			bmp = null;
+			return null;
+		}
+		return bmp;
 	}
 
 	/**
