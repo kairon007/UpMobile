@@ -26,7 +26,6 @@ import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
@@ -46,6 +45,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -98,7 +99,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		boolean isCached = false;
 		if (!fromCallback) {
 			id = songArtist.hashCode() * songTitle.hashCode() * (int) System.currentTimeMillis();
-			song.setDownloaderListener(notifyStartDownload(id));
+			if (!isBadInet()) {
+				song.setDownloaderListener(notifyStartDownload(id));
+			}
 			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, new DownloadCacheCallback() {
 				
 				@Override
@@ -163,30 +166,50 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			boolean isUpdated = continueDownload(id, currentDownloadId);
 			if (!isUpdated) {
 				song.setDownloaderListener(notifyStartDownload(currentDownloadId));
-			}
+			} 
 			Toast.makeText(context, context.getString(R.string.download_started) +" "+sb, Toast.LENGTH_SHORT).show();
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
 		}
 	}
+	
+	
 
 	@Override
 	public void onClick(View v) {
 		downloadSong(false);
 	}
 
-	protected void setFileUri(long downloadId, String uri) {}
+	protected void setFileUri(long downloadId, String uri) {
+		
+	}
 	
-	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {}
+	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {
+		
+	}
  
 	public CoverReadyListener notifyStartDownload(long downloadId) {
 		return null;
 	}
 	
-	protected void setCanceledListener(long downloadId, CanceledCallback callback) {}
+	protected void setCanceledListener(long downloadId, CanceledCallback callback) {
+		
+	}
 	
 	protected boolean continueDownload(long lastID, long newId) {
 		return false;
+	}
+	
+	@SuppressLint("NewApi")
+	public boolean isBadInet() {
+	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	    NetworkInfo.DetailedState state = netInfo.getDetailedState();
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+	    	return state.equals(NetworkInfo.DetailedState.VERIFYING_POOR_LINK);
+	    } else {
+	    	return state.equals(NetworkInfo.State.DISCONNECTING) || state.equals(NetworkInfo.State.DISCONNECTED);
+		}
 	}
 
 	protected void notifyAboutFailed(long downloadId) {
@@ -310,6 +333,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		@Override
 		public void run() {
+			if (isBadInet()) {
+				notifyAboutFailed(currentDownloadId);
+				manager.remove(currentDownloadId);
+			}
 			Cursor c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
 			if (c.moveToFirst()) {
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
