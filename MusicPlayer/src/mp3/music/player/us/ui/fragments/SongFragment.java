@@ -285,7 +285,6 @@ public class SongFragment extends SherlockFragment implements LoaderCallbacks<Li
      */
     @Override
     public Loader<List<Song>> onCreateLoader(final int id, final Bundle args) {
-    	Log.d("log", "SongFragment.onCreateLoader");
         return new SongLoader(getSherlockActivity());
     }
 
@@ -294,7 +293,6 @@ public class SongFragment extends SherlockFragment implements LoaderCallbacks<Li
      */
     @Override
     public void onLoadFinished(final Loader<List<Song>> loader, final List<Song> data) {
-    	Log.d("log", "SongFragment.onLoadFinished/ size data = "+data.size());
         // Check for any errors
         if (data.isEmpty()) {
             // Set the empty text

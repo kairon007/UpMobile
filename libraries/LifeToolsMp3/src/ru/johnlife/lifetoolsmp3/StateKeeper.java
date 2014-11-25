@@ -201,7 +201,6 @@ public class StateKeeper {
 		if (null != songField && !Util.removeSpecialCharacters(songField).equals("")) {
 			view.setSearchField(songField);
 		}
-		
 		if (results == null || results.isEmpty()) {
 			view.setMessage(message);
 			if (generalFlags == 0) return;

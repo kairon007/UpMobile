@@ -107,6 +107,7 @@ public abstract class OnlineSearchView extends View {
 	protected AlertDialog.Builder progressDialog;
 	protected AlertDialog alertProgressDialog;
 	private AlertDialog alertDialog;
+	private Bitmap listViewImage;
 	private String extraSearch = null;
 	private String keyEngines;
 	private int initialHeight;
@@ -193,7 +194,6 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	};
-	private Bitmap listViewImage;
 
 	protected abstract BaseSettings getSettings();
 

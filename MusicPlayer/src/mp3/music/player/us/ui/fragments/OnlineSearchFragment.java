@@ -26,13 +26,13 @@ public class OnlineSearchFragment extends SherlockFragment {
 		if(str != null && !str.isEmpty()) {
 			getActivity().getIntent().removeExtra(Constants.EXTRA_SEARCH);
 			searchView.setExtraSearch(str);
-		}		
+		}
 		return searchView.getView();
 	}
 	
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onDestroyView() {
 		StateKeeper.getInstance().saveStateAdapter(searchView);
-		super.onSaveInstanceState(outState);
+		super.onDestroyView();
 	}
 }
