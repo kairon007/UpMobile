@@ -211,6 +211,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	public boolean isBadInet() {
 	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	    if (netInfo == null) return true;
 	    NetworkInfo.DetailedState state = netInfo.getDetailedState();
 	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 	    	return state.equals(NetworkInfo.DetailedState.VERIFYING_POOR_LINK);
@@ -331,6 +332,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private File src;
 		private DownloadManager manager;
 		private boolean useCover;
+		private int counter = 0;  
 
 		public UpdateTimerTask(RemoteSong song, DownloadManager manager, boolean useCover) {
 			this.song = song;
@@ -340,11 +342,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		@Override
 		public void run() {
-			if (isBadInet()) {
-				notifyAboutFailed(currentDownloadId);
-				manager.remove(currentDownloadId);
-				this.cancel();
-			}
 			Cursor c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
 			if (c.moveToFirst()) {
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
@@ -404,6 +401,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				}
 			}
 			c.close();
+			if (isBadInet()) {
+				counter++;
+			}
+			if (counter > 15) {
+				notifyAboutFailed(currentDownloadId);
+				manager.remove(currentDownloadId);
+				this.cancel();
+			}
 		}
 
 		private String cutPath(String s) {

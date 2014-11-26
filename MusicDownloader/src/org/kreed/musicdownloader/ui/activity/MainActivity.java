@@ -787,7 +787,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void setFileObserver() {
-		File musicDir = new File(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX);
+		final File musicDir = new File(Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX);
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
 		}
@@ -803,6 +803,7 @@ public class MainActivity extends Activity {
 					case FileObserver.MOVED_FROM:
 						mPagerAdapter.removeDataByPath(file);
 						break;
+					case FileObserver.MOVE_SELF:
 					case FileObserver.DELETE_SELF:
 						mPagerAdapter.cleanLibrary();
 						/**
