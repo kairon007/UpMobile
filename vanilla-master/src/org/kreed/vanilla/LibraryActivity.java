@@ -1231,6 +1231,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 							updatePlayer(id, artistName, albumTitle, songTitle, newFileName);
 						}
 					}
+
+					@Override
+					public void error() {
+					}
 				});
 				releaseID3Dialog();
 				renameTask.execute();
