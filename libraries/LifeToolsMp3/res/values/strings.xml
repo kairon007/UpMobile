@@ -77,4 +77,5 @@
         <item>Rock</item>
     </string-array>
         <string name="bad_file">Bad file</string>
+        <string name="default_cover">default_cover</string>
 </resources>

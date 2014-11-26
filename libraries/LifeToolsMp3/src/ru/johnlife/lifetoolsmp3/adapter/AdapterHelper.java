@@ -169,15 +169,17 @@ public class AdapterHelper {
 				if (value.getClass().equals(Integer.class)) {
 					cover.setVisibility(View.VISIBLE);
 					cover.setImageResource((Integer) value);
+					cover.setContentDescription(view.getContext().getResources().getString(R.string.default_cover));
 				} else if (value.getClass().equals(Drawable.class)) {
 					cover.setVisibility(View.VISIBLE);
 					cover.setImageDrawable((Drawable) value);
 					cover.setScaleType(ScaleType.CENTER_INSIDE);
+					cover.setContentDescription("");
 				} else if  (value.getClass().equals(Bitmap.class)) {
 					cover.setVisibility(View.VISIBLE);
 					cover.setImageBitmap((Bitmap) value);
+					cover.setContentDescription("");
 				}
-				cover.setContentDescription(String.valueOf(value));
 			}
 			determineLeftVisibility();
 			return this;
