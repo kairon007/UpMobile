@@ -8,12 +8,12 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
+import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -91,8 +91,9 @@ public class RenameTask extends AsyncTask<String, Void, Boolean> {
 			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist, title));
 			if (file.renameTo(newFile)) {
 				new MyID3().update(newFile, src_set, metadata);
-				notifyMediaScanner(file, newFile);
-				context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+//				notifyMediaScanner(file, newFile);
+//				context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+//				android.util.Log.d("log", "sendBroadcast");
 			} else {
 				newFile.delete();
 			}
@@ -109,21 +110,30 @@ public class RenameTask extends AsyncTask<String, Void, Boolean> {
 			toast.show();
 			cancelProgress();
 			listener.error();
-		}
-		super.onPostExecute(result);
-	}
-	
-	private void notifyMediaScanner(File file, final File newFile) {
-		MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath(), newFile.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-			public void onScanCompleted(String path, Uri uri) {
-				if (newFile.getAbsolutePath().equals(path)) {
-					if (null != listener)
-						listener.success();
-					cancelProgress();
+		} else {
+			ContentResolver resolver = context.getContentResolver();
+			String[] projection = new String [] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,  MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE};
+			Cursor c = resolver.query( MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+			c.moveToFirst();
+			while (c.moveToNext()) {
+				if (file.getPath().equals(c.getString(1))) {
+					int id = c.getInt(0);
+					ContentValues songValues = new ContentValues();
+					songValues.put(MediaStore.Audio.Media.DATA, newFile.getPath());
+					songValues.put(MediaStore.Audio.Media.ALBUM, album);
+					songValues.put(MediaStore.Audio.Media.ARTIST, artist);
+					songValues.put(MediaStore.Audio.Media.TITLE, title);
+					String where = MediaStore.Audio.Media._ID + "=" + id;
+					String[] whereArgs = new String[] { MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
+					resolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues, where, null);
+					break;
 				}
 			}
-		});
+			c.close();
+			cancelProgress();
+		}
+		
+		super.onPostExecute(result);
 	}
 	
 	public void showProgress() {
@@ -166,4 +176,5 @@ public class RenameTask extends AsyncTask<String, Void, Boolean> {
 		} catch (Exception e) {
 		}
 	}
+	
 }
