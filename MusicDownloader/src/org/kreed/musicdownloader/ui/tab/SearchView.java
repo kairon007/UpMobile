@@ -48,7 +48,7 @@ public class SearchView  extends OnlineSearchView {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		if (view.getId() == R.id.btnDownload) {
 			downloadListener = new DownloadListener(getContext(), song, id);
-			if (! downloadListener.isBadInet()) return;
+			if (downloadListener.isBadInet()) return;
 			song.setDownloaderListener(downloadListener.notifyStartDownload(id));
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
