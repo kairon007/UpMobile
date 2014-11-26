@@ -898,7 +898,7 @@ public abstract class OnlineSearchView extends View {
 			public void success() {
 				refreshLibrary();
 			}
-		});
+		},0);
 		if (getSettings().getIsCoversEnabled(getContext())) {
 			boolean hasCover = ((RemoteSong) song).getCover(true, downloadListener);
 			if (!hasCover) {

@@ -74,19 +74,24 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private boolean useAlbumCover = true;
 	private RefreshListener listener;
 
-	protected DownloadClickListener(Context context, RemoteSong song, RefreshListener listener) {
+	protected DownloadClickListener(Context context, RemoteSong song, RefreshListener listener, int id) {
 		this.context = context;
 		this.song = song;
 		this.listener = listener;
+		this.id = id;
+		initSong();
 	}
 	
-	@SuppressLint("NewApi")
-	public void downloadSong(boolean fromCallback) {
+	private void initSong() {
 		songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
 		duration = Util.getFormatedStrDuration(song.getDuration());
 		headers = song.getHeaders();
+	}
+	
+	@SuppressLint("NewApi")
+	public void downloadSong(boolean fromCallback) {
 		url = song.getUrl();
 		if (url == null || "".equals(url)) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
@@ -98,10 +103,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		boolean isCached = false;
 		if (!fromCallback) {
-			id = songArtist.hashCode() * songTitle.hashCode() * (int) System.currentTimeMillis();
-			if (!isBadInet()) {
-				song.setDownloaderListener(notifyStartDownload(id));
-			}
 			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, new DownloadCacheCallback() {
 				
 				@Override
@@ -121,7 +122,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			return;
 		}
 		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(".mp3");
-		String sb = Util.removeSpecialCharacters(stringBuilder.toString());
+		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
 		if (songId != -1) {
 			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context);
@@ -166,8 +167,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			boolean isUpdated = continueDownload(id, currentDownloadId);
 			if (!isUpdated) {
 				song.setDownloaderListener(notifyStartDownload(currentDownloadId));
-			} 
-			Toast.makeText(context, context.getString(R.string.download_started) +" "+sb, Toast.LENGTH_SHORT).show();
+			}
+			((Activity) context).runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					Toast.makeText(context, context.getString(R.string.download_started) +" "+sb, Toast.LENGTH_SHORT).show();
+				}
+			});
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
 		}
@@ -336,6 +343,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			if (isBadInet()) {
 				notifyAboutFailed(currentDownloadId);
 				manager.remove(currentDownloadId);
+				this.cancel();
 			}
 			Cursor c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
 			if (c.moveToFirst()) {

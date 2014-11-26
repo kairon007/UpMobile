@@ -1,12 +1,10 @@
 package org.kreed.musicdownloader.listeners;
 
 import java.io.File;
-import java.util.Random;
 
 import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
@@ -16,20 +14,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 public class DownloadListener extends DownloadClickListener {
 
 	private DownloadsTab downloadsTab;
-	private ViewPagerAdapter adapter;
 	private Context context;
-	private Random rand = new Random(System.currentTimeMillis());
 
-	public DownloadListener(Context context, RemoteSong song, ViewPagerAdapter adapter) {
-		super(context, song, null);
+	public DownloadListener(Context context, RemoteSong song, int id) {
+		super(context, song, null, id);
 		this.context = context;
-		this.adapter = adapter;
 		downloadsTab = DownloadsTab.getInstance();
 	}
 

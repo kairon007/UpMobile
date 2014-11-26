@@ -45,8 +45,11 @@ public class SearchView  extends OnlineSearchView {
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(Util.getFormatedStrDuration(song.getDuration()));
+		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		if (view.getId() == R.id.btnDownload) {
-			downloadListener = new DownloadListener(getContext(), song, parentAdapter);
+			downloadListener = new DownloadListener(getContext(), song, id);
+			if (! downloadListener.isBadInet()) return;
+			song.setDownloaderListener(downloadListener.notifyStartDownload(id));
 			song.getDownloadUrl(new DownloadUrlListener() {
 				
 				@Override
