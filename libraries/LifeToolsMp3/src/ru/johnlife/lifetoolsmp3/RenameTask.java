@@ -108,6 +108,7 @@ public class RenameTask extends AsyncTask<String, Void, Boolean> {
 			Toast toast = Toast.makeText(context, R.string.bad_file, Toast.LENGTH_SHORT);
 			toast.show();
 			cancelProgress();
+			listener.error();
 		}
 		super.onPostExecute(result);
 	}

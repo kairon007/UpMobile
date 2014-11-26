@@ -1,6 +1,8 @@
 package org.kreed.musicdownloader.ui.activity;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -27,6 +29,7 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +38,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
@@ -107,6 +111,8 @@ public class MainActivity extends Activity {
 	private String textFilterLibrary = "";
 	private int page;
 	private SelectedData selectedItem;
+	private ArrayList<String> uriDownloadedFilesBefore;
+	private ArrayList<String> uriDownloadedFilesAfter; 
 	private int lastPage = -1;
 	private boolean mSearchBoxVisible;
 	public boolean mFakeTarget;
@@ -671,7 +677,8 @@ public class MainActivity extends Activity {
 			editor.disableChekBox();
 		}
 		final boolean defCover = editor.useAlbumCover();
-		observer.stopWatching();
+		uriDownloadedFilesAfter = new ArrayList<String>();
+		uriDownloadedFilesBefore = new ArrayList<String>();
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
@@ -688,6 +695,8 @@ public class MainActivity extends Activity {
 					toast.show();
 					return;
 				}
+				observer.stopWatching();
+				checkDownloads(uriDownloadedFilesBefore, false); 
 				renameTask = new RenameTask(file, context, artistName, songTitle, albumTitle, editor.useAlbumCover(), new RenameTaskSuccessListener() {
 					
 					@Override
@@ -695,9 +704,15 @@ public class MainActivity extends Activity {
 						MusicData newData = new MusicData(new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artistName, songTitle)));
 						mPagerAdapter.updateMusicData(selectedData.data, newData);
 						observer.startWatching();
+						checkDownloads(uriDownloadedFilesAfter, true);
 						if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(newData.getFileUri())) {
 							MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle);
 						}
+					}
+					
+					@Override
+					public void error() {
+						observer.startWatching();
 					}
 				});
 				renameTask.execute();
@@ -716,13 +731,32 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				showDialog = false;
-				observer.startWatching();
 			}
 
 		});
 		AlertDialog alertDialog = builder.create();
 		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		alertDialog.show();
+	}
+
+	private void checkDownloads(ArrayList<String> uriDownloadedFiles, boolean check) {
+		DownloadManager manager = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
+		Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
+		while (c.moveToNext()) {
+			uriDownloadedFiles.add(c.getString(14));
+		}
+		if (check && !uriDownloadedFilesAfter.equals(uriDownloadedFilesBefore)) {
+			for (String str : uriDownloadedFilesBefore) {
+				if (!uriDownloadedFilesAfter.contains(str)) {
+					if (str.endsWith(".mp3") || str.endsWith(".MP3"))
+						try {
+							mPagerAdapter.addMusicData(new MusicData(new File(URLDecoder.decode(str.replace("file://", ""), "UTF-8"))));
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+				}
+			}
+		}
 	}
 
 	private void notifyMediascanner(final File file) {
