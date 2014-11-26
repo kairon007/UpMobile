@@ -13,14 +13,10 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Random;
- 
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -39,35 +35,29 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
-import android.graphics.Bitmap.CompressFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.appnext.appnextsdk.Appnext;
 import com.appnext.appnextsdk.NoAdsInterface;
-import com.appnext.appnextsdk.PopupClosedInterface; 
-
-
+import com.appnext.appnextsdk.PopupClosedInterface;
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
 import com.ironsource.mobilcore.MobileCore.AD_UNITS;
@@ -75,9 +65,8 @@ import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.ironsource.mobilcore.OnReadyListener;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
-
-import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
+import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.MoPubView.BannerAdListener;
 import com.mopub.nativeads.MoPubNative;
 import com.mopub.nativeads.NativeErrorCode;
@@ -85,7 +74,6 @@ import com.mopub.nativeads.NativeResponse;
 import com.mopub.nativeads.RequestParameters;
 import com.revmob.RevMob;
 import com.revmob.RevMobAdsListener;
-import com.revmob.RevMobTestingMode;
 import com.revmob.ads.link.RevMobLink;
 import com.startapp.android.publish.Ad;
 import com.startapp.android.publish.AdEventListener;
@@ -96,11 +84,6 @@ import com.startapp.android.publish.nativead.NativeAdDetails;
 import com.startapp.android.publish.nativead.NativeAdPreferences;
 import com.startapp.android.publish.nativead.NativeAdPreferences.NativeAdBitmapSize;
 import com.startapp.android.publish.nativead.StartAppNativeAd;
-
-
-
-import ru.johnlife.lifetoolsmp3.Advertisment;
-import android.annotation.SuppressLint;
 
 //import com.vungle.sdk.VunglePub;
 

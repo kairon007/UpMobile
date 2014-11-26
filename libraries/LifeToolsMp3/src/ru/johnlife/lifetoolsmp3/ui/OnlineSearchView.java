@@ -394,14 +394,12 @@ public abstract class OnlineSearchView extends View {
 		engines = new ArrayList<Engine>(engineArray.length);
 		for (int i = 0; i < engineArray.length; i++) {
 			try {
-				Class<? extends BaseSearchTask> engineClass = (Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines." + engineArray[i][0]);
+				Class<? extends BaseSearchTask> engineClass = (Class<? extends BaseSearchTask>) Class.forName(engineArray[i][0]);
 				int maxPages = Integer.parseInt(engineArray[i][1]);
 				for (int page = 1; page <= maxPages; page++) {
 					engines.add(new Engine(engineClass, page));
 				}
-			} catch (ClassNotFoundException e) {
-
-			}
+			} catch (ClassNotFoundException e) {}
 		}
 	}
 	
@@ -779,7 +777,7 @@ public abstract class OnlineSearchView extends View {
 		if (!((ImageView) view.findViewById(R.id.cover)).getContentDescription().equals(getResources().getString(R.string.default_cover))) {
 			Drawable draw = ((ImageView) view.findViewById(R.id.cover)).getDrawable();
 			listViewImage = ((BitmapDrawable) draw).getBitmap();
-		} 
+		}
 		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
 		downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (view.getId() != R.id.btnDownload) {

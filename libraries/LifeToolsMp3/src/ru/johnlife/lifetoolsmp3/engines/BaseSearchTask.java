@@ -29,7 +29,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
-	public static final Class[] PARAMETER_TYPES = new Class[]{FinishedParsingSongs.class, String.class};
+	public static final Class<?>[] PARAMETER_TYPES = new Class[]{FinishedParsingSongs.class, String.class};
 	private static String[] agents = new String[] {
 		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36", 
 		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0", 
@@ -53,7 +53,6 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	public BaseSearchTask(FinishedParsingSongs dInterface, String songName) {
 		this.dInterface = dInterface;
 		this.songName = songName;
-		
 	}
 
 	
