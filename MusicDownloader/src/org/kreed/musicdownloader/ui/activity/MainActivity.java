@@ -110,7 +110,7 @@ public class MainActivity extends Activity {
 	private String textFilterDownload = "";
 	private String textFilterLibrary = "";
 	private int page;
-	private SelectedData selectedItem;
+	private MusicData selectedItem;
 	private ArrayList<String> uriDownloadedFilesBefore;
 	private ArrayList<String> uriDownloadedFilesAfter; 
 	private int lastPage = -1;
@@ -409,7 +409,7 @@ public class MainActivity extends Activity {
 			File file = new File(in.getString(Constants.FILE_PATH_BUNDLE));
 			MusicData data = new MusicData(file);
 			int i = in.getInt(Constants.ITEM_BUNDLE);
-			showEditDialog(true, new SelectedData(i, data));
+			showEditDialog(true, data);
 		}
 		textFilterDownload = in.getString(Constants.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constants.FILTER_TEXT_LIBRARY);
@@ -431,7 +431,7 @@ public class MainActivity extends Activity {
 			strings.add(editor.getStrings()[2]);
 			out.putStringArrayList(Constants.EDITOR_FIELDS, strings);
 			out.putBoolean(Constants.USE_COVER, editor.useAlbumCover());
-			out.putString(Constants.FILE_PATH_BUNDLE, selectedItem.data.getFileUri());
+			out.putString(Constants.FILE_PATH_BUNDLE, selectedItem.getFileUri());
 		}
 		out.putBoolean(Constants.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		if (page == 1) {
@@ -587,7 +587,7 @@ public class MainActivity extends Activity {
 			break;
 		case EDIT_TAG:
 			showEditDialog(false, selectedItem);
-			if (null != selectedItem.data.getSongBitmap()) {
+			if (null != selectedItem.getSongBitmap()) {
 				useCover = true;
 			}
 			break;
@@ -607,12 +607,12 @@ public class MainActivity extends Activity {
 		this.music = music;
 	}
 
-	public SelectedData getSelectedItem() {
+	public MusicData getSelectedItem() {
 		return selectedItem;
 	}
 
-	public void setSelectedItem(int selectedItem, MusicData data) {
-		this.selectedItem = new SelectedData(selectedItem, data);
+	public void setSelectedItem(MusicData data) {
+		this.selectedItem = data;
 	}
 
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {
@@ -655,8 +655,8 @@ public class MainActivity extends Activity {
 	}
 
 	@SuppressLint("NewApi")
-	public void showEditDialog(boolean forse, final SelectedData selectedData) {
-		final File file = new File(selectedData.data.getFileUri());
+	public void showEditDialog(boolean forse, final MusicData selectedData) {
+		final File file = new File(selectedData.getFileUri());
 		final Context context = this;
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme);
@@ -702,7 +702,7 @@ public class MainActivity extends Activity {
 					@Override
 					public void success() {
 						MusicData newData = new MusicData(new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artistName, songTitle)));
-						mPagerAdapter.updateMusicData(selectedData.data, newData);
+						mPagerAdapter.updateMusicData(selectedData, newData);
 						observer.startWatching();
 						checkDownloads(uriDownloadedFilesAfter, true);
 						if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(newData.getFileUri())) {
@@ -823,12 +823,4 @@ public class MainActivity extends Activity {
 		observer.startWatching();
 	}
 	
-	private class SelectedData {
-		
-		MusicData data;
-		
-		public SelectedData(int position, MusicData data) {
-			this.data = data;
-		}
-	}
 }

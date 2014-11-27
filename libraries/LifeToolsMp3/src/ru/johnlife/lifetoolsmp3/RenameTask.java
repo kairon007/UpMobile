@@ -91,9 +91,6 @@ public class RenameTask extends AsyncTask<String, Void, Boolean> {
 			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist, title));
 			if (file.renameTo(newFile)) {
 				new MyID3().update(newFile, src_set, metadata);
-//				notifyMediaScanner(file, newFile);
-//				context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-//				android.util.Log.d("log", "sendBroadcast");
 			} else {
 				newFile.delete();
 			}
@@ -111,6 +108,7 @@ public class RenameTask extends AsyncTask<String, Void, Boolean> {
 			cancelProgress();
 			listener.error();
 		} else {
+			listener.success();
 			ContentResolver resolver = context.getContentResolver();
 			String[] projection = new String [] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,  MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE};
 			Cursor c = resolver.query( MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
