@@ -18,6 +18,7 @@ import android.app.Dialog;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnShowListener;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -231,6 +232,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		} else {
 			lyricsView = inflater.inflate(R.layout.lyrics_view, null);
 		}
+		LyricsFetcher lyricsFetcher = new LyricsFetcher(view.getContext());
 		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme);
 		b.setView(lyricsView);
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -247,7 +249,16 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 				cancelDialog(dialog, StateKeeper.LYRICS_DIALOG);
 			}
 		});
-		AlertDialog dialog = b.create();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			b.setOnDismissListener(new OnDismissListener() {
+				
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					cancelDialog(dialog, StateKeeper.LYRICS_DIALOG);
+				}
+			});
+		}
+		final AlertDialog dialog = b.create();
 		dialog.setOnShowListener(dialogShowListener);
 		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		dialog.show();
@@ -257,19 +268,20 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		final String strTitle = keeper.getTitleArtistLyrics()[0];
 		final String strArtist = keeper.getTitleArtistLyrics()[1];
 		if (null == lyrics) {
-		LyricsFetcher lyricsFetcher = new LyricsFetcher(view.getContext());
 		lyricsFetcher.fetchLyrics(strTitle, strArtist);
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
-				
+
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
 					progressLayout.setVisibility(View.GONE);
-					if (foundLyrics) {
+					if (foundLyrics && null != dialog && dialog.isShowing()) {
 						lyricsTextView.setText(Html.fromHtml(lyrics));
 						StateKeeper.getInstance().setLyricsString(lyrics);
 					} else {
-						String message = String.format(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics),strArtist + " - " + strTitle);
-						lyricsTextView.setText(message);
+						if (null != dialog && dialog.isShowing()) {
+							String message = String.format(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics), strArtist + " - " + strTitle);
+							lyricsTextView.setText(message);
+						}
 					}
 				}
 			});
