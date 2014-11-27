@@ -25,6 +25,7 @@
 -injars      libs
 -outjars     bin/classes-processed.jar
 
+
 -keep public class * extends android.app.Activity 
 -keep public class * extends android.app.Application 
 -keep public class * extends android.app.Service 
@@ -32,6 +33,7 @@
 -keep public class * extends android.content.ContentProvider  
 -keep public class * extends android.preference.Preference
 -keep class org.jsoup.** {*;}
+-keep class org.jaudiotagger.** {*;}
 -keep class com.raivz.hbkds194978.** {*;}
 -dontwarn com.raivz.hbkds194978.**
 -dontwarn com.millennialmedia.android.**
