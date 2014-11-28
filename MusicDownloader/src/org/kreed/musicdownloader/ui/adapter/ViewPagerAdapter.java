@@ -33,7 +33,6 @@ import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -105,7 +104,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	public int mLibraryPosition = -1;
 
 	private int currentType = -1;
-	private Context context;
 	public LibraryTabAdapter adapterLibrary = null;
 
 	/**
@@ -119,7 +117,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	 */
 	public ViewPagerAdapter(MainActivity activity) {
 		mActivity = activity;
-		context = activity.getBaseContext();
 		mCurrentPage = -1;
 	}
 
@@ -129,7 +126,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	 * @return True if order has changed.
 	 */
 	public boolean loadTabOrder() {
-		String in = PreferenceManager.getDefaultSharedPreferences(context).getString(PrefKeys.TAB_ORDER, null);
+		String in = PreferenceManager.getDefaultSharedPreferences(mActivity).getString(PrefKeys.TAB_ORDER, null);
 		int[] order;
 		int count;
 		if (in == null || in.length() != MAX_ADAPTER_COUNT) {
@@ -234,7 +231,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 				adapterLibrary = new LibraryTabAdapter(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
-				view.setDivider(context.getResources().getDrawable(R.drawable.layout_divider));
+				view.setDivider(mActivity.getResources().getDrawable(R.drawable.layout_divider));
 				if (adapterLibrary.checkDeployFilter()) {
 					view.setVisibility(View.INVISIBLE);
 				}
@@ -359,7 +356,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 
 	@Override
 	public void onPageSelected(int position) {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mActivity);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt(PrefKeys.LIBRARY_PAGE, position);
 		editor.commit();
@@ -390,12 +387,12 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	 *            The list to enable.
 	 */
 	private void enableFastScroll(ListView list) {
-		mActivity.mFakeTarget = true;
+		mActivity.setFakeTarget(true);
 		list.setFastScrollEnabled(true);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			// CompatHoneycomb.setFastScrollAlwaysVisible(list);
 		}
-		mActivity.mFakeTarget = false;
+		mActivity.setFakeTarget(false);
 	}
 
 	public SearchView getSearchView() {

@@ -48,9 +48,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Process;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
@@ -65,13 +62,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,62 +75,42 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public class MainActivity extends Activity {
 
-	private static final String RENAME_PROGRESS_VISIBLE = "RENAME_PROGRESS_VISIBLE";
+	private static final String SAVE_PLAYER_STATE = "save_player_state";
 	private static final String SAVE_PLAYER_VIEW = "SAVE_PLAYER_VIEW";
 	private static final String SAVE_BUTTONPLAY_PROGRESS = "SAVE_BUTTONPLAY_PROGRESS";
 	private static final String SAVE_SEEKBAR_PROGRESS = "SAVE_SEEKBAR_PROGRESS";
 	private final static int DELETE = 1;
 	private final static int EDIT_TAG = 2;
-
-	public ViewPagerAdapter mPagerAdapter;
-	private ApplicationInfo mFakeInfo;
-	protected Looper mLooper;
+	private ArrayList<String> uriDownloadedFilesBefore;
+	private ArrayList<String> uriDownloadedFilesAfter;
+	
 	private MusicData deletedItem;
+	private Player player;
+	private MP3Editor editor;
+	private StateKeeper keeper;
+	private CustomTextWatcher textWatcher;
+	
+	private ApplicationInfo mFakeInfo;
 	private TelephonyManager telephonyManager;
 	private HeadphonesReceiver headphonesReceiver;
-
-	private ViewGroup mLimiterViews;
-	private Player player;
-	private HorizontalScrollView mLimiterScroller;
+	
 	private FrameLayout footer;
-	public ViewPager mViewPager;
+	private LinearLayout searchLayout;
+	private ViewPagerAdapter pagerAdapter;
+	private ViewPager viewPager;
 	private TabPageIndicator mTabs;
 	private EditText mTextFilter;
-	private CustomTextWatcher textWatcher;
-	private LinearLayout searchLayout;
 	private ImageButton clearAll;
-	private ImageButton mClearFilterEditText;
+	private ImageButton clearTextFilter;
 
 	private String textFilterDownload = "";
 	private String textFilterLibrary = "";
 	private int page;
-	private ArrayList<String> uriDownloadedFilesBefore;
-	private ArrayList<String> uriDownloadedFilesAfter; 
 	private int lastPage = -1;
 	private boolean mSearchBoxVisible;
-	public boolean mFakeTarget;
-	private MP3Editor editor;
-	private boolean isPlayerHide;
-	private StateKeeper keeper;
+	private boolean mFakeTarget;
+	private boolean isHidePlayer = true;
 	
-
-	// -------------------------------------------------------------------------
-
-	public static void validateAdUnitId(String adUnitId) throws IllegalArgumentException {
-		if (adUnitId == null) {
-			throw new IllegalArgumentException("Invalid Ad Unit ID: null ad unit.");
-		} else if (adUnitId.length() == 0) {
-			throw new IllegalArgumentException("Invalid Ad Unit Id: empty ad unit.");
-		} else if (adUnitId.length() > 256) {
-			throw new IllegalArgumentException("Invalid Ad Unit Id: length too long.");
-		} else if (!isAlphaNumeric(adUnitId)) {
-			throw new IllegalArgumentException("Invalid Ad Unit Id: contains non-alphanumeric characters.");
-		}
-	}
-
-	public static boolean isAlphaNumeric(String input) {
-		return input.matches("^[a-zA-Z0-9-_]*$");
-	}
 	
 	FileObserver observer; {
 		setFileObserver();
@@ -190,27 +164,6 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void stopPlayer() {
-		if (null != player) {
-			player.stateManagementPlayer(Constants.STOP);
-		}
-	}
-	
-	public void pausePlayer() {
-		if (null != player) {
-			player.stateManagementPlayer(Constants.PAUSE);
-		}
-	}
-	
-	public static void logToast(Context context, String message) {
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-	}
-
-	public static void hideSoftKeyboard(final EditText editText) {
-		InputMethodManager inputMethodManager = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-	}
-
 	@Override
 	public void onDestroy() {
 		if (telephonyManager != null) {
@@ -239,6 +192,18 @@ public class MainActivity extends Activity {
 	protected void onStop() {
 		super.onStop();
 	}
+	
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		pagerAdapter.notifyDataSetChanged();
+		loadTabOrder();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+	}
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -253,9 +218,6 @@ public class MainActivity extends Activity {
 		headphonesReceiver = new HeadphonesReceiver();
 		IntentFilter filter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 		registerReceiver(headphonesReceiver, filter);
-		HandlerThread thread = new HandlerThread(getClass().getName(), Process.THREAD_PRIORITY_LOWEST);
-		thread.start();
-		mLooper = thread.getLooper();
 		setContentView(R.layout.library_content);
 		init();
 		keeper = StateKeeper.getInstance();
@@ -265,23 +227,23 @@ public class MainActivity extends Activity {
 			clearAll.setImageResource(R.drawable.icon_cancel_black);
 		}
 		mTextFilter.addTextChangedListener(textWatcher);
-		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
+		clearTextFilter.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				mTextFilter.setText("");
 			}
 		});
-		ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(this);
-		mPagerAdapter = pagerAdapter;
-		mViewPager.setAdapter(pagerAdapter);
+		ViewPagerAdapter pa = new ViewPagerAdapter(this);
+		pagerAdapter = pa;
+		viewPager.setAdapter(pa);
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			mViewPager.setOnPageChangeListener(pagerAdapter);
+			viewPager.setOnPageChangeListener(pa);
 		} else {
 			TabPageIndicator tabs = new TabPageIndicator(this);
-			tabs.setViewPager(mViewPager);
-			tabs.setOnPageChangeListener(pagerAdapter);
+			tabs.setViewPager(viewPager);
+			tabs.setOnPageChangeListener(pa);
 			mTabs = tabs;
 			LinearLayout content = (LinearLayout) findViewById(R.id.content);
 			content.addView(tabs, 0, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -289,24 +251,82 @@ public class MainActivity extends Activity {
 		loadTabOrder();
 		page = settings.getInt(PrefKeys.LIBRARY_PAGE, 0);
 		if (page != 0) {
-			mViewPager.setCurrentItem(page);
+			viewPager.setCurrentItem(page);
 		}
-		if (mViewPager.getCurrentItem() == 0) {
+		if (viewPager.getCurrentItem() == 0) {
 			searchLayout.setVisibility(View.GONE);
 		}
-		if (mViewPager.getCurrentItem() == 1) {
+		if (viewPager.getCurrentItem() == 1) {
 			clearAll.setVisibility(View.VISIBLE);
 		}
-		if (mViewPager.getCurrentItem() == 2) {
+		if (viewPager.getCurrentItem() == 2) {
 			clearAll.setVisibility(View.GONE);
 		}
-		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().containsPlayer()) {
-			if (isPlayerHide) {
-				MusicDownloaderApp.getService().getPlayer().getView(footer);
-			}
+		if (null != state && state.containsKey(SAVE_PLAYER_STATE)) isHidePlayer = state.getBoolean(SAVE_PLAYER_STATE);
+		if (!isHidePlayer) {
 			player = MusicDownloaderApp.getService().getPlayer();
 			player.setEqualizer(this);
+			player.getView(footer);
 		}
+		initAdvertisement();
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle in) {
+		isHidePlayer = in.getBoolean(SAVE_PLAYER_STATE);
+		if (keeper.checkState(StateKeeper.EDITTAG_DIALOG)){
+			showEditDialog();
+		}
+		textFilterDownload = in.getString(Constants.FILTER_TEXT_DOWNLOAD);
+		textFilterLibrary = in.getString(Constants.FILTER_TEXT_LIBRARY);
+		super.onRestoreInstanceState(in);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle out) {
+		out.putBoolean(SAVE_PLAYER_STATE, isHidePlayer);
+		if (page == 1) {
+			out.putString(Constants.FILTER_TEXT_DOWNLOAD, textFilterDownload);
+		} else if (page == 2) {
+			out.putString(Constants.FILTER_TEXT_LIBRARY, textFilterLibrary);
+		}
+		if (lastPage == 0) {
+			StateKeeper.getInstance().saveStateAdapter(pagerAdapter.getSearchView());
+		}
+		super.onSaveInstanceState(out);
+	}
+	
+
+	/**
+	 * Load the tab order and update the tab bars if needed.
+	 */
+	private void loadTabOrder() {
+		if (pagerAdapter.loadTabOrder()) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				CompatHoneycomb.addActionBarTabs(this);
+			} else {
+				mTabs.notifyDataSetChanged();
+			}
+		}
+	}
+
+	public void onPageChanged(int position) {
+		keeper = StateKeeper.resetState(); 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			CompatHoneycomb.selectTab(this, position);
+		}
+		if (lastPage != position && lastPage != -1) {
+			// mTextFilter.removeTextChangedListener(textWatcher);
+			mTextFilter.setText("");
+			// mTextFilter.addTextChangedListener(textWatcher);
+		}
+		if (lastPage == 0) {
+			StateKeeper.getInstance().saveStateAdapter(((ViewPagerAdapter) viewPager.getAdapter()).getSearchView());
+		}
+		lastPage = position;
+	}
+	
+	private void initAdvertisement() {
 		// show cross promo box
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
@@ -348,89 +368,12 @@ public class MainActivity extends Activity {
 	}
 
 	private void init() {
-		mLimiterScroller = (HorizontalScrollView) findViewById(R.id.limiter_scroller);
-		mLimiterViews = (ViewGroup) findViewById(R.id.limiter_layout);
-		mClearFilterEditText = (ImageButton) findViewById(R.id.clear_filter);
+		clearTextFilter = (ImageButton) findViewById(R.id.clear_filter);
 		mTextFilter = (EditText) findViewById(R.id.filter_text);
 		clearAll = (ImageButton) findViewById(R.id.clear_all_button);
 		footer = (FrameLayout) findViewById(R.id.footer);
 		searchLayout = (LinearLayout) findViewById(R.id.search_box);
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-	}
-
-	@Override
-	public void onRestart() {
-		super.onRestart();
-		mPagerAdapter.notifyDataSetChanged();
-		loadTabOrder();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	/**
-	 * Load the tab order and update the tab bars if needed.
-	 */
-	private void loadTabOrder() {
-		if (mPagerAdapter.loadTabOrder()) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				CompatHoneycomb.addActionBarTabs(this);
-			} else {
-				mTabs.notifyDataSetChanged();
-			}
-		}
-	}
-
-	@Override
-	public void onRestoreInstanceState(Bundle in) {
-		String uri = in.getString(Constants.MUSIC_URI);
-		if (keeper.checkState(StateKeeper.EDITTAG_DIALOG)){
-			showEditDialog();
-		}
-		textFilterDownload = in.getString(Constants.FILTER_TEXT_DOWNLOAD);
-		textFilterLibrary = in.getString(Constants.FILTER_TEXT_LIBRARY);
-		if (null != player) {
-			player.setSongProgressIndeterminate(in.getBoolean(SAVE_SEEKBAR_PROGRESS, false));
-			player.setButtonProgressVisibility(in.getInt(SAVE_BUTTONPLAY_PROGRESS, View.VISIBLE));
-		}
-		super.onRestoreInstanceState(in);
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle out) {
-		out.putBoolean(Constants.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
-		if (page == 1) {
-			out.putString(Constants.FILTER_TEXT_DOWNLOAD, textFilterDownload);
-		} else if (page == 2) {
-			out.putString(Constants.FILTER_TEXT_LIBRARY, textFilterLibrary);
-		}
-		if (null != player && player.getCustomAudioSessionId() == -1) {
-			out.putBoolean(SAVE_SEEKBAR_PROGRESS, player.isSongProgressIndeterminate());
-			out.putInt(SAVE_BUTTONPLAY_PROGRESS, player.getButtonProgressVisibility());
-			out.putBoolean(SAVE_PLAYER_VIEW, player.getPlayerVisibility() == View.VISIBLE);
-		}
-		if (lastPage == 0) {
-			StateKeeper.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
-		}
-		super.onSaveInstanceState(out);
-	}
-
-	public void onPageChanged(int position) {
-		keeper = StateKeeper.resetState(); 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			CompatHoneycomb.selectTab(this, position);
-		}
-		if (lastPage != position && lastPage != -1) {
-			// mTextFilter.removeTextChangedListener(textWatcher);
-			mTextFilter.setText("");
-			// mTextFilter.addTextChangedListener(textWatcher);
-		}
-		if (lastPage == 0) {
-			StateKeeper.getInstance().saveStateAdapter(((ViewPagerAdapter) mViewPager.getAdapter()).getSearchView());
-		}
-		lastPage = position;
+		viewPager = (ViewPager) findViewById(R.id.pager);
 	}
 
 	@Override
@@ -467,45 +410,6 @@ public class MainActivity extends Activity {
 		}
 		return textFilterLibrary;
 	}
-
-	public void setActivatedPlayButton(boolean value) {
-		if (null != player) {
-			player.setActivatedButton(value);
-		}
-	}
-
-	public boolean hasConnection() {
-		ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		if (wifiInfo != null && wifiInfo.isConnected()) {
-			return true;
-		}
-		wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-		if (wifiInfo != null && wifiInfo.isConnected()) {
-			return true;
-		}
-		wifiInfo = cm.getActiveNetworkInfo();
-		if (wifiInfo != null && wifiInfo.isConnected()) {
-			return true;
-		}
-		return false;
-	}
-
-	public void play(ArrayList<String[]> headers, MusicData musicData) {
-		if (player != null && player.getCustomAudioSessionId() == -1 && player.getData().equals(musicData)) {
-			player.stateManagementPlayer(Constants.RESTART);
-			return;
-		}
-		if (player == null) {
-			player = new Player(headers, musicData);
-			MusicDownloaderApp.getService().setPlayer(player);
-		} else {
-			player.setData(headers, musicData);
-			MusicDownloaderApp.getService().getPlayer().setData(headers, musicData);
-		}
-		player.getView(footer);
-		player.stateManagementPlayer(Constants.PLAY);
-	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -513,24 +417,22 @@ public class MainActivity extends Activity {
 	    inflater.inflate(R.menu.menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		//TODO call equalazer
 		if (MusicDownloaderApp.getService().containsPlayer()) {
 			Intent intent = new Intent(this, CustomEqualizer.class);
 			startActivity(intent);
 		} else {
+			isHidePlayer = true;
 			player = new Player();
 			player.setCustomAudioSessionId((int) System.currentTimeMillis());
 			MusicDownloaderApp.getService().setPlayer(player);
 			Intent intent = new Intent(this, CustomEqualizer.class);
 			startActivity(intent);
 		}
-			return super.onOptionsItemSelected(item);
-	}
-
-	public LinearLayout getSearchLayout() {
-		return searchLayout;
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -545,6 +447,67 @@ public class MainActivity extends Activity {
 		}
 		return super.onContextItemSelected(item);
 	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		menu.setHeaderTitle(deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle());
+		menu.add(0, DELETE, 0, getResources().getString(R.string.delete_song));
+		menu.add(0, EDIT_TAG, 0, getResources().getString(R.string.edit_mp3));
+		super.onCreateContextMenu(menu, v, menuInfo);
+	}
+
+	public boolean hasConnection() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		if (wifiInfo != null && wifiInfo.isConnected()) {
+			return true;
+		}
+		wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if (wifiInfo != null && wifiInfo.isConnected()) {
+			return true;
+		}
+		wifiInfo = cm.getActiveNetworkInfo();
+		if (wifiInfo != null && wifiInfo.isConnected()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void setActivatedPlayButton(boolean value) {
+		if (null != player) {
+			player.setActivatedButton(value);
+		}
+	}
+	
+	public void stopPlayer() {
+		if (null != player) {
+			player.stateManagementPlayer(Constants.STOP);
+		}
+	}
+	
+	public void pausePlayer() {
+		if (null != player) {
+			player.stateManagementPlayer(Constants.PAUSE);
+		}
+	}
+
+	public void play(ArrayList<String[]> headers, MusicData musicData) {
+		if (player != null && player.getCustomAudioSessionId() == -1 && player.getData().equals(musicData)) {
+			player.stateManagementPlayer(Constants.RESTART);
+			return;
+		}
+		if (player == null) {
+			player = new Player(headers, musicData);
+			MusicDownloaderApp.getService().setPlayer(player);
+		} else {
+			player.setData(headers, musicData);
+			MusicDownloaderApp.getService().getPlayer().setData(headers, musicData);
+		}
+		isHidePlayer = false;
+		player.getView(footer);
+		player.stateManagementPlayer(Constants.PLAY);
+	}
+	
 
 	private void checkFile() {
 		File file = new File(deletedItem.getFileUri());
@@ -554,36 +517,18 @@ public class MainActivity extends Activity {
 		}
 		if (!file.exists()) {
 			Toast.makeText(getApplicationContext(), "File " + deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle() + " does not exist", Toast.LENGTH_LONG).show();
-			mPagerAdapter.removeMusicData(deletedItem);
+			pagerAdapter.removeMusicData(deletedItem);
 		} else {
 			Toast.makeText(getApplicationContext(), deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle() + " has been removed",
 					Toast.LENGTH_LONG).show();
-			mPagerAdapter.removeMusicData(deletedItem);
-			if (MusicDownloaderApp.getService().containsPlayer()
-					&& MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(deletedItem.getFileUri())) {
+			pagerAdapter.removeMusicData(deletedItem);
+			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(deletedItem.getFileUri())) {
 				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
+				isHidePlayer = true;
 			}
 			new DeleteTask(file).execute();
 		}
-	}
-
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		menu.setHeaderTitle(deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle());
-		menu.add(0, DELETE, 0, getResources().getString(R.string.delete_song));
-		menu.add(0, EDIT_TAG, 0, getResources().getString(R.string.edit_mp3));
-		super.onCreateContextMenu(menu, v, menuInfo);
-	}
-
-	public void setDeletedItem(MusicData music) {
-		deletedItem = music;
-	}
-
-	public void setSelectedItem(MusicData data) {
-		keeper.setTag(data);
-		String[] strArray = new String[] { data.getSongArtist(), data.getSongTitle(), data.getSongAlbum() };
-		keeper.setTempID3Fields(strArray);
 	}
 
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {
@@ -650,7 +595,7 @@ public class MainActivity extends Activity {
 					String songTitle = editor.getNewSongTitle();
 					MusicData newData = new MusicData(artistName, songTitle, albumTitle, path);
 					newData.setUseCover(useCover);
-					mPagerAdapter.updateMusicData(item, newData);
+					pagerAdapter.updateMusicData(item, newData);
 					observer.startWatching();
 					checkDownloads(uriDownloadedFilesAfter, true);
 					if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(newData.getFileUri())) {
@@ -722,7 +667,7 @@ public class MainActivity extends Activity {
 				if (!uriDownloadedFilesAfter.contains(str)) {
 					if (str.endsWith(".mp3") || str.endsWith(".MP3"))
 						try {
-							mPagerAdapter.addMusicData(new MusicData(new File(URLDecoder.decode(str.replace("file://", ""), "UTF-8"))));
+							pagerAdapter.addMusicData(new MusicData(new File(URLDecoder.decode(str.replace("file://", ""), "UTF-8"))));
 						} catch (UnsupportedEncodingException e) {
 							e.printStackTrace();
 						}
@@ -761,15 +706,15 @@ public class MainActivity extends Activity {
 			@Override
 			public void onEvent(int event, String file) {
 				String filePath = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX + file;
-				if (mPagerAdapter != null) {
+				if (pagerAdapter != null) {
 					switch (event) {
 					case FileObserver.DELETE:
 					case FileObserver.MOVED_FROM:
-						mPagerAdapter.removeDataByPath(file);
+						pagerAdapter.removeDataByPath(file);
 						break;
 					case FileObserver.MOVE_SELF:
 					case FileObserver.DELETE_SELF:
-						mPagerAdapter.cleanLibrary();
+						pagerAdapter.cleanLibrary();
 						/**
 						 * if user delete folder while program is working, all
 						 * files will be deleted, but folder will be recreated
@@ -778,7 +723,7 @@ public class MainActivity extends Activity {
 						break;
 					case FileObserver.MOVED_TO:
 						if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))
-							mPagerAdapter.addMusicData(new MusicData(new File(filePath)));
+							pagerAdapter.addMusicData(new MusicData(new File(filePath)));
 						break;
 					}
 				}
@@ -787,4 +732,33 @@ public class MainActivity extends Activity {
 		observer.startWatching();
 	}
 	
+	public void setDeletedItem(MusicData music) {
+		deletedItem = music;
+	}
+
+	public void setSelectedItem(MusicData data) {
+		keeper.setTag(data);
+		String[] strArray = new String[] { data.getSongArtist(), data.getSongTitle(), data.getSongAlbum() };
+		keeper.setTempID3Fields(strArray);
+	}
+	
+	public ViewPager getViewPager() {
+		return viewPager;
+	}
+	
+	public ViewPagerAdapter getPagerAdapter() {
+		return pagerAdapter;
+	}
+	
+	public boolean isFakeTarget() {
+		return mFakeTarget;
+	}
+	
+	public void setFakeTarget(boolean mFakeTarget) {
+		this.mFakeTarget = mFakeTarget;
+	}
+	
+	public LinearLayout getSearchLayout() {
+		return searchLayout;
+	}
 }

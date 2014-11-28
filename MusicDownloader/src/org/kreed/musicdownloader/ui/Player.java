@@ -43,7 +43,9 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	private ArrayList<String[]> header;
 	private MediaPlayer mediaPlayer;
 	private MusicData data;
-
+	private Equalizer equalizer;
+	private BassBoost bassBoost;
+	private Virtualizer virtualizer;
 	private FrameLayout view;
 	private SeekBar songProgress;
 	private ProgressBar buttonProgress;
@@ -58,7 +60,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	private boolean prepared = false;
 	private byte playerState = 0;
 	private int customAudioSessionId = (int) System.currentTimeMillis();
-
+	
 	private Runnable progressAction = new Runnable() {
 
 		@Override
@@ -86,6 +88,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	}
 
 	public Player() {
+
 	}
 
 	public void setData(ArrayList<String[]> headers, MusicData musicData) {
@@ -117,19 +120,17 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		playerLayout.setVisibility(View.VISIBLE);
 		buttonPlay.setVisibility(View.VISIBLE);
 		buttonPlay.setOnClickListener(this);
-		if (isPrepared()) {
+		if (prepared) {
 			int duration = mediaPlayer.getDuration();
-			songProgress.removeCallbacks(progressAction);
 			songProgress.setIndeterminate(false);
+			songProgress.setVisibility(View.VISIBLE);
 			songProgress.setMax(duration);
 			songProgress.post(progressAction);
 		}
 		songProgress.setOnSeekBarChangeListener(this);
 		songTitle.setText(title);
 		songArtist.setText(artist);
-		if (null != currentImageButton) {
-			buttonPlay.setImageResource(currentImageButton);
-		}
+		if (null != currentImageButton) buttonPlay.setImageResource(currentImageButton);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			Context context = view.getContext();
 			buttonPlay.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.selectable_item_bg_honeycomb));
@@ -163,7 +164,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		if (mediaPlayer != null && isPrepared() && fromUser) {
+		if (mediaPlayer != null && prepared && fromUser) {
 			mediaPlayer.seekTo(progress);
 		}
 	}
@@ -229,7 +230,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	}
 
 	private void restart() {
-		if (mediaPlayer != null && isPrepared() && getPlayerState() == Constants.RESTART) {
+		if (mediaPlayer != null && prepared && getPlayerState() == Constants.RESTART) {
 			mediaPlayer.seekTo(0);
 			mediaPlayer.start();
 			setActivatedButton(true);
@@ -247,7 +248,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		if (mediaPlayer != null) {
 			songProgress.setProgress(0);
 			try {
-				if (isPrepared()) {
+				if (prepared) {
 					mediaPlayer.seekTo(0);
 					mediaPlayer.stop();
 					mediaPlayer.reset();
@@ -257,7 +258,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			}
 			mediaPlayer = null; 
 			songProgress.removeCallbacks(progressAction);
-			setPrepared(false);
+			prepared = false;
 		}
 	}
 
@@ -290,7 +291,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		mediaPlayer = mp;
 		setEqualizer(view.getContext());
 		Player.this.onPrepared();
-		setPrepared(true);
+		prepared = true;
 		mp.start();
 		if (data.getFileUri().contains("http")) {
 			Toast.makeText(view.getContext(), MessageFormat.format("{0} - {1} is playing", artist, title), Toast.LENGTH_SHORT).show();
@@ -318,10 +319,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	
 	public Equalizer getEqualizer() {
 		try {
-			if (null == mediaPlayer) {
-				return new Equalizer(1, customAudioSessionId);
-			} else return new Equalizer(1, mediaPlayer.getAudioSessionId());
+			if (null == mediaPlayer) return new Equalizer(1, customAudioSessionId);
+			else return new Equalizer(1, mediaPlayer.getAudioSessionId());
 		} catch (Exception e) {
+			Log.d("log", "Exeption - " + e.getMessage());
 		}
 		return null;
 	}
@@ -348,17 +349,16 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	
 	public void setEqualizer(Context context) {
 		if (Utils.getEqPrefs(context)) {
-			Equalizer equalizer = getEqualizer();
-			BassBoost bassBoost = getBassBoost();
-			Virtualizer virtualizer = getVirtualizer();
+			equalizer = getEqualizer();
+			bassBoost = getBassBoost();
+			virtualizer = getVirtualizer();
 			equalizer.setEnabled(true);
 			bassBoost.setEnabled(true);
 			virtualizer.setEnabled(true);
 			ProgressDataSource myProgressDataSource = new ProgressDataSource(context);
 			myProgressDataSource.open();
 			List<ProgressClass> values = myProgressDataSource.getAllPgs();
-			if (values.size() == 0)
-				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
+			if (values.size() == 0) myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
 			else {
 				if (null != equalizer) {
 					//Set equalizer
@@ -396,31 +396,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		}
 	}
 	
-	public int getPlayerVisibility() {
-		return playerLayout.getVisibility();
-	}
-
 	public void hidePlayerView() {
 		playerLayout.setVisibility(View.GONE);
 	}
 
-	public boolean isSongProgressIndeterminate() {
-		return songProgress.isIndeterminate();
-	}
-
-	public void setSongProgressIndeterminate(boolean ind) {
-		songProgress.setIndeterminate(ind);
-	}
-
-	public int getButtonProgressVisibility() {
-		return buttonProgress.getVisibility();
-	}
-
-	public void setButtonProgressVisibility(int visibility) {
-		buttonProgress.setVisibility(visibility);
-		buttonPlay.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
-	}
-	
 	public MediaPlayer getMediaPlayer() {
 		return mediaPlayer;
 	}
@@ -435,13 +414,5 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	
 	public int getCustomAudioSessionId() {
 		return customAudioSessionId;
-	}
-
-	public boolean isPrepared() {
-		return prepared;
-	}
-
-	public void setPrepared(boolean prepared) {
-		this.prepared = prepared;
 	}
 }

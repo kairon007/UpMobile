@@ -61,7 +61,7 @@ public class CompatHoneycomb {
 			@Override
 			public void onTabSelected(Tab tab, FragmentTransaction ft)
 			{
-				mActivity.mViewPager.setCurrentItem(tab.getPosition());
+				mActivity.getViewPager().setCurrentItem(tab.getPosition());
 			}
 
 			@Override
@@ -73,9 +73,9 @@ public class CompatHoneycomb {
 		ActionBar ab =  activity.getActionBar();
 			ab.removeAllTabs();
 		
-			int[] order = activity.mPagerAdapter.mTabOrder;
+			int[] order = activity.getPagerAdapter().mTabOrder;
 		int[] titles = ViewPagerAdapter.TITLES;
-		for (int i = 0, n = activity.mPagerAdapter.getCount(); i != n; ++i) {
+		for (int i = 0, n = activity.getPagerAdapter().getCount(); i != n; ++i) {
 			ab.addTab
 			(ab.newTab()
 					.setText(titles[order[i]])
