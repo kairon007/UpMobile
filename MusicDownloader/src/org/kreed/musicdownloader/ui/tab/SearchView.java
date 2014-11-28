@@ -71,7 +71,8 @@ public class SearchView  extends OnlineSearchView {
 				@Override
 				public void success(String url) {
 					path = url;
-					if (StateKeeper.getInstance().checkState(StateKeeper.PROGRESS_DIALOG)) SearchView.this.alertProgressDialog.dismiss();
+					SearchView.this.alertProgressDialog.dismiss();
+					StateKeeper.getInstance().closeDialog(StateKeeper.PROGRESS_DIALOG);
 					startPlay(song, data);
 				}
 				
