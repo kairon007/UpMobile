@@ -191,6 +191,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		mLyricsHider = (ImageView) findViewById(R.id.lyric_closer);
 		progressLyric = (ProgressBar) findViewById(R.id.progressLyric);
 		mLyricsHider.setOnClickListener(new OnClickListener() {
+			
 			@Override
 			public void onClick(View paramView) {
 				mLyricsConteiner.setVisibility(View.GONE);
@@ -499,8 +500,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	}
 	
 	@Override
-	protected void onSongChange(final Song song)
-	{
+	protected void onSongChange(final Song song) {
 		super.onSongChange(song);
 		setDuration(song == null ? 0 : song.duration);
 		if (mTitle != null) {
@@ -515,11 +515,9 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			}
 			updateQueuePosition();
 		}
-
 		mCurrentSong = song;
 		loadLyrics(song);
 		updateElapsedTime();
-
 		if (mExtraInfoVisible) {
 			mHandler.sendEmptyMessage(MSG_LOAD_EXTRA_INFO);
 		}
