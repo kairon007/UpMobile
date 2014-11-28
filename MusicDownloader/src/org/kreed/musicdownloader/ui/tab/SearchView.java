@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.kreed.musicdownloader.Advertisement;
 import org.kreed.musicdownloader.Settings;
+import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.listeners.DownloadListener;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
@@ -64,6 +65,9 @@ public class SearchView  extends OnlineSearchView {
 				}
 			});
 		} else {
+			if (MusicDownloaderApp.getService().containsPlayer()) {
+				MusicDownloaderApp.getService().getPlayer().setNewName(data.getSongArtist(), data.getSongTitle(), true);
+			}
 			showProgressDialog(view, song, position);
 			((MainActivity) activity).stopPlayer();
 			song.getDownloadUrl(new DownloadUrlListener() {

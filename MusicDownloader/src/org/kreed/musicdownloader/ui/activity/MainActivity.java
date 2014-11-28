@@ -658,7 +658,7 @@ public class MainActivity extends Activity {
 					observer.startWatching();
 					checkDownloads(uriDownloadedFilesAfter, true);
 					if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(newData.getFileUri())) {
-						MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle);
+						MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle, false);
 					}
 				}
 

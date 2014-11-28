@@ -65,9 +65,9 @@ public class RenameTask extends AsyncTask<Boolean, Void, Boolean> {
 			if (null != file && !file.exists()) {
 				return false;
 			}
+			newFile = file;
 			if (!params[0]) {
 				deleteCoverFromFile(file);
-				newFile = file;
 				if (params[1]) return true;
 			}
 			MusicMetadataSet src_set = new MyID3().read(file);
