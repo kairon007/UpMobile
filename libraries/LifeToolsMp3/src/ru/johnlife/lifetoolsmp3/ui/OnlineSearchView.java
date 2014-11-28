@@ -58,15 +58,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -74,6 +71,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,6 +96,8 @@ public abstract class OnlineSearchView extends View {
 	private SongSearchAdapter resultAdapter;
 	private ViewGroup view;
 	private View spEnginesChoiserLayout;
+	private ScrollView spEnginesChoiserScroll;
+	private View noTouch;
 	private View progress;
 	private View viewItem;
 	private TextView message;
@@ -110,7 +110,6 @@ public abstract class OnlineSearchView extends View {
 	private Bitmap listViewImage;
 	private String extraSearch = null;
 	private String keyEngines;
-	private int initialHeight;
 	private int clickPosition;
 	private boolean isRestored = false;
 	
@@ -268,40 +267,32 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 		listView.setEmptyView(message);
-		initialHeight = spEnginesChoiserLayout.getLayoutParams().height;
-		listView.setOnScrollListener(new OnScrollListener() {
+		listView.setPadding(0, spEnginesChoiserLayout.getLayoutParams().height, 0, 0);
+		noTouch.setOnTouchListener(new OnTouchListener() {
 			
-			int lastScroll = 0;
-			int lastVisibleItem = 0;
-			int defaultHeight = spEnginesChoiserLayout.getLayoutParams().height;
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {}
+			float downY;
+			final int defaultHeight = spEnginesChoiserLayout.getLayoutParams().height;
+			float height = defaultHeight;
 			
 			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				View firstItem = listView.getChildAt(0);
-				if (null == firstItem) return;
-				int itemHeight = firstItem.getHeight();
-				int scrollBy = 0;
-				if (firstVisibleItem == lastVisibleItem) {
-					scrollBy = firstItem.getTop() - lastScroll;
-				} else if (firstVisibleItem < lastVisibleItem) {
-					scrollBy = firstItem.getTop() - lastScroll + itemHeight;
-				} else if (firstVisibleItem > lastVisibleItem) {
-					scrollBy = firstItem.getTop() - lastScroll - itemHeight;
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					downY = event.getY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					if (listView.getAdapter().isEmpty()) return false;
+					float scrollBy = event.getY() - downY;
+					height += scrollBy;
+					downY = event.getY();
+					height = Math.min(Math.max(0, height), defaultHeight);
+					listView.setPadding(0, (int)height, 0, 0);
+					spEnginesChoiserScroll.scrollTo(0, defaultHeight - (int)height);
+					spEnginesChoiserScroll.requestLayout();
+					break;
 				}
-				int resultHeight = spEnginesChoiserLayout.getLayoutParams().height + scrollBy;
-				if (resultHeight < 0) {
-					spEnginesChoiserLayout.getLayoutParams().height = 0;
-				} else if (resultHeight > defaultHeight) {
-					spEnginesChoiserLayout.getLayoutParams().height = defaultHeight;
-				} else {
-					spEnginesChoiserLayout.getLayoutParams().height += scrollBy;
-				}
-				spEnginesChoiserLayout.requestLayout();
-				lastVisibleItem = firstVisibleItem;
-				lastScroll = firstItem.getTop();
+				listView.dispatchTouchEvent(event);
+				return false;
 			}
 		});
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -325,13 +316,6 @@ public abstract class OnlineSearchView extends View {
 				return false;
 			}
 		});
-		searchField.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				expandEngines();
-			}
-		});
 		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -341,14 +325,12 @@ public abstract class OnlineSearchView extends View {
 				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 				keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 				progress.setVisibility(View.GONE);
-				expandEngines();
 			}
 		});
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				trySearch();
-				collapseEngines();
 			}
 		});
 		if (extraSearch != null) {
@@ -424,7 +406,6 @@ public abstract class OnlineSearchView extends View {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					collapseEngines();
 					keyEngines = (String) adapter.getItem(position);
 					sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
 					SharedPreferences.Editor editor = sPref.edit();
@@ -475,50 +456,8 @@ public abstract class OnlineSearchView extends View {
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
 		spEnginesChoiserLayout = (View) view.findViewById(R.id.choise_engines_layout);
-	}
-
-	private void collapseEngines() {
-		keeper.deactivateOptions(StateKeeper.IS_EXPANDING_OPTION);
-		if (!searchField.getText().toString().isEmpty()) {
-			Animation anim = new Animation() {
-
-				@Override
-				protected void applyTransformation(float interpolatedTime, Transformation t) {
-					if (interpolatedTime == 1) {
-						spEnginesChoiserLayout.getLayoutParams().height = 0;
-					} else {
-						spEnginesChoiserLayout.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
-						spEnginesChoiserLayout.requestLayout();
-					}
-				}
-
-				@Override
-				public boolean willChangeBounds() {
-					return true;
-				}
-			};
-			anim.setDuration(200);
-			spEnginesChoiserLayout.startAnimation(anim);
-		}
-	}
-
-	private void expandEngines() {
-		keeper.activateOptions(StateKeeper.IS_EXPANDING_OPTION);
-		Animation anim = new Animation() {
-
-			@Override
-			protected void applyTransformation(float interpolatedTime, Transformation t) {
-				spEnginesChoiserLayout.getLayoutParams().height = (int)(initialHeight * interpolatedTime);
-				spEnginesChoiserLayout.requestLayout();
-			}
-
-			@Override
-			public boolean willChangeBounds() {
-				return true;
-			}
-		};
-		anim.setDuration(200);
-		spEnginesChoiserLayout.startAnimation(anim);
+		spEnginesChoiserScroll = (ScrollView) view.findViewById(R.id.scroll_choise_engines);
+		noTouch = view.findViewById(R.id.non_touch);
 	}
 
 	public static String getDownloadPath(Context context) {

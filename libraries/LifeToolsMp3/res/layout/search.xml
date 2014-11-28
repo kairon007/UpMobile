@@ -57,42 +57,73 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_height="wrap_content" >
 
-        <include
+        <ScrollView
+            android:id="@+id/scroll_choise_engines"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:fillViewport="true"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/choise_engines_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/search_background"
+                    android:orientation="vertical" >
+
+                    <Spinner
+                        android:id="@+id/choise_engines"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            layout="@layout/listview" />
+            android:layout_weight="1" >
 
-        <TextView
-            android:id="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/search_your_results_appear_here"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/listview" />
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-        <LinearLayout
-            android:id="@+id/choise_engines_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:background="@drawable/search_background"
-            android:orientation="vertical" >
-
-            <Spinner
-                android:id="@+id/choise_engines"
+            <TextView
+                android:id="@+id/message"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/search_your_results_appear_here"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+        <View
+            android:id="@+id/non_touch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true" />
+
     </FrameLayout>
 
 </LinearLayout>
