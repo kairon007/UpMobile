@@ -389,7 +389,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 					if (null != songArtist && null != songTitle) {
 						songArtist.setText(artist);
 						songTitle.setText(title);
-						songDuration.setText("");
+						if (clearTime) songDuration.setText("");
 					}
 				}
 			});
