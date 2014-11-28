@@ -17,7 +17,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-public class RenameTask extends AsyncTask<Boolean, Void, Boolean> {
+public class RenameTask {
 	private File file;
 	private Context context;
 	private ProgressDialog progress;
@@ -43,7 +43,7 @@ public class RenameTask extends AsyncTask<Boolean, Void, Boolean> {
 		this.listener = listener;
 		initProgress();
 	}
-
+		
 	private void initProgress() {
 		progress = new ProgressDialog(context);
 		progress.setTitle(R.string.message_please_wait);
@@ -51,28 +51,31 @@ public class RenameTask extends AsyncTask<Boolean, Void, Boolean> {
 		progress.setCancelable(false);
 		progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
-
-	@Override
-	protected void onPreExecute() {
+	/**
+	 * The method which must be called to start renaming
+	 * @param deleteCover - The parameter defines whether you want to delete a picture from a file
+	 * @param onlyCover - The parameter specifying the removal of only the image from a file
+	 */
+	public void start(boolean deleteCover, boolean onlyCover) {
 		showProgress();
-		super.onPreExecute();
-	}
-
-	@Override // if manipulate only checkbox params[1] = true
-	protected Boolean doInBackground(Boolean... params) {
 		boolean isChange = false;
 		try {
 			if (null != file && !file.exists()) {
-				return false;
+				error();
+				return;
 			}
 			newFile = file;
-			if (!params[0]) {
+			if (!deleteCover) {
 				deleteCoverFromFile(file);
-				if (params[1]) return true;
+				if (onlyCover) {
+					success();
+					return;
+				}
 			}
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (src_set == null) {
-				return false;
+				error();
+				return;
 			}
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			if (!album.equals("")) {
@@ -88,7 +91,8 @@ public class RenameTask extends AsyncTask<Boolean, Void, Boolean> {
 				metadata.setArtist(artist);
 			}
 			if (!isChange) {
-				return false;
+				error();
+				return;
 			}
 			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist, title));
 			if (file.renameTo(newFile)) {
@@ -96,46 +100,50 @@ public class RenameTask extends AsyncTask<Boolean, Void, Boolean> {
 			} else {
 				newFile.delete();
 			}
+			success();
 		} catch (Exception e) {
 			Log.d(getClass().getSimpleName(), e.getMessage());
 		}
-		return true;
 	}
 
-	@Override
-	protected void onPostExecute(Boolean result) {
-		if (!result) {
-			Toast toast = Toast.makeText(context, R.string.bad_file, Toast.LENGTH_SHORT);
-			toast.show();
-			cancelProgress();
-			listener.error();
-		} else {
-			listener.success(newFile.getPath());
-			if (!title.equals("") && !artist.equals("")) {
-				ContentResolver resolver = context.getContentResolver();
-				String[] projection = new String[] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
-				Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-				c.moveToFirst();
-				while (c.moveToNext()) {
-					if (file.getPath().equals(c.getString(1))) {
-						int id = c.getInt(0);
-						ContentValues songValues = new ContentValues();
-						songValues.put(MediaStore.Audio.Media.DATA, newFile.getPath());
-						songValues.put(MediaStore.Audio.Media.ALBUM, album);
-						songValues.put(MediaStore.Audio.Media.ARTIST, artist);
-						songValues.put(MediaStore.Audio.Media.TITLE, title);
-						String where = MediaStore.Audio.Media._ID + "=" + id;
-						String[] whereArgs = new String[] { MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
-						resolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues, where, null);
-						break;
+	private void success() {
+		listener.success(newFile.getPath());
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... paramVarArgs) {
+				if (!title.equals("") && !artist.equals("")) {
+					ContentResolver resolver = context.getContentResolver();
+					String[] projection = new String[] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
+					Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+					c.moveToFirst();
+					while (c.moveToNext()) {
+						if (file.getPath().equals(c.getString(1))) {
+							int id = c.getInt(0);
+							ContentValues songValues = new ContentValues();
+							songValues.put(MediaStore.Audio.Media.DATA, newFile.getPath());
+							songValues.put(MediaStore.Audio.Media.ALBUM, album);
+							songValues.put(MediaStore.Audio.Media.ARTIST, artist);
+							songValues.put(MediaStore.Audio.Media.TITLE, title);
+							String where = MediaStore.Audio.Media._ID + "=" + id;
+							resolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues, where, null);
+							break;
+						}
 					}
+					c.close();
 				}
-				c.close();
+				return null;
 			}
-			cancelProgress();
-		}
-		
-		super.onPostExecute(result);
+			
+		}.execute();
+		cancelProgress();
+	}
+
+	private void error() {
+		Toast toast = Toast.makeText(context, R.string.bad_file, Toast.LENGTH_SHORT);
+		toast.show();
+		cancelProgress();
+		listener.error();
 	}
 	
 	public void showProgress() {
@@ -144,7 +152,6 @@ public class RenameTask extends AsyncTask<Boolean, Void, Boolean> {
 		}
 	}
 	
-
 	public void cancelProgress() {
 		if (null != progress && progress.isShowing()) {
 			progress.cancel();
@@ -176,7 +183,7 @@ public class RenameTask extends AsyncTask<Boolean, Void, Boolean> {
 			new MyID3().write(file, temp1, src, metadata);
 			temp1.renameTo(file);
 		} catch (Exception e) {
-			android.util.Log.d("log", "Exeption - " + e.getMessage());
+			android.util.Log.d(getClass().getSimpleName(), e.getMessage());
 		}
 	}
 	

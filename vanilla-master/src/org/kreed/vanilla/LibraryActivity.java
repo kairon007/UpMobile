@@ -1237,7 +1237,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					}
 				}, artistName, songTitle, albumTitle);
 				releaseID3Dialog();
-				renameTask.execute();
+				renameTask.start(true, false);
 			}
 
 		});

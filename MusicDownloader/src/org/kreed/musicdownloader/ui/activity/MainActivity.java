@@ -556,13 +556,15 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(), "File " + deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle() + " does not exist", Toast.LENGTH_LONG).show();
 			mPagerAdapter.removeMusicData(deletedItem);
 		} else {
-		Toast.makeText(getApplicationContext(), deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
-		mPagerAdapter.removeMusicData(deletedItem);
-		if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(deletedItem.getFileUri())) {
-			MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
-			MusicDownloaderApp.getService().getPlayer().hidePlayerView();
-		}
-		new DeleteTask(file).execute();
+			Toast.makeText(getApplicationContext(), deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle() + " has been removed",
+					Toast.LENGTH_LONG).show();
+			mPagerAdapter.removeMusicData(deletedItem);
+			if (MusicDownloaderApp.getService().containsPlayer()
+					&& MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(deletedItem.getFileUri())) {
+				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
+				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
+			}
+			new DeleteTask(file).execute();
 		}
 	}
 
@@ -671,7 +673,7 @@ public class MainActivity extends Activity {
 				} else if (!keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION) && keeper.getTempID3UseCover() < 0) {
 					observer.stopWatching();
 					RenameTask task = new RenameTask(file, MainActivity.this, renameListener, null, null, null);
-					task.execute(false, true);
+					task.start(false, true);
 					return;
 				}
 				File f = new File(item.getFileUri());
@@ -682,7 +684,7 @@ public class MainActivity extends Activity {
 				}
 				observer.stopWatching();
 				checkDownloads(uriDownloadedFilesBefore, false);
-				new RenameTask(file, MainActivity.this, renameListener, editor.getStrings()).execute(useCover, false);
+				new RenameTask(file, MainActivity.this, renameListener, editor.getStrings()).start(useCover, false);
 				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 			}
 		});
