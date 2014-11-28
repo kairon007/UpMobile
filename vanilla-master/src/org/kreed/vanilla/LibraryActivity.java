@@ -1131,7 +1131,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		case MENU_REMOVE_ALBUM_COVER:
 			type = intent.getIntExtra("type", MediaUtils.TYPE_INVALID);
 			id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
-			final File fileRAC = PlaybackService.get(this).getFilePath(type, id);
 			AlertDialog.Builder builderRAC = new AlertDialog.Builder(this);
 			builderRAC.setTitle(R.string.remove_album_cover_title);
 			builderRAC.setMessage(R.string.remove_album_cover_complete);
@@ -1139,15 +1138,23 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					new AsyncTask<Void, Void, Void>() {
-
+					new RenameTask(PlaybackService.get(LibraryActivity.this).getFilePath(type, id), LibraryActivity.this, new RenameTaskSuccessListener() {
+						
 						@Override
-						protected Void doInBackground(Void... params) {
-							deleteCover(fileRAC);
-							return null;
+						public void success(String path) {
+							if (path.equals(PlaybackService.get(LibraryActivity.this).getSong(0).path)) {
+								runOnUiThread(new Runnable() {
+									public void run() {
+										mCover.setImageResource(R.drawable.fallback_cover);
+									}
+								});
+							}
 						}
-
-					}.execute();
+						
+						@Override
+						public void error() {
+						}
+					}, new String[] {"", "", ""}).start(false, true);
 
 				}
 
@@ -1291,35 +1298,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			}
 		} catch (Exception e) {
 		}
-	}
-	
-	private void deleteCover(File f) {
-		File file = new File(f.getParentFile(), f.getName());
-		try {
-			MusicMetadataSet src_set = new MyID3().read(file);
-			if (src_set == null) {
-				return;
-			}
-			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-			metadata.clearPictureList();
-			Bitmap cover = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
-			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-			cover.compress(CompressFormat.JPEG, 85, out);
-			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-			new MyID3().update(file, src_set, metadata);
-			notifyMediascanner(file);
-		} catch (Exception e) {
-		}
-	}
-
-	private void notifyMediascanner(File file) {
-		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-			public void onScanCompleted(String path, Uri uri) {
-				onMediaChange();
-			}
-
-		});
 	}
 
 	@Override
