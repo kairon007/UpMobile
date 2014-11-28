@@ -381,17 +381,19 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	}
 	
 	public void setNewName (final String artist, final String title,final boolean clearTime) {
-		((Activity) view.getContext()).runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				if (null != songArtist && null != songTitle) {
-					songArtist.setText(artist);
-					songTitle.setText(title);
-					songDuration.setText("");
+		if (null != view) {
+			((Activity) view.getContext()).runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					if (null != songArtist && null != songTitle) {
+						songArtist.setText(artist);
+						songTitle.setText(title);
+						songDuration.setText("");
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 	
 	public int getPlayerVisibility() {
