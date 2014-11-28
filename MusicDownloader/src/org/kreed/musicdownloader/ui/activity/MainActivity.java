@@ -58,6 +58,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -536,13 +537,33 @@ public class MainActivity extends Activity {
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case DELETE:
-			new DeleteTask(deletedItem).execute();
+			checkFile();
 			break;
 		case EDIT_TAG:
 			showEditDialog();
 			break;
 		}
 		return super.onContextItemSelected(item);
+	}
+
+	private void checkFile() {
+		File file = new File(deletedItem.getFileUri());
+		if (!file.exists()) {
+			File file2 = new File(BaseConstants.DOWNLOAD_DIR + deletedItem.getSongTitle() + " - " + deletedItem.getSongArtist() + ".mp3");
+			file.renameTo(file2);
+		}
+		if (!file.exists()) {
+			Toast.makeText(getApplicationContext(), "File " + deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle() + " does not exist", Toast.LENGTH_LONG).show();
+			mPagerAdapter.removeMusicData(deletedItem);
+		} else {
+		Toast.makeText(getApplicationContext(), deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
+		mPagerAdapter.removeMusicData(deletedItem);
+		if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(deletedItem.getFileUri())) {
+			MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
+			MusicDownloaderApp.getService().getPlayer().hidePlayerView();
+		}
+		new DeleteTask(file).execute();
+		}
 	}
 
 	@Override
@@ -565,61 +586,34 @@ public class MainActivity extends Activity {
 
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {
 		
-		private MusicData item;
+		private File file;
 		
-		public DeleteTask(MusicData item) {
-			this.item = item;
-		}
-
-		@Override
-		protected void onCancelled() {
-			Toast.makeText(getApplicationContext(), "File " + item.getSongArtist() + " - " + item.getSongTitle() + " does not exist", Toast.LENGTH_LONG).show();
-			mPagerAdapter.removeMusicData(item);
-			super.onCancelled();
+		public DeleteTask(File file) {
+			this.file = file;
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			File file = new File(item.getFileUri());
-			if (!file.exists()) {
-				File file2 = new File(BaseConstants.DOWNLOAD_DIR + item.getSongTitle() + " - " + item.getSongArtist() + ".mp3");
-				file.renameTo(file2);
-			}
-			if (!file.exists()) {
-				cancel(true);
-			} else {
+			try {
 				file.delete();
 				ContentResolver resolver = getContentResolver();
-				String[] projection = new String [] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,  MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE};
-				Cursor c = resolver.query( MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+				String[] projection = new String[] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
+				Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
 				c.moveToFirst();
 				while (c.moveToNext()) {
 					if (file.getPath().equals(c.getString(1))) {
 						int id = c.getInt(0);
 						String where = MediaStore.Audio.Media._ID + "=" + id;
-						String[] whereArgs = new String[] { MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
 						resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, where, null);
 						break;
 					}
 				}
 				c.close();
-				Cursor cr = resolver.query( MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+			} catch (Exception e) {
+				Log.d(getClass().getSimpleName(), e.getMessage());
 			}
 			return null;
 		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			Toast.makeText(getApplicationContext(), item.getSongArtist() + " - " + item.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
-			mPagerAdapter.removeMusicData(item);
-			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(item.getFileUri())) {
-				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
-				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
-				player = null;
-			}
-			super.onPostExecute(result);
-		}
-
 	}
 
 	@SuppressLint("NewApi")
