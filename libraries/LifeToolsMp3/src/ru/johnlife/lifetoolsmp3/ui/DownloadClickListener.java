@@ -61,7 +61,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	private ArrayList<String[]> headers = new ArrayList<String[]>();
 	private Context context;
-	private RemoteSong song;
+	protected RemoteSong song;
 	protected Bitmap cover;
 	protected Long currentDownloadId;
 	public Integer songId;

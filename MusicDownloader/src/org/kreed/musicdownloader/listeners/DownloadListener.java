@@ -8,6 +8,7 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.app.Activity;
@@ -20,9 +21,15 @@ public class DownloadListener extends DownloadClickListener {
 
 	private DownloadsTab downloadsTab;
 	private Context context;
+	private String songArtist;
+	private String songTitle;
+	private String duration;
 
 	public DownloadListener(Context context, RemoteSong song, int id) {
 		super(context, song, null, id);
+		songTitle = Util.removeSpecialCharacters(song.getTitle());
+		songArtist = Util.removeSpecialCharacters(song.getArtist());
+		duration = Util.getFormatedStrDuration(song.getDuration());
 		this.context = context;
 		downloadsTab = DownloadsTab.getInstance();
 	}
