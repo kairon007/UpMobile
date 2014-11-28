@@ -403,9 +403,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			c.close();
 			if (isBadInet()) {
 				counter++;
+			} else {
+				counter = 0;
 			}
-			if (counter > 15) {
+			if (counter > 100) {
 				notifyAboutFailed(currentDownloadId);
+				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 				manager.remove(currentDownloadId);
 				this.cancel();
 			}
