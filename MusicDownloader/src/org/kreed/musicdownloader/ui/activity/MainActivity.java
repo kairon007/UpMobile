@@ -3,7 +3,6 @@ package org.kreed.musicdownloader.ui.activity;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -31,6 +30,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -41,10 +41,8 @@ import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,6 +52,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -91,7 +90,7 @@ public class MainActivity extends Activity {
 	public ViewPagerAdapter mPagerAdapter;
 	private ApplicationInfo mFakeInfo;
 	protected Looper mLooper;
-	private MusicData music;
+	private MusicData deletedItem;
 	private TelephonyManager telephonyManager;
 	private HeadphonesReceiver headphonesReceiver;
 
@@ -110,19 +109,14 @@ public class MainActivity extends Activity {
 	private String textFilterDownload = "";
 	private String textFilterLibrary = "";
 	private int page;
-	private MusicData selectedItem;
 	private ArrayList<String> uriDownloadedFilesBefore;
 	private ArrayList<String> uriDownloadedFilesAfter; 
 	private int lastPage = -1;
 	private boolean mSearchBoxVisible;
 	public boolean mFakeTarget;
 	private MP3Editor editor;
-	private ArrayList<String> mStrings;
-	private boolean showDialog = false;
-	private boolean useCover = false;
 	private boolean isPlayerHide;
 	private StateKeeper keeper;
-	private RenameTask renameTask;
 	
 
 	// -------------------------------------------------------------------------
@@ -222,9 +216,6 @@ public class MainActivity extends Activity {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
 		unregisterReceiver(headphonesReceiver);
-		if (null != renameTask) {
-			renameTask.cancelProgress();
-		}
 		Advertisement.onDestroy(this);
 		super.onDestroy();
 	}
@@ -307,12 +298,6 @@ public class MainActivity extends Activity {
 		}
 		if (mViewPager.getCurrentItem() == 2) {
 			clearAll.setVisibility(View.GONE);
-		}
-		if (null != state) {
-			isPlayerHide = state.getBoolean(SAVE_PLAYER_VIEW);
-			if (state.getBoolean(RENAME_PROGRESS_VISIBLE)) {
-				new RenameTask(this).showProgress();				
-			}
 		}
 		if (null != MusicDownloaderApp.getService() && MusicDownloaderApp.getService().containsPlayer()) {
 			if (isPlayerHide) {
@@ -400,16 +385,8 @@ public class MainActivity extends Activity {
 	@Override
 	public void onRestoreInstanceState(Bundle in) {
 		String uri = in.getString(Constants.MUSIC_URI);
-		in.remove(Constants.MUSIC_URI);
-		mStrings = in.getStringArrayList(Constants.EDITOR_FIELDS);
-		if (null != uri) {
-			File musicUri = new File(uri);
-			music = new MusicData(musicUri);
-			useCover = in.getBoolean(Constants.USE_COVER, false);
-			File file = new File(in.getString(Constants.FILE_PATH_BUNDLE));
-			MusicData data = new MusicData(file);
-			int i = in.getInt(Constants.ITEM_BUNDLE);
-			showEditDialog(true, data);
+		if (keeper.checkState(StateKeeper.EDITTAG_DIALOG)){
+			showEditDialog();
 		}
 		textFilterDownload = in.getString(Constants.FILTER_TEXT_DOWNLOAD);
 		textFilterLibrary = in.getString(Constants.FILTER_TEXT_LIBRARY);
@@ -422,17 +399,6 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
-		if (showDialog && null != music) {
-			String mUri = music.getFileUri();
-			out.putString(Constants.MUSIC_URI, mUri);
-			ArrayList<String> strings = new ArrayList<String>();
-			strings.add(editor.getStrings()[0]);
-			strings.add(editor.getStrings()[1]);
-			strings.add(editor.getStrings()[2]);
-			out.putStringArrayList(Constants.EDITOR_FIELDS, strings);
-			out.putBoolean(Constants.USE_COVER, editor.useAlbumCover());
-			out.putString(Constants.FILE_PATH_BUNDLE, selectedItem.getFileUri());
-		}
 		out.putBoolean(Constants.SEARCH_BOX_VISIBLE, mSearchBoxVisible);
 		if (page == 1) {
 			out.putString(Constants.FILTER_TEXT_DOWNLOAD, textFilterDownload);
@@ -447,23 +413,11 @@ public class MainActivity extends Activity {
 		if (lastPage == 0) {
 			StateKeeper.getInstance().saveStateAdapter(mPagerAdapter.getSearchView());
 		}
-		if (null != renameTask && renameTask.isShow()) {
-			out.putBoolean(RENAME_PROGRESS_VISIBLE, true);
-		}
 		super.onSaveInstanceState(out);
 	}
 
-	/**
-	 * Create or recreate the limiter breadcrumbs.
-	 */
-	public void updateLimiterViews() {
-		mLimiterViews.removeAllViews();
-		mLimiterScroller.setVisibility(View.VISIBLE);
-	}
-
 	public void onPageChanged(int position) {
-		// mCurrentAdapter = adapter;
-		updateLimiterViews();
+		keeper = StateKeeper.resetState(); 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			CompatHoneycomb.selectTab(this, position);
 		}
@@ -537,7 +491,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void play(ArrayList<String[]> headers, MusicData musicData) {
-		music = musicData;
 		if (player != null && player.getCustomAudioSessionId() == -1 && player.getData().equals(musicData)) {
 			player.stateManagementPlayer(Constants.RESTART);
 			return;
@@ -583,13 +536,10 @@ public class MainActivity extends Activity {
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case DELETE:
-			new DeleteTask().execute();
+			new DeleteTask(deletedItem).execute();
 			break;
 		case EDIT_TAG:
-			showEditDialog(false, selectedItem);
-			if (null != selectedItem.getSongBitmap()) {
-				useCover = true;
-			}
+			showEditDialog();
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -597,54 +547,72 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		menu.setHeaderTitle(music.getSongArtist() + " - " + music.getSongTitle());
+		menu.setHeaderTitle(deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle());
 		menu.add(0, DELETE, 0, getResources().getString(R.string.delete_song));
 		menu.add(0, EDIT_TAG, 0, getResources().getString(R.string.edit_mp3));
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 
-	public void setMusic(MusicData music) {
-		this.music = music;
-	}
-
-	public MusicData getSelectedItem() {
-		return selectedItem;
+	public void setDeletedItem(MusicData music) {
+		deletedItem = music;
 	}
 
 	public void setSelectedItem(MusicData data) {
-		this.selectedItem = data;
+		keeper.setTag(data);
+		String[] strArray = new String[] { data.getSongArtist(), data.getSongTitle(), data.getSongAlbum() };
+		keeper.setTempID3Fields(strArray);
 	}
 
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {
+		
+		private MusicData item;
+		
+		public DeleteTask(MusicData item) {
+			this.item = item;
+		}
 
 		@Override
 		protected void onCancelled() {
-			Toast.makeText(getApplicationContext(), "File " + music.getSongArtist() + " - " + music.getSongTitle() + " does not exist", Toast.LENGTH_LONG).show();
-			mPagerAdapter.removeMusicData(music);
+			Toast.makeText(getApplicationContext(), "File " + item.getSongArtist() + " - " + item.getSongTitle() + " does not exist", Toast.LENGTH_LONG).show();
+			mPagerAdapter.removeMusicData(item);
 			super.onCancelled();
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			File file = new File(music.getFileUri());
+			File file = new File(item.getFileUri());
 			if (!file.exists()) {
-				File file2 = new File(BaseConstants.DOWNLOAD_DIR + music.getSongTitle() + " - " + music.getSongArtist() + ".mp3");
+				File file2 = new File(BaseConstants.DOWNLOAD_DIR + item.getSongTitle() + " - " + item.getSongArtist() + ".mp3");
 				file.renameTo(file2);
 			}
 			if (!file.exists()) {
 				cancel(true);
 			} else {
 				file.delete();
-				notifyMediascanner(file);
+				ContentResolver resolver = getContentResolver();
+				String[] projection = new String [] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,  MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE};
+				Cursor c = resolver.query( MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+				c.moveToFirst();
+				while (c.moveToNext()) {
+					if (file.getPath().equals(c.getString(1))) {
+						int id = c.getInt(0);
+						String where = MediaStore.Audio.Media._ID + "=" + id;
+						String[] whereArgs = new String[] { MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
+						resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, where, null);
+						break;
+					}
+				}
+				c.close();
+				Cursor cr = resolver.query( MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
 			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			Toast.makeText(getApplicationContext(), music.getSongArtist() + " - " + music.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
-			mPagerAdapter.removeMusicData(music);
-			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(music.getFileUri())) {
+			Toast.makeText(getApplicationContext(), item.getSongArtist() + " - " + item.getSongTitle() + " has been removed", Toast.LENGTH_LONG).show();
+			mPagerAdapter.removeMusicData(item);
+			if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(item.getFileUri())) {
 				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 				MusicDownloaderApp.getService().getPlayer().hidePlayerView();
 				player = null;
@@ -655,74 +623,82 @@ public class MainActivity extends Activity {
 	}
 
 	@SuppressLint("NewApi")
-	public void showEditDialog(boolean forse, final MusicData selectedData) {
-		final File file = new File(selectedData.getFileUri());
-		final Context context = this;
+	public void showEditDialog() {
+		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
+		final MusicData item = (MusicData) keeper.getTag();
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme);
-		showDialog = true;
-		if (null != mStrings) {
-			String[] filds = mStrings.toArray(new String[mStrings.size()]);
-			editor.setStrings(filds);
-			mStrings = null;
+		editor.setStrings(keeper.getTempID3Fields());
+		View dialogView = editor.getView();
+		if (keeper.getTempID3UseCover() != 0) {
+			editor.setUseCover(keeper.getTempID3UseCover() > 0);
 		} else {
-			String[] filds = { music.getSongArtist(), music.getSongTitle(), "" };
-			editor.setStrings(filds);
+			if (item.getSongBitmap() == null) {
+				editor.disableChekBox();
+			} else {
+				editor.setUseCover(true);
+			}
 		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(editor.getView());
-		if (forse) {
-			editor.setUseCover(useCover);
-		}
-		if (null == music.getSongBitmap()) {
-			editor.disableChekBox();
-		}
-		final boolean defCover = editor.useAlbumCover();
+		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(dialogView);
 		uriDownloadedFilesAfter = new ArrayList<String>();
 		uriDownloadedFilesBefore = new ArrayList<String>();
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
+			private boolean useCover;
+			RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
+
+				@Override
+				public void success(String path) {
+					String artistName = editor.getNewArtistName();
+					String albumTitle = editor.getNewAlbumTitle();
+					String songTitle = editor.getNewSongTitle();
+					MusicData newData = new MusicData(artistName, songTitle, albumTitle, path);
+					newData.setUseCover(useCover);
+					mPagerAdapter.updateMusicData(item, newData);
+					observer.startWatching();
+					checkDownloads(uriDownloadedFilesAfter, true);
+					if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(newData.getFileUri())) {
+						MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle);
+					}
+				}
+
+				@Override
+				public void error() {
+					observer.startWatching();
+				}
+			};
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
-				final String artistName = editor.getNewArtistName();
-				final String albumTitle = editor.getNewAlbumTitle();
-				final String songTitle = editor.getNewSongTitle();
-				if (!editor.manipulateText()) {
+				useCover = keeper.getTempID3UseCover() >= 0;
+				File file = new File(item.getFileUri());
+				if (!keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION) && keeper.getTempID3UseCover() >= 0) {
+					return;
+				} else if (!keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION) && keeper.getTempID3UseCover() < 0) {
+					observer.stopWatching();
+					RenameTask task = new RenameTask(file, MainActivity.this, renameListener, null, null, null);
+					task.execute(false, true);
 					return;
 				}
-				if (new File(file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3").exists() && defCover == editor.useAlbumCover()) {
+				File f = new File(item.getFileUri());
+				if (new File(f.getParentFile() + "/" + editor.getNewArtistName() + " - " + editor.getNewSongTitle() + ".mp3").exists()) {
 					Toast toast = Toast.makeText(editor.getView().getContext(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
 					toast.show();
 					return;
 				}
 				observer.stopWatching();
-				checkDownloads(uriDownloadedFilesBefore, false); 
-				renameTask = new RenameTask(file, context, artistName, songTitle, albumTitle, editor.useAlbumCover(), new RenameTaskSuccessListener() {
-					
-					@Override
-					public void success() {
-						MusicData newData = new MusicData(new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artistName, songTitle)));
-						mPagerAdapter.updateMusicData(selectedData, newData);
-						observer.startWatching();
-						checkDownloads(uriDownloadedFilesAfter, true);
-						if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(newData.getFileUri())) {
-							MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle);
-						}
-					}
-					
-					@Override
-					public void error() {
-						observer.startWatching();
-					}
-				});
-				renameTask.execute();
+				checkDownloads(uriDownloadedFilesBefore, false);
+				new RenameTask(file, MainActivity.this, renameListener, editor.getStrings()).execute(useCover, false);
+				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 			}
 		});
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			builder.setOnDismissListener(new OnDismissListener() {
+
+				@Override
 				public void onDismiss(DialogInterface dialog) {
+					keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 					dialog.dismiss();
-					showDialog = false;
 				}
 			});
 		}
@@ -730,7 +706,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				showDialog = false;
+				keeper.deactivateOptions(StateKeeper.EDITTAG_DIALOG);
 			}
 
 		});
@@ -757,14 +733,6 @@ public class MainActivity extends Activity {
 				}
 			}
 		}
-	}
-
-	private void notifyMediascanner(final File file) {
-		MediaScannerConnection.scanFile(this, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-			public void onScanCompleted(String path, Uri uri) {
-			}
-		});
 	}
 
 	public class CustomTextWatcher implements TextWatcher {

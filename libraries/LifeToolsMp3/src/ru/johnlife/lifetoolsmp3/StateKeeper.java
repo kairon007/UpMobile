@@ -12,6 +12,7 @@ import android.view.View;
 
 public class StateKeeper {
 	
+	private Object tag;
 	private static StateKeeper instance = null;
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
@@ -120,6 +121,7 @@ public class StateKeeper {
 				generalFlags = Integer.valueOf(old);
 			} 
 		}
+		tag = null;
 		if (flag == STREAM_DIALOG) {
 			playerInstance = null;
 			directoryChooserPath = null;
@@ -181,9 +183,13 @@ public class StateKeeper {
 		generalFlags = buff;
 		return result;
 	}
+	
+	public static StateKeeper resetState() {
+		instance = null;
+		return getInstance();
+	}
 
 	public void saveStateAdapter(OnlineSearchView searchView) {
-		//TODO save state
 		songField = searchView.getSearchField().getText().toString();
 		results = searchView.getResultAdapter().getAll();
 		if (results != null && !results.isEmpty()) listViewPosition = searchView.getListViewPosition();
@@ -244,8 +250,8 @@ public class StateKeeper {
 	}
 
 	public void setTempID3UseCover(int tempUseCover) {
-		if (tempUseCover > 0) this.tempID3UseCover = 1;
-		else if (tempUseCover < 0) this.tempID3UseCover = -1;
+		if (tempUseCover > 0) instance.tempID3UseCover = 1;
+		else if (tempUseCover < 0) instance.tempID3UseCover = -1;
 		else this.tempID3UseCover = 0;
 	}
 
@@ -311,6 +317,14 @@ public class StateKeeper {
 
 	public void setClickPosition(int clickPosition) {
 		this.clickPosition = clickPosition;
+	}
+
+	public Object getTag() {
+		return tag;
+	}
+
+	public void setTag(Object tag) {
+		this.tag = tag;
 	}
 
 }

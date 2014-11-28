@@ -17,47 +17,31 @@ import android.graphics.Bitmap;
 
 public class MusicData {
 
+	private Object tag;
 	private Bitmap songBitmap;
 	private String songArtist;
 	private String songTitle;
 	private String songDuration;
-	private long downloadProgress = -1;
-	/**
-	 * use only for the same song
-	 */
-	private int index = 0;
 	private String songGenre;
 	private String songAlbum;
 	private String fileUri;
-	private Object tag;
+	private long downloadProgress = -1;
 	private long downloadId = -1;
 	private boolean useCover = true;
 
 	public MusicData() {
 	}
 
-	public MusicData(String songArtist, String songTitle, String songDuration, Bitmap songBitmap) {
+	
+	
+	public MusicData(String songArtist, String songTitle, String songAlbum, String fileUri) {
 		this.songArtist = songArtist;
 		this.songTitle = songTitle;
-		this.songDuration = songDuration;
-		this.songBitmap = songBitmap;
+		this.songAlbum = songAlbum;
+		this.fileUri = fileUri;
 	}
 
-	public MusicData(String songArtist, String songTitle, String songDuration, long downloadProgress, Bitmap cover) {
-		this.songArtist = songArtist;
-		this.songTitle = songTitle;
-		this.songDuration = songDuration;
-		this.downloadProgress = downloadProgress;
-		this.songBitmap = cover;
-	}
 
-	public MusicData(String songArtist, String songTitle, String songDuration, Bitmap cover, String songGenre) {
-		this.songArtist = songArtist;
-		this.songTitle = songTitle;
-		this.songDuration = songDuration;
-		this.songBitmap = cover;
-		this.songGenre = songGenre;
-	}
 
 	public MusicData(File musicFile) {
 		fileUri = musicFile.getAbsolutePath();
@@ -68,13 +52,7 @@ public class MusicData {
 				if (metadata.isEmpty()) {
 					String nameFile = musicFile.getName().split(".mp3")[0];
 					String[] nameFileArray;
-					if (!nameFile.contains("-[")) {
-						nameFileArray = nameFile.split(" - ");
-					} else {
-						String[] buf = nameFile.split("-[");
-						nameFileArray = buf[0].split(" - ");
-						index = Integer.valueOf(buf[1].split("]")[0]);
-					}
+					nameFileArray = nameFile.split(" - ");
 					if (nameFileArray.length > 0) {
 						songTitle = nameFileArray[1];
 						songArtist = nameFileArray[0];
@@ -173,17 +151,17 @@ public class MusicData {
 	public void update(MusicData newData) { 
 		if (null != newData.fileUri) {
 			fileUri = newData.fileUri;
-		}
-		if (null == newData.getSongBitmap()) {
+		} 
+		if (!newData.useCover) {
 			songBitmap = null;
 		}
 		if (null != newData.songGenre && !newData.songGenre.equals(songGenre)) {
 			songGenre = newData.songGenre;
 		}
-		if (!newData.songArtist.equals(songArtist)) {
+		if (newData.songArtist != null && !newData.songArtist.equals(songArtist)) {
 			songArtist = newData.songArtist;
 		}
-		if (!newData.songTitle.equals(songTitle)) {
+		if (newData.songTitle != null && !newData.songTitle.equals(songTitle)) {
 			songTitle = newData.songTitle;
 		}
 	}
@@ -333,9 +311,6 @@ public class MusicData {
 		}
 		if (null != fileUri && !fileUri.equals("")) {
 			hash *= fileUri.hashCode();
-		}
-		if (index > 0) {
-			hash *= index;
 		}
 		return hash;
 	}

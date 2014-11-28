@@ -1222,20 +1222,20 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					releaseID3Dialog();
 					return;
 				}
-				renameTask = new RenameTask(file, LibraryActivity.this, artistName, songTitle, albumTitle, true, new RenameTaskSuccessListener() {
+				renameTask = new RenameTask(file, LibraryActivity.this, new RenameTaskSuccessListener() {
 					
 					@Override
-					public void success() {
+					public void success(String path) {
 						if (null != renameTask) {
 							renameTask.cancelProgress();
-							updatePlayer(id, artistName, albumTitle, songTitle, newFileName);
+							updatePlayer(id, artistName, albumTitle, songTitle, path);
 						}
 					}
 
 					@Override
 					public void error() {
 					}
-				});
+				}, artistName, songTitle, albumTitle);
 				releaseID3Dialog();
 				renameTask.execute();
 			}

@@ -183,7 +183,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			@Override
 			public boolean onLongClick(View arg0) {
 				MusicData music = getItem(pos);
-				activity.setMusic(music);
+				activity.setDeletedItem(music);
 				activity.setSelectedItem(music);
 				return false;
 			}
@@ -194,7 +194,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			@Override
 			public void onClick(View arg0) {
 				MusicData music = getItem(pos);
-				activity.setMusic(music);
+				activity.setDeletedItem(music);
 				activity.setSelectedItem(music);
 				arg0.performLongClick();
 			}

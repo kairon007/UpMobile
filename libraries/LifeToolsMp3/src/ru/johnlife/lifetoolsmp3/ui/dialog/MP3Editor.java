@@ -65,8 +65,9 @@ public class MP3Editor {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) StateKeeper.getInstance().setTempID3UseCover(1);
-				else StateKeeper.getInstance().setTempID3UseCover(-1);
+				StateKeeper keeper = StateKeeper.getInstance();
+				if (isChecked) keeper.setTempID3UseCover(1);
+				else keeper.setTempID3UseCover(-1);
 			}
 		});
 		clearFocus();
@@ -95,11 +96,12 @@ public class MP3Editor {
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			StateKeeper.getInstance().activateOptions(StateKeeper.MANIPULATE_TEXT_OPTION);
+			StateKeeper keeper = StateKeeper.getInstance();
+			keeper.activateOptions(StateKeeper.MANIPULATE_TEXT_OPTION);
 			newArtistName = etArtistName.getText().toString();
 			newSongTitle = etSongTitle.getText().toString();
 			newAlbumTitle = etAlbumTitle.getText().toString();
-			StateKeeper.getInstance().setTempID3Fields( new String[] { newArtistName, newSongTitle, newAlbumTitle });
+			keeper.setTempID3Fields( new String[] { newArtistName, newSongTitle, newAlbumTitle });
 		}
 
 		@Override
