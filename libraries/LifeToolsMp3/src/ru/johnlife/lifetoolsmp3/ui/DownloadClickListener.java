@@ -63,10 +63,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private Context context;
 	private RemoteSong song;
 	protected Bitmap cover;
-	protected String songTitle;
-	protected String songArtist;
-	protected String url;
-	protected String duration;
 	protected Long currentDownloadId;
 	public Integer songId;
 	private int id;
@@ -84,19 +80,18 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	
 	private void initSong() {
 		songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
-		songTitle = Util.removeSpecialCharacters(song.getTitle());
-		songArtist = Util.removeSpecialCharacters(song.getArtist());
-		duration = Util.getFormatedStrDuration(song.getDuration());
 		headers = song.getHeaders();
 	}
 	
 	@SuppressLint("NewApi")
 	public void downloadSong(boolean fromCallback) {
-		url = song.getUrl();
+		String url = song.getUrl();
 		if (url == null || "".equals(url)) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
 		}
+		String songArtist = song.getArtist();
+		String songTitle = song.getTitle();
 		File musicDir = new File(getDirectory());
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
@@ -263,6 +258,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		this.cover = bmp;
 	}
 	
+	//if change title or artist of song, then this method call before downloadSong()
 	public void setSong(RemoteSong song) {
 		this.song = song;
 	}
@@ -293,8 +289,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 		metadata.clearPictureList();
-		metadata.setSongTitle(songTitle);
-		metadata.setArtist(songArtist);
+		metadata.setSongTitle(song.getTitle());
+		metadata.setArtist(song.getArtist());
 		if (null != cover && useCover) {
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);
@@ -392,7 +388,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						this.cancel();
 					}
 					setFileUri(currentDownloadId, src.getAbsolutePath());
-					DownloadCache.getInstanse().remove(songArtist, songTitle);
+					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 					notifyMediascanner(song, path);
 					this.cancel();
 					return;

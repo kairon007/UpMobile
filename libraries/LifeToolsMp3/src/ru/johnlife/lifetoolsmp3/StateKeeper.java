@@ -275,6 +275,10 @@ public class StateKeeper {
 		this.downloadSong = downloadSong;
 	}
 	
+	public RemoteSong getDownloadSong() {
+		return downloadSong;
+	}
+	
 	public int getCurrentPlayersId() {
 		return currentPlayersId;
 	}

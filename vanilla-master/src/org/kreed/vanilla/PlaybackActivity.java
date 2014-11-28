@@ -88,6 +88,7 @@ public abstract class PlaybackActivity extends Activity
 	private long mLastStateEvent;
 	private long mLastSongEvent;
 	private boolean isLyricsShow;
+	private Song songForLyrics;
 	private TextView mLyricsView;
 	private ProgressBar progressLyric;
 	
@@ -289,20 +290,27 @@ public abstract class PlaybackActivity extends Activity
 	}
 
 	public void loaderLyrics(final Song song) {
+		songForLyrics = song;
 		mLyricsView.setText("");
 		if (null != song && null != song.title && null != song.artist) {
 			enableProgress();
 			LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
 			lyricsFetcher.fetchLyrics(song.title, song.artist);
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+
+				private Song s;
+				{ s = song; }
+				
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-					disableProgress();
-					if (foundLyrics) {
-						mLyricsView.setText(Html.fromHtml(lyrics));
-					} else {
-						String songName = song.artist + " - " + song.title;
-						mLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
+					if (s.artist.equals(songForLyrics.artist) && s.title.equals(songForLyrics.title)) {
+						disableProgress();
+						if (foundLyrics) {
+							mLyricsView.setText(Html.fromHtml(lyrics));
+						} else {
+							String songName = s.artist + " - " + s.title;
+							mLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
+						}
 					}
 				}
 			});

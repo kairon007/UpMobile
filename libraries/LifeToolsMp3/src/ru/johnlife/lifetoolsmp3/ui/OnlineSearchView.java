@@ -945,7 +945,7 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				downloadListener.setSong(song);
+				downloadListener.setSong(keeper.getDownloadSong());
 				downloadListener.setUseAlbumCover(keeper.isUseCover());
 				downloadListener.downloadSong(false);
 				dialog.cancel();
