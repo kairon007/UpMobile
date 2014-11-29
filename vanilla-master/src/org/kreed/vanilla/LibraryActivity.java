@@ -1176,6 +1176,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@SuppressLint("NewApi") 
 	private void createEditID3Dialog(int type, final long id) {
+		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme);
@@ -1279,7 +1280,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		}
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
-		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 	}
 
 	private void releaseID3Dialog() {
@@ -1288,7 +1288,13 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	}
 
 	private void updatePlayer(long id, final String artistName, final String albumTitle, final String songTitle, final String newFileName) {
-		Song newSong = PlaybackService.get(this).getSongObj(new Song(id));
+		PlaybackService service = PlaybackService.get(this);
+		Song currentSong = service.getSong(0);
+		if (id == currentSong.getId()) {
+			mArtist.setText(artistName);
+			mTitle.setText(songTitle);
+		}
+		Song newSong = service.getSongObj(new Song(id));
 		try {
 			if (null != newSong) {
 				newSong.artist = artistName;

@@ -108,10 +108,10 @@ public class RenameTask {
 
 	private void success() {
 		listener.success(newFile.getPath());
-		new AsyncTask<Void, Void, Void>() {
-
+		new Thread(new Runnable() {
+			
 			@Override
-			protected Void doInBackground(Void... paramVarArgs) {
+			public void run() {
 				if (!title.equals("") && !artist.equals("")) {
 					ContentResolver resolver = context.getContentResolver();
 					String[] projection = new String[] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
@@ -132,10 +132,8 @@ public class RenameTask {
 					}
 					c.close();
 				}
-				return null;
 			}
-			
-		}.execute();
+		}).start();
 		cancelProgress();
 	}
 
