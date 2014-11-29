@@ -311,7 +311,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void onPageChanged(int position) {
-		keeper = StateKeeper.resetState(); 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			CompatHoneycomb.selectTab(this, position);
 		}

@@ -184,11 +184,6 @@ public class StateKeeper {
 		return result;
 	}
 	
-	public static StateKeeper resetState() {
-		instance = null;
-		return getInstance();
-	}
-
 	public void saveStateAdapter(OnlineSearchView searchView) {
 		songField = searchView.getSearchField().getText().toString();
 		results = searchView.getResultAdapter().getAll();
