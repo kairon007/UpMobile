@@ -216,6 +216,10 @@ public abstract class OnlineSearchView extends View {
 		return true;
 	}
 	
+	protected void hideView () {
+		//hide player in MusicDownloder application
+	}
+	
 	public OnlineSearchView(LayoutInflater inflater) {
 		super(inflater.getContext());
 		init(inflater);
@@ -794,6 +798,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public void onCancel(DialogInterface paramDialogInterface) {
 				downloadSong.cancelTasks();
+				hideView();
 				keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 			}
 		});

@@ -393,7 +393,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if (null != MusicDownloaderApp.getService().getPlayer() && null != MusicDownloaderApp.getService().getPlayer().getMediaPlayer()) {
+		if (!isHidePlayer) {
 			MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 			MusicDownloaderApp.getService().getPlayer().hidePlayerView();
 		} else {

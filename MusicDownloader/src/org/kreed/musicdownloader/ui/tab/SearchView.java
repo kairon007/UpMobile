@@ -90,6 +90,11 @@ public class SearchView  extends OnlineSearchView {
 	protected BaseSettings getSettings() {
 		return new Settings();
 	}
+	
+	@Override
+	protected void hideView() {
+		activity.onBackPressed();
+	}
 
 	@Override
 	protected Advertisment getAdvertisment() {
