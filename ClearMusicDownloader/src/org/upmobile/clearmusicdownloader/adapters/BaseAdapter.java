@@ -1,6 +1,7 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
-import ru.johnlife.lifetoolsmp3.song.Song;
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +9,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-public abstract class BaseAdapter extends ArrayAdapter<Song> {
+public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 
 	private LayoutInflater inflater;
 	private int layoutId;
 
 	public BaseAdapter(Context context, int resource) {
-		super(context, resource);
+		super(context, resource, new ArrayList<T>());
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.layoutId = resource;
 	}
@@ -23,40 +24,40 @@ public abstract class BaseAdapter extends ArrayAdapter<Song> {
 		return inflater.inflate(layoutId, parent, false);
 	}
 
-	protected abstract ViewHolder<Song> createViewHolder(final View v);
+	protected abstract ViewHolder<T> createViewHolder(final View v);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		BaseAdapter.ViewHolder<Song> h;
+		BaseAdapter.ViewHolder<T> h;
 		if (v == null) {
 			v = createView(parent);
 			h = createViewHolder(v);
 			v.setTag(h);
 		} else {
-			h = (BaseAdapter.ViewHolder<Song>) v.getTag();
+			h = (BaseAdapter.ViewHolder<T>) v.getTag();
 		}
-		Song item = getItem(position);
+		T item = getItem(position);
 		h.hold(item);
 		return v;
 	}
 
-	public static abstract class ViewHolder<Song> {
+	public static abstract class ViewHolder<T> {
 		protected abstract class ItemizedClickListener implements OnClickListener {
-			private Song item;
+			private T item;
 
-			public Song getItem() {
+			public T getItem() {
 				return item;
 			}
 
-			public void setItem(Song item) {
+			public void setItem(T item) {
 				this.item = item;
 			}
 
 		}
 
-		protected abstract void hold(Song item);
+		protected abstract void hold(T item);
 	}
 
 }
