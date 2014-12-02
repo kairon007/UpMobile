@@ -611,10 +611,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				useCover = keeper.getTempID3UseCover() >= 0;
+				boolean manipulate = keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION);
+				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 				File file = new File(item.getFileUri());
-				if (!keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION) && keeper.getTempID3UseCover() >= 0) {
+				if (!manipulate && useCover) {
 					return;
-				} else if (!keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION) && keeper.getTempID3UseCover() < 0) {
+				} else if (!manipulate && !useCover) {
 					observer.stopWatching();
 					RenameTask task = new RenameTask(file, MainActivity.this, renameListener, null, null, null);
 					task.start(false, true);
@@ -629,8 +631,8 @@ public class MainActivity extends Activity {
 				observer.stopWatching();
 				checkDownloads(uriDownloadedFilesBefore, false);
 				new RenameTask(file, MainActivity.this, renameListener, editor.getStrings()).start(useCover, false);
-				keeper.closeDialog(StateKeeper.EDITTAG_DIALOG);
 			}
+			
 		});
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			builder.setOnDismissListener(new OnDismissListener() {
