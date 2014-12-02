@@ -1,0 +1,147 @@
+package org.upmobile.clearmusicdownloader.data;
+
+import java.io.File;
+
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
+import ru.johnlife.lifetoolsmp3.Util;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.provider.MediaStore;
+
+public class MusicData implements Comparable<MusicData>, Parcelable{
+
+	public static final String[] FILLED_PROJECTION = {
+		MediaStore.Audio.Media._ID,
+		MediaStore.Audio.Media.DATA,
+		MediaStore.Audio.Media.TITLE,
+		MediaStore.Audio.Media.ARTIST,
+		MediaStore.Audio.Media.DURATION,
+	};
+	private String path;
+	private String title;
+	private String artist;
+	private long id;
+	private long duration;
+	
+	public MusicData() {
+		
+	}
+	
+	public MusicData(String title, String artist, long id, long duration) {
+		this.title = title;
+		this.artist = artist;
+		this.id = id;
+		this.duration = duration;
+	}
+
+	private MusicData(Parcel parcel) {
+		id = parcel.readLong();
+		duration = parcel.readLong();
+		path = parcel.readString();
+		title = parcel.readString();
+		artist = parcel.readString();
+	}
+
+	public void populate(Cursor cursor) {
+		id = cursor.getLong(0);
+		path = cursor.getString(1);
+		title = cursor.getString(2);
+		artist = cursor.getString(3);
+		duration = cursor.getLong(4);
+	}
+
+	public Bitmap getCover(Context context) {
+		Bitmap cover = null;
+		File file = new File(path);
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			cover = Util.getArtworkImage(2, metadata);
+		} catch (Exception e) {
+			android.util.Log.d("log", "Exeption! Metadata is bad. " + e.getMessage());
+			return null;
+		}
+		return cover;
+	}
+	
+	@Override
+	public int compareTo(MusicData other) {
+		if (id > other.id) return 1;
+		else if (id < other.id) return -1;
+		else return 0;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%d %s", id, path);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object)	return true;
+		if (null == object) return false;
+		if (this.getClass() != object.getClass()) return false;
+		MusicData another = (MusicData) object;
+		if (this.id != another.id) return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) id;
+	}
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel parcel, int arg1) {
+		parcel.writeLong(id);
+		parcel.writeLong(duration);
+		parcel.writeString(path);
+		parcel.writeString(title);
+		parcel.writeString(artist);
+	}
+	
+	public static final Parcelable.Creator<MusicData> CREATOR = new Parcelable.Creator<MusicData>() {
+
+		@Override
+		public MusicData createFromParcel(Parcel source) {
+			return new MusicData(source);
+		}
+
+		@Override
+		public MusicData[] newArray(int size) {
+			return new MusicData[size];
+		}
+	};
+
+	public String getPath() {
+		return path;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public String getArtist() {
+		return artist;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public long getDuration() {
+		return duration;
+	}
+
+}
