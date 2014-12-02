@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
@@ -25,7 +24,7 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	protected abstract ViewHolder<T> createViewHolder(final View v);
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -44,19 +43,7 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	public static abstract class ViewHolder<T> {
-		protected abstract class ItemizedClickListener implements OnClickListener {
-			private T item;
-
-			public T getItem() {
-				return item;
-			}
-
-			public void setItem(T item) {
-				this.item = item;
-			}
-
-		}
-
+		
 		protected abstract void hold(T item);
 	}
 

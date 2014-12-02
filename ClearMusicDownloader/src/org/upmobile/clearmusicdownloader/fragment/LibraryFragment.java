@@ -51,12 +51,6 @@ public class LibraryFragment extends Fragment {
 		listView.setActionLayout(R.id.hidden_view);
 		listView.setItemLayout(R.id.front_layout);
 		listView.setIgnoredViewHandler(resideMenu);
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-			}
-		});
 	}
 
 	private void init() {
@@ -64,7 +58,6 @@ public class LibraryFragment extends Fragment {
 		adapter = new LibraryAdapter(getActivity(), org.upmobile.clearmusicdownloader.R.layout.library_item);
 		listView = (UISwipableList) parentView.findViewById(R.id.listView);
 	}
-	
 	
 	public ArrayList<MusicData> querySong() {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();

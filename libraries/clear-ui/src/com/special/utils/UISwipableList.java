@@ -247,7 +247,7 @@ public class UISwipableList extends ListView {
         }
     }
 
-    private void slideOutView(final View view, final int startPosition,
+    public void slideOutView(final View view, final int startPosition,
             final boolean slideLeft) {
         int toPosition = 0;
         if (slideLeft) {
