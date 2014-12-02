@@ -85,7 +85,6 @@ public class MusicApp extends Application {
 		FONT_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Regular.otf");
 		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
 	}
 	
 	public static SharedPreferences getSharedPreferences() {
