@@ -1355,6 +1355,7 @@ public final class MusicUtils {
         // in the media content domain, so update everything.
         context.getContentResolver().notifyChange(Uri.parse("content://media"), null);
         // Notify the lists to update
+        context.sendBroadcast(new Intent("action.update.mp3.music.player.us"));
         refresh();
     }
 }
