@@ -338,6 +338,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 		if (extraSearch != null) {
+			searchField.setText(extraSearch);
 			trySearch();
 			return view;
 		}
