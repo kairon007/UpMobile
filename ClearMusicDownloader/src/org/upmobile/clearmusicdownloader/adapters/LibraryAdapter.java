@@ -1,25 +1,33 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.special.utils.UICircularImage;
 
-public class LibraryAdapter extends BaseAdapter{
+public class LibraryAdapter extends BaseAdapter<MusicData> {
 
-	
-	private class LibraryViewHolder extends ViewHolder<Song> {
+	public LibraryAdapter(Context context, int resource) {
+		super(context, resource);
+	}
+
+	@Override
+	protected ViewHolder<MusicData> createViewHolder(View v) {
+		return new LibraryViewHolder(v);
+	}
+
+	private class LibraryViewHolder extends ViewHolder<MusicData> {
 		TextView title;
 		TextView artist;
 		TextView duration;
-		ProgressBar progress;
 		UICircularImage image;
+		ItemOnClickListener itemClickListener;
 
 		private View v;
 
@@ -28,27 +36,26 @@ public class LibraryAdapter extends BaseAdapter{
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
 			image = (UICircularImage) v.findViewById(R.id.item_image);
-			progress = (ProgressBar) v.findViewById(R.id.item_progress);
 			duration = (TextView) v.findViewById(R.id.item_duration);
 		}
 
 		@Override
-		protected void hold(Song item) {
-			title.setText(item.title);
-			artist.setText(item.artist);
+		protected void hold(MusicData item) {
+			itemClickListener = new ItemOnClickListener();
+			itemClickListener.setItem(item);
+			title.setText(item.getTitle());
+			artist.setText(item.getArtist());
 			image.setImageResource(R.drawable.fallback_cover);
-			progress.setProgress(75);
-			duration.setText(Util.getFormatedStrDuration(item.duration));
+			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
+		}
+		
+		private class ItemOnClickListener extends ItemizedClickListener {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+			}
+			
 		}
 	}
-
-	public LibraryAdapter(Context context, int resource) {
-		super(context, resource);
-	}
-
-	@Override
-	protected ViewHolder<Song> createViewHolder(View v) {
-		return new LibraryViewHolder(v);
-	}
-
 }

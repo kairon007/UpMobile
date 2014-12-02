@@ -1,15 +1,16 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
-import org.upmobile.clearmusicdownloader.adapters.DownloadsAdapter;
+import java.util.ArrayList;
 
-import ru.johnlife.lifetoolsmp3.song.Song;
+import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
+import org.upmobile.clearmusicdownloader.data.MusicData;
 
-import com.special.BaseClearActivity;
-import com.special.R;
-import com.special.menu.ResideMenu;
-import com.special.utils.UISwipableList;
-
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,41 +18,73 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.special.BaseClearActivity;
+import com.special.R;
+import com.special.menu.ResideMenu;
+import com.special.utils.UISwipableList;
+
 public class LibraryFragment extends Fragment {
 
-	// Views & Widgets
 	private View parentView;
 	private UISwipableList listView;
-	private DownloadsAdapter mAdapter;
+	private LibraryAdapter adapter;
 	private ResideMenu resideMenu;
+	// it is condition for query of array
+	private String folderFilter;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle state) {
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
-		listView = (UISwipableList) parentView.findViewById(R.id.listView);
 		BaseClearActivity parentActivity = (BaseClearActivity) getActivity();
 		resideMenu = parentActivity.getResideMenu();
-		initView();
+		init();
+		settingListView();
+		ArrayList<MusicData> srcList = querySong();
+		if (!srcList.isEmpty()) {
+			adapter.addAll(srcList);
+			listView.setAdapter(adapter);
+		}
 		return parentView;
 	}
 
-	private void initView() {
-		mAdapter = new DownloadsAdapter(getActivity(), org.upmobile.clearmusicdownloader.R.layout.library_item);
+	private void settingListView() {
 		listView.setActionLayout(R.id.hidden_view);
 		listView.setItemLayout(R.id.front_layout);
-		listView.setAdapter(mAdapter);
 		listView.setIgnoredViewHandler(resideMenu);
-		// Test item for test view. Will be removed after create serach view.
-		Song song = new Song(0);
-		song.artist = "artistname";
-		song.title = "titlename";
-		mAdapter.add(song);
-		// end
 		listView.setOnItemClickListener(new OnItemClickListener() {
+			
 			@Override
-			public void onItemClick(AdapterView<?> adapterView, View viewa, int i, long l) {
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 			}
 		});
 	}
 
+	private void init() {
+		folderFilter = Environment.getExternalStorageDirectory() +"/MusicDownloader/";//it's temporary solution
+		adapter = new LibraryAdapter(getActivity(), org.upmobile.clearmusicdownloader.R.layout.library_item);
+		listView = (UISwipableList) parentView.findViewById(R.id.listView);
+	}
+	
+	
+	public ArrayList<MusicData> querySong() {
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		Cursor cursor = buildQuery(getActivity().getContentResolver());
+		if (!cursor.moveToFirst()) {
+			return new ArrayList<MusicData>();
+		}
+		while (cursor.moveToNext()) {
+			MusicData data = new MusicData();
+			data.populate(cursor);	
+			result.add(data);
+		}
+		cursor.close();
+		return result;
+	}
+	
+	public Cursor buildQuery(ContentResolver resolver) {
+		String selection =  MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%'" ;
+		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+		return cursor;
+	}
+	
 }
