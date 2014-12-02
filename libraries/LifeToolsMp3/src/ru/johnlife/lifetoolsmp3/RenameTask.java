@@ -94,13 +94,14 @@ public class RenameTask {
 				error();
 				return;
 			}
-			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist, title));
+			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist.replaceAll("/", "-"), title.replaceAll("/", "-")));
 			if (file.renameTo(newFile)) {
 				new MyID3().update(newFile, src_set, metadata);
+				success();
 			} else {
+				error();
 				newFile.delete();
 			}
-			success();
 		} catch (Exception e) {
 			Log.d(getClass().getSimpleName(), e.getMessage());
 		}
