@@ -68,10 +68,6 @@ public class SearchView  extends OnlineSearchView {
 			if (MusicDownloaderApp.getService().containsPlayer()) {
 				MusicDownloaderApp.getService().getPlayer().setNewName(data.getSongArtist(), data.getSongTitle(), true);
 			}
-			if (null != SearchView.this.alertProgressDialog && SearchView.this.alertProgressDialog.isShowing()) {
-				SearchView.this.alertProgressDialog.dismiss();
-				song.cancelTasks();
-			}
 			showProgressDialog(view, song, position);
 			((MainActivity) activity).stopPlayer();
 			song.getDownloadUrl(new DownloadUrlListener() {

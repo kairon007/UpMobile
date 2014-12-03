@@ -724,6 +724,10 @@ public abstract class OnlineSearchView extends View {
 		}
 		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
 		downloadSong = (RemoteSong) resultAdapter.getItem(position);
+		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
+			alertProgressDialog.dismiss();
+			downloadSong.cancelTasks();
+		}
 		if (view.getId() != R.id.btnDownload) {
 			stopSystemPlayer(getContext());
 			showProgressDialog(view, downloadSong, position);
