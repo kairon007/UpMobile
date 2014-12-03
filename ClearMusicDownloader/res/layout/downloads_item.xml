@@ -82,9 +82,7 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
-                android:indeterminate="true"
-                android:progressDrawable="@drawable/progress" />
+                android:paddingRight="5dp"></ProgressBar>
         </LinearLayout>
 
     </LinearLayout>

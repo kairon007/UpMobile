@@ -28,6 +28,7 @@ public class MusicData implements Comparable<MusicData>, Parcelable{
 	private String artist;
 	private long id;
 	private long duration;
+	private int progress;
 	
 	public MusicData() {
 		
@@ -46,6 +47,7 @@ public class MusicData implements Comparable<MusicData>, Parcelable{
 		path = parcel.readString();
 		title = parcel.readString();
 		artist = parcel.readString();
+		progress = parcel.readInt();
 	}
 
 	public void populate(Cursor cursor) {
@@ -109,6 +111,7 @@ public class MusicData implements Comparable<MusicData>, Parcelable{
 		parcel.writeString(path);
 		parcel.writeString(title);
 		parcel.writeString(artist);
+		parcel.writeInt(progress);
 	}
 	
 	public static final Parcelable.Creator<MusicData> CREATOR = new Parcelable.Creator<MusicData>() {
@@ -127,7 +130,7 @@ public class MusicData implements Comparable<MusicData>, Parcelable{
 	public String getPath() {
 		return path;
 	}
-
+	
 	public String getTitle() {
 		return title;
 	}
@@ -142,6 +145,18 @@ public class MusicData implements Comparable<MusicData>, Parcelable{
 
 	public long getDuration() {
 		return duration;
+	}
+		
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public int getProgress() {
+		return progress;
+	}
+
+	public void setProgress(int progress) {
+		this.progress = progress;
 	}
 
 }

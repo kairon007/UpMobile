@@ -1,9 +1,10 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.Song;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,10 +12,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.special.utils.UICircularImage;
+import com.special.utils.UISwipableList;
 
 public class DownloadsAdapter extends BaseAdapter {
 
-	private class DownloadsViewHolder extends ViewHolder<Song> {
+	private class DownloadsViewHolder extends ViewHolder<MusicData> {
 		TextView title;
 		TextView artist;
 		TextView duration;
@@ -23,7 +25,7 @@ public class DownloadsAdapter extends BaseAdapter {
 		UICircularImage image;
 
 		private View v;
-		private Song item;
+		private MusicData item;
 
 		public DownloadsViewHolder(View v) {
 			this.v = v;
@@ -37,18 +39,23 @@ public class DownloadsAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View v) {
+					cancelDownload(item.getId());
+//					v.findViewById(R.id.hidden_view).setVisibility(View.GONE);
+//					int startPosition = 0 - v.getContext().getResources().getDimensionPixelSize(R.dimen.swipe_size);
+//					((UISwipableList) v.getParent()).slideOutView(v.findViewById(R.id.front_layout), startPosition, false);
 					remove(item);
 				}
 			});
 		}
 
 		@Override
-		protected void hold(Song item) {
+		protected void hold(MusicData item) {
 			this.item = item;
-			title.setText(item.title);
-			artist.setText(item.artist);
+			title.setText(item.getTitle());
+			artist.setText(item.getArtist());
 			image.setImageResource(R.drawable.fallback_cover);
-			duration.setText(Util.getFormatedStrDuration(item.duration));
+			progress.setProgress(item.getProgress());
+			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
 		}
 	}
 
@@ -57,7 +64,12 @@ public class DownloadsAdapter extends BaseAdapter {
 	}
 
 	@Override
-	protected ViewHolder<Song> createViewHolder(View v) {
+	protected ViewHolder<MusicData> createViewHolder(View v) {
 		return new DownloadsViewHolder(v);
+	}
+
+	private void cancelDownload(long id) {
+		DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+		manager.remove(id);
 	}
 }
