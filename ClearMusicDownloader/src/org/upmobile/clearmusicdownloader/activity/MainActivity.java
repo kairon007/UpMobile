@@ -29,7 +29,7 @@ public class MainActivity extends BaseClearActivity {
 		items[0] = new ResideMenuItem(this, R.drawable.ic_search, R.string.navigation_search);
 		items[1] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.navigation_downloads);
 		items[2] = new ResideMenuItem(this, R.drawable.ic_library, R.string.navigation_library);
-		items[3] = new ResideMenuItem(this, R.drawable.ic_player, R.string.now_playing);
+		items[3] = new ResideMenuItem(this, R.drawable.ic_player, R.string.navigation_player);
 		return items;
 	}
 }
