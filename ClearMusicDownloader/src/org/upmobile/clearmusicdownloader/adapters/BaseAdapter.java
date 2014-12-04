@@ -42,13 +42,11 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 				@Override
 				public void onSwipeVisible(int pos) {
 					onItemSwipeVisible(pos);
-//					getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
 				}
 
 				@Override
 				public void onSwipeGone(int pos) {
 					onItemSwipeGone(pos);
-//					getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
 				}
 			});
 		}
@@ -62,7 +60,7 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		} else {
 			h = (BaseAdapter.ViewHolder<T>) v.getTag();
 		}
-		h.hold(item);
+		h.hold(item, position);
 		v.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
@@ -76,7 +74,7 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	
 	public static abstract class ViewHolder<T> {
 		
-		protected abstract void hold(T item);
+		protected abstract void hold(T item, int position);
 
 	}
 }

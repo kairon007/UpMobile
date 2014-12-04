@@ -4,7 +4,10 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -16,9 +19,15 @@ import com.special.utils.UISwipableList;
 import com.special.utils.UISwipableList.OnSwipableListener;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
+	
+	private final Drawable BTN_PLAY;
+	private final Drawable BTN_PAUSE;
+	private int currentPlayPosition; 
 
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
+		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
+		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 	}
 
 	@Override
@@ -38,17 +47,19 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	private class LibraryViewHolder extends ViewHolder<MusicData> {
 		
+		private MusicData item;
 		private View view;
-		private ImageView button;
+		private View button;
 		private TextView title;
 		private TextView artist;
 		private TextView duration;
 		private TextView cancel;
 		private UICircularImage image;
+		private int onClickPosition;
 
 		public LibraryViewHolder(View v) {
 			view = v;
-			button = (ImageView) v.findViewById(R.id.item_play);
+			button = (View) v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
 			image = (UICircularImage) v.findViewById(R.id.item_image);
@@ -57,7 +68,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 
 		@Override
-		protected void hold(final MusicData item) {
+		protected void hold(MusicData item, int position) {
+			this.item = item;
+			onClickPosition = position;
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			if (!item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.VISIBLE) {
@@ -70,13 +83,52 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				box.setX(startPosition);
 				cancel.setVisibility(View.VISIBLE);
 			}
+			if (item.check(MusicData.MODE_PLAYING)) {
+				setButtonBackground(BTN_PAUSE);
+			} else {
+				setButtonBackground(BTN_PLAY);
+			}
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
 			image.setImageResource(R.drawable.fallback_cover);
+			setListener();
+		}
+
+		@SuppressLint("NewApi")
+		private void setButtonBackground(Drawable drawable) {
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN){
+				button.setBackgroundDrawable(drawable);
+			} else {
+				button.setBackground(drawable);
+			}
+		}
+
+		private void setListener() {
+			button.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if (item.check(MusicData.MODE_PLAYING)) {
+						item.turnOff(MusicData.MODE_PLAYING);
+						setButtonBackground(BTN_PLAY);
+					} else {
+						if (currentPlayPosition == onClickPosition) {
+							item.turnOff(MusicData.MODE_PLAYING);
+							setButtonBackground(BTN_PAUSE);
+						} else {
+							getItem(currentPlayPosition).turnOff(MusicData.MODE_PLAYING);
+							notifyDataSetChanged();
+						}
+						currentPlayPosition = onClickPosition;
+						item.turnOn(MusicData.MODE_PLAYING);
+						setButtonBackground(BTN_PAUSE);
+					}
+				}
+			});
 			cancel.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-//					item.reset(v.getContext()); it's template solution
+//<--it's template solution		item.reset(v.getContext()); 
 					remove(item);
 				}
 			});

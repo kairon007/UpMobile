@@ -49,7 +49,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		}
 
 		@Override
-		protected void hold(MusicData item) {
+		protected void hold(MusicData item, int position) {
 			this.item = item;
 			if (!item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.VISIBLE) {
 				cancel.setVisibility(View.GONE);
