@@ -520,7 +520,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						output.close();
 						input.close();
 						buffer.close();
-						sendNotification(0, true);
+						if (file.delete()){
+							sendNotification(0, true);
+						}
 						return;
 					}
 					output.write(bBuffer, 0, current);
