@@ -69,6 +69,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private long progress = 0;
 	private boolean useAlbumCover = true;
 	private RefreshListener listener;
+	protected boolean interrupted = false;
+	private CanceledCallback cancelDownload = new CanceledCallback() {
+		@Override
+		public void cancel() {
+			interrupted = true;
+		}
+	};
 
 	protected DownloadClickListener(Context context, RemoteSong song, RefreshListener listener, int id) {
 		this.context = context;
@@ -113,6 +120,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				}
 			});
 		}
+		setCanceledListener(id, cancelDownload);
 		if (isCached)  {
 			return;
 		}
@@ -429,14 +437,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private final int idDownload;
 		private String url;
 		private String filePath;
-		private boolean interrupted = false;
-		private CanceledCallback cancelDownload = new CanceledCallback() {
-			
-			@Override
-			public void cancel() {
-				interrupted = true;
-			}
-		};
 
 		public DownloadSongTask(RemoteSong song, boolean useCover, String url, String filePath, int idDownload) {
 			this.url = url;
@@ -514,7 +514,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				buffer = new BufferedInputStream(input);
 				byte[] bBuffer = new byte[10240];
 				int i = 0;
-				setCanceledListener(idDownload, cancelDownload);
 				notifyDuringDownload(idDownload, 3);
 				while ((current = buffer.read(bBuffer)) != -1) {
 					if (interrupted) {
