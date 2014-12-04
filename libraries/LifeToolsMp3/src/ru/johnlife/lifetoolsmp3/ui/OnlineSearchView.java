@@ -713,6 +713,11 @@ public abstract class OnlineSearchView extends View {
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
+		downloadSong = (RemoteSong) resultAdapter.getItem(position);
+		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
+			alertProgressDialog.dismiss();
+			downloadSong.cancelTasks();
+		}
 		if (!showFullElement()) {
 			click(view, position);
 			return;
@@ -723,11 +728,6 @@ public abstract class OnlineSearchView extends View {
 			listViewImage = ((BitmapDrawable) draw).getBitmap();
 		}
 		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
-		downloadSong = (RemoteSong) resultAdapter.getItem(position);
-		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
-			alertProgressDialog.dismiss();
-			downloadSong.cancelTasks();
-		}
 		if (view.getId() != R.id.btnDownload) {
 			stopSystemPlayer(getContext());
 			showProgressDialog(view, downloadSong, position);
