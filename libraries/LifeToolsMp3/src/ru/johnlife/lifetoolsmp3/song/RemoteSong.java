@@ -206,4 +206,9 @@ public class RemoteSong extends Song implements Cloneable {
 		}
 		return null;
 	}
+	
+	@Override
+	public int describeContents() {
+		return 1;
+	}
 }
