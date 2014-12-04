@@ -22,8 +22,18 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	}
 
 	@Override
-	protected ViewHolder<MusicData> createViewHolder(View v, int position) {
-		return new LibraryViewHolder(v, position);
+	protected ViewHolder<MusicData> createViewHolder(View v) {
+		return new LibraryViewHolder(v);
+	}
+	
+	@Override
+	protected void onItemSwipeVisible(int pos) {
+		getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
+	}
+
+	@Override
+	protected void onItemSwipeGone(int pos) {
+		getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
 	}
 	
 	private class LibraryViewHolder extends ViewHolder<MusicData> {
@@ -36,20 +46,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		private TextView cancel;
 		private UICircularImage image;
 
-		public LibraryViewHolder(View v, int position) {
+		public LibraryViewHolder(View v) {
 			view = v;
-			((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
-
-				@Override
-				public void onSwipeVisible(int pos) {
-					getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
-				}
-
-				@Override
-				public void onSwipeGone(int pos) {
-					getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
-				}
-			});
 			button = (ImageView) v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);

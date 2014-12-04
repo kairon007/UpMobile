@@ -7,14 +7,14 @@ import ru.johnlife.lifetoolsmp3.Util;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.special.utils.UICircularImage;
-import com.special.utils.UISwipableList;
 
-public class DownloadsAdapter extends BaseAdapter {
+public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 	private class DownloadsViewHolder extends ViewHolder<MusicData> {
 		TextView title;
@@ -51,6 +51,16 @@ public class DownloadsAdapter extends BaseAdapter {
 		@Override
 		protected void hold(MusicData item) {
 			this.item = item;
+			if (!item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.VISIBLE) {
+				cancel.setVisibility(View.GONE);
+				ViewGroup box = (ViewGroup) v.findViewById(R.id.front_layout);
+				box.setX(0);
+			} else if (item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.GONE){
+				ViewGroup box = (ViewGroup) v.findViewById(R.id.front_layout);
+				int startPosition = 0 - parent.getContext().getResources().getDimensionPixelSize(R.dimen.swipe_size);
+				box.setX(startPosition);
+				cancel.setVisibility(View.VISIBLE);
+			}
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			image.setImageResource(R.drawable.fallback_cover);
@@ -64,8 +74,18 @@ public class DownloadsAdapter extends BaseAdapter {
 	}
 
 	@Override
-	protected ViewHolder<MusicData> createViewHolder(View v, int position) {
+	protected ViewHolder<MusicData> createViewHolder(View v) {
 		return new DownloadsViewHolder(v);
+	}
+	
+	@Override
+	protected void onItemSwipeVisible(int pos) {
+		getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
+	}
+
+	@Override
+	protected void onItemSwipeGone(int pos) {
+		getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
 	}
 
 	private void cancelDownload(long id) {
