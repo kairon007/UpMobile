@@ -7,6 +7,7 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -23,9 +24,13 @@ public class MusicData implements Comparable<MusicData>, Parcelable{
 		MediaStore.Audio.Media.ARTIST,
 		MediaStore.Audio.Media.DURATION,
 	};
+	public static final int MODE_VISIBLITY = 0x00000001;
+	public static final int MODE_PLAYING = 0x00000002;
+	private Object tag;
 	private String path;
 	private String title;
 	private String artist;
+	private int mode;
 	private long id;
 	private long duration;
 	private int progress;
@@ -56,6 +61,22 @@ public class MusicData implements Comparable<MusicData>, Parcelable{
 		title = cursor.getString(2);
 		artist = cursor.getString(3);
 		duration = cursor.getLong(4);
+	}
+	
+	public void reset(final Context context) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				ContentResolver resolver = context.getContentResolver();
+				String where = MediaStore.Audio.Media._ID + "=" + id;
+				resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, where, null);
+				File file = new File(path);
+				if (file.exists()) file.delete();
+				else android.util.Log.i(getClass().getCanonicalName(), "Attention! File "+ artist + " - " + title + ".mp3 " + " doesn't exist");
+			}
+			
+		}).start();
 	}
 
 	public Bitmap getCover(Context context) {
@@ -126,11 +147,42 @@ public class MusicData implements Comparable<MusicData>, Parcelable{
 			return new MusicData[size];
 		}
 	};
+	
+	public void turnOff(int flag) {
+		setFlag(flag, false);
+	}
+	
+	public void turnOn(int flag) {
+		setFlag(flag, true);
+	}
+	
+	public boolean check(int flag) {
+		int buf =  mode;
+		boolean result  = (buf & flag) == flag;
+		return result;  
+	}
+	
+	private void setFlag(int flag, boolean onOff) {
+		if ((check(flag) && onOff) || (!check(flag) && !onOff)) return;
+		if (onOff) {
+			mode |= flag;
+		} else {
+			mode ^= flag;
+		}
+	}
+	
+	public Object getTag() {
+		return tag;
+	}
+
+	public void setTag(Object tag) {
+		this.tag = tag;
+	}
 
 	public String getPath() {
 		return path;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}

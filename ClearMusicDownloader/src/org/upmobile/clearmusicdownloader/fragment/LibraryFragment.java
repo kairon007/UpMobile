@@ -59,7 +59,7 @@ public class LibraryFragment extends Fragment {
 		listView = (UISwipableList) parentView.findViewById(R.id.listView);
 	}
 	
-	public ArrayList<MusicData> querySong() {
+	private ArrayList<MusicData> querySong() {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		Cursor cursor = buildQuery(getActivity().getContentResolver());
 		if (!cursor.moveToFirst()) {
@@ -74,7 +74,7 @@ public class LibraryFragment extends Fragment {
 		return result;
 	}
 	
-	public Cursor buildQuery(ContentResolver resolver) {
+	private Cursor buildQuery(ContentResolver resolver) {
 		String selection =  MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%'" ;
 		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		return cursor;

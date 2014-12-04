@@ -16,12 +16,6 @@
  */
 package com.special.utils;
 
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.Animator;
-import com.special.menu.ResideMenu;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
@@ -34,8 +28,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.view.ViewHelper;
+import com.special.menu.ResideMenu;
+
 public class UISwipableList extends ListView {
 
+	
+	private OnSwipableListener swipableListener;
 	//Layouts
     private int mFrontLayout;
     private int mHiddenLayout;
@@ -50,26 +52,32 @@ public class UISwipableList extends ListView {
     private boolean mSwiping = false;
     private float mFirstX;
     private float mFirstY;
+    private int selectedPosition;
     
-    private Context mContext;
+    
+    public interface OnSwipableListener {
+    	
+    	public void onSwipeGone(int position);
+    	public void onSwipeVisible(int position);
+    	
+    }
 
     public UISwipableList(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public UISwipableList(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public UISwipableList(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
+        init();
     }
 
-    private void init(Context context) {
-    	mContext = context;
+    private void init() {
         setOnScrollListener(UISwipeScrollListener());
     }
     
@@ -79,7 +87,7 @@ public class UISwipableList extends ListView {
 
     public void setItemLayout(int frontLayout) {
         mFrontLayout = frontLayout;
-    }
+    }	
 
     public void setActionLayout(int hiddenLayout) {
         mHiddenLayout = hiddenLayout;
@@ -169,7 +177,6 @@ public class UISwipableList extends ListView {
     @SuppressLint({ "ClickableViewAccessibility", "Recycle" })
 	@Override
     public boolean onTouchEvent(MotionEvent ev) {
-
         switch (ev.getActionMasked()) {
         case MotionEvent.ACTION_DOWN:
         case MotionEvent.ACTION_UP:
@@ -179,13 +186,13 @@ public class UISwipableList extends ListView {
             if (mSwipePaused) {
                 break;
             }
-
             float deltaX = ev.getRawX() - mDownX;
             float lastY = ev.getY();
             float deltaY = lastY - mFirstY;
             boolean swipeLeft = false;
             if (isSwipeHorizontal(deltaX, deltaY)
                     && isSwipeDirectionLeft(deltaX) && !mHiddenView.isEnabled()) {
+            	if(null != swipableListener) swipableListener.onSwipeVisible(selectedPosition);
                 ViewParent parent = getParent();
                 if (parent != null) {
                     parent.requestDisallowInterceptTouchEvent(true);
@@ -203,6 +210,7 @@ public class UISwipableList extends ListView {
                 }
             } else if (isSwipeHorizontal(deltaX, deltaY)
                     && Math.abs(deltaX) > mSwipeMin) {
+            	if(null != swipableListener) swipableListener.onSwipeGone(selectedPosition);
                 mSwiping = true;
                 swipeLeft = false;
                 requestDisallowInterceptTouchEvent(true);
@@ -254,7 +262,7 @@ public class UISwipableList extends ListView {
             if (mHiddenView != null) {
                 toPosition = -1 * mHiddenView.getMeasuredWidth();
                 mHiddenView.setVisibility(View.VISIBLE);
-                Animation animFadeIn = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+                Animation animFadeIn = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
                 mHiddenView.setAnimation(animFadeIn);
             }
         } else {
@@ -268,7 +276,7 @@ public class UISwipableList extends ListView {
             public void onAnimationStart(Animator animation) {
                 if (mHiddenView != null) {
                     if (!slideLeft) {
-                        Animation animFadeOut = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_out);
+                        Animation animFadeOut = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out);
                         mHiddenView.setAnimation(animFadeOut);
                         mHiddenView.setVisibility(View.GONE);
                     }
@@ -306,5 +314,18 @@ public class UISwipableList extends ListView {
     }
     
     View currentlyStickingView;
+    
+    public void setOnSwipableListener(OnSwipableListener swipableListener) {
+		this.swipableListener = swipableListener;
+	}
+    
 
+	public int getSelectedPosition() {
+		return selectedPosition;
+	}
+
+	public void setSelectedPosition(int selectedPosition) {
+		this.selectedPosition = selectedPosition;
+	}
+    
 }

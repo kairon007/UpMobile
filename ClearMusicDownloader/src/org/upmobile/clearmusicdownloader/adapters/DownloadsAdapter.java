@@ -64,7 +64,7 @@ public class DownloadsAdapter extends BaseAdapter {
 	}
 
 	@Override
-	protected ViewHolder<MusicData> createViewHolder(View v) {
+	protected ViewHolder<MusicData> createViewHolder(View v, int position) {
 		return new DownloadsViewHolder(v);
 	}
 
