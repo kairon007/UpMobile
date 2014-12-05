@@ -1,17 +1,13 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
-import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
-import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;

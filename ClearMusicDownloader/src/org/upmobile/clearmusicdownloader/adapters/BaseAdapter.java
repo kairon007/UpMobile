@@ -34,23 +34,9 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public View getView(final int position, View convertView, ViewGroup p) {
-		if (null == parent) {
-			parent = p;
-			((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
-
-				@Override
-				public void onSwipeVisible(int pos) {
-					onItemSwipeVisible(pos);
-				}
-
-				@Override
-				public void onSwipeGone(int pos) {
-					onItemSwipeGone(pos);
-				}
-			});
-		}
+	public View getView(int position, View convertView, ViewGroup p) {
 		View v = convertView;
+		setListener(p, v, position);
 		BaseAdapter.ViewHolder<T> h;
 		T item = getItem(position);
 		if (v == null) {
@@ -61,6 +47,25 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 			h = (BaseAdapter.ViewHolder<T>) v.getTag();
 		}
 		h.hold(item, position);
+		return v;
+	}
+
+	private void setListener(ViewGroup p, View v, final int position) {
+		if (null == parent) {
+			parent = p;
+		}
+		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
+
+			@Override
+			public void onSwipeVisible(int pos) {
+				onItemSwipeVisible(pos);
+			}
+
+			@Override
+			public void onSwipeGone(int pos) {
+				onItemSwipeGone(pos);
+			}
+		});
 		v.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
@@ -69,7 +74,6 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
   				return true;
 			}
 		});
-		return v;
 	}
 	
 	public static abstract class ViewHolder<T> {
