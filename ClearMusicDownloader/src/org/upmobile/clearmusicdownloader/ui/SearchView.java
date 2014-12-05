@@ -69,4 +69,9 @@ public class SearchView extends OnlineSearchView {
 	protected boolean showFullElement() {
 		return false;
 	}
+	
+	@Override
+	protected boolean showDownloadButton() {
+		return false;
+	}
 }

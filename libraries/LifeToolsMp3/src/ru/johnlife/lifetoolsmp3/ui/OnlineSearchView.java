@@ -206,6 +206,10 @@ public abstract class OnlineSearchView extends View {
 	protected boolean showFullElement() {
 		return true;
 	}
+	
+	protected boolean showDownloadButton() {
+		return showFullElement() ? false : true;
+	}
 
 	protected void click(View view, int position) {
 
@@ -548,7 +552,7 @@ public abstract class OnlineSearchView extends View {
 					.setLine2(song.getArtist())
 					.setId(position)
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : R.drawable.fallback_cover)
-					.setButtonVisible(showFullElement() ? false : true);
+					.setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
 					@Override
