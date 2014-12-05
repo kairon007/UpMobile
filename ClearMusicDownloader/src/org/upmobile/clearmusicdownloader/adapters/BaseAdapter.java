@@ -36,7 +36,6 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {
 		View v = convertView;
-		setListener(p, v, position);
 		BaseAdapter.ViewHolder<T> h;
 		T item = getItem(position);
 		if (v == null) {
@@ -46,6 +45,7 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		} else {
 			h = (BaseAdapter.ViewHolder<T>) v.getTag();
 		}
+		setListener(p, v, position);
 		h.hold(item, position);
 		return v;
 	}
