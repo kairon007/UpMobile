@@ -30,7 +30,6 @@ public class DownloadsFragment extends Fragment {
 	private UISwipableList listView;
 	private DownloadsAdapter mAdapter;
 	private ResideMenu resideMenu;
-	private ArrayList<MusicData> downloadableSongs;
 	private DownloadManager manager;
 	private Timer timer;
 	private Updater updater;
@@ -49,7 +48,6 @@ public class DownloadsFragment extends Fragment {
 	}
 
 	private void initView() {
-		downloadableSongs = new ArrayList<MusicData>();
 		activity = (MainActivity) getActivity();
 		mAdapter = new DownloadsAdapter(getActivity(), org.upmobile.clearmusicdownloader.R.layout.downloads_item);
 		listView.setActionLayout(R.id.hidden_view);
@@ -90,54 +88,41 @@ public class DownloadsFragment extends Fragment {
 			}
 			timer.schedule(updater, 100, 1000);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		updateAdapter(downloadableSongs);
 	}
 
 	private void updateList(Cursor c) {
 		while (c.moveToNext()) {
-			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c
-					.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
-			if (null != c.getString(14) && c.getString(14).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) && !downloadableSongs.contains(song)) {
-				if (downloadableSongs.size() == 0) {
-					downloadableSongs.add(song);
+			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
+			if (null != c.getString(14) && c.getString(14).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
+				if (mAdapter.getCount() == 0) {
+					addItem(song);
 				}
-				for (int i = 0; i < downloadableSongs.size(); i++) {
-					if (downloadableSongs.get(i).getId() != song.getId()) {
-						downloadableSongs.add(song);
-					}
+				ArrayList<MusicData> chek = new ArrayList<MusicData>();
+				for (int i = 0; i < mAdapter.getCount(); i++) {
+					chek.add((MusicData) mAdapter.getItem(i));
+				}
+				if (!chek.contains(song)) {
+					addItem(song);
 				}
 			}
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void updateAdapter(ArrayList<MusicData> downloadableSongs) {
-		if (null != downloadableSongs && !downloadableSongs.isEmpty()) {
-			for (final MusicData song : downloadableSongs) {
-				activity.runOnUiThread(new Runnable() {
+	private void addItem(final MusicData song) {
+		activity.runOnUiThread(new Runnable() {
 
-					@Override
-					public void run() {
-						if (mAdapter.getCount() == 0) {
-							mAdapter.add(song);
-						}
-						ArrayList<MusicData> chek = new ArrayList<MusicData>();
-						for (int i = 0; i < mAdapter.getCount(); i++) {
-							chek.add((MusicData) mAdapter.getItem(i));
-						}
-						if (!chek.contains(song)) {
-							mAdapter.add(song);
-						}
-					}
-				});
+			@Override
+			public void run() {
+				mAdapter.add(song);
+				mAdapter.notifyDataSetChanged();
 			}
-		}
+		});
 	}
 
 	private class Updater extends TimerTask {
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void run() {
 			checkDownloads();
@@ -168,7 +153,7 @@ public class DownloadsFragment extends Fragment {
 			checkFinished();
 			reDrawAdapter();
 		}
-
+		
 		private void reDrawAdapter() {
 			activity.runOnUiThread(new Runnable() {
 
@@ -179,7 +164,6 @@ public class DownloadsFragment extends Fragment {
 			});
 		}
 
-		@SuppressWarnings("unchecked")
 		private void checkFinished() {
 			Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 			while (c.moveToNext()) {
@@ -207,12 +191,8 @@ public class DownloadsFragment extends Fragment {
 		private void removeItem(final int position) {
 			activity.runOnUiThread(new Runnable() {
 
-				@SuppressWarnings("unchecked")
 				@Override
 				public void run() {
-					if (downloadableSongs.contains(((MusicData) mAdapter.getItem(position)))) {
-						downloadableSongs.remove(((MusicData) mAdapter.getItem(position)));
-					}
 					mAdapter.remove(mAdapter.getItem(position));
 					mAdapter.notifyDataSetChanged();
 				}
