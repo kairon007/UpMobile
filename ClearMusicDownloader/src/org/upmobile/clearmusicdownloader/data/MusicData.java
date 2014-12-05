@@ -7,6 +7,7 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,7 +16,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
-public class MusicData implements Comparable<MusicData>, Parcelable{
+public class MusicData implements Comparable<MusicData>, Parcelable, AbstractSong{
 
 	public static final String[] FILLED_PROJECTION = {
 		MediaStore.Audio.Media._ID,

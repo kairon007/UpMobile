@@ -40,7 +40,7 @@ import android.provider.MediaStore;
  * Represents a Song backed by the MediaStore. Includes basic metadata and
  * utilities to retrieve songs from the MediaStore.
  */
-public class Song implements Comparable<Song>, Parcelable {
+public class Song implements Comparable<Song>, Parcelable, AbstractSong {
 	/**
 	 * Indicates that this song was randomly selected from all songs.
 	 */
@@ -195,8 +195,7 @@ public class Song implements Comparable<Song>, Parcelable {
 	 * @param song The Song to get the id from.
 	 * @return The id, or 0 if the given song is null.
 	 */
-	public long getId()
-	{
+	public long getId() {
 		return id;
 	}
 
@@ -258,6 +257,11 @@ public class Song implements Comparable<Song>, Parcelable {
 	public long getDuration() {
 		return duration;
 	}
+	
+	@Override
+	public String getPath() {
+		return path;
+	}
 
 //	public Bitmap getSongCover() {
 //		return songBmp;
@@ -300,5 +304,6 @@ public class Song implements Comparable<Song>, Parcelable {
 		duration= parcel.readLong();
 		trackNumber= parcel.readInt();
 	}
+
 
 }

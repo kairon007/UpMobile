@@ -1,7 +1,10 @@
 package org.upmobile.clearmusicdownloader.service;
 
+import java.util.ArrayList;
+
 import org.upmobile.clearmusicdownloader.Constants;
 
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -20,21 +23,28 @@ import android.os.Process;
 
 public class PlayerService extends Service implements OnCompletionListener, OnErrorListener, OnPreparedListener, Handler.Callback {
 	
-	/**
-	 * Object used for Player service startup waiting.
-	 */
+	//constants
+	public static final int CURRENT_SONG = -1;
+	private static final int MODE_PLAYING = 0x00000001;	
+	private static final int MODE_PREPARED = 0x00000002;	
+	
+	//multy-threading
 	private static final Object wait = new Object();
-	/**
-	 * The appplication-wide instance of the Player service.
-	 */
-	public static PlayerService instance;
-	private byte playerState;
-	private MediaPlayer player;
+	private final Object lock = new Object(); 
 	private Looper looper;
 	private Handler handler;
-	private String path;
-	private boolean prepared;
-	private boolean isPrepared = false;
+	
+	//instance
+	public static PlayerService instance;
+	private MediaPlayer player;
+	
+	
+	private ArrayList<AbstractSong> queue;
+//	private String path;
+	private int mode;
+	private AbstractSong current;
+	
+	private boolean isPrepared;
 	private boolean isComplete = false;
 	
 	
@@ -59,7 +69,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	/**
 	 * Returns true if a Player service instance is active.
 	 */
-	
 	public static boolean hasInstance()	{
 		return instance != null;
 	}
@@ -91,25 +100,31 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
 		case Constants.MSG_PLAY:
-			if (!prepared) {
-				try {
-					Uri uri = Uri.parse((String) msg.obj);
-					player.setDataSource(this, uri);
-					player.prepare();
-					prepared = true;
-					player.start();
-				} catch (Exception e) {
-					android.util.Log.d("log", "!!!!!!!!!!!!!!!!!!!!!!!!Appear problem: " + e);
-					return false;
-				}
-			} else {
+			try {
+				Uri uri = Uri.parse((String) msg.obj);
+				player.setDataSource(this, uri);
+				player.prepare();
 				player.start();
+			} catch (Exception e) {
+				android.util.Log.d("log", "Appear problem: " + e);
+				return false;
 			}
 			break;
+			
+		case Constants.MSG_PLAY_CURRENT:
+			player.start();
+			
 		case Constants.MSG_PAUSE:
 				player.pause();
 			break;
 
+		case Constants.MSG_NEXT :
+			
+			break;
+			
+		case Constants.MSG_PREVIOUS:
+			
+			break;
 		default:
 			break;
 		}
@@ -118,53 +133,48 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public void pause() {
-		Message message = new Message();
-		message.what = Constants.MSG_PAUSE;
-		handler.sendMessage(message);
-	}
-	
-	public void play(String path) {
-		Message message = new Message();
-		message.obj = path;
-		message.what = Constants.MSG_PLAY;
-		handler.sendMessage(message);
-	}
-	
-	public void stateManagementPlayer(byte state) {
-		this.playerState = state;
-		switch (state) {
-		case 0: // in progress
-			break;
-		case 1:
-//			play();
-			break;
-		case 2:
-			pause();
-			break;
-		case 3:
-			stop();
-			break;
-		case 4:
-			restart();
-			break;
-		case 5:
-			continuePlaying();
+		synchronized (lock) {
+			Message message = new Message();
+			message.what = Constants.MSG_PAUSE;
+			handler.sendMessage(message);
 		}
 	}
-
-	private void continuePlaying() {
-		player.start();
+	
+	public void play(int i) {
+		synchronized (lock) {
+			Message message = new Message();;
+			if (i == CURRENT_SONG && isPrepared) {
+				message.what = Constants.MSG_PLAY_CURRENT;
+				handler.sendMessage(message);
+			} else {
+				String path = queue.get(i).getPath();
+				message.obj = path;
+				message.what = Constants.MSG_PLAY;
+				handler.sendMessage(message);
+			}
+		}
 	}
-
-	private void restart() {
-		player.seekTo(0);
-		player.start();
+	
+	public void previous() {
+		synchronized (lock) {
+			
+		}
 	}
-
-	private void stop() {
-		isPrepared = false;
-		player.stop();
-		player.reset();
+	
+	public void next() {
+		synchronized (lock) {
+			
+		}
+	}
+	
+	public void setQueue(ArrayList<AbstractSong> list) {
+		queue = new ArrayList<AbstractSong>(list);
+	}
+	
+	
+	//TODO are we need in this method?
+	public void IsContainsSong () {
+		
 	}
 
 	@Override
@@ -172,10 +182,13 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		player = paramMediaPlayer;
 		player.start();
 		isPrepared = true;
+		isComplete = false;
 	}
 
 	@Override
-	public boolean onError(MediaPlayer paramMediaPlayer, int paramInt1, int paramInt2) {
+	public boolean onError(MediaPlayer mediaPlayer, int paramInt1, int paramInt2) {
+		mediaPlayer.release();
+		isPrepared = false;
 		return false;
 	}
 
@@ -193,6 +206,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		player.seekTo(progress);
 	}
 
+	public Object getData () {
+		return new Object();
+	}
+	
+	public int getCerrent() {
+		return 1;
+	}
+	
 	public boolean isPrepared() {
 		return isPrepared;
 	}
@@ -200,14 +221,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public boolean isComplete() {
 		return isComplete;
 	}
+//
+//	public String getPath() {
+//		return path;
+//	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
+//	public void setPath(String path) {
+//		this.path = path;
+//	}
 
 	public int getDuratioun() {
 		return player.getDuration();

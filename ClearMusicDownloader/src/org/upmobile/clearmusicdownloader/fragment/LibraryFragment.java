@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 import org.upmobile.clearmusicdownloader.data.MusicData;
+import org.upmobile.clearmusicdownloader.service.PlayerService;
 
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,8 +17,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.special.BaseClearActivity;
 import com.special.R;
@@ -41,6 +41,8 @@ public class LibraryFragment extends Fragment {
 		settingListView();
 		ArrayList<MusicData> srcList = querySong();
 		if (!srcList.isEmpty()) {
+			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
+			PlayerService.get(getActivity()).setQueue(list);
 			adapter.addAll(srcList);
 			listView.setAdapter(adapter);
 		}

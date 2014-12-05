@@ -56,12 +56,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		player = PlayerService.get(getActivity());
-		selectedSong = this.getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+		selectedSong = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+		int position = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
+		play(position);
 		parentView = inflater.inflate(R.layout.player, container, false);
-		PlayerService.get(getActivity()).stateManagementPlayer((byte) 1);
 		init();
 		setSongObject(selectedSong);
-		play();
 		return parentView;
 	}
 	
@@ -134,7 +134,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.player_play:
-			play();
+			play(PlayerService.CURRENT_SONG);
 			//TODO start play
 			break;
 		case R.id.player_previous:
@@ -194,13 +194,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		downloadListener.onClick(parentView);
 	}
 
-	private void play() {
+	private void play(int position) {
 		playerArtist.setText(artist);
 		playerTitle.setText(title);
 		playerTotalTime.setText("");
 		playerProgress.post(progressAction);
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
-		player.play(path);
+		player.play(position);
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -111,6 +110,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				public void onClick(View v) {
 					Bundle bundle = new Bundle();
 					bundle.putParcelable(Constants.KEY_SELECTED_SONG, item);
+					bundle.putInt(Constants.KEY_SELECTED_POSITION, onClickPosition);
 					PlayerFragment playerFragment = new PlayerFragment();
 					playerFragment.setArguments(bundle);
 					((MainActivity) view.getContext()).changeFragment(playerFragment);
@@ -126,7 +126,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
-						PlayerService.get(getContext()).play(item.getPath());
+						PlayerService.get(getContext()).play(onClickPosition);
 						if (currentPlayPosition == onClickPosition) {
 							item.turnOff(MusicData.MODE_PLAYING);
 							setButtonBackground(BTN_PAUSE);
