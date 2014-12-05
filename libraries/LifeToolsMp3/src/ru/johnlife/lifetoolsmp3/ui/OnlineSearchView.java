@@ -58,12 +58,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -71,7 +72,6 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -96,8 +96,7 @@ public abstract class OnlineSearchView extends View {
 	private SongSearchAdapter resultAdapter;
 	private ViewGroup view;
 	private View spEnginesChoiserLayout;
-	private ScrollView spEnginesChoiserScroll;
-	private View noTouch;
+	private View spEnginesChoiserScroll;
 	private View progress;
 	private View viewItem;
 	private TextView message;
@@ -253,6 +252,8 @@ public abstract class OnlineSearchView extends View {
 			});
 		}
 		listView.addFooterView(resultAdapter.getProgress());
+		View emtyHeader = inflate(getContext(), R.layout.empty_header, null);
+		listView.addHeaderView(emtyHeader);
 		if (!isRestored) listView.setAdapter(resultAdapter);
 		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
 			if (isWhiteTheme(getContext())) {
@@ -261,7 +262,6 @@ public abstract class OnlineSearchView extends View {
 				listView.setDivider(getContext().getResources().getDrawable(R.drawable.layout_divider));
 			}
 			listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
-			view.findViewById(R.id.search_field).setBackgroundResource(R.drawable.search_background_white);
 			view.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
 			int color = getContext().getResources().getColor(android.R.color.black);
 			searchField.setTextColor(color);
@@ -271,32 +271,26 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 		listView.setEmptyView(message);
-		listView.setPadding(0, spEnginesChoiserLayout.getLayoutParams().height, 0, 0);
-		noTouch.setOnTouchListener(new OnTouchListener() {
+		listView.setOnScrollListener(new OnScrollListener() {
 			
-			float downY;
-			final int defaultHeight = spEnginesChoiserLayout.getLayoutParams().height;
-			float height = defaultHeight;
+			int lastScroll = getScrollListView();
+			int maxScroll = spEnginesChoiserScroll.getLayoutParams().height;
 			
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					downY = event.getY();
-					break;
-				case MotionEvent.ACTION_MOVE:
-					if (listView.getAdapter().isEmpty()) return false;
-					float scrollBy = event.getY() - downY;
-					height += scrollBy;
-					downY = event.getY();
-					height = Math.min(Math.max(0, height), defaultHeight);
-					listView.setPadding(0, (int)height, 0, 0);
-					spEnginesChoiserScroll.scrollTo(0, defaultHeight - (int)height);
-					spEnginesChoiserScroll.requestLayout();
-					break;
+			public void onScrollStateChanged(AbsListView view, int scrollState) {}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				int scrollBy = getScrollListView() - lastScroll;
+				lastScroll = getScrollListView();
+				int resultScroll = spEnginesChoiserScroll.getScrollY() + scrollBy;
+				if (resultScroll < 0) {
+					spEnginesChoiserScroll.scrollTo(0, 0);
+				} else if (resultScroll > maxScroll) {
+					spEnginesChoiserScroll.scrollTo(0, maxScroll);
+				} else {
+					spEnginesChoiserScroll.scrollBy(0, scrollBy);
 				}
-				listView.dispatchTouchEvent(event);
-				return false;
 			}
 		});
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -345,6 +339,15 @@ public abstract class OnlineSearchView extends View {
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) progress.setVisibility(View.VISIBLE);
 		else progress.setVisibility(View.GONE);
 		return view;
+	}
+	
+	public int getScrollListView()
+	{
+	    View c = listView.getChildAt(0);
+	    if (c == null) return 0;
+	    int firstVisiblePosition = listView.getFirstVisiblePosition();
+	    int top = c.getTop();
+	    return -top + firstVisiblePosition * c.getHeight();
 	}
 
 	public void initSearchEngines(Context context, String valueEngines) {
@@ -460,9 +463,8 @@ public abstract class OnlineSearchView extends View {
 		listView = (ListView) view.findViewById(R.id.list);
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
-		spEnginesChoiserLayout = (View) view.findViewById(R.id.choise_engines_layout);
-		spEnginesChoiserScroll = (ScrollView) view.findViewById(R.id.scroll_choise_engines);
-		noTouch = view.findViewById(R.id.non_touch);
+		spEnginesChoiserLayout = view.findViewById(R.id.choise_engines_layout);
+		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
 	}
 
 	public static String getDownloadPath(Context context) {
