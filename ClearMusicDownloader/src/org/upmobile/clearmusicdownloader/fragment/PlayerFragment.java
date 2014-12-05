@@ -6,15 +6,16 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
-import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
+import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private Button playerCancelTags;
 	protected DownloadListener downloadListener;
 	private ImageView playerCover;
+	private TextView playerLyricsView;
 	
 
 	@Override
@@ -58,10 +60,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player = PlayerService.get(getActivity());
 		selectedSong = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 		int position = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
-		play(position);
 		parentView = inflater.inflate(R.layout.player, container, false);
 		init();
 		setSongObject(selectedSong);
+		play(position);
 		return parentView;
 	}
 	
@@ -77,6 +79,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerArtist = (TextView) parentView.findViewById(R.id.player_artist);
 		playerCurrTime = (TextView) parentView.findViewById(R.id.player_current_time);
 		playerTotalTime = (TextView) parentView.findViewById(R.id.player_total_time);
+		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
 		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
 		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
 		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
@@ -149,7 +152,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			download();
 			break;
 		case R.id.player_lyrics:
-			//TODO show lyrics
+			showLyrics();
 			break;
 		case R.id.player_edit_tags:
 			showEditTagDialog();
@@ -159,10 +162,35 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.player_cancel_tags:
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 			break;
+		case R.id.player_cancel_lyrics: 
+			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
+			break;
 		default:
 			break;
 		}
 		
+	}
+
+	private void showLyrics() {
+		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
+			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
+			LyricsFetcher lyricsFetcher = new LyricsFetcher(getActivity());
+			lyricsFetcher.fetchLyrics(title, artist);
+			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+				
+				@Override
+				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+					if (foundLyrics) {
+						playerLyricsView.setText(Html.fromHtml(lyrics));
+					} else {
+						String songName = artist + " - " + title;
+						playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
+					}
+				}
+			});
+		} else {
+			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
+		}
 	}
 
 	private void showEditTagDialog() {

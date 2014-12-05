@@ -111,8 +111,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="0:00"
-                        android:lines="1"/>
+                        android:lines="1"
+                        android:text="0:00" />
 
                     <SeekBar
                         android:id="@+id/player_progress"
@@ -169,14 +169,10 @@
                     <Button
                         android:id="@+id/player_download"
                         style="@style/UIButton"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:textSize="24dp"
-                        android:gravity="center"
-                        android:layout_gravity="center"
-                        android:paddingTop="8dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="3dp"
                         android:text="@string/download" />
                 </FrameLayout>
             </LinearLayout>
@@ -191,6 +187,31 @@
                     layout="@layout/edit_tag"
                     android:visibility="gone" />
             </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/player_lyrics_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/player_lyrics_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/dashed_area_text" />
+
+                <Button
+                    android:id="@+id/player_cancel_lyrics"
+                    style="@style/UIButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/edit_mp3_cancel" />
+            </LinearLayout>
         </LinearLayout>
     </com.special.utils.UIParallaxScroll>
 
