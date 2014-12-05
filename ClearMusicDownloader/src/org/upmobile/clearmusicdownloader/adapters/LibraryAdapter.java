@@ -1,13 +1,18 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
+import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
+import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -45,6 +50,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	private class LibraryViewHolder extends ViewHolder<MusicData> {
 		
 		private MusicData item;
+		private ViewGroup frontView;
 		private View view;
 		private View button;
 		private TextView title;
@@ -56,6 +62,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		public LibraryViewHolder(View v) {
 			view = v;
+			frontView = (ViewGroup) view.findViewById(R.id.front_layout);
 			button = (View) v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
@@ -72,12 +79,10 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			artist.setText(item.getArtist());
 			if (!item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.VISIBLE) {
 				cancel.setVisibility(View.GONE);
-				ViewGroup box = (ViewGroup) view.findViewById(R.id.front_layout);
-				box.setX(0);
+				frontView.setX(0);
 			} else if (item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.GONE){
-				ViewGroup box = (ViewGroup) view.findViewById(R.id.front_layout);
 				int startPosition = 0 - parent.getContext().getResources().getDimensionPixelSize(R.dimen.swipe_size);
-				box.setX(startPosition);
+				frontView.setX(startPosition);
 				cancel.setVisibility(View.VISIBLE);
 			}
 			if (item.check(MusicData.MODE_PLAYING)) {
@@ -100,6 +105,18 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 
 		private void setListener() {
+			frontView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Bundle bundle = new Bundle();
+					bundle.putParcelable(Constants.KEY_SELECTED_SONG, item);
+					PlayerFragment playerFragment = new PlayerFragment();
+					playerFragment.setArguments(bundle);
+					((MainActivity) view.getContext()).changeFragment(playerFragment);
+				}
+
+			});
 			button.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -131,6 +148,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 //<--it's template solution		item.reset(v.getContext()); 
 					remove(item);
 				}
+				
 			});
 		}
 	}
