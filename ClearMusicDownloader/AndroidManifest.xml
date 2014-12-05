@@ -37,8 +37,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name="org.upmobile.clearmusicdownloader.ui.PlayerService" >
-        </service>
+        <service android:name="org.upmobile.clearmusicdownloader.service.PlayerService" />
+        
     </application>
 
 </manifest>

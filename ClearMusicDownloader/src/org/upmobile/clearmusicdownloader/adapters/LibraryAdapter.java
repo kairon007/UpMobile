@@ -1,22 +1,23 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
+import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
+import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
+import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.special.utils.UICircularImage;
-import com.special.utils.UISwipableList;
-import com.special.utils.UISwipableList.OnSwipableListener;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
@@ -104,13 +105,15 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		private void setListener() {
 			button.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					if (item.check(MusicData.MODE_PLAYING)) {
+						PlayerService.get(getContext()).pause();
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
+						PlayerService.get(getContext()).play(item.getPath());
 						if (currentPlayPosition == onClickPosition) {
 							item.turnOff(MusicData.MODE_PLAYING);
 							setButtonBackground(BTN_PAUSE);
@@ -123,6 +126,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						setButtonBackground(BTN_PAUSE);
 					}
 				}
+
 			});
 			cancel.setOnClickListener(new OnClickListener() {
 

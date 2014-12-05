@@ -4,7 +4,7 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.data.MusicData;
-import org.upmobile.clearmusicdownloader.ui.PlayerService;
+import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -200,8 +200,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTotalTime.setText("");
 		playerProgress.post(progressAction);
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
-		player.setPath(path);
-		player.stateManagementPlayer((byte) 1);
+		player.play(path);
 	}
 
 	@Override

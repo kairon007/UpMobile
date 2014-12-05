@@ -5,13 +5,23 @@ import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
+import org.upmobile.clearmusicdownloader.service.PlayerService;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.special.BaseClearActivity;
 import com.special.menu.ResideMenuItem;
 
 public class MainActivity extends BaseClearActivity {
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (!PlayerService.hasInstance()) {
+			startService(new Intent(this, PlayerService.class));
+		}
+	}
 
 	@Override
 	protected Fragment[] getFragments() {

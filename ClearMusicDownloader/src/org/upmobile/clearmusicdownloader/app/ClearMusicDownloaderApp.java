@@ -1,7 +1,5 @@
 package org.upmobile.clearmusicdownloader.app;
 
-import org.upmobile.clearmusicdownloader.ui.PlayerService;
-
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -16,6 +14,6 @@ public class ClearMusicDownloaderApp extends Application {
 		super.onCreate();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		MusicApp.setSharedPreferences(prefs);
-		PlayerService.get(this);
 	}
+	
 }
