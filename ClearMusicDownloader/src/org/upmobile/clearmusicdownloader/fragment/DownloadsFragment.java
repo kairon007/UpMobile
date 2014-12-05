@@ -15,7 +15,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +36,7 @@ public class DownloadsFragment extends Fragment {
 	private Updater updater;
 	private static final int DEFAULT_SONG = 7340032; // 7 Mb
 	private MainActivity activity;
-	private Cursor c;
 	private int progress;
-	private final static boolean DEBUG = true; //until the application is complete
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +56,8 @@ public class DownloadsFragment extends Fragment {
 		listView.setItemLayout(R.id.front_layout);
 		listView.setAdapter(mAdapter);
 		listView.setIgnoredViewHandler(resideMenu);
-		manager = (DownloadManager) getActivity().getApplicationContext().getSystemService(Context.DOWNLOAD_SERVICE);
+		listView.getAdapter();
+		manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 		timer = new Timer();
 		updater = new Updater();
 	}
@@ -78,46 +76,45 @@ public class DownloadsFragment extends Fragment {
 
 	private void checkDownloads() {
 		try {
-			if (DEBUG) {
-				android.util.Log.d("logd", "updateAdapter: " + "start timer");
-			}
-			c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
-			if (DEBUG) {
-				android.util.Log.d( "logd", "checkDownloads: " + String.valueOf(c == null) + " " + String.valueOf(manager == null) + " " + String.valueOf(downloadableSongs == null));
-			}
-			while (c.moveToNext()) {
-				MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
-				if (c.getString(14).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) && !downloadableSongs.contains(song)) {
-					if (downloadableSongs.size() == 0) {
-						downloadableSongs.add(song);
-					}
-					for (int i = 0; i < downloadableSongs.size(); i++) {
-						if (downloadableSongs.get(i).getId() != song.getId()) {
-							if (DEBUG) {
-								android.util.Log.d("logd", "checkDownloads: contains ");
-							}
-							downloadableSongs.add(song);
-						}
-					}
+			if (null != manager) {
+				Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
+				if (running!=null) {
+					updateList(running);
+					running.close();
+				}
+				Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
+				if (pending!=null) {
+					updateList(pending);
+					pending.close();
 				}
 			}
-			c.close();
 			timer.schedule(updater, 100, 1000);
 		} catch (Exception e) {
-			if (DEBUG) {
-				Log.d(getClass().getSimpleName(), e + "");
-			}
-		}
-		if (DEBUG) {
-			android.util.Log.d("logd", "checkDownloads: " + downloadableSongs.size());
 		}
 		updateAdapter(downloadableSongs);
 	}
 
+	private void updateList(Cursor c) {
+		while (c.moveToNext()) {
+			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c
+					.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
+			if (null != c.getString(14) && c.getString(14).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) && !downloadableSongs.contains(song)) {
+				if (downloadableSongs.size() == 0) {
+					downloadableSongs.add(song);
+				}
+				for (int i = 0; i < downloadableSongs.size(); i++) {
+					if (downloadableSongs.get(i).getId() != song.getId()) {
+						downloadableSongs.add(song);
+					}
+				}
+			}
+		}
+	}
+
 	@SuppressWarnings("unchecked")
-	private void updateAdapter(ArrayList<MusicData> uriDownloadedFiles) {
-		if (null != uriDownloadedFiles && !uriDownloadedFiles.isEmpty()) {
-			for (final MusicData song : uriDownloadedFiles) {
+	private void updateAdapter(ArrayList<MusicData> downloadableSongs) {
+		if (null != downloadableSongs && !downloadableSongs.isEmpty()) {
+			for (final MusicData song : downloadableSongs) {
 				activity.runOnUiThread(new Runnable() {
 
 					@Override
@@ -155,9 +152,6 @@ public class DownloadsFragment extends Fragment {
 					progress = downloaded * 100 / size;
 				} else {
 					progress = downloaded * 100 / DEFAULT_SONG;
-				}
-				if (DEBUG) {
-					android.util.Log.d("logd", "run: " + progress);
 				}
 				try {
 					for (int i = 0; i < mAdapter.getCount(); i++) {
