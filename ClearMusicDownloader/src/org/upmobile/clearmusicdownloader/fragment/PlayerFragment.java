@@ -10,6 +10,7 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.graphics.Bitmap;
@@ -31,7 +32,7 @@ import android.widget.TextView;
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
 	private View parentView;
-	private Object selectedSong;
+//	private Object selectedSong;
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
@@ -45,7 +46,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private TextView playerTotalTime;
 	private String title;
 	private String artist;
-	private long totalTime;
 	private String path;
 	private PlayerService player;
 	private Button playerSaveTags;
@@ -53,17 +53,24 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	protected DownloadListener downloadListener;
 	private ImageView playerCover;
 	private TextView playerLyricsView;
+	private long totalTime;
+	private boolean playPause;
+	private int selectedPosition;
 	
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		player = PlayerService.get(getActivity());
-		selectedSong = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-		int position = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
 		parentView = inflater.inflate(R.layout.player, container, false);
 		init();
-		setSongObject(selectedSong);
-		play(position);
+		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_POSITION)) {
+			// getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+			selectedPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
+		} else {
+			selectedPosition = 0;//it's temporary solutions. selectedPosition must be position from adapter
+		}
+//		setSongObject(selectedSong); 
+		play(selectedPosition);
 		return parentView;
 	}
 	
@@ -137,15 +144,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.player_play:
-			play(PlayerService.CURRENT_SONG);
+			if (playPause) {
+				pause();
+			} else {
+				play(selectedPosition);
+			}
 			//TODO start play
 			break;
 		case R.id.player_previous:
 			shift(-1);
+			player.previous();
 			//TODO start previous
 			break;
 		case R.id.player_forward:
 			shift(1);
+			player.forward();
 			//TODO start forward
 			break;
 		case R.id.player_download:
@@ -217,18 +230,25 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void download() {
 		int id = artist.hashCode() * title.hashCode() * (int) System.currentTimeMillis();
-		downloadListener = new DownloadListener(getActivity(), (RemoteSong) selectedSong, id);
-		if (downloadListener.isBadInet()) return;
-		downloadListener.onClick(parentView);
+//		downloadListener = new DownloadListener(getActivity(), (RemoteSong) selectedSong, id);
+//		if (downloadListener.isBadInet()) return;
+//		downloadListener.onClick(parentView);
 	}
 
 	private void play(int position) {
-		playerArtist.setText(artist);
-		playerTitle.setText(title);
+		playPause = true;
+		AbstractSong song = player.play(position);
+		playerArtist.setText(song.getArtist());
+		playerTitle.setText(song.getTitle());
 		playerTotalTime.setText("");
 		playerProgress.post(progressAction);
-		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
-		player.play(position);
+		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
+	}
+	
+	public void pause() {
+		playPause = false;
+		changePlayPauseView(false);
+		player.pause();
 	}
 
 	@Override
@@ -247,7 +267,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	//TODO improve the method

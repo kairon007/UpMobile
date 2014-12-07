@@ -9,7 +9,5 @@ public class Constants {
 	public static final int MSG_PLAY = 1;
 	public static final int MSG_PLAY_CURRENT = 2;
 	public static final int MSG_PAUSE = 3;
-	public static final int MSG_PREVIOUS = 4;
-	public static final int MSG_NEXT = 5;
 	
 }

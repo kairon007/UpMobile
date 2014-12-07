@@ -1,13 +1,20 @@
 package org.upmobile.clearmusicdownloader.activity;
 
+import java.util.ArrayList;
+
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
 import com.special.BaseClearActivity;
@@ -42,4 +49,25 @@ public class MainActivity extends BaseClearActivity {
 		items[3] = new ResideMenuItem(this, R.drawable.ic_player, R.string.navigation_player);
 		return items;
 	}
+	
+	@Override
+	protected void transferdata(int openPage) {
+		switch (openPage) {
+		case 3:
+			ArrayList<MusicData> result = new ArrayList<MusicData>();
+			String selection =  MediaStore.MediaColumns.DATA + " LIKE '" + Environment.getExternalStorageDirectory() +"/MusicDownloader/" + "%'" ;
+			Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+			cursor.moveToFirst();
+			while (cursor.moveToNext()) {
+				MusicData data = new MusicData();
+				data.populate(cursor);	
+				result.add(data);
+			}
+			cursor.close();
+			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(result);
+			PlayerService.get(this).setQueue(list);
+			break;
+		}
+	}
+
 }
