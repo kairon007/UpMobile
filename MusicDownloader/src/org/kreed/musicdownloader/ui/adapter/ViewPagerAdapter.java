@@ -398,4 +398,8 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	public SearchView getSearchView() {
 		return searchView;
 	}
+	
+	public ListView getListView(){
+		return mLists[mCurrentPage];
+	}
 }

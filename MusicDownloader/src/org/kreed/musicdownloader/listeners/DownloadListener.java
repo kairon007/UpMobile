@@ -73,17 +73,13 @@ public class DownloadListener extends DownloadClickListener {
 		downloadItem.setSongDuration(String.valueOf(duration));
 		downloadItem.setDownloadId(downloadId);
 		downloadItem.setDownloadProgress(0);
-		if (!existFile(songArtist, songTitle) && !DownloadCache.getInstanse().contain(songArtist, songTitle)) {
-			downloadsTab.insertData(downloadItem);
-			return new CoverReadyListener() {
-				@Override
-				public void onCoverReady(Bitmap cover) {
-					downloadItem.setSongBitmap(cover);
-				}
-			};
-		} else {
-			return null;
-		}
+		downloadsTab.insertData(downloadItem);
+		return new CoverReadyListener() {
+			@Override
+			public void onCoverReady(Bitmap cover) {
+				downloadItem.setSongBitmap(cover);
+			}
+		};
 	}
 	
 	@Override

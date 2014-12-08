@@ -182,24 +182,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
 		}
 	}
-	
-	protected boolean existFile(String song, String artist){
-		File musicDir = new File(getDirectory());
-		StringBuilder stringBuilder = new StringBuilder(song).append(" - ").append(artist).append(".mp3");
-		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
-		String fileUri = musicDir.getAbsolutePath() + "/" + sb;
-		File trackFile = new File(fileUri);
-		if (trackFile.exists()){
-			return true;
-		}
-		return false;
-	}	
 
 	@Override
 	public void onClick(View v) {
-		if (existFile(song.getArtist(), song.getTitle()) || DownloadCache.getInstanse().contain(song.getArtist(), song.getTitle())) {
-			return;
-		}
 		downloadSong(false);
 	}
 
