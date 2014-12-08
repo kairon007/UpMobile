@@ -53,7 +53,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		
 		private MusicData item;
 		private ViewGroup frontView;
-		private View view;
 		private View button;
 		private TextView title;
 		private TextView artist;
@@ -63,8 +62,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		private int onClickPosition;
 
 		public LibraryViewHolder(View v) {
-			view = v;
-			frontView = (ViewGroup) view.findViewById(R.id.front_layout);
+			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
 			button = (View) v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
@@ -120,7 +118,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 					bundle.putInt(Constants.KEY_SELECTED_POSITION, onClickPosition);
 					PlayerFragment playerFragment = new PlayerFragment();
 					playerFragment.setArguments(bundle);
-					((MainActivity) view.getContext()).changeFragment(playerFragment);
+					((MainActivity) v.getContext()).changeFragment(playerFragment);
 				}
 
 			});
@@ -130,11 +128,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				public void onClick(View v) {
 					PlayerService.get(getContext()).play(item.getPath());
 					if (item.check(MusicData.MODE_PLAYING)) {
-//						PlayerService.get(getContext()).pause();
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
-//						PlayerService.get(getContext()).play(item.getPath());
 						if (currentPlayPosition == onClickPosition) {
 							item.turnOff(MusicData.MODE_PLAYING);
 							setButtonBackground(BTN_PAUSE);

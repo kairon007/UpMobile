@@ -37,34 +37,29 @@ import android.widget.TextView;
 
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
+	private ArrayList<AbstractSong> list;
+	private AbstractSong song;
+	private PlayerService player;
+	protected DownloadListener downloadListener;
 	private View parentView;
+	private SeekBar playerProgress;
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
-	private Button download;
 	private ImageButton showLyrics;
 	private ImageButton editTag;
-	private SeekBar playerProgress;
+	private ImageView playerCover;
+	private Button download;
+	private Button playerSaveTags;
+	private Button playerCancelTags;
+	private Button playerCancelLyrics;
 	private TextView playerTitle;
 	private TextView playerArtist;
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
-	private String title;
-	private String artist;
-	private String path;
-	private PlayerService player;
-	private Button playerSaveTags;
-	private Button playerCancelTags;
-	protected DownloadListener downloadListener;
-	private ImageView playerCover;
 	private TextView playerLyricsView;
-	private long totalTime;
-	private boolean playPause;
 	private int selectedPosition;
-	private AbstractSong song;
-	private ArrayList<AbstractSong> list;
 	private Dialog dialog;
-	private Button playerCancelLyrics;
 	
 
 	@Override
@@ -72,6 +67,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player = PlayerService.get(getActivity());
 		parentView = inflater.inflate(R.layout.player, container, false);
 		list = new ArrayList<AbstractSong>();
+		if (getArguments() != null) android.util.Log.d("log", "size arguments of object = " + getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG).size());
 		init();
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_POSITION)) {
 			list = getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG);
@@ -117,6 +113,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			play(0);
 			break;
 		case R.id.player_previous:
+			
 			play(-1);
 			break;
 		case R.id.player_forward:
@@ -179,19 +176,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		// delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 		switch (delta) {
 		case 1:
-			++selectedPosition;
-			song = list.get(selectedPosition);
+			if (selectedPosition < list.size() - 1) ++selectedPosition;
+			playerProgress.setProgress(0);
 			getUri();
 			break;
 		case -1:
-			if (0 != selectedPosition) {
-				--selectedPosition;
-			}
-			song = list.get(selectedPosition);
-			getUri();
-			break;
+			if (0 != selectedPosition) --selectedPosition;
+			playerProgress.setProgress(0);
 		case 0:
-			song = list.get(selectedPosition);
 			getUri();
 			break;
 		default:
@@ -200,6 +192,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void getUri() {
+		song = list.get(selectedPosition);
 		if (song.getClass() == MusicData.class) {
 			player.play(song.getPath());
 			changeView();
