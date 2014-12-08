@@ -182,10 +182,10 @@ public abstract class OnlineSearchView extends View {
 					} catch(Exception e) {
 						
 					}
-					progress.setVisibility(View.GONE);
+					hideBaseProgress();
 				}
 			} else {
-				progress.setVisibility(View.GONE);
+				hideBaseProgress();
 				for (Song song : songsList) {
 					resultAdapter.add(song);
 				}
@@ -326,7 +326,7 @@ public abstract class OnlineSearchView extends View {
 				resultAdapter.clear();
 				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 				keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
-				progress.setVisibility(View.GONE);
+				hideBaseProgress();
 			}
 		});
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
@@ -340,8 +340,8 @@ public abstract class OnlineSearchView extends View {
 			trySearch();
 			return view;
 		}
-		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) progress.setVisibility(View.VISIBLE);
-		else progress.setVisibility(View.GONE);
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) showBaseProgress();
+		else hideBaseProgress();
 		return view;
 	}
 	
@@ -469,6 +469,18 @@ public abstract class OnlineSearchView extends View {
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
 		spEnginesChoiserLayout = view.findViewById(R.id.choise_engines_layout);
 		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
+		specialInit(view);
+	}
+	
+	public void specialInit(View view) {
+	}
+
+	public void hideBaseProgress() {
+		progress.setVisibility(View.GONE);
+	}
+	
+	public void showBaseProgress() {
+		progress.setVisibility(View.VISIBLE);
 	}
 
 	public static String getDownloadPath(Context context) {
@@ -684,7 +696,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		resultAdapter.clear();
 		message.setText("");
-		progress.setVisibility(View.VISIBLE);
+		showBaseProgress();
 		getNextResults();
 	}
 
