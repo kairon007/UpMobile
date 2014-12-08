@@ -8,6 +8,7 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
@@ -67,20 +68,22 @@ public class DownloadListener extends DownloadClickListener {
 	@Override
 	public CoverReadyListener notifyStartDownload(long downloadId) {
 		final MusicData downloadItem = new MusicData();
-		
 		downloadItem.setSongArtist(songArtist);
 		downloadItem.setSongTitle(songTitle);
 		downloadItem.setSongDuration(String.valueOf(duration));
 		downloadItem.setDownloadId(downloadId);
 		downloadItem.setDownloadProgress(0);
-		downloadsTab.insertData(downloadItem);
-		return new CoverReadyListener() {
-			
-			@Override
-			public void onCoverReady(Bitmap cover) {
-				downloadItem.setSongBitmap(cover);
-			}
-		};
+		if (!existFile(songArtist, songTitle) && !DownloadCache.getInstanse().contain(songArtist, songTitle)) {
+			downloadsTab.insertData(downloadItem);
+			return new CoverReadyListener() {
+				@Override
+				public void onCoverReady(Bitmap cover) {
+					downloadItem.setSongBitmap(cover);
+				}
+			};
+		} else {
+			return null;
+		}
 	}
 	
 	@Override
