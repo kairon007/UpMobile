@@ -67,7 +67,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player = PlayerService.get(getActivity());
 		parentView = inflater.inflate(R.layout.player, container, false);
 		list = new ArrayList<AbstractSong>();
-		if (getArguments() != null) android.util.Log.d("log", "size arguments of object = " + getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG).size());
 		init();
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_POSITION)) {
 			list = getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG);

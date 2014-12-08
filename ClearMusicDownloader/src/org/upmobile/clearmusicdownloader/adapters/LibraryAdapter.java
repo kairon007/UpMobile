@@ -63,7 +63,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		public LibraryViewHolder(View v) {
 			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
-			button = (View) v.findViewById(R.id.item_play);
+			button = v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
 			image = (UICircularImage) v.findViewById(R.id.item_image);
@@ -131,19 +131,16 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
-						if (currentPlayPosition == onClickPosition) {
-							item.turnOff(MusicData.MODE_PLAYING);
-							setButtonBackground(BTN_PAUSE);
-						} else {
+						if (currentPlayPosition != onClickPosition) {
 							getItem(currentPlayPosition).turnOff(MusicData.MODE_PLAYING);
+							currentPlayPosition = onClickPosition;
 							notifyDataSetChanged();
 						}
-						currentPlayPosition = onClickPosition;
 						item.turnOn(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PAUSE);
 					}
 				}
-
+				
 			});
 			cancel.setOnClickListener(new OnClickListener() {
 

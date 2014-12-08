@@ -2,19 +2,16 @@ package org.upmobile.clearmusicdownloader.adapters;
 
 import java.util.ArrayList;
 
-import org.upmobile.clearmusicdownloader.data.MusicData;
-
-import com.special.utils.UISwipableList;
-import com.special.utils.UISwipableList.OnSwipableListener;
-
 import android.content.Context;
-import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+
+import com.special.utils.UISwipableList;
+import com.special.utils.UISwipableList.OnSwipableListener;
 
 public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 
