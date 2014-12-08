@@ -67,25 +67,6 @@ public class MainActivity extends BaseClearActivity {
 	}
 
 	@Override
-	protected void transferData(int openPage) {
-		switch (openPage) {
-		case 3:
-			ArrayList<MusicData> result = new ArrayList<MusicData>();
-			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX + "%'";
-			Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
-			cursor.moveToFirst();
-			while (cursor.moveToNext()) {
-				MusicData data = new MusicData();
-				data.populate(cursor);
-				result.add(data);
-			}
-			cursor.close();
-			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(result);
-			break;
-		}
-	}
-	
-	@Override
 	public void reReadItems() {
 		super.reReadItems();
 	}
