@@ -179,21 +179,18 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		// delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 		switch (delta) {
 		case 1:
-			selectedPosition = selectedPosition + 1;
-			changeView();
+			++selectedPosition;
 			song = list.get(selectedPosition);
 			getUri();
 			break;
 		case -1:
 			if (0 != selectedPosition) {
-				selectedPosition = selectedPosition - 1;
+				--selectedPosition;
 			}
 			song = list.get(selectedPosition);
-			changeView();
 			getUri();
 			break;
 		case 0:
-			changeView();
 			song = list.get(selectedPosition);
 			getUri();
 			break;
@@ -205,6 +202,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void getUri() {
 		if (song.getClass() == MusicData.class) {
 			player.play(song.getPath());
+			changeView();
 		} else {
 			((RemoteSong) song).getCover(true, new OnBitmapReadyListener() {
 				@Override
@@ -220,6 +218,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				@Override
 				public void success(String url) {
 					player.play(url);
+					changeView();
 					dialog.dismiss();
 				}
 
@@ -263,18 +262,38 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void changeView() {
+		playerProgress.removeCallbacks(progressAction);
 		playerArtist.setText(list.get(selectedPosition).getArtist());
 		playerTitle.setText(list.get(selectedPosition).getTitle());
-		playerTotalTime.setText("");
+		long totalTime = list.get(selectedPosition).getDuration();
+		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
+		playerProgress.setMax((int) totalTime);
+		changePlayPauseView(player.showPlayPause());
 		playerProgress.post(progressAction);
-		playerTotalTime.setText(Util.getFormatedStrDuration(list.get(selectedPosition).getDuration()));
 	}
 	
-	public void pause() {
-		playPause = false;
-		changePlayPauseView(false);
-		player.pause();
-	}
+	private Runnable progressAction = new Runnable() {
+
+		@Override
+		public void run() {
+			try {
+				playerProgress.removeCallbacks(this);
+				if (player.isPrepared()) {
+					int current = player.getCurrentPosition();
+					playerProgress.setProgress(current);
+					playerCurrTime.setText(Util.getFormatedStrDuration(current));
+				} 
+				if (player.isComplete()) {
+					playerProgress.setProgress(0);
+					playerCurrTime.setText("");
+				}
+				playerProgress.postDelayed(this, 1000);
+			} catch (Exception e) {
+				Log.d(getClass().getSimpleName(), e.getMessage());
+			}
+		}
+
+	};
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -297,34 +316,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	//TODO improve the method
 	private void changePlayPauseView(boolean isPlaying) {
 		if (isPlaying) {
-			play.setImageResource(R.drawable.pause);
-		} else {
 			play.setImageResource(R.drawable.play);
+		} else {
+			play.setImageResource(R.drawable.pause);
 		}
 	}
 	
-	private Runnable progressAction = new Runnable() {
-
-		@Override
-		public void run() {
-			try {
-				if (player.isPrepared()) {
-					changePlayPauseView(true);
-					int current = player.getCurrentPosition();
-					playerProgress.setProgress(current);
-					playerProgress.setMax(player.getDuratioun());
-					playerCurrTime.setText(Util.getFormatedStrDuration(current));
-				}
-				if (player.isComplete()) {
-					playerProgress.setProgress(0);
-					playerCurrTime.setText("");
-					changePlayPauseView(false);
-				}
-				playerProgress.postDelayed(this, 1000);
-			} catch (Exception e) {
-				Log.d(getClass().getSimpleName(), e.getMessage());
-			}
-		}
-
-	};	
 }

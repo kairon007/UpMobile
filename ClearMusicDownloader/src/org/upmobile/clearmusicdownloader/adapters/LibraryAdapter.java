@@ -128,12 +128,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
+					PlayerService.get(getContext()).play(item.getPath());
 					if (item.check(MusicData.MODE_PLAYING)) {
-						PlayerService.get(getContext()).pause();
+//						PlayerService.get(getContext()).pause();
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
-						PlayerService.get(getContext()).play(item.getPath());
+//						PlayerService.get(getContext()).play(item.getPath());
 						if (currentPlayPosition == onClickPosition) {
 							item.turnOff(MusicData.MODE_PLAYING);
 							setButtonBackground(BTN_PAUSE);

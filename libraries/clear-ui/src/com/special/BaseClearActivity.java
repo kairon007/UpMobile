@@ -62,14 +62,14 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     public void onClick(View view) {
         for (int i = 0; i < menuItems.length; i++) {
         	if (view == menuItems[i]) {
-        		transferdata(i);
+        		transferData(i);
         		changeFragment(fragments[i]);
         	}
         }
         resideMenu.closeMenu();
     }
 
-    protected void transferdata(int openPage) {
+    protected void transferData(int openPage) {
 	}
 
 	//Example of menuListener
