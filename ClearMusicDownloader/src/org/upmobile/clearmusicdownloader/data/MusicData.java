@@ -8,6 +8,7 @@ import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -210,6 +211,11 @@ public class MusicData implements Comparable<MusicData>, Parcelable, AbstractSon
 
 	public void setProgress(int progress) {
 		this.progress = progress;
+	}
+
+	@Override
+	public boolean getDownloadUrl(DownloadUrlListener listener) {
+		return false;
 	}
 
 }

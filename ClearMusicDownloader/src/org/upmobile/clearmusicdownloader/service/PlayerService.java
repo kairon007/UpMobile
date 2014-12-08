@@ -146,11 +146,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (path.equals(currentPath)) {
 				message.what = MSG_PLAY_CURRENT;
 			} else {
-				player.reset();
+				if (null != currentPath) player.reset();
 				message.what = MSG_PLAY;
 			}
 			stack.push(path);
 			currentPath = path;
+			message.obj = currentPath;
 			handler.sendMessage(message);
 		}
 	}

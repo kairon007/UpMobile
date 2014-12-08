@@ -103,6 +103,7 @@ public class RemoteSong extends Song implements Cloneable {
 		}
 	}
 	
+	@Override
 	public boolean getDownloadUrl(DownloadUrlListener listener) {
 		downloadUrlListeners = listener;
 		if (null != downloadUrl && !downloadUrl.isEmpty() && null != downloadUrlListeners && downloadUrl.startsWith("http")) {

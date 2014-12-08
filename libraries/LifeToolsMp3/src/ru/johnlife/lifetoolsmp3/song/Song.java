@@ -29,6 +29,7 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -253,6 +254,10 @@ public class Song implements Comparable<Song>, Parcelable, AbstractSong {
 
 	public String getTitle() {
 		return title;
+	}
+	
+	public boolean getDownloadUrl(DownloadUrlListener listener) {
+		return false;
 	}
 
 	public String getArtist() {
