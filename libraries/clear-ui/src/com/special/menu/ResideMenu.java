@@ -203,7 +203,7 @@ public class ResideMenu extends FrameLayout{
      * show the reside menu;
      */
     public void openMenu(){
-    	((BaseClearActivity) getContext()).reReadItems();
+//    	((BaseClearActivity) getContext()).reReadItems();
         setScaleDirection(ResideMenu.DIRECTION_LEFT);
         
         if (showShadow && imageViewShadow != null){
@@ -212,8 +212,7 @@ public class ResideMenu extends FrameLayout{
 
         isOpened = true;
         AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity, mScaleValue, mScaleValue);
-        AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow,
-        		mScaleValue + shadowAdjustScaleX, mScaleValue + shadowAdjustScaleY);
+        AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow, mScaleValue + shadowAdjustScaleX, mScaleValue + shadowAdjustScaleY);
         AnimatorSet alpha_menu = buildMenuAnimation(scrollViewMenu, 1.0f);
         AnimatorSet alpha_shadow = buildMenuAnimation(imageViewShadow, 1.0f);
         AnimatorSet alpha_header = buildMenuAnimation(headerView, 1.0f);
