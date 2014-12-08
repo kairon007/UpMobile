@@ -11,10 +11,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
+import com.special.BaseClearActivity;
 import com.special.R;
 
 import java.util.ArrayList;
@@ -201,7 +203,7 @@ public class ResideMenu extends FrameLayout{
      * show the reside menu;
      */
     public void openMenu(){
-
+    	((BaseClearActivity) getContext()).reReadItems();
         setScaleDirection(ResideMenu.DIRECTION_LEFT);
         
         if (showShadow && imageViewShadow != null){
@@ -456,93 +458,96 @@ public class ResideMenu extends FrameLayout{
     private float lastActionDownX, lastActionDownY;
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        float currentActivityScaleX = ViewHelper.getScaleX(viewActivity);
-        if (currentActivityScaleX == 1.0f)
-            setScaleDirectionByRawX(ev.getRawX());
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		float currentActivityScaleX = ViewHelper.getScaleX(viewActivity);
+		if (currentActivityScaleX == 1.0f)
+			setScaleDirectionByRawX(ev.getRawX());
 
-        switch (ev.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                lastActionDownX = ev.getX();
-                lastActionDownY = ev.getY();
-                isInIgnoredView = isInIgnoredView(ev) && !isOpened();
-                pressedState    = PRESSED_DOWN;
-                break;
+		switch (ev.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			lastActionDownX = ev.getX();
+			lastActionDownY = ev.getY();
+			isInIgnoredView = isInIgnoredView(ev) && !isOpened();
+			pressedState = PRESSED_DOWN;
+			break;
 
-            case MotionEvent.ACTION_MOVE:
-            	//TODO change if different menu side
-                if (isInIgnoredView || scaleDirection == ResideMenu.DIRECTION_RIGHT)
-                    break;
+		case MotionEvent.ACTION_MOVE:
+			// TODO change if different menu side
+			if (isInIgnoredView || scaleDirection == ResideMenu.DIRECTION_RIGHT)
+				break;
 
-                if(pressedState != PRESSED_DOWN &&
-                        pressedState != PRESSED_MOVE_HORIZANTAL)
-                    break;
+			if (pressedState != PRESSED_DOWN && pressedState != PRESSED_MOVE_HORIZANTAL)
+				break;
 
-                int xOffset = (int) (ev.getX() - lastActionDownX);
-                int yOffset = (int) (ev.getY() - lastActionDownY);
+			int xOffset = (int) (ev.getX() - lastActionDownX);
+			int yOffset = (int) (ev.getY() - lastActionDownY);
 
-                if(pressedState == PRESSED_DOWN) {
-                    if(yOffset > 25 || yOffset < -25) {
-                        pressedState = PRESSED_MOVE_VERTICAL;
-                        break;
-                    }
-                    if(xOffset < -50 || xOffset > 50) {
-                        pressedState = PRESSED_MOVE_HORIZANTAL;
-                        ev.setAction(MotionEvent.ACTION_CANCEL);
-                    }
-                } else if(pressedState == PRESSED_MOVE_HORIZANTAL) {
-                    if (showShadow && imageViewShadow != null){
-                        imageViewShadow.setImageResource(R.drawable.shadow);
-                    }
-                    
-                    if (currentActivityScaleX < 0.95)
-                        scrollViewMenu.setVisibility(VISIBLE);
+			if (pressedState == PRESSED_DOWN) {
+				if (yOffset > 25 || yOffset < -25) {
+					pressedState = PRESSED_MOVE_VERTICAL;
+					break;
+				}
+				if (xOffset < -50 || xOffset > 50) {
+					pressedState = PRESSED_MOVE_HORIZANTAL;
+					ev.setAction(MotionEvent.ACTION_CANCEL);
+				}
+			} else if (pressedState == PRESSED_MOVE_HORIZANTAL) {
+				if (showShadow && imageViewShadow != null) {
+					imageViewShadow.setImageResource(R.drawable.shadow);
+				}
 
-                    float targetScale = getTargetScale(ev.getRawX());
-                    ViewHelper.setScaleX(viewActivity, targetScale);
-                    ViewHelper.setScaleY(viewActivity, targetScale);
-                    ViewHelper.setScaleX(imageViewShadow, targetScale + shadowAdjustScaleX);
-                    ViewHelper.setScaleY(imageViewShadow, targetScale + shadowAdjustScaleY);
-                    ViewHelper.setAlpha(imageViewShadow, (1 - targetScale) * 2.0f);
-                    ViewHelper.setAlpha(headerView, (1 - targetScale) * 2.0f);
-                    ViewHelper.setAlpha(scrollViewMenu, (1 - targetScale) * 2.0f);
+				if (currentActivityScaleX < 0.95)
+					scrollViewMenu.setVisibility(VISIBLE);
 
-                    float adustable = ((1 / targetScale) - 1.0f);
-                    float scale = 1 / (targetScale - (0.15f * adustable));
-                    ViewHelper.setScaleX(imageViewBackground, scale);
-                    ViewHelper.setScaleY(imageViewBackground, scale);
-                    
-                    lastRawX = ev.getRawX();
-                    return true;
-                }
+				float targetScale = getTargetScale(ev.getRawX());
+				ViewHelper.setScaleX(viewActivity, targetScale);
+				ViewHelper.setScaleY(viewActivity, targetScale);
+				ViewHelper.setScaleX(imageViewShadow, targetScale + shadowAdjustScaleX);
+				ViewHelper.setScaleY(imageViewShadow, targetScale + shadowAdjustScaleY);
+				ViewHelper.setAlpha(imageViewShadow, (1 - targetScale) * 2.0f);
+				ViewHelper.setAlpha(headerView, (1 - targetScale) * 2.0f);
+				ViewHelper.setAlpha(scrollViewMenu, (1 - targetScale) * 2.0f);
 
-                break;
+				float adustable = ((1 / targetScale) - 1.0f);
+				float scale = 1 / (targetScale - (0.15f * adustable));
+				ViewHelper.setScaleX(imageViewBackground, scale);
+				ViewHelper.setScaleY(imageViewBackground, scale);
 
-            case MotionEvent.ACTION_UP:
+				lastRawX = ev.getRawX();
+				return true;
+			}
 
-                if (isInIgnoredView) break;
-                if (pressedState != PRESSED_MOVE_HORIZANTAL) break;
+			break;
 
-                pressedState = PRESSED_DONE;
-                if (isOpened()){
-                    if (currentActivityScaleX > 0.56f)
-                        closeMenu();
-                    else
-                        openMenu();
-                }else{
-                    if (currentActivityScaleX < 0.94f){
-                        openMenu();
-                    }else{
-                        closeMenu();
-                    }
-                }
+		case MotionEvent.ACTION_UP:
 
-                break;
+			if (isInIgnoredView)
+				break;
+			if (pressedState != PRESSED_MOVE_HORIZANTAL)
+				break;
 
-        }
-        lastRawX = ev.getRawX();
-        return super.dispatchTouchEvent(ev);
-    }
+			pressedState = PRESSED_DONE;
+			if (isOpened()) {
+				if (currentActivityScaleX > 0.56f)
+					closeMenu();
+				else
+					((BaseClearActivity) getContext()).reReadItems();
+					openMenu();
+			} else {
+				if (currentActivityScaleX < 0.94f) {
+					((BaseClearActivity) getContext()).reReadItems();
+					openMenu();
+				} else {
+					closeMenu();
+				}
+			}
+
+			break;
+
+		}
+		lastRawX = ev.getRawX();
+		return super.dispatchTouchEvent(ev);
+	}
 
     public int getScreenHeight(){
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

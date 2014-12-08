@@ -32,7 +32,6 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     }
 
     private void setUpMenu() {
-    	
         resideMenu = new ResideMenu(this);
         resideMenu.setBackground(R.drawable.menu_background);
         resideMenu.attachToActivity(this);
@@ -102,5 +101,11 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     	} else {
     		resideMenu.openMenu();
     	}
+    }
+    
+    public void reReadItems() {
+        menuItems = getMenuItems();
+        fragments = getFragments();
+        setUpMenu();
     }
 }

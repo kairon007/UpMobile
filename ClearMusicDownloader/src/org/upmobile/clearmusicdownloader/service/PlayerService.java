@@ -219,6 +219,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	private void play (AbstractSong song) {
 		synchronized (lock) {
+			player.stop();
 			player.reset();
 			Message message = new Message();
 			if (song.getClass() == RemoteSong.class) {
@@ -234,11 +235,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public void setQueue(ArrayList<AbstractSong> list) {
 		queue = new ArrayList<AbstractSong>(list);
 	}
-
-	// TODO are we need in this method?
-//	public void IsContainsSong() {
-//
-//	}
 
 	@Override
 	public void onPrepared(MediaPlayer paramMediaPlayer) {
@@ -282,6 +278,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 //	public int getCerrent() {
 //		return 1;
 //	}
+	
+	public boolean isPlaying() {
+		return player.isPlaying();
+	}
 	
 	public boolean isPrepared() {
 		return isPrepared;

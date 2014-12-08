@@ -3,6 +3,7 @@ package org.upmobile.clearmusicdownloader.fragment;
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
@@ -236,6 +237,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void play(int position) {
+		((MainActivity) getActivity()).reReadItems();
 		playPause = true;
 		AbstractSong song = player.play(position);
 		playerArtist.setText(song.getArtist());
