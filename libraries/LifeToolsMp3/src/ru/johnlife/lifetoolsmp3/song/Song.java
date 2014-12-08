@@ -242,8 +242,13 @@ public class Song implements Comparable<Song>, Parcelable, AbstractSong {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		return (o instanceof Song) && ((Song)o).id == id;
+	public boolean equals(Object object) {
+		if (this == object)	return true;
+		if (null == object) return false;
+		if (this.getClass() != object.getClass()) return false;
+		Song another = (Song) object;
+		if (this.id != another.id) return false;
+		return true;
 	}
 
 	public String getTitle() {

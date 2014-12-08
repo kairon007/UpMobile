@@ -1,5 +1,7 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
+import java.util.ArrayList;
+
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
@@ -8,6 +10,7 @@ import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -109,7 +112,11 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				@Override
 				public void onClick(View v) {
 					Bundle bundle = new Bundle();
-					bundle.putParcelable(Constants.KEY_SELECTED_SONG, item);
+					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
+					for (int i = 0; i < getCount(); i++) {
+						list.add(getItem(i));
+					}
+					bundle.putParcelableArrayList(Constants.KEY_SELECTED_SONG, list);
 					bundle.putInt(Constants.KEY_SELECTED_POSITION, onClickPosition);
 					PlayerFragment playerFragment = new PlayerFragment();
 					playerFragment.setArguments(bundle);
