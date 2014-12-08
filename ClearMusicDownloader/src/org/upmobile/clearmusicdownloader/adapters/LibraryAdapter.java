@@ -126,7 +126,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
-						PlayerService.get(getContext()).play(onClickPosition);
+						PlayerService.get(getContext()).play(item.getPath());
 						if (currentPlayPosition == onClickPosition) {
 							item.turnOff(MusicData.MODE_PLAYING);
 							setButtonBackground(BTN_PAUSE);

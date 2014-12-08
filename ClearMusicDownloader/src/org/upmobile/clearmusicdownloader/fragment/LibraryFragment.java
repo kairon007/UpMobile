@@ -42,7 +42,6 @@ public class LibraryFragment extends Fragment {
 		ArrayList<MusicData> srcList = querySong();
 		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
-			PlayerService.get(getActivity()).setQueue(list);
 			adapter.addAll(srcList);
 			listView.setAdapter(adapter);
 		}

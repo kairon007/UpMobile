@@ -12,7 +12,6 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,9 +28,7 @@ public class MainActivity extends BaseClearActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		if (PlayerService.hasInstance()) {
-			startService(new Intent(this, PlayerService.class));
-		}
+		PlayerService.get(this);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -82,7 +79,6 @@ public class MainActivity extends BaseClearActivity {
 			}
 			cursor.close();
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(result);
-			PlayerService.get(this).setQueue(list);
 			break;
 		}
 	}

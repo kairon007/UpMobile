@@ -28,9 +28,12 @@ import android.os.Process;
 public class PlayerService extends Service implements OnCompletionListener, OnErrorListener, OnPreparedListener, Handler.Callback {
 	
 	//constants
-	private static final String EMPTY_PATH = "send.empty.path";
 	private static final int SMODE_PLAYING = 0x00000001;	
 	private static final int SMODE_PREPARED = 0x00000002;
+	
+	private static final int MSG_PLAY = 1;
+	private static final int MSG_PLAY_CURRENT = 2;
+	private static final int MSG_PAUSE = 3;
 	
 	//multy-threading
 	private static final Object wait = new Object();
@@ -43,11 +46,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private MediaPlayer player;
 	
 	
-	private ArrayList<AbstractSong> queue;
-	private Stack<AbstractSong> stack;
+	private Stack<String> stack;
 	private int mode;
 	
-	private int currentPosition = -1;
+	private String currentPath;
+//	private int currentPosition = -1;
 	private boolean isPrepared;
 	private boolean isComplete = false;
 	
@@ -82,7 +85,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		HandlerThread thread = new HandlerThread("PlayerService", Process.THREAD_PRIORITY_BACKGROUND);
 		thread.start();
 		player = new MediaPlayer();
-		stack = new Stack<AbstractSong>();
+		stack = new Stack<String>();
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
@@ -98,6 +101,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	@Override
 	public void onDestroy() {
 		instance = null;
+		stack = null;
+		currentPath = null;
 		player.release();
 		looper.quit();
 	}
@@ -107,34 +112,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		//TODO handleMessage
 		mode |= SMODE_PLAYING;
 		switch (msg.what) {
-		case Constants.MSG_PLAY:
+		case MSG_PLAY:
 			try {
-				if (msg.obj.equals(EMPTY_PATH)) {
-					RemoteSong song = (RemoteSong) queue.get(currentPosition);
-					song.getDownloadUrl(new DownloadUrlListener() {
-						
-						@Override
-						public void success(String url) {
-							try {
-								Uri uri = Uri.parse(url);
-								player.setDataSource(PlayerService.this, uri);
-								player.prepareAsync();
-								synchronized (wait) {
-									wait.wait();
-								}
-							} catch (Exception e) {
-								android.util.Log.d("log", "in method \"success\" into \"handleMessage\" appear problem: " + e);
-							}
-						}
-						
-						@Override
-						public void error(String error) {
-							
-						}
-						
-					});
-					break;
-				}
 				Uri uri = Uri.parse((String) msg.obj);
 				player.setDataSource(this, uri);
 				player.prepareAsync();
@@ -147,11 +126,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			}
 			break;
 
-		case Constants.MSG_PLAY_CURRENT:
+		case MSG_PLAY_CURRENT:
 			player.start();
 			break;
 
-		case Constants.MSG_PAUSE:
+		case MSG_PAUSE:
 			player.pause();
 			break;
 
@@ -165,76 +144,26 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if ((mode & SMODE_PLAYING) != SMODE_PLAYING) return;
 		synchronized (lock) {
 			Message message = new Message();
-			message.what = Constants.MSG_PAUSE;
+			message.what = MSG_PAUSE;
 			handler.sendMessage(message);
 		}
 	}
 
-	public AbstractSong play(int i) {
+	public void play(String path) {
 		Message message = new Message();
-		AbstractSong song = queue.get(i);
 		synchronized (lock) {
-			if (currentPosition != -1 && currentPosition != i) {
+			if (path.equals(currentPath)) {
+				message.what = MSG_PLAY_CURRENT;
+			} else {
 				player.reset();
-				message.what = Constants.MSG_PLAY;
-			} else if ((mode & SMODE_PLAYING) == SMODE_PLAYING) {
-				message.what = Constants.MSG_PLAY_CURRENT;
-			} else {
-				message.what = Constants.MSG_PLAY;
+				message.what = MSG_PLAY;
 			}
-			if (song.getClass() == RemoteSong.class){
-				message.obj = EMPTY_PATH;
-			} else if (song.getClass() == MusicData.class) {
-				message.obj = song.getPath();
-			} else {
-				android.util.Log.d("log", "unknown type of data in object field");
-			}
-			stack.push(song);
-			currentPosition = i;
-			handler.sendMessage(message);
-		}
-		return song;
-	}
-
-	public AbstractSong previous() {
-		AbstractSong song = null;
-		if (null != stack && !stack.isEmpty()) {
-			song = stack.pop();
-			currentPosition = -1;
-			play(song);
-		}
-		return song;
-	}
-
-	public AbstractSong forward() {
-		AbstractSong song = null;
-		currentPosition++;
-		if (currentPosition >= queue.size()) {
-			currentPosition = queue.size() - 1;
-		}
-		song = queue.get(currentPosition);
-		play(song);
-		return song;
-	}
-	
-	private void play (AbstractSong song) {
-		synchronized (lock) {
-			player.stop();
-			player.reset();
-			Message message = new Message();
-			if (song.getClass() == RemoteSong.class) {
-				message.obj = EMPTY_PATH;
-			} else {
-				message.obj = song.getPath();
-			}
-			message.what = Constants.MSG_PLAY;
+			stack.push(path);
+			currentPath = path;
 			handler.sendMessage(message);
 		}
 	}
 
-	public void setQueue(ArrayList<AbstractSong> list) {
-		queue = new ArrayList<AbstractSong>(list);
-	}
 
 	@Override
 	public void onPrepared(MediaPlayer paramMediaPlayer) {
@@ -270,14 +199,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public void seekTo(int progress) {
 		player.seekTo(progress);
 	}
-
-//	public Object getData () {
-//		return new Object();
-//	}
-//	
-//	public int getCerrent() {
-//		return 1;
-//	}
 	
 	public boolean isPlaying() {
 		return player.isPlaying();
