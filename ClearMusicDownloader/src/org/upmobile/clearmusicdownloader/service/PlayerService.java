@@ -63,12 +63,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public static PlayerService get(Context context) {
 		if (instance == null) {
 			context.startService(new Intent(context, PlayerService.class));
-			try {
-				synchronized (wait) {
-					wait.wait();
-				}
-			} catch (InterruptedException e) {
-			}
 		}
 		return instance;
 	}
@@ -93,9 +87,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		looper = thread.getLooper();
 		handler = new Handler(looper, this);
 		instance = this;
-		synchronized (wait) {
-			wait.notifyAll();
-		}
 	}
 	
 	@Override
