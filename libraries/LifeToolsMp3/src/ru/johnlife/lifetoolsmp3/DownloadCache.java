@@ -16,6 +16,15 @@ public class DownloadCache {
 		return instanse;
 	}
 	
+	public boolean contain(String artist, String title) {
+		for (Item item : cache) {
+			if (item.getArtist().equals(artist) && item.getTitle().equals(title)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public boolean put(String artist, String title, DownloadCacheCallback callback) {
 		boolean isCached = cache.size() + 1 > CACHE_CAPACITY;
 		Item item = new Item(artist, title, isCached);

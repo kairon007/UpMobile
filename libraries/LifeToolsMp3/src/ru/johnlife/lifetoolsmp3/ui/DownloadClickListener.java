@@ -121,7 +121,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			});
 		}
 		setCanceledListener(id, cancelDownload);
-		if (isCached)  {
+		if (isCached) {
 			return;
 		}
 		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(".mp3");
@@ -183,10 +183,23 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 	}
 	
-	
+	protected boolean existFile(String song, String artist){
+		File musicDir = new File(getDirectory());
+		StringBuilder stringBuilder = new StringBuilder(song).append(" - ").append(artist).append(".mp3");
+		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
+		String fileUri = musicDir.getAbsolutePath() + "/" + sb;
+		File trackFile = new File(fileUri);
+		if (trackFile.exists()){
+			return true;
+		}
+		return false;
+	}	
 
 	@Override
 	public void onClick(View v) {
+		if (existFile(song.getArtist(), song.getTitle()) || DownloadCache.getInstanse().contain(song.getArtist(), song.getTitle())) {
+			return;
+		}
 		downloadSong(false);
 	}
 
@@ -507,7 +520,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			int current = 0;
 			try {
 				file = new File(filePath);
-				file.createNewFile();
+				if (!file.exists()){
+					file.createNewFile();
+				}
 				output = new FileOutputStream(file);
 				input = connection.getInputStream();
 				size = connection.getContentLength();
