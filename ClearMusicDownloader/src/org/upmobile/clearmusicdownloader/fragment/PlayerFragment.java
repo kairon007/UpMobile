@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
@@ -16,7 +15,9 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -25,6 +26,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,7 +38,6 @@ import android.widget.TextView;
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
 	private View parentView;
-//	private Object selectedSong;
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
@@ -61,6 +63,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private int selectedPosition;
 	private AbstractSong song;
 	private ArrayList<AbstractSong> list;
+	private Dialog dialog;
+	private Button playerCancelLyrics;
 	
 
 	@Override
@@ -93,7 +97,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
 		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
 		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
+		playerCancelLyrics = (Button) parentView.findViewById(R.id.player_cancel_lyrics);
 		playerProgress.setOnSeekBarChangeListener(this);
+		playerCancelLyrics.setOnClickListener(this);
 		play.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
@@ -143,7 +149,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
 			LyricsFetcher lyricsFetcher = new LyricsFetcher(getActivity());
-			lyricsFetcher.fetchLyrics(title, artist);
+			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
 				
 				@Override
@@ -151,7 +157,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					if (foundLyrics) {
 						playerLyricsView.setText(Html.fromHtml(lyrics));
 					} else {
-						String songName = artist + " - " + title;
+						String songName = song.getArtist() + " - " + song.getTitle();
 						playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
 					}
 				}
@@ -176,7 +182,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			selectedPosition = selectedPosition + 1;
 			changeView();
 			song = list.get(selectedPosition);
-			player.play(list.get(selectedPosition).getPath());
+			getUri();
 			break;
 		case -1:
 			if (0 != selectedPosition) {
@@ -184,20 +190,73 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 			song = list.get(selectedPosition);
 			changeView();
-			player.play(list.get(selectedPosition).getPath());
+			getUri();
 			break;
 		case 0:
 			changeView();
 			song = list.get(selectedPosition);
-			player.play(list.get(selectedPosition).getPath());
+			getUri();
 			break;
 		default:
 			break;
 		}
 	}
+	
+	private void getUri() {
+		if (song.getClass() == MusicData.class) {
+			player.play(song.getPath());
+		} else {
+			((RemoteSong) song).getCover(true, new OnBitmapReadyListener() {
+				@Override
+				public void onBitmapReady(Bitmap bmp) {
+					if (null != bmp) {
+						playerCover.setImageBitmap(bmp);
+					}
+				}
+			});
+			showCustomDialog();
+			song.getDownloadUrl(new DownloadUrlListener() {
+
+				@Override
+				public void success(String url) {
+					player.play(url);
+					dialog.dismiss();
+				}
+
+				@Override
+				public void error(String error) {
+					dialog.dismiss();
+				}
+			});
+		}
+	}
+	
+    //Showing a custom styled dialog and adding actions to the buttons
+    protected void showCustomDialog() {
+		dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setCancelable(false);
+		dialog.setContentView(R.layout.layout_dialog);
+		((TextView)dialog.findViewById(R.id.dialog_title)).setText(R.string.message_please_wait);
+		((TextView)dialog.findViewById(R.id.dialog_text)).setText(R.string.message_loading);
+		Button btnCancel = (Button) dialog.findViewById(R.id.btncancel);
+		btnCancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				((RemoteSong) song).cancelTasks();
+				dialog.cancel();
+			}
+
+		});
+		final ImageView myImage = (ImageView) dialog.findViewById(R.id.loader);
+        myImage.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate) );
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x7f000000));
+		dialog.show();
+    }
 
 	private void download() {
-		int id = artist.hashCode() * title.hashCode() * (int) System.currentTimeMillis();
+		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
 		if (downloadListener.isBadInet()) return;
 		downloadListener.onClick(parentView);
