@@ -175,17 +175,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case 1:
 			selectedPosition = selectedPosition + 1;
 			changeView();
+			song = list.get(selectedPosition);
 			player.play(list.get(selectedPosition).getPath());
 			break;
 		case -1:
 			if (0 != selectedPosition) {
 				selectedPosition = selectedPosition - 1;
 			}
+			song = list.get(selectedPosition);
 			changeView();
 			player.play(list.get(selectedPosition).getPath());
 			break;
 		case 0:
 			changeView();
+			song = list.get(selectedPosition);
 			player.play(list.get(selectedPosition).getPath());
 			break;
 		default:
@@ -201,11 +204,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void changeView() {
-		playerArtist.setText(song.getArtist());
-		playerTitle.setText(song.getTitle());
+		playerArtist.setText(list.get(selectedPosition).getArtist());
+		playerTitle.setText(list.get(selectedPosition).getTitle());
 		playerTotalTime.setText("");
 		playerProgress.post(progressAction);
-		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
+		playerTotalTime.setText(Util.getFormatedStrDuration(list.get(selectedPosition).getDuration()));
 	}
 	
 	public void pause() {
