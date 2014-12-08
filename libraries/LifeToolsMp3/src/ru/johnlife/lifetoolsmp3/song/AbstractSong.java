@@ -1,6 +1,8 @@
 package ru.johnlife.lifetoolsmp3.song;
 
-public interface AbstractSong {
+import android.os.Parcelable;
+
+public interface AbstractSong extends Parcelable{
 	
 	public String getPath();
 

@@ -1,5 +1,7 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
+import java.util.ArrayList;
+
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
@@ -57,21 +59,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private long totalTime;
 	private boolean playPause;
 	private int selectedPosition;
+	private AbstractSong song;
+	private ArrayList<AbstractSong> list;
 	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		player = PlayerService.get(getActivity());
 		parentView = inflater.inflate(R.layout.player, container, false);
+		list = new ArrayList<AbstractSong>();
 		init();
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_POSITION)) {
-			// getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+			list = getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG);
 			selectedPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
-		} else {
-			selectedPosition = 0;//it's temporary solutions. selectedPosition must be position from adapter
+			play(0);
 		}
-//		setSongObject(selectedSong); 
-		play(selectedPosition);
 		return parentView;
 	}
 	
@@ -102,65 +104,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerSaveTags.setOnClickListener(this);
 	}
 	
-	public void setSongObject(Object obj) {
-		if(null == obj) return;
-		if (obj.getClass().equals(RemoteSong.class)) {
-		initPAramsForOnlineSong(((RemoteSong) obj));
-		title = ((RemoteSong) obj).getTitle();
-		artist = ((RemoteSong) obj).getArtist();
-		totalTime = ((RemoteSong) obj).getDuration();
-		((RemoteSong) obj).getDownloadUrl(new DownloadUrlListener() {
-			
-			@Override
-			public void success(String url) {
-				path = url;
-			}
-			
-			@Override
-			public void error(String error) {
-				// TODO Auto-generated method stub
-			}
-		});
-		} else if (obj.getClass().equals(MusicData.class)) {
-			download.setVisibility(View.GONE);
-			title = ((MusicData) obj).getTitle();
-			artist = ((MusicData) obj).getArtist();
-			totalTime = ((MusicData) obj).getDuration();
-			path = ((MusicData) obj).getPath();
-		}
-	}
-
-	private void initPAramsForOnlineSong(RemoteSong remoteSong) {
-		remoteSong.getCover(true, new OnBitmapReadyListener() {
-			@Override
-			public void onBitmapReady(Bitmap bmp) {
-				if (null != bmp) {
-					playerCover.setImageBitmap(bmp);
-				}
-			}
-		});
-	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.player_play:
-			if (playPause) {
-				pause();
-			} else {
-				play(selectedPosition);
-			}
-			//TODO start play
+			play(0);
 			break;
 		case R.id.player_previous:
-			shift(-1);
-			player.previous();
-			//TODO start previous
+			play(-1);
 			break;
 		case R.id.player_forward:
-			shift(1);
-			player.forward();
-			//TODO start forward
+			play(1);
 			break;
 		case R.id.player_download:
 			download();
@@ -215,14 +169,24 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 	
-	private void shift(int delta) {
-		// delta must be 1 or -1, 1 - next, -1 - previous
+	private void play(int delta) {
+		// delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 		switch (delta) {
 		case 1:
-			
+			selectedPosition = selectedPosition + 1;
+			changeView();
+			player.play(list.get(selectedPosition).getPath());
 			break;
 		case -1:
-			
+			if (0 != selectedPosition) {
+				selectedPosition = selectedPosition - 1;
+			}
+			changeView();
+			player.play(list.get(selectedPosition).getPath());
+			break;
+		case 0:
+			changeView();
+			player.play(list.get(selectedPosition).getPath());
 			break;
 		default:
 			break;
@@ -231,15 +195,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void download() {
 		int id = artist.hashCode() * title.hashCode() * (int) System.currentTimeMillis();
-//		downloadListener = new DownloadListener(getActivity(), (RemoteSong) selectedSong, id);
-//		if (downloadListener.isBadInet()) return;
-//		downloadListener.onClick(parentView);
+		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
+		if (downloadListener.isBadInet()) return;
+		downloadListener.onClick(parentView);
 	}
 
-	private void play(int position) {
-		((MainActivity) getActivity()).reReadItems();
-		playPause = true;
-		AbstractSong song = player.play(position);
+	private void changeView() {
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());
 		playerTotalTime.setText("");
@@ -303,6 +264,5 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		}
 
-	};
-	
+	};	
 }
