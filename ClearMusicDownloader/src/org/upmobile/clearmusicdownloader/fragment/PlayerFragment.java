@@ -206,7 +206,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 *  - 
 	 * delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 	 */
-	private void play(int delta) {
+	private void play(int delta) throws IllegalArgumentException {
 		switch (delta) {
 		case 1:
 			if (selectedPosition < list.size() - 1) ++selectedPosition;
@@ -220,7 +220,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			getUri();
 			break;
 		default:
-			break;
+			throw new IllegalArgumentException("delta must be 1, -1 or 0");
 		}
 	}
 

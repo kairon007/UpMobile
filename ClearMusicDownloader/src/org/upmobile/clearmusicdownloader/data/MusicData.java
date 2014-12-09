@@ -17,7 +17,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
-public class MusicData implements Comparable<MusicData>, Parcelable, AbstractSong{
+public class MusicData implements Comparable<MusicData>, AbstractSong{
 
 	public static final String[] FILLED_PROJECTION = {
 		MediaStore.Audio.Media._ID,
@@ -28,7 +28,6 @@ public class MusicData implements Comparable<MusicData>, Parcelable, AbstractSon
 	};
 	public static final int MODE_VISIBLITY = 0x00000001;
 	public static final int MODE_PLAYING = 0x00000002;
-	private Object tag;
 	private String path;
 	private String title;
 	private String artist;
@@ -77,7 +76,6 @@ public class MusicData implements Comparable<MusicData>, Parcelable, AbstractSon
 				if (file.exists()) file.delete();
 				else android.util.Log.i(getClass().getCanonicalName(), "Attention! File "+ artist + " - " + title + ".mp3 " + " doesn't exist");
 			}
-			
 		}).start();
 	}
 
@@ -173,14 +171,6 @@ public class MusicData implements Comparable<MusicData>, Parcelable, AbstractSon
 		}
 	}
 	
-	public Object getTag() {
-		return tag;
-	}
-
-	public void setTag(Object tag) {
-		this.tag = tag;
-	}
-
 	public String getPath() {
 		return path;
 	}

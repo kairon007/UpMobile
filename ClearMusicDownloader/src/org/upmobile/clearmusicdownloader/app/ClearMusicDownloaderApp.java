@@ -15,5 +15,4 @@ public class ClearMusicDownloaderApp extends Application {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		MusicApp.setSharedPreferences(prefs);
 	}
-	
 }

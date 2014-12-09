@@ -1,6 +1,5 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -100,12 +99,10 @@ public class DownloadsFragment extends Fragment {
 			while (c.moveToNext()) {
 				MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
 				if (null != c.getString(14) && c.getString(14).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
-					ArrayList<MusicData> chek = new ArrayList<MusicData>();
 					for (int i = 0; i < mAdapter.getCount(); i++) {
-						chek.add((MusicData) mAdapter.getItem(i));
-					}
-					if (!chek.contains(song)) {
-						addItem(song);
+						if (((MusicData) mAdapter.getItem(i)).equals(song)) {
+							addItem(song);
+						}
 					}
 				}
 			}
@@ -120,10 +117,10 @@ public class DownloadsFragment extends Fragment {
 					@Override
 					public void run() {
 						mAdapter.add(song);
-						mAdapter.notifyDataSetChanged();
 					}
 				});
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -171,10 +168,10 @@ public class DownloadsFragment extends Fragment {
 					@Override
 					public void run() {
 						mAdapter.remove(mAdapter.getItem(position));
-						mAdapter.notifyDataSetChanged();
 					}
 				});
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
