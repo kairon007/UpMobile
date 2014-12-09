@@ -133,8 +133,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:progressDrawable="@drawable/progress"
                         android:thumb="@drawable/checkbox" />
 
@@ -202,30 +202,34 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <LinearLayout
-                android:id="@+id/player_lyrics_frame"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                android:visibility="gone" >
+                android:animateLayoutChanges="true" >
 
-                <TextView
-                    android:id="@+id/player_lyrics_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/dashed_area_text" />
+                <LinearLayout
+                    android:id="@+id/player_lyrics_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
 
-                <Button
-                    android:id="@+id/player_cancel_lyrics"
-                    style="@style/UIButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/edit_mp3_cancel" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/player_lyrics_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <Button
+                        android:id="@+id/player_cancel_lyrics"
+                        style="@style/UIButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/edit_mp3_cancel" />
+                </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
     </com.special.utils.UIParallaxScroll>
 
