@@ -21,7 +21,7 @@
         android:id="@+id/front_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white_transparent"
+        android:background="@drawable/list_selector_white"
         android:orientation="horizontal"
         android:padding="4dp" >
 
