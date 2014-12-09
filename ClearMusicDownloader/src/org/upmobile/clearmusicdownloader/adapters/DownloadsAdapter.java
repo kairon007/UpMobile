@@ -63,7 +63,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 			}
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
-			image.setImageResource(R.drawable.fallback_cover);
+			image.setImageResource(R.drawable.def_cover_circle);
 			progress.setProgress(item.getProgress());
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
 		}

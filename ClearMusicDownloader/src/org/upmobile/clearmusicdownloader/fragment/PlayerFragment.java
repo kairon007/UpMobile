@@ -1,5 +1,7 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
@@ -7,6 +9,11 @@ import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
+
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.view.ViewHelper;
 
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -29,10 +36,12 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -42,6 +51,8 @@ import android.widget.TextView;
 
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
+    public static final int DURATION = 500; // in ms
+    private String PACKAGE = "IDENTIFY";
 	private ArrayList<AbstractSong> list;
 	private AbstractSong song;
 	private String folderFilter;
@@ -65,6 +76,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private TextView playerTotalTime;
 	private TextView playerLyricsView;
 	private int selectedPosition;
+    private int delta_top;
+    private int delta_left;
+    private float scale_width;
+    private float scale_height;
 	private Dialog dialog;
 	
 
@@ -78,15 +93,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_POSITION)) {
 			list = getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG);
 			selectedPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
+	        top = getArguments().getInt(PACKAGE + ".top");
+	        left = getArguments().getInt(PACKAGE + ".left");
+	        width = getArguments().getInt(PACKAGE + ".width");
+	        height = getArguments().getInt(PACKAGE + ".height");    
 			play(0);
 		} else {
 			cheñkWhereQueue();
 			song = list.get(selectedPosition);
 			changeView();
 		}
+		startImageAnimation();
 		return parentView;
 	}
-	
+
 	private void init() {
 		play = (ImageButton) parentView.findViewById(R.id.player_play);
 		previous = (ImageButton) parentView.findViewById(R.id.player_previous);
@@ -207,6 +227,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void getUri() {
 		song = list.get(selectedPosition);
 		if (song.getClass() == MusicData.class) {
+			download.setVisibility(View.GONE);
 			player.play(song.getPath());
 			changeView();
 		} else {
@@ -300,6 +321,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 
 	};
+	private int top;
+	private int left;
+	private int width;
+	private int height;
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -372,4 +397,49 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		return cursor;
 	}
+	
+	
+	private void startImageAnimation() {
+		ViewTreeObserver observer = playerCover.getViewTreeObserver();
+		observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+			@Override
+			public boolean onPreDraw() {
+				playerCover.getViewTreeObserver().removeOnPreDrawListener(this);
+				int[] screen_location = new int[2];
+				playerCover.getLocationOnScreen(screen_location);
+				delta_left = left - screen_location[0];
+				delta_top = top - screen_location[1];
+				scale_width = (float) width / playerCover.getWidth();
+				scale_height = (float) height / playerCover.getHeight();
+				runEnterAnimation();
+				return true;
+			}
+		});
+	}
+	
+    private void runEnterAnimation() {
+        ViewHelper.setPivotX(playerCover, 0.f);
+        ViewHelper.setPivotY(playerCover, 0.f);
+        ViewHelper.setScaleX(playerCover, scale_width);
+        ViewHelper.setScaleY(playerCover, scale_height);
+        ViewHelper.setTranslationX(playerCover, delta_left);
+        ViewHelper.setTranslationY(playerCover, delta_top);
+        animate(playerCover).
+                setDuration(DURATION).
+                scaleX(1.f).
+                scaleY(1.f).
+                translationX(0.f).
+                translationY(0.f).
+                setInterpolator(new DecelerateInterpolator()).
+        		setListener(new AnimatorListenerAdapter() {  
+
+        			@Override
+	        	    public void onAnimationEnd(Animator animation) {        	    
+        			}
+        		});
+
+        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(parentView.findViewById(R.id.player_layout), "alpha", 0f, 1f);
+        bg_anim.setDuration(DURATION);
+        bg_anim.start();
+    }
 }

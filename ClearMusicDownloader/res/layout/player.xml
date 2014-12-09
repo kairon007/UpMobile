@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/player_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.special.DetailActivity" >
+    android:layout_height="match_parent" >
 
     <com.special.utils.UIParallaxScroll
         android:id="@+id/scroller"
@@ -19,12 +19,26 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/player_cover"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="208dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/shadow" />
+                android:background="@color/white_transparent" >
+
+                <FrameLayout
+                    android:layout_width="208dp"
+                    android:layout_height="208dp"
+                    android:layout_gravity="center" >
+
+                    <com.special.utils.UICircularImage
+                        android:id="@+id/player_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/def_cover_circle_web"
+                        app:line_color="@color/theme_color"
+                        app:line_color_press="@color/green" />
+                </FrameLayout>
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

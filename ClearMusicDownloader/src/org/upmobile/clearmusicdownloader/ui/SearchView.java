@@ -25,7 +25,7 @@ public class SearchView extends OnlineSearchView {
 
 	private ImageView baseProgress;
 	private ImageView refreshProgress;
-
+    private String PACKAGE = "IDENTIFY";
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
 	}
@@ -36,9 +36,18 @@ public class SearchView extends OnlineSearchView {
 		Bundle bundle = new Bundle();
 		bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
 		bundle.putParcelableArrayList(Constants.KEY_SELECTED_SONG, list);
+        int[] screen_location = new int[2];
+        View v = view.findViewById(R.id.cover);
+        v.getLocationOnScreen(screen_location);
+        
+        bundle.putInt(PACKAGE + ".left", screen_location[0]);
+        bundle.putInt(PACKAGE + ".top", screen_location[1]);
+        bundle.putInt(PACKAGE + ".width", view.getWidth());
+        bundle.putInt(PACKAGE + ".height", view.getHeight());
 		PlayerFragment playerFragment = new PlayerFragment();
 		playerFragment.setArguments(bundle);
 		((MainActivity) view.getContext()).changeFragment(playerFragment);
+		((MainActivity) getContext()).overridePendingTransition(0, 0);
 		super.click(view, position);
 	}
 

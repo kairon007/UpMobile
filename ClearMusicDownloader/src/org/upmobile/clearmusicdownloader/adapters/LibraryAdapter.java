@@ -91,7 +91,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				setButtonBackground(BTN_PLAY);
 			}
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-			image.setImageResource(R.drawable.fallback_cover);
+			image.setImageResource(R.drawable.def_cover_circle);
 			setListener();
 		}
 
