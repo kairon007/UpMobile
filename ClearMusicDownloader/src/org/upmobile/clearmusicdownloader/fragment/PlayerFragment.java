@@ -8,6 +8,7 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -16,9 +17,13 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.app.Dialog;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
@@ -39,6 +44,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private ArrayList<AbstractSong> list;
 	private AbstractSong song;
+	private String folderFilter;
 	private PlayerService player;
 	protected DownloadListener downloadListener;
 	private View parentView;
@@ -67,11 +73,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player = PlayerService.get(getActivity());
 		parentView = inflater.inflate(R.layout.player, container, false);
 		list = new ArrayList<AbstractSong>();
+		folderFilter = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 		init();
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_POSITION)) {
 			list = getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG);
 			selectedPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
 			play(0);
+		} else {
+			cheñkWhereQueue();
+			song = list.get(selectedPosition);
+			changeView();
 		}
 		return parentView;
 	}
@@ -112,7 +123,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			play(0);
 			break;
 		case R.id.player_previous:
-			
 			play(-1);
 			break;
 		case R.id.player_forward:
@@ -171,8 +181,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 	
+	/**
+	 * @param delta
+	 *  - 
+	 * delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
+	 */
 	private void play(int delta) {
-		// delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 		switch (delta) {
 		case 1:
 			if (selectedPosition < list.size() - 1) ++selectedPosition;
@@ -189,7 +203,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			break;
 		}
 	}
-	
+
 	private void getUri() {
 		song = list.get(selectedPosition);
 		if (song.getClass() == MusicData.class) {
@@ -222,8 +236,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 	
-    //Showing a custom styled dialog and adding actions to the buttons
-    protected void showCustomDialog() {
+
+    private void showCustomDialog() {
 		dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setCancelable(false);
@@ -281,7 +295,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				}
 				playerProgress.postDelayed(this, 1000);
 			} catch (Exception e) {
-				Log.d(getClass().getSimpleName(), e.getMessage());
+				Log.d(getClass().getSimpleName(), e + "");
 			}
 		}
 
@@ -305,7 +319,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		// TODO Auto-generated method stub
 	}
 	
-	//TODO improve the method
+	/**
+	 * @param isPlaying
+	 *  - 
+	 *  If "true", the button changes the picture to "play", if "false" changes to "pause"
+	 */
 	private void changePlayPauseView(boolean isPlaying) {
 		if (isPlaying) {
 			play.setImageResource(R.drawable.play);
@@ -314,4 +332,44 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 	
+	private void cheñkWhereQueue() {
+		if (player.getCurrentPath().contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
+			list = new ArrayList<AbstractSong>(querySong());
+			for (int i = 0; i < list.size(); i ++ ) {
+				if (player.getCurrentPath().equals(list.get(i).getPath())) {
+					selectedPosition = i;
+				}
+			}
+		} else if (player.getCurrentPath().contains("http")) {
+			list = new ArrayList<AbstractSong>(StateKeeper.getInstance().getResults());
+			for (int i = 0; i < list.size(); i ++ ) {
+				if (player.getCurrentPath().equals(list.get(i).getPath())) {
+					selectedPosition = i;
+				}
+			}
+		} else {
+			Log.d(getClass().getSimpleName(), "Unknown queue! Check the method of updating the queue player!!!");
+		}
+	}
+	
+	private ArrayList<MusicData> querySong() {
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		Cursor cursor = buildQuery(getActivity().getContentResolver());
+		if (!cursor.moveToFirst()) {
+			return new ArrayList<MusicData>();
+		}
+		while (cursor.moveToNext()) {
+			MusicData data = new MusicData();
+			data.populate(cursor);	
+			result.add(data);
+		}
+		cursor.close();
+		return result;
+	}
+	
+	private Cursor buildQuery(ContentResolver resolver) {
+		String selection =  MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%'" ;
+		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+		return cursor;
+	}
 }

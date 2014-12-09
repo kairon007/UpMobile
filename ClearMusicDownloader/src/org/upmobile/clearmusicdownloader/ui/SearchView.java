@@ -10,6 +10,7 @@ import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
@@ -19,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 public class SearchView extends OnlineSearchView {
 
@@ -119,5 +119,9 @@ public class SearchView extends OnlineSearchView {
 	private void showAnimation(ImageView image) {
 		image.setVisibility(View.VISIBLE);
 		image.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.rotate));
+	}
+
+	public void saveState() {
+		StateKeeper.getInstance().saveStateAdapter(this);
 	}
 }

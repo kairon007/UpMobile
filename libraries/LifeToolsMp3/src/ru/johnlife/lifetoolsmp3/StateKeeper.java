@@ -197,7 +197,7 @@ public class StateKeeper {
 			playerInstance = searchView.getPlayer();
 		} else if (checkState(PROGRESS_DIALOG)) setClickPosition(searchView.getClickPosition());
 	}
-	
+
 	public void restoreState(OnlineSearchView view) {
 		if (null != songField && !Util.removeSpecialCharacters(songField).equals("")) {
 			view.setSearchField(songField);
@@ -325,5 +325,8 @@ public class StateKeeper {
 	public void setTag(Object tag) {
 		this.tag = tag;
 	}
-
+	
+	public ArrayList<Song> getResults() {
+		return results;
+	}
 }

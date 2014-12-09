@@ -169,6 +169,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return (mode & SMODE_COMPLETE) == SMODE_COMPLETE;
 	}
 	
+	public String getCurrentPath() {
+		return currentPath;
+	}
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);

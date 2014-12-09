@@ -9,9 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class SearchFragment extends Fragment {
+	private SearchView searchView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return new SearchView(getActivity().getLayoutInflater()).getView();
+		searchView = new SearchView(getActivity().getLayoutInflater());
+		return searchView.getView();
+	}
+	
+	@Override
+	public void onPause() {
+		searchView.saveState();
+		super.onPause();
 	}
 }
