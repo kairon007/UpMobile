@@ -3,6 +3,7 @@ package org.upmobile.clearmusicdownloader.fragment;
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 
@@ -35,7 +36,7 @@ public class LibraryFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle state) {
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
-		BaseClearActivity parentActivity = (BaseClearActivity) getActivity();
+		MainActivity parentActivity = (MainActivity) getActivity();
 		resideMenu = parentActivity.getResideMenu();
 		init();
 		settingListView();

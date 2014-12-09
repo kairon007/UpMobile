@@ -530,11 +530,9 @@ public class ResideMenu extends FrameLayout{
 				if (currentActivityScaleX > 0.56f)
 					closeMenu();
 				else
-					((BaseClearActivity) getContext()).reReadItems();
 					openMenu();
 			} else {
 				if (currentActivityScaleX < 0.94f) {
-					((BaseClearActivity) getContext()).reReadItems();
 					openMenu();
 				} else {
 					closeMenu();

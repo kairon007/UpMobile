@@ -47,7 +47,6 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	reReadItems();
                 resideMenu.openMenu();
             }
         });
@@ -96,14 +95,8 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     	if (resideMenu.isOpened()){
     		resideMenu.closeMenu();
     	} else {
-    		reReadItems();
     		resideMenu.openMenu();
     	}
     }
     
-    public void reReadItems() {
-        menuItems = getMenuItems();
-        fragments = getFragments();
-        setUpMenu();
-    }
 }

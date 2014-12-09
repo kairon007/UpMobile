@@ -30,7 +30,6 @@ public class HomeFragment extends Fragment {
         parentView.findViewById(R.id.btn_open_menu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	((BaseClearActivity) getActivity()).reReadItems();
                 resideMenu.openMenu();
             }
         });
