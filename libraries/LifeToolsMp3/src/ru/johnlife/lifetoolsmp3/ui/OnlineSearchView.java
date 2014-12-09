@@ -255,10 +255,12 @@ public abstract class OnlineSearchView extends View {
 				}
 			});
 		}
-		listView.addFooterView(resultAdapter.getProgress());
-		View emtyHeader = inflate(getContext(), R.layout.empty_header, null);
-		listView.addHeaderView(emtyHeader);
-		if (!isRestored) listView.setAdapter(resultAdapter);
+		if (!isRestored) {
+			listView.addFooterView(resultAdapter.getProgress());
+			View emtyHeader = inflate(getContext(), R.layout.empty_header, null);
+			listView.addHeaderView(emtyHeader);
+			listView.setAdapter(resultAdapter);
+		}
 		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
 			if (isWhiteTheme(getContext())) {
 				listView.setDividerHeight(0);
