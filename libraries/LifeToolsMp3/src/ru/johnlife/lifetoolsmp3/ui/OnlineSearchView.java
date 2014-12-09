@@ -68,7 +68,6 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -349,7 +348,7 @@ public abstract class OnlineSearchView extends View {
 	
 	public int getScrollListView()
 	{
-	    View c = listView.getChildAt(0);
+	    View c = listView.getChildAt(1);
 	    if (c == null) return 0;
 	    int firstVisiblePosition = listView.getFirstVisiblePosition();
 	    int top = c.getTop();
