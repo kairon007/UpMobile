@@ -153,7 +153,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return player.getCurrentPosition();
 	}
 
-	public void seekTo(int progress) {
+	public void seekTo(int progress) throws IllegalStateException {
 		player.seekTo(progress);
 	}
 	

@@ -257,7 +257,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 	
-
     private void showCustomDialog() {
 		dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -329,7 +328,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (fromUser) {
-			player.seekTo(progress);
+			try {
+				player.seekTo(progress);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
