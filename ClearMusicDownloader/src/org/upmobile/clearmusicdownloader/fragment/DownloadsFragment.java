@@ -102,6 +102,7 @@ public class DownloadsFragment extends Fragment {
 					for (int i = 0; i < mAdapter.getCount(); i++) {
 						if (((MusicData) mAdapter.getItem(i)).equals(song)) {
 							addItem(song);
+							return;
 						}
 					}
 				}
