@@ -388,11 +388,11 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 					viewSearchTab = searchView.getView();
 				}
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					viewSearchTab.findViewById(R.id.search_scroll).setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.search_background_white));
+					viewSearchTab.findViewById(R.id.choise_engines_layout).setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.search_background_white));
 					((ListView) viewSearchTab.findViewById(R.id.list)).setDivider(new ColorDrawable(activity.getResources().getColor(R.color.divider_color_light)));
 					((ListView) viewSearchTab.findViewById(R.id.list)).setDividerHeight(1);
 				} else if ("AppTheme.Black".equals(Util.getThemeName(activity))) {
-					viewSearchTab.findViewById(R.id.search_scroll).setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.search_background_black));
+					viewSearchTab.findViewById(R.id.choise_engines_layout).setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.search_background_black));
 				}
 				container.addView(viewSearchTab);
 				return viewSearchTab;
