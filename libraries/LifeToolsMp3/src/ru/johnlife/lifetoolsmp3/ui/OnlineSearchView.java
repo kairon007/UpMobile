@@ -170,7 +170,7 @@ public abstract class OnlineSearchView extends View {
 
 		@Override
 		public void onFinishParsing(List<Song> songsList) {
-			resultAdapter.hideProgress();
+			hideRefreshProgress();
 			if (keeper.checkState(StateKeeper.SEARCH_STOP_OPTION)) return;
 			//TODO: set result
 			if (songsList.isEmpty()) {
@@ -529,21 +529,35 @@ public abstract class OnlineSearchView extends View {
 		edit.putString(OnlineSearchView.DOWNLOAD_DIR, downloadPath);
 		edit.commit();
 	}
-
+	
+	private ProgressBar refreshSpinner;
+	
+	public Object initRefreshProgress() {
+		refreshSpinner = new ProgressBar(getContext());
+		refreshSpinner.setIndeterminate(true);
+		return refreshSpinner;
+	}
+	
+	public void showRefreshProgress() {
+		refreshSpinner.setVisibility(View.VISIBLE);
+	}
+	
+	public void hideRefreshProgress() {
+		refreshSpinner.setVisibility(View.GONE);
+	}
+	
+	
 	public class SongSearchAdapter extends ArrayAdapter<Song> {
 
 		private LayoutInflater inflater;
 		private FrameLayout footer;
-		private ProgressBar refreshSpinner;
 
 		private SongSearchAdapter(Context context) {
 			super(context, -1, new ArrayList<Song>());
 			this.inflater = LayoutInflater.from(getContext());
 			this.footer = new FrameLayout(context);
-			this.refreshSpinner = new ProgressBar(context);
-			refreshSpinner.setIndeterminate(true);
-			footer.addView(refreshSpinner, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-			refreshSpinner.setVisibility(View.GONE);
+			footer.addView((View) initRefreshProgress(), new FrameLayout.LayoutParams(80, 80, Gravity.CENTER));
+			hideRefreshProgress();
 		}
 		
 		public ArrayList<Song> getAll() {
@@ -576,7 +590,7 @@ public abstract class OnlineSearchView extends View {
 				});
 			}
 			if (position == getCount() - 1) {
-				refreshSpinner.setVisibility(View.VISIBLE);
+				showRefreshProgress();
 				getNextResults();
 			}
 			View v = builder.build();
@@ -701,9 +715,9 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	private void getNextResults() {
-		resultAdapter.refreshSpinner.setVisibility(View.VISIBLE);
+		showRefreshProgress();
 		if (!taskIterator.hasNext()) {
-			resultAdapter.hideProgress();
+			hideRefreshProgress();
 			keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			return;
 		}

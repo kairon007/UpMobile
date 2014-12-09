@@ -18,17 +18,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 public class SearchView extends OnlineSearchView {
 
-	private ImageView load;
+	private ImageView baseProgress;
+	private ImageView refreshProgress;
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
 	}
-	
+
 	@Override
 	protected void click(final View view, int position) {
 		ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
@@ -67,31 +68,56 @@ public class SearchView extends OnlineSearchView {
 	public boolean isWhiteTheme(Context context) {
 		return false;
 	}
-	
+
 	@Override
 	protected boolean showFullElement() {
 		return false;
 	}
-	
+
 	@Override
 	protected boolean showDownloadButton() {
 		return false;
 	}
-	
+
 	@Override
 	public void specialInit(View v) {
-		load = (ImageView) v.findViewById(R.id.loader_image);
+		baseProgress = (ImageView) v.findViewById(R.id.loader_image);
 	}
-	
+
 	@Override
 	public void showBaseProgress() {
-		load.setVisibility(View.VISIBLE);
-		load.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.rotate));
+		showAnimation(baseProgress);
 	}
-	
+
 	@Override
 	public void hideBaseProgress() {
-		load.clearAnimation();
-		load.setVisibility(View.GONE);
+		hideAnimation(baseProgress);
+	}
+
+	@Override
+	public Object initRefreshProgress() {
+		refreshProgress = new ImageView(getContext());
+		refreshProgress.setImageResource(com.special.R.drawable.loader);
+		return refreshProgress;
+	}
+
+	@Override
+	public void showRefreshProgress() {
+		showAnimation(refreshProgress);
+	}
+
+	@Override
+	public void hideRefreshProgress() {
+		hideAnimation(refreshProgress);
+	}
+
+	private void hideAnimation(ImageView image) {
+		image.clearAnimation();
+		image.setVisibility(View.GONE);
+	}
+
+	private void showAnimation(ImageView image) {
+		image.setVisibility(View.VISIBLE);
+		image.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.rotate));
 	}
 }
