@@ -2,6 +2,7 @@ package org.upmobile.clearmusicdownloader.fragment;
 
 import java.util.ArrayList;
 
+import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
@@ -55,7 +56,7 @@ public class LibraryFragment extends Fragment {
 	}
 
 	private void init() {
-		folderFilter = Environment.getExternalStorageDirectory() +"/MusicDownloader/";//it's temporary solution
+		folderFilter = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 		adapter = new LibraryAdapter(getActivity(), org.upmobile.clearmusicdownloader.R.layout.library_item);
 		listView = (UISwipableList) parentView.findViewById(R.id.listView);
 	}
