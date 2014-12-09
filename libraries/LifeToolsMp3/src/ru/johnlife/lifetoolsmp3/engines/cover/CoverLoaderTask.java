@@ -1,28 +1,18 @@
 package ru.johnlife.lifetoolsmp3.engines.cover;
 
-import java.io.BufferedInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
-public class CoverLoaderTask extends AsyncTask<Void, Void, Bitmap> {
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+
+public class CoverLoaderTask implements ImageLoadingListener {
 
 	public interface OnBitmapReadyListener {
 		public void onBitmapReady(Bitmap bmp);
@@ -41,35 +31,34 @@ public class CoverLoaderTask extends AsyncTask<Void, Void, Bitmap> {
 		listeners.add(listener);
 	}
 	
-	@Override
-	protected Bitmap doInBackground(Void... params) {
+	public void execute() {
 		try {
-			HttpClient httpclient = new DefaultHttpClient();
 			if (coverUrl == null || coverUrl.equals("NOT_FOUND") || "".equals(coverUrl)) {
 				Log.e(getClass().getSimpleName(), "Error, cover not found from engines");
-				return null;
+				return;
 			}
-		    HttpParams httpParameters = new BasicHttpParams();
-		    HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
-			HttpGet httpget = new HttpGet(coverUrl.replace("https", "http"));
-			HttpResponse response = httpclient.execute(httpget);
-			HttpEntity entity = response.getEntity();
-			BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent());
-			return BitmapFactory.decodeStream(bitmapStream);			
+		    ImageLoader.getInstance().loadImage(coverUrl, this);			
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
 		}
-		return null;
+		return;
 	}
-	
+
 	@Override
-	protected void onPostExecute(Bitmap result) {
-		super.onPostExecute(result);
+	public void onLoadingCancelled(String arg0, View arg1) {}
+
+	@Override
+	public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
 		for (OnBitmapReadyListener listener : listeners) {
 			if (null != listener) {
-				listener.onBitmapReady(result);
+				listener.onBitmapReady(arg2);
 			}
 		}
 	}
-	
+
+	@Override
+	public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {}
+
+	@Override
+	public void onLoadingStarted(String arg0, View arg1) {}
 }

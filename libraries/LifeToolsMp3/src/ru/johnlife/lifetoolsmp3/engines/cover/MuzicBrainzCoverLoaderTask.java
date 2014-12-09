@@ -1,6 +1,5 @@
 package ru.johnlife.lifetoolsmp3.engines.cover;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,9 +11,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 
@@ -29,38 +29,42 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 	}
 	
 	@Override
-	protected Bitmap doInBackground(Void... params) {
-		try {
-			String[] arrayString2, arrayString4;
-			String link = String.format(URL_PATTERN, URLEncoder.encode(artist, "UTF-8"), URLEncoder.encode(title, "UTF-8"));
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpGet httpget = new HttpGet(link);
-			HttpResponse response = httpclient.execute(httpget);
-			HttpEntity entity = response.getEntity();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-			StringBuffer sb = new StringBuffer();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line);
-			}
-			reader.close();
-			arrayString2 = filterRecordingByScore(sb.toString());
-			arrayString4 = takeMBID(arrayString2);
-			String fromWhereToGetThePic = getTheLinkToPicture(arrayString4);
-			if (fromWhereToGetThePic == null) {
+	public void execute() {
+		new GetUrlTask().execute();
+	}
+	
+	private class GetUrlTask extends AsyncTask<Void, Void, String> {
+		
+		@Override
+		protected String doInBackground(Void... params) {
+			try {
+				String[] arrayString2, arrayString4;
+				String link = String.format(URL_PATTERN, URLEncoder.encode(artist, "UTF-8"), URLEncoder.encode(title, "UTF-8"));
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpGet httpget = new HttpGet(link);
+				HttpResponse response = httpclient.execute(httpget);
+				HttpEntity entity = response.getEntity();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
+				StringBuffer sb = new StringBuffer();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line);
+				}
+				reader.close();
+				arrayString2 = filterRecordingByScore(sb.toString());
+				arrayString4 = takeMBID(arrayString2);
+				String fromWhereToGetThePic = getTheLinkToPicture(arrayString4);
+				if (fromWhereToGetThePic == null) return null;
+				return getTHEdamnURL(fromWhereToGetThePic, "large");
+			} catch (Exception e) {
+				Log.e(getClass().getName(), "Error downloading the cover", e);
 				return null;
-			} else {
-				String damnUrl = getTHEdamnURL(fromWhereToGetThePic, "large");
-				if (damnUrl == null) return null;
-				httpget = new HttpGet(damnUrl);
-				response = httpclient.execute(httpget);
-				entity = response.getEntity();
-				BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent());
-				return BitmapFactory.decodeStream(bitmapStream);
 			}
-		} catch (Exception e) {
-			Log.e(getClass().getName(), "Error downloading the cover", e);
-			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			ImageLoader.getInstance().loadImage(result, MuzicBrainzCoverLoaderTask.this);
 		}
 	}
 

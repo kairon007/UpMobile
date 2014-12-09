@@ -12,7 +12,6 @@ import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,7 +25,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 public class AdapterHelper {
-	private Context context;
+
 	private final static Bitmap[] cache = new Bitmap[2];
 
 	public static class ViewBuilder {

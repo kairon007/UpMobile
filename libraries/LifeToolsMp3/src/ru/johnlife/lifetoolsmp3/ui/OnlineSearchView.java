@@ -881,7 +881,7 @@ public abstract class OnlineSearchView extends View {
 			}
 		},0);
 		if (getSettings().getIsCoversEnabled(getContext())) {
-			boolean hasCover = ((RemoteSong) song).getCover(true, downloadListener);
+			boolean hasCover = ((RemoteSong) song).getCover(downloadListener);
 			if (!hasCover) {
 				player.hideCoverProgress();
 				player.setCover(null);

@@ -15,9 +15,9 @@ import java.io.FileDescriptor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -36,7 +36,7 @@ import android.support.v4.util.LruCache;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 @SuppressLint("NewApi")
-public class MusicPlayerApp extends Application {
+public class MusicPlayerApp extends MusicApp {
 
 	private static final BitmapFactory.Options BITMAP_OPTIONS = new BitmapFactory.Options();
 	public static Typeface FONT_LIGHT;
@@ -53,6 +53,7 @@ public class MusicPlayerApp extends Application {
      */
     @Override
     public void onCreate() {
+    	super.onCreate();
         // Enable strict mode logging
         // enableStrictMode();
         // Turn off logging for jaudiotagger.

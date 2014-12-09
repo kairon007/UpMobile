@@ -3,7 +3,6 @@ package org.kreed.vanilla.app;
 import java.io.FileDescriptor;
 
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,7 +14,7 @@ import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
 
-public class VanillaApp extends Application {
+public class VanillaApp extends MusicApp {
 	private static final BitmapFactory.Options BITMAP_OPTIONS = new BitmapFactory.Options();
 	public static Typeface FONT_LIGHT;
 	public static Typeface FONT_REGULAR;
@@ -86,7 +85,6 @@ public class VanillaApp extends Application {
 		FONT_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Regular.otf");
 		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		MusicApp.setSharedPreferences(prefs);
 	}
 	
 	public static SharedPreferences getSharedPreferences() {

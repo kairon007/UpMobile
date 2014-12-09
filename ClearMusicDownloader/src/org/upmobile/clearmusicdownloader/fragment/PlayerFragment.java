@@ -231,7 +231,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			player.play(song.getPath());
 			changeView();
 		} else {
-			((RemoteSong) song).getCover(true, new OnBitmapReadyListener() {
+			((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
 					if (null != bmp) {

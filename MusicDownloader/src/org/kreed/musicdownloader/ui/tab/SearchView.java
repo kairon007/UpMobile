@@ -77,7 +77,7 @@ public class SearchView  extends OnlineSearchView {
 
 					@Override
 					public void success(String url) {
-						song.getCover(true, downloadListener);
+						song.getCover(downloadListener);
 						downloadListener.onClick(view);
 					}
 

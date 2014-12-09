@@ -1,6 +1,5 @@
 package ru.johnlife.lifetoolsmp3.engines.cover;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -8,18 +7,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
+import android.os.AsyncTask;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class LastFmCoverLoaderTask extends CoverLoaderTask {
 
@@ -28,7 +22,6 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 	protected String title;
 
 	public LastFmCoverLoaderTask(String artist, String title) {
-		super();
 		this.artist = artist;
 		this.title = title;
 	}
@@ -51,7 +44,7 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 		}
 	}
 
-	public String GetUrlImage() {
+	public String getUrlImage() {
 		String link = null;
 		try {
 			link = String.format(URL_PATTERN, URLEncoder.encode(artist, "UTF-8"), URLEncoder.encode(title, "UTF-8"));
@@ -91,7 +84,6 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 			try {
 				list.add(image.getJSONObject(i).getString("#text"));
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -102,21 +94,20 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 	}
 
 	@Override
-	protected Bitmap doInBackground(Void... params) {
-		try {
-			HttpClient httpclient = new DefaultHttpClient();
-			String urlImage = GetUrlImage();
-			if (urlImage == null) {
-				return null; 
-			}
-			HttpGet httpget = new HttpGet(urlImage);
-			HttpResponse response = httpclient.execute(httpget);
-			HttpEntity entity = response.getEntity();
-			BufferedInputStream bitmapStream = new BufferedInputStream(entity.getContent());
-			return BitmapFactory.decodeStream(bitmapStream);
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
+	public void execute() {
+		new GetUrlTask().execute();
+	}
+	
+	private class GetUrlTask extends AsyncTask<Void, Void, String> {
+		
+		@Override
+		protected String doInBackground(Void... params) {
+			return getUrlImage();
 		}
-		return null;
+		
+		@Override
+		protected void onPostExecute(String result) {
+			ImageLoader.getInstance().loadImage(result, LastFmCoverLoaderTask.this);
+		}
 	}
 }

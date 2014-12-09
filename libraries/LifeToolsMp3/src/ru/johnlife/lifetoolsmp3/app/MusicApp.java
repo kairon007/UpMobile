@@ -1,99 +1,57 @@
 package ru.johnlife.lifetoolsmp3.app;
 
-import java.io.FileDescriptor;
-
+import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.ParcelFileDescriptor;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.preference.PreferenceManager;
-import android.support.v4.util.LruCache;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class MusicApp extends Application {
-	private static final BitmapFactory.Options BITMAP_OPTIONS = new BitmapFactory.Options();
+	
 	public static Typeface FONT_LIGHT;
 	public static Typeface FONT_REGULAR;
 	public static Typeface FONT_BOLD;
-
-	private static SharedPreferences prefs;
 	
-	static {
-		BITMAP_OPTIONS.inPreferredConfig = Bitmap.Config.RGB_565;
-		BITMAP_OPTIONS.inDither = false;
-	}
+	private static final DisplayImageOptions defaultImageOptions = new DisplayImageOptions.Builder()
+		.showImageOnLoading(android.R.drawable.ic_menu_gallery)
+		.showImageForEmptyUri(android.R.drawable.ic_menu_gallery)
+		.cacheInMemory(true)
+		.cacheOnDisc(true)
+	    .imageScaleType(ImageScaleType.EXACTLY) 
+	    .bitmapConfig(Bitmap.Config.RGB_565)
+		.build(); 
 
+	protected static SharedPreferences prefs;
 
-	/**
-	 * A cache of 6 MiB of covers.
-	 */
-	public static class CoverCache extends LruCache<Long, Bitmap> {
-		private final Context mContext;
-
-		public CoverCache(Context context)
-		{
-			super(6 * 1024 * 1024);
-			mContext = context;
-		}
-
-		@Override
-		public Bitmap create(Long key)
-		{
-			Uri uri =  Uri.parse("content://media/external/audio/media/" + key + "/albumart");
-			ContentResolver res = mContext.getContentResolver();
-
-			try {
-				ParcelFileDescriptor parcelFileDescriptor = res.openFileDescriptor(uri, "r");
-				if (parcelFileDescriptor != null) {
-					FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-					return BitmapFactory.decodeFileDescriptor(fileDescriptor, null, BITMAP_OPTIONS);
-				}
-			} catch (Exception e) {
-				// no cover art found
-			}
-
-			return null;
-		}
-
-		@Override
-		protected int sizeOf(Long key, Bitmap value)
-		{
-			return value.getRowBytes() * value.getHeight();
-		}
-	}
-
-	/**
-	 * The cache instance.
-	 */
-	private static CoverCache sCoverCache = null;
-
-	public static CoverCache getCoverCache() {
-		return sCoverCache;
-	}
-
+	@SuppressLint("NewApi") 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		if (sCoverCache == null) {
-			sCoverCache = new CoverCache(this);
+		ImageLoaderConfiguration.Builder b = new ImageLoaderConfiguration.Builder(getApplicationContext())
+        .discCacheExtraOptions(0, 0, CompressFormat.PNG, 100, null);
+		if (Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
+			b.taskExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+			 .taskExecutorForCachedImages(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
-		FONT_BOLD = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Bold.otf");
-		FONT_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Regular.otf");
-		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
+	    b.threadPoolSize(7)
+	        .defaultDisplayImageOptions(defaultImageOptions)
+	        .memoryCache(new LruMemoryCache(20 * 1024 * 1024))
+	        .discCacheFileCount(500);
+	    ImageLoader.getInstance().init(b.build());
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 	
 	public static SharedPreferences getSharedPreferences() {
 		return prefs;
 	}
-	
-	public static SharedPreferences setSharedPreferences(SharedPreferences sPrefs) {
-		prefs = sPrefs;
-		return prefs;
-	}
-	
 }

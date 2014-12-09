@@ -26,7 +26,7 @@ public class RemoteSong extends Song implements Cloneable {
 					setCover(null);
 				} else
 					useNextCoverLoader();
-				getCover(callFromPlayer, (OnBitmapReadyListener) null);
+				getCover((OnBitmapReadyListener) null);
 			}
 		}
 
@@ -65,7 +65,6 @@ public class RemoteSong extends Song implements Cloneable {
 	public ArrayList<String []> headers;
 	private WeakReference<Bitmap> cover;
 	private WeakReference<Bitmap> smallCover;
-	private boolean callFromPlayer;
 	private CoverReadyListener downloaderListener = null;
 	protected DownloadUrlListener downloadUrlListeners;
 	
@@ -129,10 +128,8 @@ public class RemoteSong extends Song implements Cloneable {
 	}	
 	
 	protected CoverLoaderTask getCoverLoader() {
-		if (callFromPlayer) {
 		return 0 == coverLoaderIndex ? new LastFmCoverLoaderTask(artist, title) : 
 			(1 == coverLoaderIndex && tryMuzicBrainz) ? new MuzicBrainzCoverLoaderTask(artist, title) : null;
-		} else return null;
 	}
 
 
@@ -144,8 +141,7 @@ public class RemoteSong extends Song implements Cloneable {
 		coverLoaderIndex = 0;
 	}
 	
-	public boolean getCover(boolean callFromPlayer, OnBitmapReadyListener listener) {
-		this.callFromPlayer = callFromPlayer;
+	public boolean getCover(OnBitmapReadyListener listener) {
 		if (null != listener && null != cover && null != cover.get()) {
 			listener.onBitmapReady(cover.get());
 			return true;
@@ -163,7 +159,6 @@ public class RemoteSong extends Song implements Cloneable {
 	}
 	
 	public boolean getSmallCover(boolean callFromPlayer,final OnBitmapReadyListener listener) {
-		this.callFromPlayer = callFromPlayer;
 		if (null != smallCover && null != smallCover.get()) {
 			listener.onBitmapReady(smallCover.get());
 			return true;
@@ -172,7 +167,7 @@ public class RemoteSong extends Song implements Cloneable {
 			listener.onBitmapReady(Util.resizeToSmall(cover.get()));
 			return true;
 		}
-		return getCover(callFromPlayer, new OnBitmapReadyListener() {
+		return getCover(new OnBitmapReadyListener() {
 			
 			@Override
 			public void onBitmapReady(Bitmap bmp) {

@@ -19,7 +19,6 @@ import mp3.music.player.us.R;
 import mp3.music.player.us.Settings;
 import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
 import mp3.music.player.us.utils.PreferenceUtils;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -67,7 +66,6 @@ public class HomeActivity extends BaseActivity {
 		if (savedInstanceState != null) {
 			doesTheMopub = savedInstanceState.getBoolean(IS_SHOW);
 		}
-		MusicApp.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
 		// load banner ad
 		/*
 		try {

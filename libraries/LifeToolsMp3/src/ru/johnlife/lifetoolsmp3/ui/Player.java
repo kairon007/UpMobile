@@ -376,7 +376,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void setCoverFromSong(RemoteSong song) {
-		song.getCover(true, new OnBitmapReadyListener() {
+		song.getCover(new OnBitmapReadyListener() {
 
 			@Override
 			public void onBitmapReady(Bitmap bmp) {

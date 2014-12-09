@@ -28,7 +28,6 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.Context;
 import android.database.Cursor;
@@ -216,8 +215,8 @@ public class Song implements Comparable<Song>, Parcelable, AbstractSong {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata);
-		} catch (Exception ex) {
-			cover = MusicApp.getCoverCache().get(id);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if (cover == null) flags |= FLAG_NO_COVER;
 		return cover;
