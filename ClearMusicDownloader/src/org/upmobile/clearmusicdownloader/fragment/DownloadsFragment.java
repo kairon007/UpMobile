@@ -36,6 +36,7 @@ public class DownloadsFragment extends Fragment {
 	private static final int DEFAULT_SONG = 7340032; // 7 Mb
 	private MainActivity activity;
 	private int progress;
+	private Object lock  = new Object();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,52 +74,109 @@ public class DownloadsFragment extends Fragment {
 	}
 
 	private void checkDownloads() {
-		try {
-			if (null != manager) {
-				Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
-				if (running!=null) {
-					updateList(running);
-					running.close();
+		synchronized (lock) {
+			try {
+				if (null != manager) {
+					Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
+					if (running!=null) {
+						updateList(running);
+						running.close();
+					}
+					Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
+					if (pending!=null) {
+						updateList(pending);
+						pending.close();
+					}
 				}
-				Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
-				if (pending!=null) {
-					updateList(pending);
-					pending.close();
-				}
+				timer.schedule(updater, 100, 1000);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			timer.schedule(updater, 100, 1000);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
 	private void updateList(Cursor c) {
-		while (c.moveToNext()) {
-			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
-			if (null != c.getString(14) && c.getString(14).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
-				if (mAdapter.getCount() == 0) {
-					addItem(song);
-				}
-				ArrayList<MusicData> chek = new ArrayList<MusicData>();
-				for (int i = 0; i < mAdapter.getCount(); i++) {
-					chek.add((MusicData) mAdapter.getItem(i));
-				}
-				if (!chek.contains(song)) {
-					addItem(song);
+		synchronized (lock) {
+			while (c.moveToNext()) {
+				MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
+				if (null != c.getString(14) && c.getString(14).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
+					ArrayList<MusicData> chek = new ArrayList<MusicData>();
+					for (int i = 0; i < mAdapter.getCount(); i++) {
+						chek.add((MusicData) mAdapter.getItem(i));
+					}
+					if (!chek.contains(song)) {
+						addItem(song);
+					}
 				}
 			}
 		}
 	}
 
 	private void addItem(final MusicData song) {
+		synchronized (lock) {
+			try {
+				activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						mAdapter.add(song);
+						mAdapter.notifyDataSetChanged();
+					}
+				});
+			} catch (Exception e) {
+			}
+		}
+	}
+	
+	
+	private void reDrawAdapter() {
 		activity.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				mAdapter.add(song);
 				mAdapter.notifyDataSetChanged();
 			}
 		});
+	}
+	
+	private void checkFinished() {
+		Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
+		while (c.moveToNext()) {
+			for (int i = 0; i < mAdapter.getCount(); i++) {
+				if (((MusicData) mAdapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
+					removeItem(i);	
+				}
+			}
+		}
+		c.close();
+	}
+
+	private void checkCanceled() {
+		Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_FAILED));
+		while (c.moveToNext()) {
+			for (int i = 0; i < mAdapter.getCount(); i++) {
+				if (((MusicData) mAdapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
+					removeItem(i);
+				}
+			}
+		}
+		c.close();
+	}
+
+	private void removeItem(final int position) {
+		synchronized (lock) {
+			try {
+				activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						mAdapter.remove(mAdapter.getItem(position));
+						mAdapter.notifyDataSetChanged();
+					}
+				});
+			} catch (Exception e) {
+			}
+		}
 	}
 
 	private class Updater extends TimerTask {
@@ -145,58 +203,13 @@ public class DownloadsFragment extends Fragment {
 						}
 					}
 				} catch (Exception e) {
-					android.util.Log.d(getClass().getSimpleName(), e.getLocalizedMessage());
+					android.util.Log.d(getClass().getSimpleName(), e + "");
 				}
 			}
 			c.close();
 			checkCanceled();
 			checkFinished();
 			reDrawAdapter();
-		}
-		
-		private void reDrawAdapter() {
-			activity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					mAdapter.notifyDataSetChanged();
-				}
-			});
-		}
-
-		private void checkFinished() {
-			Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
-			while (c.moveToNext()) {
-				for (int i = 0; i < mAdapter.getCount(); i++) {
-					if (((MusicData) mAdapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-						removeItem(i);	
-					}
-				}
-			}
-			c.close();
-		}
-
-		private void checkCanceled() {
-			Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_FAILED));
-			while (c.moveToNext()) {
-				for (int i = 0; i < mAdapter.getCount(); i++) {
-					if (((MusicData) mAdapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-						removeItem(i);
-					}
-				}
-			}
-			c.close();
-		}
-
-		private void removeItem(final int position) {
-			activity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					mAdapter.remove(mAdapter.getItem(position));
-					mAdapter.notifyDataSetChanged();
-				}
-			});
 		}
 	}
 }
