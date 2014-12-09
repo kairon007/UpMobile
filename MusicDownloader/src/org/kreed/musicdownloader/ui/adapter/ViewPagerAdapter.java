@@ -225,7 +225,9 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 				return viewSearchActivity;
 			case 1:
 				View downloadView = DownloadsTab.getInstanceView(inflater, activity);
-				container.addView(downloadView);
+				if (null != downloadView) {
+					container.addView(downloadView);
+				}
 				return downloadView;
 			case 2:
 				adapterLibrary = new LibraryTabAdapter(0, activity);

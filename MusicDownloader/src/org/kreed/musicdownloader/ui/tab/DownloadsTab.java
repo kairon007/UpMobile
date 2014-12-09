@@ -428,7 +428,10 @@ public class DownloadsTab implements LoadPercentageInterface {
 
 	public static View getInstanceView(LayoutInflater layoutInflater, Activity activity) {
 		View instanceView = getInstance(layoutInflater, activity).view;
-		ViewGroup parent = (ViewGroup) instanceView.getParent();
+		ViewGroup parent = null;
+		if (null != instanceView){
+			parent = (ViewGroup) instanceView.getParent();
+		}
 		if (null != parent) {
 			parent.removeView(instanceView);
 		}

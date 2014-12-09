@@ -53,6 +53,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		
 		private MusicData item;
 		private ViewGroup frontView;
+		private ViewGroup boxInfo;
 		private View button;
 		private TextView title;
 		private TextView artist;
@@ -63,6 +64,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		public LibraryViewHolder(View v) {
 			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
+			boxInfo = (ViewGroup) v.findViewById(R.id.item_box_info);
 			button = v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
@@ -105,7 +107,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 
 		private void setListener() {
-			frontView.setOnClickListener(new OnClickListener() {
+			boxInfo.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
