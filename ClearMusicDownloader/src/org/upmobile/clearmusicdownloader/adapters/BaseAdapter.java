@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
@@ -61,14 +59,6 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 			@Override
 			public void onSwipeGone(int pos) {
 				onItemSwipeGone(pos);
-			}
-		});
-		v.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				((UISwipableList)parent).setSelectedPosition(position);
-  				return true;
 			}
 		});
 	}
