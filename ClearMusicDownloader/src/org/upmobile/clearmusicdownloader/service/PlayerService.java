@@ -41,10 +41,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private String currentPath;
 	private int mode;
 	
-	private PlayerService() {
-		
-	}
-	
 	/**
 	 * 
 	 * Return the Player sevice instance, creating one if needed.
