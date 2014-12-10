@@ -27,9 +27,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private static final int MSG_PLAY = 1;
 	private static final int MSG_PLAY_CURRENT = 2;
 	private static final int MSG_PAUSE = 3;
+	private static final int MSG_SEEK_TO = 4;
+	private static final int MSG_ERROR = 5;
 	
 	//multy-threading section
-	private final Object lock = new Object(); 
+	private final Object lock = new Object();
 	private Looper looper;
 	private Handler handler;
 	
@@ -38,6 +40,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private MediaPlayer player;
 	private String currentPath;
 	private int mode;
+	
+	private PlayerService() {
+		
+	}
 	
 	/**
 	 * 
@@ -60,7 +66,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	@Override
 	public void onCreate() {
-		HandlerThread thread = new HandlerThread("PlayerService", Process.THREAD_PRIORITY_BACKGROUND);
+		HandlerThread thread = new HandlerThread(getClass().getName(), Process.THREAD_PRIORITY_BACKGROUND);
 		thread.start();
 		player = new MediaPlayer();
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -83,32 +89,50 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		//TODO handleMessage
 		switch (msg.what) {
 		case MSG_PLAY:
-			if ((mode & SMODE_PREPARED) == SMODE_PREPARED) {
+			if (check(SMODE_PREPARED)) {
+				offMode(SMODE_PREPARED);
 				player.reset();
-				mode ^= SMODE_PREPARED;
 			}
 			try {
 				String path = (String) msg.obj;
 				Uri uri = Uri.parse(path);
 				player.setDataSource(this, uri);
 				player.prepare();
-				mode |= SMODE_PREPARED;
-				if ((mode & SMODE_COMPLETE) == SMODE_COMPLETE) mode ^= SMODE_COMPLETE;
+				onMode(SMODE_PREPARED);
+				offMode(SMODE_COMPLETE);
 				player.start();
 			} catch (Exception e) {
-				android.util.Log.d("log", "in method \"handleMessage\" appear problem: " + e);
-				return false;
+				android.util.Log.d("log", "in method \"handleMessage\" appear problem: " + e.toString());
+				offMode(SMODE_PREPARED);
 			}
 			break;
 
 		case MSG_PLAY_CURRENT:
-			player.start();
+			if (check(SMODE_PREPARED)) {
+				player.start();
+			}
 			break;
 
 		case MSG_PAUSE:
-			player.pause();
+			if (check(SMODE_PREPARED)) {
+				player.pause();
+			}
 			break;
 
+		case MSG_SEEK_TO:
+			if(check(SMODE_PREPARED)){
+				player.seekTo(msg.arg1);
+			}
+			break;
+			
+		case MSG_ERROR:
+			offMode(SMODE_PREPARED);
+			player.release();
+			player = new MediaPlayer();
+			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			player.setOnCompletionListener(this);
+			player.setOnErrorListener(this);
+			break;
 		default:
 			break;
 		}
@@ -119,15 +143,15 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		Message message = new Message();
 		synchronized (lock) {
 			if (path.equals(currentPath)) {
-				if ((mode & SMODE_PLAY_PAUSE) == SMODE_PLAY_PAUSE) {
+				if (check(SMODE_PLAY_PAUSE)) {
 					message.what = MSG_PLAY_CURRENT;
-					mode ^= SMODE_PLAY_PAUSE;
+					offMode(SMODE_PLAY_PAUSE);
 				} else {
 					message.what = MSG_PAUSE;
-					mode |= SMODE_PLAY_PAUSE;
+					onMode(SMODE_PLAY_PAUSE);
 				}
 			} else {
-				if ((mode & SMODE_PLAY_PAUSE) == SMODE_PLAY_PAUSE) mode ^= SMODE_PLAY_PAUSE;
+				offMode(SMODE_PLAY_PAUSE);
 				message.what = MSG_PLAY;
 				message.obj = path;
 			}
@@ -135,38 +159,59 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			handler.sendMessage(message);
 		}
 	}
+	
+	private void offMode(int flag) {
+		mode &= ~flag;
+	}
+
+	private void onMode(int flag) {
+		mode |= flag;
+	}
+	
+	private boolean check(int flag) {
+		return (mode & flag) == flag;
+	}
 
 	@Override
-	public boolean onError(MediaPlayer mediaPlayer, int paramInt1, int paramInt2) {
-		mediaPlayer.release();
-		mode ^= SMODE_PREPARED;
-		return false;
+	public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+		Message message = new Message();
+		message.what = MSG_ERROR;
+		message.arg1 = what;
+		message.arg2 = extra;
+		handler.sendMessage(message);
+		return true;
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer paramMediaPlayer) {
-		mode |= SMODE_COMPLETE;
-		player.seekTo(0);
+		onMode(SMODE_COMPLETE);
+		Message message = new Message();
+		message.what  = MSG_SEEK_TO;
+		message.arg1 = 0;
+		handler.sendMessage(message);
 	}
 
 	public int getCurrentPosition() {
 		return player.getCurrentPosition();
 	}
 
-	public void seekTo(int progress) throws IllegalStateException {
-		player.seekTo(progress);
+	public void seekTo(int progress) {
+		Message message = new Message();
+		message.what  = MSG_SEEK_TO;
+		message.arg1 = progress;
+		handler.sendMessage(message);
 	}
 	
 	public boolean isPrepared() {
-		return (mode & SMODE_PREPARED) == SMODE_PREPARED;
+		return check(SMODE_PREPARED);
 	}
 	
 	public boolean showPlayPause() {
-		return (mode & SMODE_PLAY_PAUSE) == SMODE_PLAY_PAUSE;
+		return check(SMODE_PLAY_PAUSE);
 	}
 	
 	public boolean isComplete() {
-		return (mode & SMODE_COMPLETE) == SMODE_COMPLETE;
+		return check(SMODE_COMPLETE);
 	}
 	
 	public String getCurrentPath() {
@@ -175,8 +220,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		super.onStartCommand(intent, flags, startId);
-		return Service.START_STICKY;
+		return Service.START_NOT_STICKY;
 	}
 
 	@Override
