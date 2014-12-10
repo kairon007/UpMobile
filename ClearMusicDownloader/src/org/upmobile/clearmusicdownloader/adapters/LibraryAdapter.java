@@ -148,7 +148,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
-//<--it's template solution		item.reset(v.getContext()); 
+					item.reset(v.getContext()); 
 					remove(item);
 				}
 				
