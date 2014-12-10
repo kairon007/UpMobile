@@ -40,9 +40,6 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 				@Override
 				public void onClick(View v) {
 					cancelDownload(item.getId());
-//					v.findViewById(R.id.hidden_view).setVisibility(View.GONE);
-//					int startPosition = 0 - v.getContext().getResources().getDimensionPixelSize(R.dimen.swipe_size);
-//					((UISwipableList) v.getParent()).slideOutView(v.findViewById(R.id.front_layout), startPosition, false);
 					remove(item);
 				}
 			});
@@ -64,6 +61,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			image.setImageResource(R.drawable.def_cover_circle);
+			progress.setIndeterminate(item.getProgress() == 0);
 			progress.setProgress(item.getProgress());
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
 		}

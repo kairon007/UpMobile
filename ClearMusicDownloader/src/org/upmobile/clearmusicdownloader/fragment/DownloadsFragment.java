@@ -1,5 +1,6 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -89,7 +90,6 @@ public class DownloadsFragment extends Fragment {
 				}
 				timer.schedule(updater, 100, 1000);
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}
@@ -98,12 +98,13 @@ public class DownloadsFragment extends Fragment {
 		synchronized (lock) {
 			while (c.moveToNext()) {
 				MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
-				if (null != c.getString(14) && c.getString(14).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
+				if (c.getString(8).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
+					ArrayList<MusicData> chek = new ArrayList<MusicData>();
 					for (int i = 0; i < mAdapter.getCount(); i++) {
-						if (((MusicData) mAdapter.getItem(i)).equals(song)) {
-							addItem(song);
-							return;
-						}
+						chek.add((MusicData) mAdapter.getItem(i));
+					}
+					if (!chek.contains(song)) {
+						addItem(song);
 					}
 				}
 			}
@@ -118,6 +119,7 @@ public class DownloadsFragment extends Fragment {
 					@Override
 					public void run() {
 						mAdapter.add(song);
+						mAdapter.notifyDataSetChanged();
 					}
 				});
 			} catch (Exception e) {
@@ -155,6 +157,7 @@ public class DownloadsFragment extends Fragment {
 			for (int i = 0; i < mAdapter.getCount(); i++) {
 				if (((MusicData) mAdapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
 					removeItem(i);
+					android.util.Log.d("logd", "checkCanceled: ");
 				}
 			}
 		}
@@ -169,6 +172,7 @@ public class DownloadsFragment extends Fragment {
 					@Override
 					public void run() {
 						mAdapter.remove(mAdapter.getItem(position));
+						mAdapter.notifyDataSetChanged();
 					}
 				});
 			} catch (Exception e) {
