@@ -52,12 +52,18 @@ public class UISwipableList extends ListView {
     private boolean mSwiping = false;
     private float mFirstX;
     private float mFirstY;
-    private int selectedPosition;
+    private int selectedPosition = -1;
     
     
     public interface OnSwipableListener {
     	
+    	/**
+    	 * @param position - can be -1, in that case selected position is bad
+    	 */
     	public void onSwipeGone(int position);
+    	/**
+    	 * @param position - can be -1, in that case selected position is bad
+    	 */
     	public void onSwipeVisible(int position);
     	
     }
@@ -184,6 +190,7 @@ public class UISwipableList extends ListView {
 
         case MotionEvent.ACTION_MOVE: {
             if (mSwipePaused) {
+            	selectedPosition = -1;
                 break;
             }
             float deltaX = ev.getRawX() - mDownX;
@@ -192,8 +199,8 @@ public class UISwipableList extends ListView {
             boolean swipeLeft = false;
             if (isSwipeHorizontal(deltaX, deltaY)
                     && isSwipeDirectionLeft(deltaX) && !mHiddenView.isEnabled()) {
-            	if(null != swipableListener) swipableListener.onSwipeVisible(selectedPosition);
                 ViewParent parent = getParent();
+                if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeVisible(selectedPosition);
                 if (parent != null) {
                     parent.requestDisallowInterceptTouchEvent(true);
                 }
@@ -210,7 +217,7 @@ public class UISwipableList extends ListView {
                 }
             } else if (isSwipeHorizontal(deltaX, deltaY)
                     && Math.abs(deltaX) > mSwipeMin) {
-            	if(null != swipableListener) swipableListener.onSwipeGone(selectedPosition);
+            	if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeGone(selectedPosition);
                 mSwiping = true;
                 swipeLeft = false;
                 requestDisallowInterceptTouchEvent(true);
@@ -230,9 +237,11 @@ public class UISwipableList extends ListView {
             	try {
                 slideOutView(mSwipeDownView, (int) ViewHelper.getX(mSwipeDownView),
                         swipeLeft);
-            	} catch (Exception e){ e.printStackTrace(); }
+            	} catch (Exception e){ 
+            		android.util.Log.d("log", "<<<<<EXEPTION>>>>>>" + e.getMessage());
+            	}
                 return true;
-            }
+            } else selectedPosition = -1;
             break;
         }
         }

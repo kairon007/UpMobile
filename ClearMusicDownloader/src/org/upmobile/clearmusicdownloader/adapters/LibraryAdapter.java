@@ -15,12 +15,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.special.utils.UICircularImage;
+import com.special.utils.UISwipableList;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
@@ -60,7 +63,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		private TextView duration;
 		private TextView cancel;
 		private UICircularImage image;
-		private int onClickPosition;
 
 		public LibraryViewHolder(View v) {
 			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
@@ -76,7 +78,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		@Override
 		protected void hold(MusicData item, int position) {
 			this.item = item;
-			onClickPosition = position;
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			if (!item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.VISIBLE) {
@@ -94,7 +95,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
 			image.setImageResource(R.drawable.def_cover_circle);
-			setListener();
+			setListener(position);
 		}
 
 		@SuppressLint("NewApi")
@@ -106,23 +107,30 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 		}
 
-		private void setListener() {
-			boxInfo.setOnClickListener(new OnClickListener() {
-
+		private void setListener(final int position) {
+			frontView.setOnTouchListener(new OnTouchListener() {
+				
 				@Override
-				public void onClick(View v) {
-					Bundle bundle = new Bundle();
-					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
-					for (int i = 0; i < getCount(); i++) {
-						list.add(getItem(i));
+				public boolean onTouch(View v, MotionEvent event) {
+					switch (event.getAction()) {
+					case MotionEvent.ACTION_UP:
+						Bundle bundle = new Bundle();
+						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
+						for (int i = 0; i < getCount(); i++) {
+							list.add(getItem(i));
+						}
+						bundle.putParcelableArrayList(Constants.KEY_SELECTED_SONG, list);
+						bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
+						PlayerFragment playerFragment = new PlayerFragment();
+						playerFragment.setArguments(bundle);
+						((MainActivity) v.getContext()).changeFragment(playerFragment);
+						break;
+					case MotionEvent.ACTION_MOVE:
+						((UISwipableList)parent).setSelectedPosition(position);
+						break;
 					}
-					bundle.putParcelableArrayList(Constants.KEY_SELECTED_SONG, list);
-					bundle.putInt(Constants.KEY_SELECTED_POSITION, onClickPosition);
-					PlayerFragment playerFragment = new PlayerFragment();
-					playerFragment.setArguments(bundle);
-					((MainActivity) v.getContext()).changeFragment(playerFragment);
+	  				return true;
 				}
-
 			});
 			button.setOnClickListener(new OnClickListener() {
 
@@ -133,9 +141,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
-						if (currentPlayPosition != onClickPosition) {
+						if (currentPlayPosition != position) {
 							getItem(currentPlayPosition).turnOff(MusicData.MODE_PLAYING);
-							currentPlayPosition = onClickPosition;
+							currentPlayPosition = position;
 							notifyDataSetChanged();
 						}
 						item.turnOn(MusicData.MODE_PLAYING);
