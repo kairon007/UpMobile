@@ -12,7 +12,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
@@ -103,7 +102,7 @@ public class RenameTask {
 				newFile.delete();
 			}
 		} catch (Exception e) {
-			Log.d(getClass().getSimpleName(), e.getMessage());
+			Log.d(getClass().getSimpleName(), e + "");
 		}
 	}
 

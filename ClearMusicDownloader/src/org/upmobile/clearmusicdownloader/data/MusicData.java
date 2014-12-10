@@ -25,12 +25,14 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		MediaStore.Audio.Media.TITLE,
 		MediaStore.Audio.Media.ARTIST,
 		MediaStore.Audio.Media.DURATION,
+		MediaStore.Audio.Media.ALBUM
 	};
 	public static final int MODE_VISIBLITY = 0x00000001;
 	public static final int MODE_PLAYING = 0x00000002;
 	private String path;
 	private String title;
 	private String artist;
+	private String album;
 	private int mode;
 	private long id;
 	private long duration;
@@ -54,6 +56,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		title = parcel.readString();
 		artist = parcel.readString();
 		progress = parcel.readInt();
+		album = parcel.readString();
 	}
 
 	public void populate(Cursor cursor) {
@@ -62,6 +65,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		title = cursor.getString(2);
 		artist = cursor.getString(3);
 		duration = cursor.getLong(4);
+		album = cursor.getString(5);
 	}
 	
 	public void reset(final Context context) {
@@ -133,6 +137,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		parcel.writeString(title);
 		parcel.writeString(artist);
 		parcel.writeInt(progress);
+		parcel.writeString(album);
 	}
 	
 	public static final Parcelable.Creator<MusicData> CREATOR = new Parcelable.Creator<MusicData>() {
@@ -202,10 +207,29 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 	public void setProgress(int progress) {
 		this.progress = progress;
 	}
+	
+	@Override
+	public String getAlbum() {
+		return album;
+	}
 
 	@Override
 	public boolean getDownloadUrl(DownloadUrlListener listener) {
 		return false;
 	}
 
+	@Override
+	public void setNewArtist(String artist) {
+		this.artist = artist;
+	}
+
+	@Override
+	public void setNewTitle(String title) {
+		this.title = title;
+	}
+
+	@Override
+	public void setAlbum(String album) {
+		this.album = album;
+	}
 }

@@ -73,6 +73,30 @@ public class MP3Editor {
 		clearFocus();
 		return view;
 	}
+	
+	public View getCustomView(int layout) {
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.view = inflater.inflate(layout, null);
+		init();
+		etArtistName.setText(newArtistName);
+		etSongTitle.setText(newSongTitle);
+		etAlbumTitle.setText(newAlbumTitle);
+		CustomWatcher watcher = new CustomWatcher();
+		etAlbumTitle.addTextChangedListener(watcher);
+		etSongTitle.addTextChangedListener(watcher);
+		etArtistName.addTextChangedListener(watcher);
+		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				StateKeeper keeper = StateKeeper.getInstance();
+				if (isChecked) keeper.setTempID3UseCover(1);
+				else keeper.setTempID3UseCover(-1);
+			}
+		});
+		clearFocus();
+		return view;
+	}
 
 	public void clearFocus() {
 		etAlbumTitle.clearFocus();

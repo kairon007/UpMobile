@@ -271,6 +271,11 @@ public class Song implements Comparable<Song>, Parcelable, AbstractSong {
 	public String getPath() {
 		return path;
 	}
+	
+	@Override
+	public String getAlbum() {
+		return album;
+	}
 
 //	public Bitmap getSongCover() {
 //		return songBmp;
@@ -314,5 +319,23 @@ public class Song implements Comparable<Song>, Parcelable, AbstractSong {
 		trackNumber= parcel.readInt();
 	}
 
+	@Override
+	public void setAlbum(String album) {
+		this.album = album;
+	}
+
+	@Override
+	public void setPath(String path) {
+	}
+
+	@Override
+	public void setNewArtist(String artist) {
+		this.artist = artist;
+	}
+
+	@Override
+	public void setNewTitle(String title) {
+		this.title = title;
+	}
 
 }
