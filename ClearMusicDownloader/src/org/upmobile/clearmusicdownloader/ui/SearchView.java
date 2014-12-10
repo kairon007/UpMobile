@@ -42,8 +42,8 @@ public class SearchView extends OnlineSearchView {
         
         bundle.putInt(PACKAGE + ".left", screen_location[0]);
         bundle.putInt(PACKAGE + ".top", screen_location[1]);
-        bundle.putInt(PACKAGE + ".width", view.getWidth());
-        bundle.putInt(PACKAGE + ".height", view.getHeight());
+        bundle.putInt(PACKAGE + ".width", v.getWidth());
+        bundle.putInt(PACKAGE + ".height", v.getHeight());
 		PlayerFragment playerFragment = new PlayerFragment();
 		playerFragment.setArguments(bundle);
 		((MainActivity) view.getContext()).changeFragment(playerFragment);

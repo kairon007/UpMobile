@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/player_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    tools:context="org.upmobile.clearmusicdownloader.activity.MainActivity" >
 
     <com.special.utils.UIParallaxScroll
         android:id="@+id/scroller"
@@ -13,48 +14,18 @@
         app:backgroundView="@+id/imageView"
         app:headerView="@+id/layout_top" >
 
-        <LinearLayout
+        <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="208dp"
-                android:background="@color/white_transparent" >
-
-                <FrameLayout
-                    android:layout_width="208dp"
-                    android:layout_height="208dp"
-                    android:layout_gravity="center" >
-
-                    <com.special.utils.UICircularImage
-                        android:id="@+id/player_cover"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/def_cover_circle_web"
-                        app:line_color="@color/theme_color"
-                        app:line_color_press="@color/green" />
-                </FrameLayout>
-            </FrameLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_below="@+id/player_cover"
+                android:gravity="center_horizontal"
                 android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/player_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:fontFamily="sans-serif-condensed"
-                    android:paddingTop="8dp"
-                    android:text="Clean Music Downloader Player"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/white" />
 
                 <View
                     android:id="@+id/player_divider"
@@ -99,6 +70,7 @@
                         android:layout_toLeftOf="@+id/player_lyrics"
                         android:background="@drawable/button_selector_inverse"
                         android:src="@drawable/ic_player_edit" />
+
                 </RelativeLayout>
 
                 <TextView
@@ -144,6 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:lines="1" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -173,6 +146,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/button_selector_inverse"
                         android:src="@drawable/forward" />
+
                 </LinearLayout>
 
                 <FrameLayout
@@ -188,17 +162,20 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="3dp"
                         android:text="@string/download" />
+
                 </FrameLayout>
             </LinearLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true" >
 
                 <include
                     android:id="@+id/player_edit_tag_dialog"
                     layout="@layout/edit_tag"
                     android:visibility="gone" />
+
             </FrameLayout>
 
             <FrameLayout
@@ -218,7 +195,7 @@
                         android:id="@+id/player_lyrics_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal" />
 
                     <Button
                         android:id="@+id/player_cancel_lyrics"
@@ -227,9 +204,25 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="@string/edit_mp3_cancel" />
+
                 </LinearLayout>
             </FrameLayout>
-        </LinearLayout>
+
+            <com.special.utils.UICircularImage
+                android:id="@+id/player_cover"
+                android:layout_width="208dp"
+                android:layout_height="208dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/default_text_padding"
+                android:layout_marginTop="@dimen/default_text_padding"
+                android:scaleType="centerInside"
+                android:src="@drawable/def_cover_circle_web"
+                app:line_color="@color/theme_color"
+                app:line_color_press="@color/green" />
+
+        </RelativeLayout>
+
     </com.special.utils.UIParallaxScroll>
 
 </RelativeLayout>
