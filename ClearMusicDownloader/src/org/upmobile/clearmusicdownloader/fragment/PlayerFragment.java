@@ -133,7 +133,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void run() {
 						playerProgress.setProgress(0);
-						playerCurrTime.setText("00:00");
+						playerCurrTime.setText("0:00");
 						setClickablePlayerElement(false);
 						hideOpenViews();
 					}
@@ -484,7 +484,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				} 
 				if (player.isComplete()) {
 					playerProgress.setProgress(0);
-					playerCurrTime.setText("00:00");
+					playerCurrTime.setText("0:00");
 				}
 				playerProgress.postDelayed(this, 1000);
 			} catch (Exception e) {

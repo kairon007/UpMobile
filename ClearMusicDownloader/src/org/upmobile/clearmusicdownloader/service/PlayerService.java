@@ -1,8 +1,10 @@
 package org.upmobile.clearmusicdownloader.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -14,6 +16,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 public class PlayerService extends Service implements OnCompletionListener, OnErrorListener, Handler.Callback {
 	
@@ -37,6 +41,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	//instance section
 	public static PlayerService instance;
+	private TelephonyManager telephonyManager;
+	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
 	private OnStatePlayerListener stateListener;
 	private String currentPath;
@@ -48,6 +54,43 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		public void error();
 		
 	}
+	
+	private class HeadsetIntentReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
+				Message msg = buildMessage(MSG_PAUSE, 0, 0);
+				handler.sendMessage(msg);
+			}
+		}
+	};
+	
+	PhoneStateListener phoneStateListener = new PhoneStateListener() {
+
+		private boolean flag = false;
+		
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber) {
+			Message msg = null;
+			switch (state) {
+			case TelephonyManager.CALL_STATE_RINGING:
+				msg = buildMessage(MSG_PAUSE, 0, 0);
+				handler.sendMessage(msg);
+				flag = true;
+				return;
+			case TelephonyManager.CALL_STATE_IDLE:
+				if (flag) {
+					msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
+					handler.sendMessage(msg);
+					flag = false;
+				}
+				break;
+			}
+			super.onCallStateChanged(state, incomingNumber);
+		}
+	};
 	
 	/**
 	 * 
@@ -72,6 +115,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public void onCreate() {
 		HandlerThread thread = new HandlerThread(getClass().getName(), Process.THREAD_PRIORITY_BACKGROUND);
 		thread.start();
+		telephonyManager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
+		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		headsetReceiver = new HeadsetIntentReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+		registerReceiver(headsetReceiver, filter);
 		player = new MediaPlayer();
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		player.setOnCompletionListener(this);
@@ -83,6 +132,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	@Override
 	public void onDestroy() {
+		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		instance = null;
 		player.release();
 		looper.quit();
@@ -148,23 +198,23 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 
 	public void play(String path) {
-		Message message = new Message();
+		Message msg = new Message();	
 		synchronized (lock) {
 			if (path.equals(currentPath)) {
 				if (check(SMODE_PLAY_PAUSE)) {
-					message.what = MSG_PLAY_CURRENT;
+					msg.what = MSG_PLAY_CURRENT;
 					offMode(SMODE_PLAY_PAUSE);
 				} else {
-					message.what = MSG_PAUSE;
+					msg.what = MSG_PAUSE;
 					onMode(SMODE_PLAY_PAUSE);
 				}
 			} else {
 				offMode(SMODE_PLAY_PAUSE);
-				message.what = MSG_PLAY;
-				message.obj = path;
+				msg.what = MSG_PLAY;
+				msg.obj = path;
 			}
 			currentPath = path;
-			handler.sendMessage(message);
+			handler.sendMessage(msg);
 		}
 	}
 	
@@ -188,35 +238,37 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			stateListener.error();
 		}
 	}
+	
+	private Message buildMessage(int what, int arg1, int arg2) {
+		Message msg = new Message();
+		msg.what = what;
+		msg.arg1 = arg1;
+		msg.arg2 = arg2;
+		return msg;
+	}
 
 	@Override
 	public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
-		Message message = new Message();
-		message.what = MSG_ERROR;
-		message.arg1 = what;
-		message.arg2 = extra;
-		handler.sendMessage(message);
+		Message msg = buildMessage(MSG_ERROR, what, extra);
+		handler.sendMessage(msg);
 		return true;
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer paramMediaPlayer) {
 		onMode(SMODE_COMPLETE);
-		Message message = new Message();
-		message.what  = MSG_SEEK_TO;
-		message.arg1 = 0;
-		handler.sendMessage(message);
+		Message msg = buildMessage(MSG_SEEK_TO, 0, 0);
+		handler.sendMessage(msg);
 	}
 
 	public int getCurrentPosition() {
+		if (!check(SMODE_PREPARED)) return 0;
 		return player.getCurrentPosition();
 	}
 
 	public void seekTo(int progress) {
-		Message message = new Message();
-		message.what  = MSG_SEEK_TO;
-		message.arg1 = progress;
-		handler.sendMessage(message);
+		Message msg = buildMessage(MSG_SEEK_TO, progress, 0);
+		handler.sendMessage(msg);
 	}
 	
 	public boolean isPrepared() {
