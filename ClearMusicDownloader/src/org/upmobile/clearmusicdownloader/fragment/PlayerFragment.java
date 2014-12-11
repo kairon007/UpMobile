@@ -11,6 +11,7 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
+import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
@@ -70,7 +71,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private RenameTask renameTask;
 	private String folderFilter;
 	private PlayerService player;
-	protected DownloadListener downloadListener;
+	private DownloadListener downloadListener;
 	private View parentView;
 	private SeekBar playerProgress;
 	private ImageButton play;
@@ -109,6 +110,36 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		player = PlayerService.get(getActivity());
+		player.setStatePlayerListener(new OnStatePlayerListener() {
+			
+			@Override
+			public void prepare() {
+				getActivity().runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						setClickablePlayerElement(true);
+					}
+					
+				});
+			}
+			
+			@Override
+			public void error() {
+				getActivity().runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						playerProgress.setProgress(0);
+						playerCurrTime.setText("00:00");
+						setClickablePlayerElement(false);
+						hideOpenViews();
+					}
+
+				});
+			}
+			
+		});
 		parentView = inflater.inflate(R.layout.player, container, false);
 		((MainActivity) getActivity()).hideTopFrame();
 		list = new ArrayList<AbstractSong>();
@@ -134,6 +165,30 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		return parentView;
 	}
 
+	private void setClickablePlayerElement(boolean isClickable) {
+		play.setClickable(isClickable);
+		forward.setClickable(isClickable);
+		previous.setClickable(isClickable);
+		playerProgress.setEnabled(isClickable);
+		if (isClickable) {
+			if (player.showPlayPause()) {
+				play.setImageResource(R.drawable.play);
+			} else {
+				play.setImageResource(R.drawable.pause);
+			}
+			forward.setImageResource(R.drawable.forward);
+			previous.setImageResource(R.drawable.previous);
+		} else {
+			if (player.showPlayPause()) {
+				play.setImageResource(R.drawable.play_idle);
+			} else {
+				play.setImageResource(R.drawable.pause_idle);
+			}
+			forward.setImageResource(R.drawable.forward_idle);
+			previous.setImageResource(R.drawable.previous_idle);
+		}
+	}
+	
 	private void init() {
 		play = (ImageButton) parentView.findViewById(R.id.player_play);
 		previous = (ImageButton) parentView.findViewById(R.id.player_previous);
@@ -170,6 +225,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerSaveTags.setOnClickListener(this);
 	}
 	
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -178,11 +234,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			break;
 		case R.id.player_previous:
 			play(-1);
-			hideOpenViews();
 			break;
 		case R.id.player_forward:
 			play(1);
-			hideOpenViews();
 			break;
 		case R.id.player_download:
 			download();
@@ -236,7 +290,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 		}
 	}
-	
+
 	private void showEditTagDialog() {
 		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
@@ -321,14 +375,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		switch (delta) {
 		case 1:
 			if (selectedPosition < list.size() - 1) ++selectedPosition;
-			playerProgress.setProgress(0);
-			playerCurrTime.setText("");
 			getUri();
 			break;
 		case -1:
-			if (0 != selectedPosition) --selectedPosition;
-			playerProgress.setProgress(0);
-			playerCurrTime.setText("");
+			if (selectedPosition > 0) --selectedPosition;
 		case 0:
 			getUri();
 			break;
@@ -402,10 +452,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void changeView() {
 		playerProgress.removeCallbacks(progressAction);
-		playerArtist.setText(list.get(selectedPosition).getArtist());
-		playerTitle.setText(list.get(selectedPosition).getTitle());
-		mNavigationTitle.setText(list.get(selectedPosition).getArtist());
-		long totalTime = list.get(selectedPosition).getDuration();
+		playerArtist.setText(song.getArtist());
+		playerTitle.setText(song.getTitle());
+		mNavigationTitle.setText(song.getArtist());
+		long totalTime = song.getDuration();
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
 		playerProgress.setMax((int) totalTime);
 		changePlayPauseView(player.showPlayPause());
@@ -425,7 +475,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				} 
 				if (player.isComplete()) {
 					playerProgress.setProgress(0);
-					playerCurrTime.setText("");
+					playerCurrTime.setText("00:00");
 				}
 				playerProgress.postDelayed(this, 1000);
 			} catch (Exception e) {
@@ -455,9 +505,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	/**
-	 * @param isPlaying
-	 *  - 
-	 *  If "true", the button changes the picture to "play", if "false" changes to "pause"
+	 * @param isPlaying - If "true", the button changes the picture to "play", if "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
 		if (isPlaying) {

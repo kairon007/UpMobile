@@ -38,8 +38,16 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	//instance section
 	public static PlayerService instance;
 	private MediaPlayer player;
+	private OnStatePlayerListener stateListener;
 	private String currentPath;
 	private int mode;
+	
+	public interface OnStatePlayerListener {
+		
+		public void prepare();
+		public void error();
+		
+	}
 	
 	/**
 	 * 
@@ -87,6 +95,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		case MSG_PLAY:
 			if (check(SMODE_PREPARED)) {
 				offMode(SMODE_PREPARED);
+				callStateListener(false);
 				player.reset();
 			}
 			try {
@@ -94,12 +103,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				Uri uri = Uri.parse(path);
 				player.setDataSource(this, uri);
 				player.prepare();
+				callStateListener(true);
 				onMode(SMODE_PREPARED);
 				offMode(SMODE_COMPLETE);
 				player.start();
 			} catch (Exception e) {
 				android.util.Log.d("log", "in method \"handleMessage\" appear problem: " + e.toString());
 				offMode(SMODE_PREPARED);
+				callStateListener(false);
 			}
 			break;
 
@@ -123,6 +134,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			
 		case MSG_ERROR:
 			offMode(SMODE_PREPARED);
+			callStateListener(false);
 			player.release();
 			player = new MediaPlayer();
 			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -166,6 +178,15 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	private boolean check(int flag) {
 		return (mode & flag) == flag;
+	}
+	
+	private void callStateListener(boolean value) {
+		if (stateListener == null) return;
+		if (value) {
+			stateListener.prepare();
+		} else {
+			stateListener.error();
+		}
 	}
 
 	@Override
@@ -214,6 +235,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return currentPath;
 	}
 
+	public void setStatePlayerListener(OnStatePlayerListener stateListener) {
+		this.stateListener = stateListener;
+	}
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		return Service.START_NOT_STICKY;
