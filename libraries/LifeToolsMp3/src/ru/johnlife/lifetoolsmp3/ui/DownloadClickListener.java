@@ -97,8 +97,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
 		}
-		String songArtist = song.getArtist();
-		String songTitle = song.getTitle();
+		String songArtist = song.getArtist().trim();
+		String songTitle = song.getTitle().trim();
 		File musicDir = new File(getDirectory());
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
@@ -345,13 +345,15 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		@Override
 		public void run() {
 			Cursor c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
+			final String artist = song.getArtist().trim();
+			final String title = song.getTitle().trim();
 			if (c.moveToFirst()) {
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 				switch (status) {
 				case DownloadManager.STATUS_FAILED:
 					notifyAboutFailed(currentDownloadId);
 					c.close();
-					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+					DownloadCache.getInstanse().remove(artist, title);
 					this.cancel();
 					return;
 				case DownloadManager.STATUS_RUNNING:
@@ -390,11 +392,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					src = new File(path);
 					if (!setMetadataToFile(path, src, useCover)) {
 						setFileUri(currentDownloadId, src.getAbsolutePath());
-						DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+						DownloadCache.getInstanse().remove(artist, title);
 						this.cancel();
 					}
 					setFileUri(currentDownloadId, src.getAbsolutePath());
-					DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+					DownloadCache.getInstanse().remove(artist, title);
 					notifyMediascanner(song, path);
 					this.cancel();
 					return;
@@ -410,7 +412,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			if (counter > 100) {
 				notifyAboutFailed(currentDownloadId);
-				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+				DownloadCache.getInstanse().remove(artist, title);
 				manager.remove(currentDownloadId);
 				this.cancel();
 			}
@@ -455,19 +457,21 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			RemoteViews notificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
 			notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			Notification notification = null;
+			final String artist = song.getArtist().trim();
+			final String title = song.getTitle().trim();
 			if (!isStop) {
 				notification = new Notification(android.R.drawable.stat_sys_download, notificationTitle, Calendar.getInstance().getTimeInMillis());
 			} else if (progress < 100 && isStop && !interrupted){
 				String message = context.getString(R.string.download_failed);
-				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+				DownloadCache.getInstanse().remove(artist, title);
 				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
 			} else if (progress == 0 && isStop && interrupted) {
 				String message = context.getString(R.string.download_canceled);
-				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+				DownloadCache.getInstanse().remove(artist, title);
 				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
 			} else {
 				String message = context.getString(R.string.download_finished);
-				DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
+				DownloadCache.getInstanse().remove(artist, title);
 				notification = new Notification(android.R.drawable.stat_sys_download_done, message, Calendar.getInstance().getTimeInMillis());
 			}
 			Intent intent = new Intent();
