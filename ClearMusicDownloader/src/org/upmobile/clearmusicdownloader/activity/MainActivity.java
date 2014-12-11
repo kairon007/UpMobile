@@ -53,4 +53,14 @@ public class MainActivity extends BaseClearActivity {
 		items[2] = new ResideMenuItem(this, R.drawable.ic_library, R.string.navigation_library);
 		return items;
 	}
+	
+	@Override
+	public void showTopFrame() {
+		super.showTopFrame();
+	}
+	
+	@Override
+	public void hideTopFrame() {
+		super.hideTopFrame();
+	}
 }

@@ -38,6 +38,7 @@ public class LibraryFragment extends Fragment {
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
 		MainActivity parentActivity = (MainActivity) getActivity();
 		resideMenu = parentActivity.getResideMenu();
+		((MainActivity) getActivity()).showTopFrame();
 		init();
 		settingListView();
 		ArrayList<MusicData> srcList = querySong();

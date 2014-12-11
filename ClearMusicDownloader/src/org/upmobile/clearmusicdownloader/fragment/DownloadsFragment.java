@@ -42,6 +42,7 @@ public class DownloadsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
 		listView = (UISwipableList) parentView.findViewById(R.id.listView);
+		((MainActivity) getActivity()).showTopFrame();
 		BaseClearActivity parentActivity = (BaseClearActivity) getActivity();
 		resideMenu = parentActivity.getResideMenu();
 		initView();

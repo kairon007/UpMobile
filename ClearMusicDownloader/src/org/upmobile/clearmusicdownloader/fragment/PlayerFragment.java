@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
@@ -38,13 +39,17 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -54,6 +59,7 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
+import com.special.utils.UIParallaxScroll;
 
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
@@ -96,14 +102,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private float scale_height;
 	private Dialog dialog;
 	private CheckBox playerTagsCheckBox;
+	private FrameLayout mNavigationTop;
+	private TextView mNavigationTitle;
+	private Button mNavigationBackBtn;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		player = PlayerService.get(getActivity());
 		parentView = inflater.inflate(R.layout.player, container, false);
+		((MainActivity) getActivity()).hideTopFrame();
 		list = new ArrayList<AbstractSong>();
 		folderFilter = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(mOnScrollChangedListener);
 		init();
+		 mNavigationTop.getBackground().setAlpha(0);   
+		    mNavigationTitle.setVisibility(View.INVISIBLE);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_POSITION)) {
 			list = getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG);
 			selectedPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
@@ -128,11 +141,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		download = (Button) parentView.findViewById(R.id.player_download);
 		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
 		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
+		mNavigationBackBtn = (Button) parentView.findViewById(R.id.title_bar_left_menu);
 		playerProgress = (SeekBar) parentView.findViewById(R.id.player_progress);
 		playerTitle = (TextView) parentView.findViewById(R.id.player_title);
 		playerArtist = (TextView) parentView.findViewById(R.id.player_artist);
 		playerCurrTime = (TextView) parentView.findViewById(R.id.player_current_time);
 		playerTotalTime = (TextView) parentView.findViewById(R.id.player_total_time);
+	    mNavigationTop = (FrameLayout) parentView.findViewById(R.id.layout_top);   
+	    mNavigationTitle = (TextView) parentView.findViewById(R.id.titleBar);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
 		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
 		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
@@ -220,7 +236,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 		}
 	}
-
+	
 	private void showEditTagDialog() {
 		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
@@ -388,6 +404,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerProgress.removeCallbacks(progressAction);
 		playerArtist.setText(list.get(selectedPosition).getArtist());
 		playerTitle.setText(list.get(selectedPosition).getTitle());
+		mNavigationTitle.setText(list.get(selectedPosition).getArtist());
 		long totalTime = list.get(selectedPosition).getDuration();
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
 		playerProgress.setMax((int) totalTime);
@@ -531,8 +548,78 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         			}
         		});
 
-        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(parentView.findViewById(R.id.player_layout), "alpha", 0f, 1f);
+        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", 0f, 1f);
         bg_anim.setDuration(DURATION);
         bg_anim.start();
     }
+    
+    private void runExitAnimation(final Runnable end_action) {
+
+    	ViewHelper.setPivotX(playerCover, 0.f);
+    	ViewHelper.setPivotY(playerCover, 0.f);
+    	ViewHelper.setScaleX(playerCover, 1.f);
+    	ViewHelper.setScaleY(playerCover, 1.f);
+    	ViewHelper.setTranslationX(playerCover, 0.f);
+    	ViewHelper.setTranslationY(playerCover, 0.f);
+
+    	animate(playerCover).
+                setDuration(DURATION).
+                scaleX(scale_width).
+                scaleY(scale_height).
+                translationX(delta_left).
+                translationY(delta_top).
+                setInterpolator(new DecelerateInterpolator()).
+                setListener(new AnimatorListenerAdapter() {  
+
+                	@Override
+                	    public void onAnimationEnd(Animator animation) {
+                	    end_action.run();
+                	}
+                });
+
+        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", 1f, 0f);
+        bg_anim.setDuration(DURATION);
+        bg_anim.start();
+
+    }
+    
+    private UIParallaxScroll.OnScrollChangedListener mOnScrollChangedListener = new UIParallaxScroll.OnScrollChangedListener() {
+        public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
+        	//Difference between the heights, important to not add margin or remove mNavigationTitle.
+        	final float headerHeight = ViewHelper.getY(playerArtist) - (mNavigationTop.getHeight() - playerArtist.getHeight());
+            final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
+            final int newAlpha = (int) (ratio * 255);
+            mNavigationTop.getBackground().setAlpha(newAlpha);
+            Animation animationFadeIn = AnimationUtils.loadAnimation(getActivity(),R.anim.fadein);
+            Animation animationFadeOut = AnimationUtils.loadAnimation(getActivity(),R.anim.fadeout);
+            if (newAlpha == 255 && mNavigationTitle.getVisibility() != View.VISIBLE && !animationFadeIn.hasStarted()){
+            	mNavigationTitle.setVisibility(View.VISIBLE);
+            	mNavigationTitle.startAnimation(animationFadeIn);
+            } else if (newAlpha < 255 && !animationFadeOut.hasStarted() && mNavigationTitle.getVisibility() != View.INVISIBLE)  { 	
+            	mNavigationTitle.startAnimation(animationFadeOut);
+            	mNavigationTitle.setVisibility(View.INVISIBLE);
+            }
+        }
+    };
+    
+    
+    
+//    @Override
+//    public void onBackPressed() {
+//
+//        runExitAnimation(new Runnable() {
+//            @Override
+//            public void run() {
+//                finish();
+//            }
+//        });
+//
+//    }
+//    
+//    @Override
+//    public void finish() {
+//
+//        super.finish();
+//        overridePendingTransition(0, 0);
+//    }
 }

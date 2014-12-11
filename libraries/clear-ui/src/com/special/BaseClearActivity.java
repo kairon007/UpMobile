@@ -10,12 +10,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 
 public abstract class BaseClearActivity extends FragmentActivity implements View.OnClickListener{
 
     private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
     private Fragment[] fragments;
+    private LinearLayout topFrame;
   
     protected abstract Fragment[] getFragments();
     
@@ -25,6 +27,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        topFrame = (LinearLayout) findViewById(R.id.layout_top);
         menuItems = getMenuItems();
         fragments = getFragments();
         setUpMenu();
@@ -98,5 +101,13 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     		resideMenu.openMenu();
     	}
     }
+    
+    public void showTopFrame() {
+    		topFrame.setVisibility(View.VISIBLE);
+    }
+    
+    public void hideTopFrame() {
+		topFrame.setVisibility(View.GONE);
+	}
     
 }

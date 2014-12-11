@@ -1,5 +1,6 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.ui.SearchView;
 
 import android.os.Bundle;
@@ -14,6 +15,7 @@ public class SearchFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		searchView = new SearchView(getActivity().getLayoutInflater());
+		((MainActivity) getActivity()).showTopFrame();
 		return searchView.getView();
 	}
 	
