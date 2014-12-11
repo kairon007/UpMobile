@@ -25,6 +25,7 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class SearchView  extends OnlineSearchView {
 	
@@ -52,10 +53,13 @@ public class SearchView  extends OnlineSearchView {
 		data.setSongDuration(Util.getFormatedStrDuration(song.getDuration()));
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		if (view.getId() == R.id.btnDownload) {
-			StringBuilder stringBuilder = new StringBuilder(song.getArtist()).append(" - ").append(song.getTitle());
+			StringBuilder stringBuilder = new StringBuilder(song.getArtist().trim()).append(" - ").append(song.getTitle().trim());
 			final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
+			boolean isCached = DownloadCache.getInstanse().contain(song.getArtist().trim(), song.getTitle().trim());
 			String directory = Environment.getExternalStorageDirectory() + BaseConstants.DIRECTORY_PREFIX;
-			if ((Util.existFile(directory, sb) != 0) && !DownloadCache.getInstanse().contain(song.getArtist(), song.getTitle())) {
+			int exist = Util.existFile(directory, sb);
+			if (exist != 0 && !isCached) {
+				Toast.makeText(getContext(), R.string.track_exist, Toast.LENGTH_SHORT).show();
 				MainActivity activity = (MainActivity) getContext();
 				if (null != activity) {
 					activity.getViewPager().setCurrentItem(2);
@@ -69,7 +73,7 @@ public class SearchView  extends OnlineSearchView {
 					}
 					return;
 				}
-			} else if ((Util.existFile(directory, sb) == 0) && !DownloadCache.getInstanse().contain(song.getArtist(), song.getTitle())) {
+			} else if (exist == 0 && !isCached) {
 				downloadListener = new DownloadListener(getContext(), song, id);
 				if (downloadListener.isBadInet()) return;
 				song.setDownloaderListener(downloadListener.notifyStartDownload(id));

@@ -101,7 +101,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 							if (null != callback) {
 								callback.cancel();
 							}
-						} else if (!DownloadCache.getInstanse().remove(song.getSongArtist(), song.getSongTitle())) {
+						} else if (!DownloadCache.getInstanse().remove(song.getSongArtist().trim(), song.getSongTitle().trim())) {
 							if (song.isDownloaded()) {
 								DBHelper.getInstance(getContext()).delete(song);
 							} else {
