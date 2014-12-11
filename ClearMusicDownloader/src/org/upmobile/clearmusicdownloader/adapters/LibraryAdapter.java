@@ -30,6 +30,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
 	private int currentPlayPosition; 
+    private String PACKAGE = "IDENTIFY";
 
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
@@ -121,6 +122,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						}
 						bundle.putParcelableArrayList(Constants.KEY_SELECTED_SONG, list);
 						bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
+				        int[] screen_location = new int[2];
+				        View view = v.findViewById(R.id.item_image);
+				        v.getLocationOnScreen(screen_location);
+				        bundle.putInt(PACKAGE + ".left", screen_location[0]);
+				        bundle.putInt(PACKAGE + ".top", screen_location[1]);
+				        bundle.putInt(PACKAGE + ".width", view.getWidth());
+				        bundle.putInt(PACKAGE + ".height", view.getHeight());
 						PlayerFragment playerFragment = new PlayerFragment();
 						playerFragment.setArguments(bundle);
 						((MainActivity) v.getContext()).changeFragment(playerFragment);
@@ -136,6 +144,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
+					int [] location = new int[2];
+					v.getLocationOnScreen(location);
 					PlayerService.get(getContext()).play(item.getPath());
 					if (item.check(MusicData.MODE_PLAYING)) {
 						item.turnOff(MusicData.MODE_PLAYING);
