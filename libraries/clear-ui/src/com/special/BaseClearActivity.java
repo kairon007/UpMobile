@@ -3,10 +3,12 @@ package com.special;
 import com.special.R;
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
-
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +20,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     private ResideMenuItem[] menuItems;
     private Fragment[] fragments;
     private LinearLayout topFrame;
+	private Fragment lastOpenedFragment;
   
     protected abstract Fragment[] getFragments();
     
@@ -32,6 +35,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         fragments = getFragments();
         setUpMenu();
         changeFragment(getFragments()[0]);
+        hidePlayerElement();
     }
 
     private void setUpMenu() {
@@ -80,10 +84,12 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     };
 
     public void changeFragment(Fragment targetFragment){
-        resideMenu.clearIgnoredViewList();
+        this.lastOpenedFragment = targetFragment;
+		resideMenu.clearIgnoredViewList();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main_fragment, targetFragment, "fragment")
+                .replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
+                .addToBackStack(targetFragment.getClass().getSimpleName())
                 .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
@@ -93,8 +99,19 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         return resideMenu;
     }
     
-    @Override
-    public void onBackPressed() {
+    /**
+     * Beware, this method is suitable only for api > 11 if you want to port, you need to think of another way
+     */
+    
+    @SuppressLint("NewApi") @Override
+	public void onBackPressed() {
+		if (lastOpenedFragment.getClass().getSimpleName().equals("PlayerFragment")) {
+			getSupportFragmentManager().popBackStack();
+			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
+			String lastFragmentName = backEntry.getName();
+			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
+			return;
+		}
     	if (resideMenu.isOpened()){
     		resideMenu.closeMenu();
     	} else {
@@ -110,4 +127,11 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 		topFrame.setVisibility(View.GONE);
 	}
     
+    public void hidePlayerElement() {
+    	resideMenu.hideLastElement();
+    }
+    
+    public void showPlayerElement() {
+    	resideMenu.showLastElement();
+    }
 }

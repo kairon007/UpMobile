@@ -66,8 +66,9 @@
 
                 <SeekBar
                     android:id="@+id/player_progress"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:progressDrawable="@drawable/progress"
@@ -77,7 +78,7 @@
                     android:id="@+id/player_total_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center_vertical|end"
                     android:lines="1"
                     android:text="0:00" />
             </LinearLayout>
@@ -196,18 +197,32 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/titlebar_back_selector" />
 
-            <TextView
-                android:id="@+id/titleBar"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:ellipsize="marquee"
-                android:fontFamily="sans-serif-light"
-                android:padding="7dp"
-                android:singleLine="false"
-                android:text=""
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/textsize_large" />
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleBarArtist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fontFamily="sans-serif-light"
+                    android:padding="4dp"
+                    android:singleLine="false"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/titleBarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fontFamily="sans-serif-light"
+                    android:padding="4dp"
+                    android:singleLine="false"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
         </FrameLayout>
 
         <LinearLayout

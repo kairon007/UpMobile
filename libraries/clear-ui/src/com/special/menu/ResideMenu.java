@@ -572,5 +572,13 @@ public class ResideMenu extends FrameLayout{
          */
         public void closeMenu();
     }
+    
+    public void hideLastElement () {
+    	layoutLeftMenu.getChildAt(layoutLeftMenu.getChildCount() - 1).setVisibility(View.GONE);
+    }
+    
+    public void showLastElement () {
+    	layoutLeftMenu.getChildAt(layoutLeftMenu.getChildCount() - 1).setVisibility(View.VISIBLE);
+    }
 
 }
