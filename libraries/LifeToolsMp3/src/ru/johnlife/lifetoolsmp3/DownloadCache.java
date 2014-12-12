@@ -65,12 +65,23 @@ public class DownloadCache {
 		}
 	}
 	
+	public ArrayList<Item> getCachedItems() {
+		ArrayList<Item> cachedItems = new ArrayList<Item>();
+		for (Item item : cache) {
+			if (item.isCached) {
+				cachedItems.add(item);
+			}
+		}
+		return cachedItems;
+	}
+	
 	public class Item {
 		
 		private String artist;
 		private String title;
 		private boolean isCached;
 		private DownloadCacheCallback callback;
+		private DownloadCacheCallback customCallback;
 		
 		public Item(String artist, String title, boolean isCached) {
 			this.artist = artist;
@@ -100,10 +111,17 @@ public class DownloadCache {
 		public void callback() {
 			this.isCached = false;
 			callback.callback(this);
+			if (customCallback != null) {
+				customCallback.callback(this);
+			}
 		}
 
 		public void setCallback(DownloadCacheCallback callback) {
 			this.callback = callback;
+		}
+		
+		public void setCustovCallback(DownloadCacheCallback callback) {
+			this.customCallback = callback;
 		}
 
 		@Override

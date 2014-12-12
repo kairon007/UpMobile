@@ -7,8 +7,8 @@ import ru.johnlife.lifetoolsmp3.Util;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -89,5 +89,14 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	private void cancelDownload(long id) {
 		DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 		manager.remove(id);
+	}
+	
+	public boolean contains(MusicData song) {
+		for (int i = 0; i < getCount(); i++) {
+			if (getItem(i).equals(song)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
