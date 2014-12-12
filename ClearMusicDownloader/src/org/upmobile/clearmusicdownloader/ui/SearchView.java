@@ -133,4 +133,9 @@ public class SearchView extends OnlineSearchView {
 	public void saveState() {
 		StateKeeper.getInstance().saveStateAdapter(this);
 	}
+	
+	@Override
+	public int defaultCover() {
+		return R.drawable.def_cover_circle;
+	}
 }

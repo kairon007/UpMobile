@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/detail_background"
-    tools:context="com.special.TransitionDetailActivity" >
+    tools:context="org.upmobile.clearmusicdownloader.activity.MainActivity" >
 
     <com.special.utils.UIParallaxScroll
         android:id="@+id/scroller"

@@ -25,9 +25,7 @@ THE SOFTWARE.
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
+    android:dividerHeight="1dp"
     android:cacheColorHint="@android:color/transparent"
-    android:divider="@color/divider_color"
-    android:dividerHeight="1dip"
-    android:listSelector="@drawable/selectable_item_bg"
     android:scrollbarStyle="outsideInset" />
 

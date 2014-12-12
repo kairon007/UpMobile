@@ -547,6 +547,9 @@ public abstract class OnlineSearchView extends View {
 		refreshSpinner.setVisibility(View.GONE);
 	}
 	
+	public int defaultCover() {
+		return R.drawable.fallback_cover;
+	}
 	
 	public class SongSearchAdapter extends ArrayAdapter<Song> {
 
@@ -578,7 +581,7 @@ public abstract class OnlineSearchView extends View {
 					.setExpandable(false)
 					.setLine2(song.getArtist())
 					.setId(position)
-					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : R.drawable.fallback_cover)
+					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover())
 					.setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {

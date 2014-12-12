@@ -34,12 +34,14 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -152,6 +154,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitleBar.getBackground().setAlpha(0);
 		playerTitleBarArtis.setVisibility(View.INVISIBLE);
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
+		playerCover.bringToFront();
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_POSITION)) {
 			list = getArguments().getParcelableArrayList(Constants.KEY_SELECTED_SONG);
@@ -169,6 +172,24 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		startImageAnimation();
 		return parentView;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		getView().setFocusableInTouchMode(true);
+		getView().requestFocus();
+		getView().setOnKeyListener(new View.OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+					onBackPress();
+					return true;
+				}
+				return false;
+			}
+		});
 	}
 	
 	private void setClickablePlayerElement(boolean isClickable) {
@@ -228,6 +249,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void changeView() {
+		if (song.getClass() == MusicData.class) {
+			download.setVisibility(View.GONE);
+		}
 		playerProgress.removeCallbacks(progressAction);
 		playerArtist.setText(list.get(selectedPosition).getArtist());
 		playerTitle.setText(list.get(selectedPosition).getTitle());
@@ -285,7 +309,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 			break;
 		case R.id.title_bar_left_menu: 
-			((MainActivity) getActivity()).onBackPressed();
+			onBackPress();
 			break;
 		default:
 			break;
@@ -411,7 +435,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void getUri() {
 		song = list.get(selectedPosition);
 		if (song.getClass() == MusicData.class) {
-			download.setVisibility(View.GONE);
 			player.play(song.getPath());
 			changeView();
 		} else {
@@ -583,6 +606,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		});
 	}
 	
+	private void onBackPress() {
+		runExitAnimation(new Runnable() {
+			
+			@Override
+			public void run() {
+				((MainActivity) getActivity()).onBackPressed();
+				((MainActivity) getActivity()).overridePendingTransition(0, 0);
+			}
+		});
+	}
+	
     private void runEnterAnimation() {
         ViewHelper.setPivotX(playerCover, 0.f);
         ViewHelper.setPivotY(playerCover, 0.f);
@@ -605,6 +639,34 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         		});
 
         ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", 0f, 1f);
+        bg_anim.setDuration(DURATION);
+        bg_anim.start();
+    }
+    
+    private void runExitAnimation(final Runnable end_action) {
+    	ViewHelper.setPivotX(playerCover, 0.f);
+    	ViewHelper.setPivotY(playerCover, 0.f);
+    	ViewHelper.setScaleX(playerCover, 1.f);
+    	ViewHelper.setScaleY(playerCover, 1.f);
+    	ViewHelper.setTranslationX(playerCover, 0.f);
+    	ViewHelper.setTranslationY(playerCover, 0.f);
+
+    	animate(playerCover).
+                setDuration(DURATION).
+                scaleX(scale_width).
+                scaleY(scale_height).
+                translationX(delta_left).
+                translationY(delta_top).
+                setInterpolator(new DecelerateInterpolator()).
+                setListener(new AnimatorListenerAdapter() {  
+
+                	@Override
+                	    public void onAnimationEnd(Animator animation) {
+                	    end_action.run();
+                	}
+                });
+
+        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", 1f, 0f);
         bg_anim.setDuration(DURATION);
         bg_anim.start();
     }
