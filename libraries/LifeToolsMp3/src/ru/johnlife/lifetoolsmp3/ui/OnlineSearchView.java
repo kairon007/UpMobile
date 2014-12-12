@@ -766,6 +766,8 @@ public abstract class OnlineSearchView extends View {
 		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
 		if (view.getId() != R.id.btnDownload) {
 			stopSystemPlayer(getContext());
+			dismissDialog();
+			dismissProgressDialog();
 			showProgressDialog(view, downloadSong, position);
 		}
 		if (!isRestored) {
@@ -818,6 +820,17 @@ public abstract class OnlineSearchView extends View {
 		}
 	}
 
+	protected void dismissDialog(){
+		keeper.closeDialog(StateKeeper.STREAM_DIALOG);
+		if (null != alertDialog && alertDialog.isShowing()) {
+			try {
+				alertDialog.cancel();
+			} catch (Exception e) {
+				Log.e(getClass().getSimpleName(), e.getMessage());
+			}
+		}
+	}
+	
 	protected void dismissProgressDialog() {
 		keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
