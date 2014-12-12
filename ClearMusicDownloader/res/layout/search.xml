@@ -114,6 +114,11 @@
                         android:src="@drawable/ic_download" />
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/theme_color" />
+
                 <Spinner
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
