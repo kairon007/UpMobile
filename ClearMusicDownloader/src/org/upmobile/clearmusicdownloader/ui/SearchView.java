@@ -8,6 +8,7 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.Settings;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
+import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -26,20 +27,24 @@ public class SearchView extends OnlineSearchView {
 	private ImageView baseProgress;
 	private ImageView refreshProgress;
     private String PACKAGE = "IDENTIFY";
+    
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
 	}
 
 	@Override
 	protected void click(final View view, int position) {
-		ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
+		PlayerService service = PlayerService.get(getContext());
+		if (!service.isCorrectlyState(getResultAdapter().getItem(0).getClass(), getResultAdapter().getCount())) {
+			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
+			service.setArrayPlayback(list);
+		} 
+		service.setPlayingPosition(position);
 		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
-		bundle.putParcelableArrayList(Constants.KEY_SELECTED_SONG, list);
+		bundle.putParcelable(Constants.KEY_SELECTED_SONG, getResultAdapter().getItem(position));
         int[] screen_location = new int[2];
         View v = view.findViewById(R.id.cover);
         v.getLocationOnScreen(screen_location);
-        
         bundle.putInt(PACKAGE + ".left", screen_location[0]);
         bundle.putInt(PACKAGE + ".top", screen_location[1]);
         bundle.putInt(PACKAGE + ".width", v.getWidth());
@@ -63,13 +68,11 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void refreshLibrary() {
-		// TODO Auto-generated method stub
 
 	}
 

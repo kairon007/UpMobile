@@ -25,7 +25,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		MediaStore.Audio.Media.TITLE,
 		MediaStore.Audio.Media.ARTIST,
 		MediaStore.Audio.Media.DURATION,
-		MediaStore.Audio.Media.ALBUM
+		MediaStore.Audio.Media.ALBUM,
 	};
 	public static final int MODE_VISIBLITY = 0x00000001;
 	public static final int MODE_PLAYING = 0x00000002;

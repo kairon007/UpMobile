@@ -6,6 +6,7 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 import org.upmobile.clearmusicdownloader.data.MusicData;
+import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.ContentResolver;
@@ -44,6 +45,13 @@ public class LibraryFragment extends Fragment {
 		ArrayList<MusicData> srcList = querySong();
 		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
+			PlayerService service = PlayerService.get(getActivity());
+			if (service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
+				int pos = service.getPlayingPosition();
+				if (pos >= 0 && pos < list.size()) {
+					((MusicData) list.get(pos)).turnOn(MusicData.MODE_PLAYING);
+				}
+			}
 			adapter.addAll(srcList);
 			listView.setAdapter(adapter);
 		}

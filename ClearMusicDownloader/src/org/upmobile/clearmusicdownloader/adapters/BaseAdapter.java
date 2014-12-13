@@ -44,6 +44,7 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		h.hold(item, position);
 		return v;
 	}
+	
 
 	private void setListener(ViewGroup p, View v, final int position) {
 		if (null == parent) {
@@ -61,6 +62,14 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 				onItemSwipeGone(pos);
 			}
 		});
+	}
+	
+	public ArrayList<T> getAll() {
+		ArrayList<T> result = new ArrayList<T>();
+		for (int i = 0; i < getCount(); i++) {
+			result.add(getItem(i));
+		}
+		return result;
 	}
 	
 	public static abstract class ViewHolder<T> {

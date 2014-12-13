@@ -1,5 +1,14 @@
 package org.upmobile.clearmusicdownloader.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.upmobile.clearmusicdownloader.data.MusicData;
+import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener.State;
+
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,12 +31,13 @@ import android.telephony.TelephonyManager;
 public class PlayerService extends Service implements OnCompletionListener, OnErrorListener, Handler.Callback {
 	
 	//constants section
-	private static final int SMODE_COMPLETE = 0x00000001;
 	private static final int SMODE_PREPARED = 0x00000002;
 	/**
 	 * bit 1 (true) - play, bit 0 (false) - pause
 	 */
 	private static final int SMODE_PLAY_PAUSE = 0x00000004;
+	private static final int SMODE_PLAYING = 0x00000008;
+	private static final int SMODE_STOPPING = 0x00000010;
 	private static final int MSG_PLAY = 1;
 	private static final int MSG_PLAY_CURRENT = 2;
 	private static final int MSG_PAUSE = 3;
@@ -40,19 +50,29 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private Handler handler;
 	
 	//instance section
-	public static PlayerService instance;
+	private ArrayList<AbstractSong> arrayPlayback;
+	private OnStatePlayerListener stateListener;
+	private static PlayerService instance;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
-	private OnStatePlayerListener stateListener;
-	private String currentPath;
+	private AbstractSong playingSong;
+	private int playingPosition;
 	private int mode;
 	
 	public interface OnStatePlayerListener {
 		
-		public void prepare();
-		public void error();
+		public enum State {
+			START, PLAY, PAUSE, RESET, COMPLETE, UPDATE
+		}
 		
+		public void start(AbstractSong song);
+		public void play();
+		public void	pause();
+		public void reset();
+		public void complete();
+		public void update(AbstractSong song);
+			
 	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -79,7 +99,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				msg = buildMessage(MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
 				flag = true;
-				return;
+				break;
 			case TelephonyManager.CALL_STATE_IDLE:
 				if (flag) {
 					msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
@@ -132,10 +152,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	@Override
 	public void onDestroy() {
-		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-		instance = null;
 		player.release();
 		looper.quit();
+		super.onDestroy();
 	}
 	
 	@Override
@@ -144,35 +163,53 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		switch (msg.what) {
 		case MSG_PLAY:
 			if (check(SMODE_PREPARED)) {
-				offMode(SMODE_PREPARED);
-				callStateListener(false);
 				player.reset();
+				offMode(SMODE_PREPARED);
 			}
+			String path = (String) msg.obj;
+			Uri uri = Uri.parse(path);
 			try {
-				String path = (String) msg.obj;
-				Uri uri = Uri.parse(path);
 				player.setDataSource(this, uri);
 				player.prepare();
-				callStateListener(true);
 				onMode(SMODE_PREPARED);
-				offMode(SMODE_COMPLETE);
-				player.start();
-			} catch (Exception e) {
+			} catch (IllegalArgumentException | SecurityException | IOException | IllegalStateException e) {
+				try {
+					player.reset();
+					player.setDataSource(this, uri);
+					player.prepare();
+				} catch (Exception e2) {
+					android.util.Log.d("log", "Appear problem: " + e2);
+					offMode(SMODE_PREPARED);
+					break;
+				}
 				android.util.Log.d("log", "in method \"handleMessage\" appear problem: " + e.toString());
-				offMode(SMODE_PREPARED);
-				callStateListener(false);
 			}
+			if (msg.arg1 != playingPosition) {
+				handler.removeMessages(1);
+				if (playingSong.getClass() != MusicData.class) {
+					play(playingSong);
+					return true;
+				}
+				Message m = buildMessage(MSG_PLAY, 0, 0);
+				m.obj = playingSong.getPath();
+				handler.sendMessage(m);
+				break;
+			}
+			helper(State.START);
+			player.start();
 			break;
 
 		case MSG_PLAY_CURRENT:
 			if (check(SMODE_PREPARED)) {
 				player.start();
+				onMode(SMODE_PLAYING);
 			}
 			break;
 
 		case MSG_PAUSE:
 			if (check(SMODE_PREPARED)) {
 				player.pause();
+				onMode(SMODE_STOPPING);
 			}
 			break;
 
@@ -184,7 +221,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			
 		case MSG_ERROR:
 			offMode(SMODE_PREPARED);
-			callStateListener(false);
 			player.release();
 			player = new MediaPlayer();
 			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -196,47 +232,113 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 		return true;
 	}
+	
+	public void shift(int delta) {
+		int buf = playingPosition + delta;
+		if (buf < 0 || buf > arrayPlayback.size()) return;
+		playingPosition  =  buf;
+		handler.removeMessages(1, null);
+		offMode(SMODE_PREPARED);
+		helper(State.UPDATE);
+		play(playingPosition);
+	}
 
-	public void play(String path) {
+	public void play(int position) {
+		playingSong = arrayPlayback.get(position);
+		boolean fromInternet = playingSong.getClass() != MusicData.class;
 		Message msg = new Message();	
 		synchronized (lock) {
-			if (path.equals(currentPath)) {
+			if (check(SMODE_PREPARED)) {
 				if (check(SMODE_PLAY_PAUSE)) {
 					msg.what = MSG_PLAY_CURRENT;
 					offMode(SMODE_PLAY_PAUSE);
+					helper(State.PLAY);
 				} else {
 					msg.what = MSG_PAUSE;
+					helper(State.PAUSE);
 					onMode(SMODE_PLAY_PAUSE);
 				}
 			} else {
+				if (fromInternet) {
+					playingPosition = position;
+					play(playingSong);
+					return;
+				}
 				offMode(SMODE_PLAY_PAUSE);
 				msg.what = MSG_PLAY;
-				msg.obj = path;
+				msg.arg1 = position;
+				String str = playingSong.getPath();
+				msg.obj = str;
 			}
-			currentPath = path;
 			handler.sendMessage(msg);
 		}
 	}
 	
-	private void offMode(int flag) {
-		mode &= ~flag;
+	private void helper(State state) {
+		if (stateListener == null) return;
+		switch (state) {
+		case START:
+			stateListener.start(playingSong);
+			break;
+		case PLAY:
+			stateListener.play();
+			break;
+		case PAUSE:
+			stateListener.pause();
+			break;
+		case RESET:
+			stateListener.reset();
+			break;
+		case COMPLETE:
+			stateListener.complete();
+			break;
+		case UPDATE:
+			AbstractSong buf = arrayPlayback.get(playingPosition);
+			stateListener.update(buf);
+			break;
+		}
+	}
+	
+	// for RemoteSong
+	private void play(AbstractSong song) {
+		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+
+			@Override
+			public void success(String url) {
+				offMode(SMODE_PLAY_PAUSE);
+				Message msg = new Message();
+				msg.what = MSG_PLAY;
+				msg.arg1 = playingPosition;
+				msg.obj = url;
+				handler.sendMessage(msg);
+			}
+
+			@Override
+			public void error(String error) {
+			}
+		});
 	}
 
+	private void offMode(int flag) {
+		mode &= ~flag;
+		if (flag == SMODE_PREPARED) {
+			mode &= ~SMODE_PLAYING;
+			mode &= ~SMODE_STOPPING;
+		}
+	}
 	private void onMode(int flag) {
 		mode |= flag;
+		if (flag == SMODE_PREPARED) {
+			onMode(SMODE_PLAYING);
+		} else if (flag == SMODE_PLAYING) {
+			mode &= ~SMODE_STOPPING;
+		} else if (flag == SMODE_STOPPING){
+			mode &= ~SMODE_PLAYING;
+		}
 	}
 	
 	private boolean check(int flag) {
 		return (mode & flag) == flag;
-	}
-	
-	private void callStateListener(boolean value) {
-		if (stateListener == null) return;
-		if (value) {
-			stateListener.prepare();
-		} else {
-			stateListener.error();
-		}
 	}
 	
 	private Message buildMessage(int what, int arg1, int arg2) {
@@ -256,7 +358,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 	@Override
 	public void onCompletion(MediaPlayer paramMediaPlayer) {
-		onMode(SMODE_COMPLETE);
+		helper(State.COMPLETE);
 		Message msg = buildMessage(MSG_SEEK_TO, 0, 0);
 		handler.sendMessage(msg);
 	}
@@ -279,12 +381,42 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return check(SMODE_PLAY_PAUSE);
 	}
 	
-	public boolean isComplete() {
-		return check(SMODE_COMPLETE);
+	/** 
+	 * @param isPlaying - recommended parameter is false
+	 */
+	public AbstractSong getPlayingSong() {
+		if (!check(SMODE_PREPARED)) return null;
+		return playingSong;
 	}
 	
-	public String getCurrentPath() {
-		return currentPath;
+	public int getPlayingPosition() {
+		return playingPosition;
+	}
+	
+	public boolean isPlaying() {
+		boolean result=  false;
+		if (check(SMODE_PLAYING)) {
+			result = true;
+		}
+		if (check(SMODE_STOPPING)) {
+			result = false;
+		}
+		return result;
+	}
+	
+	public boolean isCorrectlyState(Class calledClass, int transferSize) {
+		if (arrayPlayback == null) return false;
+		if (transferSize != arrayPlayback.size()) return false;
+		if (playingSong.getClass() != calledClass) return false;
+		return true;
+	}
+	
+	public void setArrayPlayback(ArrayList<AbstractSong> arrayPlayback) {
+		this.arrayPlayback = arrayPlayback;
+	}
+	
+	public void setPlayingPosition(int playingPosition) {
+		this.playingPosition = playingPosition;
 	}
 
 	public void setStatePlayerListener(OnStatePlayerListener stateListener) {

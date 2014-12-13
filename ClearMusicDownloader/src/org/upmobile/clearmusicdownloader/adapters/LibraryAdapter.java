@@ -115,16 +115,18 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_UP:
-						Bundle bundle = new Bundle();
-						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
-						for (int i = 0; i < getCount(); i++) {
-							list.add(getItem(i));
+						android.util.Log.d("log", "LibraryAdapter.LibraryViewHolder.setListener(...).new OnTouchListener() {...}, onTouch:");
+						PlayerService service = PlayerService.get(getContext());
+						if (!service.isCorrectlyState(getItem(position).getClass(), getCount())) {
+							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+							service.setArrayPlayback(list);
 						}
-						bundle.putParcelableArrayList(Constants.KEY_SELECTED_SONG, list);
-						bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
+						service.setPlayingPosition(position);
 				        int[] screen_location = new int[2];
 				        View view = v.findViewById(R.id.item_image);
 				        v.getLocationOnScreen(screen_location);
+				        Bundle bundle = new Bundle();
+				        bundle.putParcelable(Constants.KEY_SELECTED_SONG, getItem(position));
 				        bundle.putInt(PACKAGE + ".left", screen_location[0]);
 				        bundle.putInt(PACKAGE + ".top", screen_location[1]);
 				        bundle.putInt(PACKAGE + ".width", view.getWidth());
@@ -146,7 +148,12 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				public void onClick(View v) {
 					int [] location = new int[2];
 					v.getLocationOnScreen(location);
-					PlayerService.get(getContext()).play(item.getPath());
+					PlayerService service = PlayerService.get(getContext());
+					if (!service.isCorrectlyState(getItem(position).getClass(), getCount())) {
+						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+						service.setArrayPlayback(list);
+					}
+					service.play(position);
 					if (item.check(MusicData.MODE_PLAYING)) {
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
