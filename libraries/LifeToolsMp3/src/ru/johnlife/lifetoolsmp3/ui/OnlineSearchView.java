@@ -751,8 +751,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		downloadSong = (RemoteSong) resultAdapter.getItem(position);
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
-			alertProgressDialog.dismiss();
-			downloadSong.cancelTasks();
+			alertProgressDialog.cancel();
 		}
 		if (!showFullElement()) {
 			click(view, position);
@@ -821,7 +820,6 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	protected void dismissDialog(){
-		keeper.closeDialog(StateKeeper.STREAM_DIALOG);
 		if (null != alertDialog && alertDialog.isShowing()) {
 			try {
 				alertDialog.cancel();
@@ -832,7 +830,6 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	protected void dismissProgressDialog() {
-		keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
 			try {
 				alertProgressDialog.cancel();
