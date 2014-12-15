@@ -31,6 +31,7 @@ import android.telephony.TelephonyManager;
 public class PlayerService extends Service implements OnCompletionListener, OnErrorListener, Handler.Callback {
 	
 	//constants section
+	private static final int SMODE_GET_URL = 0x00000001;
 	private static final int SMODE_PREPARED = 0x00000002;
 	/**
 	 * bit 1 (true) - play, bit 0 (false) - pause
@@ -173,7 +174,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				player.prepare();
 				onMode(SMODE_PREPARED);
 			} catch (IllegalArgumentException | SecurityException | IOException | IllegalStateException e) {
-				android.util.Log.d(getClass().getName(), "in method \"handleMessage\" appear problem: " + e.toString());
+				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
 			if (msg.arg1 != playingPosition) {
 				play(playingPosition);
@@ -246,6 +247,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		Message msg = new Message();	
 		synchronized (lock) {
 			if (check(SMODE_PREPARED)) {
+				android.util.Log.d("log", "PlayerService, play: true");
 				if (check(SMODE_PLAY_PAUSE)) {
 					msg.what = MSG_PLAY_CURRENT;
 					offMode(SMODE_PLAY_PAUSE);
@@ -298,10 +300,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	// for RemoteSong
 	private void play(AbstractSong song) {
+		onMode(SMODE_GET_URL);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
 			@Override
 			public void success(String url) {
+				offMode(SMODE_GET_URL);
 				offMode(SMODE_PLAY_PAUSE);
 				Message msg = new Message();
 				msg.what = MSG_PLAY;
@@ -370,6 +374,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		handler.sendMessage(msg);
 	}
 	
+	public void reset() {
+		Message msg = buildMessage(MSG_RESET, 0, 0);
+		handler.sendMessage(msg);
+	}
+	
 	public boolean isPrepared() {
 		return check(SMODE_PREPARED);
 	}
@@ -382,12 +391,16 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	 * @param isPlaying - recommended parameter is false
 	 */
 	public AbstractSong getPlayingSong() {
-		if (!check(SMODE_PREPARED)) return null;
+		playingSong = arrayPlayback.get(playingPosition);
 		return playingSong;
 	}
 	
 	public int getPlayingPosition() {
 		return playingPosition;
+	}
+	
+	public boolean gettingURl() {
+		return check(SMODE_GET_URL);
 	}
 	
 	public boolean isPlaying() {

@@ -22,6 +22,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -119,6 +121,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+			int pos = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
 			if (song.getClass() != MusicData.class) {
 				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 					
@@ -134,16 +137,33 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
-			setClickablePlayerElement(false);
-			play(0);
-			setElementsView(0);
+			if (!player.isPrepared() || player.getPlayingSong().getClass() != song.getClass() || player.getPlayingPosition() != pos) {
+				if (player.isPrepared()) {
+					player.reset();
+				} 
+				setClickablePlayerElement(false);
+				player.setPlayingPosition(pos);
+				play(0);
+				setElementsView(0);
+			} else {
+				boolean check = player.isPlaying();
+				int current = player.getCurrentPosition();
+				setElementsView(current);
+				if (check) changePlayPauseView(false);
+				else changePlayPauseView(true);
+			}
 		} else {
-			song = player.getPlayingSong();
-			boolean check = player.isPlaying();
-			int current = player.getCurrentPosition();
-			setElementsView(current);
-			if (check) changePlayPauseView(false);
-			else changePlayPauseView(true);
+			if (player.gettingURl() || !player.isPrepared()) {
+				song = player.getPlayingSong();
+				setClickablePlayerElement(false);
+				setElementsView(0);
+			} else {
+				song = player.getPlayingSong();
+				boolean check = player.isPlaying();
+				int current = player.getCurrentPosition();
+				setElementsView(current);
+				changePlayPauseView(!check);
+			}
 		}
 		startImageAnimation();
 		return parentView;
@@ -595,28 +615,28 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 //		}
 //	}
 //	
-//    private void showCustomDialog() {
-//		dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent);
-//		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//		dialog.setCancelable(false);
-//		dialog.setContentView(R.layout.layout_dialog);
-//		((TextView)dialog.findViewById(R.id.dialog_title)).setText(R.string.message_please_wait);
-//		((TextView)dialog.findViewById(R.id.dialog_text)).setText(R.string.message_loading);
-//		Button btnCancel = (Button) dialog.findViewById(R.id.btncancel);
-//		btnCancel.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View view) {
-//				((RemoteSong) song).cancelTasks();
-//				dialog.cancel();
-//			}
-//
-//		});
-//		final ImageView myImage = (ImageView) dialog.findViewById(R.id.loader);
-//        myImage.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate) );
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x7f000000));
-//		dialog.show();
-//    }
+    private void showCustomDialog() {
+		dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setCancelable(false);
+		dialog.setContentView(R.layout.layout_dialog);
+		((TextView)dialog.findViewById(R.id.dialog_title)).setText(R.string.message_please_wait);
+		((TextView)dialog.findViewById(R.id.dialog_text)).setText(R.string.message_loading);
+		Button btnCancel = (Button) dialog.findViewById(R.id.btncancel);
+		btnCancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				((RemoteSong) song).cancelTasks();
+				dialog.cancel();
+			}
+
+		});
+		final ImageView myImage = (ImageView) dialog.findViewById(R.id.loader);
+        myImage.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate) );
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x7f000000));
+		dialog.show();
+    }
 
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
@@ -626,46 +646,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	
-//	private void cheñkWhereQueue() {
-//		if (player.getCurrentPath().contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
-//			list = new ArrayList<AbstractSong>(querySong());
-//			for (int i = 0; i < list.size(); i ++ ) {
-//				if (player.getCurrentPath().equals(list.get(i).getPath())) {
-//					selectedPosition = i;
-//				}
-//			}
-//		} else if (player.getCurrentPath().contains("http")) {
-//			list = new ArrayList<AbstractSong>(StateKeeper.getInstance().getResults());
-//			for (int i = 0; i < list.size(); i ++ ) {
-//				if (player.getCurrentPath().equals(list.get(i).getPath())) {
-//					selectedPosition = i;
-//				}
-//			}
-//		} else {
-//			Log.d(getClass().getSimpleName(), "Unknown queue! Check the method of updating the queue player!!!");
-//		}
-//	}
-	
-//	private ArrayList<MusicData> querySong() {
-//		ArrayList<MusicData> result = new ArrayList<MusicData>();
-//		Cursor cursor = buildQuery(getActivity().getContentResolver());
-//		if (!cursor.moveToFirst()) {
-//			return new ArrayList<MusicData>();
-//		}
-//		while (cursor.moveToNext()) {
-//			MusicData data = new MusicData();
-//			data.populate(cursor);	
-//			result.add(data);
-//		}
-//		cursor.close();
-//		return result;
-//	}
-	
-//	private Cursor buildQuery(ContentResolver resolver) {
-//		String selection =  MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%'" ;
-//		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
-//		return cursor;
-//	}
 	
 	private void startImageAnimation() {
 		ViewTreeObserver observer = playerCover.getViewTreeObserver();

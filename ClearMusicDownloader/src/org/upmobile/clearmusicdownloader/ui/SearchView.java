@@ -39,9 +39,9 @@ public class SearchView extends OnlineSearchView {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
 			service.setArrayPlayback(list);
 		} 
-		service.setPlayingPosition(position);
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(Constants.KEY_SELECTED_SONG, getResultAdapter().getItem(position));
+		bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
         int[] screen_location = new int[2];
         View v = view.findViewById(R.id.cover);
         v.getLocationOnScreen(screen_location);

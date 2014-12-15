@@ -115,18 +115,17 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_UP:
-						android.util.Log.d("log", "LibraryAdapter.LibraryViewHolder.setListener(...).new OnTouchListener() {...}, onTouch:");
 						PlayerService service = PlayerService.get(getContext());
 						if (!service.isCorrectlyState(getItem(position).getClass(), getCount())) {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 							service.setArrayPlayback(list);
 						}
-						service.setPlayingPosition(position);
 				        int[] screen_location = new int[2];
 				        View view = v.findViewById(R.id.item_image);
 				        v.getLocationOnScreen(screen_location);
 				        Bundle bundle = new Bundle();
 				        bundle.putParcelable(Constants.KEY_SELECTED_SONG, getItem(position));
+				        bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
 				        bundle.putInt(PACKAGE + ".left", screen_location[0]);
 				        bundle.putInt(PACKAGE + ".top", screen_location[1]);
 				        bundle.putInt(PACKAGE + ".width", view.getWidth());
