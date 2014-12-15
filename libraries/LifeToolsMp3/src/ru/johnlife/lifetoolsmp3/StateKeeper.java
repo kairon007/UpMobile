@@ -110,16 +110,11 @@ public class StateKeeper {
 	 * @param openClose - It is status of operations. If true - it is open, if it false - close
 	 */
 	private void setFlags(int flag, int mask, boolean openClose) {
-		int old;
 		if (openClose) {
-			old = flag | generalFlags;
-			generalFlags = Integer.valueOf(old);
+			generalFlags |= flag;
 			return;
 		} else {
-			if (checkState(flag)) {
-				old = flag ^ generalFlags;
-				generalFlags = Integer.valueOf(old);
-			} 
+			generalFlags &= ~flag;
 		}
 		tag = null;
 		if (flag == STREAM_DIALOG) {

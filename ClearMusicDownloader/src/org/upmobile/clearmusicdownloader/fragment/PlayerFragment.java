@@ -194,8 +194,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					
 					@Override
 					public void run() {
-						playerProgress.setProgress(0);
-						playerCurrTime.setText("0:00");
 						setClickablePlayerElement(false);
 						hideOpenViews();
 					}
@@ -289,6 +287,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (isClickable) {
 			play.setImageResource(R.drawable.pause);
 		} else {
+			playerCurrTime.setText("0:00");
+			playerProgress.setProgress(0);
 			play.setImageResource(R.drawable.pause_idle);
 		}
 	}
