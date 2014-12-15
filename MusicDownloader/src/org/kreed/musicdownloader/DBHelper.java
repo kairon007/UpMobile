@@ -94,27 +94,31 @@ public class DBHelper extends SQLiteOpenHelper {
 		@Override
 		protected ArrayList<MusicData> doInBackground(Void... params) {
 			ArrayList<MusicData> all = new ArrayList<MusicData>();
-			Cursor c = getReadableDatabase().query(DB_NAME, null, null, null, null, null, null);
-			while (c.moveToNext()) {
-				MusicData data = new MusicData();
-				data.setSongArtist(c.getString(c.getColumnIndex("artist")));
-				data.setSongTitle(c.getString(c.getColumnIndex("title")));
-				data.setSongDuration(c.getString(c.getColumnIndex("duration")));
-				String fileUriString = c.getString(c.getColumnIndex("fileuri"));
-				data.setFileUri(fileUriString);
-				try {
-					MusicMetadataSet src_set = new MyID3().read(new File(fileUriString));
-					if (src_set != null) {
-						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-						Bitmap bitmap = getArtworkImage(2, metadata);
-						data.setSongBitmap(bitmap);
+			if (!context.getDatabasePath(DB_NAME).exists()) {
+				return all;
+			} else {
+				Cursor c = getReadableDatabase().query(DB_NAME, null, null, null, null, null, null);
+				while (c.moveToNext()) {
+					MusicData data = new MusicData();
+					data.setSongArtist(c.getString(c.getColumnIndex("artist")));
+					data.setSongTitle(c.getString(c.getColumnIndex("title")));
+					data.setSongDuration(c.getString(c.getColumnIndex("duration")));
+					String fileUriString = c.getString(c.getColumnIndex("fileuri"));
+					data.setFileUri(fileUriString);
+					try {
+						MusicMetadataSet src_set = new MyID3().read(new File(fileUriString));
+						if (src_set != null) {
+							MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+							Bitmap bitmap = getArtworkImage(2, metadata);
+							data.setSongBitmap(bitmap);
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
+					all.add(data);
 				}
-				all.add(data);
+				return all;
 			}
-			return all;
 		}
 		
 		@Override
