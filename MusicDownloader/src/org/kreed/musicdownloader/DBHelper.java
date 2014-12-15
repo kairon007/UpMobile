@@ -28,6 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String DB_NAME = "downloads";
 	private static DBHelper instance = null;
 	private Context context;
+	private static Bitmap bitmap = null;
 	
 	public DBHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
@@ -148,7 +149,14 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		opts = new BitmapFactory.Options();
 		opts.inSampleSize = scale;
-		Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
+		try {
+			bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
+		} catch (OutOfMemoryError e) {
+			if (bitmap != null && !bitmap.isRecycled()){
+				bitmap.recycle();
+			}
+			bitmap = null;
+		}
 		return bitmap;
 	}
 	
