@@ -72,6 +72,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton showLyrics;
 	private ImageButton editTag;
 	private ImageView playerCover;
+	private ImageView lyricsLoader;
 	private Button download;
 	private Button playerSaveTags;
 	private Button playerCancelTags;
@@ -289,6 +290,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		forward = (ImageButton) parentView.findViewById(R.id.player_forward);
 		download = (Button) parentView.findViewById(R.id.player_download);
 		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
+		lyricsLoader= (ImageView) parentView.findViewById(R.id.lyrics_load_image);
 		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
 		playerTitleBarBack = (Button) parentView.findViewById(R.id.title_bar_left_menu);
 		playerProgress = (SeekBar) parentView.findViewById(R.id.player_progress);
@@ -447,12 +449,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void showLyrics() {
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
+			lyricsLoader.setVisibility(View.VISIBLE);
+			lyricsLoader.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
 			LyricsFetcher lyricsFetcher = new LyricsFetcher(getActivity());
 			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
 				
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+					lyricsLoader.clearAnimation();
+					lyricsLoader.setVisibility(View.GONE);
 					if (foundLyrics) {
 						playerLyricsView.setText(Html.fromHtml(lyrics));
 					} else {
