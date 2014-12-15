@@ -43,6 +43,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private static final int MSG_PAUSE = 3;
 	private static final int MSG_SEEK_TO = 4;
 	private static final int MSG_ERROR = 5;
+	private static final int MSG_RESET = 6;
 	
 	//multy-threading section
 	private final Object lock = new Object();
@@ -159,13 +160,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	@Override
 	public boolean handleMessage(Message msg) {
-		//TODO handleMessage
 		switch (msg.what) {
 		case MSG_PLAY:
 			if (check(SMODE_PREPARED)) {
 				player.reset();
 				offMode(SMODE_PREPARED);
-			}
+			} 
 			String path = (String) msg.obj;
 			Uri uri = Uri.parse(path);
 			try {
@@ -173,26 +173,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				player.prepare();
 				onMode(SMODE_PREPARED);
 			} catch (IllegalArgumentException | SecurityException | IOException | IllegalStateException e) {
-				try {
-					player.reset();
-					player.setDataSource(this, uri);
-					player.prepare();
-				} catch (Exception e2) {
-					android.util.Log.d("log", "Appear problem: " + e2);
-					offMode(SMODE_PREPARED);
-					break;
-				}
-				android.util.Log.d("log", "in method \"handleMessage\" appear problem: " + e.toString());
+				android.util.Log.d(getClass().getName(), "in method \"handleMessage\" appear problem: " + e.toString());
 			}
 			if (msg.arg1 != playingPosition) {
-				handler.removeMessages(1);
-				if (playingSong.getClass() != MusicData.class) {
-					play(playingSong);
-					return true;
-				}
-				Message m = buildMessage(MSG_PLAY, 0, 0);
-				m.obj = playingSong.getPath();
-				handler.sendMessage(m);
+				play(playingPosition);
 				break;
 			}
 			helper(State.START);
@@ -227,6 +211,13 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			player.setOnCompletionListener(this);
 			player.setOnErrorListener(this);
 			break;
+			
+		case MSG_RESET:
+			if(check(SMODE_PREPARED)){
+				offMode(SMODE_PREPARED);
+				player.reset();
+			}
+			break;
 		default:
 			break;
 		}
@@ -235,10 +226,16 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void shift(int delta) {
 		int buf = playingPosition + delta;
-		if (buf < 0 || buf > arrayPlayback.size()) return;
-		playingPosition  =  buf;
+		if (buf >= 0 && buf < arrayPlayback.size()) playingPosition  =  buf;
+		else {
+			Message msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
+			handler.sendMessage(msg);
+			return;
+		}
 		handler.removeMessages(1, null);
-		offMode(SMODE_PREPARED);
+		Message msg = new Message();
+		msg.what = MSG_RESET;
+		handler.sendMessage(msg);
 		helper(State.UPDATE);
 		play(playingPosition);
 	}
