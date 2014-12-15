@@ -67,6 +67,7 @@
     
     
     <application
+        android:name="com.simpleandroid.music.MusicPlayerApp"
         android:allowTaskReparenting="true"
         android:icon="@drawable/icon"
         android:label="@string/musicbrowserlabel"

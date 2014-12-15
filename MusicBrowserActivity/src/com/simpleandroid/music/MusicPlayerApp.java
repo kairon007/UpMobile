@@ -26,6 +26,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
 
 /**
@@ -57,13 +58,18 @@ public class MusicPlayerApp extends MusicApp {
         // Enable strict mode logging
         // enableStrictMode();
         // Turn off logging for jaudiotagger.
+    	prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
 		if (sCoverCache == null) {
 			sCoverCache = new CoverCache(this);
 		}
-		FONT_BOLD = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Bold.otf");
-		FONT_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Regular.otf");
-		FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
+		try {
+			FONT_BOLD = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Bold.otf");
+			FONT_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Regular.otf");
+			FONT_LIGHT = Typeface.createFromAsset(getAssets(), "fonts/ProximaNova-Light.otf");
+		} catch (Exception e){
+			
+		}
     }
 
     /**

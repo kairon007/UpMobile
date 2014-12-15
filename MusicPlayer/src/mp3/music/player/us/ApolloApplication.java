@@ -15,12 +15,15 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 
 import mp3.music.player.us.cache.ImageCache;
 import mp3.music.player.us.utils.ApolloUtils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 
 /**
  * Used to turn off logging for jaudiotagger and free up memory when
@@ -30,7 +33,7 @@ import java.util.logging.Logger;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 @SuppressLint("NewApi")
-public class ApolloApplication extends Application {
+public class ApolloApplication extends MusicApp {
 
     /**
      * {@inheritDoc}
@@ -40,6 +43,7 @@ public class ApolloApplication extends Application {
         // Enable strict mode logging
         // enableStrictMode();
         // Turn off logging for jaudiotagger.
+    	prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
     }
 
