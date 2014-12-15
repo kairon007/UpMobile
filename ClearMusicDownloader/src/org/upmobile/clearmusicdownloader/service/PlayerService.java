@@ -48,6 +48,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	//multy-threading section
 	private final Object lock = new Object();
+	private Object wait = new Object();
 	private Looper looper;
 	private Handler handler;
 	
@@ -218,6 +219,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				offMode(SMODE_PREPARED);
 				player.reset();
 			}
+			synchronized (wait) {
+				wait.notifyAll();
+			}
 			break;
 		default:
 			break;
@@ -227,16 +231,23 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void shift(int delta) {
 		int buf = playingPosition + delta;
-		if (buf >= 0 && buf < arrayPlayback.size()) playingPosition  =  buf;
+		if (0 >= buf && buf < arrayPlayback.size()) playingPosition  =  buf;
 		else {
 			Message msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
 			handler.sendMessage(msg);
 			return;
 		}
 		handler.removeMessages(1, null);
-		Message msg = new Message();
-		msg.what = MSG_RESET;
-		handler.sendMessage(msg);
+		synchronized (wait) {
+			Message msg = new Message();
+			msg.what = MSG_RESET;
+			handler.sendMessage(msg);
+			try {
+				wait.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		helper(State.UPDATE);
 		play(playingPosition);
 	}
@@ -247,7 +258,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		Message msg = new Message();	
 		synchronized (lock) {
 			if (check(SMODE_PREPARED)) {
-				android.util.Log.d("log", "PlayerService, play: true");
 				if (check(SMODE_PLAY_PAUSE)) {
 					msg.what = MSG_PLAY_CURRENT;
 					offMode(SMODE_PLAY_PAUSE);
