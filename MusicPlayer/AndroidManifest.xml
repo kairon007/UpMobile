@@ -89,7 +89,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".ApolloApplication"
+        android:name="mp3.music.player.us.app.MusicPlayerApp"
         android:allowBackup="true"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="@bool/config_hardwareAccelerated"
