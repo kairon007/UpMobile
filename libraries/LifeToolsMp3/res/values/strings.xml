@@ -78,4 +78,5 @@
     </string-array>
         <string name="bad_file">Bad file</string>
         <string name="default_cover">default_cover</string>
+        <string name="file_with_the_same_name_already_exists">File with the same name already exists</string>
 </resources>

@@ -527,6 +527,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			toast.show();
 			return;
 		}
+		File f = new File(song.getPath());
+		if (new File(f.getParentFile() + "/" + playerTagsArtist.getText() + " - " + playerTagsTitle.getText() + ".mp3").exists()) {
+			Toast toast = Toast.makeText(getActivity(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
+			toast.show();
+			return;
+		}
 		if (song.getClass() == MusicData.class) {
 			RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
 				
