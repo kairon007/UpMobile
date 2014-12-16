@@ -3,6 +3,7 @@ package org.upmobile.clearmusicdownloader.adapters;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.Util;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -83,10 +84,11 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
+					DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
 					remove(item);
+					if (item.getId() == -1) return;
 					cancelDownload(item.getId());
 				}
-
 			});
 		}
 	}
@@ -102,14 +104,14 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 	@Override
 	protected void onItemSwipeVisible(int pos) {
-		if (getCount()  >= pos - 1) {
+		if (getCount() > pos) {
 			getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
 		}
 	}
 
 	@Override
 	protected void onItemSwipeGone(int pos) {
-		if (getCount()  >= pos - 1) {
+		if (getCount() > pos) {
 			getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
 		}
 	}

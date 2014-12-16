@@ -193,6 +193,7 @@ public class DownloadsFragment extends Fragment {
 
 					@Override
 					public void run() {
+						DownloadCache.getInstanse().remove(adapter.getItem(position).getArtist(), adapter.getItem(position).getTitle());
 						adapter.remove(adapter.getItem(position));
 						adapter.notifyDataSetChanged();
 					}
