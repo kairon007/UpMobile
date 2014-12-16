@@ -219,9 +219,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				offMode(SMODE_PREPARED);
 				player.reset();
 			}
-			synchronized (wait) {
-				wait.notifyAll();
-			}
 			break;
 		default:
 			break;
@@ -242,11 +239,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			Message msg = new Message();
 			msg.what = MSG_RESET;
 			handler.sendMessage(msg);
-			try {
-				wait.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 		helper(State.UPDATE);
 		play(playingPosition);

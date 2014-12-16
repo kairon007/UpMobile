@@ -18,7 +18,7 @@
         <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="match_parent" >
 
             <TextView
                 android:id="@+id/player_artist"
@@ -99,13 +99,27 @@
                     android:background="@drawable/button_selector_inverse"
                     android:src="@drawable/previous" />
 
-                <ImageButton
-                    android:id="@+id/player_play"
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_selector_inverse"
-                    android:src="@drawable/play" />
+                    android:layout_weight="1" >
+
+                    <ImageButton
+                        android:id="@+id/player_play"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_selector_inverse"
+                        android:src="@drawable/play" />
+
+                    <ProgressBar
+                        android:id="@+id/player_play_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        android:layout_gravity="center" />
+
+                </FrameLayout>
 
                 <ImageButton
                     android:id="@+id/player_forward"
