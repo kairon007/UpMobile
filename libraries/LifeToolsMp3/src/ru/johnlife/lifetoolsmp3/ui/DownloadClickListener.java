@@ -142,7 +142,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				url = url.replaceFirst("https", "http");
 			}
-			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url)).addRequestHeader("User-Agent",
+			Uri uri = null;
+			try {
+				uri = Uri.parse(url);
+			} catch (IllegalArgumentException e) {
+				Log.e(getClass().getSimpleName(), e.getMessage());
+				return;
+			}
+			DownloadManager.Request request = new DownloadManager.Request(uri).addRequestHeader("User-Agent",
 					"Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
 			if (headers != null && !headers.isEmpty()) {
 				for (int i = 0; i < headers.size(); i++) {
