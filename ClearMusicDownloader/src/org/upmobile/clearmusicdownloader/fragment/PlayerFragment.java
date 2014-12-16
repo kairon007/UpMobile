@@ -471,6 +471,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
 			lyricsLoader.setVisibility(View.VISIBLE);
 			lyricsLoader.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
+			final int [] location = new int[2];
+			playerLyricsView.getLocationOnScreen(location);
+			animateOpenViews(location);
 			LyricsFetcher lyricsFetcher = new LyricsFetcher(getActivity());
 			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
@@ -502,9 +505,22 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
 			playerTagsCheckBox.setChecked(true);                     //temporary 
+			final int [] location = new int[2];
+			playerTagsArtist.getLocationOnScreen(location);
+			animateOpenViews(location);
 		}
 	}
 
+	private void animateOpenViews(final int[] location) {
+		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).post(new Runnable() {
+			public void run() {
+	            Animation open = AnimationUtils.loadAnimation(getActivity(),R.anim.open);
+	            ((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setAnimation(open);
+				((UIParallaxScroll) parentView.findViewById(R.id.scroller)).scrollTo(0, location[1]);
+			}
+		});
+	}
+	
 	private void saveTags() {
 		if (!manipulateText() && playerTagsCheckBox.isChecked()) {
 			Toast toast = Toast.makeText(getActivity(), R.string.nothing_changed, Toast.LENGTH_LONG);
@@ -583,38 +599,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			});
 		}
 	}
-
-//		song = list.get(selectedPosition);
-//		if (song.getClass() == MusicData.class) {
-//			player.play(song.getPath());
-//			changeView();
-//		} else {
-//			((RemoteSong) song).getCover(new OnBitmapReadyListener() {
-//				@Override
-//				public void onBitmapReady(Bitmap bmp) {
-//					if (null != bmp) {
-//						playerCover.setImageBitmap(bmp);
-//					}
-//				}
-//			});
-//			showCustomDialog();
-//			song.getDownloadUrl(new DownloadUrlListener() {
-//
-//				@Override
-//				public void success(String url) {
-//					player.play(url);
-//					changeView();
-//					dialog.dismiss();
-//				}
-//
-//				@Override
-//				public void error(String error) {
-//					dialog.dismiss();
-//				}
-//			});
-//		}
-//	}
-//	
+	
     private void showCustomDialog() {
 		dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
