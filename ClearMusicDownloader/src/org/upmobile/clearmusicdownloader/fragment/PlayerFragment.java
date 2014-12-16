@@ -531,15 +531,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			toast.show();
 			return;
 		}
-		File f = new File(song.getPath());
-		if (new File(f.getParentFile() + "/" + playerTagsArtist.getText() + " - " + playerTagsTitle.getText() + ".mp3").exists()) {
-			Toast toast = Toast.makeText(getActivity(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
-			toast.show();
-			return;
+		if (song.getClass() == MusicData.class) {
+			File f = new File(song.getPath());
+			if (new File(f.getParentFile() + "/" + playerTagsArtist.getText() + " - " + playerTagsTitle.getText() + ".mp3").exists()) {
+				Toast toast = Toast.makeText(getActivity(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
+				toast.show();
+				return;
+			}
 		}
 		if (song.getClass() == MusicData.class) {
 			RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
-				
+
 				@Override
 				public void success(String path) {
 					renameTask.cancelProgress();
@@ -549,10 +551,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				@Override
 				public void error() {
 					// TODO Auto-generated method stub
-					
+
 				}
 			};
-			renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, playerTagsArtist.getText().toString(), playerTagsTitle.getText().toString(), playerTagsAlbum.getText().toString());
+			renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, playerTagsArtist.getText().toString(),
+					playerTagsTitle.getText().toString(), playerTagsAlbum.getText().toString());
 		}
 		if (manipulateText() && playerTagsCheckBox.isChecked()) { 			//if we change only text
 			if (song.getClass() == MusicData.class) {
