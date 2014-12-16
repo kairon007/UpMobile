@@ -96,6 +96,7 @@ public abstract class OnlineSearchView extends View {
 	private ViewGroup view;
 	private View spEnginesChoiserLayout;
 	private View spEnginesChoiserScroll;
+	private View emtyHeader;
 	private View progress;
 	private View viewItem;
 	private TextView message;
@@ -255,9 +256,8 @@ public abstract class OnlineSearchView extends View {
 			});
 		}
 		if (!isRestored) {
-			listView.addFooterView(resultAdapter.getProgress());
-			View emtyHeader = inflate(getContext(), R.layout.empty_header, null);
 			listView.addHeaderView(emtyHeader);
+			listView.addFooterView(resultAdapter.getProgress());
 			listView.setAdapter(resultAdapter);
 		}
 		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
@@ -470,6 +470,7 @@ public abstract class OnlineSearchView extends View {
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
 		spEnginesChoiserLayout = view.findViewById(R.id.choise_engines_layout);
 		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
+		emtyHeader = inflate(getContext(), R.layout.empty_header, null);
 		specialInit(view);
 	}
 	
@@ -988,6 +989,8 @@ public abstract class OnlineSearchView extends View {
 		for (Song song : list) {
 			resultAdapter.add(song);
 		}
+		listView.addHeaderView(emtyHeader);
+		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setSelection(position);
 		isRestored = true;
