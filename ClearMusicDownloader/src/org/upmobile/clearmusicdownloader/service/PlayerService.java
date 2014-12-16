@@ -178,7 +178,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
 			if (msg.arg1 != playingPosition) {
-				play(playingPosition);
+				player.reset();
 				break;
 			}
 			helper(State.START);
@@ -228,7 +228,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void shift(int delta) {
 		int buf = playingPosition + delta;
-		if (0 <= buf && buf < arrayPlayback.size()) playingPosition  =  buf;
+		if (0 <= buf && buf < arrayPlayback.size()) {
+			playingPosition  =  buf;
+			playingSong  = arrayPlayback.get(playingPosition);
+		}
 		else {
 			Message msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
 			handler.sendMessage(msg);
@@ -425,9 +428,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void setArrayPlayback(ArrayList<AbstractSong> arrayPlayback) {
 		this.arrayPlayback = arrayPlayback;
-		if (playingSong.getClass() != arrayPlayback.get(0).getClass()) {
-			playingPosition = -1;
-		}
 	}
 	
 	public void setStatePlayerListener(OnStatePlayerListener stateListener) {
