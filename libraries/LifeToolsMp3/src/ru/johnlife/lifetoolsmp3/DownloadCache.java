@@ -120,7 +120,7 @@ public class DownloadCache {
 			this.callback = callback;
 		}
 		
-		public void setCustovCallback(DownloadCacheCallback callback) {
+		public void setCustomCallback(DownloadCacheCallback callback) {
 			this.customCallback = callback;
 		}
 

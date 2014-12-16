@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.special.utils.UICircularImage;
 
-public class DownloadsAdapter extends BaseAdapter<MusicData> {
+public class DownloadsAdapter extends BaseAdapter<MusicData> {	
+	
+	private Object lock = new Object();
 
 	private class DownloadsViewHolder extends ViewHolder<MusicData> {
 		TextView title;
@@ -92,11 +94,13 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	}
 	
 	public boolean contains(MusicData song) {
-		for (int i = 0; i < getCount(); i++) {
-			if (getItem(i).equals(song)) {
-				return true;
+		synchronized (lock) {
+			for (int i = 0; i < getCount(); i++) {
+				if (getItem(i).equals(song)) {
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
 	}
 }

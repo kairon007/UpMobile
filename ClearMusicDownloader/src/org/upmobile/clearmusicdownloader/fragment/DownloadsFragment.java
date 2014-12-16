@@ -64,11 +64,11 @@ public class DownloadsFragment extends Fragment {
 		timer = new Timer();
 		updater = new Updater();
 	}
-
+	
 	@Override
-	public void onDestroy() {
+	public void onPause() {
 		timer.cancel();
-		super.onDestroy();
+		super.onPause();
 	}
 
 	@Override
@@ -118,7 +118,8 @@ public class DownloadsFragment extends Fragment {
 
 					@Override
 					public void run() {
-						adapter.add(song);
+					 adapter.insert(song, 0);
+					 adapter.notifyDataSetChanged();
 					}
 				});
 			} catch (Exception e) {
@@ -137,7 +138,7 @@ public class DownloadsFragment extends Fragment {
 						final MusicData song = new MusicData(item.getTitle(), item.getArtist(), -1, -1);
 						if (!adapter.contains(song)) {
 							adapter.add(song);
-							item.setCustovCallback(new DownloadCacheCallback() {
+							item.setCustomCallback(new DownloadCacheCallback() {
 								
 								@Override
 								public void callback(Item item) {
@@ -179,7 +180,6 @@ public class DownloadsFragment extends Fragment {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
 					removeItem(i);
-					android.util.Log.d("logd", "checkCanceled: ");
 				}
 			}
 		}
