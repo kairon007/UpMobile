@@ -1,7 +1,5 @@
 package com.special.utils;
 
-import com.special.R;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,8 +15,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageButton;
+
+import com.special.R;
 
 public class UICircularImage extends ImageButton {
 
@@ -79,6 +80,7 @@ public class UICircularImage extends ImageButton {
         mReady = true;
 
         if (mWaiting) {
+        	System.out.println("!!! SETUP");
             setup();
             mWaiting = false;
         }
@@ -238,11 +240,18 @@ public class UICircularImage extends ImageButton {
         
         int paddingX = mPadding;
         int paddingY = mPadding;        
-        
-        Bitmap paddedBitmap = Bitmap.createBitmap(
-        	      mBitmap.getWidth() + paddingX,
-        	      mBitmap.getHeight() + paddingY,
-        	      Bitmap.Config.ARGB_8888);
+                
+        Bitmap paddedBitmap = null;
+		try {
+			paddedBitmap = Bitmap.createBitmap(mBitmap.getWidth() + paddingX,
+					mBitmap.getHeight() + paddingY, Bitmap.Config.ARGB_8888);
+		} catch (OutOfMemoryError e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
+			if (null != paddedBitmap) {
+				paddedBitmap.recycle();
+				paddedBitmap = null;
+			}
+		}
 
         Canvas canvas = new Canvas(paddedBitmap);
         
