@@ -14,6 +14,7 @@ import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	protected void click(final View view, int position) {
 		PlayerService service = PlayerService.get(getContext());
-		if (!service.isCorrectlyState(getResultAdapter().getItem(0).getClass(), getResultAdapter().getCount())) {
+		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
 			service.setArrayPlayback(list);
 		} 

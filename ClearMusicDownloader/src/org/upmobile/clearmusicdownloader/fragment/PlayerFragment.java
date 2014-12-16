@@ -142,7 +142,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					player.reset();
 				} 
 				setClickablePlayerElement(false);
-				player.setPlayingPosition(pos);
+				player.play(pos);
 				play(0);
 				setElementsView(0);
 			} else {
@@ -467,9 +467,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onStopTrackingTouch(SeekBar seekBar) {
 	}
 	
-
-	
-	
 	private void showLyrics() {
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
@@ -498,7 +495,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 		}
 	}
-	
 
 	private void showEditTagDialog() {
 		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
@@ -596,8 +592,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (delta > 0) player.shift(1);
 		else if (delta < 0) player.shift(-1);
 		else {
-			int position = player.getPlayingPosition();
-			player.play(position);
+			player.play(player.getPlayingPosition());
 		}
 		if (delta != 0 && song.getClass() != MusicData.class) {
 			((RemoteSong) song).getCover(new OnBitmapReadyListener() {

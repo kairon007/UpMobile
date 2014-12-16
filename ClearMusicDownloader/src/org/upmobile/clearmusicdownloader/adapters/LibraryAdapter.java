@@ -91,6 +91,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 			if (item.check(MusicData.MODE_PLAYING)) {
 				setButtonBackground(BTN_PAUSE);
+				currentPlayPosition = position;
 			} else {
 				setButtonBackground(BTN_PLAY);
 			}
@@ -116,7 +117,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_UP:
 						PlayerService service = PlayerService.get(getContext());
-						if (!service.isCorrectlyState(getItem(position).getClass(), getCount())) {
+						if (!service.isCorrectlyState(MusicData.class, getCount())) {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 							service.setArrayPlayback(list);
 						}
@@ -148,7 +149,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 					int [] location = new int[2];
 					v.getLocationOnScreen(location);
 					PlayerService service = PlayerService.get(getContext());
-					if (!service.isCorrectlyState(getItem(position).getClass(), getCount())) {
+					if (!service.isCorrectlyState(MusicData.class, getCount())) {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
 					}

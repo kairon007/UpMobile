@@ -73,8 +73,10 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	}
 	
 	public void changeArray(ArrayList<T> array) {
+		setNotifyOnChange(false);
 		clear();
 		addAll(array);
+		notifyDataSetChanged();
 	}
 	
 	public static abstract class ViewHolder<T> {

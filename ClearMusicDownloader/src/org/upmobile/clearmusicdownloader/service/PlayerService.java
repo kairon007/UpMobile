@@ -235,48 +235,70 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			return;
 		}
 		handler.removeMessages(1, null);
-		synchronized (wait) {
-			Message msg = new Message();
-			msg.what = MSG_RESET;
-			handler.sendMessage(msg);
-		}
+		Message msg = new Message();
+		msg.what = MSG_RESET;
+		handler.sendMessage(msg);
 		helper(State.UPDATE);
-		play(playingPosition);
+		play(new Message());
 	}
 
 	public void play(int position) {
 		playingSong = arrayPlayback.get(position);
 		boolean fromInternet = playingSong.getClass() != MusicData.class;
-		Message msg = new Message();	
-		synchronized (lock) {
-			if (check(SMODE_PREPARED)) {
-				if (check(SMODE_PLAY_PAUSE)) {
-					msg.what = MSG_PLAY_CURRENT;
-					offMode(SMODE_PLAY_PAUSE);
-					helper(State.PLAY);
-				} else {
-					msg.what = MSG_PAUSE;
-					helper(State.PAUSE);
-					onMode(SMODE_PLAY_PAUSE);
-				}
-			} else {
-				if (fromInternet) {
-					playingPosition = position;
-					play(playingSong);
-					return;
-				}
+		Message msg = new Message();
+		if (playingPosition == position) {
+			if (check(SMODE_PLAY_PAUSE)) {
+				msg.what = MSG_PLAY_CURRENT;
 				offMode(SMODE_PLAY_PAUSE);
-				msg.what = MSG_PLAY;
-				msg.arg1 = position;
-				String str = playingSong.getPath();
-				msg.obj = str;
+				helper(State.PLAY);
+			} else {
+				msg.what = MSG_PAUSE;
+				helper(State.PAUSE);
+				onMode(SMODE_PLAY_PAUSE);
 			}
 			handler.sendMessage(msg);
+		} else {
+			playingPosition = position;
+			play(msg);
 		}
 	}
 	
+	private void play(Message msg) {
+		boolean fromInternet = playingSong.getClass() != MusicData.class;
+		if (fromInternet) {
+			onMode(SMODE_GET_URL);
+
+			((RemoteSong) playingSong).getDownloadUrl(new DownloadUrlListener() {
+
+				@Override
+				public void success(String url) {
+					offMode(SMODE_GET_URL);
+					offMode(SMODE_PLAY_PAUSE);
+					Message msg = new Message();
+					msg.what = MSG_PLAY;
+					msg.arg1 = playingPosition;
+					msg.obj = url;
+					handler.sendMessage(msg);
+				}
+
+				@Override
+				public void error(String error) {
+				}
+			});
+			return;
+		}
+		offMode(SMODE_PLAY_PAUSE);
+		msg.what = MSG_PLAY;
+		msg.arg1 = playingPosition;
+		String str = playingSong.getPath();
+		msg.obj = str;
+		handler.sendMessage(msg);
+	}
+
 	private void helper(State state) {
-		if (stateListener == null) return;
+		if (stateListener == null) {
+			return;
+		}
 		switch (state) {
 		case START:
 			stateListener.start(playingSong);
@@ -298,28 +320,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			stateListener.update(buf);
 			break;
 		}
-	}
-	
-	// for RemoteSong
-	private void play(AbstractSong song) {
-		onMode(SMODE_GET_URL);
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
-
-			@Override
-			public void success(String url) {
-				offMode(SMODE_GET_URL);
-				offMode(SMODE_PLAY_PAUSE);
-				Message msg = new Message();
-				msg.what = MSG_PLAY;
-				msg.arg1 = playingPosition;
-				msg.obj = url;
-				handler.sendMessage(msg);
-			}
-
-			@Override
-			public void error(String error) {
-			}
-		});
 	}
 
 	private void offMode(int flag) {
@@ -425,12 +425,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void setArrayPlayback(ArrayList<AbstractSong> arrayPlayback) {
 		this.arrayPlayback = arrayPlayback;
+		if (playingSong.getClass() != arrayPlayback.get(0).getClass()) {
+			playingPosition = -1;
+		}
 	}
 	
-	public void setPlayingPosition(int playingPosition) {
-		this.playingPosition = playingPosition;
-	}
-
 	public void setStatePlayerListener(OnStatePlayerListener stateListener) {
 		this.stateListener = stateListener;
 	}
