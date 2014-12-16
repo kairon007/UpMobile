@@ -286,10 +286,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerProgress.setEnabled(isClickable);
 		if (isClickable) {
 			play.setImageResource(R.drawable.pause);
+			play.setVisibility(View.VISIBLE);
+			parentView.findViewById(R.id.player_play_progress).setVisibility(View.GONE);
+			
 		} else {
 			playerCurrTime.setText("0:00");
 			playerProgress.setProgress(0);
-			play.setImageResource(R.drawable.pause_idle);
+			play.setVisibility(View.GONE);
+			parentView.findViewById(R.id.player_play_progress).setVisibility(View.VISIBLE);
 		}
 	}
 	
