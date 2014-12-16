@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3.equalizer;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import ru.johnlife.lifetoolsmp3.equalizer.widget.VerticalSeekBar;
@@ -10,6 +11,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -42,8 +45,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public abstract class MyEqualizer extends Activity implements
-		OnSeekBarChangeListener {// , OnSeekArcChangeListener {
+public abstract class MyEqualizer extends Activity implements OnSeekBarChangeListener, BaseConstants {// , OnSeekArcChangeListener {
 
 	public static final String SERVICECMD = "com.android.music.musicservicecommand";
 	public static final String CMDNAME = "command";
@@ -71,6 +73,7 @@ public abstract class MyEqualizer extends Activity implements
 	private Virtualizer virtualizer;
 	private AssetFileDescriptor descriptor;
 	private AudioTrack audioTrack;
+	private SharedPreferences prefs;
 
 	private Button presetsButton;
 	private ImageView onOffBtn;
@@ -106,9 +109,9 @@ public abstract class MyEqualizer extends Activity implements
 			ProgressDataSource myProgressDataSource = new ProgressDataSource(context);
 			myProgressDataSource.open();
 			List<ProgressClass> values = myProgressDataSource.getAllPgs();
-			if (values.size() == 0)
+			if (values.size() == 0) {
 				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
-			else {
+			} else {
 				//Set equalizer
 				Utils.changeAtBand(equalizer, (short)0, values.get(0).getProgress(1) - 15);
 				Utils.changeAtBand(equalizer, (short)1, values.get(0).getProgress(2) - 15);
@@ -128,6 +131,7 @@ public abstract class MyEqualizer extends Activity implements
 		setContentView(R.layout.equalizer_main);
 
 		startService(new Intent(this, MyService.class));
+		prefs = getPreferences(MODE_PRIVATE);
 
 		initApp();
 
@@ -180,23 +184,17 @@ public abstract class MyEqualizer extends Activity implements
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-
 				switch (event.getAction()) {
-
 				case MotionEvent.ACTION_DOWN:
-
-					if (!Utils.isOn)
+					if (!Utils.isOn) {
 						onOffBtn.setImageResource(R.drawable.off_btn_pressed);
-					else
+					} else {
 						onOffBtn.setImageResource(R.drawable.on_btn_pressed);
+					}
 					return true;
-
 				case MotionEvent.ACTION_MOVE:
 					return true;
-
 				case MotionEvent.ACTION_UP:
-
 					if (!Utils.isOn) {
 						onOffBtn.setImageResource(R.drawable.on_btn);
 						Utils.isOn = true;
@@ -204,13 +202,20 @@ public abstract class MyEqualizer extends Activity implements
 						initEqualizer();
 						enableAll();
 						Utils.setEqPrefs(MyEqualizer.this, true);
+						if (prefs.getBoolean(EQUALIZER_SAVE, false)) {
+							String preset = prefs.getString(EQUALIZER_PRESET, "Flat");
+							if (preset.equals("Custom")) {
+								setSavedPreset();
+							} else {
+								setPreset(preset);
+							}
+						}
 					} else {
+						savePreset();
 						setPreset("Flat");
 						onOffBtn.setImageResource(R.drawable.off_btn);
 						Utils.isOn = false;
-
-						Log.e("eqActive",
-								Boolean.toString(equalizer.getEnabled()));
+						Log.e("eqActive", Boolean.toString(equalizer.getEnabled()));
 						dontTouch.setVisibility(View.VISIBLE);
 						equalizer.release();
 						bassBoost.release();
@@ -219,9 +224,7 @@ public abstract class MyEqualizer extends Activity implements
 						Utils.setEqPrefs(MyEqualizer.this, false);
 					}
 					return true;
-
 				}
-
 				return false;
 			}
 		});
@@ -234,17 +237,61 @@ public abstract class MyEqualizer extends Activity implements
 		}
 	}
 
-	public void initBassBoost() {
+	public void setSavedPreset(){
+		final int sbOne = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_ONE, 0);
+		final int sbTwo = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_TWO, 0);
+		final int sbThree = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_THREE, 0);
+		final int sbFour = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_FOUR, 0);
+		final int sbFive = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_FIVE, 0);
+		final int skOne = prefs.getInt(EQUALIZER_SEEKBAR_ONE, 0);
+		final int skTwo = prefs.getInt(EQUALIZER_SEEKBAR_TWO, 0);
+		sb1.setProgressAndThumb(sbOne);
+		sb2.setProgressAndThumb(sbTwo);
+		sb3.setProgressAndThumb(sbThree);
+		sb4.setProgressAndThumb(sbFour);
+		sb5.setProgressAndThumb(sbFive);
+		Utils.changeAtBand(equalizer,(short) band1, sbOne - 15);
+		Utils.changeAtBand(equalizer,(short) band2, sbTwo - 15);
+		Utils.changeAtBand(equalizer,(short) band2, sbThree - 15);
+		Utils.changeAtBand(equalizer,(short) band3, sbFour - 15);
+		Utils.changeAtBand(equalizer,(short) band4, sbFive - 15);
+		presetsButton.setText(R.string.user);
+		Toast.makeText(getApplicationContext(), R.string.user, Toast.LENGTH_SHORT).show();
+		sk1.setProgress(skOne);
+		sk2.setProgress(skTwo);
+		dbChangePg(sbOne, sbTwo, sbThree, sbFour, sbFive, getResources().getString(R.string.user), skOne, skTwo);
+	}
+	
+	public void savePreset() {
+		final int sbOne = sb1.getProgress();
+		final int sbTwo = sb2.getProgress();
+		final int sbThree = sb3.getProgress();
+		final int sbFour = sb4.getProgress();
+		final int sbFive = sb5.getProgress();
+		final int skOne = sk1.getProgress();
+		final int skTwo = sk2.getProgress();
+		final String preset = presetsButton.getText().toString().trim();
+		Editor editor = prefs.edit();
+		editor.putBoolean(EQUALIZER_SAVE, true);
+		editor.putString(EQUALIZER_PRESET, preset);
+		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_ONE, sbOne);
+		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_TWO, sbTwo);
+		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_THREE, sbThree);
+		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_FOUR, sbFour);
+		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_FIVE, sbFive);
+		editor.putInt(EQUALIZER_SEEKBAR_ONE, skOne);
+		editor.putInt(EQUALIZER_SEEKBAR_TWO, skTwo);
+		editor.commit();
+	}
 
+	public void initBassBoost() {
 		try {
 			bassBoost = getBassBoost();
 			bassBoost.setEnabled(true);
 			BassBoost.Settings bassBoostSettingTemp = bassBoost.getProperties();
-			BassBoost.Settings bassBoostSetting = new BassBoost.Settings(
-					bassBoostSettingTemp.toString());
+			BassBoost.Settings bassBoostSetting = new BassBoost.Settings(bassBoostSettingTemp.toString());
 			bassBoostSetting.strength = 0;
 			bassBoost.setProperties(bassBoostSetting);
-
 			Log.e("bbSetTemp", bassBoost.getProperties().toString());
 			ok = true;
 		} catch (Exception localException) {
@@ -253,7 +300,6 @@ public abstract class MyEqualizer extends Activity implements
 	}
 
 	public void initVirtualizer() {
-
 		try {
 			virtualizer = getVirtualizer();
 			virtualizer.setEnabled(true);
@@ -261,20 +307,15 @@ public abstract class MyEqualizer extends Activity implements
 		} catch (Exception localException) {
 			localException.printStackTrace();
 		}
-
 	}
 
-	public void setEqualizerPreset(Short preset, int p1, int p2, int p3,
-			int p4, int p5) {
-
+	public void setEqualizerPreset(Short preset, int p1, int p2, int p3, int p4, int p5) {
 		equalizer.usePreset(preset);
-
 		sb1.setProgressAndThumb(15 + p1);
 		sb2.setProgressAndThumb(15 + p2);
 		sb3.setProgressAndThumb(15 + p3);
 		sb4.setProgressAndThumb(15 + p4);
 		sb5.setProgressAndThumb(15 + p5);
-
 	}
 
 	public void setPresets() {
@@ -290,34 +331,24 @@ public abstract class MyEqualizer extends Activity implements
 	}
 
 	private void testMethod() {
-
 		try {
-
 			manager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
 			equalizer = getEqualizer();
 			int val = equalizer.setEnabled(true);
 			if (val != Equalizer.SUCCESS)
 				Log.e("A", "EQUALIZER NON ATTIVO");
 			setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
 			bands = equalizer.getNumberOfBands();
 			minEQLevel = equalizer.getBandLevelRange()[0];
 			maxEQLevel = equalizer.getBandLevelRange()[1];
-
 			initBassBoost();
-
 			initVirtualizer();
-
 			initDB();
-
 			showEqLevels();
-
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	private void initDB() {
@@ -329,9 +360,9 @@ public abstract class MyEqualizer extends Activity implements
 
 		Log.e("valSize", Integer.toString(values.size()));
 
-		if (values.size() == 0)
+		if (values.size() == 0) {
 			myProgressDataSource.createProgress(DEF, DEF, DEF, DEF, DEF, "Custom", 0, 0);
-		else {
+		} else {
 			Log.e("valuesPgs", Integer.toString(values.get(0).getProgress(1)));
 			int progress;
 			presetsButton.setText(values.get(0).getUser());
@@ -379,7 +410,6 @@ public abstract class MyEqualizer extends Activity implements
 				sb4.setProgress(progress + 15);
 				Utils.changeAtBand(equalizer, band4, progress);
 			}
-
 			progress = values.get(0).getProgress(5);
 			if (presetsButton.getText().equals("Custom")) {
 				sbP5.setText(Integer.toString(progress - 15));
@@ -390,39 +420,28 @@ public abstract class MyEqualizer extends Activity implements
 				sb5.setProgress(progress + 15);
 				Utils.changeAtBand(equalizer, band5, progress);
 			}
-
 			progress = values.get(0).getArc(1);
 			Log.e("dbSK1", Integer.toString(progress));
 			sk1.setProgress(progress);
 			sk1pgs = progress;
 			bassBoost.setStrength((short) (progress * 10));
-
 			progress = values.get(0).getArc(2);
 			Log.e("dbSK2", Integer.toString(progress));
 			sk2.setProgress(progress);
 			sk2pgs = progress;
 			virtualizer.setStrength((short) (progress * 10));
 		}
-
 		for (ProgressClass i : values) {
-
 			Log.e("user", "blabla " + i.getUser());
-
 		}
-
 		myProgressDataSource.close();
 	}
 
-	private void dbChangePg(int p1, int p2, int p3, int p4, int p5,
-			String user, int arc1, int arc2) {
-
+	private void dbChangePg(int p1, int p2, int p3, int p4, int p5, String user, int arc1, int arc2) {
 		myProgressDataSource.open();
 		values = myProgressDataSource.getAllPgs();
-
 		myProgressDataSource.deleteComment(values.get(0));
-		myProgressDataSource.createProgress(p1, p2, p3, p4, p5, user, arc1,
-				arc2);
-
+		myProgressDataSource.createProgress(p1, p2, p3, p4, p5, user, arc1, arc2);
 		myProgressDataSource.close();
 	}
 
