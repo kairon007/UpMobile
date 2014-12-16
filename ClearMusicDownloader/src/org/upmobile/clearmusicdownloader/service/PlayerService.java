@@ -231,7 +231,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void shift(int delta) {
 		int buf = playingPosition + delta;
-		if (0 >= buf && buf < arrayPlayback.size()) playingPosition  =  buf;
+		if (0 <= buf && buf < arrayPlayback.size()) playingPosition  =  buf;
 		else {
 			Message msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
 			handler.sendMessage(msg);

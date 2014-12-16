@@ -72,6 +72,11 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		return result;
 	}
 	
+	public void changeArray(ArrayList<T> array) {
+		clear();
+		addAll(array);
+	}
+	
 	public static abstract class ViewHolder<T> {
 		
 		protected abstract void hold(T item, int position);
