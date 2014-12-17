@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.special.utils.UICircularImage;
@@ -44,12 +45,12 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	}
 	
 	@Override
-	protected void onItemSwipeVisible(int pos) {
+	public void onItemSwipeVisible(int pos) {
 		getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
 	}
 
 	@Override
-	protected void onItemSwipeGone(int pos) {
+	public void onItemSwipeGone(int pos) {
 		getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
 	}
 	
@@ -62,6 +63,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		private TextView title;
 		private TextView artist;
 		private TextView duration;
+		private LinearLayout hidenView;
 		private TextView cancel;
 		private UICircularImage image;
 
@@ -73,7 +75,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			artist = (TextView) v.findViewById(R.id.item_description);
 			image = (UICircularImage) v.findViewById(R.id.item_image);
 			duration = (TextView) v.findViewById(R.id.item_duration);
-			cancel = (TextView) v.findViewById(R.id.hidden_view);
+			hidenView = (LinearLayout) v.findViewById(R.id.hidden_view);
+			cancel = (TextView) v.findViewById(R.id.cancel);
 		}
 
 		@Override
@@ -81,13 +84,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			this.item = item;
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
-			if (!item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.VISIBLE) {
-				cancel.setVisibility(View.GONE);
+			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
+				hidenView.setVisibility(View.GONE);
 				frontView.setX(0);
-			} else if (item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.GONE){
-				int startPosition = 0 - parent.getContext().getResources().getDimensionPixelSize(R.dimen.swipe_size);
+			} else if (item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.GONE){
+				int startPosition = 0 - parent.getWidth();
 				frontView.setX(startPosition);
-				cancel.setVisibility(View.VISIBLE);
+				hidenView.setVisibility(View.VISIBLE);
 			}
 			if (item.check(MusicData.MODE_PLAYING)) {
 				setButtonBackground(BTN_PAUSE);
@@ -146,7 +149,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
-					int [] location = new int[2];
+					int[] location = new int[2];
 					v.getLocationOnScreen(location);
 					PlayerService service = PlayerService.get(getContext());
 					if (!service.isCorrectlyState(MusicData.class, getCount())) {
@@ -167,18 +170,17 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						setButtonBackground(BTN_PAUSE);
 					}
 				}
-				
 			});
 			cancel.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					item.reset(v.getContext()); 
-					remove(item);
-				}
 				
+				@Override
+				public void onClick(View paramView) {
+					onItemSwipeGone(position);
+					hidenView.setVisibility(View.GONE);
+					frontView.setX(0);
+				}
 			});
 		}
 	}
-	
+
 }

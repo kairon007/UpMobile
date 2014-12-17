@@ -24,8 +24,8 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	protected abstract ViewHolder<T> createViewHolder(final View v);
-	protected abstract void onItemSwipeVisible(int position);
-	protected abstract void onItemSwipeGone(int position);
+	public abstract void onItemSwipeVisible(int position);
+	public abstract void onItemSwipeGone(int position);
 	
 	@SuppressWarnings("unchecked")
 	@Override

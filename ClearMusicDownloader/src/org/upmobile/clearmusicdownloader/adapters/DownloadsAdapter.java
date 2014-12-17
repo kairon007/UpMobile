@@ -103,14 +103,14 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	}
 
 	@Override
-	protected void onItemSwipeVisible(int pos) {
+	public void onItemSwipeVisible(int pos) {
 		if (getCount() > pos) {
 			getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
 		}
 	}
 
 	@Override
-	protected void onItemSwipeGone(int pos) {
+	public void onItemSwipeGone(int pos) {
 		if (getCount() > pos) {
 			getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
 		}

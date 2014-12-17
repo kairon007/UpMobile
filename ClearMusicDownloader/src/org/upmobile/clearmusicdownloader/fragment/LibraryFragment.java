@@ -22,12 +22,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 
 import com.special.R;
 import com.special.menu.ResideMenu;
 import com.special.utils.UISwipableList;
 
-public class LibraryFragment extends Fragment implements Handler.Callback{
+public class LibraryFragment extends Fragment implements Handler.Callback, OnScrollListener{
 
 	private static final int MSG_FILL_ADAPTER = 1;
 	private View parentView;
@@ -47,6 +53,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback{
 		};
 		
 	};
+	private Animation anim;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle state) {
@@ -70,6 +77,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback{
 			}
 			adapter.addAll(srcList);
 			listView.setAdapter(adapter);
+			listView.setOnScrollListener(this);
 		}
 		return parentView;
 	}
@@ -116,5 +124,36 @@ public class LibraryFragment extends Fragment implements Handler.Callback{
 		}
 		return true;
 	}
-	
+
+	@Override
+	public void onScrollStateChanged(AbsListView paramAbsListView, int paramInt) {
+		for (final MusicData item : adapter.getAll()) {
+			if (item.check(MusicData.MODE_VISIBLITY)) {
+				//TODO get view selected item and set to him animation
+//				anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+//				anim.setDuration(200);
+//				anim.setAnimationListener(new AnimationListener() {
+//					
+//					@Override
+//					public void onAnimationStart(Animation paramAnimation) {
+//					}
+//					
+//					@Override
+//					public void onAnimationRepeat(Animation paramAnimation) {
+//					}
+//					
+//					@Override
+//					public void onAnimationEnd(Animation paramAnimation) {
+						item.reset(getActivity());
+						adapter.remove(item);
+//					}
+//				});
+//				((View) listView.getChildAt(adapter.getPosition(item))).startAnimation(anim);
+			}
+		}
+	}
+
+	@Override
+	public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3) {
+	}
 }
