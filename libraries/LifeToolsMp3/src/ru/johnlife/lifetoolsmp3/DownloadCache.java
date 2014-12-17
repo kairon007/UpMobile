@@ -25,7 +25,7 @@ public class DownloadCache {
 		return false;
 	}
 	
-	public boolean put(String artist, String title, DownloadCacheCallback callback) {
+	public synchronized boolean put(String artist, String title, DownloadCacheCallback callback) {
 		boolean isCached = cache.size() + 1 > CACHE_CAPACITY;
 		Item item = new Item(artist, title, isCached);
 		item.setCallback(callback);
@@ -51,7 +51,7 @@ public class DownloadCache {
 		return cached;
 	}
 	
-	public boolean remove(String artist, String title) {
+	public synchronized boolean remove(String artist, String title) {
 		Item deleteItem = null;
 		for (Item item : cache) {
 			if (item.getArtist().equals(artist) && item.getTitle().equals(title)) {
