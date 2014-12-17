@@ -44,7 +44,7 @@ public class SearchSoundCloud extends SearchWithPages {
 				if (songString != null) {
 					addSong(new SoundCloudV1Song(getDownloadUrl(songString) + "?client_id=" + soundcloudClientId, getImageUrl(songString).equals("ul") ? "NOT_FOUND" : getImageUrl(songString))
 							.setArtistName(getArtistName(getTitle(songString)))
-							.setTitle(getTitle(songString))
+							.setSongTitle(getTitle(songString))
 							.setDuration(Long.valueOf(getDuration(songString))));
 				}
 			} while (songString != null);

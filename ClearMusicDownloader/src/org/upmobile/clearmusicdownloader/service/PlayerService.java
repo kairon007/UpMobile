@@ -398,6 +398,15 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return playingSong;
 	}
 	
+	public void updateQueue(int position, String title, String artist, String path){
+		if (playingSong.getClass() == MusicData.class){
+			MusicData data = (MusicData) arrayPlayback.get(position);
+			data.setArtist(artist);
+			data.setTitle(title);
+			data.setPath(path);
+		}
+	}
+	
 	public int getPlayingPosition() {
 		return playingPosition;
 	}

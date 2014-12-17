@@ -365,14 +365,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerProgress.post(progressAction);
 		}
 	}
-	
+		
 	private void updateObject() {
-		song.setAlbum(playerTagsAlbum.getText().toString());
-		song.setNewArtist(playerTagsArtist.getText().toString());
-		song.setNewTitle(playerTagsTitle.getText().toString());
-		if (song.getClass() == MusicData.class) {
-			song.setPath(folderFilter + playerTagsArtist.getText().toString() + playerTagsTitle.getText().toString() + ".mp3");
-		}
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());
 		playerTitleBarArtis.setText(song.getArtist());
@@ -521,65 +515,65 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void saveTags() {
-		if (!manipulateText() && playerTagsCheckBox.isChecked()) {
-			Toast toast = Toast.makeText(getActivity(), R.string.nothing_changed, Toast.LENGTH_LONG);
+		boolean manipulate = manipulateText();
+		if (!manipulate && playerTagsCheckBox.isChecked()) {
+			return;
+		} else {
+			updateObject();
+		}
+		if (song.getClass() != MusicData.class)
+			return;
+		File f = new File(song.getPath());
+		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
+			Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
 			toast.show();
 			return;
 		}
-		if (song.getClass() == MusicData.class) {
-			File f = new File(song.getPath());
-			if (new File(f.getParentFile() + "/" + playerTagsArtist.getText() + " - " + playerTagsTitle.getText() + ".mp3").exists()) {
-				Toast toast = Toast.makeText(getActivity(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
-				toast.show();
-				return;
+		RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
+
+			@Override
+			public void success(String path) {
+				song.setPath(path);
+				renameTask.cancelProgress();
+				parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 			}
-		}
-		if (song.getClass() == MusicData.class) {
-			RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
 
-				@Override
-				public void success(String path) {
-					renameTask.cancelProgress();
-					parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
-				}
+			@Override
+			public void error() {
 
-				@Override
-				public void error() {
-					// TODO Auto-generated method stub
-
-				}
-			};
-			renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, playerTagsArtist.getText().toString(),
-					playerTagsTitle.getText().toString(), playerTagsAlbum.getText().toString());
-		}
-		if (manipulateText() && playerTagsCheckBox.isChecked()) { 			//if we change only text
+			}
+		};
+		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
+		if (manipulate && playerTagsCheckBox.isChecked()) { 			//if we change only text
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(true, false);
 			}
-			updateObject();
-		} else if (!manipulateText() && !playerTagsCheckBox.isChecked()) { 	// if we change only cover
+		} else if (manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change only cover
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(false, true);
 			}
-		} else if (manipulateText() && !playerTagsCheckBox.isChecked()) { 	// if we change cover and fields
+		} else if (manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change cover and fields
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(false, false);
 			}
-			updateObject();
 		}
 	}
 
 	public boolean manipulateText() {
-		if (!song.getTitle().equals(playerTagsTitle.getText())) {
-			return true;
+		boolean result = false;
+		if (!song.getTitle().equals(playerTagsTitle.getText().toString())) {
+			song.setTitle(playerTagsTitle.getText().toString());
+			result = true;
 		}
-		if (!song.getArtist().equals(playerTagsArtist.getText())) {
-			return true;
+		if (!song.getArtist().equals(playerTagsArtist.getText().toString())) {
+			song.setArtist(playerTagsArtist.getText().toString());
+			result = true;
 		}
-		if (!song.getAlbum().equals(playerTagsAlbum.getText())) {
-			return true;
-		}
-		return false;
+		if (song.getAlbum() != null && !song.getAlbum().equals(playerTagsAlbum.getText().toString())) {
+			song.setAlbum(playerTagsAlbum.getText().toString());
+			result = true;
+		} 
+		return result;
 	}
 	
 	/**
@@ -636,8 +630,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (downloadListener.isBadInet()) return;
 		downloadListener.onClick(parentView);
 	}
-
-	
 	
 	private void startImageAnimation() {
 		ViewTreeObserver observer = playerCover.getViewTreeObserver();

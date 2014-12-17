@@ -317,7 +317,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			public void onClick(DialogInterface dialog, int which) {
 				if(keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION)) {
 					downloadSong.setArtistName(editor.getNewArtistName());
-					downloadSong.setTitle(editor.getNewSongTitle());
+					downloadSong.setSongTitle(editor.getNewSongTitle());
 					keeper.setDownloadSong(downloadSong);
 					setTitle(downloadSong.getArtist() + " - " + downloadSong.getTitle());
 				}

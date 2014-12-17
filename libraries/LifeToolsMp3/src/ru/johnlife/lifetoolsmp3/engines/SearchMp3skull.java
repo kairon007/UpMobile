@@ -51,7 +51,7 @@ public class SearchMp3skull extends BaseSearchTask {
 
 						if (songURL != "" && songTitle != "") {
 							RemoteSong song = new RemoteSong(songURL);
-							song.setTitle(songTitle);
+							song.setSongTitle(songTitle);
 							song.setArtistName(songArtist);
 							song.setDuration(formatTime(duration));
 							addSong(song);

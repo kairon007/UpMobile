@@ -36,7 +36,7 @@ public class SearchSoArdIyyin extends SearchWithPages {
 					JSONObject urlObject = urlList.getJSONObject(urlList.length() -1);
 					String duration = urlObject.getString("duration");
 					String downloadUrl = urlObject.getString("url");
-					addSong(new RemoteSong(downloadUrl).setArtistName(author).setTitle(title).setDuration(Util.formatTime(duration)));
+					addSong(new RemoteSong(downloadUrl).setArtistName(author).setSongTitle(title).setDuration(Util.formatTime(duration)));
 				}
 			}
 		} catch (Exception e) {

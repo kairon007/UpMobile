@@ -219,12 +219,12 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 	}
 
 	@Override
-	public void setNewArtist(String artist) {
+	public void setArtist(String artist) {
 		this.artist = artist;
 	}
 
 	@Override
-	public void setNewTitle(String title) {
+	public void setTitle(String title) {
 		this.title = title;
 	}
 

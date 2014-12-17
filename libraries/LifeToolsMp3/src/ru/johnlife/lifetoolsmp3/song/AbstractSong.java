@@ -19,9 +19,9 @@ public interface AbstractSong extends Parcelable{
 	
 	public boolean getDownloadUrl(DownloadUrlListener listener);
 	
-	public void setNewArtist(String artist);
+	public void setArtist(String artist);
 	
-	public void setNewTitle(String title);
+	public void setTitle(String title);
 	
 	public void setAlbum(String album);
 	

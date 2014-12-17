@@ -49,11 +49,7 @@ public class MainActivity extends BaseClearActivity {
 	
 	@Override
 	protected String[] getTitlePage() {
-		titles = new String[4];
-		titles[0] = getResources().getString(R.string.navigation_search);
-		titles[1] = getResources().getString(R.string.navigation_downloads);
-		titles[2] = getResources().getString(R.string.navigation_library);
-		titles[3] = getResources().getString(R.string.navigation_player);
+		titles = getResources().getStringArray(R.array.titles);
 		return titles;
 	}
 	

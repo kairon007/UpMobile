@@ -78,7 +78,7 @@ public class RemoteSong extends Song implements Cloneable {
 		downloadUrl = null;
 	}
 
-	public RemoteSong setTitle(String songTitle) {
+	public RemoteSong setSongTitle(String songTitle) {
 		title = songTitle;
 		return this;
 	}

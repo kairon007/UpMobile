@@ -38,7 +38,7 @@ public class SearchZaycevScrape extends SearchWithPages {
 				String author = items.get(i).select("div.result-list__item-subtitle").text();
 				String title = items.get(i).select("div.result-list__item-title").text();
 				String songPage = items.get(i).select("a").attr("abs:href");
-				addSong(new RemoteSong(getDownloadUrl(songPage)).setArtistName(author).setTitle(title));
+				addSong(new RemoteSong(getDownloadUrl(songPage)).setArtistName(author).setSongTitle(title));
 			}
 		} catch (IOException e) {
 			Log.e(getClass().getSimpleName(), "Something went wrong :(" + e.getMessage());
