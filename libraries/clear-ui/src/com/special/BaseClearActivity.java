@@ -1,8 +1,5 @@
 package com.special;
 
-import com.special.R;
-import com.special.menu.ResideMenu;
-import com.special.menu.ResideMenuItem;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +10,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.special.menu.ResideMenu;
+import com.special.menu.ResideMenuItem;
 
 public abstract class BaseClearActivity extends FragmentActivity implements View.OnClickListener{
 
@@ -49,6 +49,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         resideMenu.setScaleValue(0.6f);
         for (ResideMenuItem item : menuItems) {
         	item.setOnClickListener(this);
+        	item.setBackgroundResource(R.drawable.button_selector_inverse_light);
         	resideMenu.addMenuItem(item);
         }
         findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {

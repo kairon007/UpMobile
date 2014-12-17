@@ -109,10 +109,8 @@ public class LibraryFragment extends Fragment implements Handler.Callback{
 
 	@Override
 	public boolean handleMessage(Message msg) {
-		switch (msg.what) {
-		case MSG_FILL_ADAPTER:
+		if (msg.what == MSG_FILL_ADAPTER) {
 			adapter.changeArray((ArrayList<MusicData>) msg.obj);
-			break;
 		}
 		return true;
 	}
