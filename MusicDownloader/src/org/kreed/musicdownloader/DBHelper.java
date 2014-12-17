@@ -20,7 +20,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -28,7 +27,6 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String DB_NAME = "downloads";
 	private static DBHelper instance = null;
 	private Context context;
-	private static Bitmap bitmap = null;
 	
 	public DBHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
@@ -135,13 +133,11 @@ public class DBHelper extends SQLiteOpenHelper {
 		if ((pictureList == null) || (pictureList.size() == 0)) {
 			return null;
 		}
-		ImageData imageData = (ImageData) pictureList.get(0);
+		ImageData imageData = pictureList.get(0);
 		if (imageData == null) {
 			return null;
 		}
 		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inJustDecodeBounds = true;
-		opts.inPurgeable = true;
 		int scale = 1;
 		if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
 			// Find the correct scale value. It should be the power of 2.
@@ -153,15 +149,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		opts = new BitmapFactory.Options();
 		opts.inSampleSize = scale;
-		try {
-			bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
-		} catch (OutOfMemoryError e) {
-			if (bitmap != null && !bitmap.isRecycled()){
-				bitmap.recycle();
-			}
-			bitmap = null;
-		}
-		return bitmap;
+		opts.inPreferredConfig = Bitmap.Config.RGB_565;
+		opts.inDither = false;
+		return BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
 	}
 	
 	private class DeleteTask extends AsyncTask<Void, Void, Void> {

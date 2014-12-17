@@ -11,19 +11,16 @@
 
 package mp3.music.player.us;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Application;
-import android.os.StrictMode;
-import android.preference.PreferenceManager;
-
-import mp3.music.player.us.cache.ImageCache;
-import mp3.music.player.us.utils.ApolloUtils;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import mp3.music.player.us.cache.ImageCache;
+import mp3.music.player.us.utils.ApolloUtils;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
 
 /**
  * Used to turn off logging for jaudiotagger and free up memory when

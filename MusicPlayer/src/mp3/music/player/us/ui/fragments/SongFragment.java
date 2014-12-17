@@ -11,6 +11,21 @@
 
 package mp3.music.player.us.ui.fragments;
 
+import java.util.List;
+
+import mp3.music.player.us.MusicStateListener;
+import mp3.music.player.us.R;
+import mp3.music.player.us.adapters.SongAdapter;
+import mp3.music.player.us.loaders.SongLoader;
+import mp3.music.player.us.menu.CreateNewPlaylist;
+import mp3.music.player.us.menu.DeleteDialog;
+import mp3.music.player.us.menu.FragmentMenuItems;
+import mp3.music.player.us.model.Song;
+import mp3.music.player.us.provider.FavoritesStore;
+import mp3.music.player.us.recycler.RecycleHolder;
+import mp3.music.player.us.ui.activities.BaseActivity;
+import mp3.music.player.us.utils.MusicUtils;
+import mp3.music.player.us.utils.NavUtils;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -19,7 +34,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -35,25 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-
-import mp3.music.player.us.MusicStateListener;
-import mp3.music.player.us.R;
-import mp3.music.player.us.adapters.SongAdapter;
-import mp3.music.player.us.loaders.SongLoader;
-import mp3.music.player.us.menu.CreateNewPlaylist;
-import mp3.music.player.us.menu.DeleteDialog;
-import mp3.music.player.us.menu.FragmentMenuItems;
-import mp3.music.player.us.model.Artist;
-import mp3.music.player.us.model.Song;
-import mp3.music.player.us.provider.FavoritesStore;
-import mp3.music.player.us.recycler.RecycleHolder;
-import mp3.music.player.us.ui.activities.BaseActivity;
-import mp3.music.player.us.utils.MusicUtils;
-import mp3.music.player.us.utils.NavUtils;
-
 import com.viewpagerindicator.TitlePageIndicator;
-
-import java.util.List;
 
 /**
  * This class is used to display all of the songs on a user's device.

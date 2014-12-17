@@ -31,8 +31,6 @@ public class MusicData {
 
 	public MusicData() {
 	}
-
-	
 	
 	public MusicData(String songArtist, String songTitle, String songAlbum, String fileUri) {
 		this.songArtist = songArtist;
@@ -40,8 +38,6 @@ public class MusicData {
 		this.songAlbum = songAlbum;
 		this.fileUri = fileUri;
 	}
-
-
 
 	public MusicData(File musicFile) {
 		fileUri = musicFile.getAbsolutePath();
@@ -222,6 +218,18 @@ public class MusicData {
 	}
 
 	public Bitmap getSongBitmap() {
+		try {
+			MusicMetadataSet src_set = new MyID3().read(new File(fileUri));
+			if (src_set != null) {
+				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+				Bitmap bitmap = DBHelper.getArtworkImage(2, metadata);
+				if (bitmap != null) {
+					return bitmap;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return songBitmap;
 	}
 
