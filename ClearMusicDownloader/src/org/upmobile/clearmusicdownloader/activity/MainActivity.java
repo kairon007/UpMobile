@@ -18,6 +18,7 @@ public class MainActivity extends BaseClearActivity {
 
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
+	private String[] titles;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,16 @@ public class MainActivity extends BaseClearActivity {
 	}
 	
 	@Override
+	protected String[] getTitlePage() {
+		titles = new String[4];
+		titles[0] = getResources().getString(R.string.navigation_search);
+		titles[1] = getResources().getString(R.string.navigation_downloads);
+		titles[2] = getResources().getString(R.string.navigation_library);
+		titles[3] = getResources().getString(R.string.navigation_player);
+		return titles;
+	}
+	
+	@Override
 	public void showTopFrame() {
 		super.showTopFrame();
 	}
@@ -70,4 +81,5 @@ public class MainActivity extends BaseClearActivity {
 	public void showPlayerElement() {
 		super.showPlayerElement();
 	}
+
 }

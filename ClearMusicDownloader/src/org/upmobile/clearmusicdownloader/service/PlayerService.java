@@ -48,7 +48,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	//multy-threading section
 	private final Object lock = new Object();
-	private Object wait = new Object();
 	private Looper looper;
 	private Handler handler;
 	
@@ -60,7 +59,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
 	private AbstractSong playingSong;
-	private int playingPosition;
+	private int playingPosition = -1;
 	private int mode;
 	
 	public interface OnStatePlayerListener {
@@ -247,9 +246,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 	public void play(int position) {
 		playingSong = arrayPlayback.get(position);
-		boolean fromInternet = playingSong.getClass() != MusicData.class;
 		Message msg = new Message();
 		if (playingPosition == position) {
+			if (!check(SMODE_PREPARED)) return;
 			if (check(SMODE_PLAY_PAUSE)) {
 				msg.what = MSG_PLAY_CURRENT;
 				offMode(SMODE_PLAY_PAUSE);
@@ -270,7 +269,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		boolean fromInternet = playingSong.getClass() != MusicData.class;
 		if (fromInternet) {
 			onMode(SMODE_GET_URL);
-
 			((RemoteSong) playingSong).getDownloadUrl(new DownloadUrlListener() {
 
 				@Override

@@ -1,110 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-       xmlns:android="http://schemas.android.com/apk/res/android"
-   	   android:fitsSystemWindows="true"
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent">
-            
-            <ImageView
-                android:id="@+id/actionbar"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/image_description"
-                android:background="@color/bar_color_transparent" />
-            
-			<LinearLayout 
-              	android:orientation="vertical"
-              	android:layout_width="match_parent"
-              	android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
 
-   				 <LinearLayout
-            		android:orientation="vertical"
-            		android:layout_width="fill_parent"
-            		android:layout_height="wrap_content"
-            		android:id="@+id/layout_top">
+    <ImageView
+        android:id="@+id/actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bar_color_transparent"
+        android:contentDescription="@string/image_description" />
 
-     				<FrameLayout
-                		android:layout_width="fill_parent"
-                		android:layout_height="wrap_content">
-                
-            			<Button
-                    		android:layout_width="28dp"
-                    		android:layout_height="28dp"
-                    		android:background="@drawable/titlebar_menu_selector"
-                    		android:id="@+id/title_bar_left_menu"
-                    		android:layout_gravity="left|center_vertical"
-                    		android:layout_marginLeft="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-            			<TextView
-                    		android:layout_width="wrap_content"
-                    		android:layout_height="wrap_content"
-                    		android:padding="7dp"
-                    		android:fontFamily="sans-serif-light" 
-                    		android:text="@string/app_title"
-                   			android:textSize="@dimen/textsize_large"
-                    		android:textColor="@android:color/white"
-                    		android:layout_gravity="center"/>        
-
-       				 </FrameLayout>
-
-        			<ImageView
-               			 android:layout_width="match_parent"
-                		 android:layout_height="5dp"
-                		 android:contentDescription="@string/image_description"
-                		 android:background="@color/bar_separator_color"/>
-        			
-        			<LinearLayout
-            android:id="@+id/cross_promo_box"
+        <LinearLayout
+            android:id="@+id/layout_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" 
-            android:background="#eeeeee"
-            android:padding="3dp"
-            android:visibility="gone">
+            android:orientation="vertical" >
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-				android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:orientation="vertical" >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/title_bar_left_menu"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/titlebar_menu_selector" />
 
                 <TextView
-                    android:id="@+id/cross_promo_box_title"
+                    android:id="@+id/page_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif-light"
+                    android:padding="8dp"
+                    android:text="@string/app_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/textsize_large" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/bar_separator_color"
+                android:contentDescription="@string/image_description" />
+
+            <LinearLayout
+                android:id="@+id/cross_promo_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#eeeeee"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp" >
+
+                    <TextView
+                        android:id="@+id/cross_promo_box_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#000000"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/cross_promo_box_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#000000"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/cross_promo_box_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="#000000"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/cross_promo_box_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="11sp"
-                    android:textColor="#000000"
-                    android:text="" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/cross_promo_box_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="13sp"
-                android:text="" />
         </LinearLayout>
 
-   				 </LinearLayout>
+        <FrameLayout
+            android:id="@+id/main_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </FrameLayout>
+    </LinearLayout>
 
-    			<FrameLayout
-            		android:layout_width="match_parent"
-            		android:layout_height="match_parent"
-            		android:orientation="vertical"
-            		android:id="@+id/main_fragment">
-    			</FrameLayout>
-
-		   </LinearLayout>
 </FrameLayout>
