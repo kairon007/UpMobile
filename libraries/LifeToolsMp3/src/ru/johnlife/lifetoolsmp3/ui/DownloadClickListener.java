@@ -398,14 +398,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 					}
 					src = new File(path);
-					if (!setMetadataToFile(path, src, useCover)) {
-						setFileUri(currentDownloadId, src.getAbsolutePath());
-						DownloadCache.getInstanse().remove(artist, title);
-						this.cancel();
+					if (setMetadataToFile(path, src, useCover)) {
+						notifyMediascanner(song, path);
 					}
 					setFileUri(currentDownloadId, src.getAbsolutePath());
 					DownloadCache.getInstanse().remove(artist, title);
-					notifyMediascanner(song, path);
 					this.cancel();
 					return;
 				default:

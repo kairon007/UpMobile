@@ -31,6 +31,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
+                    android:paddingLeft="8dp"
                     android:background="@drawable/titlebar_menu_selector" />
 
                 <TextView
