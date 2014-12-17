@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DownloadCache {
 	
@@ -8,6 +9,8 @@ public class DownloadCache {
 
 	private static DownloadCache instanse = null;
 	private ArrayList<Item> cache = new ArrayList<Item>();
+	private int randomId = 0;
+	private Random random = new Random();
 	
 	public static DownloadCache getInstanse() {
 		if (null == instanse) {
@@ -27,7 +30,8 @@ public class DownloadCache {
 	
 	public synchronized boolean put(String artist, String title, DownloadCacheCallback callback) {
 		boolean isCached = cache.size() + 1 > CACHE_CAPACITY;
-		Item item = new Item(artist, title, isCached);
+	    randomId = random.nextInt(9999);
+		Item item = new Item(randomId, artist, title, isCached);
 		item.setCallback(callback);
 		cache.add(item);
 		return isCached;
@@ -55,7 +59,8 @@ public class DownloadCache {
 		Item deleteItem = null;
 		for (Item item : cache) {
 			if (item.getArtist().equals(artist) && item.getTitle().equals(title)) {
-				deleteItem = new Item(artist, title, false);
+			    randomId = random.nextInt(9999);
+			    deleteItem = new Item(randomId, artist, title, false);
 			}
 		}
 		if (null != deleteItem) {
@@ -77,16 +82,22 @@ public class DownloadCache {
 	
 	public class Item {
 		
+		private int id;
 		private String artist;
 		private String title;
 		private boolean isCached;
 		private DownloadCacheCallback callback;
 		private DownloadCacheCallback customCallback;
 		
-		public Item(String artist, String title, boolean isCached) {
+		public Item(int id, String artist, String title, boolean isCached) {
 			this.artist = artist;
 			this.title = title;
 			this.isCached = isCached;
+			this.id = id;
+		}
+		
+		public int getId() {
+			return id;
 		}
 		
 		public String getArtist() {
