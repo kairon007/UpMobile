@@ -80,7 +80,6 @@ public class UICircularImage extends ImageButton {
         mReady = true;
 
         if (mWaiting) {
-        	System.out.println("!!! SETUP");
             setup();
             mWaiting = false;
         }
