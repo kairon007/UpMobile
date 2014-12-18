@@ -160,6 +160,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(sb);
 			try {
+				request.setTitle(songArtist);
+				request.setDescription(songTitle);
 				request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
 			} catch (Exception e) { 
 				Log.e(getClass().getSimpleName(), e.getMessage());
