@@ -69,7 +69,6 @@ public class YouTubeSong extends SongWithCover {
 	}
 	
 	private void getDownloadUrl(final String watchId) {
-		android.util.Log.d("logd", "getDownloadUrl()");
 		getUrl = new AsyncTask<Void, Void, String>() {
 			@Override
 			protected String doInBackground(Void... params) {
