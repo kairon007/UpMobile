@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
     private String PACKAGE = "IDENTIFY";
 	private Timer timer;
 	private RemoveTimer task;
+	private Animation anim;
 
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
@@ -50,15 +52,15 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	}
 	
 	@Override
-	public void onItemSwipeVisible(int pos) {
+	public void onItemSwipeVisible(int pos, View v) {
 		if (!getItem(pos).check(MusicData.MODE_VISIBLITY)) {
-			timer(getItem(pos));
+			timer(getItem(pos), v);
 		}
 		getItem(pos).turnOn(MusicData.MODE_VISIBLITY);	
 	}
 
 	@Override
-	public void onItemSwipeGone(int pos) {
+	public void onItemSwipeGone(int pos, View v) {
 		if (getItem(pos).check(MusicData.MODE_VISIBLITY)) {
 			cancelTimer();
 		}
@@ -70,28 +72,47 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		timer.cancel();
 	}
 
-	private void timer(MusicData musicData) {
+	private void timer(MusicData musicData, View v) {
 		timer = new Timer();
-		task = new RemoveTimer(musicData);
+		task = new RemoveTimer(musicData, v);
 		timer.schedule(task, DELAY);
 	}
 
 	private class RemoveTimer extends TimerTask {
 
 		private MusicData musicData;
+		private View v;
 
-		public RemoveTimer(MusicData musicData) {
+		public RemoveTimer(MusicData musicData, View v) {
 			this.musicData = musicData;
+			this.v = v;
 		}
 
 		public void run() {
 			if (musicData.check(MusicData.MODE_VISIBLITY)) {
-				musicData.reset(getContext());
 				((MainActivity) getContext()).runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
-						remove(musicData);
+//						anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
+//						anim.setDuration(200);
+//						anim.setAnimationListener(new AnimationListener() {
+//
+//							@Override
+//							public void onAnimationStart(Animation paramAnimation) {
+//							}
+//
+//							@Override
+//							public void onAnimationRepeat(Animation paramAnimation) {
+//							}
+//
+//							@Override
+//							public void onAnimationEnd(Animation paramAnimation) {
+								musicData.reset(getContext());
+								remove(musicData);
+//							}
+//						});
+//						v.startAnimation(anim);
 					}
 				});
 			}
@@ -170,7 +191,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						}
 				        int[] screen_location = new int[2];
 				        View view = v.findViewById(R.id.item_image);
-				        v.getLocationOnScreen(screen_location);
+				        view.getLocationOnScreen(screen_location);
 				        Bundle bundle = new Bundle();
 				        bundle.putParcelable(Constants.KEY_SELECTED_SONG, getItem(position));
 				        bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
@@ -183,7 +204,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						((MainActivity) v.getContext()).changeFragment(playerFragment);
 						break;
 					case MotionEvent.ACTION_MOVE:
-						((UISwipableList)parent).setSelectedPosition(position);
+						((UISwipableList)parent).setSelectedPosition(position, v);
 						break;
 					}
 	  				return true;
@@ -219,7 +240,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				
 				@Override
 				public void onClick(View paramView) {
-					onItemSwipeGone(position);
+					onItemSwipeGone(position, paramView);
 					hidenView.setVisibility(View.GONE);
 					frontView.setX(0);
 				}

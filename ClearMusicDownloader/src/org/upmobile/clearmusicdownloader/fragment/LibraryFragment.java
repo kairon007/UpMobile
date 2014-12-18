@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
@@ -43,6 +42,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	private ResideMenu resideMenu;
 	private Handler uiHandler;
 	private String folderFilter;
+	private Animation anim;
 	private ContentObserver observer = new ContentObserver(null) {
 		
 		public void onChange(boolean selfChange) {
@@ -64,7 +64,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		};
 		
 	};
-	private Animation anim;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle state) {
@@ -138,27 +137,30 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	public void onScrollStateChanged(AbsListView paramAbsListView, int paramInt) {
 		for (final MusicData item : adapter.getAll()) {
 			if (item.check(MusicData.MODE_VISIBLITY)) {
-				//TODO get view selected item and set to him animation
-//				anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
-//				anim.setDuration(200);
-//				anim.setAnimationListener(new AnimationListener() {
-//					
-//					@Override
-//					public void onAnimationStart(Animation paramAnimation) {
-//					}
-//					
-//					@Override
-//					public void onAnimationRepeat(Animation paramAnimation) {
-//					}
-//					
-//					@Override
-//					public void onAnimationEnd(Animation paramAnimation) {
+				int wantedPosition = adapter.getPosition(item);
+				int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
+				int wantedChild = wantedPosition - firstPosition;
+				if (wantedChild < 0 || wantedChild >= listView.getChildCount()) return;
+				anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+				anim.setDuration(200);
+				anim.setAnimationListener(new AnimationListener() {
+
+					@Override
+					public void onAnimationStart(Animation paramAnimation) {
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation paramAnimation) {
+					}
+
+					@Override
+					public void onAnimationEnd(Animation paramAnimation) {
 						adapter.cancelTimer();
 						item.reset(getActivity());
 						adapter.remove(item);
-//					}
-//				});
-//				((View) listView.getChildAt(adapter.getPosition(item))).startAnimation(anim);
+					}
+				});
+				listView.getChildAt(wantedChild).startAnimation(anim);
 			}
 		}
 	}

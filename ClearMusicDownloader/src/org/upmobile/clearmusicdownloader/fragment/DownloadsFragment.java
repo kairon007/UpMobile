@@ -21,6 +21,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
@@ -42,6 +45,7 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 	private MainActivity activity;
 	private int progress;
 	private Object lock  = new Object();
+	private Animation anim;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -246,33 +250,34 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 	public void onScrollStateChanged(AbsListView paramAbsListView, int paramInt) {
 		for (final MusicData item : adapter.getAll()) {
 			if (item.check(MusicData.MODE_VISIBLITY)) {
-				//TODO get view selected item and set to him animation
-//				anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
-//				anim.setDuration(200);
-//				anim.setAnimationListener(new AnimationListener() {
-//					
-//					@Override
-//					public void onAnimationStart(Animation paramAnimation) {
-//					}
-//					
-//					@Override
-//					public void onAnimationRepeat(Animation paramAnimation) {
-//					}
-//					
-//					@Override
-//					public void onAnimationEnd(Animation paramAnimation) {
+				int wantedPosition = adapter.getPosition(item);
+				int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
+				int wantedChild = wantedPosition - firstPosition;
+				if (wantedChild < 0 || wantedChild >= listView.getChildCount()) return;
+				anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+				anim.setDuration(200);
+				anim.setAnimationListener(new AnimationListener() {
+
+					@Override
+					public void onAnimationStart(Animation paramAnimation) {
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation paramAnimation) {
+					}
+
+					@Override
+					public void onAnimationEnd(Animation paramAnimation) {
 						adapter.cancelTimer();
 						adapter.removeItem(item);
-//					}
-//				});
-//				((View) listView.getChildAt(adapter.getPosition(item))).startAnimation(anim);
+					}
+				});
+				listView.getChildAt(wantedChild).startAnimation(anim);
 			}
 		}
 	}
 
 	@Override
 	public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3) {
-		// TODO Auto-generated method stub
-		
 	}
 }

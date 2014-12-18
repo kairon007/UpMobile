@@ -24,8 +24,8 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	protected abstract ViewHolder<T> createViewHolder(final View v);
-	public abstract void onItemSwipeVisible(int position);
-	public abstract void onItemSwipeGone(int position);
+	public abstract void onItemSwipeVisible(int position, View v);
+	public abstract void onItemSwipeGone(int position, View v);
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -53,13 +53,13 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
 
 			@Override
-			public void onSwipeVisible(int pos) {
-				onItemSwipeVisible(pos);
+			public void onSwipeVisible(int pos, View v) {
+				onItemSwipeVisible(pos, v);
 			}
 
 			@Override
-			public void onSwipeGone(int pos) {
-				onItemSwipeGone(pos);
+			public void onSwipeGone(int pos, View v) {
+				onItemSwipeGone(pos, v);
 			}
 		});
 	}

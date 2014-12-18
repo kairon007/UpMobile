@@ -15,6 +15,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -39,7 +42,6 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		private ViewGroup frontView;
 		private ProgressBar progress;
 		private UICircularImage image;
-
 		private View v;
 		private MusicData item;
 
@@ -84,7 +86,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_MOVE:
-						((UISwipableList) parent).setSelectedPosition(position);
+						((UISwipableList) parent).setSelectedPosition(position, v);
 						break;
 					}
 					return true;
@@ -94,7 +96,9 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
-					removeItem(item);
+					onItemSwipeGone(position, v);
+					hidenView.setVisibility(View.GONE);
+					frontView.setX(0);
 				}
 			});
 		}
@@ -110,17 +114,17 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	}
 
 	@Override
-	public void onItemSwipeVisible(int pos) {
+	public void onItemSwipeVisible(int pos, View v) {
 		if (getCount() > pos) {
 			if (!getItem(pos).check(MusicData.MODE_VISIBLITY)) {
-				timer(getItem(pos));
+				timer(getItem(pos), v);
 			}
 			getItem(pos).turnOn(MusicData.MODE_VISIBLITY);	
 		}
 	}
 	
 	@Override
-	public void onItemSwipeGone(int pos) {
+	public void onItemSwipeGone(int pos, View v) {
 		if (getCount() > pos) {
 			if (getItem(pos).check(MusicData.MODE_VISIBLITY)) {
 				cancelTimer();
@@ -141,18 +145,21 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		timer.cancel();
 	}
 
-	private void timer(MusicData musicData) {
+	private void timer(MusicData musicData, View v) {
 		timer = new Timer();
-		task = new RemoveTimer(musicData);
+		task = new RemoveTimer(musicData, v);
 		timer.schedule(task, DELAY );
 	}
 
 	private class RemoveTimer extends TimerTask {
 
 		private MusicData musicData;
+		private Animation anim;
+		private View v;
 
-		public RemoveTimer(MusicData musicData) {
+		public RemoveTimer(MusicData musicData, View v) {
 			this.musicData = musicData;
+			this.v = v;
 		}
 
 		public void run() {
@@ -161,7 +168,24 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 					@Override
 					public void run() {
-						removeItem(musicData);
+//						anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
+//						anim.setDuration(200);
+//						anim.setAnimationListener(new AnimationListener() {
+//
+//							@Override
+//							public void onAnimationStart(Animation paramAnimation) {
+//							}
+//
+//							@Override
+//							public void onAnimationRepeat(Animation paramAnimation) {
+//							}
+//
+//							@Override
+//							public void onAnimationEnd(Animation paramAnimation) {
+								removeItem(musicData);
+//							}
+//						});
+//						v.startAnimation(anim);
 					}
 				});
 			}
