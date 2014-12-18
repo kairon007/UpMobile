@@ -119,15 +119,15 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     
     @SuppressLint("NewApi") @Override
 	public void onBackPressed() {
-		if (lastOpenedFragment.getClass().getSimpleName().equals("PlayerFragment")) {
+		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[3].getClass().getSimpleName())) {
 			getSupportFragmentManager().popBackStack();
 			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
-			if (lastFragmentName.equals("SearchFragment")) {
+			if (lastFragmentName.equals(getFragments()[0].getClass().getSimpleName())) {
 				tvTitle.setText(titles[0]);
-			} else if (lastFragmentName.equals("DownloadsFragment")) {
+			} else if (lastFragmentName.equals(getFragments()[1].getClass().getSimpleName())) {
 				tvTitle.setText(titles[1]);
-			} else if (lastFragmentName.equals("LibraryFragment")) {
+			} else if (lastFragmentName.equals(getFragments()[2].getClass().getSimpleName())) {
 				tvTitle.setText(titles[2]);
 			}
 			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);

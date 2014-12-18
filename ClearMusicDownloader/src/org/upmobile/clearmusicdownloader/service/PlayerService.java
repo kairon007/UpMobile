@@ -230,8 +230,13 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (0 <= buf && buf < arrayPlayback.size()) {
 			playingPosition  =  buf;
 			playingSong  = arrayPlayback.get(playingPosition);
-		}
-		else {
+		} else if (buf >= arrayPlayback.size()) {
+			playingPosition = 0;
+			playingSong  = arrayPlayback.get(playingPosition);
+		} else if (buf < 0) {
+			playingPosition = arrayPlayback.size() - 1;
+			playingSong = arrayPlayback.get(playingPosition);
+		} else {
 			Message msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
 			handler.sendMessage(msg);
 			return;
@@ -362,9 +367,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 	@Override
 	public void onCompletion(MediaPlayer paramMediaPlayer) {
-		helper(State.COMPLETE);
-		Message msg = buildMessage(MSG_SEEK_TO, 0, 0);
-		handler.sendMessage(msg);
+		shift(1);
 	}
 
 	public int getCurrentPosition() {
@@ -398,7 +401,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return playingSong;
 	}
 	
-	public void updateQueue(int position, String title, String artist, String path){
+	
+	public void remove(AbstractSong song) {
+		arrayPlayback.remove(song);
+	}
+	
+	public void update(int position, String title, String artist, String path){
 		if (playingSong.getClass() == MusicData.class){
 			MusicData data = (MusicData) arrayPlayback.get(position);
 			data.setArtist(artist);

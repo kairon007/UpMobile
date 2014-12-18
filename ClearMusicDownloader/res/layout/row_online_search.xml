@@ -18,8 +18,8 @@
         android:padding="4dp" >
 
         <FrameLayout
-            android:layout_width="75dp"
-            android:layout_height="75dp" >
+            android:layout_width="72dp"
+            android:layout_height="72dp" >
 
             <RelativeLayout
                 android:id="@+id/RelativeLayout1"
@@ -35,7 +35,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:lines="1"
-                    android:text="29"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textSize="22sp" />
 
@@ -47,9 +46,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/number"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-10dp"
+                    android:layout_marginTop="-8dp"
                     android:gravity="center_horizontal"
-                    android:text="tracks"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -59,9 +57,9 @@
                 android:id="@+id/cover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="4dp"
                 android:contentDescription="@string/default_cover"
-                android:padding="10dp"
+                android:padding="8dp"
                 app:line_color="@color/theme_color"
                 app:line_color_press="@color/green"
                 app:line_width="1dp"
