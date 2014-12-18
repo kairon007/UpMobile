@@ -53,7 +53,7 @@ public class SearchZaycev extends SearchWithPages {
 				String songArtist = songObject.getString("artistName");
 				String songDuration = songObject.getString("duration");
 				int songId = songObject.getInt("id");
-				addSong(new RemoteSong(getDownloadUrl(songId)).setTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
+				addSong(new RemoteSong(getDownloadUrl(songId)).setSongTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

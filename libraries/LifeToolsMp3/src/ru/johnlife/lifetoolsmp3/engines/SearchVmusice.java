@@ -45,7 +45,7 @@ public class SearchVmusice extends BaseSearchTask {
 					ArrayList<String[]> headers = new ArrayList<String[]>();
 			    	headers.add(new String[] {"Referer","http://vmusice.net/"});
 			    	headers.add(new String[] {"Range", "bytes=0-"});
-					addSong(new RemoteSong(downloadUrl).setTitle(name).setArtistName(author).setDuration(formatTime(duration)).setHeader(headers));
+					addSong(new RemoteSong(downloadUrl).setSongTitle(name).setArtistName(author).setDuration(formatTime(duration)).setHeader(headers));
 				} catch (Exception e) {
 					Log.e(getClass().getSimpleName(), "Error parsing song", e);
 				}

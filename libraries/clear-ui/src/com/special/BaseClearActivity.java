@@ -1,8 +1,5 @@
 package com.special;
 
-import com.special.R;
-import com.special.menu.ResideMenu;
-import com.special.menu.ResideMenuItem;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,30 +10,45 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.special.menu.ResideMenu;
+import com.special.menu.ResideMenuItem;
 
 public abstract class BaseClearActivity extends FragmentActivity implements View.OnClickListener{
 
     private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
     private Fragment[] fragments;
+    private String[] titles;
     private LinearLayout topFrame;
 	private Fragment lastOpenedFragment;
+	private TextView tvTitle;
   
     protected abstract Fragment[] getFragments();
     
     protected abstract ResideMenuItem[] getMenuItems();
     
+    protected abstract String[] getTitlePage();
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        topFrame = (LinearLayout) findViewById(R.id.layout_top);
+        init();
         menuItems = getMenuItems();
         fragments = getFragments();
+        titles = getTitlePage();
         setUpMenu();
         changeFragment(getFragments()[0]);
+        tvTitle.setText(titles[0]);
         hidePlayerElement();
     }
+
+	private void init() {
+		topFrame = (LinearLayout) findViewById(R.id.layout_top);
+        tvTitle = (TextView) findViewById(R.id.page_title);
+	}
 
     private void setUpMenu() {
         resideMenu = new ResideMenu(this);
@@ -49,6 +61,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         resideMenu.setScaleValue(0.6f);
         for (ResideMenuItem item : menuItems) {
         	item.setOnClickListener(this);
+        	item.setBackgroundResource(R.drawable.button_selector_inverse_light);
         	resideMenu.addMenuItem(item);
         }
         findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
@@ -69,6 +82,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         for (int i = 0; i < menuItems.length; i++) {
         	if (view == menuItems[i]) {
         		changeFragment(fragments[i]);
+        		tvTitle.setText(titles[i]);
         	}
         }
         resideMenu.closeMenu();

@@ -14,4 +14,11 @@
     <string name="delete">Delete</string>
     <string name="download">Download</string>
     <string name="nothing_changed">Nothing changed</string>
+    
+    <string-array name="titles">
+	    <item>Search</item>
+	    <item>Downloads</item>
+	    <item>Library</item>
+	    <item>Now playing</item>
+	</string-array>
 </resources>

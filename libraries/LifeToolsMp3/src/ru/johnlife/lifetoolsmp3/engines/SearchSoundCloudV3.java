@@ -56,7 +56,7 @@ public class SearchSoundCloudV3 extends SearchWithPages  {
 					String id = nameObject.getString("id");
 					long duration = nameObject.getLong("duration");
 					String downloadUrl = "http://api.soundcloud.com/tracks/" + id + "/stream?client_id=" + soundcloudClientId;
-					addSong(new RemoteSong(downloadUrl).setTitle(name).setArtistName(author).setDuration(duration));
+					addSong(new RemoteSong(downloadUrl).setSongTitle(name).setArtistName(author).setDuration(duration));
 				}
 			}
 		} catch (Exception e) {

@@ -38,7 +38,7 @@ public class SearchPleer extends SearchWithPages {
 						JSONObject jsonSong = listOfSongs.getJSONObject(i);
 						RemoteSong song = new RemoteSong(jsonSong.getString("file"));
 						String songTitle = jsonSong.getString("track");
-						song.setTitle(songTitle);
+						song.setSongTitle(songTitle);
 						song.setArtistName(jsonSong.getString("artist"));
 						song.setDuration((jsonSong.getLong("length") * 1000));
 						addSong(song);

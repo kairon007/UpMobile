@@ -48,7 +48,7 @@ public class SearchHulkShare extends SearchWithPages {
 						String songArtist = m.group(2);
 						if (songURL != "" && songTitle != "") {
 							RemoteSong song = new RemoteSong(songURL);
-							song.setTitle(songTitle);
+							song.setSongTitle(songTitle);
 							song.setArtistName(songArtist);
 							song.setDuration(formatTime(duration));
 							addSong(song);

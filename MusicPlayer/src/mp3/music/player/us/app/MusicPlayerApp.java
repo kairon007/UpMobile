@@ -15,13 +15,12 @@ import java.io.FileDescriptor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import mp3.music.player.us.BuildConfig;
 import mp3.music.player.us.cache.ImageCache;
 import mp3.music.player.us.utils.ApolloUtils;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;

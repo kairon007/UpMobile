@@ -36,7 +36,7 @@ public class SearchSoundCloudV2 extends BaseSearchTask {
 				    	long duration = (long) track.getDuration();
 				    	String songArtist = pair[0].trim();
 				    	String songTitle = pair[1].trim();
-						addSong(new SoundCloudV2Song(downloadUrl, (largeCoverUrl == null || largeCoverUrl.equals("null")) ? "NOT_FOUND" : largeCoverUrl).setArtistName(songArtist).setDuration(duration).setTitle(songTitle));
+						addSong(new SoundCloudV2Song(downloadUrl, (largeCoverUrl == null || largeCoverUrl.equals("null")) ? "NOT_FOUND" : largeCoverUrl).setArtistName(songArtist).setDuration(duration).setSongTitle(songTitle));
 			    }
 			}
 		} catch (Exception e) {

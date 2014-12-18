@@ -93,7 +93,7 @@ public class SearchPoisk extends SearchWithPages {
 					}
 					
 					realSong.setArtistName(artistName);
-					realSong.setTitle(title);
+					realSong.setSongTitle(title);
 					realSong.setDuration(formatTime(duration));
 				} catch(Exception e) {
 					Log.e(getClass().getSimpleName(), "", e);

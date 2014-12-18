@@ -135,7 +135,7 @@ public class DownloadsFragment extends Fragment {
 				@Override
 				public void run() {
 					for (Item item : cache) {
-						final MusicData song = new MusicData(item.getTitle(), item.getArtist(), -1, -1);
+						final MusicData song = new MusicData(item.getTitle(), item.getArtist(), item.getId(), -1);
 						if (!adapter.contains(song)) {
 							adapter.add(song);
 							item.setCustomCallback(new DownloadCacheCallback() {
@@ -193,7 +193,8 @@ public class DownloadsFragment extends Fragment {
 
 					@Override
 					public void run() {
-						DownloadCache.getInstanse().remove(adapter.getItem(position).getArtist(), adapter.getItem(position).getTitle());
+						MusicData song = adapter.getItem(position);
+						DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
 						adapter.remove(adapter.getItem(position));
 						adapter.notifyDataSetChanged();
 					}

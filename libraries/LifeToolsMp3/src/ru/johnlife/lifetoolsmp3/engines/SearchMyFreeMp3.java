@@ -50,7 +50,7 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 				long duration = Long.valueOf(srcDuration) * 1000;
 				String idSong = info.attr("data-aid");
 				String link = partServer + idSong + "/";
-				addSong(new RemoteSong(link).setTitle(title).setArtistName(artist).setDuration(duration));
+				addSong(new RemoteSong(link).setSongTitle(title).setArtistName(artist).setDuration(duration));
 			}
 		} catch (Exception e) {
 			Log.d("log", "parsing error, couse:" + e.getMessage());

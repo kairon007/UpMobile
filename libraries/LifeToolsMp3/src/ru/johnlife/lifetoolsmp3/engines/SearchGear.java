@@ -37,7 +37,7 @@ public class SearchGear extends SearchWithPages {
 					String coverUrl = items.getJSONObject(i).getString("imgpath");
 					String duration = items.getJSONObject(i).getString("songtime");
 					//addSong(new GearSong(downloadUrl, coverUrl).setArtistName(author).setTitle(title).setDuration(Util.formatTime("0" + duration)));
-					addSong(new RemoteSong(downloadUrl).setArtistName(author).setTitle(title).setDuration(Util.formatTime("0" + duration)));
+					addSong(new RemoteSong(downloadUrl).setArtistName(author).setSongTitle(title).setDuration(Util.formatTime("0" + duration)));
 				}
 			}
 		} catch (Exception e) {

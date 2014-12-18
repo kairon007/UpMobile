@@ -93,7 +93,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	@SuppressLint("NewApi")
 	public void downloadSong(boolean fromCallback) {
 		String url = song.getUrl();
-		if (url == null || "".equals(url)) {
+		if (url == null || url.isEmpty()) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -145,6 +145,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Uri uri = null;
 			try {
 				uri = Uri.parse(url);
+				Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
 			} catch (IllegalArgumentException e) {
 				Log.e(getClass().getSimpleName(), e.getMessage());
 				return;
@@ -397,14 +398,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 					}
 					src = new File(path);
-					if (!setMetadataToFile(path, src, useCover)) {
-						setFileUri(currentDownloadId, src.getAbsolutePath());
-						DownloadCache.getInstanse().remove(artist, title);
-						this.cancel();
+					if (setMetadataToFile(path, src, useCover)) {
+						notifyMediascanner(song, path);
 					}
 					setFileUri(currentDownloadId, src.getAbsolutePath());
 					DownloadCache.getInstanse().remove(artist, title);
-					notifyMediascanner(song, path);
 					this.cancel();
 					return;
 				default:

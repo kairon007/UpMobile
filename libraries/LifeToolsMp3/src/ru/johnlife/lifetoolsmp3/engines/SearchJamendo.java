@@ -32,7 +32,7 @@ public class SearchJamendo extends SearchWithPages {
 //					long duration = 1000 * track.getLong("duration");
 					String downloadUrl = track.getString("audiodownload");
 					String coverUrl = track.getString("album_image");
-					addSong(new JamendoSong(downloadUrl, coverUrl).setArtistName(author).setTitle(title));
+					addSong(new JamendoSong(downloadUrl, coverUrl).setArtistName(author).setSongTitle(title));
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());

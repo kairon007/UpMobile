@@ -70,7 +70,7 @@ public class SearchSogou extends SearchWithPages {
 				// testing 
 				boolean isntChinese = (checkWord(title) && checkWord(artist) && checkWord(album));
 				if (isntChinese && hasDownloadButton && downloadLinkOk) {
-					addSong(new RemoteSong(directLink).setArtistName(artist).setTitle(title));
+					addSong(new RemoteSong(directLink).setArtistName(artist).setSongTitle(title));
 				}
 			}
 			

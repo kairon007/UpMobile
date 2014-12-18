@@ -38,7 +38,7 @@ public class SearchMp3World extends BaseSearchTask {
 					String songTitle = rawTitle.get(0).text();
 					Matcher matcher = SONG_TITLE_PATTERN.matcher(songTitle);
 					if (matcher.find()) {
-						song.setTitle(matcher.group(2).trim());
+						song.setSongTitle(matcher.group(2).trim());
 						song.setArtistName(matcher.group(1).trim());
 						addSong(song);
 					}

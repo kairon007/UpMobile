@@ -12,6 +12,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -45,11 +46,21 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	private ContentObserver observer = new ContentObserver(null) {
 		
 		public void onChange(boolean selfChange) {
+			ArrayList<MusicData> list = querySong();
+			Message msg = new Message();
+			msg.what = MSG_FILL_ADAPTER;
+			msg.obj = list;
+			uiHandler.sendMessage(msg);
+		};
+		
+		public void onChange(boolean selfChange, Uri uri) {
+			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)){
 				ArrayList<MusicData> list = querySong();
 				Message msg = new Message();
 				msg.what = MSG_FILL_ADAPTER;
 				msg.obj = list;
 				uiHandler.sendMessage(msg);
+			}
 		};
 		
 	};
@@ -66,7 +77,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		init();
 		settingListView();
 		ArrayList<MusicData> srcList = querySong();
-		if (!srcList.isEmpty()) {
+		if (null == srcList || !srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
 			PlayerService service = PlayerService.get(getActivity());
 			if (service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
@@ -117,10 +128,8 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 
 	@Override
 	public boolean handleMessage(Message msg) {
-		switch (msg.what) {
-		case MSG_FILL_ADAPTER:
+		if (msg.what == MSG_FILL_ADAPTER) {
 			adapter.changeArray((ArrayList<MusicData>) msg.obj);
-			break;
 		}
 		return true;
 	}
