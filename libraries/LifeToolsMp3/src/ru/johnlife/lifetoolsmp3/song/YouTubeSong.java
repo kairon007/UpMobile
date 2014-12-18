@@ -38,7 +38,6 @@ public class YouTubeSong extends SongWithCover {
 		@Override
 		public void run() {
 			String result = getUrlTask(watchId);
-			android.util.Log.d("logd", "run() = " + result);
 			if (!PENDING.equals(result) && result.startsWith("http")) {
 				downloadUrl = result;
 				for (DownloadUrlListener listener : downloadUrlListeners) {

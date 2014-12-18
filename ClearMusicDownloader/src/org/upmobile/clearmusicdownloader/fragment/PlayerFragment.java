@@ -641,7 +641,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     }
 
 	private void download() {
-		android.util.Log.d("logd", "download()");
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
 		if (downloadListener.isBadInet()) return;
