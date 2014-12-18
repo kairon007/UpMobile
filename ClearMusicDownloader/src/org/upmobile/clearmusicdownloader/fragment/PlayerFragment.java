@@ -120,7 +120,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerCover.bringToFront();
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
-			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+			AbstractSong buf = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+			if (buf.getClass() == RemoteSong.class) {
+				song = ((RemoteSong) buf).cloneSong();
+			} else {
+				song = buf;
+			}
 			int pos = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
 			if (song.getClass() != MusicData.class) {
 				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
@@ -152,12 +157,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				else changePlayPauseView(true);
 			}
 		} else {
+			AbstractSong buf = player.getPlayingSong();
+			if (buf.getClass() == RemoteSong.class) {
+				song = ((RemoteSong) buf).cloneSong();
+			} else {
+				song = buf;
+			}
 			if (player.gettingURl() || !player.isPrepared()) {
-				song = player.getPlayingSong();
 				setClickablePlayerElement(false);
 				setElementsView(0);
 			} else {
-				song = player.getPlayingSong();
 				boolean check = player.isPlaying();
 				int current = player.getCurrentPosition();
 				setElementsView(current);
@@ -173,7 +182,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public void start(AbstractSong song) {
-				PlayerFragment.this.song = song; 
+				if (song.getClass() == RemoteSong.class) {
+					PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
+				} else {
+					PlayerFragment.this.song = song;
+				}
 				if (isDestroy) return;
 				getActivity().runOnUiThread(new Runnable() {
 					
