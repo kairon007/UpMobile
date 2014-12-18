@@ -96,13 +96,13 @@ public abstract class OnlineSearchView extends View {
 	private ViewGroup view;
 	private View spEnginesChoiserLayout;
 	private View spEnginesChoiserScroll;
-	private View emtyHeader;
+	private View emptyHeader;
 	private View progress;
 	private View viewItem;
 	private TextView message;
 	private TextView searchField;
 	private Spinner spEnginesChoiser;
-	private ListView listView;
+	protected ListView listView;
 	protected AlertDialog.Builder progressDialog;
 	protected AlertDialog alertProgressDialog;
 	private AlertDialog alertDialog;
@@ -256,7 +256,7 @@ public abstract class OnlineSearchView extends View {
 			});
 		}
 		if (!isRestored) {
-			listView.addHeaderView(emtyHeader);
+			listView.addHeaderView(emptyHeader);
 			listView.addFooterView(resultAdapter.getProgress());
 			listView.setAdapter(resultAdapter);
 		}
@@ -470,7 +470,7 @@ public abstract class OnlineSearchView extends View {
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
 		spEnginesChoiserLayout = view.findViewById(R.id.choise_engines_layout);
 		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
-		emtyHeader = inflate(getContext(), R.layout.empty_header, null);
+		emptyHeader = inflate(getContext(), R.layout.empty_header, null);
 		specialInit(view);
 	}
 	
@@ -989,7 +989,7 @@ public abstract class OnlineSearchView extends View {
 		for (Song song : list) {
 			resultAdapter.add(song);
 		}
-		listView.addHeaderView(emtyHeader);
+		listView.addHeaderView(emptyHeader);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
 		listView.setSelection(position);

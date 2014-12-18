@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 public class SearchView extends OnlineSearchView {
 
@@ -33,6 +34,13 @@ public class SearchView extends OnlineSearchView {
 		super(inflater);
 	}
 
+	@Override
+	public View getView() {
+		View v = super.getView();
+		listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
+		return v;
+	}
+	
 	@Override
 	protected void click(final View view, int position) {
 		PlayerService service = PlayerService.get(getContext());
