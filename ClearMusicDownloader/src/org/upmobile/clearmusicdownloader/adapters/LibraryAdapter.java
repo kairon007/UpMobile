@@ -10,6 +10,7 @@ import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
+import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -39,11 +40,47 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	private Timer timer;
 	private RemoveTimer task;
 	private Animation anim;
+	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+		
+		@Override
+		public void update(AbstractSong song) {
+			int position = getPosition((MusicData) song);
+			((MusicData)getItem(position)).turnOn(MusicData.MODE_PLAYING);
+			((MusicData)getItem(position - 1)).turnOff(MusicData.MODE_PLAYING);
+			notifyDataSetChanged();
+		}
+		
+		@Override
+		public void start(AbstractSong song) {
+			
+		}
+		
+		@Override
+		public void reset() {
+			
+		}
+		
+		@Override
+		public void play() {
+			
+		}
+		
+		@Override
+		public void pause() {
+			
+		}
+		
+		@Override
+		public void complete() {
+			
+		}
+	};
 
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
 		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
+		PlayerService.get(getContext()).setStatePlayerListener(stateListener);
 	}
 
 	@Override
@@ -110,6 +147,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 //							public void onAnimationEnd(Animation paramAnimation) {
 								musicData.reset(getContext());
 								remove(musicData);
+								PlayerService.get(getContext()).remove(musicData);
 //							}
 //						});
 //						v.startAnimation(anim);
