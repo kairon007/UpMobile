@@ -153,6 +153,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 //					
 //					@Override
 //					public void onAnimationEnd(Animation paramAnimation) {
+						adapter.cancelTimer();
 						item.reset(getActivity());
 						adapter.remove(item);
 //					}

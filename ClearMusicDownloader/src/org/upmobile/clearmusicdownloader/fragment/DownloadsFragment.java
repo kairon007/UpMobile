@@ -21,13 +21,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 
 import com.special.BaseClearActivity;
 import com.special.R;
 import com.special.menu.ResideMenu;
 import com.special.utils.UISwipableList;
 
-public class DownloadsFragment extends Fragment {
+public class DownloadsFragment extends Fragment implements OnScrollListener {
 
 	private View parentView;
 	private UISwipableList listView;
@@ -59,6 +61,7 @@ public class DownloadsFragment extends Fragment {
 		listView.setItemLayout(R.id.front_layout);
 		listView.setAdapter(adapter);
 		listView.setIgnoredViewHandler(resideMenu);
+		listView.setOnScrollListener(this);
 		listView.getAdapter();
 		manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 		timer = new Timer();
@@ -142,7 +145,7 @@ public class DownloadsFragment extends Fragment {
 								
 								@Override
 								public void callback(Item item) {
-									removeItem(adapter.getPosition(song));
+									removeItem(song);
 								}
 							});
 						}
@@ -167,7 +170,7 @@ public class DownloadsFragment extends Fragment {
 		while (c.moveToNext()) {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-					removeItem(i);	
+					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252));	
 				}
 			}
 		}
@@ -179,23 +182,22 @@ public class DownloadsFragment extends Fragment {
 		while (c.moveToNext()) {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-					removeItem(i);
+					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)), c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252));
 				}
 			}
 		}
 		c.close();
 	}
 
-	private void removeItem(final int position) {
+	private void removeItem(final MusicData musicData) {
 		synchronized (lock) {
 			try {
 				activity.runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
-						MusicData song = adapter.getItem(position);
-						DownloadCache.getInstanse().remove(song.getArtist(), song.getTitle());
-						adapter.remove(adapter.getItem(position));
+						DownloadCache.getInstanse().remove(musicData.getArtist(), musicData.getTitle());
+						adapter.remove(musicData);
 						adapter.notifyDataSetChanged();
 					}
 				});
@@ -238,5 +240,39 @@ public class DownloadsFragment extends Fragment {
 			reDrawAdapter();
 			addAllCached(DownloadCache.getInstanse().getCachedItems());
 		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView paramAbsListView, int paramInt) {
+		for (final MusicData item : adapter.getAll()) {
+			if (item.check(MusicData.MODE_VISIBLITY)) {
+				//TODO get view selected item and set to him animation
+//				anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+//				anim.setDuration(200);
+//				anim.setAnimationListener(new AnimationListener() {
+//					
+//					@Override
+//					public void onAnimationStart(Animation paramAnimation) {
+//					}
+//					
+//					@Override
+//					public void onAnimationRepeat(Animation paramAnimation) {
+//					}
+//					
+//					@Override
+//					public void onAnimationEnd(Animation paramAnimation) {
+						adapter.cancelTimer();
+						adapter.removeItem(item);
+//					}
+//				});
+//				((View) listView.getChildAt(adapter.getPosition(item))).startAnimation(anim);
+			}
+		}
+	}
+
+	@Override
+	public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3) {
+		// TODO Auto-generated method stub
+		
 	}
 }

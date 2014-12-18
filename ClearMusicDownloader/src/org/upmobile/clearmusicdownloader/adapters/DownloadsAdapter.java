@@ -1,6 +1,10 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
@@ -12,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,12 +26,16 @@ import com.special.utils.UISwipableList;
 public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 	private Object lock = new Object();
+	private Timer timer;
+	private RemoveTimer task;
+	private final static int DELAY = 2000;
 
 	private class DownloadsViewHolder extends ViewHolder<MusicData> {
 		private TextView title;
 		private TextView artist;
 		private TextView duration;
 		private TextView cancel;
+		private LinearLayout hidenView;
 		private ViewGroup frontView;
 		private ProgressBar progress;
 		private UICircularImage image;
@@ -42,21 +51,22 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 			image = (UICircularImage) v.findViewById(R.id.item_image);
 			duration = (TextView) v.findViewById(R.id.item_duration);
 			progress = (ProgressBar) v.findViewById(R.id.item_progress);
-			cancel = (TextView) v.findViewById(R.id.hidden_view);
+			cancel = (TextView) v.findViewById(R.id.cancel);
+			hidenView = (LinearLayout) v.findViewById(R.id.hidden_view);
 		}
 
 		@Override
 		protected void hold(MusicData item, int position) {
 			this.item = item;
-			if (!item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.VISIBLE) {
-				cancel.setVisibility(View.GONE);
+			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
+				hidenView.setVisibility(View.GONE);
 				ViewGroup box = (ViewGroup) v.findViewById(R.id.front_layout);
 				box.setX(0);
-			} else if (item.check(MusicData.MODE_VISIBLITY) && cancel.getVisibility() == View.GONE) {
+			} else if (item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.GONE) {
 				ViewGroup box = (ViewGroup) v.findViewById(R.id.front_layout);
-				int startPosition = 0 - parent.getContext().getResources().getDimensionPixelSize(R.dimen.swipe_size);
+				int startPosition = 0 - parent.getWidth();
 				box.setX(startPosition);
-				cancel.setVisibility(View.VISIBLE);
+				hidenView.setVisibility(View.VISIBLE);
 			}
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
@@ -84,10 +94,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
-					DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
-					remove(item);
-					if (item.getId() == -1) return;
-					cancelDownload(item.getId());
+					removeItem(item);
 				}
 			});
 		}
@@ -105,14 +112,61 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	@Override
 	public void onItemSwipeVisible(int pos) {
 		if (getCount() > pos) {
-			getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
+			if (!getItem(pos).check(MusicData.MODE_VISIBLITY)) {
+				timer(getItem(pos));
+			}
+			getItem(pos).turnOn(MusicData.MODE_VISIBLITY);	
 		}
 	}
-
+	
 	@Override
 	public void onItemSwipeGone(int pos) {
 		if (getCount() > pos) {
+			if (getItem(pos).check(MusicData.MODE_VISIBLITY)) {
+				cancelTimer();
+			}
 			getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
+		}
+	}
+	
+	public void removeItem(MusicData item) {
+		DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
+		remove(item);
+		if (item.getId() == -1) return;
+		cancelDownload(item.getId());
+	}
+	
+	public void cancelTimer() {
+		task.cancel();
+		timer.cancel();
+	}
+
+	private void timer(MusicData musicData) {
+		timer = new Timer();
+		task = new RemoveTimer(musicData);
+		timer.schedule(task, DELAY );
+	}
+
+	private class RemoveTimer extends TimerTask {
+
+		private MusicData musicData;
+
+		public RemoveTimer(MusicData musicData) {
+			this.musicData = musicData;
+		}
+
+		public void run() {
+			if (musicData.check(MusicData.MODE_VISIBLITY)) {
+				((MainActivity) getContext()).runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						removeItem(musicData);
+					}
+				});
+			}
+			timer.cancel();
+			this.cancel();
 		}
 	}
 

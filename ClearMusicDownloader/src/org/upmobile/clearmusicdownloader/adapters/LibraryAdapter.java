@@ -1,6 +1,8 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
@@ -28,10 +30,13 @@ import com.special.utils.UISwipableList;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
+	private static final int DELAY = 5000;
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
 	private int currentPlayPosition; 
     private String PACKAGE = "IDENTIFY";
+	private Timer timer;
+	private RemoveTimer task;
 
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
@@ -46,19 +51,59 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	@Override
 	public void onItemSwipeVisible(int pos) {
-		getItem(pos).turnOn(MusicData.MODE_VISIBLITY);
+		if (!getItem(pos).check(MusicData.MODE_VISIBLITY)) {
+			timer(getItem(pos));
+		}
+		getItem(pos).turnOn(MusicData.MODE_VISIBLITY);	
 	}
 
 	@Override
 	public void onItemSwipeGone(int pos) {
+		if (getItem(pos).check(MusicData.MODE_VISIBLITY)) {
+			cancelTimer();
+		}
 		getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
 	}
-	
+
+	public void cancelTimer() {
+		task.cancel();
+		timer.cancel();
+	}
+
+	private void timer(MusicData musicData) {
+		timer = new Timer();
+		task = new RemoveTimer(musicData);
+		timer.schedule(task, DELAY);
+	}
+
+	private class RemoveTimer extends TimerTask {
+
+		private MusicData musicData;
+
+		public RemoveTimer(MusicData musicData) {
+			this.musicData = musicData;
+		}
+
+		public void run() {
+			if (musicData.check(MusicData.MODE_VISIBLITY)) {
+				musicData.reset(getContext());
+				((MainActivity) getContext()).runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						remove(musicData);
+					}
+				});
+			}
+			timer.cancel();
+			this.cancel();
+		}
+	}
+
 	private class LibraryViewHolder extends ViewHolder<MusicData> {
 		
 		private MusicData item;
 		private ViewGroup frontView;
-		private ViewGroup boxInfo;
 		private View button;
 		private TextView title;
 		private TextView artist;
@@ -69,7 +114,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		public LibraryViewHolder(View v) {
 			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
-			boxInfo = (ViewGroup) v.findViewById(R.id.item_box_info);
 			button = v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
