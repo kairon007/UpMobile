@@ -47,19 +47,29 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		
 		public void onChange(boolean selfChange) {
 			ArrayList<MusicData> list = querySong();
+			customList(list);
 			Message msg = new Message();
 			msg.what = MSG_FILL_ADAPTER;
 			msg.obj = list;
 			uiHandler.sendMessage(msg);
-		};
-		
+		}
+
 		public void onChange(boolean selfChange, Uri uri) {
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)){
 				ArrayList<MusicData> list = querySong();
+				customList(list);
 				Message msg = new Message();
 				msg.what = MSG_FILL_ADAPTER;
 				msg.obj = list;
 				uiHandler.sendMessage(msg);
+			}
+		};
+		
+		private void customList(ArrayList<MusicData> list) {
+			PlayerService service = PlayerService.get(getActivity());
+			if(service.getPlayingPosition() >= 0 && service.isPlaying()){
+				int i = service.getPlayingPosition();
+				list.get(i).turnOn(MusicData.MODE_PLAYING);
 			}
 		};
 		

@@ -126,6 +126,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 
 		public void run() {
+			PlayerService.get(getContext()).remove(musicData);
 			if (musicData.check(MusicData.MODE_VISIBLITY)) {
 				((MainActivity) getContext()).runOnUiThread(new Runnable() {
 
@@ -145,9 +146,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 //
 //							@Override
 //							public void onAnimationEnd(Animation paramAnimation) {
-								musicData.reset(getContext());
+								
 								remove(musicData);
-								PlayerService.get(getContext()).remove(musicData);
+								
 //							}
 //						});
 //						v.startAnimation(anim);
