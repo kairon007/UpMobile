@@ -123,6 +123,13 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 			getSupportFragmentManager().popBackStack();
 			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
+			if (lastFragmentName.equals("SearchFragment")) {
+				tvTitle.setText(titles[0]);
+			} else if (lastFragmentName.equals("DownloadsFragment")) {
+				tvTitle.setText(titles[1]);
+			} else if (lastFragmentName.equals("LibraryFragment")) {
+				tvTitle.setText(titles[2]);
+			}
 			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
 			return;
 		}
