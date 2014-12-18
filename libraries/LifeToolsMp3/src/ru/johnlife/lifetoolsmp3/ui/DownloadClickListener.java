@@ -92,6 +92,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	
 	@SuppressLint("NewApi")
 	public void downloadSong(boolean fromCallback) {
+		android.util.Log.d("logd", "downloadSong()");
 		String url = song.getUrl();
 		if (url == null || url.isEmpty()) {
 			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();

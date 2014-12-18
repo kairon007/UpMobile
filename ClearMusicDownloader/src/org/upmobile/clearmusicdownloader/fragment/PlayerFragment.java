@@ -20,11 +20,14 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
@@ -638,10 +641,27 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     }
 
 	private void download() {
+		android.util.Log.d("logd", "download()");
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
 		if (downloadListener.isBadInet()) return;
-		downloadListener.onClick(parentView);
+		((RemoteSong)song).getDownloadUrl(new DownloadUrlListener() {
+			
+			@Override
+			public void success(String url) {
+				Runnable callbackRun = new Runnable() {
+					
+					@Override
+					public void run() {
+						downloadListener.onClick(parentView);						
+					}
+				};
+				new Handler(Looper.getMainLooper()).post(callbackRun);
+			}
+			
+			@Override
+			public void error(String error) {}
+		});
 	}
 	
 	private void startImageAnimation() {

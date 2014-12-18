@@ -38,9 +38,13 @@ public class YouTubeSong extends SongWithCover {
 		@Override
 		public void run() {
 			String result = getUrlTask(watchId);
+			android.util.Log.d("logd", "run() = " + result);
 			if (!PENDING.equals(result) && result.startsWith("http")) {
 				downloadUrl = result;
-				downloadUrlListeners.success(downloadUrl);
+				for (DownloadUrlListener listener : downloadUrlListeners) {
+					listener.success(downloadUrl);
+				}
+				downloadUrlListeners.clear();
 				this.cancel();
 			}
 		}
@@ -66,7 +70,7 @@ public class YouTubeSong extends SongWithCover {
 	}
 	
 	private void getDownloadUrl(final String watchId) {
-
+		android.util.Log.d("logd", "getDownloadUrl()");
 		getUrl = new AsyncTask<Void, Void, String>() {
 			@Override
 			protected String doInBackground(Void... params) {

@@ -66,7 +66,7 @@ public class RemoteSong extends Song implements Cloneable {
 	private WeakReference<Bitmap> cover;
 	private WeakReference<Bitmap> smallCover;
 	private CoverReadyListener downloaderListener = null;
-	protected DownloadUrlListener downloadUrlListeners;
+	protected List<DownloadUrlListener> downloadUrlListeners = new ArrayList<DownloadUrlListener>();
 	
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
@@ -104,15 +104,15 @@ public class RemoteSong extends Song implements Cloneable {
 	
 	@Override
 	public boolean getDownloadUrl(DownloadUrlListener listener) {
-		downloadUrlListeners = listener;
+		downloadUrlListeners.add(listener);
 		if (null != downloadUrl && !downloadUrl.isEmpty() && null != downloadUrlListeners && downloadUrl.startsWith("http")) {
-			downloadUrlListeners.success(downloadUrl);
+			listener.success(downloadUrl);
 			return true;
 		} else return false;
 	}
 	
 	public void addListener(DownloadUrlListener listener) {
-		downloadUrlListeners = listener;
+		downloadUrlListeners.add(listener);
 	}
 	
 	public void cancelTasks() {
