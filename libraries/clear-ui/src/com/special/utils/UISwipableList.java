@@ -43,6 +43,8 @@ public class UISwipableList extends ListView {
     private int mHiddenLayout;
     private View mSwipeDownView = null;
     private View mHiddenView = null;
+    private View currentlyStickingView;
+	private View v;
     private ResideMenu mResideMenu;
     
     //Vars
@@ -60,11 +62,11 @@ public class UISwipableList extends ListView {
     	/**
     	 * @param position - can be -1, in that case selected position is bad
     	 */
-    	public void onSwipeGone(int position);
+    	public void onSwipeGone(int position, View v);
     	/**
     	 * @param position - can be -1, in that case selected position is bad
     	 */
-    	public void onSwipeVisible(int position);
+    	public void onSwipeVisible(int position, View v);
     	
     }
 
@@ -200,7 +202,7 @@ public class UISwipableList extends ListView {
             if (isSwipeHorizontal(deltaX, deltaY)
                     && isSwipeDirectionLeft(deltaX) && !mHiddenView.isEnabled()) {
                 ViewParent parent = getParent();
-                if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeVisible(selectedPosition);
+                if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeVisible(selectedPosition, v);
                 if (parent != null) {
                     parent.requestDisallowInterceptTouchEvent(true);
                 }
@@ -217,7 +219,7 @@ public class UISwipableList extends ListView {
                 }
             } else if (isSwipeHorizontal(deltaX, deltaY)
                     && Math.abs(deltaX) > mSwipeMin) {
-            	if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeGone(selectedPosition);
+            	if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeGone(selectedPosition, v);
                 mSwiping = true;
                 swipeLeft = false;
                 requestDisallowInterceptTouchEvent(true);
@@ -322,8 +324,6 @@ public class UISwipableList extends ListView {
         anim.start();
     }
     
-    View currentlyStickingView;
-    
     public void setOnSwipableListener(OnSwipableListener swipableListener) {
 		this.swipableListener = swipableListener;
 	}
@@ -333,8 +333,8 @@ public class UISwipableList extends ListView {
 		return selectedPosition;
 	}
 
-	public void setSelectedPosition(int selectedPosition) {
+	public void setSelectedPosition(int selectedPosition, View v) {
 		this.selectedPosition = selectedPosition;
+		this.v = v;
 	}
-    
 }
