@@ -166,7 +166,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (check(SMODE_PREPARED)) {
 				player.reset();
 				offMode(SMODE_PREPARED);
-			} 
+			}
+			if (check(SMODE_GET_URL)) {
+				offMode(SMODE_GET_URL);
+			}
 			String path = (String) msg.obj;
 			Uri uri = Uri.parse(path);
 			try {
