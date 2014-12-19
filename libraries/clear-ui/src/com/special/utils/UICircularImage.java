@@ -134,7 +134,6 @@ public class UICircularImage extends ImageButton {
         	break;
         case MotionEvent.ACTION_UP :
         case MotionEvent.ACTION_MOVE :
-        	performClick();
         	setUsedLineColor(line_color);
         	break;
         }
