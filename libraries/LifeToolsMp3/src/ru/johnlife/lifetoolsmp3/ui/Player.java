@@ -14,7 +14,6 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;

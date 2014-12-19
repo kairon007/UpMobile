@@ -25,7 +25,6 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
@@ -66,7 +65,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private String PACKAGE = "IDENTIFY";
 	private AbstractSong song;
 	private RenameTask renameTask;
-	private String folderFilter;
 	private PlayerService player;
 	private DownloadListener downloadListener;
 	private View parentView;
@@ -114,7 +112,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		parentView = inflater.inflate(R.layout.player, container, false);
 		((MainActivity) getActivity()).hideTopFrame();
 		((MainActivity) getActivity()).showPlayerElement();
-		folderFilter = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(mOnScrollChangedListener);
 		init();
 		playerTitleBar.getBackground().setAlpha(0);
