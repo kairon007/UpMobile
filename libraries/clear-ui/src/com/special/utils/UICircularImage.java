@@ -128,14 +128,16 @@ public class UICircularImage extends ImageButton {
 	@Override
     public boolean onTouchEvent(MotionEvent event) {
         int maskedAction = event.getActionMasked();
-        if (maskedAction == MotionEvent.ACTION_DOWN) {
+        switch (maskedAction) {
+        case MotionEvent.ACTION_DOWN :
         	setUsedLineColor(mPressLineColor);
-        	return true;
-        } else if (maskedAction == MotionEvent.ACTION_UP || maskedAction == MotionEvent.ACTION_MOVE) {
-        	setUsedLineColor(line_color);
+        	break;
+        case MotionEvent.ACTION_UP :
+        case MotionEvent.ACTION_MOVE :
         	performClick();
+        	setUsedLineColor(line_color);
+        	break;
         }
-            
         return super.onTouchEvent(event);
     }
     
