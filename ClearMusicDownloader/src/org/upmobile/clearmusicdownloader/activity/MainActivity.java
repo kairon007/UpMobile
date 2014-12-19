@@ -1,5 +1,8 @@
 package org.upmobile.clearmusicdownloader.activity;
 
+import java.io.File;
+
+import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
@@ -8,6 +11,8 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.FileObserver;
 import android.support.v4.app.Fragment;
 import android.view.Window;
 
@@ -19,11 +24,26 @@ public class MainActivity extends BaseClearActivity {
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
 	private String[] titles;
+	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
+		
+		@Override
+		public void onEvent(int event, String path) {
+			if(event == FileObserver.DELETE_SELF) {
+				File file = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
+				file.mkdirs();
+			}
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		PlayerService.get(this);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		File file = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
+		if (!file.exists()){
+			file.mkdirs();
+		}
+		fileObserver.startWatching();
 		super.onCreate(savedInstanceState);
 	}
 

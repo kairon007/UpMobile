@@ -393,9 +393,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return check(SMODE_PLAY_PAUSE);
 	}
 	
-	/** 
-	 * @param isPlaying - recommended parameter is false
-	 */
 	public AbstractSong getPlayingSong() {
 		playingSong = arrayPlayback.get(playingPosition);
 		return playingSong;
