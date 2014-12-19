@@ -48,6 +48,9 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		@Override
 		public void onChange(boolean selfChange) {
 			ArrayList<MusicData> list = querySong();
+			if (adapter.getCount() >= list.size()) {
+				return;
+			}
 			customList(list);
 			Message msg = new Message();
 			msg.what = MSG_FILL_ADAPTER;
@@ -59,21 +62,22 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		public void onChange(boolean selfChange, Uri uri) {
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)){
 				ArrayList<MusicData> list = querySong();
+				if (adapter.getCount() >= list.size()) {
+					return;
+				}
 				customList(list);
 				Message msg = new Message();
 				msg.what = MSG_FILL_ADAPTER;
 				msg.obj = list;
 				uiHandler.sendMessage(msg);
-			}
+			} 
 		};
 		
 		private void customList(ArrayList<MusicData> list) {
 			PlayerService service = PlayerService.get(getActivity());
-			if(service.getPlayingPosition() >= 0 && service.isPlaying()){
+			if(service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class){
 				int i = service.getPlayingPosition();
-				if (i <= list.size()) {
-					list.get(i).turnOn(MusicData.MODE_PLAYING);
-				}
+				list.get(i).turnOn(MusicData.MODE_PLAYING);
 			}
 		};
 		
@@ -170,6 +174,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 					@Override
 					public void onAnimationEnd(Animation paramAnimation) {
 						adapter.cancelTimer();
+						PlayerService.get(getActivity()).remove(item);
 						item.reset(getActivity());
 						adapter.remove(item);
 					}

@@ -403,7 +403,15 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	
 	public void remove(AbstractSong song) {
-		arrayPlayback.remove(song);
+		synchronized (lock) {
+			if (song.getClass() != MusicData.class) {
+				return;
+			}
+			if (song.equals(playingSong)) {
+				arrayPlayback.remove(song);
+				shift(0);
+			}
+		}
 	}
 	
 	public void update(int position, String title, String artist, String path){
@@ -416,7 +424,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public int getPlayingPosition() {
-		return playingPosition;
+		synchronized (lock) {
+			return playingPosition;
+		}
 	}
 	
 	public boolean gettingURl() {

@@ -43,16 +43,27 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
 		@Override
-		public void update(AbstractSong song) {
-			int position = getPosition((MusicData) song);
-			((MusicData)getItem(position)).turnOn(MusicData.MODE_PLAYING);
-			((MusicData)getItem(position - 1)).turnOff(MusicData.MODE_PLAYING);
-			notifyDataSetChanged();
+		public void update(final AbstractSong song) {
+			if (song.getClass() != MusicData.class) {
+				return;
+			}
+			((MainActivity)getContext()).runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					int position = getPosition((MusicData) song);
+					((MusicData)getItem(position)).turnOn(MusicData.MODE_PLAYING);
+					((MusicData)getItem(position - 1)).turnOff(MusicData.MODE_PLAYING);
+					notifyDataSetChanged();
+				}
+			});
 		}
 		
 		@Override
 		public void start(AbstractSong song) {
-			
+			if (song.getClass() != MusicData.class) {
+				return;
+			}
 		}
 		
 		@Override
@@ -127,6 +138,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		public void run() {
 			PlayerService.get(getContext()).remove(musicData);
+			musicData.reset(getContext());
 			if (musicData.check(MusicData.MODE_VISIBLITY)) {
 				((MainActivity) getContext()).runOnUiThread(new Runnable() {
 
