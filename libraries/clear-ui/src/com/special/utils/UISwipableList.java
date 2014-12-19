@@ -189,7 +189,6 @@ public class UISwipableList extends ListView {
         case MotionEvent.ACTION_DOWN:
         case MotionEvent.ACTION_UP:
             break;
-
         case MotionEvent.ACTION_MOVE: {
             if (mSwipePaused) {
             	selectedPosition = -1;
@@ -199,9 +198,8 @@ public class UISwipableList extends ListView {
             float lastY = ev.getY();
             float deltaY = lastY - mFirstY;
             boolean swipeLeft = false;
-            if (isSwipeHorizontal(deltaX, deltaY)
-                    && isSwipeDirectionLeft(deltaX) && !mHiddenView.isEnabled()) {
-                ViewParent parent = getParent();
+            if (isSwipeHorizontal(deltaX, deltaY) && isSwipeDirectionLeft(deltaX) && null != mHiddenView && !mHiddenView.isEnabled()) {
+            	ViewParent parent = getParent();
                 if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeVisible(selectedPosition, v);
                 if (parent != null) {
                     parent.requestDisallowInterceptTouchEvent(true);
@@ -210,35 +208,26 @@ public class UISwipableList extends ListView {
                     mSwiping = true;
                     swipeLeft = true;
                     requestDisallowInterceptTouchEvent(true);
-
                     MotionEvent cancelEvent = MotionEvent.obtain(ev);
-                    cancelEvent
-                            .setAction(MotionEvent.ACTION_CANCEL
-                                    | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
                     super.onTouchEvent(cancelEvent);
                 }
-            } else if (isSwipeHorizontal(deltaX, deltaY)
-                    && Math.abs(deltaX) > mSwipeMin) {
+            } else if (isSwipeHorizontal(deltaX, deltaY) && Math.abs(deltaX) > mSwipeMin) {
             	if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeGone(selectedPosition, v);
                 mSwiping = true;
                 swipeLeft = false;
                 requestDisallowInterceptTouchEvent(true);
-
                 MotionEvent cancelEvent = MotionEvent.obtain(ev);
-                cancelEvent
-                        .setAction(MotionEvent.ACTION_CANCEL
-                                | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+                cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
                 super.onTouchEvent(cancelEvent);
             } else {
                 mDownX = ev.getRawX();
                 deltaX = 0;
                 mSwiping = false;
             }
-
-            if (mSwiping) {
+            if (null != mSwipeDownView && mSwiping) {
             	try {
-                slideOutView(mSwipeDownView, (int) ViewHelper.getX(mSwipeDownView),
-                        swipeLeft);
+            		slideOutView(mSwipeDownView, (int) ViewHelper.getX(mSwipeDownView), swipeLeft);
             	} catch (Exception e){ 
             		android.util.Log.d(getClass().getName(), "exeption - " + e.getMessage());
             	}
@@ -251,19 +240,11 @@ public class UISwipableList extends ListView {
     }
 
     private boolean isSwipeHorizontal(float deltaX, float deltaY) {
-        if (Math.abs(deltaX) > 30 && Math.abs(deltaX) > 2 * Math.abs(deltaY)) {
-            return true;
-        } else {
-            return false;
-        }
+    	return (Math.abs(deltaX) > 30 && Math.abs(deltaX) > 2 * Math.abs(deltaY));
     }
 
     private boolean isSwipeDirectionLeft(float deltaX) {
-        if (deltaX < 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (deltaX < 0);
     }
 
     public void slideOutView(final View view, final int startPosition,
