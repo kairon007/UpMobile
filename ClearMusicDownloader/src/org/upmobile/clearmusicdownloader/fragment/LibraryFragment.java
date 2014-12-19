@@ -45,6 +45,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	private Animation anim;
 	private ContentObserver observer = new ContentObserver(null) {
 		
+		@Override
 		public void onChange(boolean selfChange) {
 			ArrayList<MusicData> list = querySong();
 			customList(list);
@@ -54,6 +55,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 			uiHandler.sendMessage(msg);
 		}
 
+		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)){
 				ArrayList<MusicData> list = querySong();
@@ -69,7 +71,9 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 			PlayerService service = PlayerService.get(getActivity());
 			if(service.getPlayingPosition() >= 0 && service.isPlaying()){
 				int i = service.getPlayingPosition();
-				list.get(i).turnOn(MusicData.MODE_PLAYING);
+				if (i <= list.size()) {
+					list.get(i).turnOn(MusicData.MODE_PLAYING);
+				}
 			}
 		};
 		
