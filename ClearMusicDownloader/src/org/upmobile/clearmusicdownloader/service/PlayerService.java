@@ -179,6 +179,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			} catch (IllegalArgumentException | SecurityException | IOException | IllegalStateException e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
+			android.util.Log.d("log", "msg.arg1 = " + msg.arg1 + ", playingPosition = " + playingPosition);
 			if (msg.arg1 != playingPosition) {
 				player.reset();
 				break;
@@ -335,7 +336,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private void offMode(int flag) {
 		mode &= ~flag;
 		if (flag == SMODE_PREPARED) {
-			playingPosition = -1;
 			mode &= ~SMODE_PLAYING;
 			mode &= ~SMODE_STOPPING;
 		}
