@@ -119,6 +119,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
 		playerCover.bringToFront();
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
+		int pos;
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			AbstractSong buf = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 			if (buf.getClass() == RemoteSong.class) {
@@ -126,7 +127,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			} else {
 				song = buf;
 			}
-			int pos = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
+			pos = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
 			if (song.getClass() != MusicData.class) {
 				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 					
@@ -142,22 +143,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
-			if (!player.isPrepared() || player.getPlayingSong().getClass() != song.getClass() || player.getPlayingPosition() != pos) {
-				if (player.isPrepared()) {
-					player.reset();
-				} 
-				setClickablePlayerElement(false);
-				player.play(pos);
-				setElementsView(0);
-			} else {
+			if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == pos) {
 				boolean check = player.isPlaying();
 				int current = player.getCurrentPosition();
 				setElementsView(current);
 				if (check) changePlayPauseView(false);
 				else changePlayPauseView(true);
+			} else {
+				player.reset();
+				setClickablePlayerElement(false);
+				setElementsView(0);
+				player.play(pos);
 			}
 		} else {
 			AbstractSong buf = player.getPlayingSong();
+			pos = player.getPlayingPosition();
 			if (buf.getClass() == RemoteSong.class) {
 				song = ((RemoteSong) buf).cloneSong();
 			} else {

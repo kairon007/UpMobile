@@ -229,7 +229,7 @@ public class UISwipableList extends ListView {
             	try {
             		slideOutView(mSwipeDownView, (int) ViewHelper.getX(mSwipeDownView), swipeLeft);
             	} catch (Exception e){ 
-            		android.util.Log.d(getClass().getName(), "exeption - " + e.getMessage());
+            		e.printStackTrace();
             	}
                 return true;
             } else selectedPosition = -1;

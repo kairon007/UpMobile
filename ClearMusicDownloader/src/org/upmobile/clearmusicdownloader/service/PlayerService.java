@@ -195,6 +195,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			break;
 
 		case MSG_PAUSE:
+			android.util.Log.d("log", "MSG_PAUSE");
 			if (check(SMODE_PREPARED)) {
 				player.pause();
 				onMode(SMODE_STOPPING);
@@ -334,6 +335,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private void offMode(int flag) {
 		mode &= ~flag;
 		if (flag == SMODE_PREPARED) {
+			playingPosition = -1;
 			mode &= ~SMODE_PLAYING;
 			mode &= ~SMODE_STOPPING;
 		}
@@ -384,8 +386,19 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public void reset() {
+		playingPosition = -1;
 		Message msg = buildMessage(MSG_RESET, 0, 0);
 		handler.sendMessage(msg);
+	}
+	
+	public boolean hasValidSong(Class cl) {
+		boolean result = false;
+		if (null != playingSong) {
+			if (playingSong.getClass() == cl) {
+				result = true;
+			}
+		}
+		return result;
 	}
 	
 	public boolean isPrepared() {
