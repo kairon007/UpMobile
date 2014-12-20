@@ -58,7 +58,7 @@ public class YouTubeSong extends SongWithCover {
 		if (null != timer) {
 			timer.cancel();
 		}
-		downloadUrlListeners = null;
+		downloadUrlListeners.clear();
 	}
 	
 	@Override
