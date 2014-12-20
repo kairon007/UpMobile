@@ -19,6 +19,7 @@ import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
+import org.jaudiotagger.audio.AudioFileIO;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.DownloadCache;
@@ -37,6 +38,8 @@ import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,6 +55,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -279,17 +283,24 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		this.song = song;
 	}
 
-	private void notifyMediascanner(final RemoteSong song, final String pathToFile) {
-		final File file = new File(pathToFile);
-		MediaScannerConnection.scanFile(context, new String[] { file.getAbsolutePath() }, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-			public void onScanCompleted(String path, Uri uri) {
-				prepare(file, song, pathToFile);
-				if (null != listener) {
-					listener.success();
-				}
+	private void insertToMediaStore(final RemoteSong song, final String pathToFile) {
+			ContentResolver resolver = context.getContentResolver();
+			int seconds = 0;
+			long ms = 0;
+			try {
+				File musicFile = new File(pathToFile);
+				seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
+				ms = seconds * 1000;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		});
+			ContentValues songValues = new ContentValues();
+			songValues.put(MediaStore.Audio.Media.DATA, pathToFile);
+			songValues.put(MediaStore.Audio.Media.ALBUM, song.getAlbum());
+			songValues.put(MediaStore.Audio.Media.ARTIST, song.getArtist());
+			songValues.put(MediaStore.Audio.Media.TITLE, song.getTitle());
+			songValues.put(MediaStore.Audio.Media.DURATION, ms);
+			resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues);
 	}
 	
 	private boolean setMetadataToFile(String path, File src, boolean useCover) {
@@ -300,7 +311,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
 		}
 		if (null == src_set) {
-			notifyMediascanner(song, path);
+			insertToMediaStore(song, path);
 			return false;
 		}
 		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
@@ -361,6 +372,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 				switch (status) {
 				case DownloadManager.STATUS_FAILED:
+					android.util.Log.d("log", "download is failed");
 					notifyAboutFailed(currentDownloadId);
 					c.close();
 					DownloadCache.getInstanse().remove(artist, title);
@@ -382,6 +394,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					notifyDuringDownload(currentDownloadId, progress);
 					break;
 				case DownloadManager.STATUS_SUCCESSFUL:
+					android.util.Log.d("log", "download is success");
 					progress = 100;
 					notifyDuringDownload(currentDownloadId, progress);
 					int columnIndex = 0;
@@ -401,7 +414,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					}
 					src = new File(path);
 					if (setMetadataToFile(path, src, useCover)) {
-						notifyMediascanner(song, path);
+						insertToMediaStore(song, path);
 					}
 					setFileUri(currentDownloadId, src.getAbsolutePath());
 					DownloadCache.getInstanse().remove(artist, title);
@@ -575,7 +588,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			sendNotification(100, true);
 			setFileUri(idDownload, file.getAbsolutePath());
-			notifyMediascanner(song, file.getAbsolutePath());
+			insertToMediaStore(song, file.getAbsolutePath());
 			return;
 		}
 		
