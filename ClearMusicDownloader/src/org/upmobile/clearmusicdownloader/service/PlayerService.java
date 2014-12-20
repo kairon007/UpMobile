@@ -3,6 +3,7 @@ package org.upmobile.clearmusicdownloader.service;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener.State;
 
@@ -58,6 +59,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
+	private Context context;
 	private AbstractSong playingSong;
 	private int playingPosition = -1;
 	private int mode;
@@ -122,9 +124,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	 * @Context use for call
 	 */
 	public static PlayerService get(Context context) {
-		if (instance == null) {
+		if (null == instance) {
 			context.startService(new Intent(context, PlayerService.class));
 		}
+		if (null != instance) instance.context = context;
 		return instance;
 	}
 	
@@ -181,7 +184,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			} catch (IllegalArgumentException | SecurityException | IOException | IllegalStateException e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
-			android.util.Log.d("log", "msg.arg1 = " + msg.arg1 + ", playingPosition = " + playingPosition);
 			if (msg.arg1 != playingPosition) {
 				player.reset();
 				break;
@@ -239,6 +241,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			playingSong  = arrayPlayback.get(playingPosition);
 		} else if (buf >= arrayPlayback.size()) {
 			playingPosition = 0;
+			if (arrayPlayback.size() == 0) {
+				((MainActivity) context).hidePlayerElement();
+				return;
+			}
 			playingSong  = arrayPlayback.get(playingPosition);
 		} else if (buf < 0) {
 			playingPosition = arrayPlayback.size() - 1;
