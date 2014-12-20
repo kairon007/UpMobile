@@ -24,6 +24,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -144,26 +146,26 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 					@Override
 					public void run() {
-//						anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
-//						anim.setDuration(200);
-//						anim.setAnimationListener(new AnimationListener() {
-//
-//							@Override
-//							public void onAnimationStart(Animation paramAnimation) {
-//							}
-//
-//							@Override
-//							public void onAnimationRepeat(Animation paramAnimation) {
-//							}
-//
-//							@Override
-//							public void onAnimationEnd(Animation paramAnimation) {
-								
+						anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
+						anim.setDuration(200);
+						anim.setAnimationListener(new AnimationListener() {
+
+							@Override
+							public void onAnimationStart(Animation paramAnimation) {
+							}
+
+							@Override
+							public void onAnimationRepeat(Animation paramAnimation) {
+							}
+
+							@Override
+							public void onAnimationEnd(Animation paramAnimation) {
 								remove(musicData);
-								
-//							}
-//						});
-//						v.startAnimation(anim);
+							}
+						});
+						v.invalidate();
+						v.bringToFront();
+						v.startAnimation(anim);
 					}
 				});
 			}
@@ -265,13 +267,12 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
-					int[] location = new int[2];
-					v.getLocationOnScreen(location);
 					PlayerService service = PlayerService.get(getContext());
 					if (!service.isCorrectlyState(MusicData.class, getCount())) {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
 					}
+					((MainActivity) getContext()).showPlayerElement();
 					service.play(position);
 					if (item.check(MusicData.MODE_PLAYING)) {
 						item.turnOff(MusicData.MODE_PLAYING);

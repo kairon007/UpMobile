@@ -168,24 +168,26 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 					@Override
 					public void run() {
-//						anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
-//						anim.setDuration(200);
-//						anim.setAnimationListener(new AnimationListener() {
-//
-//							@Override
-//							public void onAnimationStart(Animation paramAnimation) {
-//							}
-//
-//							@Override
-//							public void onAnimationRepeat(Animation paramAnimation) {
-//							}
-//
-//							@Override
-//							public void onAnimationEnd(Animation paramAnimation) {
+						anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
+						anim.setDuration(200);
+						anim.setAnimationListener(new AnimationListener() {
+
+							@Override
+							public void onAnimationStart(Animation paramAnimation) {
+							}
+
+							@Override
+							public void onAnimationRepeat(Animation paramAnimation) {
+							}
+
+							@Override
+							public void onAnimationEnd(Animation paramAnimation) {
 								removeItem(musicData);
-//							}
-//						});
-//						v.startAnimation(anim);
+							}
+						});
+						v.invalidate();
+						v.bringToFront();
+						v.startAnimation(anim);
 					}
 				});
 			}
