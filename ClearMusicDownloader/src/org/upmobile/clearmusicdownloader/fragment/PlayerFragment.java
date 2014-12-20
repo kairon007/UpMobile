@@ -181,7 +181,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player.setStatePlayerListener(new OnStatePlayerListener() {
 			
 			@Override
-			public void start(AbstractSong song) {
+			public void start(AbstractSong song, int position) {
 				if (song.getClass() == RemoteSong.class) {
 					PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
 				} else {
@@ -252,7 +252,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 			
 			@Override
-			public void update(final AbstractSong song) {
+			public void update(final AbstractSong song, int position) {
 				if (isDestroy)
 					return;
 				getActivity().runOnUiThread(new Runnable() {

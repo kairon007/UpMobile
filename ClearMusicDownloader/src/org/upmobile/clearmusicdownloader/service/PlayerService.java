@@ -65,15 +65,15 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public interface OnStatePlayerListener {
 		
 		public enum State {
-			START, PLAY, PAUSE, RESET, COMPLETE, UPDATE
+			START, PLAY, PAUSE, RESET, COMPLETE, UPDATE, NONE
 		}
 		
-		public void start(AbstractSong song);
+		public void start(AbstractSong song, int position);
 		public void play();
 		public void	pause();
 		public void reset();
 		public void complete();
-		public void update(AbstractSong song);
+		public void update(AbstractSong song, int position);
 			
 	}
 	
@@ -181,7 +181,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			} catch (IllegalArgumentException | SecurityException | IOException | IllegalStateException e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
-			android.util.Log.d("log", "msg.arg1 = " + msg.arg1 + ", playingPosition = " + playingPosition);
 			if (msg.arg1 != playingPosition) {
 				player.reset();
 				break;
@@ -198,7 +197,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			break;
 
 		case MSG_PAUSE:
-			android.util.Log.d("log", "MSG_PAUSE");
 			if (check(SMODE_PREPARED)) {
 				player.pause();
 				onMode(SMODE_STOPPING);
@@ -234,25 +232,27 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void shift(int delta) {
 		int buf = playingPosition + delta;
-		if (0 <= buf && buf < arrayPlayback.size()) {
+		State state = null;
+		if (0 < buf && buf < arrayPlayback.size()) {
+			state = State.UPDATE;
 			playingPosition  =  buf;
 			playingSong  = arrayPlayback.get(playingPosition);
 		} else if (buf >= arrayPlayback.size()) {
+			state = State.UPDATE;
 			playingPosition = 0;
 			playingSong  = arrayPlayback.get(playingPosition);
 		} else if (buf < 0) {
+			state = State.UPDATE;
 			playingPosition = arrayPlayback.size() - 1;
 			playingSong = arrayPlayback.get(playingPosition);
-		} else {
-			Message msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
-			handler.sendMessage(msg);
-			return;
+		} else if (buf == 0) {
+			state = State.NONE;
 		}
 		handler.removeMessages(1, null);
 		Message msg = new Message();
 		msg.what = MSG_RESET;
 		handler.sendMessage(msg);
-		helper(State.UPDATE);
+		helper(state);
 		play(new Message());
 	}
 
@@ -309,12 +309,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 
 	private void helper(State state) {
-		if (stateListener == null) {
+		if (stateListener == null || state.equals(State.NONE)) {
 			return;
 		}
 		switch (state) {
 		case START:
-			stateListener.start(playingSong);
+			stateListener.start(playingSong, playingPosition);
 			break;
 		case PLAY:
 			stateListener.play();
@@ -330,7 +330,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			break;
 		case UPDATE:
 			AbstractSong buf = arrayPlayback.get(playingPosition);
-			stateListener.update(buf);
+			stateListener.update(buf, playingPosition);
 			break;
 		}
 	}
