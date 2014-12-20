@@ -98,9 +98,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			Message msg = null;
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
-				msg = buildMessage(MSG_PAUSE, 0, 0);
-				handler.sendMessage(msg);
-				flag = true;
+				if (check(SMODE_PLAYING)) {
+					msg = buildMessage(MSG_PAUSE, 0, 0);
+					handler.sendMessage(msg);
+					flag = true;
+				}
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
 				if (flag) {
