@@ -67,14 +67,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public interface OnStatePlayerListener {
 		
 		public enum State {
-			START, PLAY, PAUSE, RESET, COMPLETE, UPDATE, NONE
+			START, PLAY, PAUSE, UPDATE, NONE
 		}
 		
 		public void start(AbstractSong song, int position);
 		public void play();
 		public void	pause();
-		public void reset();
-		public void complete();
 		public void update(AbstractSong song, int position);
 			
 	}
@@ -164,6 +162,38 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		super.onDestroy();
 	}
 	
+	public void seekTo(int progress) {
+		Message msg = buildMessage(MSG_SEEK_TO, progress, 0);
+		handler.sendMessage(msg);
+	}
+	
+	public void reset() {
+		playingPosition = -1;
+		Message msg = buildMessage(MSG_RESET, 0, 0);
+		handler.sendMessage(msg);
+	}
+	
+	public void remove(AbstractSong song) {
+		synchronized (lock) {
+			if (song.getClass() != MusicData.class) {
+				return;
+			}
+			if (song.equals(playingSong)) {
+				arrayPlayback.remove(song);
+				shift(0);
+			}
+		}
+	}
+	
+	public void update(int position, String title, String artist, String path){
+		if (playingSong.getClass() == MusicData.class){
+			MusicData data = (MusicData) arrayPlayback.get(position);
+			data.setArtist(artist);
+			data.setTitle(title);
+			data.setPath(path);
+		}
+	}
+	
 	@Override
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
@@ -194,6 +224,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 		case MSG_PLAY_CURRENT:
 			if (check(SMODE_PREPARED)) {
+				helper(State.PLAY);
 				player.start();
 				onMode(SMODE_PLAYING);
 			}
@@ -201,6 +232,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 		case MSG_PAUSE:
 			if (check(SMODE_PREPARED)) {
+				helper(State.PAUSE);
 				player.pause();
 				onMode(SMODE_STOPPING);
 			}
@@ -235,13 +267,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void shift(int delta) {
 		int buf = playingPosition + delta;
-		State state = null;
-		if (0 < buf && buf < arrayPlayback.size()) {
-			state = State.UPDATE;
+		State state = State.UPDATE;
+		if (delta == 0) {
+			state = State.NONE;
+			playingSong = arrayPlayback.get(playingPosition);
+		} else if (0 < buf && buf < arrayPlayback.size()) {
 			playingPosition  =  buf;
-			playingSong  = arrayPlayback.get(playingPosition);
+			playingSong = arrayPlayback.get(playingPosition);
 		} else if (buf >= arrayPlayback.size()) {
-			state = State.UPDATE;
 			playingPosition = 0;
 			if (arrayPlayback.size() == 0) {
 				((MainActivity) context).hidePlayerElement();
@@ -249,11 +282,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			}
 			playingSong  = arrayPlayback.get(playingPosition);
 		} else if (buf < 0) {
-			state = State.UPDATE;
 			playingPosition = arrayPlayback.size() - 1;
 			playingSong = arrayPlayback.get(playingPosition);
-		} else if (buf == 0) {
-			state = State.NONE;
 		}
 		handler.removeMessages(1, null);
 		Message msg = new Message();
@@ -271,10 +301,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (check(SMODE_PLAY_PAUSE)) {
 				msg.what = MSG_PLAY_CURRENT;
 				offMode(SMODE_PLAY_PAUSE);
-				helper(State.PLAY);
 			} else {
 				msg.what = MSG_PAUSE;
-				helper(State.PAUSE);
 				onMode(SMODE_PLAY_PAUSE);
 			}
 			handler.sendMessage(msg);
@@ -315,31 +343,31 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		handler.sendMessage(msg);
 	}
 
-	private void helper(State state) {
+	private void helper(final State state) {
 		if (stateListener == null || state.equals(State.NONE)) {
 			return;
 		}
-		switch (state) {
-		case START:
-			stateListener.start(playingSong, playingPosition);
-			break;
-		case PLAY:
-			stateListener.play();
-			break;
-		case PAUSE:
-			stateListener.pause();
-			break;
-		case RESET:
-			stateListener.reset();
-			break;
-		case COMPLETE:
-			stateListener.complete();
-			break;
-		case UPDATE:
-			AbstractSong buf = arrayPlayback.get(playingPosition);
-			stateListener.update(buf, playingPosition);
-			break;
-		}
+		((MainActivity)context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				switch (state) {
+				case START:
+					stateListener.start(playingSong, playingPosition);
+					break;
+				case PLAY:
+					stateListener.play();
+					break;
+				case PAUSE:
+					stateListener.pause();
+					break;
+				case UPDATE:
+					AbstractSong buf = arrayPlayback.get(playingPosition);
+					stateListener.update(buf, playingPosition);
+					break;
+				}
+			}
+		});
 	}
 
 	private void offMode(int flag) {
@@ -384,20 +412,25 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		shift(1);
 	}
 
+	
 	public int getCurrentPosition() {
 		if (!check(SMODE_PREPARED)) return 0;
 		return player.getCurrentPosition();
 	}
-
-	public void seekTo(int progress) {
-		Message msg = buildMessage(MSG_SEEK_TO, progress, 0);
-		handler.sendMessage(msg);
+	
+	public AbstractSong getPlayingSong() {
+		playingSong = arrayPlayback.get(playingPosition);
+		return playingSong;
 	}
 	
-	public void reset() {
-		playingPosition = -1;
-		Message msg = buildMessage(MSG_RESET, 0, 0);
-		handler.sendMessage(msg);
+	public int getPlayingPosition() {
+		synchronized (lock) {
+			return playingPosition;
+		}
+	}
+	
+	public boolean showPlayPause() {
+		return check(SMODE_PLAY_PAUSE);
 	}
 	
 	public boolean hasValidSong(Class cl) {
@@ -414,44 +447,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return check(SMODE_PREPARED);
 	}
 	
-	public boolean showPlayPause() {
-		return check(SMODE_PLAY_PAUSE);
-	}
-	
-	public AbstractSong getPlayingSong() {
-		playingSong = arrayPlayback.get(playingPosition);
-		return playingSong;
-	}
-	
-	
-	public void remove(AbstractSong song) {
-		synchronized (lock) {
-			if (song.getClass() != MusicData.class) {
-				return;
-			}
-			if (song.equals(playingSong)) {
-				arrayPlayback.remove(song);
-				shift(0);
-			}
-		}
-	}
-	
-	public void update(int position, String title, String artist, String path){
-		if (playingSong.getClass() == MusicData.class){
-			MusicData data = (MusicData) arrayPlayback.get(position);
-			data.setArtist(artist);
-			data.setTitle(title);
-			data.setPath(path);
-		}
-	}
-	
-	public int getPlayingPosition() {
-		synchronized (lock) {
-			return playingPosition;
-		}
-	}
-	
-	public boolean gettingURl() {
+	public boolean isGettingURl() {
 		return check(SMODE_GET_URL);
 	}
 	

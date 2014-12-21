@@ -163,7 +163,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			} else {
 				song = buf;
 			}
-			if (player.gettingURl() || !player.isPrepared()) {
+			if (player.isGettingURl() || !player.isPrepared()) {
 				setClickablePlayerElement(false);
 				setElementsView(0);
 			} else {
@@ -188,82 +188,29 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					PlayerFragment.this.song = song;
 				}
 				if (isDestroy) return;
-				getActivity().runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						setClickablePlayerElement(true);
-						setElementsView(0);
-						playerProgress.post(progressAction);
-					}
-				});
+				setClickablePlayerElement(true);
+				setElementsView(0);
+				playerProgress.post(progressAction);
 			}
 			
 			@Override
-			public void reset() {
-				if (isDestroy) return;
-				getActivity().runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						setClickablePlayerElement(false);
-						hideOpenViews();
-					}
-				});
-			}
-
-			@Override
 			public void pause() {
 				if (isDestroy) return;
-				getActivity().runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						changePlayPauseView(true);
-					}
-				});
+				changePlayPauseView(true);
 			}
 
 			@Override
 			public void play() {
 				if (isDestroy) return;
-				getActivity().runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						changePlayPauseView(false);
-					}
-				});
+				changePlayPauseView(false);
 			}
 
-			@Override
-			public void complete() {
-				if (isDestroy) return;
-				getActivity().runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						playerProgress.removeCallbacks(progressAction);
-						playerProgress.setProgress(0);
-						playerCurrTime.setText("0:00");
-					}
-					
-				});
-			}
-			
 			@Override
 			public void update(final AbstractSong song, int position) {
-				if (isDestroy)
-					return;
-				getActivity().runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						PlayerFragment.this.song = song;
-						setElementsView(0);
-						setClickablePlayerElement(false);
-					}
-				});
+				if (isDestroy) return;
+				PlayerFragment.this.song = song;
+				setElementsView(0);
+				setClickablePlayerElement(false);
 			}
 			
 		});

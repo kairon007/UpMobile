@@ -46,39 +46,20 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		
 		@Override
 		public void update(AbstractSong song, final int position) {
-			if (song.getClass() != MusicData.class) {
-				return;
+			if (song.getClass() != MusicData.class) return;
+			if (position > 0) {
+				((MusicData) getItem(position - 1)).turnOff(MusicData.MODE_PLAYING);
+			} else if (position == 0) {
+				((MusicData) getItem(getCount() - 1)).turnOff(MusicData.MODE_PLAYING);
 			}
-			((MainActivity)getContext()).runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					if (position > 0) {
-						((MusicData) getItem(position - 1)).turnOff(MusicData.MODE_PLAYING);
-					}
-					notifyDataSetChanged();
-				}
-			});
+			notifyDataSetChanged();
 		}
 		
 		@Override
 		public void start(AbstractSong song, final int position) {
-			if (song.getClass() != MusicData.class) {
-				return;
-			}
-			((MainActivity)getContext()).runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					((MusicData)getItem(position)).turnOn(MusicData.MODE_PLAYING);
-					notifyDataSetChanged();
-				}
-			});
-		}
-		
-		@Override
-		public void reset() {
-			
+			if (song.getClass() != MusicData.class) return;
+			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
+			notifyDataSetChanged();
 		}
 		
 		@Override
@@ -90,11 +71,11 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		public void pause() {
 			
 		}
-		
-		@Override
-		public void complete() {
-			
-		}
+	};
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup p) {
+		return super.getView(position, convertView, p);
 	};
 
 	public LibraryAdapter(Context context, int resource) {
@@ -147,8 +128,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 
 		public void run() {
-			PlayerService.get(getContext()).remove(musicData);
-			musicData.reset(getContext());
 			if (musicData.check(MusicData.MODE_VISIBLITY)) {
 				((MainActivity) getContext()).runOnUiThread(new Runnable() {
 
@@ -168,6 +147,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 							@Override
 							public void onAnimationEnd(Animation paramAnimation) {
+								PlayerService.get(getContext()).remove(musicData);
+								musicData.reset(getContext());
 								remove(musicData);
 							}
 						});
