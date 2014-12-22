@@ -1,6 +1,5 @@
 package org.upmobile.clearmusicdownloader.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
@@ -175,13 +174,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void remove(AbstractSong song) {
 		synchronized (lock) {
-			if (song.getClass() != MusicData.class) {
+			if (song.getClass() != MusicData.class || null == arrayPlayback || arrayPlayback.isEmpty()) {
 				return;
 			}
 			if (song.equals(playingSong)) {
 				arrayPlayback.remove(song);
 				shift(0);
-			}
+			} else arrayPlayback.remove(song);
+			if (arrayPlayback.isEmpty()) reset();
 		}
 	}
 	
@@ -271,6 +271,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (delta == 0) {
 			state = State.NONE;
 			if(playingPosition == arrayPlayback.size()) playingPosition--;
+			else if (playingPosition > arrayPlayback.size()) playingPosition = arrayPlayback.size() - 1;
 		} else if (0 < buf && buf < arrayPlayback.size()) {
 			playingPosition  =  buf;
 		} else if (buf >= arrayPlayback.size()) {
@@ -284,7 +285,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 		if (playingPosition == -1) {
 			((MainActivity) context).hidePlayerElement();
-			reset();
 			return;
 		}
 		playingSong = arrayPlayback.get(playingPosition);
@@ -354,9 +354,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			
 			@Override
 			public void run() {
+				int position = arrayPlayback.indexOf(playingSong);
 				switch (state) {
 				case START:
-					stateListener.start(playingSong, playingPosition);
+					stateListener.start(playingSong, position);
 					break;
 				case PLAY:
 					stateListener.play();
@@ -365,8 +366,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					stateListener.pause();
 					break;
 				case UPDATE:
-					AbstractSong buf = arrayPlayback.get(playingPosition);
-					stateListener.update(buf, playingPosition);
+					AbstractSong buf = arrayPlayback.get(position);
+					stateListener.update(buf, position);
 					break;
 				}
 			}
@@ -422,13 +423,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public AbstractSong getPlayingSong() {
-		playingSong = arrayPlayback.get(playingPosition);
 		return playingSong;
 	}
 	
 	public int getPlayingPosition() {
 		synchronized (lock) {
-			return playingPosition;
+			return arrayPlayback.indexOf(playingSong);
 		}
 	}
 	
@@ -468,7 +468,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public boolean isCorrectlyState(Class calledClass, int transferSize) {
 		if (arrayPlayback == null) return false;
 		if (transferSize != arrayPlayback.size()) return false;
-		if (playingSong.getClass() != calledClass) return false;
+		if (playingSong != null) {
+			if (playingSong.getClass() != calledClass) return false;
+		};
 		return true;
 	}
 	

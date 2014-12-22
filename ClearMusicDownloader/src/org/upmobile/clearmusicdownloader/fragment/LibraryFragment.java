@@ -1,6 +1,7 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
@@ -48,9 +49,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		@Override
 		public void onChange(boolean selfChange) {
 			ArrayList<MusicData> list = querySong();
-			if (adapter.getCount() >= list.size()) {
-				return;
-			}
 			customList(list);
 			Message msg = new Message();
 			msg.what = MSG_FILL_ADAPTER;
@@ -62,9 +60,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		public void onChange(boolean selfChange, Uri uri) {
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)){
 				ArrayList<MusicData> list = querySong();
-				if (adapter.getCount() >= list.size()) {
-					return;
-				}
 				customList(list);
 				Message msg = new Message();
 				msg.what = MSG_FILL_ADAPTER;
@@ -75,6 +70,16 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		
 		private void customList(ArrayList<MusicData> list) {
 			PlayerService service = PlayerService.get(getActivity());
+			HashSet<MusicData> datas = adapter.getRemovingData();
+			if (null != datas) {
+				for (MusicData musicData : datas) {
+					if (list.contains(musicData)) {
+						list.get(list.indexOf(musicData)).turnOn(MusicData.MODE_VISIBLITY);
+					} else {
+						adapter.deleteRemovingData(musicData);
+					}
+				}
+			}
 			if(service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class){
 				int i = service.getPlayingPosition();
 				list.get(i).turnOn(MusicData.MODE_PLAYING);
