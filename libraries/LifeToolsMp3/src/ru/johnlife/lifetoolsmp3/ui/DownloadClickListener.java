@@ -301,6 +301,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			songValues.put(MediaStore.Audio.Media.TITLE, song.getTitle());
 			songValues.put(MediaStore.Audio.Media.DURATION, ms);
 			resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues);
+			resolver.notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
 	}
 	
 	private boolean setMetadataToFile(String path, File src, boolean useCover) {
