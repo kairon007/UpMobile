@@ -152,9 +152,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 								remove(musicData);
 							}
 						});
-						v.invalidate();
-						v.bringToFront();
-						v.startAnimation(anim);
+						int wantedChild = getPosition(musicData);
+						parent.getChildAt(wantedChild).startAnimation(anim);
 					}
 				});
 			}

@@ -211,7 +211,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				player.setDataSource(this, uri);
 				player.prepare();
 				onMode(SMODE_PREPARED);
-			} catch (IllegalArgumentException | SecurityException | IOException | IllegalStateException e) {
+			} catch (Exception e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
 			if (msg.arg1 != playingPosition) {
