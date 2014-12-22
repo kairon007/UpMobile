@@ -603,6 +603,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public void run() {
+				if (isDestroy) return;
 				((MainActivity) getActivity()).onBackPressed();
 				((MainActivity) getActivity()).overridePendingTransition(0, 0);
 			}
