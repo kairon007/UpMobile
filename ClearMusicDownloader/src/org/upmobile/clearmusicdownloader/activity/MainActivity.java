@@ -13,6 +13,7 @@ import org.upmobile.clearmusicdownloader.service.PlayerService;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.Window;
 
@@ -29,8 +30,11 @@ public class MainActivity extends BaseClearActivity {
 		@Override
 		public void onEvent(int event, String path) {
 			if(event == FileObserver.DELETE_SELF) {
-				File file = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
+				String folder_path = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+				File file = new File(folder_path);
 				file.mkdirs();
+				getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.MediaColumns.DATA + " LIKE '" + folder_path + "%'", null);
+				getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
 			}
 		}
 	};
