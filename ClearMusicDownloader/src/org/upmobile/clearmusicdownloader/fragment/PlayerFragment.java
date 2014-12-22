@@ -21,9 +21,7 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import android.app.Dialog;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,7 +34,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -100,7 +97,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private float scale_width;
     private float scale_height;
     private boolean isDestroy;
-	private Dialog dialog;
 	private CheckBox playerTagsCheckBox;
 	private FrameLayout playerTitleBar;
 
@@ -122,7 +118,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		int pos;
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			AbstractSong buf = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			if (buf.getClass() == RemoteSong.class) {
+			if (buf.getClass() != MusicData.class) {
 				song = ((RemoteSong) buf).cloneSong();
 			} else {
 				song = buf;
@@ -158,7 +154,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			AbstractSong buf = player.getPlayingSong();
 			pos = player.getPlayingPosition();
-			if (buf.getClass() == RemoteSong.class) {
+			if (buf.getClass() != MusicData.class) {
 				song = ((RemoteSong) buf).cloneSong();
 			} else {
 				song = buf;
@@ -182,7 +178,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public void start(AbstractSong song, int position) {
-				if (song.getClass() == RemoteSong.class) {
+				if (song.getClass() != MusicData.class) {
 					PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
 				} else {
 					PlayerFragment.this.song = song;
@@ -560,29 +556,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			});
 		}
 	}
-	
-    private void showCustomDialog() {
-		dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setCancelable(false);
-		dialog.setContentView(R.layout.layout_dialog);
-		((TextView)dialog.findViewById(R.id.dialog_title)).setText(R.string.message_please_wait);
-		((TextView)dialog.findViewById(R.id.dialog_text)).setText(R.string.message_loading);
-		Button btnCancel = (Button) dialog.findViewById(R.id.btncancel);
-		btnCancel.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View view) {
-				((RemoteSong) song).cancelTasks();
-				dialog.cancel();
-			}
-
-		});
-		final ImageView myImage = (ImageView) dialog.findViewById(R.id.loader);
-        myImage.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate) );
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x7f000000));
-		dialog.show();
-    }
 
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
