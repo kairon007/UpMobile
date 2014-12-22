@@ -134,6 +134,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						}
 					}
 				});
+			} else {
+				setCoverFromMusicData();
 			}
 			top = getArguments().getInt(PACKAGE + ".top");
 			left = getArguments().getInt(PACKAGE + ".left");
@@ -554,6 +556,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				}
 				
 			});
+		} else if (song.getClass() == MusicData.class) {
+			setCoverFromMusicData();
+		}
+	}
+
+	private void setCoverFromMusicData() {
+		Bitmap bitmap = ((MusicData)song).getCover(getActivity());
+		if (bitmap != null) {
+			playerCover.setImageBitmap(bitmap);
 		}
 	}
 

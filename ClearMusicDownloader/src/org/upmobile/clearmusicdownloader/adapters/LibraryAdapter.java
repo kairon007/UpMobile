@@ -17,6 +17,7 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -227,7 +228,12 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				setButtonBackground(BTN_PLAY);
 			}
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-			image.setImageResource(R.drawable.def_cover_circle);
+			Bitmap bitmap = item.getCover(getContext());
+			if (bitmap == null) {
+				image.setImageResource(R.drawable.def_cover_circle);
+			} else {
+				image.setImageBitmap(bitmap);
+			}
 			setListener(position);
 		}
 
