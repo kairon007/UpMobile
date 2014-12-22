@@ -47,7 +47,6 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -126,6 +125,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		setCanceledListener(id, cancelDownload);
 		if (isCached) {
+			Toast.makeText(context, context.getResources().getString(R.string.download_cached), Toast.LENGTH_SHORT).show();
 			return;
 		}
 		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(".mp3");
