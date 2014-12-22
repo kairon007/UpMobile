@@ -174,9 +174,9 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 
 					@Override
 					public void onAnimationEnd(Animation paramAnimation) {
-						PlayerService.get(getActivity()).remove(item);
 						item.reset(getActivity());
 						adapter.remove(item);
+						PlayerService.get(getActivity()).remove(item);
 					}
 				});
 				listView.getChildAt(wantedChild).startAnimation(anim);

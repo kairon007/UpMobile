@@ -45,7 +45,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
 		@Override
-		public void update(AbstractSong song, final int position) {
+		public void update(AbstractSong song, int position) {
 			if (song.getClass() != MusicData.class) return;
 			if (position > 0) {
 				((MusicData) getItem(position - 1)).turnOff(MusicData.MODE_PLAYING);
@@ -56,8 +56,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 		
 		@Override
-		public void start(AbstractSong song, final int position) {
+		public void start(AbstractSong song, int position) {
 			if (song.getClass() != MusicData.class) return;
+			if (position == getCount()) --position;
 			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();
 		}
@@ -147,9 +148,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 							@Override
 							public void onAnimationEnd(Animation paramAnimation) {
-								PlayerService.get(getContext()).remove(musicData);
 								musicData.reset(getContext());
 								remove(musicData);
+								PlayerService.get(getContext()).remove(musicData);
 							}
 						});
 						int wantedChild = getPosition(musicData);

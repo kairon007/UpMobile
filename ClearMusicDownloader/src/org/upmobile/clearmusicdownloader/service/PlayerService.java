@@ -270,21 +270,24 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		State state = State.UPDATE;
 		if (delta == 0) {
 			state = State.NONE;
-			playingSong = arrayPlayback.get(playingPosition);
+			if(playingPosition == arrayPlayback.size()) playingPosition--;
 		} else if (0 < buf && buf < arrayPlayback.size()) {
 			playingPosition  =  buf;
-			playingSong = arrayPlayback.get(playingPosition);
 		} else if (buf >= arrayPlayback.size()) {
 			playingPosition = 0;
 			if (arrayPlayback.size() == 0) {
 				((MainActivity) context).hidePlayerElement();
 				return;
 			}
-			playingSong  = arrayPlayback.get(playingPosition);
 		} else if (buf < 0) {
 			playingPosition = arrayPlayback.size() - 1;
-			playingSong = arrayPlayback.get(playingPosition);
 		}
+		if (playingPosition == -1) {
+			((MainActivity) context).hidePlayerElement();
+			reset();
+			return;
+		}
+		playingSong = arrayPlayback.get(playingPosition);
 		handler.removeMessages(1, null);
 		Message msg = new Message();
 		msg.what = MSG_RESET;
