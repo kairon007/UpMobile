@@ -60,7 +60,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		
 		@Override
 		public void start(AbstractSong song, int position) {
-			if (song.getClass() != MusicData.class) return;
+			if (song.getClass() != MusicData.class || position == -1) return;
 			if (position == getCount()) --position;
 			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();

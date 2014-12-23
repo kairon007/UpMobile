@@ -313,7 +313,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		metadata.setSongTitle(song.getTitle());
 		metadata.setArtist(song.getArtist());
 		if (null != cover && useCover) {
-			android.util.Log.d("logd", "setMetadataToFile()");
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);
 			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
