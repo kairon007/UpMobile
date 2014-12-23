@@ -23,6 +23,12 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		this.layoutId = resource;
 	}
 
+	public BaseAdapter(Context context, int resource, ArrayList<T> array) {
+		super(context, resource, array);
+		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.layoutId = resource;
+	}
+	
 	protected abstract ViewHolder<T> createViewHolder(final View v);
 	public abstract void onItemSwipeVisible(int position, View v);
 	public abstract void onItemSwipeGone(int position, View v);

@@ -99,7 +99,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		init();
 		settingListView();
 		ArrayList<MusicData> srcList = querySong();
-		if (null == srcList || !srcList.isEmpty()) {
+		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
 			PlayerService service = PlayerService.get(getActivity());
 			if (service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
@@ -122,7 +122,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	}
 
 	private void init() {
-		folderFilter = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+		folderFilter = Environment.getExternalStorageDirectory() + "/ClearMusicDownloader";
 		adapter = new LibraryAdapter(getActivity(), org.upmobile.clearmusicdownloader.R.layout.library_item);
 		listView = (UISwipableList) parentView.findViewById(R.id.listView);
 	}
@@ -151,7 +151,14 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	@Override
 	public boolean handleMessage(Message msg) {
 		if (msg.what == MSG_FILL_ADAPTER) {
-			adapter.changeArray((ArrayList<MusicData>) msg.obj);
+			ArrayList<MusicData> array = (ArrayList<MusicData>) msg.obj;
+			if (adapter.isEmpty()) {
+				adapter = new LibraryAdapter(getActivity(), org.upmobile.clearmusicdownloader.R.layout.library_item, array);
+				listView.setAdapter(adapter);
+				listView.setOnScrollListener(this);
+			} else {
+				adapter.changeArray((ArrayList<MusicData>) msg.obj);
+			}
 		}
 		return true;
 	}

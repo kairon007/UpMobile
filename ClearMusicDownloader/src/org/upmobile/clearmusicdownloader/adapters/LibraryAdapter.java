@@ -83,6 +83,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		PlayerService.get(getContext()).setStatePlayerListener(stateListener);
 	}
 	
+	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
+		super(context, resource, array);
+		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
+		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
+		PlayerService.get(getContext()).setStatePlayerListener(stateListener);
+	}
+	
 	public HashSet<MusicData> getRemovingData() {
 		return removingData;
 	}
