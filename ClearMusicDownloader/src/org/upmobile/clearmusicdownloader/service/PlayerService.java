@@ -191,7 +191,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			}
 			if (song.equals(playingSong)) {
 				arrayPlayback.remove(song);
-				shift(0);
+				if (check(SMODE_PLAYING)) {
+					shift(0);
+				}
 			} else arrayPlayback.remove(song);
 			if (arrayPlayback.isEmpty()) reset();
 		}

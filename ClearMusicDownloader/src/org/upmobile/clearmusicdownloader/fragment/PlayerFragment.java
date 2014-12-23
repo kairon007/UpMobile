@@ -150,6 +150,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void run() {
 				player = PlayerService.get(getActivity());
 				bindToPlayer();
+				final int current;
+				final int mode;
+				final boolean enabledPlayerElement;
 				if (hadInstance) {
 					AbstractSong buf = player.getPlayingSong();
 					currentPosition = player.getPlayingPosition();
@@ -159,25 +162,35 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						song = buf;
 					}
 					if (player.isGettingURl() || !player.isPrepared()) {
-						setClickablePlayerElement(false);
-						setElementsView(0);
+						enabledPlayerElement = false;
+						current = 0;
+						mode = 0;
 					} else {
 						boolean check = player.isPlaying();
-						int current = player.getCurrentPosition();
-						setElementsView(current);
+						current = player.getCurrentPosition();
+						if (check) {
+							mode = -1;
+						} else {
+							mode = 1;
+						}
+						enabledPlayerElement = true;
 						changePlayPauseView(!check);
 					}
 				} else {
 					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition) {
 						boolean check = player.isPlaying();
-						int current = player.getCurrentPosition();
-						setElementsView(current);
-						if (check) changePlayPauseView(false);
-						else changePlayPauseView(true);
+						current = player.getCurrentPosition();
+						enabledPlayerElement = true;
+						if (check) {
+							mode = -1;
+						} else {
+							mode = 1;
+						}
 					} else {
+						mode = 0;
+						current = 0;
+						enabledPlayerElement = false;
 						player.reset();
-						setClickablePlayerElement(false);
-						setElementsView(0);
 						player.play(currentPosition);
 					}
 				}
@@ -186,6 +199,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void run() {
 						startImageAnimation();
+						setElementsView(current);
+						if (!enabledPlayerElement) {
+							setClickablePlayerElement(false);
+						}
+						if (mode > 0) {
+							changePlayPauseView(true);
+						} else if (mode < 0){
+							changePlayPauseView(false);
+						}
 					}
 				});
 			}
