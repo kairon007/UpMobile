@@ -58,7 +58,7 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 	
 
 	public String getSoundcloudClientId() {
-		String defaultSoundcloudClientId = "b5990142b74d929a8e0af4ceb3ca3615";
+		String defaultSoundcloudClientId = "b28035537c669e1d5f232dcbf2b32dc4";
 		SharedPreferences prefs = MusicApp.getSharedPreferences();
 		String soundcloudClientId = prefs.getString("soundcloud_client_id", defaultSoundcloudClientId);
 		if (soundcloudClientId == null || soundcloudClientId.equals("")) soundcloudClientId = defaultSoundcloudClientId;
