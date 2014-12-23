@@ -1,5 +1,6 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,10 +16,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Animation.AnimationListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,8 +30,7 @@ import com.special.utils.UISwipableList;
 public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 	private Object lock = new Object();
-	private Timer timer;
-	private RemoveTimer task;
+	private ArrayList<Timer> timers = new ArrayList<Timer>();
 	private final static int DELAY = 2000;
 
 	private class DownloadsViewHolder extends ViewHolder<MusicData> {
@@ -62,12 +62,10 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 			this.item = item;
 			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
 				hidenView.setVisibility(View.GONE);
-				ViewGroup box = (ViewGroup) v.findViewById(R.id.front_layout);
-				box.setX(0);
+				frontView.setX(0);
 			} else if (item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.GONE) {
-				ViewGroup box = (ViewGroup) v.findViewById(R.id.front_layout);
 				int startPosition = 0 - parent.getWidth();
-				box.setX(startPosition);
+				frontView.setX(startPosition);
 				hidenView.setVisibility(View.VISIBLE);
 			}
 			title.setText(item.getTitle());
@@ -115,18 +113,18 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 	@Override
 	public void onItemSwipeVisible(Object selected, View v) {
-			if (!((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
-				timer((MusicData) selected, v);
-			}
-			((MusicData) selected).turnOn(MusicData.MODE_VISIBLITY);	
+		if (!((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
+			timer((MusicData) selected, v);
+		}
+		((MusicData) selected).turnOn(MusicData.MODE_VISIBLITY);
 	}
 	
 	@Override
 	public void onItemSwipeGone(Object selected, View v) {
-			if (((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
-				cancelTimer();
-			}
-			((MusicData) selected).turnOff(MusicData.MODE_VISIBLITY);
+		if (((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
+			cancelTimer();
+		}
+		((MusicData) selected).turnOff(MusicData.MODE_VISIBLITY);
 	}
 	
 	public void removeItem(MusicData item) {
@@ -137,25 +135,28 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	}
 	
 	public void cancelTimer() {
-		task.cancel();
-		timer.cancel();
+		for (Timer timer : timers) {
+			timer.cancel();
+		}
 	}
 
 	private void timer(MusicData musicData, View v) {
-		timer = new Timer();
-		task = new RemoveTimer(musicData, v);
-		timer.schedule(task, DELAY );
+		Timer timer = new Timer();
+		timers.add(timer);
+		int pos = timers.indexOf(timer);
+		RemoveTimer task = new RemoveTimer(musicData, pos);
+		timer.schedule(task, DELAY);
 	}
 
 	private class RemoveTimer extends TimerTask {
 
 		private MusicData musicData;
 		private Animation anim;
-		private View v;
+		private int position;
 
-		public RemoveTimer(MusicData musicData, View v) {
+		public RemoveTimer(MusicData musicData, int position) {
 			this.musicData = musicData;
-			this.v = v;
+			this.position = position;
 		}
 
 		public void run() {
@@ -181,13 +182,15 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 								removeItem(musicData);
 							}
 						});
-						v.invalidate();
-						v.bringToFront();
-						v.startAnimation(anim);
+						int wantedPosition = getPosition(musicData);
+						int firstPosition = ((UISwipableList) parent).getFirstVisiblePosition() - ((UISwipableList) parent).getHeaderViewsCount();
+						int wantedChild = wantedPosition - firstPosition;
+						if (wantedChild < 0 || wantedChild >= ((UISwipableList) parent).getChildCount()) return;
+						parent.getChildAt(wantedChild).startAnimation(anim);
 					}
 				});
 			}
-			timer.cancel();
+			timers.get(position).cancel();
 			this.cancel();
 		}
 	}
