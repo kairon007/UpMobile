@@ -40,7 +40,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	private HashSet<MusicData> removingData = new HashSet<MusicData>();
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
-	private int currentPlayPosition; 
+	private MusicData currentPlayData; 
     private String PACKAGE = "IDENTIFY";
 	private ArrayList<Timer> timers = new ArrayList<Timer>();
 	private Animation anim;
@@ -104,23 +104,21 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	}
 	
 	@Override
-	public void onItemSwipeVisible(int pos, View v) {
-		MusicData data = getItem(pos);
-		if (!data.check(MusicData.MODE_VISIBLITY)) {
-			timer(getItem(pos), v);
+	public void onItemSwipeVisible(Object selected, View v) {
+		if (!((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
+			timer((MusicData) selected, v);
 		}
-		data.turnOn(MusicData.MODE_VISIBLITY);
-		removingData.add(data);
+		((MusicData) selected).turnOn(MusicData.MODE_VISIBLITY);
+		removingData.add((MusicData) selected);
 	}
 
 	@Override
-	public void onItemSwipeGone(int pos, View v) {
-		MusicData data = getItem(pos);
-		if (data.check(MusicData.MODE_VISIBLITY)) {
+	public void onItemSwipeGone(Object selected, View v) {
+		if (((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
 			cancelTimer();
 		}
-		data.turnOff(MusicData.MODE_VISIBLITY);
-		removingData.remove(data);
+		((MusicData) selected).turnOff(MusicData.MODE_VISIBLITY);
+		removingData.remove((MusicData) selected);
 	}
 
 	public void cancelTimer() {
@@ -230,7 +228,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 			if (item.check(MusicData.MODE_PLAYING)) {
 				setButtonBackground(BTN_PAUSE);
-				currentPlayPosition = position;
+				currentPlayData = item;
 			} else {
 				setButtonBackground(BTN_PLAY);
 			}
@@ -241,7 +239,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			} else {
 				image.setImageBitmap(bitmap);
 			}
-			setListener(position);
+			setListener(item);
 		}
 
 		@SuppressLint("NewApi")
@@ -253,7 +251,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 		}
 
-		private void setListener(final int position) {
+		private void setListener(final MusicData item) {
 			frontView.setOnTouchListener(new OnTouchListener() {
 				
 				@Override
@@ -269,8 +267,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				        View view = v.findViewById(R.id.item_image);
 				        view.getLocationOnScreen(screen_location);
 				        Bundle bundle = new Bundle();
-				        bundle.putParcelable(Constants.KEY_SELECTED_SONG, getItem(position));
-				        bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
+				        bundle.putParcelable(Constants.KEY_SELECTED_SONG, item);
+				        bundle.putInt(Constants.KEY_SELECTED_POSITION, getPosition(item));
 				        bundle.putInt(PACKAGE + ".left", screen_location[0]);
 				        bundle.putInt(PACKAGE + ".top", screen_location[1]);
 				        bundle.putInt(PACKAGE + ".width", view.getWidth());
@@ -280,7 +278,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						((MainActivity) v.getContext()).changeFragment(playerFragment);
 						break;
 					case MotionEvent.ACTION_MOVE:
-						((UISwipableList)parent).setSelectedPosition(position, v);
+						((UISwipableList)parent).setSelectedPosition(item, v);
 						break;
 					}
 	  				return true;
@@ -296,14 +294,14 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						service.setArrayPlayback(list);
 					}
 					((MainActivity) getContext()).showPlayerElement();
-					service.play(position);
+					service.play(getPosition(item));
 					if (item.check(MusicData.MODE_PLAYING)) {
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
-						if (currentPlayPosition != position) {
-							getItem(currentPlayPosition).turnOff(MusicData.MODE_PLAYING);
-							currentPlayPosition = position;
+						if (!currentPlayData.equals(item)) {
+							currentPlayData.turnOff(MusicData.MODE_PLAYING);
+							currentPlayData = item;
 							notifyDataSetChanged();
 						}
 						item.turnOn(MusicData.MODE_PLAYING);
@@ -315,7 +313,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				
 				@Override
 				public void onClick(View paramView) {
-					onItemSwipeGone(position, paramView);
+					onItemSwipeGone(item, paramView);
 					hidenView.setVisibility(View.GONE);
 					frontView.setX(0);
 				}

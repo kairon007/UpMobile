@@ -76,17 +76,17 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 			progress.setIndeterminate(item.getProgress() == 0);
 			progress.setProgress(item.getProgress());
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-			setListener(position);
+			setListener(item);
 		}
 
-		private void setListener(final int position) {
+		private void setListener(final MusicData item) {
 			frontView.setOnTouchListener(new OnTouchListener() {
 
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_MOVE:
-						((UISwipableList) parent).setSelectedPosition(position, v);
+						((UISwipableList) parent).setSelectedPosition(item, v);
 						break;
 					}
 					return true;
@@ -96,7 +96,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
-					onItemSwipeGone(position, v);
+					onItemSwipeGone(item, v);
 					hidenView.setVisibility(View.GONE);
 					frontView.setX(0);
 				}
@@ -114,23 +114,19 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	}
 
 	@Override
-	public void onItemSwipeVisible(int pos, View v) {
-		if (getCount() > pos) {
-			if (!getItem(pos).check(MusicData.MODE_VISIBLITY)) {
-				timer(getItem(pos), v);
+	public void onItemSwipeVisible(Object selected, View v) {
+			if (!((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
+				timer((MusicData) selected, v);
 			}
-			getItem(pos).turnOn(MusicData.MODE_VISIBLITY);	
-		}
+			((MusicData) selected).turnOn(MusicData.MODE_VISIBLITY);	
 	}
 	
 	@Override
-	public void onItemSwipeGone(int pos, View v) {
-		if (getCount() > pos) {
-			if (getItem(pos).check(MusicData.MODE_VISIBLITY)) {
+	public void onItemSwipeGone(Object selected, View v) {
+			if (((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
 				cancelTimer();
 			}
-			getItem(pos).turnOff(MusicData.MODE_VISIBLITY);
-		}
+			((MusicData) selected).turnOff(MusicData.MODE_VISIBLITY);
 	}
 	
 	public void removeItem(MusicData item) {

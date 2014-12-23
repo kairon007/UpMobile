@@ -54,7 +54,7 @@ public class UISwipableList extends ListView {
     private boolean mSwiping = false;
     private float mFirstX;
     private float mFirstY;
-    private int selectedPosition = -1;
+    private Object selectedObject = null;
     
     
     public interface OnSwipableListener {
@@ -62,11 +62,11 @@ public class UISwipableList extends ListView {
     	/**
     	 * @param position - can be -1, in that case selected position is bad
     	 */
-    	public void onSwipeGone(int position, View v);
+    	public void onSwipeGone(Object selected, View v);
     	/**
     	 * @param position - can be -1, in that case selected position is bad
     	 */
-    	public void onSwipeVisible(int position, View v);
+    	public void onSwipeVisible(Object selected, View v);
     	
     }
 
@@ -191,7 +191,7 @@ public class UISwipableList extends ListView {
             break;
         case MotionEvent.ACTION_MOVE: {
             if (mSwipePaused) {
-            	selectedPosition = -1;
+            	selectedObject = null;
                 break;
             }
             float deltaX = ev.getRawX() - mDownX;
@@ -200,7 +200,7 @@ public class UISwipableList extends ListView {
             boolean swipeLeft = false;
             if (isSwipeHorizontal(deltaX, deltaY) && isSwipeDirectionLeft(deltaX) && null != mHiddenView && !mHiddenView.isEnabled()) {
             	ViewParent parent = getParent();
-                if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeVisible(selectedPosition, v);
+                if(null != swipableListener && selectedObject != null) swipableListener.onSwipeVisible(selectedObject, v);
                 if (parent != null) {
                     parent.requestDisallowInterceptTouchEvent(true);
                 }
@@ -213,7 +213,7 @@ public class UISwipableList extends ListView {
                     super.onTouchEvent(cancelEvent);
                 }
             } else if (isSwipeHorizontal(deltaX, deltaY) && Math.abs(deltaX) > mSwipeMin) {
-            	if(null != swipableListener && selectedPosition > -1) swipableListener.onSwipeGone(selectedPosition, v);
+            	if(null != swipableListener && selectedObject != null) swipableListener.onSwipeGone(selectedObject, v);
                 mSwiping = true;
                 swipeLeft = false;
                 requestDisallowInterceptTouchEvent(true);
@@ -232,7 +232,7 @@ public class UISwipableList extends ListView {
             		e.printStackTrace();
             	}
                 return true;
-            } else selectedPosition = -1;
+            } else selectedObject = null;
             break;
         }
         }
@@ -310,12 +310,12 @@ public class UISwipableList extends ListView {
 	}
     
 
-	public int getSelectedPosition() {
-		return selectedPosition;
+	public Object getSelectedObject() {
+		return selectedObject;
 	}
 
-	public void setSelectedPosition(int selectedPosition, View v) {
-		this.selectedPosition = selectedPosition;
+	public void setSelectedPosition(Object obj, View v) {
+		this.selectedObject = obj;
 		this.v = v;
 	}
 }
