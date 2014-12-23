@@ -41,7 +41,13 @@ public class MainActivity extends BaseClearActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		PlayerService.get(this);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				PlayerService.get(MainActivity.this);
+			}
+		}).start();
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		File file = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
 		if (!file.exists()){
@@ -50,7 +56,7 @@ public class MainActivity extends BaseClearActivity {
 		fileObserver.startWatching();
 		super.onCreate(savedInstanceState);
 	}
-
+	
 	@Override
 	protected Fragment[] getFragments() {
 		fragments = new Fragment[4];

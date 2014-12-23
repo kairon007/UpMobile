@@ -66,6 +66,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private DownloadListener downloadListener;
 	private View parentView;
 	private SeekBar playerProgress;
+	private CheckBox playerTagsCheckBox;
+	private FrameLayout playerTitleBar;
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
@@ -88,6 +90,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private EditText playerTagsAlbum;
 	private EditText playerTagsTitle;
 	private EditText playerTagsArtist;
+	private int currentPosition;
     private int delta_top;
     private int delta_left;
 	private int top;
@@ -97,14 +100,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private float scale_width;
     private float scale_height;
     private boolean isDestroy;
-	private CheckBox playerTagsCheckBox;
-	private FrameLayout playerTitleBar;
+    private boolean hadInstance;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		player = PlayerService.get(getActivity());
-		bindToPlayer();
 		parentView = inflater.inflate(R.layout.player, container, false);
 		((MainActivity) getActivity()).hideTopFrame();
 		((MainActivity) getActivity()).showPlayerElement();
@@ -115,15 +115,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
 		playerCover.bringToFront();
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
-		int pos;
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
+			hadInstance = false;
 			AbstractSong buf = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 			if (buf.getClass() != MusicData.class) {
 				song = ((RemoteSong) buf).cloneSong();
 			} else {
 				song = buf;
 			}
-			pos = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
+			currentPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
 			if (song.getClass() != MusicData.class) {
 				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 					
@@ -141,37 +141,55 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
-			if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == pos) {
-				boolean check = player.isPlaying();
-				int current = player.getCurrentPosition();
-				setElementsView(current);
-				if (check) changePlayPauseView(false);
-				else changePlayPauseView(true);
-			} else {
-				player.reset();
-				setClickablePlayerElement(false);
-				setElementsView(0);
-				player.play(pos);
-			}
 		} else {
-			AbstractSong buf = player.getPlayingSong();
-			pos = player.getPlayingPosition();
-			if (buf.getClass() != MusicData.class) {
-				song = ((RemoteSong) buf).cloneSong();
-			} else {
-				song = buf;
-			}
-			if (player.isGettingURl() || !player.isPrepared()) {
-				setClickablePlayerElement(false);
-				setElementsView(0);
-			} else {
-				boolean check = player.isPlaying();
-				int current = player.getCurrentPosition();
-				setElementsView(current);
-				changePlayPauseView(!check);
-			}
+			hadInstance = true;
 		}
-		startImageAnimation();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				player = PlayerService.get(getActivity());
+				bindToPlayer();
+				if (hadInstance) {
+					AbstractSong buf = player.getPlayingSong();
+					currentPosition = player.getPlayingPosition();
+					if (buf.getClass() != MusicData.class) {
+						song = ((RemoteSong) buf).cloneSong();
+					} else {
+						song = buf;
+					}
+					if (player.isGettingURl() || !player.isPrepared()) {
+						setClickablePlayerElement(false);
+						setElementsView(0);
+					} else {
+						boolean check = player.isPlaying();
+						int current = player.getCurrentPosition();
+						setElementsView(current);
+						changePlayPauseView(!check);
+					}
+				} else {
+					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition) {
+						boolean check = player.isPlaying();
+						int current = player.getCurrentPosition();
+						setElementsView(current);
+						if (check) changePlayPauseView(false);
+						else changePlayPauseView(true);
+					} else {
+						player.reset();
+						setClickablePlayerElement(false);
+						setElementsView(0);
+						player.play(currentPosition);
+					}
+				}
+				getActivity().runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						startImageAnimation();
+					}
+				});
+			}
+		}).start();
 		return parentView;
 	}
 

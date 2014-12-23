@@ -3,7 +3,6 @@ package org.upmobile.clearmusicdownloader.fragment;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 import org.upmobile.clearmusicdownloader.data.MusicData;
@@ -39,6 +38,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	private static final int MSG_FILL_ADAPTER = 1;
 	private View parentView;
 	private UISwipableList listView;
+	private PlayerService service;
 	private LibraryAdapter adapter;
 	private ResideMenu resideMenu;
 	private Handler uiHandler;
@@ -69,7 +69,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		};
 		
 		private void customList(ArrayList<MusicData> list) {
-			PlayerService service = PlayerService.get(getActivity());
 			HashSet<MusicData> datas = adapter.getRemovingData();
 			if (null != datas) {
 				for (MusicData musicData : datas) {
@@ -90,6 +89,14 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle state) {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				service = PlayerService.get(getActivity());
+			}
+			
+		}).start();
 		uiHandler = new Handler(this);
 		getActivity().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false, observer);
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
@@ -101,8 +108,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		ArrayList<MusicData> srcList = querySong();
 		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
-			PlayerService service = PlayerService.get(getActivity());
-			if (service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
+			if (null != service && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
 				int pos = service.getPlayingPosition();
 				if (pos >= 0 && pos < list.size()) {
 					((MusicData) list.get(pos)).turnOn(MusicData.MODE_PLAYING);
@@ -188,7 +194,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 					public void onAnimationEnd(Animation paramAnimation) {
 						item.reset(getActivity());
 						adapter.remove(item);
-						PlayerService.get(getActivity()).remove(item);
+						service.remove(item);
 					}
 				});
 				listView.getChildAt(wantedChild).startAnimation(anim);

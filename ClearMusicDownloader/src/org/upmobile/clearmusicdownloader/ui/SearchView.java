@@ -26,12 +26,20 @@ import android.widget.ListView;
 
 public class SearchView extends OnlineSearchView {
 
+	private PlayerService service;
 	private ImageView baseProgress;
 	private ImageView refreshProgress;
     private String PACKAGE = "IDENTIFY";
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				service = PlayerService.get(getContext());
+			}
+		}).start();
 	}
 
 	@Override
@@ -43,7 +51,6 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	protected void click(final View view, int position) {
-		PlayerService service = PlayerService.get(getContext());
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
 			service.setArrayPlayback(list);

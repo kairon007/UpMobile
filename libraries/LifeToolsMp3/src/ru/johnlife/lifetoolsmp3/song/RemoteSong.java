@@ -11,6 +11,8 @@ import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.CoverReadyListener;
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 public class RemoteSong extends Song implements Cloneable {
@@ -207,4 +209,32 @@ public class RemoteSong extends Song implements Cloneable {
 	public int describeContents() {
 		return 1;
 	}
+	
+	@Override
+	public void writeToParcel(Parcel parcel, int arg1) {
+		parcel.writeLong(id);
+		parcel.writeString(path);
+		parcel.writeString(title);
+		parcel.writeString(album);
+		parcel.writeLong(albumId);
+		parcel.writeString(artist);
+		parcel.writeLong(artistId);
+		parcel.writeLong(duration);
+		parcel.writeInt(trackNumber);
+	
+	}
+
+	public RemoteSong (Parcel parcel) {
+		super(parcel);
+	}
+	
+	public static final Parcelable.Creator<RemoteSong> CREATOR = new Parcelable.Creator<RemoteSong>() {
+		public RemoteSong createFromParcel(Parcel in) {
+			return new RemoteSong(in);
+		}
+
+		public RemoteSong[] newArray(int size) {
+			return new RemoteSong[size];
+		}
+	};
 }

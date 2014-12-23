@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import android.os.AsyncTask;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 public class YouTubeSong extends SongWithCover {
@@ -287,4 +289,37 @@ public class YouTubeSong extends SongWithCover {
 		String b = sig(a);
 		return a + "&s=" + (b.contains(".0") ? b.replace(".0", "") : b);
 	}
+
+	@Override
+	public int describeContents() {
+		return 2;
+	}
+
+	@Override
+	public void writeToParcel(Parcel parcel, int arg1) {
+		parcel.writeLong(id);
+		parcel.writeString(path);
+		parcel.writeString(title);
+		parcel.writeString(album);
+		parcel.writeLong(albumId);
+		parcel.writeString(artist);
+		parcel.writeLong(artistId);
+		parcel.writeLong(duration);
+		parcel.writeInt(trackNumber);
+	
+	}
+
+	public YouTubeSong (Parcel parcel) {
+		super(parcel);
+	}	
+	
+	public static final Parcelable.Creator<YouTubeSong> CREATOR = new Parcelable.Creator<YouTubeSong>() {
+		public YouTubeSong createFromParcel(Parcel in) {
+			return new YouTubeSong(in);
+		}
+
+		public YouTubeSong[] newArray(int size) {
+			return new YouTubeSong[size];
+		}
+	};
 }

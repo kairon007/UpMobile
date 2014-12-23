@@ -37,6 +37,7 @@ import com.special.utils.UISwipableList;
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	private static final int DELAY = 5000;
+	private PlayerService service;
 	private HashSet<MusicData> removingData = new HashSet<MusicData>();
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
@@ -80,14 +81,29 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		super(context, resource);
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
 		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
-		PlayerService.get(getContext()).setStatePlayerListener(stateListener);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				service = PlayerService.get(getContext());
+				service.setStatePlayerListener(stateListener);
+			}
+		}).start();
+		
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
 		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
-		PlayerService.get(getContext()).setStatePlayerListener(stateListener);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				service = PlayerService.get(getContext());
+				service.setStatePlayerListener(stateListener);
+			}
+		}).start();
 	}
 	
 	public HashSet<MusicData> getRemovingData() {
@@ -168,20 +184,14 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 							public void onAnimationEnd(Animation paramAnimation) {
 								musicData.reset(getContext());
 								remove(musicData);
-								PlayerService.get(getContext()).remove(musicData);
+								service.remove(musicData);
 							}
 						});
-						int wantedChild = getPosition(musicData);
-						View view = parent.getChildAt(wantedChild);
-						if (view != null) {
-							view.startAnimation(anim);
-						} else {
-							musicData.reset(getContext());
-							setNotifyOnChange(false);
-							remove(musicData);
-							setNotifyOnChange(true);
-							PlayerService.get(getContext()).remove(musicData);
-						}
+						int wantedPosition = getPosition(musicData);
+						int firstPosition  = ((UISwipableList)parent).getFirstVisiblePosition() - ((UISwipableList)parent).getHeaderViewsCount();
+						int wantedChild = wantedPosition - firstPosition;
+						if (wantedChild < 0 || wantedChild >= ((UISwipableList)parent).getChildCount()) return;
+						parent.getChildAt(wantedChild).startAnimation(anim);
 					}
 				});
 			}
@@ -192,7 +202,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 	private class LibraryViewHolder extends ViewHolder<MusicData> {
 		
-		private MusicData item;
 		private ViewGroup frontView;
 		private View button;
 		private TextView title;
@@ -215,7 +224,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		protected void hold(MusicData item, int position) {
-			this.item = item;
+			currentPlayData = item;
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
@@ -228,7 +237,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 			if (item.check(MusicData.MODE_PLAYING)) {
 				setButtonBackground(BTN_PAUSE);
-				currentPlayData = item;
 			} else {
 				setButtonBackground(BTN_PLAY);
 			}
@@ -258,7 +266,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_UP:
-						PlayerService service = PlayerService.get(getContext());
 						if (!service.isCorrectlyState(MusicData.class, getCount())) {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 							service.setArrayPlayback(list);
@@ -288,7 +295,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 				@Override
 				public void onClick(View v) {
-					PlayerService service = PlayerService.get(getContext());
 					if (!service.isCorrectlyState(MusicData.class, getCount())) {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
@@ -299,7 +305,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);
 					} else {
-						if (!currentPlayData.equals(item)) {
+						if (!item.equals(currentPlayData)) {
 							currentPlayData.turnOff(MusicData.MODE_PLAYING);
 							currentPlayData = item;
 							notifyDataSetChanged();

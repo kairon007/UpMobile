@@ -47,7 +47,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private static final int MSG_RESET = 6;
 	
 	//multy-threading section
-	private final Object lock = new Object();
+	private static final Object LOCK = new Object();
+	private static final Object WAIT = new Object();
 	private Looper looper;
 	private Handler handler;
 	
@@ -117,14 +118,22 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	/**
 	 * 
-	 * Return the Player sevice instance, creating one if needed.
+	 * Return the Player service instance, creating one if needed. It can't call in ui
 	 * @Context use for call
 	 */
 	public static PlayerService get(Context context) {
-		if (null == instance) {
+
+		if (instance == null) {
 			context.startService(new Intent(context, PlayerService.class));
+			try {
+				synchronized (WAIT) {
+					WAIT.wait();
+				}
+			} catch (InterruptedException ignored) {
+			}
+
 		}
-		if (null != instance) instance.context = context;
+		instance.context = context;
 		return instance;
 	}
 	
@@ -152,6 +161,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		looper = thread.getLooper();
 		handler = new Handler(looper, this);
 		instance = this;
+		synchronized (WAIT) {
+			WAIT.notifyAll();
+		}
 	}
 	
 	@Override
@@ -173,7 +185,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public void remove(AbstractSong song) {
-		synchronized (lock) {
+		synchronized (LOCK) {
 			if (song.getClass() != MusicData.class || null == arrayPlayback || arrayPlayback.isEmpty()) {
 				return;
 			}
@@ -297,6 +309,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 
 	public void play(int position) {
+		if (arrayPlayback == null) return;
 		playingSong = arrayPlayback.get(position);
 		Message msg = new Message();
 		if (playingPosition == position) {
@@ -427,7 +440,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public int getPlayingPosition() {
-		synchronized (lock) {
+		synchronized (LOCK) {
 			return arrayPlayback.indexOf(playingSong);
 		}
 	}

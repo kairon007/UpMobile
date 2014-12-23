@@ -307,7 +307,7 @@ public class Song implements Comparable<Song>, Parcelable, AbstractSong {
 		return super.hashCode();
 	}
 
-	private Song (Parcel parcel) {
+	public Song (Parcel parcel) {
 		id = parcel.readLong();
 		path = parcel.readString();
 		title = parcel.readString();

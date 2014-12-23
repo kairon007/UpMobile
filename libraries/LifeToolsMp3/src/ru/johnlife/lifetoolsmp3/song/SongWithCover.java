@@ -1,5 +1,6 @@
 package ru.johnlife.lifetoolsmp3.song;
 
+import android.os.Parcel;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 
 public abstract class SongWithCover extends RemoteSong {
@@ -8,6 +9,10 @@ public abstract class SongWithCover extends RemoteSong {
 	
 	public SongWithCover(long id) {
 		super(id);
+	}
+
+	public SongWithCover (Parcel parcel) {
+		super(parcel);
 	}
 	
 	public SongWithCover(String downloadUrl) {
