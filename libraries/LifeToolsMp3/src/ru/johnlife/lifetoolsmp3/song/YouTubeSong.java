@@ -114,7 +114,10 @@ public class YouTubeSong extends SongWithCover {
 		String status = null;
 		try {
 			Document doc = Jsoup.connect(YOUTUBE_MP3_URL + sig_url("/a/itemInfo/?video_id=" + watchId + "&ac=www&t=grp&r=" + System.currentTimeMillis())).ignoreContentType(true).get();
-			h = new JSONObject(doc.body().text().replace("info = ", "").replace(";", ""));
+			String body = doc.body().text().toString();
+			body = body.replace("info = ", "").replace(";", "");
+			body = body.substring(0, (body.indexOf("\"title\": \"")) + 10) + body.substring((body.indexOf("\"title\": \"") + 10), body.indexOf("\", \"progress\"")).replace("\"", "") + body.substring(body.indexOf("\", \"progress\""), body.indexOf("}")) + "}";
+			h = new JSONObject(body);
 			hHash = h.getString("h");
 			status = h.getString("status");
 			if (PENDING.equals(status) || "loading".equals(status) || "converting".equals(status)) {
