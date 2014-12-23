@@ -143,10 +143,10 @@ public class UISwipableList extends ListView {
                             if (swipingView != null) {
                                 mSwipeDownView = swipingView;
                                 if (mHiddenLayout > 0) {
-                                    View hiddenView = child
-                                            .findViewById(mHiddenLayout);
+                                    View hiddenView = child.findViewById(mHiddenLayout);
                                     if (hiddenView != null) {
                                         mHiddenView = hiddenView;
+                                        mHiddenView.setEnabled(false);
                                     }
                                 }
                                 break;
@@ -200,9 +200,11 @@ public class UISwipableList extends ListView {
             boolean swipeLeft = false;
             if (isSwipeHorizontal(deltaX, deltaY) && isSwipeDirectionLeft(deltaX) && null != mHiddenView && !mHiddenView.isEnabled()) {
             	ViewParent parent = getParent();
-                if(null != swipableListener && selectedObject != null) swipableListener.onSwipeVisible(selectedObject, v);
+            	if (null != swipableListener && null != selectedObject) {
+                	swipableListener.onSwipeVisible(selectedObject, v);
+                }
                 if (parent != null) {
-                    parent.requestDisallowInterceptTouchEvent(true);
+                	parent.requestDisallowInterceptTouchEvent(true);
                 }
                 if (Math.abs(deltaX) > mSwipeMin) {
                     mSwiping = true;
@@ -212,8 +214,10 @@ public class UISwipableList extends ListView {
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
                     super.onTouchEvent(cancelEvent);
                 }
-            } else if (isSwipeHorizontal(deltaX, deltaY) && Math.abs(deltaX) > mSwipeMin) {
-            	if(null != swipableListener && selectedObject != null) swipableListener.onSwipeGone(selectedObject, v);
+            } else if (isSwipeHorizontal(deltaX, deltaY) && Math.abs(deltaX) > mSwipeMin) {   	
+            	if(null != swipableListener && selectedObject != null){
+            		swipableListener.onSwipeGone(selectedObject, v);
+            	}
                 mSwiping = true;
                 swipeLeft = false;
                 requestDisallowInterceptTouchEvent(true);
@@ -247,9 +251,8 @@ public class UISwipableList extends ListView {
         return (deltaX < 0);
     }
 
-    public void slideOutView(final View view, final int startPosition,
-            final boolean slideLeft) {
-        int toPosition = 0;
+    public void slideOutView(final View view, final int startPosition,final boolean slideLeft) {
+    	int toPosition = 0;
         if (slideLeft) {
             if (mHiddenView != null) {
                 toPosition = -1 * mHiddenView.getMeasuredWidth();
@@ -260,8 +263,7 @@ public class UISwipableList extends ListView {
         } else {
             toPosition = 0;
         }
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "translationX",
-                startPosition, toPosition);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "translationX", startPosition, toPosition);
         anim.addListener(new AnimatorListenerAdapter(){
 
             @Override
@@ -280,14 +282,14 @@ public class UISwipableList extends ListView {
                 if (mHiddenView != null) {
                     if (slideLeft) {
                         mHiddenView.setEnabled(true);
-                        if (null != mResideMenu){
-                        	mResideMenu.addIgnoredView(mHiddenView);
+                    	if (null != mResideMenu){
+                    		mResideMenu.addIgnoredView(mHiddenView);
                         	mResideMenu.addIgnoredView(mSwipeDownView);
                         }
                     } else {
-                        mHiddenView.setEnabled(false);
-                        if (null != mResideMenu){
-                        	mResideMenu.removeIgnoredView(mHiddenView);
+                    	mHiddenView.setEnabled(false);
+                    	if (null != mResideMenu){
+                    		mResideMenu.removeIgnoredView(mHiddenView);
                         	mResideMenu.removeIgnoredView(mSwipeDownView);
                         }
                     }
