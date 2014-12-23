@@ -590,22 +590,29 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
 		if (downloadListener.isBadInet()) return;
-		((RemoteSong)song).getDownloadUrl(new DownloadUrlListener() {
-			
+		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+
 			@Override
 			public void success(String url) {
+				if (!url.startsWith("http")) {
+					Toast toast = Toast.makeText(player, R.string.error_retrieving_the_url, Toast.LENGTH_SHORT);
+					toast.show();
+					return;
+				}
+				((RemoteSong) song).setDownloadUrl(url);
 				Runnable callbackRun = new Runnable() {
-					
+
 					@Override
 					public void run() {
-						downloadListener.onClick(parentView);						
+						downloadListener.onClick(parentView);
 					}
 				};
 				new Handler(Looper.getMainLooper()).post(callbackRun);
 			}
-			
+
 			@Override
-			public void error(String error) {}
+			public void error(String error) {
+			}
 		});
 	}
 	
