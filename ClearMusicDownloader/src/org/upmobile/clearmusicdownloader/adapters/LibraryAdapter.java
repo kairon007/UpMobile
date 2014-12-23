@@ -224,7 +224,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		protected void hold(MusicData item, int position) {
-			currentPlayData = item;
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
@@ -237,6 +236,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 			if (item.check(MusicData.MODE_PLAYING)) {
 				setButtonBackground(BTN_PAUSE);
+				currentPlayData = item;
 			} else {
 				setButtonBackground(BTN_PLAY);
 			}
@@ -306,11 +306,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						setButtonBackground(BTN_PLAY);
 					} else {
 						if (!item.equals(currentPlayData)) {
-							currentPlayData.turnOff(MusicData.MODE_PLAYING);
-							currentPlayData = item;
+							if (null != currentPlayData) {
+								currentPlayData.turnOff(MusicData.MODE_PLAYING);
+							}
 							notifyDataSetChanged();
 						}
 						item.turnOn(MusicData.MODE_PLAYING);
+						currentPlayData = item;
 						setButtonBackground(BTN_PAUSE);
 					}
 				}
