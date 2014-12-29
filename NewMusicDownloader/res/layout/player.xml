@@ -168,13 +168,6 @@
             android:fitsSystemWindows="true"
             android:visibility="visible" >
 
-            <Button
-                android:id="@+id/title_bar_left_menu"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="left|center_vertical"
-                android:layout_marginLeft="10dp"/>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

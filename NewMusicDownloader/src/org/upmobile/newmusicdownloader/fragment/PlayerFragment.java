@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DownloadListener;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
@@ -87,7 +88,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		parentView = inflater.inflate(org.upmobile.sevenplayer.R.layout.player, container, false);
+		parentView = inflater.inflate(R.layout.player, container, false);
 		init();
 		playerTitleBar.getBackground().setAlpha(0);
 		playerTitleBarArtis.setVisibility(View.INVISIBLE);
@@ -258,15 +259,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		play.setClickable(isClickable);
 		playerProgress.setEnabled(isClickable);
 		if (isClickable) {
-			play.setImageResource(org.upmobile.sevenplayer.R.drawable.pause);
+			play.setImageResource(R.drawable.pause);
 			play.setVisibility(View.VISIBLE);
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_play_progress).setVisibility(View.GONE);
+			parentView.findViewById(R.id.player_play_progress).setVisibility(View.GONE);
 			
 		} else {
 			playerCurrTime.setText("0:00");
 			playerProgress.setProgress(0);
 			play.setVisibility(View.GONE);
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_play_progress).setVisibility(View.VISIBLE);
+			parentView.findViewById(R.id.player_play_progress).setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -275,36 +276,36 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
 		if (isPlaying) {
-			play.setImageResource(org.upmobile.sevenplayer.R.drawable.play);
+			play.setImageResource(R.drawable.play);
 		} else {
-			play.setImageResource(org.upmobile.sevenplayer.R.drawable.pause);
+			play.setImageResource(R.drawable.pause);
 		}
 	}
 	
 	private void init() {
-		play = (ImageButton) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_play);
-		previous = (ImageButton) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_previous);
-		forward = (ImageButton) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_forward);
-		download = (Button) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_download);
-		lyricsLoader= (ImageView) parentView.findViewById(org.upmobile.sevenplayer.R.id.lyrics_load_image);
-		playerTitleBarBack = (Button) parentView.findViewById(org.upmobile.sevenplayer.R.id.title_bar_left_menu);
-		playerProgress = (SeekBar) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_progress);
-		playerTitle = (TextView) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_title);
-		playerArtist = (TextView) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_artist);
-		playerCurrTime = (TextView) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_current_time);
-		playerTotalTime = (TextView) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_total_time);
-	    playerTitleBar = (FrameLayout) parentView.findViewById(org.upmobile.sevenplayer.R.id.layout_top);   
-	    playerTitleBarArtis = (TextView) parentView.findViewById(org.upmobile.sevenplayer.R.id.titleBarArtist);
-	    playerTitleBarTitle = (TextView) parentView.findViewById(org.upmobile.sevenplayer.R.id.titleBarTitle);
-		playerLyricsView = (TextView) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_lyrics_view);
-		playerSaveTags = (Button) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_save_tags);
-		playerCancelTags = (Button) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_cancel_tags);
-		playerCover = (ImageView) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_cover);
-		playerCancelLyrics = (Button) parentView.findViewById(org.upmobile.sevenplayer.R.id.player_cancel_lyrics);
-		playerTagsArtist = (EditText) parentView.findViewById(org.upmobile.sevenplayer.R.id.editTextArtist);
-		playerTagsTitle = (EditText) parentView.findViewById(org.upmobile.sevenplayer.R.id.editTextTitle);
-		playerTagsAlbum = (EditText) parentView.findViewById(org.upmobile.sevenplayer.R.id.editTextAlbum);
-		playerTagsCheckBox = (CheckBox) parentView.findViewById(org.upmobile.sevenplayer.R.id.isUseCover);
+		play = (ImageButton) parentView.findViewById(R.id.player_play);
+		previous = (ImageButton) parentView.findViewById(R.id.player_previous);
+		forward = (ImageButton) parentView.findViewById(R.id.player_forward);
+		download = (Button) parentView.findViewById(R.id.player_download);
+		lyricsLoader= (ImageView) parentView.findViewById(R.id.lyrics_load_image);
+		playerTitleBarBack = (Button) parentView.findViewById(R.id.title_bar_left_menu);
+		playerProgress = (SeekBar) parentView.findViewById(R.id.player_progress);
+		playerTitle = (TextView) parentView.findViewById(R.id.player_title);
+		playerArtist = (TextView) parentView.findViewById(R.id.player_artist);
+		playerCurrTime = (TextView) parentView.findViewById(R.id.player_current_time);
+		playerTotalTime = (TextView) parentView.findViewById(R.id.player_total_time);
+	    playerTitleBar = (FrameLayout) parentView.findViewById(R.id.layout_top);   
+	    playerTitleBarArtis = (TextView) parentView.findViewById(R.id.titleBarArtist);
+	    playerTitleBarTitle = (TextView) parentView.findViewById(R.id.titleBarTitle);
+		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
+		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
+		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
+		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
+		playerCancelLyrics = (Button) parentView.findViewById(R.id.player_cancel_lyrics);
+		playerTagsArtist = (EditText) parentView.findViewById(R.id.editTextArtist);
+		playerTagsTitle = (EditText) parentView.findViewById(R.id.editTextTitle);
+		playerTagsAlbum = (EditText) parentView.findViewById(R.id.editTextAlbum);
+		playerTagsCheckBox = (CheckBox) parentView.findViewById(R.id.isUseCover);
 		playerProgress.setOnSeekBarChangeListener(this);
 		playerCancelLyrics.setOnClickListener(this);
 		play.setOnClickListener(this);
@@ -347,35 +348,35 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case org.upmobile.sevenplayer.R.id.player_play:
+		case R.id.player_play:
 			play(0);
 			break;
-		case org.upmobile.sevenplayer.R.id.player_previous:
+		case R.id.player_previous:
 			play(-1);
 			hideOpenViews();
 			break;
-		case org.upmobile.sevenplayer.R.id.player_forward:
+		case R.id.player_forward:
 			play(1);
 			hideOpenViews();
 			break;
-		case org.upmobile.sevenplayer.R.id.player_download:
+		case R.id.player_download:
 			download();
 			break;
-//		case org.upmobile.sevenplayer.R.id.player_lyrics:
+//		case R.id.player_lyrics:
 //			showLyrics();
 //			break;
-//		case org.upmobile.sevenplayer.R.id.player_edit_tags:
+//		case R.id.player_edit_tags:
 //			showEditTagDialog();
 //			break;
-		case org.upmobile.sevenplayer.R.id.player_save_tags:
+		case R.id.player_save_tags:
 			saveTags();
-		case org.upmobile.sevenplayer.R.id.player_cancel_tags:
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+		case R.id.player_cancel_tags:
+			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 			break;
-		case org.upmobile.sevenplayer.R.id.player_cancel_lyrics:
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_lyrics_frame).setVisibility(View.GONE);
+		case R.id.player_cancel_lyrics:
+			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 			break;
-		case org.upmobile.sevenplayer.R.id.title_bar_left_menu: 
+		case R.id.title_bar_left_menu: 
 			break;
 		default:
 			break;
@@ -383,11 +384,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void hideOpenViews() {
-		if (parentView.findViewById(org.upmobile.sevenplayer.R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
+			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 		}
-		if (parentView.findViewById(org.upmobile.sevenplayer.R.id.player_lyrics_frame).getVisibility() == View.VISIBLE) {
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_lyrics_frame).setVisibility(View.GONE);
+		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.VISIBLE) {
+			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 		}
 	}
 
@@ -430,8 +431,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void showLyrics() {
-		if (parentView.findViewById(org.upmobile.sevenplayer.R.id.player_lyrics_frame).getVisibility() == View.GONE) {
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
+		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
+			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
 			lyricsLoader.setVisibility(View.VISIBLE);
 			final int [] location = new int[2];
 			playerLyricsView.getLocationOnScreen(location);
@@ -447,20 +448,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						playerLyricsView.setText(Html.fromHtml(lyrics));
 					} else {
 						String songName = song.getArtist() + " - " + song.getTitle();
-						playerLyricsView.setText(getResources().getString(org.upmobile.sevenplayer.R.string.download_dialog_no_lyrics, songName));
+						playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
 					}
 				}
 			});
 		} else {
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_lyrics_frame).setVisibility(View.GONE);
+			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 		}
 	}
 
 	private void showEditTagDialog() {
-		if (parentView.findViewById(org.upmobile.sevenplayer.R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
+			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 		} else {
-			parentView.findViewById(org.upmobile.sevenplayer.R.id.player_edit_tag_dialog).setVisibility(View.VISIBLE);
+			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.VISIBLE);
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
@@ -481,7 +482,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			return;
 		File f = new File(song.getPath());
 		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
-			Toast toast = Toast.makeText(getActivity(), org.upmobile.sevenplayer.R.string.file_already_exists, Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
 			toast.show();
 			return;
 		}
@@ -491,7 +492,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void success(String path) {
 				song.setPath(path);
 				renameTask.cancelProgress();
-				parentView.findViewById(org.upmobile.sevenplayer.R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+				parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 			}
 
 			@Override
@@ -575,7 +576,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			@Override
 			public void success(String url) {
 				if (!url.startsWith("http")) {
-					Toast toast = Toast.makeText(player, org.upmobile.sevenplayer.R.string.error_retrieving_the_url, Toast.LENGTH_SHORT);
+					Toast toast = Toast.makeText(player, R.string.error_retrieving_the_url, Toast.LENGTH_SHORT);
 					toast.show();
 					return;
 				}
