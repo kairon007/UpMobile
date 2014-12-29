@@ -49,8 +49,8 @@ public final class R {
         public static final int size_big=0x7f060014;
         /**  default dimen  
  dimen resources for editor dialog 
- mdpi 
  hdpi 
+ mdpi 
  xdpi 
  xxdpi 
 
@@ -66,9 +66,9 @@ public final class R {
         public static final int size_progress=0x7f060015;
         public static final int size_spinner=0x7f060002;
         public static final int size_very_small=0x7f060019;
-        /**  ldpi 
+        /**  hdpi 
+ ldpi 
  mdpi 
- hdpi 
  xhdpi 
  xxhdpi 
          */
