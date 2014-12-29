@@ -1,10 +1,6 @@
 package org.upmobile.newmusicdownloader.adapter;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.upmobile.newmusicdownloader.activity.MainActivity;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
@@ -16,18 +12,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class DownloadsAdapter extends BaseAdapter<MusicData> {
-
-	private Object lock = new Object();
-	private ArrayList<Timer> timers = new ArrayList<Timer>();
-	private final static int DELAY = 2000;
 
 	private class DownloadsViewHolder extends ViewHolder<MusicData> {
 		private TextView title;
@@ -42,13 +31,13 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 		public DownloadsViewHolder(View v) {
 			this.v = v;
-			frontView = (ViewGroup) v.findViewById(org.upmobile.sevenplayer.R.id.front_layout);
-			title = (TextView) v.findViewById(org.upmobile.sevenplayer.R.id.item_title);
-			artist = (TextView) v.findViewById(org.upmobile.sevenplayer.R.id.item_description);
-			duration = (TextView) v.findViewById(org.upmobile.sevenplayer.R.id.item_duration);
-			progress = (ProgressBar) v.findViewById(org.upmobile.sevenplayer.R.id.item_progress);
-			cancel = (TextView) v.findViewById(org.upmobile.sevenplayer.R.id.cancel);
-			hidenView = (LinearLayout) v.findViewById(org.upmobile.sevenplayer.R.id.hidden_view);
+			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
+			title = (TextView) v.findViewById(R.id.item_title);
+			artist = (TextView) v.findViewById(R.id.item_description);
+			duration = (TextView) v.findViewById(R.id.item_duration);
+			progress = (ProgressBar) v.findViewById(R.id.item_progress);
+			cancel = (TextView) v.findViewById(R.id.cancel);
+			hidenView = (LinearLayout) v.findViewById(R.id.hidden_view);
 		}
 
 		@Override
@@ -99,7 +88,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	protected ViewHolder<MusicData> createViewHolder(View v) {
 		return new DownloadsViewHolder(v);
 	}
-	
+
 	public void removeItem(MusicData item) {
 		DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
 		remove(item);
@@ -107,62 +96,6 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		cancelDownload(item.getId());
 	}
 	
-	public void cancelTimer() {
-		for (Timer timer : timers) {
-			timer.cancel();
-		}
-	}
-
-	private void timer(MusicData musicData, View v) {
-		Timer timer = new Timer();
-		timers.add(timer);
-		int pos = timers.indexOf(timer);
-		RemoveTimer task = new RemoveTimer(musicData, pos);
-		timer.schedule(task, DELAY);
-	}
-
-	private class RemoveTimer extends TimerTask {
-
-		private MusicData musicData;
-		private Animation anim;
-		private int position;
-
-		public RemoveTimer(MusicData musicData, int position) {
-			this.musicData = musicData;
-			this.position = position;
-		}
-
-		public void run() {
-			if (musicData.check(MusicData.MODE_VISIBLITY)) {
-				((MainActivity) getContext()).runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
-						anim.setDuration(200);
-						anim.setAnimationListener(new AnimationListener() {
-
-							@Override
-							public void onAnimationStart(Animation paramAnimation) {
-							}
-
-							@Override
-							public void onAnimationRepeat(Animation paramAnimation) {
-							}
-
-							@Override
-							public void onAnimationEnd(Animation paramAnimation) {
-								removeItem(musicData);
-							}
-						});
-					}
-				});
-			}
-			timers.get(position).cancel();
-			this.cancel();
-		}
-	}
-
 	private void cancelDownload(long id) {
 		DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 		try {
@@ -173,13 +106,11 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	}
 
 	public boolean contains(MusicData song) {
-		synchronized (lock) {
-			for (int i = 0; i < getCount(); i++) {
-				if (getItem(i).equals(song)) {
-					return true;
-				}
+		for (int i = 0; i < getCount(); i++) {
+			if (getItem(i).equals(song)) {
+				return true;
 			}
-			return false;
 		}
+		return false;
 	}
 }

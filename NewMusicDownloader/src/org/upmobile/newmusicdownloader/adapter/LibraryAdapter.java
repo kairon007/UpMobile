@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
@@ -32,15 +33,10 @@ import android.widget.TextView;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
-	private static final int DELAY = 5000;
 	private PlayerService service;
-	private HashSet<MusicData> removingData = new HashSet<MusicData>();
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
 	private MusicData currentPlayData; 
-    private String PACKAGE = "IDENTIFY";
-	private ArrayList<Timer> timers = new ArrayList<Timer>();
-	private Animation anim;
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
 		@Override
@@ -73,25 +69,10 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 	};
 	
-	public LibraryAdapter(Context context, int resource) {
-		super(context, resource);
-		BTN_PAUSE = context.getResources().getDrawable(org.upmobile.sevenplayer.R.drawable.pause_white);
-		BTN_PLAY = context.getResources().getDrawable(org.upmobile.sevenplayer.R.drawable.play_white);
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				service = PlayerService.get(getContext());
-				service.setStatePlayerListener(stateListener);
-			}
-		}).start();
-		
-	}
-	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		BTN_PAUSE = context.getResources().getDrawable(org.upmobile.sevenplayer.R.drawable.pause_white);
-		BTN_PLAY = context.getResources().getDrawable(org.upmobile.sevenplayer.R.drawable.play_white);
+		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
+		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		new Thread(new Runnable() {
 			
 			@Override
@@ -102,75 +83,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}).start();
 	}
 	
-	public HashSet<MusicData> getRemovingData() {
-		return removingData;
-	}
-	
-	public void deleteRemovingData(MusicData data) {
-		removingData.remove(data);
-	}
-
 	@Override
 	protected ViewHolder<MusicData> createViewHolder(View v) {
 		return new LibraryViewHolder(v);
-	}
-	
-	public void cancelTimer() {
-		for (Timer timer : timers) {
-			timer.cancel();
-		}
-	}
-
-	private void timer(MusicData musicData, View v) {
-		Timer timer = new Timer();
-		timers.add(timer);
-		int pos = timers.indexOf(timer);
-		RemoveTimer task = new RemoveTimer(musicData, pos);
-		timer.schedule(task, DELAY);
-	}
-
-	private class RemoveTimer extends TimerTask {
-
-		private MusicData musicData;
-		int position;
-
-		public RemoveTimer(MusicData musicData, int position) {
-			this.musicData = musicData;
-			this.position = position;
-		}
-
-		public void run() {
-			if (musicData.check(MusicData.MODE_VISIBLITY)) {
-				musicData.turnOff(MusicData.MODE_VISIBLITY);
-				((MainActivity) getContext()).runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
-						anim.setDuration(200);
-						anim.setAnimationListener(new AnimationListener() {
-
-							@Override
-							public void onAnimationStart(Animation paramAnimation) {
-							}
-
-							@Override
-							public void onAnimationRepeat(Animation paramAnimation) {
-							}
-
-							@Override
-							public void onAnimationEnd(Animation paramAnimation) {
-								musicData.reset(getContext());
-								remove(musicData);
-								service.remove(musicData);
-							}
-						});
-					}
-				});
-			}
-			timers.get(position).cancel();
-			this.cancel();
-		}
 	}
 
 	private class LibraryViewHolder extends ViewHolder<MusicData> {
@@ -184,13 +99,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		private TextView cancel;
 
 		public LibraryViewHolder(View v) {
-			frontView = (ViewGroup) v.findViewById(org.upmobile.sevenplayer.R.id.front_layout);
-			button = v.findViewById(org.upmobile.sevenplayer.R.id.item_play);
-			title = (TextView) v.findViewById(org.upmobile.sevenplayer.R.id.item_title);
-			artist = (TextView) v.findViewById(org.upmobile.sevenplayer.R.id.item_description);
-			duration = (TextView) v.findViewById(org.upmobile.sevenplayer.R.id.item_duration);
-			hidenView = (LinearLayout) v.findViewById(org.upmobile.sevenplayer.R.id.hidden_view);
-			cancel = (TextView) v.findViewById(org.upmobile.sevenplayer.R.id.cancel);
+			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
+			button = v.findViewById(R.id.item_play);
+			title = (TextView) v.findViewById(R.id.item_title);
+			artist = (TextView) v.findViewById(R.id.item_description);
+			duration = (TextView) v.findViewById(R.id.item_duration);
+			hidenView = (LinearLayout) v.findViewById(R.id.hidden_view);
+			cancel = (TextView) v.findViewById(R.id.cancel);
 		}
 
 		@Override
@@ -233,14 +148,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 							service.setArrayPlayback(list);
 						}
-				        int[] screen_location = new int[2];
-				        Bundle bundle = new Bundle();
-				        bundle.putParcelable(Constants.KEY_SELECTED_SONG, item);
-				        bundle.putInt(Constants.KEY_SELECTED_POSITION, getPosition(item));
-				        bundle.putInt(PACKAGE + ".left", screen_location[0]);
-				        bundle.putInt(PACKAGE + ".top", screen_location[1]);
-						PlayerFragment playerFragment = new PlayerFragment();
-						playerFragment.setArguments(bundle);
 						break;
 					case MotionEvent.ACTION_MOVE:
 						break;

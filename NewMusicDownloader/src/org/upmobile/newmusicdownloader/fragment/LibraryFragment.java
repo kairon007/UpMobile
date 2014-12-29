@@ -1,9 +1,8 @@
 package org.upmobile.newmusicdownloader.fragment;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
-import org.upmobile.newmusicdownloader.activity.MainActivity;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.service.PlayerService;
@@ -22,22 +21,19 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
+import android.widget.ListView;
 
-public class LibraryFragment extends Fragment implements Handler.Callback, OnScrollListener{
+public class LibraryFragment extends Fragment implements Handler.Callback {
 
 	private static final int MSG_FILL_ADAPTER = 1;
 	private PlayerService service;
 	private LibraryAdapter adapter;
 	private Handler uiHandler;
+	private View parentView;
+	private ListView listView;
 	private String folderFilter;
-	private Animation anim;
 	private ContentObserver observer = new ContentObserver(null) {
-		
+
 		@Override
 		public void onChange(boolean selfChange) {
 			ArrayList<MusicData> list = querySong();
@@ -50,48 +46,38 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
-			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)){
+			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
 				ArrayList<MusicData> list = querySong();
 				customList(list);
 				Message msg = new Message();
 				msg.what = MSG_FILL_ADAPTER;
 				msg.obj = list;
 				uiHandler.sendMessage(msg);
-			} 
-		};
-		
-		private void customList(ArrayList<MusicData> list) {
-			HashSet<MusicData> datas = adapter.getRemovingData();
-			if (null != datas) {
-				for (MusicData musicData : datas) {
-					if (list.contains(musicData)) {
-						list.get(list.indexOf(musicData)).turnOn(MusicData.MODE_VISIBLITY);
-					} else {
-						adapter.deleteRemovingData(musicData);
-					}
-				}
 			}
-			if(service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class){
+		};
+
+		private void customList(ArrayList<MusicData> list) {
+			if (service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
 				int i = service.getPlayingPosition();
 				list.get(i).turnOn(MusicData.MODE_PLAYING);
 			}
 		};
-		
+
 	};
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				service = PlayerService.get(getActivity());
 			}
-			
+
 		}).start();
 		uiHandler = new Handler(this);
 		getActivity().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false, observer);
-		MainActivity parentActivity = (MainActivity) getActivity();
+		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
 		init();
 		ArrayList<MusicData> srcList = querySong();
 		if (!srcList.isEmpty()) {
@@ -103,15 +89,18 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 				}
 			}
 			adapter.addAll(srcList);
+			listView.setAdapter(adapter);
 		}
-		return new View(getActivity());
+		return parentView;
 	}
 
 	private void init() {
 		folderFilter = Environment.getExternalStorageDirectory() + "/ClearMusicDownloader";
-		adapter = new LibraryAdapter(getActivity(), org.upmobile.sevenplayer.R.layout.library_item);
+		listView = (ListView) parentView.findViewById(R.id.listView);
+		ArrayList<MusicData> initArray = new ArrayList<MusicData>();
+		adapter = new LibraryAdapter(getActivity(), R.layout.library_item, initArray);
 	}
-	
+
 	private ArrayList<MusicData> querySong() {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		Cursor cursor = buildQuery(getActivity().getContentResolver());
@@ -120,15 +109,15 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		}
 		while (cursor.moveToNext()) {
 			MusicData data = new MusicData();
-			data.populate(cursor);	
+			data.populate(cursor);
 			result.add(data);
 		}
 		cursor.close();
 		return result;
 	}
-	
+
 	private Cursor buildQuery(ContentResolver resolver) {
-		String selection =  MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%'" ;
+		String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%'";
 		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		return cursor;
 	}
@@ -138,7 +127,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		if (msg.what == MSG_FILL_ADAPTER) {
 			ArrayList<MusicData> array = (ArrayList<MusicData>) msg.obj;
 			if (adapter.isEmpty()) {
-				adapter = new LibraryAdapter(getActivity(), org.upmobile.sevenplayer.R.layout.library_item, array);
+				adapter = new LibraryAdapter(getActivity(), R.layout.library_item, array);
 			} else {
 				adapter.changeAll((ArrayList<MusicData>) msg.obj);
 			}
@@ -146,35 +135,4 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		return true;
 	}
 
-	@Override
-	public void onScrollStateChanged(AbsListView paramAbsListView, int paramInt) {
-		for (final MusicData item : adapter.getAll()) {
-			if (item.check(MusicData.MODE_VISIBLITY)) {
-				anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
-				anim.setDuration(200);
-				anim.setAnimationListener(new AnimationListener() {
-
-					@Override
-					public void onAnimationStart(Animation paramAnimation) {
-						adapter.cancelTimer();
-					}
-
-					@Override
-					public void onAnimationRepeat(Animation paramAnimation) {
-					}
-
-					@Override
-					public void onAnimationEnd(Animation paramAnimation) {
-						item.reset(getActivity());
-						adapter.remove(item);
-						service.remove(item);
-					}
-				});
-			}
-		}
-	}
-
-	@Override
-	public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3) {
-	}
 }

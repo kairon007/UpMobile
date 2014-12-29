@@ -125,16 +125,11 @@ public class TabOrderAdapter extends BaseAdapter implements DragListView.DragAda
 			text = (DragTextView)convert;
 		}
 		text.setText(LibraryPagerAdapter.TITLES[mTabIds[position]]);
-		switch(Util.getThemeName(mActivity))
-		{
-		case "AppTheme.White":
+		if(Util.getThemeName(mActivity).equals("AppTheme.White")){
 			text.setTextColor(Color.BLACK);
-			break;
-		case "AppTheme.Black":
+		} else if (Util.getThemeName(mActivity).equals("AppTheme.Black")) {
 			text.setTextColor(Color.WHITE);
-			break;
 		}
-		
 		return text;
 	}
 

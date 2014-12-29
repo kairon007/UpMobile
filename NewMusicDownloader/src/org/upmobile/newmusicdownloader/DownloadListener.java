@@ -2,8 +2,6 @@ package org.upmobile.newmusicdownloader;
 
 import java.io.File;
 
-import org.upmobile.sevenplayer.R;
-
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;

@@ -17,7 +17,6 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.upmobile.sevenplayer.R;
 
 import ru.johnlife.lifetoolsmp3.Advertisment;
 import ru.johnlife.lifetoolsmp3.MusicPlayerReceiver;
@@ -409,7 +408,7 @@ public class Advertisement implements Advertisment {
 						if (title != null && description != null && buttonText != null && pkg != null && !pkg.equals("") && !buttonText.equals("") && !Advertisement.isPackageInstalled(activity, pkg)) {
 
 							
-							TextView crossPromoBoxTitle = (TextView)view.findViewById(org.upmobile.sevenplayer.R.id.cross_promo_box_title); 
+							TextView crossPromoBoxTitle = (TextView)view.findViewById(R.id.cross_promo_box_title); 
 							TextView crossPromoBoxDescription = (TextView)view.findViewById(R.id.cross_promo_box_description);
 							Button crossPromoBoxButton = (Button)view.findViewById(R.id.cross_promo_box_button);
 							

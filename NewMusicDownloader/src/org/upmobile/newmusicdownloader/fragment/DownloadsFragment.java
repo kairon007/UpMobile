@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.upmobile.newmusicdownloader.Constants;
-import org.upmobile.newmusicdownloader.activity.MainActivity;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.DownloadsAdapter;
 import org.upmobile.newmusicdownloader.data.MusicData;
 
@@ -21,33 +21,31 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
+import android.widget.ListView;
 
-public class DownloadsFragment extends Fragment implements OnScrollListener {
+public class DownloadsFragment extends Fragment{
 
+	private static final int DEFAULT_SONG = 7340032; // 7 Mb
 	private DownloadsAdapter adapter;
 	private DownloadManager manager;
 	private Timer timer;
 	private Updater updater;
-	private static final int DEFAULT_SONG = 7340032; // 7 Mb
-	private MainActivity activity;
+	private View parentView;
+	private ListView listView;
 	private int progress;
 	private Object lock  = new Object();
-	private Animation anim;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
 		initView();
-		return new View(activity);
+		listView.setAdapter(adapter);
+		return parentView;
 	}
 
 	private void initView() {
-		activity = (MainActivity) getActivity();
-		adapter = new DownloadsAdapter(getActivity(), org.upmobile.sevenplayer.R.layout.downloads_item);
+		listView = (ListView) parentView.findViewById(R.id.listView);
+		adapter = new DownloadsAdapter(getActivity(), R.layout.downloads_item);
 		manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 		timer = new Timer();
 		updater = new Updater();
@@ -102,7 +100,7 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 	private void addItem(final MusicData song) {
 		synchronized (lock) {
 			try {
-				activity.runOnUiThread(new Runnable() {
+				getActivity().runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
@@ -118,7 +116,7 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 	
 	private void addAllCached(final ArrayList<Item> cache) {
 		synchronized (lock) {
-			activity.runOnUiThread(new Runnable() {
+			getActivity().runOnUiThread(new Runnable() {
 				
 				@Override
 				public void run() {
@@ -141,7 +139,7 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 	}
 	
 	private void reDrawAdapter() {
-		activity.runOnUiThread(new Runnable() {
+		getActivity().runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -179,7 +177,7 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 	private void removeItem(final MusicData musicData) {
 		synchronized (lock) {
 			try {
-				activity.runOnUiThread(new Runnable() {
+				getActivity().runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
@@ -229,33 +227,4 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 		}
 	}
 
-	@Override
-	public void onScrollStateChanged(AbsListView paramAbsListView, int paramInt) {
-		for (final MusicData item : adapter.getAll()) {
-			if (item.check(MusicData.MODE_VISIBLITY)) {
-				anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
-				anim.setDuration(200);
-				anim.setAnimationListener(new AnimationListener() {
-
-					@Override
-					public void onAnimationStart(Animation paramAnimation) {
-					}
-
-					@Override
-					public void onAnimationRepeat(Animation paramAnimation) {
-					}
-
-					@Override
-					public void onAnimationEnd(Animation paramAnimation) {
-						adapter.cancelTimer();
-						adapter.removeItem(item);
-					}
-				});
-			}
-		}
-	}
-
-	@Override
-	public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3) {
-	}
 }

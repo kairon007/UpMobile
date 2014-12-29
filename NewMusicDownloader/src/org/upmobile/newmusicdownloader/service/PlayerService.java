@@ -58,7 +58,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
-	private Context context;
 	private AbstractSong playingSong;
 	private int playingPosition = -1;
 	private int mode;
@@ -132,7 +131,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			}
 
 		}
-		instance.context = context;
 		return instance;
 	}
 	
