@@ -233,7 +233,7 @@ public class DownloadsFragment extends Fragment{
 					@Override
 					public void run() {
 						messageView.setVisibility(View.VISIBLE);
-						messageView.setText("Downloads list is empty");
+						messageView.setText(getActivity().getString(R.string.downloads_empty));
 					}
 				});
 			}
