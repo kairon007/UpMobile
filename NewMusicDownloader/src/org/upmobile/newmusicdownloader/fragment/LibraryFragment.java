@@ -80,12 +80,17 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
 		init();
 		ArrayList<MusicData> srcList = querySong();
+		ArrayList<AbstractSong> bufList = new ArrayList<AbstractSong>(srcList);
+		service.setArrayPlayback(bufList);
 		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
-			if (null != service && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
+			if (service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
 				int pos = service.getPlayingPosition();
 				if (pos >= 0 && pos < list.size()) {
-					((MusicData) list.get(pos)).setPlaying(true);
+					MusicData data = (MusicData) list.get(pos);
+					data.setPlaying(true);
+					service.setPlayingSong(data);
+					service.setPreviousSong(data);
 				}
 			}
 			adapter.addAll(srcList);

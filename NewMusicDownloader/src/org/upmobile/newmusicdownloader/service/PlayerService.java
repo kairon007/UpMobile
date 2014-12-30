@@ -58,6 +58,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
+	private AbstractSong previousSong;
 	private AbstractSong playingSong;
 	private int playingPosition = -1;
 	private int mode;
@@ -71,7 +72,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		public void start(AbstractSong song);
 		public void play(AbstractSong song);
 		public void	pause(AbstractSong song);
-		public void update(AbstractSong song);
+		public void update(AbstractSong previous, AbstractSong current);
 			
 	}
 	
@@ -227,7 +228,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				player.reset();
 				break;
 			}
-			helper(State.START);
+			if (null != previousSong) {
+				helper(State.UPDATE);
+			} else {
+				helper(State.START);
+			}
 			player.start();
 			break;
 
@@ -294,6 +299,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (playingPosition == -1) {
 			return;
 		}
+		previousSong = playingSong;
 		playingSong = arrayPlayback.get(playingPosition);
 		handler.removeMessages(1, null);
 		Message msg = new Message();
@@ -305,6 +311,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 	public void play(int position) {
 		if (arrayPlayback == null) return;
+		if (null != playingSong) {
+			previousSong = playingSong;
+		}
 		playingSong = arrayPlayback.get(position);
 		Message msg = new Message();
 		if (playingPosition == position) {
@@ -364,7 +373,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			
 			@Override
 			public void run() {
-				int position = arrayPlayback.indexOf(playingSong);
 				switch (state) {
 				case START:
 					stateListener.start(playingSong);
@@ -376,7 +384,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					stateListener.pause(playingSong);
 					break;
 				case UPDATE:
-					stateListener.update(playingSong);
+					stateListener.update(previousSong, playingSong);
 					break;
 				}
 			}
@@ -489,6 +497,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void setStatePlayerListener(OnStatePlayerListener stateListener) {
 		this.stateListener = stateListener;
+	}
+	
+	public void setPlayingSong(AbstractSong playingSong) {
+		this.playingSong = playingSong;
+	}
+	
+	public void setPreviousSong(AbstractSong previousSong) {
+		this.previousSong = previousSong;
 	}
 	
 	@Override

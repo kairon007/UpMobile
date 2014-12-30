@@ -213,10 +213,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				changePlayPauseView(false);
 			}
 
+
 			@Override
-			public void update(AbstractSong song) {
+			public void update(AbstractSong previous, AbstractSong current) {
 				if (isDestroy) return;
-				PlayerFragment.this.song = song;
+				song = current;
 				setElementsView(0);
 				setClickablePlayerElement(false);
 			}
