@@ -89,7 +89,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			cover = Util.getArtworkImage(2, metadata);
 		} catch (Exception e) {
-			android.util.Log.d("log", "Exeption! Metadata is bad. " + e.getMessage());
+			android.util.Log.d("log", getClass().getName() + " Exeption! Metadata is bad. " + e.getMessage());
 			return null;
 		}
 		return cover;

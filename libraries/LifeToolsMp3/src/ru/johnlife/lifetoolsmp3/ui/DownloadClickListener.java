@@ -366,7 +366,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 				switch (status) {
 				case DownloadManager.STATUS_FAILED:
-					android.util.Log.d("log", "download is failed");
 					notifyAboutFailed(currentDownloadId);
 					c.close();
 					DownloadCache.getInstanse().remove(artist, title);
@@ -388,7 +387,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					notifyDuringDownload(currentDownloadId, progress);
 					break;
 				case DownloadManager.STATUS_SUCCESSFUL:
-					android.util.Log.d("log", "download is success");
 					progress = 100;
 					notifyDuringDownload(currentDownloadId, progress);
 					int columnIndex = 0;

@@ -10,6 +10,7 @@ import org.upmobile.newmusicdownloader.service.PlayerService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,14 +19,18 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
 
 public class LibraryFragment extends Fragment implements Handler.Callback {
 
-	private static final int MSG_FILL_ADAPTER = 1;
+	private final int MSG_FILL_ADAPTER = 1;
+	private final int DELETE = 1;
 	private PlayerService service;
 	private LibraryAdapter adapter;
 	private Handler uiHandler;
@@ -138,5 +143,19 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		}
 		return true;
 	}
-
+//	
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+////		menu.setHeaderTitle(deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle());
+//		menu.add(0, DELETE, 0, getResources().getString(R.string.delete));
+//		super.onCreateContextMenu(menu, v, menuInfo);
+//	}
+//	
+//	@Override
+//	public boolean onContextItemSelected(MenuItem item) {
+//		if(item.getItemId() == DELETE){
+//			android.util.Log.d("log", "delete data");
+//		}
+//		return super.onContextItemSelected(item);
+//	}
 }

@@ -17,10 +17,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
@@ -81,7 +85,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnClickListener{
+	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnClickListener, OnLongClickListener{
 		
 		private MusicData data;
 		private ViewGroup info;
@@ -120,7 +124,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		private void setListener() {
 			cover.setOnClickListener(this);
+			cover.setOnLongClickListener(this);
 			info.setOnClickListener(this);
+			info.setOnLongClickListener(this);
 			button.setOnClickListener(this);
 		}
 
@@ -158,6 +164,26 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				service.play(getPosition(data));
 				break;
 			}
+		}
+
+		@Override
+		public boolean onLongClick(View view) {
+			if (view.getId() == cover.getId() || view.getId() == info.getId()) {
+				PopupMenu menu = new PopupMenu(getContext(), view);
+				menu.getMenuInflater().inflate(R.menu.menu, menu.getMenu());
+				menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						remove(data);
+						service.remove(data);
+						data.reset(getContext());
+						return false;
+					}
+				});
+				menu.show();
+			}
+			return true;
 		}
 	}
 
