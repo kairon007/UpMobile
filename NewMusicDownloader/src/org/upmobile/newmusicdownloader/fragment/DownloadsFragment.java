@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class DownloadsFragment extends Fragment{
 
@@ -32,6 +33,7 @@ public class DownloadsFragment extends Fragment{
 	private Updater updater;
 	private View parentView;
 	private ListView listView;
+	private TextView messageView;
 	private int progress;
 	private Object lock  = new Object();
 
@@ -45,6 +47,7 @@ public class DownloadsFragment extends Fragment{
 
 	private void initView() {
 		listView = (ListView) parentView.findViewById(R.id.listView);
+		messageView = (TextView) parentView.findViewById(R.id.message_listview);
 		adapter = new DownloadsAdapter(getActivity(), R.layout.downloads_item);
 		manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 		timer = new Timer();
@@ -224,6 +227,16 @@ public class DownloadsFragment extends Fragment{
 			checkFinished();
 			reDrawAdapter();
 			addAllCached(DownloadCache.getInstanse().getCachedItems());
+			if (adapter.isEmpty()) {
+				getActivity().runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						messageView.setVisibility(View.VISIBLE);
+						messageView.setText("Downloads list is empty");
+					}
+				});
+			}
 		}
 	}
 
