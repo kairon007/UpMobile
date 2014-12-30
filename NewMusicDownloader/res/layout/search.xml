@@ -59,6 +59,7 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
+                android:background="@drawable/search_background"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -85,13 +86,14 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="50dp"
                             android:singleLine="true"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@android:color/white" />
 
                         <ImageButton
                             android:id="@+id/clear"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_gravity="center_vertical|right"
+                            android:background="@drawable/selectable_item_bg"
                             android:src="@drawable/close" />
                     </FrameLayout>
 
@@ -99,6 +101,7 @@
                         android:id="@+id/search"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:background="@drawable/selectable_item_bg"
                         android:src="@drawable/ic_menu_search" />
 
                     <ImageButton
