@@ -30,31 +30,31 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
 		@Override
-		public void update(AbstractSong song, int position) {
-			if (song.getClass() != MusicData.class) return;
-			if (position > 0) {
-				((MusicData) getItem(position - 1)).setPlaying(false);
-			} else if (position == 0) {
-				((MusicData) getItem(getCount() - 1)).setPlaying(false);
-			}
-			notifyDataSetChanged();
+		public void update(AbstractSong song) {
+//			if (song.getClass() != MusicData.class) return;
+//			if (position > 0) {
+//				((MusicData) getItem(position - 1)).setPlaying(false);
+//			} else if (position == 0) {
+//				((MusicData) getItem(getCount() - 1)).setPlaying(false);
+//			}
+//			notifyDataSetChanged();
 		}
 		
 		@Override
-		public void start(AbstractSong song, int position) {
-			if (song.getClass() != MusicData.class || position == -1) return;
-			if (position == getCount()) --position;
-			((MusicData) getItem(position)).setPlaying(true);
-			notifyDataSetChanged();
+		public void start(AbstractSong song) {
+//			if (song.getClass() != MusicData.class || position == -1) return;
+//			if (position == getCount()) --position;
+//			((MusicData) getItem(position)).setPlaying(true);
+//			notifyDataSetChanged();
 		}
 		
 		@Override
-		public void play() {
+		public void play(AbstractSong song) {
 			
 		}
 		
 		@Override
-		public void pause() {
+		public void pause(AbstractSong song) {
 			
 		}
 	};

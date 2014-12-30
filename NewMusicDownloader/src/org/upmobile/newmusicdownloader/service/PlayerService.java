@@ -68,10 +68,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			START, PLAY, PAUSE, UPDATE, NONE
 		}
 		
-		public void start(AbstractSong song, int position);
-		public void play();
-		public void	pause();
-		public void update(AbstractSong song, int position);
+		public void start(AbstractSong song);
+		public void play(AbstractSong song);
+		public void	pause(AbstractSong song);
+		public void update(AbstractSong song);
 			
 	}
 	
@@ -367,17 +367,16 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				int position = arrayPlayback.indexOf(playingSong);
 				switch (state) {
 				case START:
-					stateListener.start(playingSong, position);
+					stateListener.start(playingSong);
 					break;
 				case PLAY:
-					stateListener.play();
+					stateListener.play(playingSong);
 					break;
 				case PAUSE:
-					stateListener.pause();
+					stateListener.pause(playingSong);
 					break;
 				case UPDATE:
-					AbstractSong buf = arrayPlayback.get(position);
-					stateListener.update(buf, position);
+					stateListener.update(playingSong);
 					break;
 				}
 			}
