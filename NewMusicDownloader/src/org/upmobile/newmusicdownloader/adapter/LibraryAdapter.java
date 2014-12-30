@@ -54,7 +54,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		@Override
 		public void update(AbstractSong previous, AbstractSong current) {
 			if (current.getClass() != MusicData.class) return;
-			((MusicData)previous).setPlaying(false);
+			if (previous.getClass() == MusicData.class) {
+				((MusicData)previous).setPlaying(false);
+			}
 			((MusicData)current).setPlaying(true);
 			notifyDataSetChanged();
 		}
