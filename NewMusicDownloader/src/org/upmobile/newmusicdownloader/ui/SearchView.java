@@ -101,6 +101,6 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	public int defaultCover() {
-		return R.drawable.def_cover_circle;
+		return R.drawable.no_cover_art_light_big_dark;
 	}
 }

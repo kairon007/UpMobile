@@ -11,7 +11,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center"
-        android:src="@drawable/default_cover" />
+        android:src="@drawable/no_cover_art_light_big_dark" />
 
     <LinearLayout
         android:id="@+id/item_box_info"

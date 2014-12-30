@@ -62,8 +62,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause);
-		BTN_PLAY = context.getResources().getDrawable(R.drawable.play);
+		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
+		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		new Thread(new Runnable() {
 			
 			@Override

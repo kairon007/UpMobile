@@ -38,7 +38,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		@Override
 		protected void hold(MusicData item, int position) {
 			this.item = item;
-			image.setImageResource(R.drawable.def_cover_circle);
+			image.setImageResource(R.drawable.no_cover_art_light_big_dark);
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			progress.setIndeterminate(item.getProgress() == 0);
