@@ -2,8 +2,11 @@ package org.upmobile.newmusicdownloader.adapter;
 
 import java.util.ArrayList;
 
+import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.data.MusicData;
+import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
@@ -13,13 +16,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.view.MotionEvent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
@@ -139,7 +140,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);
 				}
-				//TODO from this get into PlayerFragment
+				Bundle bundle = new Bundle();
+				bundle.putParcelable(Constants.KEY_SELECTED_SONG, data);
+				bundle.putInt(Constants.KEY_SELECTED_POSITION, getPosition(data));
+				PlayerFragment playerFragment = new PlayerFragment();
+				playerFragment.setArguments(bundle);
+				((MainActivity) view.getContext()).changeFragment(playerFragment);
+				((MainActivity) getContext()).overridePendingTransition(0, 0);
 				break;
 			case R.id.item_play:
 				if (!service.isCorrectlyState(MusicData.class, getCount())) {

@@ -46,7 +46,6 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	protected void click(final View view, int position) {
-		android.util.Log.d("logd", "click: ");
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
 			service.setArrayPlayback(list);

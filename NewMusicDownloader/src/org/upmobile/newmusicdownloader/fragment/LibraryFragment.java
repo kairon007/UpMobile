@@ -90,7 +90,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 					MusicData data = (MusicData) list.get(pos);
 					data.setPlaying(true);
 					service.setPlayingSong(data);
-					service.setPreviousSong(data);
 				}
 			}
 			adapter.addAll(srcList);

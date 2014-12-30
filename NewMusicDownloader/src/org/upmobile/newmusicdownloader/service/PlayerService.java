@@ -503,10 +503,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		this.playingSong = playingSong;
 	}
 	
-	public void setPreviousSong(AbstractSong previousSong) {
-		this.previousSong = previousSong;
-	}
-	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		return Service.START_NOT_STICKY;
