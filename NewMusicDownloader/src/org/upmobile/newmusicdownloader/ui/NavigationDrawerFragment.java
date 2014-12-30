@@ -172,29 +172,7 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
-        switch (position) {
-		case 0:
-	        changeFragment(new SearchFragment());
-			break;
-		case 1:
-	        changeFragment(new DownloadsFragment());
-			break;
-		case 2:
-	        changeFragment(new LibraryFragment());
-			break;
-		default:
-			break;
-		}
     }
-
-	private void changeFragment(Fragment targetFragment) {
-		getFragmentManager()
-		.beginTransaction()
-		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
-		.addToBackStack(targetFragment.getClass().getSimpleName())
-		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-		.commit();
-	}
 
     @Override
     public void onAttach(Activity activity) {

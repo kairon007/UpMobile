@@ -46,6 +46,7 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	protected void click(final View view, int position) {
+		android.util.Log.d("logd", "click: ");
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
 			service.setArrayPlayback(list);
@@ -55,6 +56,7 @@ public class SearchView extends OnlineSearchView {
 		bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
 		PlayerFragment playerFragment = new PlayerFragment();
 		playerFragment.setArguments(bundle);
+		((MainActivity) view.getContext()).changeFragment(playerFragment);
 		((MainActivity) getContext()).overridePendingTransition(0, 0);
 		super.click(view, position);
 	}

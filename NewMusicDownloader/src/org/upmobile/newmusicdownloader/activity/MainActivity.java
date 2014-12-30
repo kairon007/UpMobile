@@ -4,15 +4,20 @@ import java.io.File;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
+import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends Activity implements NavigationDrawerCallbacks {
@@ -55,6 +60,27 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		// TODO Auto-generated method stub
+        switch (position) {
+		case 0:
+	        changeFragment(new SearchFragment());
+			break;
+		case 1:
+	        changeFragment(new DownloadsFragment());
+			break;
+		case 2:
+	        changeFragment(new LibraryFragment());
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public void changeFragment(Fragment targetFragment) {
+		getFragmentManager()
+		.beginTransaction()
+		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
+		.addToBackStack(targetFragment.getClass().getSimpleName())
+		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+		.commit();
 	}
 }
