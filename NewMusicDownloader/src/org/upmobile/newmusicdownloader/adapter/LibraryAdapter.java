@@ -1,15 +1,9 @@
 package org.upmobile.newmusicdownloader.adapter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
-import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.data.MusicData;
-import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
@@ -19,15 +13,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

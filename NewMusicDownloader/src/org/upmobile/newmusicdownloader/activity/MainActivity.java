@@ -46,8 +46,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			}
 			
 		}).start();
-        navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager()
-        		.findFragmentById(R.id.navigation_drawer);
+        navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 		File file = new File(folderPath);
 		if (!file.exists()) file.mkdirs();

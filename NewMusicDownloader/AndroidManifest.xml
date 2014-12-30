@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
+        android:name="org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp"
         android:allowBackup="true"
         android:backupAgent="PreferencesBackupAgent"
         android:icon="@drawable/ic_launcher"

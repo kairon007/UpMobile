@@ -20,13 +20,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 public class SearchView extends OnlineSearchView {
 
 	private PlayerService service;
-	private ImageView refreshProgress;
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
@@ -95,15 +93,6 @@ public class SearchView extends OnlineSearchView {
 	protected boolean showDownloadButton() {
 		return false;
 	}
-
-
-	@Override
-	public Object initRefreshProgress() {
-		refreshProgress = new ImageView(getContext());
-		refreshProgress.setImageResource(R.drawable.loader);
-		return refreshProgress;
-	}
-
 
 	public void saveState() {
 		StateKeeper.getInstance().saveStateAdapter(this);

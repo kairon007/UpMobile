@@ -2,6 +2,9 @@ package org.upmobile.newmusicdownloader.ui;
 
 
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
+import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -11,6 +14,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -77,9 +81,9 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        "1",
-                        "2",
-                        "3",
+                        "Search",
+                        "Downloads",
+                        "Library",
                 }));
 	}
 
@@ -168,7 +172,29 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+        switch (position) {
+		case 0:
+	        changeFragment(new SearchFragment());
+			break;
+		case 1:
+	        changeFragment(new DownloadsFragment());
+			break;
+		case 2:
+	        changeFragment(new LibraryFragment());
+			break;
+		default:
+			break;
+		}
     }
+
+	private void changeFragment(Fragment targetFragment) {
+		getFragmentManager()
+		.beginTransaction()
+		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
+		.addToBackStack(targetFragment.getClass().getSimpleName())
+		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+		.commit();
+	}
 
     @Override
     public void onAttach(Activity activity) {
