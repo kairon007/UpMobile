@@ -62,7 +62,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private Button playerSaveTags;
 	private Button playerCancelTags;
 	private Button playerCancelLyrics;
-	private Button playerTitleBarBack;
+//	private Button playerTitleBarBack;
 	private TextView playerTitle;
 	private TextView playerArtist;
 	private TextView playerCurrTime;
@@ -288,7 +288,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		forward = (ImageButton) parentView.findViewById(R.id.player_forward);
 		download = (Button) parentView.findViewById(R.id.player_download);
 		lyricsLoader= (ImageView) parentView.findViewById(R.id.lyrics_load_image);
-		playerTitleBarBack = (Button) parentView.findViewById(R.id.title_bar_left_menu);
+//		playerTitleBarBack = (Button) parentView.findViewById(R.id.title_bar_left_menu);
 		playerProgress = (SeekBar) parentView.findViewById(R.id.player_progress);
 		playerTitle = (TextView) parentView.findViewById(R.id.player_title);
 		playerArtist = (TextView) parentView.findViewById(R.id.player_artist);
@@ -314,7 +314,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		download.setOnClickListener(this);
 		playerCancelTags.setOnClickListener(this);
 		playerSaveTags.setOnClickListener(this);
-		playerTitleBarBack.setOnClickListener(this);
+//		playerTitleBarBack.setOnClickListener(this);
 	}
 	
 	
@@ -376,8 +376,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.player_cancel_lyrics:
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 			break;
-		case R.id.title_bar_left_menu: 
-			break;
+//		case R.id.title_bar_left_menu: 
+//			break;
 		default:
 			break;
 		}

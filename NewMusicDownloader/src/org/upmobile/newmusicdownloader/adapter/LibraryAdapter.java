@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,16 +27,15 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	private PlayerService service;
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
-	private MusicData currentPlayData; 
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
 		@Override
 		public void update(AbstractSong song, int position) {
 			if (song.getClass() != MusicData.class) return;
 			if (position > 0) {
-				((MusicData) getItem(position - 1)).turnOff(MusicData.MODE_PLAYING);
+				((MusicData) getItem(position - 1)).setPlaying(false);
 			} else if (position == 0) {
-				((MusicData) getItem(getCount() - 1)).turnOff(MusicData.MODE_PLAYING);
+				((MusicData) getItem(getCount() - 1)).setPlaying(false);
 			}
 			notifyDataSetChanged();
 		}
@@ -44,7 +44,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		public void start(AbstractSong song, int position) {
 			if (song.getClass() != MusicData.class || position == -1) return;
 			if (position == getCount()) --position;
-			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
+			((MusicData) getItem(position)).setPlaying(true);
 			notifyDataSetChanged();
 		}
 		
@@ -61,8 +61,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
-		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
+		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause);
+		BTN_PLAY = context.getResources().getDrawable(R.drawable.play);
 		new Thread(new Runnable() {
 			
 			@Override
@@ -78,44 +78,47 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends ViewHolder<MusicData> {
+	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnClickListener{
 		
-		private ViewGroup frontView;
+		private MusicData data;
+		private ViewGroup info;
 		private View button;
+		private ImageView cover;
 		private TextView title;
 		private TextView artist;
 		private TextView duration;
-		private LinearLayout hidenView;
-		private TextView cancel;
 
 		public LibraryViewHolder(View v) {
-			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
+			info = (ViewGroup) v.findViewById(R.id.item_box_info);
 			button = v.findViewById(R.id.item_play);
+			cover = (ImageView) v.findViewById(R.id.item_cover);
 			title = (TextView) v.findViewById(R.id.item_title);
-			artist = (TextView) v.findViewById(R.id.item_description);
+			artist = (TextView) v.findViewById(R.id.item_artist);
 			duration = (TextView) v.findViewById(R.id.item_duration);
-			hidenView = (LinearLayout) v.findViewById(R.id.hidden_view);
-			cancel = (TextView) v.findViewById(R.id.cancel);
 		}
 
 		@Override
-		protected void hold(MusicData item, int position) {
-			title.setText(item.getTitle());
-			artist.setText(item.getArtist());
-			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
-				hidenView.setVisibility(View.GONE);
-				frontView.setX(0);
-			} else if (item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.GONE){
-			}
-			if (item.check(MusicData.MODE_PLAYING)) {
+		protected void hold(MusicData data, int position) {
+			this.data = data;
+			title.setText(data.getTitle());
+			artist.setText(data.getArtist());
+			duration.setText(Util.getFormatedStrDuration(data.getDuration()));
+			if (data.isPlaying()) {
 				setButtonBackground(BTN_PAUSE);
-				currentPlayData = item;
 			} else {
 				setButtonBackground(BTN_PLAY);
 			}
-			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-			Bitmap bitmap = item.getCover(getContext());
-			setListener(item);
+			Bitmap bitmap = data.getCover(getContext());
+			if (null != bitmap) {
+				cover.setImageBitmap(bitmap);
+			}
+			setListener();
+		}
+
+		private void setListener() {
+			cover.setOnClickListener(this);
+			info.setOnClickListener(this);
+			button.setOnClickListener(this);
 		}
 
 		@SuppressLint("NewApi")
@@ -127,57 +130,25 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 		}
 
-		private void setListener(final MusicData item) {
-			frontView.setOnTouchListener(new OnTouchListener() {
-				
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_UP:
-						if (!service.isCorrectlyState(MusicData.class, getCount())) {
-							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-							service.setArrayPlayback(list);
-						}
-						break;
-					case MotionEvent.ACTION_MOVE:
-						break;
-					}
-	  				return true;
+		@Override
+		public void onClick(View view) {
+			switch (view.getId()) {
+			case R.id.item_cover:
+			case R.id.item_box_info:
+				if (!service.isCorrectlyState(MusicData.class, getCount())) {
+					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+					service.setArrayPlayback(list);
 				}
-			});
-			button.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					if (!service.isCorrectlyState(MusicData.class, getCount())) {
-						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-						service.setArrayPlayback(list);
-					}
-					service.play(getPosition(item));
-					if (item.check(MusicData.MODE_PLAYING)) {
-						item.turnOff(MusicData.MODE_PLAYING);
-						setButtonBackground(BTN_PLAY);
-					} else {
-						if (!item.equals(currentPlayData)) {
-							if (null != currentPlayData) {
-								currentPlayData.turnOff(MusicData.MODE_PLAYING);
-							}
-							notifyDataSetChanged();
-						}
-						item.turnOn(MusicData.MODE_PLAYING);
-						currentPlayData = item;
-						setButtonBackground(BTN_PAUSE);
-					}
+				//TODO from this get into PlayerFragment
+				break;
+			case R.id.item_play:
+				if (!service.isCorrectlyState(MusicData.class, getCount())) {
+					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+					service.setArrayPlayback(list);
 				}
-			});
-			cancel.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View paramView) {
-					hidenView.setVisibility(View.GONE);
-					frontView.setX(0);
-				}
-			});
+				service.play(getPosition(data));
+				break;
+			}
 		}
 	}
 

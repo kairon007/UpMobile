@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="org.upmobile.nemusicdownloader.service.PlayerService" />
+        <service android:name="org.upmobile.newmusicdownloader.service.PlayerService" />
     </application>
 
 </manifest>

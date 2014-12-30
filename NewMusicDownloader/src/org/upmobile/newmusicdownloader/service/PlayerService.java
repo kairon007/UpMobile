@@ -120,7 +120,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	 * @Context use for call
 	 */
 	public static PlayerService get(Context context) {
-
 		if (instance == null) {
 			context.startService(new Intent(context, PlayerService.class));
 			try {
@@ -129,7 +128,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				}
 			} catch (InterruptedException ignored) {
 			}
-
 		}
 		return instance;
 	}
@@ -361,22 +359,29 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (stateListener == null || state.equals(State.NONE)) {
 			return;
 		}
-		int position = arrayPlayback.indexOf(playingSong);
-		switch (state) {
-		case START:
-			stateListener.start(playingSong, position);
-			break;
-		case PLAY:
-			stateListener.play();
-			break;
-		case PAUSE:
-			stateListener.pause();
-			break;
-		case UPDATE:
-			AbstractSong buf = arrayPlayback.get(position);
-			stateListener.update(buf, position);
-			break;
-		}
+		Handler handler = new Handler(getMainLooper());
+		handler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				int position = arrayPlayback.indexOf(playingSong);
+				switch (state) {
+				case START:
+					stateListener.start(playingSong, position);
+					break;
+				case PLAY:
+					stateListener.play();
+					break;
+				case PAUSE:
+					stateListener.pause();
+					break;
+				case UPDATE:
+					AbstractSong buf = arrayPlayback.get(position);
+					stateListener.update(buf, position);
+					break;
+				}
+			}
+		});
 	}
 
 	private void offMode(int flag) {

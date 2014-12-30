@@ -43,12 +43,12 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		@Override
 		protected void hold(MusicData item, int position) {
 			this.item = item;
-			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
-				hidenView.setVisibility(View.GONE);
-				frontView.setX(0);
-			} else if (item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.GONE) {
-				hidenView.setVisibility(View.VISIBLE);
-			}
+//			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
+//				hidenView.setVisibility(View.GONE);
+//				frontView.setX(0);
+//			} else if (item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.GONE) {
+//				hidenView.setVisibility(View.VISIBLE);
+//			}
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			progress.setIndeterminate(item.getProgress() == 0);

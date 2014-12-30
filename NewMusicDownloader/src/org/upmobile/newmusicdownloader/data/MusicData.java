@@ -27,16 +27,14 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		MediaStore.Audio.Media.DURATION,
 		MediaStore.Audio.Media.ALBUM,
 	};
-	public static final int MODE_VISIBLITY = 0x00000001;
-	public static final int MODE_PLAYING = 0x00000002;
 	private String path;
 	private String title;
 	private String artist;
 	private String album;
-	private int mode;
 	private long id;
 	private long duration;
 	private int progress;
+	private boolean isPlaying;
 	
 	public MusicData() {
 		
@@ -153,29 +151,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		}
 	};
 	
-	public void turnOff(int flag) {
-		setFlag(flag, false);
-	}
-	
-	public void turnOn(int flag) {
-		setFlag(flag, true);
-	}
-	
-	public boolean check(int flag) {
-		int buf =  mode;
-		boolean result  = (buf & flag) == flag;
-		return result;  
-	}
-	
-	private void setFlag(int flag, boolean onOff) {
-		if ((check(flag) && onOff) || (!check(flag) && !onOff)) return;
-		if (onOff) {
-			mode |= flag;
-		} else {
-			mode ^= flag;
-		}
-	}
-	
 	public String getPath() {
 		return path;
 	}
@@ -202,6 +177,15 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 
 	public int getProgress() {
 		return progress;
+	}
+	
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+	
+	public void setPlaying(boolean isPlaying) {
+		android.util.Log.d("log", "title = " + title + ", parametr = " + isPlaying);
+		this.isPlaying = isPlaying;
 	}
 
 	public void setProgress(int progress) {
