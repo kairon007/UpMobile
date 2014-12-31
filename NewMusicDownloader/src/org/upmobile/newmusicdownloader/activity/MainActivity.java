@@ -6,6 +6,7 @@ import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment;
@@ -70,6 +71,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		case 2:
 	        changeFragment(new LibraryFragment());
 			break;
+		case 3:
+			changeFragment(new PlayerFragment());
+			break;
 		default:
 			break;
 		}
@@ -83,4 +87,11 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 		.commit();
 	}
+	
+	public void showPlayerElement(boolean flag) {
+		if (null != navigationDrawerFragment) {
+			navigationDrawerFragment.setAdapter(flag);
+		}
+	}
+
 }

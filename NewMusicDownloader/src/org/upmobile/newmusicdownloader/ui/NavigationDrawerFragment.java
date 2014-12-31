@@ -72,15 +72,11 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
 	public void setAdapter(boolean isNowPlaying) {
+		String[] items = isNowPlaying ? new String[]{"Search", "Downloads", "Library", "Now playing"} : new String[]{"Search", "Downloads", "Library"};
 		mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        "Search",
-                        "Downloads",
-                        "Library",
-                }));
+                android.R.id.text1, items));
 	}
 
     public boolean isDrawerOpen() {

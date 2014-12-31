@@ -5,6 +5,7 @@ import java.io.File;
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DownloadListener;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
@@ -155,6 +156,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						enabledPlayerElement = false;
 						player.reset();
 						player.play(currentPosition);
+						((MainActivity) getActivity()).showPlayerElement(true);
 					}
 				}
 				getActivity().runOnUiThread(new Runnable() {
