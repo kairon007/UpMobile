@@ -19,7 +19,9 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,20 +44,20 @@ import android.widget.Toast;
 
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
-    public static final int DURATION = 500; // in ms
-    private String PACKAGE = "IDENTIFY";
 	private AbstractSong song;
 	private RenameTask renameTask;
 	private PlayerService player;
 	private DownloadListener downloadListener;
 	private View parentView;
 	private SeekBar playerProgress;
+	private SeekBar volume;
 	private CheckBox playerTagsCheckBox;
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
-//	private ImageView playerCover;
-	private ImageView lyricsLoader;
+	private ImageButton editTag;
+	private ImageButton showLyrics;
+	private ImageView playerCover;
 	private Button download;
 	private Button playerSaveTags;
 	private Button playerCancelTags;
@@ -69,23 +71,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private EditText playerTagsTitle;
 	private EditText playerTagsArtist;
 	private int currentPosition;
-    private int delta_top;
-    private int delta_left;
-	private int top;
-	private int left;
-	private int width;
-	private int height;
-    private float scale_width;
-    private float scale_height;
     private boolean isDestroy;
     private boolean hadInstance;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		parentView = inflater.inflate(R.layout.player, container, false);
+		parentView = inflater.inflate(R.layout.main_fragment_port, container, false);
 		init();
-//		playerCover.bringToFront();
+		audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			hadInstance = false;
 			AbstractSong buf = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
@@ -101,17 +97,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (null != bmp) {
-//							playerCover.setImageBitmap(bmp);
+							playerCover.setImageBitmap(bmp);
 						}
 					}
 				});
 			} else {
 				setCoverFromMusicData();
 			}
-			top = getArguments().getInt(PACKAGE + ".top");
-			left = getArguments().getInt(PACKAGE + ".left");
-			width = getArguments().getInt(PACKAGE + ".width");
-			height = getArguments().getInt(PACKAGE + ".height");
 		} else {
 			hadInstance = true;
 		}
@@ -252,15 +244,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		play.setClickable(isClickable);
 		playerProgress.setEnabled(isClickable);
 		if (isClickable) {
-			play.setImageResource(R.drawable.pause);
-			play.setVisibility(View.VISIBLE);
-			parentView.findViewById(R.id.player_play_progress).setVisibility(View.GONE);
-			
+			play.setImageResource(R.drawable.ic_media_pause);
 		} else {
 			playerCurrTime.setText("0:00");
 			playerProgress.setProgress(0);
-			play.setVisibility(View.GONE);
-			parentView.findViewById(R.id.player_play_progress).setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -269,42 +256,46 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
 		if (isPlaying) {
-			play.setImageResource(R.drawable.play);
+			play.setImageResource(R.drawable.ic_media_play);
 		} else {
-			play.setImageResource(R.drawable.pause);
+			play.setImageResource(R.drawable.ic_media_pause);
 		}
 	}
 	
 	private void init() {
-		play = (ImageButton) parentView.findViewById(R.id.player_play);
-		previous = (ImageButton) parentView.findViewById(R.id.player_previous);
-		forward = (ImageButton) parentView.findViewById(R.id.player_forward);
-		download = (Button) parentView.findViewById(R.id.player_download);
-		lyricsLoader= (ImageView) parentView.findViewById(R.id.lyrics_load_image);
-		playerProgress = (SeekBar) parentView.findViewById(R.id.player_progress);
-		playerTitle = (TextView) parentView.findViewById(R.id.player_title);
-		playerArtist = (TextView) parentView.findViewById(R.id.player_artist);
-		playerCurrTime = (TextView) parentView.findViewById(R.id.player_current_time);
-		playerTotalTime = (TextView) parentView.findViewById(R.id.player_total_time);
+		play = (ImageButton) parentView.findViewById(R.id.playpause);
+		previous = (ImageButton) parentView.findViewById(R.id.prev);
+		forward = (ImageButton) parentView.findViewById(R.id.next);
+		download = (Button) parentView.findViewById(R.id.download);
+		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
+		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
+		volume = (SeekBar) parentView.findViewById(R.id.progress_volume);
+		playerProgress = (SeekBar) parentView.findViewById(R.id.progress_track);
+		playerTitle = (TextView) parentView.findViewById(R.id.songName);
+		playerArtist = (TextView) parentView.findViewById(R.id.artistName);
+		playerCurrTime = (TextView) parentView.findViewById(R.id.trackTime);
+		playerTotalTime = (TextView) parentView.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
 		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
 		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
-//		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
+		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
 		playerCancelLyrics = (Button) parentView.findViewById(R.id.player_cancel_lyrics);
 		playerTagsArtist = (EditText) parentView.findViewById(R.id.editTextArtist);
 		playerTagsTitle = (EditText) parentView.findViewById(R.id.editTextTitle);
 		playerTagsAlbum = (EditText) parentView.findViewById(R.id.editTextAlbum);
 		playerTagsCheckBox = (CheckBox) parentView.findViewById(R.id.isUseCover);
 		playerProgress.setOnSeekBarChangeListener(this);
+		volume.setOnSeekBarChangeListener(this);
 		playerCancelLyrics.setOnClickListener(this);
 		play.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
+		editTag.setOnClickListener(this);
+		showLyrics.setOnClickListener(this);
 		download.setOnClickListener(this);
 		playerCancelTags.setOnClickListener(this);
 		playerSaveTags.setOnClickListener(this);
 	}
-	
 	
 	private void setElementsView(int progress) {
 		if (song.getClass() == MusicData.class) {
@@ -328,30 +319,29 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitle.setText(song.getTitle());
 	}
 	
-	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.player_play:
+		case R.id.playpause:
 			play(0);
 			break;
-		case R.id.player_previous:
+		case R.id.prev:
 			play(-1);
 			hideOpenViews();
 			break;
-		case R.id.player_forward:
+		case R.id.next:
 			play(1);
 			hideOpenViews();
 			break;
-		case R.id.player_download:
+		case R.id.download:
 			download();
 			break;
-//		case R.id.player_lyrics:
-//			showLyrics();
-//			break;
-//		case R.id.player_edit_tags:
-//			showEditTagDialog();
-//			break;
+		case R.id.player_lyrics:
+			showLyrics();
+			break;
+		case R.id.player_edit_tags:
+			showEditTagDialog();
+			break;
 		case R.id.player_save_tags:
 			saveTags();
 		case R.id.player_cancel_tags:
@@ -360,8 +350,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.player_cancel_lyrics:
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 			break;
-//		case R.id.title_bar_left_menu: 
-//			break;
 		default:
 			break;
 		}
@@ -394,15 +382,25 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 
 	};
+	private AudioManager audio;
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		if (fromUser) {
-			try {
-				player.seekTo(progress);
-			} catch (Exception e) {
-				e.printStackTrace();
+		switch (seekBar.getId()) {
+		case R.id.progress_volume:
+			if (fromUser) {
+				audio.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 			}
+			break;
+		case R.id.progress_track:
+			if (fromUser) {
+				try {
+					player.seekTo(progress);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			break;
 		}
 	}
 
@@ -417,7 +415,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void showLyrics() {
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
-			lyricsLoader.setVisibility(View.VISIBLE);
 			final int [] location = new int[2];
 			playerLyricsView.getLocationOnScreen(location);
 			LyricsFetcher lyricsFetcher = new LyricsFetcher(getActivity());
@@ -426,8 +423,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-					lyricsLoader.clearAnimation();
-					lyricsLoader.setVisibility(View.GONE);
 					if (foundLyrics) {
 						playerLyricsView.setText(Html.fromHtml(lyrics));
 					} else {
@@ -534,7 +529,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
 					if (null != bmp) {
-//						playerCover.setImageBitmap(bmp);
+						playerCover.setImageBitmap(bmp);
 					}
 				}
 				
@@ -547,10 +542,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void setCoverFromMusicData() {
 		Bitmap bitmap = ((MusicData)song).getCover(getActivity());
 		if (bitmap != null) {
-//			playerCover.setImageBitmap(bitmap);
+			playerCover.setImageBitmap(bitmap);
 		}
 	}
-
+	
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
