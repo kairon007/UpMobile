@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
-	private Context context;
 	private PlayerService service;
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
@@ -69,7 +68,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		this.context = context;
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
 		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		new Thread(new Runnable() {
@@ -84,7 +82,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	@Override
 	protected ViewHolder<MusicData> createViewHolder(View v) {
-		return new LibraryViewHolder(context, v);
+		return new LibraryViewHolder(v);
 	}
 
 	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnClickListener, OnLongClickListener{
@@ -97,7 +95,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		private TextView artist;
 		private TextView duration;
 
-		public LibraryViewHolder(Context context, View v) {
+		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.item_box_info);
 			button = v.findViewById(R.id.item_play);
 			cover = (ImageView) v.findViewById(R.id.item_cover);
@@ -164,9 +162,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 					service.setArrayPlayback(list);
 				}
 				service.play(getPosition(data));
-				if(context instanceof MainActivity){
-	                ((MainActivity) context).showPlayerElement(true);
-	            }
+				((MainActivity) getContext()).showPlayerElement(true);
 				break;
 			}
 		}

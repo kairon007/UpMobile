@@ -136,12 +136,15 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	private ArrayList<MusicData> querySong() {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		Cursor cursor = buildQuery(getActivity().getContentResolver());
-		if (!cursor.moveToFirst()) {
-			return new ArrayList<MusicData>();
+		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			return result;
 		}
+		MusicData d = new MusicData();
+		d.populate(cursor);
+		result.add(d);
 		while (cursor.moveToNext()) {
 			MusicData data = new MusicData();
-			data.populate(cursor);	
+			data.populate(cursor);
 			result.add(data);
 		}
 		cursor.close();

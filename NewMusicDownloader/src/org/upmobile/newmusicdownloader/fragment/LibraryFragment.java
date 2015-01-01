@@ -2,6 +2,7 @@ package org.upmobile.newmusicdownloader.fragment;
 
 import java.util.ArrayList;
 
+import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.newmusicdownloader.data.MusicData;
@@ -10,7 +11,6 @@ import org.upmobile.newmusicdownloader.service.PlayerService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.Fragment;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,18 +19,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
 
 public class LibraryFragment extends Fragment implements Handler.Callback {
 
 	private final int MSG_FILL_ADAPTER = 1;
-	private final int DELETE = 1;
 	private PlayerService service;
 	private LibraryAdapter adapter;
 	private Handler uiHandler;
@@ -104,7 +100,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 	}
 
 	private void init() {
-		folderFilter = Environment.getExternalStorageDirectory() + "/ClearMusicDownloader";
+		folderFilter = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 		listView = (ListView) parentView.findViewById(R.id.listView);
 		ArrayList<MusicData> initArray = new ArrayList<MusicData>();
 		adapter = new LibraryAdapter(getActivity(), R.layout.library_item, initArray);
@@ -113,9 +109,12 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 	private ArrayList<MusicData> querySong() {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		Cursor cursor = buildQuery(getActivity().getContentResolver());
-		if (!cursor.moveToFirst()) {
-			return new ArrayList<MusicData>();
+		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			return result;
 		}
+		MusicData d = new MusicData();
+		d.populate(cursor);
+		result.add(d);
 		while (cursor.moveToNext()) {
 			MusicData data = new MusicData();
 			data.populate(cursor);
@@ -137,25 +136,11 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 			ArrayList<MusicData> array = (ArrayList<MusicData>) msg.obj;
 			if (adapter.isEmpty()) {
 				adapter = new LibraryAdapter(getActivity(), R.layout.library_item, array);
+				listView.setAdapter(adapter);
 			} else {
-				adapter.changeAll((ArrayList<MusicData>) msg.obj);
+				adapter.changeAll(array);
 			}
 		}
 		return true;
 	}
-//	
-//	@Override
-//	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-////		menu.setHeaderTitle(deletedItem.getSongArtist() + " - " + deletedItem.getSongTitle());
-//		menu.add(0, DELETE, 0, getResources().getString(R.string.delete));
-//		super.onCreateContextMenu(menu, v, menuInfo);
-//	}
-//	
-//	@Override
-//	public boolean onContextItemSelected(MenuItem item) {
-//		if(item.getItemId() == DELETE){
-//			android.util.Log.d("log", "delete data");
-//		}
-//		return super.onContextItemSelected(item);
-//	}
 }
