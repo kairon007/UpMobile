@@ -194,7 +194,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 	}
 	
 	public void setPlaying(boolean isPlaying) {
-		android.util.Log.d("log", "title = " + title + ", parametr = " + isPlaying);
 		this.isPlaying = isPlaying;
 	}
 

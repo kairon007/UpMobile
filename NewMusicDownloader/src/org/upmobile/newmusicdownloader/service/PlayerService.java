@@ -70,13 +70,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public interface OnStatePlayerListener {
 		
 		public enum State {
-			START, PLAY, PAUSE, UPDATE, NONE
+			START, PLAY, PAUSE, UPDATE, STOP, NONE
 		}
 		
 		public void start(AbstractSong song);
 		public void play(AbstractSong song);
 		public void	pause(AbstractSong song);
-		public void update(AbstractSong previous, AbstractSong current);
+		public void stop (AbstractSong song);
+		public void update(AbstractSong song);
 			
 	}
 	
@@ -182,6 +183,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		playingPosition = -1;
 		Message msg = buildMessage(MSG_RESET, 0, 0);
 		handler.sendMessage(msg);
+		helper(State.STOP);
 	}
 	
 	public void remove(AbstractSong song) {
@@ -232,11 +234,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				player.reset();
 				break;
 			}
-			if (null != previousSong) {
-				helper(State.UPDATE);
-			} else {
-				helper(State.START);
-			}
+			helper(State.START);
 			player.start();
 			break;
 
@@ -285,6 +283,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void shift(int delta) { 
 		int buf;
+		if(playingPosition != -1) {
+			helper(State.STOP);
+		}
 		if (enabledRepeat()) {
 			buf = playingPosition;
 		} else {
@@ -341,6 +342,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 	}
 	
+	public void stop() {
+		Message msg = buildMessage(MSG_RESET, 0, 0);
+		handler.sendMessage(msg);
+		helper(State.STOP);
+	}
+	
 	public boolean offOnShuffle(){
 		mode ^= SMODE_SHUFFLE;
 		boolean result = enabledShuffle();
@@ -392,7 +399,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		msg.obj = str;
 		handler.sendMessage(msg);
 	}
-
+	
 	private void shuffle () {
 		Collections.shuffle(arrayPlayback);
 	}
@@ -417,7 +424,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					stateListener.pause(playingSong);
 					break;
 				case UPDATE:
-					stateListener.update(previousSong, playingSong);
+					stateListener.update(playingSong);
+					break;
+				case STOP:
+					stateListener.stop(previousSong);
 					break;
 				}
 			}

@@ -47,6 +47,7 @@ import android.widget.Toast;
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
 	private AbstractSong song;
+	private AudioManager audio;
 	private RenameTask renameTask;
 	private PlayerService player;
 	private DownloadListener downloadListener;
@@ -61,6 +62,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton showLyrics;
 	private ImageButton shuffle;
 	private ImageButton repeat;
+	private ImageButton stop;
 	private ImageView playerCover;
 	private Button download;
 	private Button playerSaveTags;
@@ -233,11 +235,18 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 
 			@Override
-			public void update(AbstractSong previous, AbstractSong current) {
+			public void update(AbstractSong current) {
 				if (isDestroy) return;
 				song = current;
 				setElementsView(0);
-				setClickablePlayerElement(true);
+				setClickablePlayerElement(false);
+			}
+			
+			@Override
+			public void stop(AbstractSong song) {
+				setElementsView(0);
+				changePlayPauseView(true);
+				setClickablePlayerElement(false);
 			}
 			
 		});
@@ -268,6 +277,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void setClickablePlayerElement(boolean isClickable) {
 		play.setClickable(isClickable);
+		stop.setClickable(isClickable);
 		playerProgress.setEnabled(isClickable);
 		playerProgress.setClickable(isClickable);
 		if (isClickable) {
@@ -295,6 +305,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		forward = (ImageButton) parentView.findViewById(R.id.next);
 		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
 		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
+		stop = (ImageButton) parentView.findViewById(R.id.stop);
 		download = (Button) parentView.findViewById(R.id.download);
 		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
 		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
@@ -317,6 +328,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		volume.setOnSeekBarChangeListener(this);
 		playerCancelLyrics.setOnClickListener(this);
 		play.setOnClickListener(this);
+		stop.setOnClickListener(this);
 		shuffle.setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
@@ -380,6 +392,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 			shuffle.setImageBitmap(bmShuffle);
 			break;
+		case R.id.stop:
+			player.stop();
+			break;
 		case R.id.download:
 			download();
 			break;
@@ -429,7 +444,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 
 	};
-	private AudioManager audio;
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

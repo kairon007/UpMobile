@@ -68,8 +68,8 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/holo_transparent_button"
                 android:paddingBottom="2dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" >
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" >
 
                 <TextView
                     android:id="@+id/songName"
@@ -94,20 +94,11 @@
                     android:fontFamily="sans-serif-light"
                     android:gravity="center_horizontal" />
 
-                <TextView
-                    android:id="@+id/audioName"
-                    style="@style/InfoSubText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/artistName"
-                    android:layout_marginTop="1dp"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center_horizontal" />
-
                 <RelativeLayout
                     android:id="@+id/progress_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/artistName"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="8dp" >
@@ -129,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
-                        android:paddingRight="10dp"
+                        android:paddingRight="8dp"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
@@ -139,7 +130,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/trackTime"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="4dp"
                         android:max="100"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
