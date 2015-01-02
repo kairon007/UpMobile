@@ -3,7 +3,7 @@ package ru.johnlife.lifetoolsmp3.song;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.os.Parcelable;
 
-public interface AbstractSong extends Parcelable{
+public interface AbstractSong extends Parcelable, Cloneable{
 	
 	public String getPath();
 
@@ -26,5 +26,7 @@ public interface AbstractSong extends Parcelable{
 	public void setAlbum(String album);
 	
 	public void setPath(String path);
+	
+	public AbstractSong cloneSong();
 
 }

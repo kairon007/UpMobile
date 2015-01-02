@@ -151,6 +151,16 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		}
 	};
 	
+	@Override
+	public MusicData cloneSong(){
+		try {
+			return (MusicData) clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public String getPath() {
 		return path;
 	}
@@ -216,4 +226,5 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 	public void setAlbum(String album) {
 		this.album = album;
 	}
+
 }

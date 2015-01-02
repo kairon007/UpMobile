@@ -22,6 +22,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +59,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton forward;
 	private ImageButton editTag;
 	private ImageButton showLyrics;
+	private ImageButton shuffle;
+	private ImageButton repeat;
 	private ImageView playerCover;
 	private Button download;
 	private Button playerSaveTags;
@@ -138,7 +141,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 							mode = 1;
 						}
 						enabledPlayerElement = true;
-						changePlayPauseView(!check);
 					}
 				} else {
 					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition) {
@@ -162,6 +164,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					
 					@Override
 					public void run() {
+						setImageButton();
 						if (!hadInstance) {
 							if (mode == 0) {
 								((MainActivity) getActivity()).showPlayerElement(true);
@@ -181,6 +184,23 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		}).start();
 		return parentView;
+	}
+
+	private void setImageButton() {
+		Bitmap bmRepeat;
+		Bitmap bmShuffle;
+		if(!player.enabledRepeat()) {
+			bmRepeat = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_repeat);
+		} else {
+			bmRepeat = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_repeat_on);
+		}
+		if (player.enabledShuffle()) {
+			bmShuffle = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_shuffle_on);
+		} else {
+			bmShuffle = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_shuffle);
+		}
+		repeat.setImageBitmap(bmRepeat);
+		shuffle.setImageBitmap(bmShuffle);
 	}
 
 	private void bindToPlayer() {
@@ -273,6 +293,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		play = (ImageButton) parentView.findViewById(R.id.playpause);
 		previous = (ImageButton) parentView.findViewById(R.id.prev);
 		forward = (ImageButton) parentView.findViewById(R.id.next);
+		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
+		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
 		download = (Button) parentView.findViewById(R.id.download);
 		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
 		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
@@ -295,6 +317,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		volume.setOnSeekBarChangeListener(this);
 		playerCancelLyrics.setOnClickListener(this);
 		play.setOnClickListener(this);
+		shuffle.setOnClickListener(this);
+		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
 		editTag.setOnClickListener(this);
@@ -337,6 +361,24 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.next:
 			play(1);
 			hideOpenViews();
+			break;
+		case R.id.repeat:
+			Bitmap bmRepeat;
+			if (!player.offOnRepeat()){
+				bmRepeat = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_repeat);
+			} else {
+				bmRepeat = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_repeat_on);
+			}
+			repeat.setImageBitmap(bmRepeat);
+			break;
+		case R.id.shuffle:
+			Bitmap bmShuffle;
+			if (player.offOnShuffle()) {
+				bmShuffle = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_shuffle_on);
+			} else {
+				bmShuffle = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_shuffle);
+			}
+			shuffle.setImageBitmap(bmShuffle);
 			break;
 		case R.id.download:
 			download();

@@ -40,7 +40,7 @@ import android.provider.MediaStore;
  * Represents a Song backed by the MediaStore. Includes basic metadata and
  * utilities to retrieve songs from the MediaStore.
  */
-public class Song implements Comparable<Song>, Parcelable, AbstractSong {
+public class Song implements Comparable<Song>, AbstractSong {
 	/**
 	 * Indicates that this song was randomly selected from all songs.
 	 */
@@ -336,6 +336,11 @@ public class Song implements Comparable<Song>, Parcelable, AbstractSong {
 	@Override
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	@Override
+	public AbstractSong cloneSong() {
+		return null;
 	}
 
 }

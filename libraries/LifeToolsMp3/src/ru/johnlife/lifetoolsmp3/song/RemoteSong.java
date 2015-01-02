@@ -15,7 +15,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-public class RemoteSong extends Song implements Cloneable {
+public class RemoteSong extends Song {
 	private final class WrapperCoverListener implements OnBitmapReadyListener {
 		List<OnBitmapReadyListener> listeners = new ArrayList<OnBitmapReadyListener>();
 
@@ -196,6 +196,7 @@ public class RemoteSong extends Song implements Cloneable {
 		return this;
 	}
 	
+	@Override
 	public RemoteSong cloneSong() {
 		try {
 			return (RemoteSong) clone();

@@ -1,6 +1,7 @@
 package org.upmobile.newmusicdownloader.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener.State;
@@ -38,6 +39,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private static final int SMODE_PLAY_PAUSE = 0x00000004;
 	private static final int SMODE_PLAYING = 0x00000008;
 	private static final int SMODE_STOPPING = 0x00000010;
+	private static final int SMODE_SHUFFLE = 0x00000020;
+	private static final int SMODE_REPEAT = 0x00000040;
 	private static final int MSG_PLAY = 1;
 	private static final int MSG_PLAY_CURRENT = 2;
 	private static final int MSG_PAUSE = 3;
@@ -53,6 +56,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	//instance section
 	private ArrayList<AbstractSong> arrayPlayback;
+	private ArrayList<AbstractSong> arrayPlaybackOriginal;
 	private OnStatePlayerListener stateListener;
 	private static PlayerService instance;
 	private TelephonyManager telephonyManager;
@@ -279,8 +283,13 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return true;
 	}
 	
-	public void shift(int delta) {
-		int buf = playingPosition + delta;
+	public void shift(int delta) { 
+		int buf;
+		if (enabledRepeat()) {
+			buf = playingPosition;
+		} else {
+			buf = playingPosition + delta;
+		}
 		State state = State.UPDATE;
 		if (delta == 0) {
 			state = State.NONE;
@@ -332,6 +341,26 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 	}
 	
+	public boolean offOnShuffle(){
+		mode ^= SMODE_SHUFFLE;
+		boolean result = enabledShuffle();
+		if (result) {
+			arrayPlaybackOriginal = new ArrayList<AbstractSong>();
+			for (AbstractSong song : arrayPlayback) {
+				arrayPlaybackOriginal.add(song.cloneSong());
+			}
+			shuffle();
+		} else {
+			arrayPlayback = new ArrayList<AbstractSong>(arrayPlaybackOriginal);
+		}
+		return result;
+	}
+	
+	public boolean offOnRepeat(){
+		mode ^= SMODE_REPEAT;
+		return enabledRepeat();
+	}
+	
 	private void play(Message msg) {
 		boolean fromInternet = playingSong.getClass() != MusicData.class;
 		if (fromInternet) {
@@ -364,6 +393,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		handler.sendMessage(msg);
 	}
 
+	private void shuffle () {
+		Collections.shuffle(arrayPlayback);
+	}
+	
 	private void helper(final State state) {
 		if (stateListener == null || state.equals(State.NONE)) {
 			return;
@@ -398,6 +431,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			mode &= ~SMODE_STOPPING;
 		}
 	}
+	
 	private void onMode(int flag) {
 		mode |= flag;
 		if (flag == SMODE_PREPARED) {
@@ -451,6 +485,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public boolean showPlayPause() {
 		return check(SMODE_PLAY_PAUSE);
+	}
+
+	public boolean enabledShuffle() {
+		return check(SMODE_SHUFFLE);
+	}
+
+	public boolean enabledRepeat() {
+		return check(SMODE_REPEAT);
 	}
 	
 	public boolean hasValidSong(Class cl) {
