@@ -427,7 +427,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					stateListener.update(playingSong);
 					break;
 				case STOP:
-					stateListener.stop(previousSong);
+					if (null != previousSong) {
+						stateListener.stop(previousSong);
+					}
 					break;
 				}
 			}

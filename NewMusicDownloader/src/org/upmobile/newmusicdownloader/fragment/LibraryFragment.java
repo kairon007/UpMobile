@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class LibraryFragment extends Fragment implements Handler.Callback {
 
@@ -32,6 +33,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 	private Handler uiHandler;
 	private View parentView;
 	private ListView listView;
+	private TextView emptyMessage;
 	private String folderFilter;
 	private ContentObserver observer = new ContentObserver(null) {
 
@@ -95,6 +97,9 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 			}
 			adapter.addAll(srcList);
 			listView.setAdapter(adapter);
+		} else {
+			emptyMessage.setVisibility(View.VISIBLE);
+			emptyMessage.setText(R.string.library_empty);
 		}
 		return parentView;
 	}
@@ -102,6 +107,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 	private void init() {
 		folderFilter = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 		listView = (ListView) parentView.findViewById(R.id.listView);
+		emptyMessage = (TextView) parentView.findViewById(R.id.message_listview);
 		ArrayList<MusicData> initArray = new ArrayList<MusicData>();
 		adapter = new LibraryAdapter(getActivity(), R.layout.library_item, initArray);
 	}
@@ -134,6 +140,9 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 	public boolean handleMessage(Message msg) {
 		if (msg.what == MSG_FILL_ADAPTER) {
 			ArrayList<MusicData> array = (ArrayList<MusicData>) msg.obj;
+			if (!array.isEmpty() && emptyMessage.getVisibility() == View.VISIBLE) {
+				emptyMessage.setVisibility(View.GONE);
+			}
 			if (adapter.isEmpty()) {
 				adapter = new LibraryAdapter(getActivity(), R.layout.library_item, array);
 				listView.setAdapter(adapter);

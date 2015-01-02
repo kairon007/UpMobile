@@ -27,6 +27,7 @@
 
     <string name="error_retrieving_the_url">An error occurred while retrieving the url of the song. Try to download another song</string>
     <string name="downloads_empty">Downloads list is empty</string>
+    <string name="library_empty">List of library is empty</string>
     <string name="delete_item">Delete item</string>
 
 </resources>
