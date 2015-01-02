@@ -156,13 +156,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						enabledPlayerElement = false;
 						player.reset();
 						player.play(currentPosition);
-						((MainActivity) getActivity()).showPlayerElement(true);
 					}
 				}
 				getActivity().runOnUiThread(new Runnable() {
 					
 					@Override
 					public void run() {
+						if (!hadInstance) {
+							if (mode == 0) {
+								((MainActivity) getActivity()).showPlayerElement(true);
+							}
+						}
 						setElementsView(current);
 						if (!enabledPlayerElement) {
 							setClickablePlayerElement(false);
@@ -183,11 +187,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player.setStatePlayerListener(new OnStatePlayerListener() {
 			
 			@Override
-			public void start(AbstractSong song) {
+			public void start(AbstractSong s) {
 				if (song.getClass() != MusicData.class) {
-					PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
+					song = ((RemoteSong) s).cloneSong();
 				} else {
-					PlayerFragment.this.song = song;
+					song = s;
 				}
 				if (isDestroy) return;
 				setClickablePlayerElement(true);
@@ -213,7 +217,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				if (isDestroy) return;
 				song = current;
 				setElementsView(0);
-				setClickablePlayerElement(false);
+				setClickablePlayerElement(true);
 			}
 			
 		});
@@ -245,6 +249,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void setClickablePlayerElement(boolean isClickable) {
 		play.setClickable(isClickable);
 		playerProgress.setEnabled(isClickable);
+		playerProgress.setClickable(isClickable);
 		if (isClickable) {
 			play.setImageResource(R.drawable.ic_media_pause);
 		} else {
@@ -309,11 +314,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		long totalTime = song.getDuration();
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
 		playerProgress.setMax((int) totalTime);
-		if (progress > 0) {
-			playerProgress.setProgress(progress);
-			playerCurrTime.setText(Util.getFormatedStrDuration(progress));
-			playerProgress.post(progressAction);
-		}
+		playerProgress.setProgress(progress);
+		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
+		playerProgress.post(progressAction);
 	}
 		
 	private void updateObject() {
@@ -328,7 +331,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			play(0);
 			break;
 		case R.id.prev:
-			play(-1);
+			play(-1);	
 			hideOpenViews();
 			break;
 		case R.id.next:
