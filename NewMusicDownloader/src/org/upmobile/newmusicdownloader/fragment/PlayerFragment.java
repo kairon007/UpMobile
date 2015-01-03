@@ -162,7 +162,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						player.play(currentPosition);
 					}
 				}
-				getActivity().runOnUiThread(new Runnable() {
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
 					
 					@Override
 					public void run() {

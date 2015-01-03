@@ -18,6 +18,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,8 +144,8 @@ public class DownloadsFragment extends Fragment{
 	}
 	
 	private void reDrawAdapter() {
-		getActivity().runOnUiThread(new Runnable() {
-
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
+			
 			@Override
 			public void run() {
 				adapter.notifyDataSetChanged();
