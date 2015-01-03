@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.viewpagerindicator;
+package com.viewpagerindicator; 
 
 import org.kreed.musicdownloader.R;
 
