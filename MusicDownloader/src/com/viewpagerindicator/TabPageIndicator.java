@@ -36,7 +36,7 @@ import android.widget.TextView;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change
- * across different configurations or circumstances.
+ * across different configurations or circumstances. 
  */
 public class TabPageIndicator extends HorizontalScrollView
 	implements ViewPager.OnPageChangeListener
