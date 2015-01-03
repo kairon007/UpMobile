@@ -341,8 +341,13 @@ public abstract class OnlineSearchView extends View {
 			trySearch();
 			return view;
 		}
-		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) showBaseProgress();
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) {
+			showBaseProgress();
+		}
 		else hideBaseProgress();
+		if (progress.getVisibility() == View.GONE && resultAdapter.isEmpty()) {
+			message.setText(R.string.search_your_results_appear_here);
+		}
 		return view;
 	}
 	
