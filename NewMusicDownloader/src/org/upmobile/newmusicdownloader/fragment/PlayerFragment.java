@@ -158,7 +158,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						mode = 0;
 						current = 0;
 						enabledPlayerElement = false;
-						player.reset();
+						if (player.isPlaying()) {
+							player.reset();
+						} 
 						player.play(currentPosition);
 					}
 				}
@@ -244,6 +246,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public void stop(AbstractSong song) {
+				if(song.equals(PlayerFragment.this.song)) return;
 				setElementsView(0);
 				changePlayPauseView(true);
 				setClickablePlayerElement(false);

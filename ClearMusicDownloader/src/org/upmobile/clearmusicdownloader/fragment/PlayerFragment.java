@@ -190,11 +190,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						mode = 0;
 						current = 0;
 						enabledPlayerElement = false;
-						player.reset();
+						if (player.isPlaying()) {
+							player.reset();
+						}
 						player.play(currentPosition);
 					}
 				}
-				getActivity().runOnUiThread(new Runnable() {
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
 					
 					@Override
 					public void run() {

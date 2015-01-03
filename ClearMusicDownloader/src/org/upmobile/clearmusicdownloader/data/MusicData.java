@@ -232,4 +232,14 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 	public void setAlbum(String album) {
 		this.album = album;
 	}
+
+	@Override
+	public MusicData cloneSong(){
+		try {
+			return (MusicData) clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

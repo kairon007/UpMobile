@@ -18,6 +18,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -28,7 +29,7 @@ import android.os.Process;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-public class PlayerService extends Service implements OnCompletionListener, OnErrorListener, Handler.Callback {
+public class PlayerService extends Service implements OnCompletionListener, OnErrorListener, OnPreparedListener, Handler.Callback {
 	
 	//constants section
 	private static final int SMODE_GET_URL = 0x00000001;
@@ -41,6 +42,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private static final int SMODE_STOPPING = 0x00000010;
 	private static final int SMODE_SHUFFLE = 0x00000020;
 	private static final int SMODE_REPEAT = 0x00000040;
+	private static final int SMODE_START_PREPARE = 0x00000080;
 	private static final int MSG_PLAY = 1;
 	private static final int MSG_PLAY_CURRENT = 2;
 	private static final int MSG_PAUSE = 3;
@@ -159,6 +161,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
+		player.setOnPreparedListener(this);
 		looper = thread.getLooper();
 		handler = new Handler(looper, this);
 		instance = this;
@@ -181,9 +184,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void reset() {
 		playingPosition = -1;
+		handler.removeCallbacksAndMessages(null);
 		Message msg = buildMessage(MSG_RESET, 0, 0);
 		handler.sendMessage(msg);
-		helper(State.STOP);
 	}
 	
 	public void remove(AbstractSong song) {
@@ -214,10 +217,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
 		case MSG_PLAY:
-			if (check(SMODE_PREPARED)) {
+			if (check(SMODE_START_PREPARE) || check(SMODE_START_PREPARE)) {
 				player.reset();
-				offMode(SMODE_PREPARED);
-			}
+			}	
 			if (check(SMODE_GET_URL)) {
 				offMode(SMODE_GET_URL);
 			}
@@ -225,17 +227,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			Uri uri = Uri.parse(path);
 			try {
 				player.setDataSource(this, uri);
-				player.prepare();
-				onMode(SMODE_PREPARED);
+				onMode(SMODE_START_PREPARE);
+				player.prepareAsync();
 			} catch (Exception e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
-			if (msg.arg1 != playingPosition) {
-				player.reset();
-				break;
-			}
-			helper(State.START);
-			player.start();
 			break;
 
 		case MSG_PLAY_CURRENT:
@@ -267,6 +263,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			player.setOnCompletionListener(this);
 			player.setOnErrorListener(this);
+			player.setOnPreparedListener(this);
 			break;
 			
 		case MSG_RESET:
@@ -311,7 +308,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 		previousSong = playingSong;
 		playingSong = arrayPlayback.get(playingPosition);
-		handler.removeMessages(1, null);
+		handler.removeCallbacksAndMessages(null);
 		Message msg = new Message();
 		msg.what = MSG_RESET;
 		handler.sendMessage(msg);
@@ -337,6 +334,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			}
 			handler.sendMessage(msg);
 		} else {
+			if (null != previousSong) {
+				helper(State.STOP);
+			}
 			playingPosition = position;
 			play(msg);
 		}
@@ -448,10 +448,13 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		mode |= flag;
 		if (flag == SMODE_PREPARED) {
 			onMode(SMODE_PLAYING);
+			offMode(SMODE_START_PREPARE);
 		} else if (flag == SMODE_PLAYING) {
 			mode &= ~SMODE_STOPPING;
 		} else if (flag == SMODE_STOPPING){
 			mode &= ~SMODE_PLAYING;
+		} else if (flag == SMODE_START_PREPARE) {
+			offMode(SMODE_PREPARED);
 		}
 	}
 	
@@ -479,6 +482,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		shift(1);
 	}
 
+	@Override
+	public void onPrepared(MediaPlayer mp) {
+		onMode(SMODE_PREPARED);
+		helper(State.START);
+		mp.start();
+	}
 	
 	public int getCurrentPosition() {
 		if (!check(SMODE_PREPARED)) return 0;
@@ -566,4 +575,5 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public IBinder onBind(Intent paramIntent) {
 		return null;
 	}
+
 }
