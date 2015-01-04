@@ -34,7 +34,7 @@
             android:contentDescription="@string/app_name"
             android:padding="@dimen/app_widget_recents_action_bar_item_padding"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/icon" />
 
         <TextView
             android:id="@+id/app_widget_recents_app_name"

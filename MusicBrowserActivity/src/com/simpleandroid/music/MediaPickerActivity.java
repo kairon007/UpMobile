@@ -66,13 +66,15 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
         mToken = MusicUtils.bindToService(this);
         init();
 		// load banner ad
+        /*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this);
 			}
 		} catch (Exception e) {
 
 		}
+		*/
 
     }
 
@@ -92,9 +94,9 @@ public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
 
     public void init() {
     	if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
+			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
 		} else {
-			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
+			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
 		}
         MakeCursor();
         if (null == mCursor || 0 == mCursor.getCount()) {

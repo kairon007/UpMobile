@@ -2,16 +2,16 @@ package org.kreed.musicdownloader.ui.tab;
 
 import java.util.ArrayList;
 
-import org.kreed.musicdownloader.Advertisement;
+import org.kreed.musicdownloader.Nulldroid_Advertisement;
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.Settings;
+import org.kreed.musicdownloader.Nulldroid_Settings;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.listeners.DownloadListener;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
 
-import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -126,7 +126,7 @@ public class SearchView  extends OnlineSearchView {
 
 	@Override
 	protected BaseSettings getSettings() {
-		return new Settings();
+		return new Nulldroid_Settings();
 	}
 	
 	@Override
@@ -135,9 +135,9 @@ public class SearchView  extends OnlineSearchView {
 	}
 
 	@Override
-	protected Advertisment getAdvertisment() {
+	protected Nulldroid_Advertisement getAdvertisment() {
 		try {
-			return Advertisement.class.newInstance();
+			return Nulldroid_Advertisement.class.newInstance();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

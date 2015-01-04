@@ -1,6 +1,6 @@
 package org.kreed.vanilla;
 
-import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
@@ -17,13 +17,13 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected BaseSettings getSettings() {
-		return new Settings();
+		return new Nulldroid_Settings();
 	}
 
 	@Override
-	protected Advertisment getAdvertisment() {
+	protected Nulldroid_Advertisement getAdvertisment() {
 		try {
-			return Advertisement.class.newInstance();
+			return Nulldroid_Advertisement.class.newInstance();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

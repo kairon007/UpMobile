@@ -2,15 +2,15 @@ package org.upmobile.clearmusicdownloader.ui;
 
 import java.util.ArrayList;
 
-import org.upmobile.clearmusicdownloader.Advertisement;
 import org.upmobile.clearmusicdownloader.Constants;
+import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.Settings;
+import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
-import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -74,12 +74,12 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected BaseSettings getSettings() {
-		return new Settings();
+		return new Nulldroid_Settings();
 	}
 
 	@Override
-	protected Advertisment getAdvertisment() {
-		return new Advertisement();
+	protected Nulldroid_Advertisement getAdvertisment() {
+		return new Nulldroid_Advertisement();
 	}
 
 	@Override

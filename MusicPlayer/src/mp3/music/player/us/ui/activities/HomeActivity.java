@@ -13,10 +13,10 @@ package mp3.music.player.us.ui.activities;
 
 import java.util.Random;
 
-import mp3.music.player.us.Advertisement;
 import mp3.music.player.us.Constants;
+import mp3.music.player.us.Nulldroid_Advertisement;
 import mp3.music.player.us.R;
-import mp3.music.player.us.Settings;
+import mp3.music.player.us.Nulldroid_Settings;
 import mp3.music.player.us.ui.fragments.phone.MusicBrowserPhoneFragment;
 import mp3.music.player.us.utils.PreferenceUtils;
 import android.app.Activity;
@@ -81,10 +81,10 @@ public class HomeActivity extends BaseActivity {
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
 			if (downloadsLayout != null) {
-				if (Settings.getIsBlacklisted(this)) {
-					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				if (Nulldroid_Settings.getIsBlacklisted(this)) {
+					Nulldroid_Advertisement.hideCrossPromoBox(this, downloadsLayout);
 				} else {
-					Advertisement.showCrossPromoBox(this, downloadsLayout);
+					Nulldroid_Advertisement.showCrossPromoBox(this, downloadsLayout);
 				}
 			}
 		} catch (Exception e) {
@@ -94,7 +94,7 @@ public class HomeActivity extends BaseActivity {
 		// show or hide disclaimer
 		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
 		if (editTextDisclaimer != null) {
-			if (Settings.getIsBlacklisted(this)) {
+			if (Nulldroid_Settings.getIsBlacklisted(this)) {
 				editTextDisclaimer.setVisibility(View.VISIBLE);
 			} else {
 				editTextDisclaimer.setVisibility(View.GONE);
@@ -103,13 +103,15 @@ public class HomeActivity extends BaseActivity {
 
 
 		// load banner ad
+		/*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this);
 			}
 		} catch (Exception e) {
 
 		}
+		*/
 
 
 
@@ -118,10 +120,10 @@ public class HomeActivity extends BaseActivity {
 
 		// initialize ad networks
 		try {
-			if (!Settings.getIsBlacklisted(this)) {
-				Advertisement.start(this, false);
+			if (!Nulldroid_Settings.getIsBlacklisted(this)) {
+				Nulldroid_Advertisement.start(this, false);
 			} else {
-				Advertisement.showDisclaimer(this);
+				//Advertisement.showDisclaimer(this);
 			}
 		} catch (Exception e) {
 
@@ -270,7 +272,7 @@ public class HomeActivity extends BaseActivity {
 	 */
 	@Override
 	public int setContentView() {
-		return mp3.music.player.us.Settings.SHOW_BANNER_ON_TOP ? R.layout.activity_base_top : R.layout.activity_base;
+		return mp3.music.player.us.Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.activity_base_top : R.layout.activity_base;
 	}
 
 	@Override

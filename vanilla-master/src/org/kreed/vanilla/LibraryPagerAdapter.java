@@ -249,16 +249,16 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 		int[] order = null;
 		int count = 0;
 		if (in == null || in.length() != MAX_ADAPTER_COUNT) {
-			if (Settings.ENABLE_FILES_TAB_BY_DEFAULT && Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
+			if (Nulldroid_Settings.ENABLE_FILES_TAB_BY_DEFAULT && Nulldroid_Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
 				order = DEFAULT_ORDER;
 				count = MAX_ADAPTER_COUNT;
-			} else if (!Settings.ENABLE_FILES_TAB_BY_DEFAULT && Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
+			} else if (!Nulldroid_Settings.ENABLE_FILES_TAB_BY_DEFAULT && Nulldroid_Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
 				order = DEFAULT_ORDER_WITHOUT_FILE;
 				count = MAX_ADAPTER_COUNT - 1;
-			} else if (Settings.ENABLE_FILES_TAB_BY_DEFAULT && !Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
+			} else if (Nulldroid_Settings.ENABLE_FILES_TAB_BY_DEFAULT && !Nulldroid_Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
 				order = DEFAULT_ORDER_WITHOUT_GENRE;
 				count = MAX_ADAPTER_COUNT - 1;
-			} else if (!Settings.ENABLE_FILES_TAB_BY_DEFAULT && !Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
+			} else if (!Nulldroid_Settings.ENABLE_FILES_TAB_BY_DEFAULT && !Nulldroid_Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
 				order = DEFAULT_ORDER_WITHOUT_FILE_AND_GENRE;
 				count = MAX_ADAPTER_COUNT - 2;
 			}

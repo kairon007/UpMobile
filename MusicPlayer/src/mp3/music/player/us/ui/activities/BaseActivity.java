@@ -36,10 +36,10 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
-import mp3.music.player.us.Advertisement;
 import mp3.music.player.us.IApolloService;
 import mp3.music.player.us.MusicPlaybackService;
 import mp3.music.player.us.MusicStateListener;
+import mp3.music.player.us.Nulldroid_Advertisement;
 import mp3.music.player.us.R;
 import mp3.music.player.us.utils.ApolloUtils;
 import mp3.music.player.us.utils.Lists;
@@ -306,7 +306,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity implements S
         } catch (final Throwable e) {
             //$FALL-THROUGH$
         }
-        Advertisement.onDestroy(this);
+        Nulldroid_Advertisement.onDestroy(this);
         // Remove any music status listeners
         mMusicStateListener.clear();
     }

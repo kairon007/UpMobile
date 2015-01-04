@@ -68,13 +68,15 @@ public class MiniPlaybackActivity extends PlaybackActivity {
 		
 
 		// load banner ad
+		/*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this); 
 			}
 		} catch (Exception e) { 
 			 
 		}
+		*/
 	}
 
 	@Override

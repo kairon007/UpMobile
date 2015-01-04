@@ -38,10 +38,10 @@ THE SOFTWARE.
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+    
     
     
 
@@ -51,7 +51,7 @@ THE SOFTWARE.
     
       <!-- AD NETWORK PERMISSIONS -->
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	
@@ -60,7 +60,7 @@ THE SOFTWARE.
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	
 	<uses-permission android:name="android.permission.WAKE_LOCK" /> 
-	<uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+	
 	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/> 
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -68,6 +68,10 @@ THE SOFTWARE.
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
     
+    
+  <!-- AD NETWORK PERMISSIONS -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     
     
     
@@ -136,27 +140,6 @@ THE SOFTWARE.
         <activity
             android:name=".CustomEqualizer" />
         
-        <activity
-            android:name="com.mopub.mobileads.MoPubActivity"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.mopub.mobileads.MraidActivity"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.mopub.common.MoPubBrowser"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-
-        
-        <activity
-            android:name="com.millennialmedia.android.VideoPlayer"
-            android:configChanges="keyboardHidden|orientation|keyboard" />
-
         <receiver
             android:name=".OneCellWidget"
             android:label="Vanilla Music 1x1" >
@@ -264,26 +247,10 @@ THE SOFTWARE.
         
         
         
-
-		<!-- Google play services integration start -->
-		<!-- the addition of this element is required for supporting Google play services. Please ensure not to use it twice -->
-<meta-data
-            android:name="com.google.android.gms.version"
-            android:value="5077000" />
-		<!-- Google play services integration end -->
-		
-
-
-	<!-- Appnext -->
-	<service android:name="com.appnext.appnextsdk.DownloadService"/>
-	
-
-	
-	
-	
         
-		<!-- Mobilecore Manifest declaration start -->
-		<service
+	<!-- MOBILECORE -->
+
+        <service
             android:name="com.ironsource.mobilcore.MobileCoreReport"
             android:enabled="true"
             android:exported="false"
@@ -293,29 +260,20 @@ THE SOFTWARE.
             android:name="com.ironsource.mobilcore.InstallationTracker"
             android:enabled="true"
             android:process=":installationTracker" />
+
 		<activity android:name="com.ironsource.mobilcore.InterstitialVideoActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:keepScreenOn="true"/>
+	
         
-        
-        
-		<!-- Revmob -->
-		<meta-data android:name="com.revmob.app.id" android:value="5433b352053d33220787aa51"/>
-        <activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Translucent">
-        </activity>
 		
-        
-        <!-- Startapp -->
-        <activity android:name="com.startapp.android.publish.list3d.List3DActivity"
+		<!-- STARTAPP -->
+		
+		<activity android:name="com.startapp.android.publish.list3d.List3DActivity"
           android:theme="@android:style/Theme" />
 
 <activity android:name="com.startapp.android.publish.AppWallActivity"
           android:theme="@android:style/Theme.Translucent"
           android:configChanges="orientation|keyboardHidden|screenSize" />
-        
-
-
-
+    
         
         
         

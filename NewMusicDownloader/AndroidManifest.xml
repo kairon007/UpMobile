@@ -10,10 +10,10 @@
 
     <!-- PERMISSIONS -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -23,6 +23,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
+    
+    
+  <!-- AD NETWORK PERMISSIONS -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    
+    
     <application
         android:name="org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp"
         android:allowBackup="true"
@@ -43,6 +50,40 @@
         </activity>
 
         <service android:name="org.upmobile.newmusicdownloader.service.PlayerService" />
+        
+        
+        
+        
+        
+
+        
+	<!-- MOBILECORE -->
+
+        <service
+            android:name="com.ironsource.mobilcore.MobileCoreReport"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":mcServiceProcess" />
+
+        <receiver
+            android:name="com.ironsource.mobilcore.InstallationTracker"
+            android:enabled="true"
+            android:process=":installationTracker" />
+
+		<activity android:name="com.ironsource.mobilcore.InterstitialVideoActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:keepScreenOn="true"/>
+	
+        
+		
+		<!-- STARTAPP -->
+		
+		<activity android:name="com.startapp.android.publish.list3d.List3DActivity"
+          android:theme="@android:style/Theme" />
+
+<activity android:name="com.startapp.android.publish.AppWallActivity"
+          android:theme="@android:style/Theme.Translucent"
+          android:configChanges="orientation|keyboardHidden|screenSize" />
+    
+        
     </application>
 
 </manifest>

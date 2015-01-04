@@ -174,7 +174,7 @@ THE SOFTWARE.
             >
 		</LinearLayout>
     
-<!--    <com.mopub.mobileads.MoPubView
+<!--    <com.startapp.android.publish.banner.bannerstandard.BannerStandard
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/banner_view"
         android:layout_width="match_parent"

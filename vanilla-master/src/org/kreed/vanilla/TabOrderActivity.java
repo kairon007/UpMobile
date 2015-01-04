@@ -92,14 +92,14 @@ public class TabOrderActivity extends Activity implements View.OnClickListener, 
 		for (Integer i = 0; i != LibraryPagerAdapter.MAX_ADAPTER_COUNT; ++i) {
 			switch (i) {
 			case MediaUtils.TYPE_GENRE:
-				if (Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
+				if (Nulldroid_Settings.ENABLE_GENRES_TAB_BY_DEFAULT) {
 					list.setItemChecked(i, true);
 				} else {
 					list.setItemChecked(i, false);
 				}
 				break;
 			case MediaUtils.TYPE_FILE:
-				if (Settings.ENABLE_FILES_TAB_BY_DEFAULT) {
+				if (Nulldroid_Settings.ENABLE_FILES_TAB_BY_DEFAULT) {
 					list.setItemChecked(i, true);
 				} else {
 					list.setItemChecked(i, false);

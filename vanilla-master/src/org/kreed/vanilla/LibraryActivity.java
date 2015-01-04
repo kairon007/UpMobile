@@ -258,7 +258,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	public void onDestroy() {
-		Advertisement.onDestroy(this);
+		Nulldroid_Advertisement.onDestroy(this);
 		if (null != renameTask) {
 			renameTask.cancelProgress();
 		}
@@ -268,13 +268,13 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Advertisement.onPause(this);
+		Nulldroid_Advertisement.onPause(this);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		Advertisement.onResume(this);
+		Nulldroid_Advertisement.onResume(this);
 		updateEqualizerVisibility();
 	}
 
@@ -294,7 +294,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		} else {
 			setTheme(R.style.Library);
 		}
-		setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
+		setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
 		// Advertisement.startAppInit(this);
 		// Advertisement.mobileCoreInit(this);
 		// Advertisement.moPubInit(this);
@@ -448,10 +448,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
 			if (downloadsLayout != null) {
-				if (Settings.getIsBlacklisted(this)) {
-					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				if (Nulldroid_Settings.getIsBlacklisted(this)) {
+					Nulldroid_Advertisement.hideCrossPromoBox(this, downloadsLayout);
 				} else {
-					Advertisement.showCrossPromoBox(this, downloadsLayout);
+					Nulldroid_Advertisement.showCrossPromoBox(this, downloadsLayout);
 				}
 			}
 		} catch (Exception e) {
@@ -460,7 +460,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		// show or hide disclaimer
 		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
 		if (editTextDisclaimer != null) {
-			if (Settings.getIsBlacklisted(this)) {
+			if (Nulldroid_Settings.getIsBlacklisted(this)) {
 				editTextDisclaimer.setVisibility(View.VISIBLE);
 			} else {
 				editTextDisclaimer.setVisibility(View.GONE);
@@ -468,23 +468,25 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		}
 		// initialize ad networks
 		try {
-			if (!Settings.getIsBlacklisted(this)) {
-				Advertisement.start(this, swichShowDialogRate);
+			if (!Nulldroid_Settings.getIsBlacklisted(this)) {
+				Nulldroid_Advertisement.start(this, swichShowDialogRate);
 				swichShowDialogRate = false;
 			} else {
-				Advertisement.showDisclaimer(this);
+				//Advertisement.showDisclaimer(this);
 			}
 		} catch (Exception e) {
 
 		}
 		// load banner ad
+		/*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this);
 			}
 		} catch (Exception e) {
 
 		}
+		*/
 	}
 
 	public void setFilterHint(int type) {
@@ -518,7 +520,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	}
 
 	private void updateEqualizerVisibility() {
-		mEqualizerButton.setVisibility(Settings.ENABLE_EQUALIZER ? View.VISIBLE : View.GONE);
+		mEqualizerButton.setVisibility(Nulldroid_Settings.ENABLE_EQUALIZER ? View.VISIBLE : View.GONE);
 	}
 
 	/**
@@ -605,7 +607,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			//onBackPressed();
 			
             try {
-            	Advertisement.exit(this);
+            	Nulldroid_Advertisement.exit(this);
             } catch(Exception e) {
             	
             }

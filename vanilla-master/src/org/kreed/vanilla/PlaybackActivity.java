@@ -281,7 +281,7 @@ public abstract class PlaybackActivity extends Activity
 		if (song != null) {
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 			isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-			if (mLyricsView != null && Settings.ENABLE_LYRICS && isLyricsShow == true && mLyricsView.getVisibility() == View.VISIBLE) {
+			if (mLyricsView != null && Nulldroid_Settings.ENABLE_LYRICS && isLyricsShow == true && mLyricsView.getVisibility() == View.VISIBLE) {
 				loaderLyrics(song);
 			}/* else if (mLyricsView != null) {
 				mLyricsView.setText("");

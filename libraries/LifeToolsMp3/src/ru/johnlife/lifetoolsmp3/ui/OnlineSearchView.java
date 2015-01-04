@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.json.JSONArray;
 
-import ru.johnlife.lifetoolsmp3.Advertisment;
+import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -195,7 +195,7 @@ public abstract class OnlineSearchView extends View {
 
 	protected abstract BaseSettings getSettings();
 
-	protected abstract Advertisment getAdvertisment();
+	protected abstract Nulldroid_Advertisment getAdvertisment();
 
 	protected abstract void stopSystemPlayer(Context context);
 	
@@ -589,6 +589,8 @@ public abstract class OnlineSearchView extends View {
 					.setId(position)
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover())
 					.setButtonVisible(showDownloadButton() ? true : false);
+			
+			/*
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
 					@Override
@@ -599,6 +601,7 @@ public abstract class OnlineSearchView extends View {
 					}
 				});
 			}
+			*/
 			if (position == getCount() - 1) {
 				showRefreshProgress();
 				getNextResults();
@@ -877,13 +880,18 @@ public abstract class OnlineSearchView extends View {
 				player.setSongId(((GrooveSong) song).getSongId());
 			}
 			createStreamDialog(song).show();
+			
+			Log.e("nulldroid", "hi 2");
+			
 			if (getSettings().getIsCoversEnabled(getContext())) {
+				/*
 				if (null != listViewImage) {
 					player.setCover(getResizedBitmap(listViewImage, 200, 200));
 					listViewImage = null;
 				} else {
 					player.setCoverFromSong(song);
 				}
+				*/
 			} else {
 				player.hideCoverProgress();
 			}
@@ -900,6 +908,10 @@ public abstract class OnlineSearchView extends View {
 				refreshLibrary();
 			}
 		},0);
+		
+		
+		Log.e("nulldroid", "hi 3");
+		/*
 		if (getSettings().getIsCoversEnabled(getContext())) {
 			boolean hasCover = ((RemoteSong) song).getCover(downloadListener);
 			if (!hasCover) {
@@ -907,6 +919,7 @@ public abstract class OnlineSearchView extends View {
 				player.setCover(null);
 			}
 		}
+		*/
 	}
 
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {

@@ -6,13 +6,13 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.kreed.musicdownloader.Advertisement;
 import org.kreed.musicdownloader.CompatHoneycomb;
 import org.kreed.musicdownloader.Constants;
 import org.kreed.musicdownloader.CustomEqualizer;
+import org.kreed.musicdownloader.Nulldroid_Advertisement;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.Settings;
+import org.kreed.musicdownloader.Nulldroid_Settings;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.Player;
@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		}
 		unregisterReceiver(headphonesReceiver);
-		Advertisement.onDestroy(this);
+		Nulldroid_Advertisement.onDestroy(this);
 		super.onDestroy();
 	}
 
@@ -330,10 +330,10 @@ public class MainActivity extends Activity {
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
 			if (downloadsLayout != null) {
-				if (Settings.getIsBlacklisted(this)) {
-					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				if (Nulldroid_Settings.getIsBlacklisted(this)) {
+					Nulldroid_Advertisement.hideCrossPromoBox(this, downloadsLayout);
 				} else {
-					Advertisement.showCrossPromoBox(this, downloadsLayout);
+					Nulldroid_Advertisement.showCrossPromoBox(this, downloadsLayout);
 				}
 			}
 		} catch (Exception e) {
@@ -341,26 +341,29 @@ public class MainActivity extends Activity {
 		// show or hide disclaimer
 		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
 		if (editTextDisclaimer != null) {
-			if (Settings.getIsBlacklisted(this)) {
+			if (Nulldroid_Settings.getIsBlacklisted(this)) {
 				editTextDisclaimer.setVisibility(View.VISIBLE);
 			} else {
 				editTextDisclaimer.setVisibility(View.GONE);
 			}
 		}
 		// load banner ad
+		/*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this);
 			}
 		} catch (Exception e) {
 
 		}
+		*/
+		
 		// initialize ad networks
 		try {
-			if (!Settings.getIsBlacklisted(this)) {
-				// Advertisement.start(this, false);
+			if (!Nulldroid_Settings.getIsBlacklisted(this)) {
+				Nulldroid_Advertisement.start(this, false);
 			} else {
-				Advertisement.showDisclaimer(this);
+				//Advertisement.showDisclaimer(this);
 			}
 		} catch (Exception e) {
 		}

@@ -159,9 +159,9 @@ public class TrackBrowserActivity extends ListActivity
                 MediaStore.Audio.Media.IS_MUSIC
         };
         if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
+			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
 		} else {
-			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
+			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
 		}
         mUseLastListPos = MusicUtils.updateButtonBar(this, R.id.songtab);
         mTrackList = getListView();
@@ -195,13 +195,15 @@ public class TrackBrowserActivity extends ListActivity
             }
         });
 		// load banner ad
+        /*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this);
 			}
 		} catch (Exception e) {
 
 		}
+		*/
 
     }
 

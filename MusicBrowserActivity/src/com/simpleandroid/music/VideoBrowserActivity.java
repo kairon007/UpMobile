@@ -43,13 +43,15 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         init();
 		// load banner ad
+        /*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this);
 			}
 		} catch (Exception e) {
 
 		}
+		*/
 
     }
 
@@ -57,9 +59,9 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
         // Set the layout for this activity.  You can find it
         // in assets/res/any/layout/media_picker_activity.xml
     	if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
+			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
 		} else {
-			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
+			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
 		}
         makeCursor();
         if (mCursor == null) {

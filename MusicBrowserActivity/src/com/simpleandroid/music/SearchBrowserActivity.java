@@ -37,9 +37,9 @@ public class SearchBrowserActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
  		if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top_white : R.layout.media_picker_activity_expanding_white);
+			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top_white : R.layout.media_picker_activity_expanding_white);
 		} else {
-			setContentView(Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top : R.layout.media_picker_activity_expanding);
+			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top : R.layout.media_picker_activity_expanding);
 		}
  		if (null != findViewById(R.id.nowplaying)) {
  			findViewById(R.id.nowplaying).setVisibility(View.GONE);
@@ -57,10 +57,10 @@ public class SearchBrowserActivity extends Activity {
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
 			if (downloadsLayout != null) {
-				if (Settings.getIsBlacklisted(this)) {
-					Advertisement.hideCrossPromoBox(this, downloadsLayout);
+				if (Nulldroid_Settings.getIsBlacklisted(this)) {
+					Nulldroid_Advertisement.hideCrossPromoBox(this, downloadsLayout);
 				} else {
-					Advertisement.showCrossPromoBox(this, downloadsLayout);
+					Nulldroid_Advertisement.showCrossPromoBox(this, downloadsLayout);
 				}
 			}
 		} catch (Exception e) {
@@ -70,7 +70,7 @@ public class SearchBrowserActivity extends Activity {
 		// show or hide disclaimer
 		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
 		if (editTextDisclaimer != null) {
-			if (Settings.getIsBlacklisted(this)) {
+			if (Nulldroid_Settings.getIsBlacklisted(this)) {
 				editTextDisclaimer.setVisibility(View.VISIBLE);
 			} else {
 				editTextDisclaimer.setVisibility(View.GONE);
@@ -79,22 +79,23 @@ public class SearchBrowserActivity extends Activity {
 
 
 		// load banner ad
+		/*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this);
 			}
 		} catch (Exception e) {
 
 		}
-		
+		*/
 
 
 		// initialize ad networks
 		try {
-			if (!Settings.getIsBlacklisted(this)) {
-				Advertisement.start(this, false);
+			if (!Nulldroid_Settings.getIsBlacklisted(this)) {
+				Nulldroid_Advertisement.start(this, false);
 			} else {
-				Advertisement.showDisclaimer(this);
+				//Advertisement.showDisclaimer(this);
 			}
 		} catch (Exception e) {
 

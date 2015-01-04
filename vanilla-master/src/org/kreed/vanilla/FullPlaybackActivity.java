@@ -264,8 +264,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 
 		
 		try {
-			if (Advertisement.isOnline(this)) {
-				Advertisement.downloadsStart(this);
+			if (Nulldroid_Advertisement.isOnline(this)) {
+				Nulldroid_Advertisement.downloadsStart(this);
 			}
 		} catch(Exception e) {
 			
@@ -274,13 +274,15 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		
 		
 		// load banner ad
+		/*
 		try {
-			if (Settings.ENABLE_ADS) {
+			if (Nulldroid_Settings.ENABLE_ADS) {
 				Advertisement.showBanner(this); 
 			}
 		} catch (Exception e) { 
 			 
 		}
+		*/
 		lyricConfigurate();
 		
 		if (icicle != null && mLyricsView != null && icicle.getBoolean(EXTRA_LYRICS_STATE)) {
@@ -294,8 +296,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 
 	@Override
 	public void onBackPressed() {
-		if (Advertisement.isOnline(this)) {
-			Advertisement.downloadsExit(this);	
+		if (Nulldroid_Advertisement.isOnline(this)) {
+			Nulldroid_Advertisement.downloadsExit(this);	
 		}  else {
 			finish();
 		}
@@ -529,7 +531,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	}
 	
 	public void loadLyrics(final Song song) {
-		if (mLyricsView != null && Settings.ENABLE_LYRICS && mLyricsView.getVisibility() == View.VISIBLE) {
+		if (mLyricsView != null && Nulldroid_Settings.ENABLE_LYRICS && mLyricsView.getVisibility() == View.VISIBLE) {
 			loaderLyrics(song);
 		}
 	}
@@ -581,11 +583,11 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		menu.add(0, MENU_ENQUEUE_ARTIST, 0, R.string.enqueue_current_artist).setIcon(R.drawable.ic_menu_add);
 		menu.add(0, MENU_ENQUEUE_GENRE, 0, R.string.enqueue_current_genre).setIcon(R.drawable.ic_menu_add);
 		menu.add(0, MENU_TOGGLE_CONTROLS, 0, R.string.toggle_controls);
-		if (Settings.ENABLE_EQUALIZER) {
+		if (Nulldroid_Settings.ENABLE_EQUALIZER) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.playback_menu, menu);
 		}
-		if (Settings.ENABLE_LYRICS) {
+		if (Nulldroid_Settings.ENABLE_LYRICS) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.playback_menu_lyrics, menu);
 		}
