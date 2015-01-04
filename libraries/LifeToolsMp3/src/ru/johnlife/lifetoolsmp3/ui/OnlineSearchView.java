@@ -590,7 +590,6 @@ public abstract class OnlineSearchView extends View {
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover())
 					.setButtonVisible(showDownloadButton() ? true : false);
 			
-			/*
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
 					@Override
@@ -601,7 +600,7 @@ public abstract class OnlineSearchView extends View {
 					}
 				});
 			}
-			*/
+			
 			if (position == getCount() - 1) {
 				showRefreshProgress();
 				getNextResults();
@@ -881,17 +880,13 @@ public abstract class OnlineSearchView extends View {
 			}
 			createStreamDialog(song).show();
 			
-			Log.e("nulldroid", "hi 2");
-			
 			if (getSettings().getIsCoversEnabled(getContext())) {
-				/*
 				if (null != listViewImage) {
 					player.setCover(getResizedBitmap(listViewImage, 200, 200));
 					listViewImage = null;
 				} else {
 					player.setCoverFromSong(song);
 				}
-				*/
 			} else {
 				player.hideCoverProgress();
 			}
@@ -910,8 +905,6 @@ public abstract class OnlineSearchView extends View {
 		},0);
 		
 		
-		Log.e("nulldroid", "hi 3");
-		/*
 		if (getSettings().getIsCoversEnabled(getContext())) {
 			boolean hasCover = ((RemoteSong) song).getCover(downloadListener);
 			if (!hasCover) {
@@ -919,7 +912,7 @@ public abstract class OnlineSearchView extends View {
 				player.setCover(null);
 			}
 		}
-		*/
+
 	}
 
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
