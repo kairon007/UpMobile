@@ -39,7 +39,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	 */
 	private static final int SMODE_PLAY_PAUSE = 0x00000004;
 	private static final int SMODE_PLAYING = 0x00000008;
-	private static final int SMODE_STOPPING = 0x00000010;
+	private static final int SMODE_PAUSE = 0x00000010;
 	private static final int SMODE_SHUFFLE = 0x00000020;
 	private static final int SMODE_REPEAT = 0x00000040;
 	private static final int SMODE_START_PREPARE = 0x00000080;
@@ -246,7 +246,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (check(SMODE_PREPARED)) {
 				helper(State.PAUSE);
 				player.pause();
-				onMode(SMODE_STOPPING);
+				onMode(SMODE_PAUSE);
 			}
 			break;
 
@@ -336,6 +336,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		} else {
 			if (null != previousSong) {
 				helper(State.STOP);
+			}
+			if (isPlaying() || check(SMODE_PAUSE)) {
+				Message m = buildMessage(MSG_RESET, 0, 0);
+				handler.sendMessage(m);
 			}
 			playingPosition = position;
 			play(msg);
@@ -440,18 +444,17 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		mode &= ~flag;
 		if (flag == SMODE_PREPARED) {
 			mode &= ~SMODE_PLAYING;
-			mode &= ~SMODE_STOPPING;
+			mode &= ~SMODE_PAUSE;
 		}
 	}
 	
 	private void onMode(int flag) {
 		mode |= flag;
 		if (flag == SMODE_PREPARED) {
-			onMode(SMODE_PLAYING);
 			offMode(SMODE_START_PREPARE);
 		} else if (flag == SMODE_PLAYING) {
-			mode &= ~SMODE_STOPPING;
-		} else if (flag == SMODE_STOPPING){
+			mode &= ~SMODE_PAUSE;
+		} else if (flag == SMODE_PAUSE){
 			mode &= ~SMODE_PLAYING;
 		} else if (flag == SMODE_START_PREPARE) {
 			offMode(SMODE_PREPARED);
@@ -487,6 +490,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		onMode(SMODE_PREPARED);
 		helper(State.START);
 		mp.start();
+		onMode(SMODE_PLAYING);
 	}
 	
 	public int getCurrentPosition() {
@@ -539,7 +543,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (check(SMODE_PLAYING)) {
 			result = true;
 		}
-		if (check(SMODE_STOPPING)) {
+		if (check(SMODE_PAUSE)) {
 			result = false;
 		}
 		return result;
