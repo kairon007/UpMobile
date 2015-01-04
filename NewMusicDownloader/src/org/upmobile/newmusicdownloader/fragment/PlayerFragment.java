@@ -361,6 +361,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void updateObject() {
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());
+		if (!playerTagsCheckBox.isChecked()) {
+			Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.no_cover_art_big);
+			playerCover.setImageBitmap(bmp);
+		}
 	}
 	
 	@Override
@@ -508,7 +512,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
-			playerTagsCheckBox.setChecked(true);                     //temporary 
+			if (song.hasCover()) {
+				playerTagsCheckBox.setChecked(true);
+			} else {
+				playerTagsCheckBox.setChecked(false);
+				playerTagsCheckBox.setClickable(false);
+			}
 			final int [] location = new int[2];
 			playerTagsArtist.getLocationOnScreen(location);
 		}
@@ -524,7 +533,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (song.getClass() != MusicData.class)
 			return;
 		File f = new File(song.getPath());
-		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
+		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists() && playerTagsCheckBox.isChecked()) {
 			Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
 			toast.show();
 			return;
@@ -548,7 +557,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(true, false);
 			}
-		} else if (manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change only cover
+		} else if (!manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change only cover
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(false, true);
 			}

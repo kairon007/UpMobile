@@ -22,6 +22,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -371,6 +372,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitle.setText(song.getTitle());
 		playerTitleBarArtis.setText(song.getArtist());
 		playerTitleBarTitle.setText(song.getTitle());
+		if (!playerTagsCheckBox.isChecked()) {
+			Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.def_cover_circle_web);
+			playerCover.setImageBitmap(bmp);
+		}
 	}
 	
 	
@@ -497,7 +502,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
-			playerTagsCheckBox.setChecked(true);                     //temporary 
+			if (song.hasCover()) {
+				playerTagsCheckBox.setChecked(true);
+			} else {
+				playerTagsCheckBox.setChecked(false);
+				playerTagsCheckBox.setClickable(false);
+			}                    
 			final int [] location = new int[2];
 			playerTagsArtist.getLocationOnScreen(location);
 			animateOpenViews(location);
@@ -524,7 +534,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (song.getClass() != MusicData.class)
 			return;
 		File f = new File(song.getPath());
-		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
+		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists() && playerTagsCheckBox.isChecked()) {
 			Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
 			toast.show();
 			return;
@@ -548,7 +558,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(true, false);
 			}
-		} else if (manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change only cover
+		} else if (!manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change only cover
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(false, true);
 			}

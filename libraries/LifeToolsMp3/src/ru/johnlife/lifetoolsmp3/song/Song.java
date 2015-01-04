@@ -144,7 +144,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * in the song.
 	 */
 	
-//	public Bitmap songBmp;
+	public Bitmap cover;
 	
 	public Song(long id)
 	{
@@ -195,6 +195,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * @param song The Song to get the id from.
 	 * @return The id, or 0 if the given song is null.
 	 */
+	@Override
 	public long getId() {
 		return id;
 	}
@@ -205,9 +206,9 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * @param context A context to use.
 	 * @return The album art or null if no album art could be found
 	 */
-	public Bitmap getCover(Context context)
-	{
-		Bitmap cover = null;
+	@Override
+	public Bitmap getCover(Context context) {
+		if (cover != null) return cover;
 		if (mDisableCoverArt || id == -1 || (flags & FLAG_NO_COVER) != 0) return null;
 		if (null == path) return null;
 		File file = new File(path);
@@ -220,6 +221,11 @@ public class Song implements Comparable<Song>, AbstractSong {
 		}
 		if (cover == null) flags |= FLAG_NO_COVER;
 		return cover;
+	}
+	
+	@Override
+	public boolean hasCover() {
+		return cover != null;
 	}
 
 	@Override
@@ -251,14 +257,17 @@ public class Song implements Comparable<Song>, AbstractSong {
 		return true;
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
 	
+	@Override
 	public boolean getDownloadUrl(DownloadUrlListener listener) {
 		return false;
 	}
-
+	
+	@Override
 	public String getArtist() {
 		return artist;
 	}
@@ -277,11 +286,6 @@ public class Song implements Comparable<Song>, AbstractSong {
 		return album;
 	}
 
-//	public Bitmap getSongCover() {
-//		return songBmp;
-//	}
-	
-	
 	@Override
 	public int describeContents() {
 		return 0;

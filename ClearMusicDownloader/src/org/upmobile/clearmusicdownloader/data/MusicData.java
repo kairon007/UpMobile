@@ -29,6 +29,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 	};
 	public static final int MODE_VISIBLITY = 0x00000001;
 	public static final int MODE_PLAYING = 0x00000002;
+	private Bitmap cover;
 	private String path;
 	private String title;
 	private String artist;
@@ -83,8 +84,9 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		}).start();
 	}
 
+	@Override
 	public Bitmap getCover(Context context) {
-		Bitmap cover = null;
+		if (cover != null) return cover;
 		File file = new File(path);
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
@@ -95,6 +97,11 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 			return null;
 		}
 		return cover;
+	}
+	
+	@Override
+	public boolean hasCover() {
+		return cover != null;
 	}
 	
 	@Override

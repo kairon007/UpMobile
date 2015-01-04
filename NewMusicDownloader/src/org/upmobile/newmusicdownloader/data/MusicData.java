@@ -27,6 +27,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		MediaStore.Audio.Media.DURATION,
 		MediaStore.Audio.Media.ALBUM,
 	};
+	private Bitmap cover;
 	private String path;
 	private String title;
 	private String artist;
@@ -81,8 +82,9 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		}).start();
 	}
 
+	@Override
 	public Bitmap getCover(Context context) {
-		Bitmap cover = null;
+		if (cover != null) return cover;
 		File file = new File(path);
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
@@ -93,6 +95,11 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 			return null;
 		}
 		return cover;
+	}
+	
+	@Override
+	public boolean hasCover() {
+		return cover != null;
 	}
 	
 	@Override
@@ -161,26 +168,32 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		return null;
 	}
 	
+	@Override
 	public String getPath() {
 		return path;
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
-
+	
+	@Override
 	public String getArtist() {
 		return artist;
 	}
 
+	@Override
 	public long getId() {
 		return id;
 	}
 
+	@Override
 	public long getDuration() {
 		return duration;
 	}
 		
+	@Override
 	public void setPath(String path) {
 		this.path = path;
 	}
@@ -188,11 +201,11 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 	public int getProgress() {
 		return progress;
 	}
-	
+
 	public boolean isPlaying() {
 		return isPlaying;
 	}
-	
+
 	public void setPlaying(boolean isPlaying) {
 		this.isPlaying = isPlaying;
 	}

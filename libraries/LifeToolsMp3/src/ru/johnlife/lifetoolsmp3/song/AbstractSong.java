@@ -1,6 +1,8 @@
 package ru.johnlife.lifetoolsmp3.song;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Parcelable;
 
 public interface AbstractSong extends Parcelable, Cloneable{
@@ -12,7 +14,11 @@ public interface AbstractSong extends Parcelable, Cloneable{
 	public String getArtist();
 	
 	public String getAlbum();
+	
+	public Bitmap getCover(Context context);
 
+	public boolean hasCover();
+	
 	public long getId();
 
 	public long getDuration();
