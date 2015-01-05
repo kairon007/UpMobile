@@ -100,7 +100,6 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     public void changeFragment(Fragment targetFragment){
         this.lastOpenedFragment = targetFragment;
 		resideMenu.clearIgnoredViewList();
-        System.out.println("!!! CHANGE FRAGMENT=" + targetFragment.getClass().getSimpleName());
 		getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
