@@ -1,6 +1,5 @@
 package com.special;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -64,7 +63,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         	item.setBackgroundResource(R.drawable.button_selector_inverse_light);
         	resideMenu.addMenuItem(item);
         }
-        findViewById(R.id.page_title).setOnClickListener(new View.OnClickListener() {
+        tvTitle.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				resideMenu.openMenu();
@@ -159,7 +158,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 //    }
     
     public void showTopFrame() {
-    		topFrame.setVisibility(View.VISIBLE);
+    	topFrame.setVisibility(View.VISIBLE);
     }
     
     public void hideTopFrame() {
