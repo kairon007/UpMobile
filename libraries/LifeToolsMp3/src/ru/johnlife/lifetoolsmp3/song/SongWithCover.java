@@ -17,6 +17,7 @@ public abstract class SongWithCover extends RemoteSong {
 	
 	public SongWithCover(String downloadUrl) {
 		super(downloadUrl);
+		setHasCoverFromSearch(true);
 	}
 	
 	public abstract String getLargeCoverUrl();
@@ -41,4 +42,8 @@ public abstract class SongWithCover extends RemoteSong {
 		}
 	}
 	
+	@Override
+	public void setHasCoverFromSearch(boolean hasCoverFromSearch) {
+		super.setHasCoverFromSearch(hasCoverFromSearch);
+	}
 }

@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 public class RemoteSong extends Song {
+	private boolean hasCoverFromSearch = false;
 	private final class WrapperCoverListener implements OnBitmapReadyListener {
 		List<OnBitmapReadyListener> listeners = new ArrayList<OnBitmapReadyListener>();
 
@@ -229,6 +230,14 @@ public class RemoteSong extends Song {
 		super(parcel);
 	}
 	
+	public boolean isHasCoverFromSearch() {
+		return hasCoverFromSearch;
+	}
+
+	public void setHasCoverFromSearch(boolean hasCoverFromSearch) {
+		this.hasCoverFromSearch = hasCoverFromSearch;
+	}
+
 	public static final Parcelable.Creator<RemoteSong> CREATOR = new Parcelable.Creator<RemoteSong>() {
 		public RemoteSong createFromParcel(Parcel in) {
 			return new RemoteSong(in);

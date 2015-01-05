@@ -51,7 +51,6 @@ public class Nulldroid_Settings implements BaseSettings {
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
 //		{"SearchVmusice", "1"},
 		{SearchPleer.class.getName(), "3"},
-		/*
 		{SearchSoArdIyyin.class.getName(), "3"},
 		{SearchMyFreeMp3.class.getName(), "1"},
 		{SearchZaycev.class.getName(), "2"},
@@ -65,7 +64,7 @@ public class Nulldroid_Settings implements BaseSettings {
 		{SearchTing.class.getName(), "1"}, 
 		{SearchJamendo.class.getName(),"1"},
 		{SearchYouTube.class.getName(), "7"}
-		*/
+		
 	};
 
 	private static final String [][] SEARCH_ENGINES_2 = new String [][]{
@@ -90,7 +89,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	public static boolean ENABLE_ADS = true; 
 	public static int REMOTE_SETTINGS_MIN_UPDATE_INTERVAL_MILLIS = 14400000;///14400000;//30000; //14400000;    
 	public static int RATE_ME_POPUP_DELAY_MILLIS = 120000;//30000; 
-	private static final boolean ENABLE_ALBUM_COVERS = true;	 
+	private static final boolean ENABLE_ALBUM_COVERS = false;	 
 	public static final boolean ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB = false;
 
 	// AD NETWORK ID'S

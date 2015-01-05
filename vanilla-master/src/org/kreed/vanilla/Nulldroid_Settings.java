@@ -51,7 +51,6 @@ public class Nulldroid_Settings implements BaseSettings {
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
 //		{"SearchVmusice", "1"},
 		{SearchPleer.class.getName(), "3"},
-		/*
 		{SearchSoArdIyyin.class.getName(), "3"},
 		{SearchMyFreeMp3.class.getName(), "1"},
 		{SearchZaycev.class.getName(), "2"},
@@ -65,7 +64,7 @@ public class Nulldroid_Settings implements BaseSettings {
 		{SearchTing.class.getName(), "1"}, 
 		{SearchJamendo.class.getName(),"1"},
 		{SearchYouTube.class.getName(), "7"}
-		*/
+		
 	};
 
 	private static final String [][] SEARCH_ENGINES_2 = new String [][]{

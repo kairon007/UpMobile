@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.json.JSONArray;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
@@ -333,6 +335,7 @@ public abstract class OnlineSearchView extends View {
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				ImageLoader.getInstance().stop();
 				trySearch();
 			}
 		});
@@ -589,8 +592,7 @@ public abstract class OnlineSearchView extends View {
 					.setId(position)
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover())
 					.setButtonVisible(showDownloadButton() ? true : false);
-			
-			if (getSettings().getIsCoversEnabled(getContext())) {
+			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong)song).isHasCoverFromSearch()) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
@@ -903,8 +905,6 @@ public abstract class OnlineSearchView extends View {
 				refreshLibrary();
 			}
 		},0);
-		
-		
 		if (getSettings().getIsCoversEnabled(getContext())) {
 			boolean hasCover = ((RemoteSong) song).getCover(downloadListener);
 			if (!hasCover) {
