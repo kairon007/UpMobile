@@ -23,6 +23,7 @@ package org.kreed.musicdownloader.ui.adapter;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.musicdownloader.PrefKeys;
@@ -33,7 +34,9 @@ import org.kreed.musicdownloader.ui.tab.DownloadsTab;
 import org.kreed.musicdownloader.ui.tab.SearchView;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
+import android.content.ContentResolver;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +45,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -256,32 +260,37 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		if (!contentFile.exists()) {
 			contentFile.mkdirs();
 		}
-		adapterLibrary.clear();						
-		FillLibraryTask task = new FillLibraryTask();
-		task.execute(contentFile);
+		adapterLibrary.clear();
+		querySong();
+		adapterLibrary.notifyDataSetChanged();
 	}
+	
+	private void querySong() {
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		Cursor cursor = buildQuery(mActivity.getContentResolver());
+		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			return;
+		}
+		MusicData d = new MusicData();
+		d.populate(cursor);
+		result.add(d);
+		while (cursor.moveToNext()) {
+			MusicData data = new MusicData();
+			data.populate(cursor);
+			result.add(data);
+			adapterLibrary.add(data);
+		}
+		cursor.close();
+	}
+	
+	private Cursor buildQuery(ContentResolver resolver) {
+		String selection =  MediaStore.MediaColumns.DATA + " LIKE '" + Environment.getExternalStorageDirectory() + "/MusicDownloader" + "%'" ;
+		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+		return cursor;
+	}
+	
 	public void cleanLibrary() {
 		adapterLibrary.clear();
-	}
-
-	private class FillLibraryTask extends AsyncTask<File, Void, Void> {
-
-		@Override
-		protected Void doInBackground(File... params) {
-			for (File file : params[0].listFiles()) {
-				String string = file.getName();
-				if (string.endsWith(".mp3")) {
-					MusicData musicData = new MusicData(file);
-					adapterLibrary.add(musicData);
-				}
-			}
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-			adapterLibrary.notifyFilter(mLists[2]);
-		}
 	}
 
 	@Override

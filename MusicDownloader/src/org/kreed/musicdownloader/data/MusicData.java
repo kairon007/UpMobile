@@ -13,7 +13,9 @@ import org.kreed.musicdownloader.DBHelper;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.provider.MediaStore;
 
 public class MusicData {
 
@@ -32,11 +34,27 @@ public class MusicData {
 	public MusicData() {
 	}
 	
+	public static final String[] FILLED_PROJECTION = {
+		MediaStore.Audio.Media._ID,
+		MediaStore.Audio.Media.DATA,
+		MediaStore.Audio.Media.TITLE,
+		MediaStore.Audio.Media.ARTIST,
+		MediaStore.Audio.Media.DURATION,
+		MediaStore.Audio.Media.ALBUM,
+	};
+	
 	public MusicData(String songArtist, String songTitle, String songAlbum, String fileUri) {
 		this.songArtist = songArtist;
 		this.songTitle = songTitle;
 		this.songAlbum = songAlbum;
 		this.fileUri = fileUri;
+	}
+	
+	public void populate(Cursor cursor) {
+		fileUri = cursor.getString(1);
+		songTitle = cursor.getString(2);
+		songArtist = cursor.getString(3);
+		songAlbum = cursor.getString(5);
 	}
 
 	public MusicData(File musicFile) {
@@ -84,7 +102,6 @@ public class MusicData {
 				} else {
 					songArtist = metadata.getArtist();
 					songTitle = metadata.getSongTitle();
-					songBitmap = DBHelper.getArtworkImage(2, metadata);
 					int seconds = 0;
 					try {
 						seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
@@ -104,7 +121,7 @@ public class MusicData {
 					}
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 		}
 	}
 
