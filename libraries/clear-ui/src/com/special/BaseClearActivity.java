@@ -100,10 +100,11 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     public void changeFragment(Fragment targetFragment){
         this.lastOpenedFragment = targetFragment;
 		resideMenu.clearIgnoredViewList();
-        getSupportFragmentManager()
+        System.out.println("!!! CHANGE FRAGMENT=" + targetFragment.getClass().getSimpleName());
+		getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
-                .addToBackStack(targetFragment.getClass().getSimpleName())
+                .addToBackStack(targetFragment.getClass().getSimpleName()) 
                 .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
@@ -117,28 +118,40 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
      * Beware, this method is suitable only for api > 11 if you want to port, you need to think of another way
      */
     
-    @SuppressLint("NewApi") @Override
+	@Override
 	public void onBackPressed() {
-		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[3].getClass().getSimpleName())) {
+		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[3].getClass().getSimpleName())){
 			getSupportFragmentManager().popBackStack();
 			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
-			if (lastFragmentName.equals(getFragments()[0].getClass().getSimpleName())) {
-				tvTitle.setText(titles[0]);
-			} else if (lastFragmentName.equals(getFragments()[1].getClass().getSimpleName())) {
-				tvTitle.setText(titles[1]);
-			} else if (lastFragmentName.equals(getFragments()[2].getClass().getSimpleName())) {
-				tvTitle.setText(titles[2]);
-			}
 			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
-			return;
+		} else {
+			finish();
 		}
-    	if (resideMenu.isOpened()){
-    		resideMenu.closeMenu();
-    	} else {
-    		resideMenu.openMenu();
-    	}
-    }
+	}
+    
+//    @SuppressLint("NewApi") @Override
+//	public void onBackPressed() {
+//		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[3].getClass().getSimpleName())) {
+//			getSupportFragmentManager().popBackStack();
+//			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
+//			String lastFragmentName = backEntry.getName();
+//			if (lastFragmentName.equals(getFragments()[0].getClass().getSimpleName())) {
+//				tvTitle.setText(titles[0]);
+//			} else if (lastFragmentName.equals(getFragments()[1].getClass().getSimpleName())) {
+//				tvTitle.setText(titles[1]);
+//			} else if (lastFragmentName.equals(getFragments()[2].getClass().getSimpleName())) {
+//				tvTitle.setText(titles[2]);
+//			}
+//			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
+//			return;
+//		}
+//    	if (resideMenu.isOpened()){
+//    		resideMenu.closeMenu();
+//    	} else {
+//    		resideMenu.openMenu();
+//    	}
+//    }
     
     public void showTopFrame() {
     		topFrame.setVisibility(View.VISIBLE);
