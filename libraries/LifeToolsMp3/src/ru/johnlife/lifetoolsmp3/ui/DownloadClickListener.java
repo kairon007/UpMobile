@@ -63,6 +63,7 @@ import android.widget.Toast;
 public class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
 
 	private ArrayList<String[]> headers = new ArrayList<String[]>();
+	private DownloadCache.Item cacheItem;
 	private Context context;
 	protected RemoteSong song;
 	protected Bitmap cover;
@@ -112,7 +113,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, new DownloadCacheCallback() {
 				
 				@Override
-				public void callback(final Item item) {
+				public void callback(Item item) {
+					cacheItem = item;
 					Runnable callbackRun = new Runnable() {
 						
 						@Override
@@ -185,7 +187,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					Toast.makeText(context, context.getString(R.string.download_started) +" "+sb, Toast.LENGTH_SHORT).show();
 				}
 			});
-			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover);
+			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover, cacheItem);
 			new Timer().schedule(progressUpdateTask, 1000, 1000);
 		}
 	}
@@ -346,17 +348,19 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		private static final int DEFAULT_SONG = 7340032; // 7 Mb
 		private RemoteSong song;
+		private Item item;
 		private File src;
 		private DownloadManager manager;
 		private boolean useCover;
 		private int counter = 0;  
 
-		public UpdateTimerTask(RemoteSong song, DownloadManager manager, boolean useCover) {
+		public UpdateTimerTask(RemoteSong song, DownloadManager manager, boolean useCover, Item item) {
 			this.song = song;
 			this.manager = manager;
 			this.useCover = useCover;
+			this.item = item;
 		}
-
+		
 		@Override
 		public void run() {
 			Cursor c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
@@ -376,8 +380,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						break;
 					}
 					int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+					int idIndex = c.getColumnIndex(DownloadManager.COLUMN_ID);
 					int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 					int size = c.getInt(sizeIndex);
+					long id = c.getLong(idIndex);
+					if (null != item) {
+						item.setId(id);
+					}
 					int downloaded = c.getInt(downloadedIndex);
 					if (size != -1) {
 						progress = downloaded * 100 / size;

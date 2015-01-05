@@ -16,13 +16,11 @@ public class DownloadListener extends DownloadClickListener {
 	private Context context;
 	private String songArtist;
 	private String songTitle;
-	private String duration;
 
 	public DownloadListener(Context context, RemoteSong song, int id) {
 		super(context, song, null, id);
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
-		duration = Util.getFormatedStrDuration(song.getDuration());
 		this.context = context;
 	}
 

@@ -84,10 +84,12 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		init();
 		ArrayList<MusicData> srcList = querySong();
 		ArrayList<AbstractSong> bufList = new ArrayList<AbstractSong>(srcList);
-		service.setArrayPlayback(bufList);
+		if (null != service) {
+			service.setArrayPlayback(bufList);
+		}
 		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
-			if (service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
+			if (null != service && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
 				int pos = service.getPlayingPosition();
 				if (pos >= 0 && pos < list.size()) {
 					MusicData data = (MusicData) list.get(pos);

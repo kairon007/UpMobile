@@ -10,7 +10,6 @@ import org.upmobile.newmusicdownloader.adapter.DownloadsAdapter;
 import org.upmobile.newmusicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -26,7 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class DownloadsFragment extends Fragment{
+public class DownloadsFragment extends Fragment {
 
 	private static final int DEFAULT_SONG = 7340032; // 7 Mb
 	private DownloadsAdapter adapter;
@@ -37,17 +36,17 @@ public class DownloadsFragment extends Fragment{
 	private ListView listView;
 	private TextView messageView;
 	private int progress;
-	private Object lock  = new Object();
+	private Object lock = new Object();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
-		initView();
+		init();
 		listView.setAdapter(adapter);
 		return parentView;
 	}
 
-	private void initView() {
+	private void init() {
 		listView = (ListView) parentView.findViewById(R.id.listView);
 		messageView = (TextView) parentView.findViewById(R.id.message_listview);
 		adapter = new DownloadsAdapter(getActivity(), R.layout.downloads_item);
@@ -55,7 +54,7 @@ public class DownloadsFragment extends Fragment{
 		timer = new Timer();
 		updater = new Updater();
 	}
-	
+
 	@Override
 	public void onPause() {
 		timer.cancel();
@@ -64,101 +63,61 @@ public class DownloadsFragment extends Fragment{
 
 	@Override
 	public void onResume() {
-		checkDownloads();
+		timer.schedule(updater, 100, 1000);
 		super.onResume();
 	}
 
-	private void checkDownloads() {
+	private ArrayList<MusicData> checkDownloads() {
+		ArrayList<MusicData> list = new ArrayList<MusicData>();
 		synchronized (lock) {
 			try {
 				if (null != manager) {
 					Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
-					if (running!=null) {
-						updateList(running);
+					if (running != null) {
+						list = updateList(running);
 						running.close();
 					}
-					Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
-					if (pending!=null) {
-						updateList(pending);
-						pending.close();
-					}
 				}
-				timer.schedule(updater, 100, 1000);
 			} catch (Exception e) {
 			}
 		}
+		return list;
 	}
 
-	private void updateList(Cursor c) {
-		synchronized (lock) {
-			while (c.moveToNext()) {
-				MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
-				if (c.getString(8).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
-					if (!adapter.contains(song)) {
-						addItem(song);
-					}
-				}
+	private ArrayList<MusicData> updateList(Cursor c) {
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		while (c.moveToNext()) {
+			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
+			if (c.getString(8).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
+				result.add(song);
 			}
 		}
-	}
-
-	private void addItem(final MusicData song) {
-		synchronized (lock) {
-			try {
-				getActivity().runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-					 adapter.insert(song, 0);
-					 adapter.notifyDataSetChanged();
-					}
-				});
-			} catch (Exception e) {
-				e.printStackTrace();
+		ArrayList<DownloadCache.Item> list = DownloadCache.getInstanse().getCachedItems();
+		for (Item item : list) {
+			MusicData song = new MusicData(item.getTitle(), item.getArtist(), item.getId(), -1);
+			if (item.isCached()) {
+				result.add(song);
 			}
 		}
+		return result;
 	}
-	
-	private void addAllCached(final ArrayList<Item> cache) {
-		synchronized (lock) {
-			getActivity().runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					for (Item item : cache) {
-						final MusicData song = new MusicData(item.getTitle(), item.getArtist(), item.getId(), -1);
-						if (!adapter.contains(song)) {
-							adapter.add(song);
-							item.setCustomCallback(new DownloadCacheCallback() {
-								
-								@Override
-								public void callback(Item item) {
-									removeItem(song);
-								}
-							});
-						}
-					}
-				}
-			});
-		}
-	}
-	
+
 	private void reDrawAdapter() {
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				adapter.notifyDataSetChanged();
 			}
 		});
 	}
-	
+
 	private void checkFinished() {
 		Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
 		while (c.moveToNext()) {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252));	
+					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252));
 					break;
 				}
 			}
@@ -188,7 +147,6 @@ public class DownloadsFragment extends Fragment{
 					public void run() {
 						DownloadCache.getInstanse().remove(musicData.getArtist(), musicData.getTitle());
 						adapter.remove(musicData);
-						adapter.notifyDataSetChanged();
 					}
 				});
 			} catch (Exception e) {
@@ -201,7 +159,7 @@ public class DownloadsFragment extends Fragment{
 
 		@Override
 		public void run() {
-			checkDownloads();
+			ArrayList<MusicData> list = checkDownloads();
 			Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 			while (c.moveToNext()) {
 				progress = 0;
@@ -216,8 +174,8 @@ public class DownloadsFragment extends Fragment{
 				}
 				try {
 					for (int i = 0; i < adapter.getCount(); i++) {
-						if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-							((MusicData) adapter.getItem(i)).setProgress(progress);
+						if ((list.get(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
+							(list.get(i)).setProgress(progress);
 						}
 					}
 				} catch (Exception e) {
@@ -225,13 +183,15 @@ public class DownloadsFragment extends Fragment{
 				}
 			}
 			c.close();
+			adapter.setNotifyOnChange(false);
+			adapter.clear();
+			adapter.addAll(list);
 			checkCanceled();
 			checkFinished();
 			reDrawAdapter();
-			addAllCached(DownloadCache.getInstanse().getCachedItems());
 			if (adapter.isEmpty()) {
 				getActivity().runOnUiThread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						messageView.setVisibility(View.VISIBLE);
@@ -241,5 +201,5 @@ public class DownloadsFragment extends Fragment{
 			}
 		}
 	}
-
+	
 }

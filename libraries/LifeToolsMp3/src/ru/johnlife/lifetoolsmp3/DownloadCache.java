@@ -82,21 +82,25 @@ public class DownloadCache {
 	
 	public class Item {
 		
-		private int id;
+		private long id;
 		private String artist;
 		private String title;
 		private boolean isCached;
 		private DownloadCacheCallback callback;
 		private DownloadCacheCallback customCallback;
 		
-		public Item(int id, String artist, String title, boolean isCached) {
+		public Item(long id, String artist, String title, boolean isCached) {
 			this.artist = artist;
 			this.title = title;
 			this.isCached = isCached;
 			this.id = id;
 		}
 		
-		public int getId() {
+		public void setId(long id) {
+			this.id = id;
+		}
+		
+		public long getId() {
 			return id;
 		}
 		

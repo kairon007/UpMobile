@@ -70,15 +70,10 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	public void removeItem(MusicData item) {
 		DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
 		remove(item);
-		if (item.getId() == -1)
-			return;
-		cancelDownload(item.getId());
-	}
-
-	private void cancelDownload(long id) {
+		if (item.getId() == -1)	return;
 		DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 		try {
-			manager.remove(id);
+			manager.remove(item.getId());
 		} catch (UnsupportedOperationException e) {
 			android.util.Log.d(getClass().getSimpleName(), e + "");
 		}
