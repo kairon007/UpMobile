@@ -64,6 +64,12 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         	item.setBackgroundResource(R.drawable.button_selector_inverse_light);
         	resideMenu.addMenuItem(item);
         }
+        findViewById(R.id.page_title).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				resideMenu.openMenu();
+			}
+		});
         findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
