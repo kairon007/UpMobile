@@ -63,7 +63,14 @@ public class DownloadsFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		timer.schedule(updater, 100, 1000);
+		try {
+			timer.schedule(updater, 100, 1000);
+		} catch (Exception e) {
+			android.util.Log.d("log", "in " + getClass().getName() + " appear problem: " + e);
+			timer = new Timer();
+			updater = new Updater();
+			timer.schedule(updater, 100, 1000);
+		}
 		super.onResume();
 	}
 
