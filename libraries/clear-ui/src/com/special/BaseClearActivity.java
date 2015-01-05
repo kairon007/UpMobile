@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -63,18 +64,18 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         	item.setBackgroundResource(R.drawable.button_selector_inverse_light);
         	resideMenu.addMenuItem(item);
         }
-        tvTitle.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.title_bar_left_menu).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				resideMenu.openMenu();
 			}
 		});
-        findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resideMenu.openMenu();
-            }
-        });
+        topFrame.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				resideMenu.openMenu();
+			}
+		});
     }
 
     @Override
