@@ -40,6 +40,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		@Override
 		public void onChange(boolean selfChange) {
 			ArrayList<MusicData> list = querySong();
+			updateServiceArray(list);
 			customList(list);
 			Message msg = new Message();
 			msg.what = MSG_FILL_ADAPTER;
@@ -51,6 +52,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		public void onChange(boolean selfChange, Uri uri) {
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
 				ArrayList<MusicData> list = querySong();
+				updateServiceArray(list);
 				customList(list);
 				Message msg = new Message();
 				msg.what = MSG_FILL_ADAPTER;
@@ -58,6 +60,13 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 				uiHandler.sendMessage(msg);
 			}
 		};
+		
+		private void updateServiceArray(ArrayList<MusicData> list) {
+			ArrayList<AbstractSong> playbackList = new ArrayList<AbstractSong>(list);
+			if (service.getPlayingSong().getClass() == MusicData.class) {
+				service.setArrayPlayback(playbackList);
+			}
+		}
 
 		private void customList(ArrayList<MusicData> list) {
 			if (service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
@@ -83,10 +92,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
 		init();
 		ArrayList<MusicData> srcList = querySong();
-		ArrayList<AbstractSong> bufList = new ArrayList<AbstractSong>(srcList);
-		if (null != service) {
-			service.setArrayPlayback(bufList);
-		}
 		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
 			if (null != service && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
