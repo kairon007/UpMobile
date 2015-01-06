@@ -204,6 +204,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {
 		
 	}
+	
+	protected void removeFromDownloads(final long downloadId) {
+		
+	}
  
 	public CoverReadyListener notifyStartDownload(long downloadId) {
 		return null;
@@ -259,7 +263,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			} else
 				return sharedDownloadPath;
 		}
-		return downloadPath;
+		return downloadPath;	
 	}
 
 	protected void prepare(final File src, RemoteSong song, String path) {}
@@ -347,6 +351,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private final class UpdateTimerTask extends TimerTask {
 
 		private static final int DEFAULT_SONG = 7340032; // 7 Mb
+		private static final int BAD_SONG = 1024;
 		private RemoteSong song;
 		private Item item;
 		private File src;
@@ -396,30 +401,37 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					notifyDuringDownload(currentDownloadId, progress);
 					break;
 				case DownloadManager.STATUS_SUCCESSFUL:
-					progress = 100;
-					notifyDuringDownload(currentDownloadId, progress);
-					int columnIndex = 0;
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-					} else if (columnIndex != -1) {
-						columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-					}
-					if (columnIndex == -1) return;
-					String path = c.getString(columnIndex);
-					c.close();
-					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-						path = cutPath(path);
-						if (path.contains("%20")) {
-							path.replaceAll("%20", " ");
+					if (c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR) > BAD_SONG) {
+						new File(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).delete();
+						notifyAboutFailed(currentDownloadId);
+						removeFromDownloads(currentDownloadId);
+						this.cancel();
+					} else {
+						progress = 100;
+						notifyDuringDownload(currentDownloadId, progress);
+						int columnIndex = 0;
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+						} else if (columnIndex != -1) {
+							columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
 						}
+						if (columnIndex == -1) return;
+						String path = c.getString(columnIndex);
+						c.close();
+						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+							path = cutPath(path);
+							if (path.contains("%20")) {
+								path.replaceAll("%20", " ");
+							}
+						}
+						src = new File(path);
+						if (setMetadataToFile(path, src, useCover) && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+							insertToMediaStore(song, path);
+						}
+						setFileUri(currentDownloadId, src.getAbsolutePath());
+						DownloadCache.getInstanse().remove(artist, title);
+						this.cancel();
 					}
-					src = new File(path);
-					if (setMetadataToFile(path, src, useCover) && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-						insertToMediaStore(song, path);
-					}
-					setFileUri(currentDownloadId, src.getAbsolutePath());
-					DownloadCache.getInstanse().remove(artist, title);
-					this.cancel();
 					return;
 				default:
 					break;

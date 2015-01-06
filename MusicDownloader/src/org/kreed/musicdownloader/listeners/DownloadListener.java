@@ -103,6 +103,11 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
+	protected void removeFromDownloads(long downloadId) {
+		downloadsTab.deleteItem(downloadId);
+	}
+	
+	@Override
 	protected boolean isFullAction() {
 		return false;
 	}
