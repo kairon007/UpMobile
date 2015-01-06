@@ -20,7 +20,10 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -46,6 +49,8 @@ import android.widget.Toast;
 
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
+	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
+	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
 	private AbstractSong song;
 	private AudioManager audio;
 	private RenameTask renameTask;
@@ -85,6 +90,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		isDestroy = false;
 		parentView = inflater.inflate(R.layout.main_fragment_port, container, false);
 		init();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ANDROID_MEDIA_VOLUME_CHANGED_ACTION);
+		getActivity().registerReceiver(volumeReceiver, filter);
 		audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
@@ -254,8 +262,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 		});
 	}
+	
+	private final BroadcastReceiver volumeReceiver = new BroadcastReceiver() {
 
-	@Override
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (null != intent.getAction() && ANDROID_MEDIA_VOLUME_CHANGED_ACTION.equals(intent.getAction())) {
+				if ((Integer) intent.getExtras().get(ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE) == volume.getProgress()) return;
+				volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
+			}
+		}
+	};
+
+/*	@Override
 	public void onResume() {
 		super.onResume();
 		getView().setFocusableInTouchMode(true);
@@ -264,13 +283,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-					return true;
+				switch (keyCode) {
+				case KeyEvent.KEYCODE_VOLUME_DOWN:
+					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
+					break;
+				case KeyEvent.KEYCODE_VOLUME_UP:
+					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
+					break;
+				default:
+					break;
 				}
 				return false;
 			}
 		});
-	}
+	}*/
 	
 	@Override
 	public void onDestroy() {
