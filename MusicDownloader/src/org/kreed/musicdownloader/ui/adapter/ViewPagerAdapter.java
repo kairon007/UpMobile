@@ -262,7 +262,13 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		}
 		adapterLibrary.clear();
 		querySong();
-		adapterLibrary.notifyDataSetChanged();
+		mActivity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				adapterLibrary.notifyDataSetChanged();
+			}
+		});
 	}
 	
 	private void querySong() {
