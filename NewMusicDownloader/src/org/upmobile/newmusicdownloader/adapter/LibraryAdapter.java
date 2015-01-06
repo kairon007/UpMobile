@@ -37,36 +37,40 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		@Override
 		public void start(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
-			((MusicData)song).setPlaying(true);
+			MusicData data = get(song);
+			data.setPlaying(true);
 			notifyDataSetChanged();
 		}
 		
 		@Override
 		public void play(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
-			((MusicData)song).setPlaying(true);
+			MusicData data = get(song);
+			data.setPlaying(true);
 			notifyDataSetChanged();
 		}
 		
 		@Override
 		public void pause(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
-			((MusicData)song).setPlaying(false);
+			MusicData data = get(song);
+			data.setPlaying(false);
 			notifyDataSetChanged();
 		}
 
 		@Override
 		public void update(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
-			((MusicData)song).setPlaying(true);
+			MusicData data = get(song);
+			data.setPlaying(true);
 			notifyDataSetChanged();
 		}
 
 		@Override
 		public void stop(AbstractSong song) {
-			if (song.getClass() == MusicData.class) {
-				((MusicData)song).setPlaying(false);
-			}
+			MusicData data = get(song);
+			if (song.getClass() != MusicData.class || data == null) return;
+			data.setPlaying(false);
 			notifyDataSetChanged();
 		}
 	};
@@ -85,11 +89,21 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}).start();
 	}
 	
+	public MusicData get(AbstractSong data) {
+		for (int i = 0; i < getCount(); i++) {
+			MusicData buf = getItem(i);
+			if (buf.equals(data)) {
+				return getItem(i);
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	protected ViewHolder<MusicData> createViewHolder(View v) {
 		return new LibraryViewHolder(v);
 	}
-
+	
 	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnClickListener, OnLongClickListener{
 		
 		private MusicData data;
@@ -198,5 +212,5 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			return true;
 		}
 	}
-
+	
 }
