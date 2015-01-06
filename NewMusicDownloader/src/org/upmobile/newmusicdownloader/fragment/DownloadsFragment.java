@@ -197,14 +197,15 @@ public class DownloadsFragment extends Fragment {
 			checkFinished();
 			reDrawAdapter();
 			if (adapter.isEmpty()) {
-				getActivity().runOnUiThread(new Runnable() {
+				Runnable runnable = new Runnable() {
 
 					@Override
 					public void run() {
 						messageView.setVisibility(View.VISIBLE);
 						messageView.setText(getActivity().getString(R.string.downloads_empty));
 					}
-				});
+				};
+				new Handler(Looper.getMainLooper()).post(runnable);
 			}
 		}
 	}
