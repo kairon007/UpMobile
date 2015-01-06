@@ -31,7 +31,7 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 			Document document = Jsoup.connect(strLink).get();
 			Element playlist = document.select("ul.playlist").first();
 			if (null == playlist || null == playlist.children()) {
-				Log.d("log", "request is invalid");
+				Log.e(getClass().getName(), "request is invalid");
 				return null;	
 			}
 			for (Element element : playlist.children()) {
