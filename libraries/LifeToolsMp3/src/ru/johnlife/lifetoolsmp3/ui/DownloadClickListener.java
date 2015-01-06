@@ -306,7 +306,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		} catch (Exception exception) {
 			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
 		}
-		if (null == src_set && Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
+		if (null == src_set && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			insertToMediaStore(song, path);
 			return false;
 		}
@@ -414,7 +414,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 					}
 					src = new File(path);
-					if (setMetadataToFile(path, src, useCover) && Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
+					if (setMetadataToFile(path, src, useCover) && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 						insertToMediaStore(song, path);
 					}
 					setFileUri(currentDownloadId, src.getAbsolutePath());
@@ -589,7 +589,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			sendNotification(100, true);
 			setFileUri(idDownload, file.getAbsolutePath());
-			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) insertToMediaStore(song, file.getAbsolutePath());
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) insertToMediaStore(song, file.getAbsolutePath());
 			return;
 		}
 		
