@@ -619,13 +619,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void setCoverFromMusicData() {
-		Bitmap bitmap = ((MusicData)song).getCover(getActivity());
+		Bitmap bitmap = ((MusicData) song).getCover(getActivity());
 		if (bitmap != null) {
-			((RemoteSong) song).setHasCover(true);
 			playerCover.setImageBitmap(bitmap);
 		} else {
-			Bitmap defaultBmp = BitmapFactory.decodeResource(getResources(), R.drawable.def_cover_circle_web);
-			playerCover.setImageBitmap(defaultBmp);
+			playerCover.setImageResource(R.drawable.def_cover_circle_web);
 		}
 	}
 
