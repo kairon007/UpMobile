@@ -86,6 +86,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="4dp"
+            android:background="@drawable/selectable_item_bg"
             android:layout_gravity="center_vertical"
             android:src="@drawable/download_cancel" />
 
