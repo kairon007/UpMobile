@@ -399,6 +399,7 @@ public class MainActivity extends Activity {
 		if (!isHidePlayer) {
 			MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 			MusicDownloaderApp.getService().getPlayer().hidePlayerView();
+			isHidePlayer = true;
 		} else {
 			Intent showOptions = new Intent(Intent.ACTION_MAIN);
 			showOptions.addCategory(Intent.CATEGORY_HOME);

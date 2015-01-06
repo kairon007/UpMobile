@@ -153,7 +153,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			holder.hThreedot = (ImageButton) convertView.findViewById(R.id.threedotButton);
 			holder.hButtonPlay = (ImageButton) convertView.findViewById(R.id.play_song);
 			holder.hSongTitle = (TextView) convertView.findViewById(R.id.title_song);
-			holder.hSongGenre = (TextView) convertView.findViewById(R.id.genre_song);
+			holder.hSongArtist = (TextView) convertView.findViewById(R.id.artist);
 			holder.hCoverImage = (ImageView) convertView.findViewById(R.id.cover_song);
 			holder.hSongDuration = (TextView) convertView.findViewById(R.id.duration_song);
 			convertView.setTag(holder);
@@ -173,9 +173,9 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		} else {
 			holder.hCoverImage.setImageResource(R.drawable.fallback_cover);
 		}
-		holder.hSongTitle.setText(strArtist + " - " + strTitle);
+		holder.hSongTitle.setText(strTitle);
 		holder.hSongDuration.setText(strDuration);
-		holder.hSongGenre.setText(music.getSongGenre());
+		holder.hSongArtist.setText(strArtist);
 		final int pos = position;
 		activity.registerForContextMenu(convertView);
 		convertView.setOnLongClickListener(new OnLongClickListener() {
@@ -216,7 +216,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		ImageButton hButtonPlay;
 		ImageView hCoverImage;
 		TextView hSongTitle;
-		TextView hSongGenre;
+		TextView hSongArtist;
 		TextView hSongDuration;
 		ImageButton hThreedot;
 	}
