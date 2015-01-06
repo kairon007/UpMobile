@@ -102,6 +102,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private float scale_height;
     private boolean isDestroy;
     private boolean hadInstance;
+    private boolean isUseAlbumCover = true;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -131,6 +132,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (null != bmp) {
+							((RemoteSong) song).setHasCover(true);
 							playerCover.setImageBitmap(bmp);
 						}
 					}
@@ -373,8 +375,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitleBarArtis.setText(song.getArtist());
 		playerTitleBarTitle.setText(song.getTitle());
 		if (!playerTagsCheckBox.isChecked()) {
-			Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.def_cover_circle_web);
-			playerCover.setImageBitmap(bmp);
+			if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(false);
+			playerCover.setImageResource(R.drawable.def_cover_circle_web);
 		}
 	}
 	
@@ -425,6 +427,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.VISIBLE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 		}
+		isUseAlbumCover = true;
 	}
 
 	private Runnable progressAction = new Runnable() {
@@ -502,7 +505,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
-			if (song.hasCover()) {
+			if (song.isHasCover()) {
 				playerTagsCheckBox.setChecked(true);
 			} else {
 				playerTagsCheckBox.setChecked(false);
@@ -526,6 +529,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void saveTags() {
 		boolean manipulate = manipulateText();
+		isUseAlbumCover = playerTagsCheckBox.isChecked();
 		if (!manipulate && playerTagsCheckBox.isChecked()) {
 			return;
 		} else {
@@ -603,6 +607,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
 					if (null != bmp) {
+						((RemoteSong) song).setHasCover(true);
 						playerCover.setImageBitmap(bmp);
 					}
 				}
@@ -616,6 +621,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void setCoverFromMusicData() {
 		Bitmap bitmap = ((MusicData)song).getCover(getActivity());
 		if (bitmap != null) {
+			((RemoteSong) song).setHasCover(true);
 			playerCover.setImageBitmap(bitmap);
 		} else {
 			Bitmap defaultBmp = BitmapFactory.decodeResource(getResources(), R.drawable.def_cover_circle_web);
@@ -627,6 +633,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
 		if (downloadListener.isBadInet()) return;
+		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
 			@Override

@@ -33,7 +33,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 
 /**
@@ -146,6 +145,8 @@ public class Song implements Comparable<Song>, AbstractSong {
 	
 	public Bitmap cover;
 	
+	private boolean hasCover = false;
+	
 	public Song(long id)
 	{
 		this.id = id;
@@ -223,7 +224,6 @@ public class Song implements Comparable<Song>, AbstractSong {
 		return cover;
 	}
 	
-	@Override
 	public boolean hasCover() {
 		return cover != null;
 	}
@@ -307,7 +307,6 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
 		return super.hashCode();
 	}
 
@@ -347,4 +346,15 @@ public class Song implements Comparable<Song>, AbstractSong {
 		return null;
 	}
 
+	@Override
+	public boolean isHasCover() {
+		if (hasCover()) {
+			return true;
+		}
+		return this.hasCover;
+	}
+	
+	public void setHasCover(boolean hasCover) {
+		this.hasCover = hasCover;
+	}
 }

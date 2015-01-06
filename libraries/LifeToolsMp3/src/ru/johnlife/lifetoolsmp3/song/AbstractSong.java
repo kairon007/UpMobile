@@ -17,7 +17,7 @@ public interface AbstractSong extends Parcelable, Cloneable{
 	
 	public Bitmap getCover(Context context);
 
-	public boolean hasCover();
+	public boolean isHasCover();
 	
 	public long getId();
 
