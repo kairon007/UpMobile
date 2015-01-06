@@ -185,6 +185,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						service.remove(data);
 						data.reset(getContext());
 						if (isEmpty()) {
+							((MainActivity) getContext()).showPlayerElement(false);
 							TextView emptyMsg = (TextView) ((MainActivity)getContext()).findViewById(R.id.message_listview);
 							emptyMsg.setVisibility(View.VISIBLE);
 							emptyMsg.setText(R.string.library_empty);
