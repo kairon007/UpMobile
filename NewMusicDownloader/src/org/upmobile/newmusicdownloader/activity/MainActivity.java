@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-        switch (position) {
+		switch (position) {
 		case 0:
 	        changeFragment(new SearchFragment());
 			break;
@@ -86,6 +86,15 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		.addToBackStack(targetFragment.getClass().getSimpleName())
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 		.commit();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (getFragmentManager().getBackStackEntryCount() - 1 > 0) {
+			getFragmentManager().popBackStack();
+		} else {
+			finish();
+		}
 	}
 	
 	public void showPlayerElement(boolean flag) {
