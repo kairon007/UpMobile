@@ -25,6 +25,7 @@ public class MainActivity extends BaseClearActivity {
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
 	private String[] titles;
+	private PlayerService player;
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
 		
 		@Override
@@ -45,7 +46,7 @@ public class MainActivity extends BaseClearActivity {
 			
 			@Override
 			public void run() {
-				PlayerService.get(MainActivity.this);
+				player = PlayerService.get(MainActivity.this);
 			}
 		}).start();
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -65,6 +66,14 @@ public class MainActivity extends BaseClearActivity {
 		fragments[2] = new LibraryFragment();
 		fragments[3] = new PlayerFragment();
 		return fragments;
+	}
+	
+	@Override
+	protected void onResume() {
+		if (null != player && player.isPlaying()) {
+			showPlayerElement();
+		}
+		super.onResume();
 	}
 
 	@Override
