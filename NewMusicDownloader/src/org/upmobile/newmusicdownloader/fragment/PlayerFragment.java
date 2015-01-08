@@ -97,28 +97,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			hadInstance = false;
-			AbstractSong buf = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			if (buf.getClass() != MusicData.class) {
-				song = ((RemoteSong) buf).cloneSong();
-			} else {
-				song = buf;
-			}
-			if (song.getClass() != MusicData.class) {
-				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
-					
-					@Override
-					public void onBitmapReady(Bitmap bmp) {
-						if (null != bmp) {
-							((RemoteSong) song).setHasCover(true);
-							playerCover.setImageBitmap(bmp);
-						} else {
-							playerCover.setImageResource(R.drawable.no_cover_art_big);
-						}
-					}
-				});
-			} else {
-				setCoverFromMusicData();
-			}
+			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+			getCover(song);
 		} else {
 			hadInstance = true;
 		}
@@ -141,11 +121,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void start(AbstractSong s) {
-		if (song.getClass() != MusicData.class) {
-			song = ((RemoteSong) s).cloneSong();
-		} else {
-			song = s;
-		}
+		this.song = s;
+		getCover(song);
 		if (isDestroy) return;
 		setImageButton();
 		setClickablePlayerElement(true);
@@ -550,13 +527,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 * delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 	 */
 	private void play(int delta) throws IllegalArgumentException {
-		if (delta > 0) player.shift(1);
-		else if (delta < 0) player.shift(-1);
-		else {
-//			player.play(player.getPlayingPosition());
+		if (delta > 0) {
+			player.shift(1);
+		} else if (delta < 0) {
+			player.shift(-1);
+		} else {
 			player.play(song);
 		}
-		if (delta != 0 && song.getClass() != MusicData.class) {
+	}
+
+	private void getCover(final AbstractSong song) {
+		if (song.getClass() != MusicData.class) {
 			((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 				
 				@Override
@@ -570,17 +551,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				}
 				
 			});
-		} else if (song.getClass() == MusicData.class) {
-			setCoverFromMusicData();
-		}
-	}
-
-	private void setCoverFromMusicData() {
-		Bitmap bitmap = ((MusicData) song).getCover(getActivity());
-		if (bitmap != null) {
-			playerCover.setImageBitmap(bitmap);
 		} else {
-			playerCover.setImageResource(R.drawable.no_cover_art_big);
+			final Bitmap bitmap = ((MusicData) song).getCover(getActivity());
+			if (bitmap != null) {
+				playerCover.post(new Runnable() {
+					
+					@Override
+					public void run() {
+						playerCover.setImageBitmap(bitmap);
+					}
+				});
+			} else {
+				playerCover.setImageResource(R.drawable.no_cover_art_big);
+			}
 		}
 	}
 	
