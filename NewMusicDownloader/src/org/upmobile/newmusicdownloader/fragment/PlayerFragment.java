@@ -40,7 +40,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -58,9 +57,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private View parentView;
 	private SeekBar playerProgress;
 	private SeekBar volume;
-	private View progress;
 	private CheckBox playerTagsCheckBox;
 	private ImageButton play;
+	private View wait;
 	private ImageButton previous;
 	private ImageButton forward;
 	private ImageButton editTag;
@@ -91,6 +90,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		isDestroy = false;
 		parentView = inflater.inflate(R.layout.main_fragment_port, container, false);
 		init();
+		playerProgress.setVisibility(View.INVISIBLE);
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ANDROID_MEDIA_VOLUME_CHANGED_ACTION);
 		getActivity().registerReceiver(volumeReceiver, filter);
@@ -213,6 +213,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setClickablePlayerElement(true);
 		setElementsView(0);
 		playerProgress.post(progressAction);
+		wait.setVisibility(View.INVISIBLE);
+		playerProgress.setVisibility(View.VISIBLE);
 	}
 	
 	@Override
@@ -234,6 +236,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		song = current;
 		setElementsView(0);
 		setClickablePlayerElement(false);
+		playerProgress.setVisibility(View.INVISIBLE);
+		wait.setVisibility(View.VISIBLE);
 	}
 	
 	@Override
@@ -324,8 +328,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void init() {
 		play = (ImageButton) parentView.findViewById(R.id.playpause);
-		play.setVisibility(View.GONE);
-		progress = parentView.findViewById(R.id.progress_bar_player);
+		wait = parentView.findViewById(R.id.player_wait_song);
 		previous = (ImageButton) parentView.findViewById(R.id.prev);
 		forward = (ImageButton) parentView.findViewById(R.id.next);
 		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
