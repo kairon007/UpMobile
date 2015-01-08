@@ -80,7 +80,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private EditText playerTagsAlbum;
 	private EditText playerTagsTitle;
 	private EditText playerTagsArtist;
-	private int currentPosition;
+//	private int currentPosition;
     private boolean isDestroy;
     private boolean hadInstance;
     private boolean isUseAlbumCover = true;
@@ -105,7 +105,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			} else {
 				song = buf;
 			}
-			currentPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
+//			currentPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
 			if (song.getClass() != MusicData.class) {
 				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 					
@@ -136,7 +136,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				final boolean enabledPlayerElement;
 				if (hadInstance) {
 					AbstractSong buf = player.getPlayingSong();
-					currentPosition = player.getPlayingPosition();
+//					currentPosition = player.getPlayingPosition();
 					if (buf.getClass() != MusicData.class) {
 						song = ((RemoteSong) buf).cloneSong();
 					} else {
@@ -157,7 +157,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						enabledPlayerElement = true;
 					}
 				} else {
-					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition) {
+//					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition) {
+					if (player.hasValidSong(song.getClass())) {
 						boolean check = player.isPlaying();
 						current = player.getCurrentPosition();
 						enabledPlayerElement = true;
@@ -171,9 +172,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						current = 0;
 						enabledPlayerElement = false;
 						if (player.isPlaying()) {
+							android.util.Log.d("log", "pf reset");
 							player.reset();
 						} 
-						player.play(currentPosition);
+//						player.play(currentPosition);
+						player.play(song);
 					}
 				}
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -616,7 +619,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (delta > 0) player.shift(1);
 		else if (delta < 0) player.shift(-1);
 		else {
-			player.play(player.getPlayingPosition());
+//			player.play(player.getPlayingPosition());
+			player.play(song);
 		}
 		if (delta != 0 && song.getClass() != MusicData.class) {
 			((RemoteSong) song).getCover(new OnBitmapReadyListener() {

@@ -43,12 +43,13 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private static final int SMODE_SHUFFLE = 0x00000020;
 	private static final int SMODE_REPEAT = 0x00000040;
 	private static final int SMODE_START_PREPARE = 0x00000080;
-	private static final int MSG_PLAY = 1;
-	private static final int MSG_PLAY_CURRENT = 2;
+	private static final int MSG_START = 1;
+	private static final int MSG_PLAY = 2;
 	private static final int MSG_PAUSE = 3;
 	private static final int MSG_SEEK_TO = 4;
 	private static final int MSG_ERROR = 5;
 	private static final int MSG_RESET = 6;
+	private static final int MSG_STOP = 7;
 	
 	//multy-threading section
 	private static final Object LOCK = new Object();
@@ -66,7 +67,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private MediaPlayer player;
 	private AbstractSong previousSong;
 	private AbstractSong playingSong;
-	private int playingPosition = -1;
 	private int mode;
 	
 	public interface OnStatePlayerListener {
@@ -89,7 +89,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
-				Message msg = buildMessage(MSG_PAUSE, 0, 0);
+				Message msg = buildMessage(playingSong, MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
 			}
 		}
@@ -105,14 +105,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
 				if (check(SMODE_PLAYING)) {
-					msg = buildMessage(MSG_PAUSE, 0, 0);
+					msg = buildMessage(playingSong, MSG_PAUSE, 0, 0);
 					handler.sendMessage(msg);
 					flag = true;
 				}
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
 				if (flag) {
-					msg = buildMessage(MSG_PLAY_CURRENT, 0, 0);
+					msg = buildMessage(playingSong, MSG_PLAY, 0, 0);
 					handler.sendMessage(msg);
 					flag = false;
 				}
@@ -178,14 +178,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public void seekTo(int progress) {
-		Message msg = buildMessage(MSG_SEEK_TO, progress, 0);
+		Message msg = buildMessage(null, MSG_SEEK_TO, progress, 0);
 		handler.sendMessage(msg);
 	}
 	
 	public void reset() {
-		playingPosition = -1;
 		handler.removeCallbacksAndMessages(null);
-		Message msg = buildMessage(MSG_RESET, 0, 0);
+		offMode(SMODE_PREPARED);
+		Message msg = buildMessage(playingSong, MSG_RESET, 0, 0);
 		handler.sendMessage(msg);
 	}
 	
@@ -204,8 +204,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 	}
 	
-	public void update(int position, int origPos, String title, String artist, String path, String album) {
-		if (playingSong.getClass() == MusicData.class) {
+	public void update(int position, int origPos, String title, String artist, String path, String album){
+		if (playingSong.getClass() == MusicData.class){
 			MusicData data = (MusicData) arrayPlayback.get(position);
 			data.setArtist(artist);
 			data.setTitle(title);
@@ -235,7 +235,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	@Override
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
-		case MSG_PLAY:
+		case MSG_START:
 			if (check(SMODE_START_PREPARE) || check(SMODE_START_PREPARE)) {
 				player.reset();
 			}	
@@ -253,9 +253,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			}
 			break;
 
-		case MSG_PLAY_CURRENT:
+		case MSG_PLAY:
 			if (check(SMODE_PREPARED)) {
-				helper(State.PLAY);
+				AbstractSong song = (AbstractSong) msg.obj;
+				helper(State.PLAY, song);
 				player.start();
 				onMode(SMODE_PLAYING);
 			}
@@ -263,7 +264,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 		case MSG_PAUSE:
 			if (check(SMODE_PREPARED)) {
-				helper(State.PAUSE);
+				AbstractSong song = (AbstractSong) msg.obj;
+				helper(State.PAUSE, song);
 				player.pause();
 				onMode(SMODE_PAUSE);
 			}
@@ -286,89 +288,81 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			break;
 			
 		case MSG_RESET:
-			if(check(SMODE_PREPARED)){
+			synchronized (LOCK) {
 				offMode(SMODE_PREPARED);
 				player.reset();
 			}
 			break;
-		default:
-			break;
+			
+		case MSG_STOP:
+			if (check(SMODE_PREPARED)){
+				player.pause();
+				player.seekTo(0);
+			}
 		}
 		return true;
 	}
 	
-	public void shift(int delta) { 
-		int buf;
-		if(playingPosition != -1) {
-			helper(State.STOP);
-		}
-		if (enabledRepeat()) {
-			buf = playingPosition;
-		} else {
-			buf = playingPosition + delta;
-		}
-		State state = State.UPDATE;
-		if (delta == 0) {
-			state = State.NONE;
-			if(playingPosition == arrayPlayback.size()) playingPosition--;
-			else if (playingPosition > arrayPlayback.size()) playingPosition = arrayPlayback.size() - 1;
-		} else if (0 < buf && buf < arrayPlayback.size()) {
-			playingPosition  =  buf;
-		} else if (buf >= arrayPlayback.size()) {
-			playingPosition = 0;
-			if (arrayPlayback.size() == 0) {
-				return;
+	public void shift(int delta) {
+		if (null == arrayPlayback || arrayPlayback.isEmpty()) return;
+		int position = arrayPlayback.indexOf(playingSong);
+		helper(State.STOP, playingSong);
+		if (!enabledRepeat()) {
+			position += delta;
+			if (position == arrayPlayback.size() && delta == 0) {
+				position--;
 			}
-		} else if (buf < 0) {
-			playingPosition = arrayPlayback.size() - 1;
-		}
-		if (playingPosition == -1) {
-			return;
+			else if (position >= arrayPlayback.size()) {
+				position = 0;
+			}
+			else if (position < 0) {
+				position = arrayPlayback.size() - 1;
+			}
 		}
 		previousSong = playingSong;
-		playingSong = arrayPlayback.get(playingPosition);
+		playingSong = arrayPlayback.get(position);
 		handler.removeCallbacksAndMessages(null);
 		Message msg = new Message();
 		msg.what = MSG_RESET;
 		handler.sendMessage(msg);
-		helper(state);
+		helper(State.UPDATE, playingSong);
 		play(new Message());
 	}
 
-	public void play(int position) {
-		if (arrayPlayback == null) return;
+	public void play(AbstractSong song) {
+		if (arrayPlayback == null && arrayPlayback.indexOf(song) == -1) return;
+		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
 			previousSong = playingSong;
+			if (!playingSong.equals(song)) {
+				reset();
+			}
 		}
 		playingSong = arrayPlayback.get(position);
 		Message msg = new Message();
-		if (playingPosition == position) {
-			if (!check(SMODE_PREPARED)) return;
+		if (check(SMODE_PREPARED)) {
+			// return;
 			if (check(SMODE_PLAY_PAUSE)) {
-				msg.what = MSG_PLAY_CURRENT;
+				msg.what = MSG_PLAY;
 				offMode(SMODE_PLAY_PAUSE);
 			} else {
 				msg.what = MSG_PAUSE;
 				onMode(SMODE_PLAY_PAUSE);
 			}
+			msg.obj = playingSong;
 			handler.sendMessage(msg);
 		} else {
 			if (null != previousSong) {
-				helper(State.STOP);
+				helper(State.STOP, previousSong);
 			}
-			if (isPlaying() || check(SMODE_PAUSE)) {
-				Message m = buildMessage(MSG_RESET, 0, 0);
-				handler.sendMessage(m);
-			}
-			playingPosition = position;
 			play(msg);
 		}
 	}
 	
 	public void stop() {
-		Message msg = buildMessage(MSG_RESET, 0, 0);
+		Message msg = buildMessage(playingSong, MSG_STOP, 0, 0);
 		handler.sendMessage(msg);
-		helper(State.STOP);
+		helper(State.STOP, playingSong);
 	}
 	
 	public boolean offOnShuffle(){
@@ -402,24 +396,19 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					((RemoteSong) playingSong).setDownloadUrl(url);
 					offMode(SMODE_GET_URL);
 					offMode(SMODE_PLAY_PAUSE);
-					Message msg = new Message();
-					msg.what = MSG_PLAY;
-					msg.arg1 = playingPosition;
-					msg.obj = url;
+					Message msg = buildMessage(url, MSG_START, 0, 0);
 					handler.sendMessage(msg);
 				}
 
 				@Override
 				public void error(String error) {
 				}
+				
 			});
 			return;
 		}
 		offMode(SMODE_PLAY_PAUSE);
-		msg.what = MSG_PLAY;
-		msg.arg1 = playingPosition;
-		String str = playingSong.getPath();
-		msg.obj = str;
+		msg = buildMessage(playingSong.getPath(), MSG_START, 0, 0);
 		handler.sendMessage(msg);
 	}
 	
@@ -427,7 +416,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		Collections.shuffle(arrayPlayback);
 	}
 	
-	private void helper(final State state) {
+	private void helper(final State state, final AbstractSong targetSong) {
 		if (stateListener == null || state.equals(State.NONE)) {
 			return;
 		}
@@ -438,21 +427,19 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			public void run() {
 				switch (state) {
 				case START:
-					stateListener.start(playingSong);
+					stateListener.start(targetSong);
 					break;
 				case PLAY:
-					stateListener.play(playingSong);
+					stateListener.play(targetSong);
 					break;
 				case PAUSE:
-					stateListener.pause(playingSong);
+					stateListener.pause(targetSong);
 					break;
 				case UPDATE:
-					stateListener.update(playingSong);
+					stateListener.update(targetSong);
 					break;
 				case STOP:
-					if (null != previousSong) {
-						stateListener.stop(previousSong);
-					}
+					stateListener.stop(targetSong);
 					break;
 				}
 			}
@@ -484,8 +471,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return (mode & flag) == flag;
 	}
 	
-	private Message buildMessage(int what, int arg1, int arg2) {
+	private Message buildMessage(Object obj, int what, int arg1, int arg2) {
 		Message msg = new Message();
+		msg.obj = obj;
 		msg.what = what;
 		msg.arg1 = arg1;
 		msg.arg2 = arg2;
@@ -494,7 +482,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 	@Override
 	public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
-		Message msg = buildMessage(MSG_ERROR, what, extra);
+		Message msg = buildMessage(playingSong, MSG_ERROR, what, extra);
 		handler.sendMessage(msg);
 		return true;
 	}
@@ -506,10 +494,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		onMode(SMODE_PREPARED);
-		helper(State.START);
-		mp.start();
-		onMode(SMODE_PLAYING);
+		synchronized (LOCK) {
+			onMode(SMODE_PREPARED);
+			helper(State.START, playingSong);
+			mp.start();
+			onMode(SMODE_PLAYING);
+		}
 	}
 	
 	public int getCurrentPosition() {

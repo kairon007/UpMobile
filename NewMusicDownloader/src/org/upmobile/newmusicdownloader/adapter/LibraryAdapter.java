@@ -28,31 +28,34 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
-	
+
 	private PlayerService service;
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
-		
+
 		@Override
 		public void start(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
+			if (song.getClass() != MusicData.class)
+				return;
 			MusicData data = get(song);
 			data.setPlaying(true);
 			notifyDataSetChanged();
 		}
-		
+
 		@Override
 		public void play(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
+			if (song.getClass() != MusicData.class)
+				return;
 			MusicData data = get(song);
 			data.setPlaying(true);
 			notifyDataSetChanged();
 		}
-		
+
 		@Override
 		public void pause(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
+			if (song.getClass() != MusicData.class)
+				return;
 			MusicData data = get(song);
 			data.setPlaying(false);
 			notifyDataSetChanged();
@@ -60,7 +63,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void update(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
+			if (song.getClass() != MusicData.class)
+				return;
 			MusicData data = get(song);
 			data.setPlaying(true);
 			notifyDataSetChanged();
@@ -73,14 +77,15 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			data.setPlaying(false);
 			notifyDataSetChanged();
 		}
+		
 	};
-	
+
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
 		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				service = PlayerService.get(getContext());
@@ -88,8 +93,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 		}).start();
 	}
-	
+
 	public MusicData get(AbstractSong data) {
+		if (data == null) return null;
 		for (int i = 0; i < getCount(); i++) {
 			MusicData buf = getItem(i);
 			if (buf.equals(data)) {
@@ -98,14 +104,14 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected ViewHolder<MusicData> createViewHolder(View v) {
 		return new LibraryViewHolder(v);
 	}
-	
-	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnClickListener, OnLongClickListener{
-		
+
+	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnClickListener, OnLongClickListener {
+
 		private MusicData data;
 		private ViewGroup info;
 		private View button;
@@ -151,7 +157,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@SuppressLint("NewApi")
 		private void setButtonBackground(Drawable drawable) {
-			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN){
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
 				button.setBackgroundDrawable(drawable);
 			} else {
 				button.setBackground(drawable);
@@ -180,7 +186,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);
 				}
-				service.play(getPosition(data));
+				service.play(data);
 				((MainActivity) getContext()).showPlayerElement(true);
 				break;
 			}
@@ -192,7 +198,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				PopupMenu menu = new PopupMenu(getContext(), view);
 				menu.getMenuInflater().inflate(R.menu.menu, menu.getMenu());
 				menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					
+
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
 						remove(data);
@@ -200,7 +206,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						data.reset(getContext());
 						if (isEmpty()) {
 							((MainActivity) getContext()).showPlayerElement(false);
-							TextView emptyMsg = (TextView) ((MainActivity)getContext()).findViewById(R.id.message_listview);
+							TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
 							emptyMsg.setVisibility(View.VISIBLE);
 							emptyMsg.setText(R.string.library_empty);
 						}
@@ -212,5 +218,5 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			return true;
 		}
 	}
-	
+
 }

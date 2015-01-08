@@ -69,7 +69,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		}
 
 		private void customList(ArrayList<MusicData> list) {
-			if (service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
+			if (service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
 				int i = service.getPlayingPosition();
 				list.get(i).setPlaying(true);
 			}
