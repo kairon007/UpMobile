@@ -1,7 +1,6 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,13 +37,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	private static final int DELAY = 5000;
 	private PlayerService service;
-	private HashSet<MusicData> removingData = new HashSet<MusicData>();
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
 	private MusicData currentPlayData; 
     private String PACKAGE = "IDENTIFY";
-	private ArrayList<Timer> timers = new ArrayList<Timer>();
+    private Timer timer;
 	private Animation anim;
+	private MusicData previous;
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
 		@Override
@@ -105,14 +104,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 		}).start();
 	}
-	
-	public HashSet<MusicData> getRemovingData() {
-		return removingData;
-	}
-	
-	public void deleteRemovingData(MusicData data) {
-		removingData.remove(data);
-	}
 
 	@Override
 	protected ViewHolder<MusicData> createViewHolder(View v) {
@@ -122,43 +113,43 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	@Override
 	public void onItemSwipeVisible(Object selected, View v) {
 		if (!((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
+			if (null != previous) {
+				cancelTimer();
+				previous.reset(getContext());
+				remove(previous);
+				service.remove(previous);
+			}
 			timer((MusicData) selected, v);
+			previous = ((MusicData) selected);
 		}
 		((MusicData) selected).turnOn(MusicData.MODE_VISIBLITY);
-		removingData.add((MusicData) selected);
 	}
-
+	
 	@Override
 	public void onItemSwipeGone(Object selected, View v) {
 		if (((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
 			cancelTimer();
+			previous = null;
 		}
 		((MusicData) selected).turnOff(MusicData.MODE_VISIBLITY);
-		removingData.remove((MusicData) selected);
 	}
 
 	public void cancelTimer() {
-		for (Timer timer : timers) {
-			timer.cancel();
-		}
+		timer.cancel();
 	}
 
 	private void timer(MusicData musicData, View v) {
-		Timer timer = new Timer();
-		timers.add(timer);
-		int pos = timers.indexOf(timer);
-		RemoveTimer task = new RemoveTimer(musicData, pos);
+		timer = new Timer();
+		RemoveTimer task = new RemoveTimer(musicData);
 		timer.schedule(task, DELAY);
 	}
 
 	private class RemoveTimer extends TimerTask {
 
 		private MusicData musicData;
-		int position;
 
-		public RemoveTimer(MusicData musicData, int position) {
+		public RemoveTimer(MusicData musicData) {
 			this.musicData = musicData;
-			this.position = position;
 		}
 
 		public void run() {
@@ -195,7 +186,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 					}
 				});
 			}
-			timers.get(position).cancel();
+			timer.cancel();
 			this.cancel();
 		}
 	}
@@ -284,8 +275,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 						playerFragment.setArguments(bundle);
 						((MainActivity) v.getContext()).changeFragment(playerFragment);
 						break;
+					case MotionEvent.ACTION_CANCEL:
 					case MotionEvent.ACTION_MOVE:
-						((UISwipableList)parent).setSelectedPosition(item, v);
+						((UISwipableList) parent).setSelectedPosition(item, v);
 						break;
 					}
 	  				return true;

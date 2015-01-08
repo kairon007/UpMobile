@@ -69,16 +69,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		};
 		
 		private void customList(ArrayList<MusicData> list) {
-			HashSet<MusicData> datas = adapter.getRemovingData();
-			if (null != datas) {
-				for (MusicData musicData : datas) {
-					if (list.contains(musicData)) {
-						list.get(list.indexOf(musicData)).turnOn(MusicData.MODE_VISIBLITY);
-					} else {
-						adapter.deleteRemovingData(musicData);
-					}
-				}
-			}
 			if(service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class){
 				int i = service.getPlayingPosition();
 				list.get(i).turnOn(MusicData.MODE_PLAYING);

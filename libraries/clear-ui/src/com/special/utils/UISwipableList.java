@@ -43,7 +43,6 @@ public class UISwipableList extends ListView {
     private int mHiddenLayout;
     private View mSwipeDownView = null;
     private View mHiddenView = null;
-    private View currentlyStickingView;
 	private View v;
     private ResideMenu mResideMenu;
     
@@ -172,12 +171,7 @@ public class UISwipableList extends ListView {
                 return true;
             }
             break;
-
-        case MotionEvent.ACTION_UP:
-        case MotionEvent.ACTION_CANCEL:
-            break;
         }
-
         return super.onInterceptTouchEvent(ev);
     }
 
@@ -210,9 +204,9 @@ public class UISwipableList extends ListView {
                     mSwiping = true;
                     swipeLeft = true;
                     requestDisallowInterceptTouchEvent(true);
-                    MotionEvent cancelEvent = MotionEvent.obtain(ev);
-                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
-                    super.onTouchEvent(cancelEvent);
+//                    MotionEvent cancelEvent = MotionEvent.obtain(ev);
+//                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+//                    super.onTouchEvent(cancelEvent);
                 }
             } else if (isSwipeHorizontal(deltaX, deltaY) && Math.abs(deltaX) > mSwipeMin) {   	
             	if(null != swipableListener && selectedObject != null){
@@ -221,9 +215,9 @@ public class UISwipableList extends ListView {
                 mSwiping = true;
                 swipeLeft = false;
                 requestDisallowInterceptTouchEvent(true);
-                MotionEvent cancelEvent = MotionEvent.obtain(ev);
-                cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
-                super.onTouchEvent(cancelEvent);
+//                MotionEvent cancelEvent = MotionEvent.obtain(ev);
+//                cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+//                super.onTouchEvent(cancelEvent);
             } else {
                 mDownX = ev.getRawX();
                 deltaX = 0;

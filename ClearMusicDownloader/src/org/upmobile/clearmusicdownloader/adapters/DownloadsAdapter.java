@@ -1,6 +1,5 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,8 +29,9 @@ import com.special.utils.UISwipableList;
 public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 	private Object lock = new Object();
-	private ArrayList<Timer> timers = new ArrayList<Timer>();
+	private Timer timer;
 	private final static int DELAY = 2000;
+	private MusicData previous;
 
 	private class DownloadsViewHolder extends ViewHolder<MusicData> {
 		private TextView title;
@@ -83,6 +83,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
+					case MotionEvent.ACTION_CANCEL:
 					case MotionEvent.ACTION_MOVE:
 						((UISwipableList) parent).setSelectedPosition(item, v);
 						break;
@@ -115,6 +116,10 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	public void onItemSwipeVisible(Object selected, View v) {
 		if (!((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
 			timer((MusicData) selected, v);
+			if (null != previous) {
+				removeItem(previous);
+			}
+			previous = ((MusicData) selected);
 		}
 		((MusicData) selected).turnOn(MusicData.MODE_VISIBLITY);
 	}
@@ -123,6 +128,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	public void onItemSwipeGone(Object selected, View v) {
 		if (((MusicData) selected).check(MusicData.MODE_VISIBLITY)) {
 			cancelTimer();
+			previous = null;
 		}
 		((MusicData) selected).turnOff(MusicData.MODE_VISIBLITY);
 	}
@@ -135,16 +141,12 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	}
 	
 	public void cancelTimer() {
-		for (Timer timer : timers) {
-			timer.cancel();
-		}
+		timer.cancel();
 	}
 
 	private void timer(MusicData musicData, View v) {
-		Timer timer = new Timer();
-		timers.add(timer);
-		int pos = timers.indexOf(timer);
-		RemoveTimer task = new RemoveTimer(musicData, pos);
+		timer = new Timer();
+		RemoveTimer task = new RemoveTimer(musicData);
 		timer.schedule(task, DELAY);
 	}
 
@@ -152,11 +154,9 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 		private MusicData musicData;
 		private Animation anim;
-		private int position;
 
-		public RemoveTimer(MusicData musicData, int position) {
+		public RemoveTimer(MusicData musicData) {
 			this.musicData = musicData;
-			this.position = position;
 		}
 
 		public void run() {
@@ -190,7 +190,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 					}
 				});
 			}
-			timers.get(position).cancel();
+			timer.cancel();
 			this.cancel();
 		}
 	}

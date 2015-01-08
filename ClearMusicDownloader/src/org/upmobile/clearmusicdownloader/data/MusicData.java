@@ -179,7 +179,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		if (onOff) {
 			mode |= flag;
 		} else {
-			mode ^= flag;
+			mode &= ~flag;
 		}
 	}
 	
