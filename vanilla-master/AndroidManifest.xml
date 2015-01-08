@@ -75,11 +75,9 @@ THE SOFTWARE.
     
     
     
-    <application
+    <application android:icon="@drawable/icon" android:label="@string/app_name"
         android:name="ru.johnlife.lifetoolsmp3.app.MusicApp"
         android:backupAgent="PreferencesBackupAgent"
-        android:icon="@drawable/icon"
-        android:label="@string/app_name"
         android:theme="@style/AppTheme.Black" >
 
         <!-- Activities with theme -->

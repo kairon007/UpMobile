@@ -67,11 +67,9 @@
 	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     
     
-    <application
+    <application android:icon="@drawable/icon" android:label="@string/app_name"
         android:name="com.simpleandroid.music.MusicPlayerApp"
         android:allowTaskReparenting="true"
-        android:icon="@drawable/icon"
-        android:label="@string/musicbrowserlabel"
         android:largeHeap="true"
         android:taskAffinity="android.task.music">
 <!--         android:theme="@style/AppTheme" -->
