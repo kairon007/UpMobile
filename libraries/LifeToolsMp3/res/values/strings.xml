@@ -124,4 +124,6 @@
     <string name="downloading">Downloading File</string>
     <string name="totaldl">Total Downloads</string>
     <string name="clearall">Clear All</string>
+    
+<string name="duration">Duration:</string>
 </resources>

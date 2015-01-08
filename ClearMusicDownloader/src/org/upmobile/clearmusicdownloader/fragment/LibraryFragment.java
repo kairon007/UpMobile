@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,7 +87,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	};
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle state) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		new Thread(new Runnable() {
 			
 			@Override
