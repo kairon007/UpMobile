@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -113,6 +112,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						if (null != bmp) {
 							((RemoteSong) song).setHasCover(true);
 							playerCover.setImageBitmap(bmp);
+						} else {
+							playerCover.setImageResource(R.drawable.no_cover_art_big);
 						}
 					}
 				});
@@ -200,20 +201,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void setImageButton() {
-		Bitmap bmRepeat;
-		Bitmap bmShuffle;
 		if(!player.enabledRepeat()) {
-			bmRepeat = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_repeat);
+			repeat.setImageResource(R.drawable.ic_media_repeat);
 		} else {
-			bmRepeat = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_repeat_on);
+			repeat.setImageResource(R.drawable.ic_media_repeat_on);
 		}
 		if (player.enabledShuffle()) {
-			bmShuffle = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_shuffle_on);
+			shuffle.setImageResource(R.drawable.ic_media_shuffle_on);
 		} else {
-			bmShuffle = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_shuffle);
+			shuffle.setImageResource(R.drawable.ic_media_shuffle);
 		}
-		repeat.setImageBitmap(bmRepeat);
-		shuffle.setImageBitmap(bmShuffle);
 	}
 
 	private void bindToPlayer() {
@@ -409,22 +406,18 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			hideOpenViews();
 			break;
 		case R.id.repeat:
-			Bitmap bmRepeat;
 			if (!player.offOnRepeat()){
-				bmRepeat = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_repeat);
+				repeat.setImageResource(R.drawable.ic_media_repeat);
 			} else {
-				bmRepeat = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_repeat_on);
+				repeat.setImageResource(R.drawable.ic_media_repeat_on);
 			}
-			repeat.setImageBitmap(bmRepeat);
 			break;
 		case R.id.shuffle:
-			Bitmap bmShuffle;
 			if (player.offOnShuffle()) {
-				bmShuffle = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_shuffle_on);
+				shuffle.setImageResource(R.drawable.ic_media_shuffle_on);
 			} else {
-				bmShuffle = BitmapFactory.decodeResource(getResources(), R.drawable.ic_media_shuffle);
+				shuffle.setImageResource(R.drawable.ic_media_shuffle);
 			}
-			shuffle.setImageBitmap(bmShuffle);
 			break;
 		case R.id.stop:
 			player.stop();
@@ -511,8 +504,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void showLyrics() {
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
-			final int [] location = new int[2];
-			playerLyricsView.getLocationOnScreen(location);
 			LyricsFetcher lyricsFetcher = new LyricsFetcher(getActivity());
 			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
@@ -630,6 +621,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						playerCover.setImageBitmap(bmp);
+					} else {
+						playerCover.setImageResource(R.drawable.no_cover_art_big);
 					}
 				}
 				
@@ -643,6 +636,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		Bitmap bitmap = ((MusicData) song).getCover(getActivity());
 		if (bitmap != null) {
 			playerCover.setImageBitmap(bitmap);
+		} else {
+			playerCover.setImageResource(R.drawable.no_cover_art_big);
 		}
 	}
 	
