@@ -195,7 +195,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				return;
 			}
 			if (song.equals(playingSong)) {
+				int pos = arrayPlayback.indexOf(playingSong);
 				arrayPlayback.remove(song);
+				playingSong = arrayPlayback.get(pos);
 				if (check(SMODE_PLAYING)) {
 					shift(0);
 				}
@@ -341,7 +343,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		playingSong = arrayPlayback.get(position);
 		Message msg = new Message();
 		if (check(SMODE_PREPARED)) {
-			// return;
 			if (check(SMODE_PLAY_PAUSE)) {
 				msg.what = MSG_PLAY;
 				offMode(SMODE_PLAY_PAUSE);
@@ -360,8 +361,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public void stop() {
-		Message msg = buildMessage(playingSong, MSG_STOP, 0, 0);
-		handler.sendMessage(msg);
+		if (check(SMODE_PREPARED)) {
+			player.pause();
+			player.seekTo(0);
+			onMode(SMODE_PLAY_PAUSE);
+		}
 		helper(State.STOP, playingSong);
 	}
 	

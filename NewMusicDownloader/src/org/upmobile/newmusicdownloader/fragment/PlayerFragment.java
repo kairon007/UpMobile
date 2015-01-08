@@ -5,7 +5,6 @@ import java.io.File;
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DownloadListener;
 import org.upmobile.newmusicdownloader.R;
-import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
@@ -80,7 +79,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private EditText playerTagsAlbum;
 	private EditText playerTagsTitle;
 	private EditText playerTagsArtist;
-//	private int currentPosition;
     private boolean isDestroy;
     private boolean hadInstance;
     private boolean isUseAlbumCover = true;
@@ -105,7 +103,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			} else {
 				song = buf;
 			}
-//			currentPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
 			if (song.getClass() != MusicData.class) {
 				((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 					
@@ -131,77 +128,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void run() {
 				player = PlayerService.get(getActivity());
 				player.setStatePlayerListener(PlayerFragment.this);
-				final int current;
-				final int mode;
-				final boolean enabledPlayerElement;
-				if (hadInstance) {
-					AbstractSong buf = player.getPlayingSong();
-//					currentPosition = player.getPlayingPosition();
-					if (buf.getClass() != MusicData.class) {
-						song = ((RemoteSong) buf).cloneSong();
-					} else {
-						song = buf;
-					}
-					if (player.isGettingURl() || !player.isPrepared()) {
-						enabledPlayerElement = false;
-						current = 0;
-						mode = 0;
-					} else {
-						boolean check = player.isPlaying();
-						current = player.getCurrentPosition();
-						if (check) {
-							mode = -1;
-						} else {
-							mode = 1;
-						}
-						enabledPlayerElement = true;
-					}
-				} else {
-//					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition) {
-					if (player.hasValidSong(song.getClass())) {
-						boolean check = player.isPlaying();
-						current = player.getCurrentPosition();
-						enabledPlayerElement = true;
-						if (check) {
-							mode = -1;
-						} else {
-							mode = 1;
-						}
-					} else {
-						mode = 0;
-						current = 0;
-						enabledPlayerElement = false;
-						if (player.isPlaying()) {
-							android.util.Log.d("log", "pf reset");
-							player.reset();
-						} 
-//						player.play(currentPosition);
-						player.play(song);
-					}
+				if (!hadInstance) {
+					player.play(song);
 				}
-				new Handler(Looper.getMainLooper()).post(new Runnable() {
-					
-					@Override
-					public void run() {
-						setImageButton();
-						if (!hadInstance) {
-							if (mode == 0) {
-								((MainActivity) getActivity()).showPlayerElement(true);
-							}
-						}
-						setElementsView(current);
-						if (!enabledPlayerElement) {
-							setClickablePlayerElement(false);
-						}
-						if (mode > 0) {
-							changePlayPauseView(true);
-						} else if (mode < 0){
-							changePlayPauseView(false);
-						}
-					}
-				});
 			}
+			
 		}).start();
+		setClickablePlayerElement(false);
+		changePlayPauseView(true);
 		return parentView;
 	}
 	
@@ -213,7 +147,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			song = s;
 		}
 		if (isDestroy) return;
+		setImageButton();
 		setClickablePlayerElement(true);
+		changePlayPauseView(false);
 		setElementsView(0);
 		playerProgress.post(progressAction);
 		wait.setVisibility(View.INVISIBLE);
@@ -245,10 +181,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void stop(AbstractSong song) {
-		if(song.equals(PlayerFragment.this.song)) return;
+		if (isDestroy) return;
 		setElementsView(0);
 		changePlayPauseView(true);
-		setClickablePlayerElement(false);
+		setClickablePlayerElement(true);
 	}
 
 	private void setImageButton() {
@@ -310,9 +246,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		stop.setClickable(isClickable);
 		playerProgress.setEnabled(isClickable);
 		playerProgress.setClickable(isClickable);
-		if (isClickable) {
-			play.setImageResource(R.drawable.ic_media_pause);
-		} else {
+		if (!isClickable) {
 			playerCurrTime.setText("0:00");
 			playerProgress.setProgress(0);
 		}

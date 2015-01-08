@@ -54,7 +54,6 @@ public class SearchView extends OnlineSearchView {
 		} 
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(Constants.KEY_SELECTED_SONG, getResultAdapter().getItem(position));
-		bundle.putInt(Constants.KEY_SELECTED_POSITION, position);
 		PlayerFragment playerFragment = new PlayerFragment();
 		playerFragment.setArguments(bundle);
 		((MainActivity) view.getContext()).changeFragment(playerFragment);

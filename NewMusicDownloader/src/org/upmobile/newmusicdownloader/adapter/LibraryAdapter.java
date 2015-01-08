@@ -175,7 +175,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				}
 				Bundle bundle = new Bundle();
 				bundle.putParcelable(Constants.KEY_SELECTED_SONG, data);
-				bundle.putInt(Constants.KEY_SELECTED_POSITION, getPosition(data));
 				PlayerFragment playerFragment = new PlayerFragment();
 				playerFragment.setArguments(bundle);
 				((MainActivity) view.getContext()).changeFragment(playerFragment);
