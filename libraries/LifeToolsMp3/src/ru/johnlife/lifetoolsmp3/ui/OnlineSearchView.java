@@ -124,6 +124,58 @@ public abstract class OnlineSearchView extends View {
 		}
 	};
 
+	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
+		
+		
+		
+		if (searchEngineName != null) {
+			
+			
+			if (searchEngineName.equals("SearchMyFreeMp3")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3.class;
+			} else if (searchEngineName.equals("SearchGrooveshark")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark.class;
+			} else if (searchEngineName.equals("SearchZaycev")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchZaycev.class;
+			} else if (searchEngineName.equals("SearchZaycevScrape")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchZaycevScrape.class;
+			} else if (searchEngineName.equals("SearchHulkShare")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchHulkShare.class;
+			} else if (searchEngineName.equals("SearchPleer")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
+			} else if (searchEngineName.equals("SearchPoisk")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchPoisk.class;
+			} else if (searchEngineName.equals("SearchSogou")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSogou.class;
+			} else if (searchEngineName.equals("SearchTing")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchTing.class;
+			} else if (searchEngineName.equals("SearchVmusice")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchVmusice.class;
+			} else if (searchEngineName.equals("SearchNothing")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchNothing.class;
+			} else if (searchEngineName.equals("SearchSoundCloud")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud.class;
+			} else if (searchEngineName.equals("SearchSoundCloudV2")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloudV2.class;
+			} else if (searchEngineName.equals("SearchSoundCloudV3")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloudV3.class;
+			} else if (searchEngineName.equals("SearchYouTube")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchYouTube.class;
+			} else if (searchEngineName.equals("SearchYouTubeMusic")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic.class;
+			} else if (searchEngineName.equals("SearchGear")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchGear.class;
+			} else if (searchEngineName.equals("SearchSoArdIyyin")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin.class;
+			}
+		}
+		
+		
+		
+		return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
+	}
+
+	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
 
 		@Override
@@ -394,13 +446,13 @@ public abstract class OnlineSearchView extends View {
 		}
 		engines = new ArrayList<Engine>(engineArray.length);
 		for (int i = 0; i < engineArray.length; i++) {
-			try {
-				Class<? extends BaseSearchTask> engineClass = (Class<? extends BaseSearchTask>) Class.forName(engineArray[i][0]);
+				
+				Class<? extends BaseSearchTask> engineClass = getSearchEngineClass(engineArray[i][0]);
 				int maxPages = Integer.parseInt(engineArray[i][1]);
 				for (int page = 1; page <= maxPages; page++) {
 					engines.add(new Engine(engineClass, page));
 				}
-			} catch (ClassNotFoundException e) {}
+			
 		}
 	}
 	
@@ -711,12 +763,10 @@ public abstract class OnlineSearchView extends View {
 		keeper.deactivateOptions(StateKeeper.SEARCH_STOP_OPTION);
 		if (isBlacklistedQuery(songName)) {
 			ArrayList<Engine> nothingSearch = new ArrayList<Engine>();
-			try {
-				Class<? extends BaseSearchTask> engineClass = (Class<? extends BaseSearchTask>) Class.forName("ru.johnlife.lifetoolsmp3.engines.SearchNothing");
+
+				Class<? extends BaseSearchTask> engineClass = getSearchEngineClass("SearchNothing");
 				nothingSearch.add(new Engine(engineClass, 1));
-			} catch (ClassNotFoundException e) {
-				Log.e("SearchTab", "Unknown engine", e);
-			}
+
 			taskIterator = nothingSearch.iterator();
 		} else {
 			taskIterator = engines.iterator();

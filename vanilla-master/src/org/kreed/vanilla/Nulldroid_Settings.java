@@ -18,23 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
-import ru.johnlife.lifetoolsmp3.engines.SearchHulkShare;
-import ru.johnlife.lifetoolsmp3.engines.SearchJamendo;
-import ru.johnlife.lifetoolsmp3.engines.SearchMp3World;
-import ru.johnlife.lifetoolsmp3.engines.SearchMp3skull;
-import ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3;
-import ru.johnlife.lifetoolsmp3.engines.SearchPleer;
-import ru.johnlife.lifetoolsmp3.engines.SearchPoisk;
-import ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin;
-import ru.johnlife.lifetoolsmp3.engines.SearchSogou;
-import ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud;
-import ru.johnlife.lifetoolsmp3.engines.SearchSoundCloudV2;
-import ru.johnlife.lifetoolsmp3.engines.SearchSoundCloudV3;
-import ru.johnlife.lifetoolsmp3.engines.SearchTing;
-import ru.johnlife.lifetoolsmp3.engines.SearchYouTube;
-import ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic;
-import ru.johnlife.lifetoolsmp3.engines.SearchZaycev;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
 import android.content.Context;
@@ -50,32 +33,30 @@ public class Nulldroid_Settings implements BaseSettings {
 	
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
 //		{"SearchVmusice", "1"},
-		{SearchPleer.class.getName(), "3"},
-		{SearchSoArdIyyin.class.getName(), "3"},
-		{SearchMyFreeMp3.class.getName(), "1"},
-		{SearchZaycev.class.getName(), "2"},
-		{SearchPleer.class.getName(), "2"},
-		{SearchPoisk.class.getName(), "1"}, 
-		{SearchHulkShare.class.getName(), "1"}, 
-		{SearchMp3skull.class.getName(), "1"},
-		{SearchMp3World.class.getName(), "1"},  
-		{SearchSogou.class.getName(), "1"},
-		{SearchGrooveshark.class.getName(), "1"}, 
-		{SearchTing.class.getName(), "1"}, 
-		{SearchJamendo.class.getName(),"1"},
-		{SearchYouTube.class.getName(), "7"}
+		{"SearchPleer", "3"},
+		{"SearchSoArdIyyin", "3"},
+		{"SearchMyFreeMp3", "1"},
+		{"SearchZaycev", "2"},
+		{"SearchPleer", "2"},
+		{"SearchPoisk", "1"}, 
+		{"SearchHulkShare", "1"}, 
+		{"SearchMp3skull", "1"},
+		{"SearchMp3World", "1"},  
+		{"SearchSogou", "1"},
+		{"SearchGrooveshark", "1"}, 
+		{"SearchTing", "1"}, 
+		{"SearchJamendo","1"},
+		{"SearchYouTube", "7"}
 		
 	};
 
 	private static final String [][] SEARCH_ENGINES_2 = new String [][]{
-		{SearchYouTube.class.getName(), "3"},
-		{SearchYouTubeMusic.class.getName(), "3"}		
+		{"SearchYouTube", "3"},
+		{"SearchYouTubeMusic", "3"}		
 	};
 	
 	private static final String [][] SEARCH_ENGINES_3 = new String [][]{
-		{SearchSoundCloud.class.getName(), "1"},
-		{SearchSoundCloudV2.class.getName(), "1"},
-		{SearchSoundCloudV3.class.getName(), "1"}		
+		{"SearchSoundCloud", "3"}		
 	};
 	
 	private static final String [][] SEARCH_ENGINES_4 = new String [][]{ };
@@ -1039,5 +1020,5 @@ public class Nulldroid_Settings implements BaseSettings {
 	public static String getRemoteSettingsUrl() {
 		return REMOTE_SETTINGS_URL;		
 	}
-	
 }
+
