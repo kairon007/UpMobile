@@ -181,25 +181,19 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		handler.sendMessage(msg);
 	}
 	
-	public void reset() {
-		playingPosition = -1;
-		handler.removeCallbacksAndMessages(null);
-		Message msg = buildMessage(MSG_RESET, 0, 0);
-		handler.sendMessage(msg);
-	}
-	
 	public void remove(AbstractSong song) {
 		synchronized (LOCK) {
-			if (song.getClass() != MusicData.class || null == arrayPlayback || arrayPlayback.isEmpty()) {
-				return;
+			if (null == arrayPlayback || arrayPlayback.isEmpty()) {
+				Message msg = buildMessage(MSG_RESET, 0, 0);
 			}
 			if (song.equals(playingSong)) {
 				arrayPlayback.remove(song);
 				if (check(SMODE_PLAYING)) {
 					shift(0);
 				}
-			} else arrayPlayback.remove(song);
-			if (arrayPlayback.isEmpty()) reset();
+			} else {
+				arrayPlayback.remove(song);
+			}
 		}
 	}
 	
@@ -263,6 +257,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			player.setOnCompletionListener(this);
 			player.setOnErrorListener(this);
 			player.setOnPreparedListener(this);
+			try {
+				player.setDataSource(playingSong.getPath());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			break;
 			
 		case MSG_RESET:
@@ -312,7 +311,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (arrayPlayback == null) return;
 		playingSong = arrayPlayback.get(position);
 		Message msg = new Message();
-		if (playingPosition == position) {
+		if (playingPosition == position && playingPosition != -1) {
 			if (!check(SMODE_PREPARED)) return;
 			if (check(SMODE_PLAY_PAUSE)) {
 				msg.what = MSG_PLAY_CURRENT;
@@ -323,7 +322,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			}
 			handler.sendMessage(msg);
 		} else {
-			reset();
+			Message m = buildMessage(MSG_RESET, 0, 0);
+			handler.sendMessage(m);
 			playingPosition = position;
 			play(msg);
 		}
@@ -438,8 +438,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		onMode(SMODE_PREPARED);
-		helper(State.START);
 		mp.start();
+		helper(State.START);
 	}
 	
 	public int getCurrentPosition() {
@@ -455,6 +455,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		synchronized (LOCK) {
 			return arrayPlayback.indexOf(playingSong);
 		}
+	}
+	
+	public void setPlayingPosition(int playingPosition) {
+		this.playingPosition = playingPosition;
 	}
 	
 	public boolean showPlayPause() {
