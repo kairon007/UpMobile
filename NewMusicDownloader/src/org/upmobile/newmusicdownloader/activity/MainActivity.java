@@ -90,7 +90,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	
 	@Override
 	public void onBackPressed() {
-		if (getFragmentManager().getBackStackEntryCount() - 1 > 0) {
+		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
+		if (null != player && player.isVisible()) {
 			getFragmentManager().popBackStack();
 		} else {
 			finish();
