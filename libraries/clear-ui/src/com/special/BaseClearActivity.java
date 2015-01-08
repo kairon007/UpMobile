@@ -70,7 +70,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 				resideMenu.openMenu();
 			}
 		});
-        topFrame.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.title_bar).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				resideMenu.openMenu();
