@@ -59,6 +59,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private SeekBar volume;
 	private CheckBox playerTagsCheckBox;
 	private ImageButton play;
+	private View progress;
 	private ImageButton previous;
 	private ImageButton forward;
 	private ImageButton editTag;
@@ -227,6 +228,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				setClickablePlayerElement(true);
 				setElementsView(0);
 				playerProgress.post(progressAction);
+				play.setVisibility(View.VISIBLE);
+				progress.setVisibility(View.GONE);
 			}
 			
 			@Override
@@ -248,6 +251,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				song = current;
 				setElementsView(0);
 				setClickablePlayerElement(false);
+				play.setVisibility(View.GONE);
+				progress.setVisibility(View.VISIBLE);
 			}
 			
 			@Override
@@ -328,6 +333,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void init() {
 		play = (ImageButton) parentView.findViewById(R.id.playpause);
+		play.setVisibility(View.GONE);
+		progress = parentView.findViewById(R.id.progress_bar_player);
 		previous = (ImageButton) parentView.findViewById(R.id.prev);
 		forward = (ImageButton) parentView.findViewById(R.id.next);
 		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
