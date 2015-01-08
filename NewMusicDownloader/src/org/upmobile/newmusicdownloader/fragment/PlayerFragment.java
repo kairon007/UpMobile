@@ -5,6 +5,7 @@ import java.io.File;
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DownloadListener;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
@@ -101,6 +102,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			getCover(song);
 		} else {
 			hadInstance = true;
+			if (PlayerService.hasInstance()) {
+				player = PlayerService.get(getActivity());
+				if (player.getPlayingSong() != null) {
+					song = player.getPlayingSong();
+					setImageButton();
+					setClickablePlayerElement(true);
+					changePlayPauseView(false);
+					int pos = player.getCurrentPosition();
+					wait.setVisibility(View.INVISIBLE);
+					playerProgress.setVisibility(View.VISIBLE);
+					setElementsView(pos);
+					playerProgress.post(progressAction);
+					return parentView;
+				}
+			}
 		}
 		new Thread(new Runnable() {
 			
@@ -124,6 +140,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		this.song = s;
 		getCover(song);
 		if (isDestroy) return;
+		((MainActivity) getActivity()).showPlayerElement(true);
 		setImageButton();
 		setClickablePlayerElement(true);
 		changePlayPauseView(false);
