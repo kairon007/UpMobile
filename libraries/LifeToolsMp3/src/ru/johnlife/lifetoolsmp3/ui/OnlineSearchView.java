@@ -346,10 +346,8 @@ public abstract class OnlineSearchView extends View {
 		}
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) {
 			showBaseProgress();
-		}
-		else hideBaseProgress();
-		if (progress.getVisibility() == View.GONE && resultAdapter.isEmpty()) {
-			message.setText(R.string.search_your_results_appear_here);
+		} else {
+			hideBaseProgress();
 		}
 		return view;
 	}
@@ -650,7 +648,7 @@ public abstract class OnlineSearchView extends View {
 		if (isOffline(searchField.getContext())) {
 			message.setText(R.string.search_message_no_internet);
 			resultAdapter.clear();
-		} else if ((null == searchString) || ("".equals(searchString))) {
+		} else if ((null == searchString) || (searchString.isEmpty())) {
 			resultAdapter.clear();
 			message.setText(R.string.search_please_enter_query);
 		} else {
@@ -724,7 +722,7 @@ public abstract class OnlineSearchView extends View {
 			taskIterator = engines.iterator();
 		}
 		resultAdapter.clear();
-		message.setText("");
+		setMessage("");
 		showBaseProgress();
 		getNextResults();
 	}
