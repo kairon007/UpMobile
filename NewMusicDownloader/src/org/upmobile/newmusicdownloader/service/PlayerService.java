@@ -204,12 +204,31 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 	}
 	
-	public void update(int position, String title, String artist, String path){
-		if (playingSong.getClass() == MusicData.class){
+	public void update(int position, int origPos, String title, String artist, String path, String album) {
+		if (playingSong.getClass() == MusicData.class) {
 			MusicData data = (MusicData) arrayPlayback.get(position);
 			data.setArtist(artist);
 			data.setTitle(title);
+			data.setAlbum(album);
 			data.setPath(path);
+			if (null == arrayPlaybackOriginal) return;
+			MusicData dataOrig = (MusicData) arrayPlaybackOriginal.get(position);
+			dataOrig.setArtist(artist);
+			dataOrig.setTitle(title);
+			dataOrig.setAlbum(album);
+			dataOrig.setPath(path);
+		} else {
+			RemoteSong data = (RemoteSong) arrayPlayback.get(position);
+			data.setArtist(artist);
+			data.setTitle(title);
+			data.setAlbum(album);
+			data.setPath(path);
+			if (null == arrayPlaybackOriginal) return;
+			RemoteSong dataOrig = (RemoteSong) arrayPlaybackOriginal.get(position);
+			dataOrig.setArtist(artist);
+			dataOrig.setTitle(title);
+			dataOrig.setAlbum(album);
+			dataOrig.setPath(path);
 		}
 	}
 	
@@ -568,6 +587,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public void setPlayingSong(AbstractSong playingSong) {
 		this.playingSong = playingSong;
+	}
+	
+	public int[] getPosition(AbstractSong song) {
+		return new int[] { arrayPlayback.indexOf(song), null != arrayPlaybackOriginal ? arrayPlaybackOriginal.indexOf(song) : -1 };
 	}
 	
 	@Override

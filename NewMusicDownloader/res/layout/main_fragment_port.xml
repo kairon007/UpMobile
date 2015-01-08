@@ -159,13 +159,25 @@
                     android:layout_weight="1"
                     android:src="@drawable/ic_media_previous" />
 
-                <ImageButton
-                    android:id="@+id/playpause"
-                    style="@style/PlayerButton"
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_media_play" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <ImageButton
+                        android:id="@+id/playpause"
+                        style="@style/PlayerButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_media_play" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </FrameLayout>
 
                 <ImageButton
                     android:id="@+id/stop"
