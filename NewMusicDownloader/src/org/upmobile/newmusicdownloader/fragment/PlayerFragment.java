@@ -40,12 +40,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener {
 
 	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
 	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
@@ -57,9 +58,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private View parentView;
 	private SeekBar playerProgress;
 	private SeekBar volume;
+	private View progress;
 	private CheckBox playerTagsCheckBox;
 	private ImageButton play;
-	private View progress;
 	private ImageButton previous;
 	private ImageButton forward;
 	private ImageButton editTag;
@@ -129,7 +130,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			@Override
 			public void run() {
 				player = PlayerService.get(getActivity());
-				bindToPlayer();
+				player.setStatePlayerListener(PlayerFragment.this);
 				final int current;
 				final int mode;
 				final boolean enabledPlayerElement;
@@ -200,6 +201,48 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}).start();
 		return parentView;
 	}
+	
+	@Override
+	public void start(AbstractSong s) {
+		if (song.getClass() != MusicData.class) {
+			song = ((RemoteSong) s).cloneSong();
+		} else {
+			song = s;
+		}
+		if (isDestroy) return;
+		setClickablePlayerElement(true);
+		setElementsView(0);
+		playerProgress.post(progressAction);
+	}
+	
+	@Override
+	public void pause(AbstractSong song) {
+		if (isDestroy) return;
+		changePlayPauseView(true);
+	}
+
+	@Override
+	public void play(AbstractSong song) {
+		if (isDestroy) return;
+		changePlayPauseView(false);
+	}
+
+
+	@Override
+	public void update(AbstractSong current) {
+		if (isDestroy) return;
+		song = current;
+		setElementsView(0);
+		setClickablePlayerElement(false);
+	}
+	
+	@Override
+	public void stop(AbstractSong song) {
+		if(song.equals(PlayerFragment.this.song)) return;
+		setElementsView(0);
+		changePlayPauseView(true);
+		setClickablePlayerElement(false);
+	}
 
 	private void setImageButton() {
 		if(!player.enabledRepeat()) {
@@ -214,58 +257,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 
-	private void bindToPlayer() {
-		player.setStatePlayerListener(new OnStatePlayerListener() {
-			
-			@Override
-			public void start(AbstractSong s) {
-				if (song.getClass() != MusicData.class) {
-					song = ((RemoteSong) s).cloneSong();
-				} else {
-					song = s;
-				}
-				if (isDestroy) return;
-				setClickablePlayerElement(true);
-				setElementsView(0);
-				playerProgress.post(progressAction);
-				play.setVisibility(View.VISIBLE);
-				progress.setVisibility(View.GONE);
-			}
-			
-			@Override
-			public void pause(AbstractSong song) {
-				if (isDestroy) return;
-				changePlayPauseView(true);
-			}
-
-			@Override
-			public void play(AbstractSong song) {
-				if (isDestroy) return;
-				changePlayPauseView(false);
-			}
-
-
-			@Override
-			public void update(AbstractSong current) {
-				if (isDestroy) return;
-				song = current;
-				setElementsView(0);
-				setClickablePlayerElement(false);
-				play.setVisibility(View.GONE);
-				progress.setVisibility(View.VISIBLE);
-			}
-			
-			@Override
-			public void stop(AbstractSong song) {
-				if(song.equals(PlayerFragment.this.song)) return;
-				setElementsView(0);
-				changePlayPauseView(true);
-				setClickablePlayerElement(false);
-			}
-			
-		});
-	}
-	
 	private final BroadcastReceiver volumeReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -593,6 +584,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	public boolean manipulateText() {
+		int pos[] = player.getPosition(song);
 		boolean result = false;
 		if (!song.getTitle().equals(playerTagsTitle.getText().toString())) {
 			song.setTitle(playerTagsTitle.getText().toString());
@@ -605,7 +597,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (song.getAlbum() != null && !song.getAlbum().equals(playerTagsAlbum.getText().toString())) {
 			song.setAlbum(playerTagsAlbum.getText().toString());
 			result = true;
-		} 
+		}
+		if (result) {
+			player.update(pos[0], pos[1], song.getTitle(), song.getArtist(), song.getPath(), song.getAlbum());
+		}
 		return result;
 	}
 	
