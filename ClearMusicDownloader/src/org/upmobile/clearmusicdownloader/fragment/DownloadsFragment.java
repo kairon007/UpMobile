@@ -17,6 +17,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,11 +58,11 @@ public class DownloadsFragment extends Fragment implements OnScrollListener, OnM
 		BaseClearActivity parentActivity = (BaseClearActivity) getActivity();
 		resideMenu = parentActivity.getResideMenu();
 		resideMenu.setMenuListener(this);
-		initView();
+		init();
 		return parentView;
 	}
 
-	private void initView() {
+	private void init() {
 		activity = (MainActivity) getActivity();
 		adapter = new DownloadsAdapter(getActivity(), org.upmobile.clearmusicdownloader.R.layout.downloads_item);
 		listView.setActionLayout(R.id.hidden_view);
@@ -82,87 +84,36 @@ public class DownloadsFragment extends Fragment implements OnScrollListener, OnM
 
 	@Override
 	public void onResume() {
-		checkDownloads();
+		try {
+			timer.schedule(updater, 100, 1000);
+		} catch (Exception e) {
+			android.util.Log.d("log", "in " + getClass().getName() + " appear problem: " + e);
+			timer = new Timer();
+			updater = new Updater();
+			timer.schedule(updater, 100, 1000);
+		}
 		super.onResume();
 	}
-
-	private void checkDownloads() {
+	
+	private ArrayList<MusicData> checkDownloads() {
+		ArrayList<MusicData> list = new ArrayList<MusicData>();
 		synchronized (lock) {
 			try {
 				if (null != manager) {
 					Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
-					if (running!=null) {
-						updateList(running);
+					if (running != null) {
+						list = updateList(running);
 						running.close();
 					}
-					Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
-					if (pending!=null) {
-						updateList(pending);
-						pending.close();
-					}
 				}
-				timer.schedule(updater, 100, 1000);
 			} catch (Exception e) {
 			}
 		}
+		return list;
 	}
 
-	private void updateList(Cursor c) {
-		synchronized (lock) {
-			while (c.moveToNext()) {
-				MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
-				if (c.getString(8).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
-					if (!adapter.contains(song)) {
-						addItem(song);
-					}
-				}
-			}
-		}
-	}
-
-	private void addItem(final MusicData song) {
-		synchronized (lock) {
-			try {
-				activity.runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-					 adapter.insert(song, 0);
-					 adapter.notifyDataSetChanged();
-					}
-				});
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private void addAllCached(final ArrayList<Item> cache) {
-		synchronized (lock) {
-			activity.runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					for (Item item : cache) {
-						final MusicData song = new MusicData(item.getTitle(), item.getArtist(), item.getId(), -1);
-						if (!adapter.contains(song)) {
-							adapter.add(song);
-							item.setCustomCallback(new DownloadCacheCallback() {
-								
-								@Override
-								public void callback(Item item) {
-									removeItem(song);
-								}
-							});
-						}
-					}
-				}
-			});
-		}
-	}
-	
 	private void reDrawAdapter() {
-		activity.runOnUiThread(new Runnable() {
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 			@Override
 			public void run() {
@@ -170,6 +121,25 @@ public class DownloadsFragment extends Fragment implements OnScrollListener, OnM
 			}
 		});
 	}
+	
+	private ArrayList<MusicData> updateList(Cursor c) {
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		while (c.moveToNext()) {
+			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
+			if (c.getString(8).contains(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX)) {
+				result.add(song);
+			}
+		}
+		ArrayList<DownloadCache.Item> list = DownloadCache.getInstanse().getCachedItems();
+		for (Item item : list) {
+			MusicData song = new MusicData(item.getTitle(), item.getArtist(), item.getId(), -1);
+			if (item.isCached()) {
+				result.add(song);
+			}
+		}
+		return result;
+	}
+
 	
 	private void checkFinished() {
 		Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL));
@@ -218,7 +188,7 @@ public class DownloadsFragment extends Fragment implements OnScrollListener, OnM
 
 		@Override
 		public void run() {
-			checkDownloads();
+			ArrayList<MusicData> list = checkDownloads();
 			Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 			while (c.moveToNext()) {
 				progress = 0;
@@ -233,8 +203,8 @@ public class DownloadsFragment extends Fragment implements OnScrollListener, OnM
 				}
 				try {
 					for (int i = 0; i < adapter.getCount(); i++) {
-						if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-							((MusicData) adapter.getItem(i)).setProgress(progress);
+						if ((list.get(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
+							(list.get(i)).setProgress(progress);
 						}
 					}
 				} catch (Exception e) {
@@ -242,10 +212,23 @@ public class DownloadsFragment extends Fragment implements OnScrollListener, OnM
 				}
 			}
 			c.close();
+			adapter.setNotifyOnChange(false);
+			adapter.clear();
+			adapter.addAll(list);
 			checkCanceled();
 			checkFinished();
 			reDrawAdapter();
-			addAllCached(DownloadCache.getInstanse().getCachedItems());
+			if (adapter.isEmpty()) {
+				Runnable runnable = new Runnable() {
+
+					@Override
+					public void run() {
+//						messageView.setVisibility(View.VISIBLE);
+//						messageView.setText(getActivity().getString(R.string.downloads_empty));
+					}
+				};
+				new Handler(Looper.getMainLooper()).post(runnable);
+			}
 		}
 	}
 
