@@ -53,6 +53,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private AudioManager audio;
 	private RenameTask renameTask;
 	private PlayerService player;
+	private LyricsFetcher lyricsFetcher;
 	private DownloadListener downloadListener;
 	private View parentView;
 	private SeekBar playerProgress;
@@ -180,6 +181,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		changePlayPauseView(true);
 		setClickablePlayerElement(true);
 	}
+	
+	@Override
+	public void onPause() {
+		if (null != lyricsFetcher) {
+			lyricsFetcher.cancel();
+		}
+		super.onPause();
+	}
 
 	private void setImageButton() {
 		if(!player.enabledRepeat()) {
@@ -231,10 +240,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void onDestroy() {
-	    	isDestroy = true;
-	    	super.onDestroy();
-	    }
-	
+		isDestroy = true;
+		getActivity().unregisterReceiver(volumeReceiver);
+		super.onDestroy();
+	}
+
 	private void setClickablePlayerElement(boolean isClickable) {
 		play.setClickable(isClickable);
 		stop.setClickable(isClickable);
@@ -436,17 +446,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void showLyrics() {
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
-			LyricsFetcher lyricsFetcher = new LyricsFetcher(getActivity());
+			lyricsFetcher = new LyricsFetcher(getActivity());
 			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
-				
+
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-					if (foundLyrics) {
-						playerLyricsView.setText(Html.fromHtml(lyrics));
-					} else {
-						String songName = song.getArtist() + " - " + song.getTitle();
-						playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
+					try {
+						if (foundLyrics) {
+							playerLyricsView.setText(Html.fromHtml(lyrics));
+						} else {
+							String songName = song.getArtist() + " - " + song.getTitle();
+							playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
+						}
+					} catch (Exception e) {
 					}
 				}
 			});

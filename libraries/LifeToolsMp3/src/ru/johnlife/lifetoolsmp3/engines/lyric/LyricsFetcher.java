@@ -10,6 +10,7 @@ import org.jsoup.nodes.Element;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.util.Log;
 
 public class LyricsFetcher {
@@ -53,8 +54,10 @@ public class LyricsFetcher {
 	}
 
 	private LyricsFetcher.OnLyricsFetchedListener mListener = null;
+	private AsyncTask<String, Integer, String> fetchLyrics;
 
 	public LyricsFetcher(Context context) {
+		
 	}
 
 	public void fetchLyrics(String songName, String artistName) {
@@ -63,7 +66,7 @@ public class LyricsFetcher {
 			new FetchLyrics().execute("");
 		}
 		String urlString = "http://www.azlyrics.com/lyrics/" + deleteSpecialCharacters(artistName.toLowerCase(locale)) + "/" + deleteSpecialCharacters(songName.toLowerCase(locale)) + ".html";
-		new FetchLyrics().execute(urlString);
+		fetchLyrics = new FetchLyrics().execute(urlString);
 	}
 
 	private boolean checkParameter(String songName, String artistName) {
@@ -71,6 +74,14 @@ public class LyricsFetcher {
 			return true;
 		}
 		return false;
+	}
+	
+	public void cancel() {
+		if (null != fetchLyrics) {
+			if (fetchLyrics.getStatus() == Status.PENDING || fetchLyrics.getStatus() == Status.RUNNING) {
+				fetchLyrics.cancel(true);
+			}
+		}
 	}
 
 	private String deleteSpecialCharacters(String name) {

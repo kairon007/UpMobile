@@ -64,6 +64,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private RenameTask renameTask;
 	private PlayerService player;
 	private DownloadListener downloadListener;
+	private LyricsFetcher lyricsFetcher;
 	private View parentView;
 	private SeekBar playerProgress;
 	private CheckBox playerTagsCheckBox;
@@ -258,13 +259,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		});
 	}
-	
+
 	@Override
 	public void onDestroy() {
-	    	isDestroy = true;
-	    	super.onDestroy();
-	    }
+		isDestroy = true;
+		super.onDestroy();
+	}
 	
+	@Override
+	public void onPause() {
+		if (null != lyricsFetcher) {
+			lyricsFetcher.cancel();
+		}
+		super.onPause();
+	}
+
 	private void setClickablePlayerElement(boolean isClickable) {
 		play.setClickable(isClickable);
 		playerProgress.setEnabled(isClickable);
@@ -458,19 +467,22 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			final int [] location = new int[2];
 			playerLyricsView.getLocationOnScreen(location);
 			animateOpenViews(location);
-			LyricsFetcher lyricsFetcher = new LyricsFetcher(getActivity());
+			lyricsFetcher = new LyricsFetcher(getActivity());
 			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
-				
+
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-					lyricsLoader.clearAnimation();
-					lyricsLoader.setVisibility(View.GONE);
-					if (foundLyrics) {
-						playerLyricsView.setText(Html.fromHtml(lyrics));
-					} else {
-						String songName = song.getArtist() + " - " + song.getTitle();
-						playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
+					try {
+						lyricsLoader.clearAnimation();
+						lyricsLoader.setVisibility(View.GONE);
+						if (foundLyrics) {
+							playerLyricsView.setText(Html.fromHtml(lyrics));
+						} else {
+							String songName = song.getArtist() + " - " + song.getTitle();
+							playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
+						}
+					} catch (Exception e) {
 					}
 				}
 			});
