@@ -1035,4 +1035,9 @@ public class Nulldroid_Settings implements BaseSettings {
 		return result;
 	}
 
+	
+	public static String getRemoteSettingsUrl() {
+		return REMOTE_SETTINGS_URL;		
+	}
+	
 }

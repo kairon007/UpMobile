@@ -73,9 +73,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	};
 	
 	private static final String [][] SEARCH_ENGINES_3 = new String [][]{
-		{SearchSoundCloud.class.getName(), "1"},
-		{SearchSoundCloudV2.class.getName(), "1"},
-		{SearchSoundCloudV3.class.getName(), "1"}		
+		{SearchSoundCloud.class.getName(), "3"}		
 	};
 	
 	private static final String [][] SEARCH_ENGINES_4 = new String [][]{ };
@@ -89,7 +87,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	public static boolean ENABLE_ADS = true; 
 	public static int REMOTE_SETTINGS_MIN_UPDATE_INTERVAL_MILLIS = 14400000;///14400000;//30000; //14400000;    
 	public static int RATE_ME_POPUP_DELAY_MILLIS = 120000;//30000; 
-	private static final boolean ENABLE_ALBUM_COVERS = false;	 
+	private static final boolean ENABLE_ALBUM_COVERS = true;	 
 	public static final boolean ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB = false;
 
 	// AD NETWORK ID'S
@@ -1035,4 +1033,9 @@ public class Nulldroid_Settings implements BaseSettings {
 		return result;
 	}
 
+	
+	public static String getRemoteSettingsUrl() {
+		return REMOTE_SETTINGS_URL;		
+	}
 }
+

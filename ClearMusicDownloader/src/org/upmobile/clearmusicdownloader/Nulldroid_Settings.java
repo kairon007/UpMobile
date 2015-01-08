@@ -74,7 +74,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	};
 	
 	private static final String [][] SEARCH_ENGINES_3 = new String [][]{
-		{SearchSoundCloud.class.getName(), "1"},
+		{SearchSoundCloud.class.getName(), "3"},
 		//{SearchSoundCloudV2.class.getName(), "1"},
 		//{SearchSoundCloudV3.class.getName(), "1"}		
 	};
@@ -1036,4 +1036,8 @@ public class Nulldroid_Settings implements BaseSettings {
 		return result;
 	}
 
+	
+	public static String getRemoteSettingsUrl() {
+		return REMOTE_SETTINGS_URL;		
+	}
 }
