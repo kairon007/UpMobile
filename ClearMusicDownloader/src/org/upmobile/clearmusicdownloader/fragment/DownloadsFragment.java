@@ -30,9 +30,10 @@ import android.widget.AbsListView.OnScrollListener;
 import com.special.BaseClearActivity;
 import com.special.R;
 import com.special.menu.ResideMenu;
+import com.special.menu.ResideMenu.OnMenuListener;
 import com.special.utils.UISwipableList;
 
-public class DownloadsFragment extends Fragment implements OnScrollListener {
+public class DownloadsFragment extends Fragment implements OnScrollListener, OnMenuListener {
 
 	private View parentView;
 	private UISwipableList listView;
@@ -54,6 +55,7 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 		((MainActivity) getActivity()).showTopFrame();
 		BaseClearActivity parentActivity = (BaseClearActivity) getActivity();
 		resideMenu = parentActivity.getResideMenu();
+		resideMenu.setMenuListener(this);
 		initView();
 		return parentView;
 	}
@@ -204,7 +206,6 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 					public void run() {
 						DownloadCache.getInstanse().remove(musicData.getArtist(), musicData.getTitle());
 						adapter.remove(musicData);
-						adapter.notifyDataSetChanged();
 					}
 				});
 			} catch (Exception e) {
@@ -281,5 +282,21 @@ public class DownloadsFragment extends Fragment implements OnScrollListener {
 
 	@Override
 	public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3) {
+	}
+
+	@Override
+	public void openMenu() {
+		for (final MusicData item : adapter.getAll()) {
+			if (item.check(MusicData.MODE_VISIBLITY)) {
+				adapter.removeItem(item);
+				adapter.cancelTimer();
+			}
+		}
+	}
+
+	@Override
+	public void closeMenu() {
+		// TODO Auto-generated method stub
+		
 	}
 }

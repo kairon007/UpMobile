@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.view.Window;
 
 import com.special.BaseClearActivity;
+import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
 public class MainActivity extends BaseClearActivity {
@@ -115,6 +116,10 @@ public class MainActivity extends BaseClearActivity {
 	@Override
 	public void showPlayerElement() {
 		super.showPlayerElement();
+	}
+
+	public void setResideMenuListener(ResideMenu.OnMenuListener listener) {
+		getResideMenu().setMenuListener(listener);
 	}
 
 }

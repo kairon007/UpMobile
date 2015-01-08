@@ -30,9 +30,10 @@ import android.widget.AbsListView.OnScrollListener;
 
 import com.special.R;
 import com.special.menu.ResideMenu;
+import com.special.menu.ResideMenu.OnMenuListener;
 import com.special.utils.UISwipableList;
 
-public class LibraryFragment extends Fragment implements Handler.Callback, OnScrollListener{
+public class LibraryFragment extends Fragment implements Handler.Callback, OnScrollListener, OnMenuListener{
 
 	private static final int MSG_FILL_ADAPTER = 1;
 	private View parentView;
@@ -104,6 +105,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		((MainActivity) getActivity()).showTopFrame();
 		init();
 		settingListView();
+		parentActivity.setResideMenuListener(this);
 		ArrayList<MusicData> srcList = querySong();
 		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
@@ -206,5 +208,20 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 
 	@Override
 	public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3) {
+	}
+
+	@Override
+	public void openMenu() {
+		for (final MusicData item : adapter.getAll()) {
+			if (item.check(MusicData.MODE_VISIBLITY)) {
+				item.reset(getActivity());
+				adapter.remove(item);
+				service.remove(item);
+			}
+		}
+	}
+
+	@Override
+	public void closeMenu() {
 	}
 }
