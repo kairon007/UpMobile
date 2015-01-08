@@ -11,6 +11,7 @@ import de.voidplus.soundcloud.Track;
 
 public class SearchSoundCloudV2 extends BaseSearchTask {
 	 
+	private static String SOUNDCLOUD_BASE_V2 = "http://api.soundcloud.com/tracks/";
 	
 	public SearchSoundCloudV2(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -30,7 +31,7 @@ public class SearchSoundCloudV2 extends BaseSearchTask {
 			ArrayList<Track> result = soundcloud.findTrack(songName);
 			if(result != null) {
 			    for(Track track : result) {
-			    		String downloadUrl = "http://api.soundcloud.com/tracks/" + track.getId() + "/stream?client_id=" + soundcloudClientId;
+			    		String downloadUrl = SOUNDCLOUD_BASE_V2 + track.getId() + "/stream?client_id=" + soundcloudClientId;
 				    	String largeCoverUrl = track.getArtworkUrl();
 				    	String[] pair = getPair(track.getTitle());
 				    	long duration = (long) track.getDuration();

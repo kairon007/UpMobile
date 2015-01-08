@@ -21,6 +21,7 @@ public class SearchVmusice extends BaseSearchTask {
 	}
 	
 	private static String VMUSIC_URL = "http://vmusice.net/mp3/";
+	private static String VMUSIC_URL_REF = "http://vmusice.net/";
 	
 	@Override
 	protected Void doInBackground(Void... params) {
@@ -43,7 +44,7 @@ public class SearchVmusice extends BaseSearchTask {
 					Log.d("tag play", playUrl);
 					Log.d("tag download - 2", songItem.select("x-play play").text());
 					ArrayList<String[]> headers = new ArrayList<String[]>();
-			    	headers.add(new String[] {"Referer","http://vmusice.net/"});
+			    	headers.add(new String[] {"Referer",VMUSIC_URL_REF});
 			    	headers.add(new String[] {"Range", "bytes=0-"});
 					addSong(new RemoteSong(downloadUrl).setSongTitle(name).setArtistName(author).setDuration(formatTime(duration)).setHeader(headers));
 				} catch (Exception e) {

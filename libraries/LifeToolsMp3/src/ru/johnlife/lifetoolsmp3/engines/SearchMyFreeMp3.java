@@ -11,8 +11,8 @@ import android.util.Log;
 
 public class SearchMyFreeMp3 extends SearchWithPages {
 
-	private String URL_PATTERN = "http://www.myfreemp3.cc/mp3/%s?page=%s";
-	private String partServer = "http://89.248.172.6/dvv.php?q=";
+	private static String URL_PATTERN = "http://www.myfreemp3.cc/mp3/%s?page=%s";
+	private static String partServer = "http://89.248.172.6/dvv.php?q=";
 
 	public SearchMyFreeMp3(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);

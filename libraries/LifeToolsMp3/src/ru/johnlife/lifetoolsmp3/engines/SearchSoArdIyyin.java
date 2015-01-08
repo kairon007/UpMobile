@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class SearchSoArdIyyin extends SearchWithPages {
 	
-	private String URL_PATTERN = "http://so.ard.iyyin.com/v2/songs/search?size=50&page=%s&q=%s";
+	private static String URL_PATTERN = "http://so.ard.iyyin.com/v2/songs/search?size=50&page=%s&q=%s";
 
 	public SearchSoArdIyyin(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);

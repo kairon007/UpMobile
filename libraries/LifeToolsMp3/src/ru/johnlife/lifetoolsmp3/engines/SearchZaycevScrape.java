@@ -15,7 +15,9 @@ import android.util.Log;
 
 public class SearchZaycevScrape extends SearchWithPages {
 	
-	private String URL_PATTERN = "http://zaycev.net/search.html?query_search=%s&attempt=%s&page=%s";
+	private static String URL_PATTERN = "http://zaycev.net/search.html?query_search=%s&attempt=%s&page=%s";
+	private static String ZAYCEV_REF_URL = "http://zaycev.net/search.html?query_search=muse&attempt=1&page=1";
+	private static String ZAYCEV_URL = "http://zaycev.net";
 	public SearchZaycevScrape(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -30,7 +32,7 @@ public class SearchZaycevScrape extends SearchWithPages {
 			response = Jsoup.connect(strLink)
 					.method(Method.GET)
 					.userAgent("Mozilla/5.0 (iPad; CPU OS 5_1 like Mac OS X; en-us) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B176 Safari/7534.48.3")
-					.referrer("http://zaycev.net/search.html?query_search=muse&attempt=1&page=1")
+					.referrer(ZAYCEV_REF_URL)
 					.execute();
 			Document body = response.parse();
 			Elements items = body.select("li.result-list__item");
@@ -56,7 +58,7 @@ public class SearchZaycevScrape extends SearchWithPages {
 					.timeout(20000)
 					.execute();
 			Document document = res.parse();
-			Document doc = Jsoup.connect("http://zaycev.net" + document.select("div.track__actions > span").get(0).attr("data-url"))
+			Document doc = Jsoup.connect(ZAYCEV_URL + document.select("div.track__actions > span").get(0).attr("data-url"))
 					.ignoreContentType(true)
 					.cookies(res.cookies())
 					.get();

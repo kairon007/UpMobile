@@ -18,6 +18,7 @@ public class SearchPoisk extends SearchWithPages {
 	
 	private String Tag = SearchPoisk.class.getSimpleName();
 	private static String POISK_URL = "http://www.mp3poisk.net/%s?page=%s";
+	private static String MP3_POISK_BASE = "http://www.mp3poisk.net/";
 	
 	public SearchPoisk(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -56,7 +57,7 @@ public class SearchPoisk extends SearchWithPages {
 				try {
 					Elements index = song.getElementsByClass("player-actions");
 					String downloadUrl = index.get(0).child(0).attr("href");
-					link = "http://www.mp3poisk.net/" + downloadUrl; 
+					link = MP3_POISK_BASE + downloadUrl; 
 				} catch(Exception e) {
 					Log.e(getClass().getSimpleName(), "", e);
 					continue;

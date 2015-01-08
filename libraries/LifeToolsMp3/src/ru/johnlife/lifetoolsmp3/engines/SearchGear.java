@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class SearchGear extends SearchWithPages {
 	
-	private String URL_PATTERN = "http://www.goear.com/apps/android/search_songs_json.php?p=%s&q=%s&l=20";
+	private static String URL_PATTERN = "http://www.goear.com/apps/android/search_songs_json.php?p=%s&q=%s&l=20";
 
 	public SearchGear(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);

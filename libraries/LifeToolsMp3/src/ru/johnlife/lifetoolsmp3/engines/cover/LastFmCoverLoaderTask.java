@@ -17,7 +17,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class LastFmCoverLoaderTask extends CoverLoaderTask {
 
-	private static final String URL_PATTERN = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&format=json&api_key=2d5da0a538b02cca9f43af16b5d0d6e0&artist=%s&track=%s";
+	private static String URL_PATTERN = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&format=json&api_key=2d5da0a538b02cca9f43af16b5d0d6e0&artist=%s&track=%s";
 	protected String artist;
 	protected String title;
 

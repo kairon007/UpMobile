@@ -13,9 +13,12 @@ import android.util.Log;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
 public class SearchSoundCloudV3 extends SearchWithPages  {
+	
+	private static String SOUNDCLOUD_BASE_V3 = "http://m.soundcloud.com/_api/tracks/?q=%s&offset=%s&client_id=";
+	private static String SOUNDCLOUD_BASE = "http://api.soundcloud.com/tracks/";
  	
 	public String getSoundcloudUrlPattern(String clientId) {
-		return "http://m.soundcloud.com/_api/tracks/?q=%s&offset=%s&client_id=" + clientId + "&format=json";		
+		return SOUNDCLOUD_BASE_V3 + clientId + "&format=json";		
 	}
 	
 	private int pag;
@@ -55,7 +58,7 @@ public class SearchSoundCloudV3 extends SearchWithPages  {
 					String author = nameObject.getString("title").substring(0, (nameObject.getString("title").contains("-") ? nameObject.getString("title").indexOf("-") + 1 : nameObject.getString("title").indexOf(" ") + 1));
 					String id = nameObject.getString("id");
 					long duration = nameObject.getLong("duration");
-					String downloadUrl = "http://api.soundcloud.com/tracks/" + id + "/stream?client_id=" + soundcloudClientId;
+					String downloadUrl = SOUNDCLOUD_BASE + id + "/stream?client_id=" + soundcloudClientId;
 					addSong(new RemoteSong(downloadUrl).setSongTitle(name).setArtistName(author).setDuration(duration));
 				}
 			}

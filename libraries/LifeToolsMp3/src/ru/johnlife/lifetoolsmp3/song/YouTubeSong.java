@@ -17,8 +17,9 @@ import android.util.Log;
 public class YouTubeSong extends SongWithCover {
 
 	private Timer timer = new Timer();
-	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.12 (KHTML, like Gecko) Maxthon/3.0 Chrome/26.0.1410.43 Safari/535.12";
-	private static final String YOUTUBE_MP3_URL = "http://www.youtube-mp3.org";
+	private static String USER_AGENT = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.12 (KHTML, like Gecko) Maxthon/3.0 Chrome/26.0.1410.43 Safari/535.12";
+	private static String YOUTUBE_MP3_URL = "http://www.youtube-mp3.org";
+	private static String YOUTUBE_MP3_REF = "http://www.youtube-mp3.org/?c";
 	private static final String PENDING = "pending";
 	private String largeCoverUrl;
 	private String watchId;
@@ -90,7 +91,7 @@ public class YouTubeSong extends SongWithCover {
 							.header("Cache-Control", "no-cache")
 							.header("Accept-Location", "*")
 							.header("Accept-Language", "ru-RU")
-							.referrer("http://www.youtube-mp3.org/?c")
+							.referrer(YOUTUBE_MP3_REF)
 							.ignoreContentType(true)
 							.timeout(10000)
 							.followRedirects(true)

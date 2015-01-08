@@ -10,13 +10,14 @@ import android.util.Log;
 public class SearchSoundCloud extends SearchWithPages {
 	private int specialIndex = 0;
 	private int pag;
+	private static String SOUNDCLOUD_BASE_URL = "http://api.soundcloud.com/tracks.json?client_id=";
 
 	public SearchSoundCloud(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
 	
 	public String getSoundcloudUrl(String clientId) {
-		return "http://api.soundcloud.com/tracks.json?client_id=" + clientId + "&filter=downloadable&q=";		
+		return SOUNDCLOUD_BASE_URL + clientId + "&filter=downloadable&q=";		
 	}
 	
 	private int getPage() {

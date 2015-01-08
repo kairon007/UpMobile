@@ -18,7 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 
-	private static final String URL_PATTERN = "http://www.musicbrainz.org/ws/2/recording/?query=artist:%s+recording:%s";
+	private static String URL_PATTERN = "http://www.musicbrainz.org/ws/2/recording/?query=artist:%s+recording:%s";
 	protected String artist;
 	protected String title;
 

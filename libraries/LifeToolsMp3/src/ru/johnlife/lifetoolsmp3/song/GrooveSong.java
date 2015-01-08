@@ -5,7 +5,7 @@ import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
 
 public class GrooveSong extends SongWithCover {
 
-	private static final String coverUrl = "http://images.gs-cdn.net/static/albums/%d_%d.jpg";
+	private static String coverUrl = "http://images.gs-cdn.net/static/albums/%d_%d.jpg";
 	private int songId;
 	private int albumId;
 

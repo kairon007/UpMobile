@@ -12,7 +12,7 @@ import android.util.Log;
 public class SearchYouTube extends SearchWithPages {
 	
 //	private String link = "https://content.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=%s&type=video&key=AIzaSyDUmb30N4rIk-3rrScwuki3219dcOF2nBE";
-	private String URL_PATTERN = "https://gdata.youtube.com/feeds/api/videos?q=%s&v=2&alt=jsonc&start-index=%s";
+	private static String URL_PATTERN = "https://gdata.youtube.com/feeds/api/videos?q=%s&v=2&alt=jsonc&start-index=%s";
 //	private String[] resolution = {"default" ,"medium", "high", "standard", "maxres"};
 	private String[] resolution = {"sqDefault" ,"hqDefault"};
 
