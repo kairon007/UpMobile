@@ -310,8 +310,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		} catch (Exception exception) {
 			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
 		}
-		if (null == src_set && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			insertToMediaStore(song, path);
+		if (null == src_set) {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+				insertToMediaStore(song, path);
+			}
 			return false;
 		}
 		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
