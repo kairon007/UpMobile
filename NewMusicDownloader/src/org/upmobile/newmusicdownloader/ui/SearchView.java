@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
-import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.Nulldroid_Settings;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 
-import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -47,7 +46,10 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	protected void click(final View view, int position) {
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
-			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getResultAdapter().getAll());
+			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
+			for (AbstractSong abstractSong : getResultAdapter().getAll()) {
+				list.add(abstractSong.cloneSong());
+			}
 			service.setArrayPlayback(list);
 		} 
 		Bundle bundle = new Bundle();
