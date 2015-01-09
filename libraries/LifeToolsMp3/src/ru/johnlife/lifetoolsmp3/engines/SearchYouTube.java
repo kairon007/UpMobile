@@ -32,7 +32,7 @@ public class SearchYouTube extends SearchWithPages {
 						JSONObject item = items.getJSONObject(i);
 						int duartion = item.getInt("duration");
 						if (duartion < 1140) {
-							String title = item.getString("title").substring((item.getString("title").contains("-") ? item.getString("title").indexOf("-") + 1 : item.getString("title").indexOf(" ") + 1), item.getString("title").length() - 1);
+							String title = item.getString("title").substring((item.getString("title").contains("-") ? item.getString("title").indexOf("-") + 1 : item.getString("title").indexOf(" ") + 1), item.getString("title").length());
 							String author = item.getString("title").substring(0, (item.getString("title").contains("-") ? item.getString("title").indexOf("-") + 1 : item.getString("title").indexOf(" ") + 1)); 
 							String watchId = item.getString("id");
 							JSONObject thumbnailsObject = item.getJSONObject("thumbnail");

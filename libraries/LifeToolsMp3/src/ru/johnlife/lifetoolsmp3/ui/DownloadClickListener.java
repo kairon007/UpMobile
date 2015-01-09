@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -74,6 +75,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private boolean useAlbumCover = true;
 	private RefreshListener listener;
 	protected boolean interrupted = false;
+	
 	private CanceledCallback cancelDownload = new CanceledCallback() {
 		@Override
 		public void cancel() {
@@ -318,8 +320,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 		metadata.clearPictureList();
-		metadata.setSongTitle(song.getTitle());
-		metadata.setArtist(song.getArtist());
+		metadata.clearArtist();
+		metadata.clearSongTitle();
+		metadata.setSongTitle(song.getTitle().trim());
+		metadata.setArtist(song.getArtist().trim());
 		if (null != cover && useCover) {
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);
@@ -337,6 +341,12 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				dst.delete();
 			}
 		}
+		try {
+			src_set = new MyID3().read(src);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		metadata = (MusicMetadata)src_set.getSimplified();
 		return true;
 	}
 	

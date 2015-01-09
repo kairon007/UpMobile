@@ -961,7 +961,6 @@ public abstract class OnlineSearchView extends View {
 				player.setCover(null);
 			}
 		}
-
 	}
 
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
