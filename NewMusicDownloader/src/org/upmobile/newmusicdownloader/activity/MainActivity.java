@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			@Override
 			public void run() {
 				PlayerService.get(MainActivity.this);
+				if (PlayerService.get(MainActivity.this).isPlaying()) showPlayerElement(true);
 			}
 			
 		}).start();
@@ -58,7 +59,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		if (!file.exists()) file.mkdirs();
 		fileObserver.startWatching();
 	}
-
+	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		switch (position) {
