@@ -341,12 +341,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				dst.delete();
 			}
 		}
-		try {
-			src_set = new MyID3().read(src);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		metadata = (MusicMetadata)src_set.getSimplified();
 		return true;
 	}
 	
