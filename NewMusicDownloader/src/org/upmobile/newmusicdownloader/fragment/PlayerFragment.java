@@ -106,6 +106,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			if (PlayerService.hasInstance()) {
 				player = PlayerService.get(getActivity());
 				if (player.getPlayingSong() != null) {
+					player.setStatePlayerListener(this);
 					song = player.getPlayingSong();
 					getCover(song);
 					setImageButton();
