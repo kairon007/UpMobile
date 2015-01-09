@@ -98,6 +98,36 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 	};
 	
+	// it design for debug
+	private void printStateDebug() {
+		StringBuilder builder = new StringBuilder();
+		if (check(SMODE_GET_URL)) {
+			builder.append("| SMODE_GET_URL");
+		}
+		if (check(SMODE_PAUSE)) {
+			builder.append("| SMODE_PAUSE");
+		}
+		if (check(SMODE_PLAY_PAUSE)) {
+			builder.append("| SMODE_PLAY_PAUSE");
+		}
+		if (check(SMODE_PLAYING)) {
+			builder.append("| SMODE_PLAYING");
+		}
+		if (check(SMODE_PREPARED)) {
+			builder.append("| SMODE_PREPARED");
+		}
+		if (check(SMODE_REPEAT)) {
+			builder.append("| SMODE_REPEAT");
+		}
+		if (check(SMODE_SHUFFLE)) {
+			builder.append("| SMODE_SHUFFLE");
+		}
+		if (check(SMODE_START_PREPARE)) {
+			builder.append("| SMODE_START_PREPARE");
+		}
+		android.util.Log.d("log", builder.toString());
+	}
+	
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
 		@Override
@@ -187,25 +217,32 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public void reset() {
 		handler.removeCallbacksAndMessages(null);
 		offMode(SMODE_PREPARED);
-		Message msg = buildMessage(playingSong, MSG_RESET, 0, 0);
+		Message msg = buildMessage(null, MSG_RESET, 0, 0);
 		handler.sendMessage(msg);
 	}
 	
 	public void remove(AbstractSong song) {
-		synchronized (LOCK) {
-			if (song.getClass() != MusicData.class || null == arrayPlayback || arrayPlayback.isEmpty()) {
-				return;
-			}
-			if (song.equals(playingSong)) {
-				int pos = arrayPlayback.indexOf(playingSong);
-				arrayPlayback.remove(song);
-				if (pos != 0) {
-					playingSong = arrayPlayback.get(pos - 1);
-					if (check(SMODE_PLAYING)) {
-						shift(0);
-					}
+		if (song.getClass() != MusicData.class || null == arrayPlayback || arrayPlayback.isEmpty()) {
+			return;
+		}
+		if (song.equals(playingSong)) {
+			int pos = arrayPlayback.indexOf(playingSong);
+			arrayPlayback.remove(song);
+			if (pos > -1) {
+				playingSong = arrayPlayback.get(pos);
+				if (check(SMODE_PLAYING)) {
+					shift(0);
+				} else if (check(SMODE_PAUSE)){
+					Message msg = buildMessage(null, MSG_RESET, 0, 0);
+					handler.sendMessage(msg);
 				}
-			} else arrayPlayback.remove(song);
+			}
+		} else {
+			arrayPlayback.remove(song);
+		}
+		if (arrayPlayback.isEmpty()) {
+			Message msg = buildMessage(null, MSG_RESET, 0, 0);
+			handler.sendMessage(msg);
 		}
 	}
 	
@@ -293,10 +330,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			break;
 			
 		case MSG_RESET:
-			synchronized (LOCK) {
-				offMode(SMODE_PREPARED);
-				player.reset();
-			}
+			offMode(SMODE_PREPARED);
+			player.reset();
 			break;
 			
 		case MSG_STOP:
@@ -318,7 +353,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			return;
 		}
 		position += delta;
-		if (position == arrayPlayback.size() && delta == 0) {
+		if (position == arrayPlayback.size()) {
 			position--;
 		} else if (position >= arrayPlayback.size()) {
 			position = 0;
