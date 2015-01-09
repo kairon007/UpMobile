@@ -395,7 +395,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						item.setId(id);
 					}
 					int downloaded = c.getInt(downloadedIndex);
-					if (size != -1) {
+					if (size != -1 && size != 0) {
 						progress = downloaded * 100 / size;
 					} else {
 						progress = downloaded * 100 / DEFAULT_SONG;
