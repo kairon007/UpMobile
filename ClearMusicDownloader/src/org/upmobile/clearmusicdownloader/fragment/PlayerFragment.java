@@ -210,7 +210,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				} else {
 					PlayerFragment.this.song = song;
 				}
-				getCover(song);
 				if (isDestroy) return;
 				setClickablePlayerElement(true);
 				setElementsView(0);
@@ -590,8 +589,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void play(int delta) throws IllegalArgumentException {
 		if (delta > 0) {
 			player.shift(1);
+			getCover(player.getPlayingSong());
 		} else if (delta < 0) {
 			player.shift(-1);
+			getCover(player.getPlayingSong());
 		} else {
 			player.play(player.getPlayingPosition());
 		}

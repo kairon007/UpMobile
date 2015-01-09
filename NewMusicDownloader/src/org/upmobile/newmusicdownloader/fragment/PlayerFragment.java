@@ -143,7 +143,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void start(AbstractSong s) {
 		this.song = s;
-		getCover(song);
 		if (isDestroy) return;
 		((MainActivity) getActivity()).showPlayerElement(true);
 		setImageButton();
@@ -568,8 +567,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player.stop();
 		if (delta > 0) {
 			player.shift(1);
+			getCover(player.getPlayingSong());
 		} else if (delta < 0) {
 			player.shift(-1);
+			getCover(player.getPlayingSong());
 		}
 	}
 
