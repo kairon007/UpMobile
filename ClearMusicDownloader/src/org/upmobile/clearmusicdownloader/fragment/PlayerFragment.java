@@ -141,7 +141,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				if (hadInstance) {
 					song = player.getPlayingSong();
 					currentPosition = player.getPlayingPosition();
-					getCover(song);
 					if (player.isGettingURl() || !player.isPrepared()) {
 						enabledPlayerElement = false;
 						current = 0;
@@ -178,6 +177,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					
 					@Override
 					public void run() {
+						getCover(song);
 						startImageAnimation();
 						setElementsView(current);
 						if (!enabledPlayerElement) {

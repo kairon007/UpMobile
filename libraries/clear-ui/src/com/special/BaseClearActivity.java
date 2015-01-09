@@ -17,7 +17,8 @@ import com.special.menu.ResideMenuItem;
 
 public abstract class BaseClearActivity extends FragmentActivity implements View.OnClickListener{
 
-    private ResideMenu resideMenu;
+    private static final String FRAGMENT = "Fragment";
+	private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
     private Fragment[] fragments;
     private String[] titles;
@@ -110,6 +111,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 
     public void changeFragment(Fragment targetFragment){
         this.lastOpenedFragment = targetFragment;
+        android.util.Log.d("logd", "changeFragment: " + targetFragment.getClass().getSimpleName());
 		resideMenu.clearIgnoredViewList();
 		getSupportFragmentManager()
                 .beginTransaction()
@@ -135,6 +137,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
 			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
+			tvTitle.setText(lastFragmentName.replace(FRAGMENT, ""));
 		} else {
 			finish();
 		}
