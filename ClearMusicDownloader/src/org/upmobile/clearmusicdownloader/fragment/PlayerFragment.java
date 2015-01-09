@@ -139,13 +139,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				final int mode;
 				final boolean enabledPlayerElement;
 				if (hadInstance) {
-					AbstractSong buf = player.getPlayingSong();
+					song = player.getPlayingSong();
 					currentPosition = player.getPlayingPosition();
-					if (buf.getClass() != MusicData.class) {
-						song = ((RemoteSong) buf).cloneSong();
-					} else {
-						song = buf;
-					}
+					getCover(song);
 					if (player.isGettingURl() || !player.isPrepared()) {
 						enabledPlayerElement = false;
 						current = 0;
