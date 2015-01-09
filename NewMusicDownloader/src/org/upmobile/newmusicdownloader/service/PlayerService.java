@@ -68,6 +68,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private AbstractSong previousSong;
 	private AbstractSong playingSong;
 	private int mode;
+	private boolean flag = false;
+	private boolean disabledDuringCall = false;
 	
 	public interface OnStatePlayerListener {
 		
@@ -91,14 +93,13 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
 				Message msg = buildMessage(playingSong, MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
+				if (flag) disabledDuringCall = true;
 			}
 		}
 	};
 	
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
-		private boolean flag = false;
-		
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
 			Message msg = null;
@@ -111,10 +112,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				}
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
-				if (flag) {
+				if (flag && !disabledDuringCall) {
 					msg = buildMessage(playingSong, MSG_PLAY, 0, 0);
 					handler.sendMessage(msg);
 					flag = false;
+					disabledDuringCall = false;
 				}
 				break;
 			}
