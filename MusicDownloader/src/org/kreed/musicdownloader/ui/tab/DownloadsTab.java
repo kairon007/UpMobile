@@ -110,7 +110,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 								try {
 									int i = manager.remove(cancelledId);
 								} catch (Exception e) {
-									android.util.Log.d("log", "" + e);
+									android.util.Log.d(getClass().getName(), "" + e);
 								}
 							}
 						}
@@ -267,21 +267,26 @@ public class DownloadsTab implements LoadPercentageInterface {
 		public void removeByUri(String filePath) {
 			synchronized (lock) {
 				if (mOriginalValues != null) {
+					int index = 0;
 					for (int i = 0; i < mOriginalValues.size(); ++i) {
-						if (mOriginalValues.get(i).getFileUri()!=null && mOriginalValues.get(i).getFileUri().equals(filePath)) {
-							mOriginalValues.remove(i);
+						if (mOriginalValues.get(i).getFileUri() != null && mOriginalValues.get(i).getFileUri().equals(filePath)) {
+							index = i;
 							break;
-							}
-											
 						}
+					}
+					if (index != -1) {
+						mOriginalValues.remove(index);
+					}
 				}
-				
+				int index = -1;
 				for (int i = 0; i < mObjects.size(); ++i) {
-					if (mObjects.get(i).getFileUri()!= null && mObjects.get(i).getFileUri().equals(filePath)) {
-						mObjects.remove(i);
+					if (mObjects.get(i).getFileUri() != null && mObjects.get(i).getFileUri().equals(filePath)) {
+						index = i;
 						break;
 					}
-										
+				}
+				if (index != -1) {
+					mObjects.remove(index);
 				}
 				redraw();
 			}
@@ -369,7 +374,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 		}
 	}
 
-	public void deleteItem(final long downloadId) {
+	public void deleteItem(long downloadId) {
 		MusicData buf = null;
 		for (int i = 0; i < adapter.getCount(); i++) {
 			buf = adapter.getItem(i);
