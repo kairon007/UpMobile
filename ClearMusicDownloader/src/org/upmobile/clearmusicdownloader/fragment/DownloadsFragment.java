@@ -196,7 +196,7 @@ public class DownloadsFragment extends Fragment implements OnScrollListener, OnM
 				int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 				int size = c.getInt(sizeIndex);
 				int downloaded = c.getInt(downloadedIndex);
-				if (size != -1) {
+				if (size != -1 && size != 0) {
 					progress = downloaded * 100 / size;
 				} else {
 					progress = downloaded * 100 / DEFAULT_SONG;
