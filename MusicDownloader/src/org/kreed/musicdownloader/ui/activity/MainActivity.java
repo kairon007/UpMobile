@@ -396,7 +396,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if (!isHidePlayer) {
+		if (!isHidePlayer || keeper.checkState(StateKeeper.PROGRESS_DIALOG)) {
 			MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
 			MusicDownloaderApp.getService().getPlayer().hidePlayerView();
 			isHidePlayer = true;
