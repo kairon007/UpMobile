@@ -186,7 +186,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public void remove(AbstractSong song) {
 		synchronized (LOCK) {
 			if (null == arrayPlayback || arrayPlayback.isEmpty()) {
-				Message msg = buildMessage(MSG_RESET, 0, 0);
+				return;
 			}
 			if (song.equals(playingSong)) {
 				arrayPlayback.remove(song);
