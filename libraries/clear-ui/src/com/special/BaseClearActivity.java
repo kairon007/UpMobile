@@ -87,8 +87,13 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     public void onClick(View view) {
         for (int i = 0; i < menuItems.length; i++) {
         	if (view == menuItems[i]) {
+        		if (lastOpenedFragment.getClass().getSimpleName().equals(fragments[i].getClass().getSimpleName())) {
+        			resideMenu.closeMenu();
+        			return;
+        		} else {
         		changeFragment(fragments[i]);
         		tvTitle.setText(titles[i]);
+        		}
         	}
         }
         resideMenu.closeMenu();
