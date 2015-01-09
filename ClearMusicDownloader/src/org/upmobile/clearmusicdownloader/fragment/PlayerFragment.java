@@ -155,7 +155,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 							mode = 1;
 						}
 						enabledPlayerElement = true;
-						changePlayPauseView(!check);
 					}
 				} else {
 					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition) {
