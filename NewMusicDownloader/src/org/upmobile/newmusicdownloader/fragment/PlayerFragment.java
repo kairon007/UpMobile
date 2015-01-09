@@ -88,7 +88,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		parentView = inflater.inflate(R.layout.main_fragment_port, container, false);
+		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
 		playerProgress.setVisibility(View.INVISIBLE);
 		IntentFilter filter = new IntentFilter();
@@ -184,7 +184,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (isDestroy) return;
 		setElementsView(0);
 		changePlayPauseView(true);
-		setClickablePlayerElement(true);
+		setClickablePlayerElement(player.isPrepared());
 	}
 	
 	@Override
