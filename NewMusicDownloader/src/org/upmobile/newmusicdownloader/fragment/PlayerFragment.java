@@ -126,7 +126,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				player = PlayerService.get(getActivity());
 				player.setStatePlayerListener(PlayerFragment.this);
 				if (!hadInstance) {
-					player.play(song);
+					if (song.equals(player.getPlayingSong())) {
+						player.play();
+					} else {
+						player.play(song);
+					}
 				}
 			}
 			
@@ -557,12 +561,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 * delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 	 */
 	private void play(int delta) throws IllegalArgumentException {
+		if (delta == 0) {
+			player.play(song);
+			return;
+		}
+		player.stop();
 		if (delta > 0) {
 			player.shift(1);
 		} else if (delta < 0) {
 			player.shift(-1);
-		} else {
-			player.play(song);
 		}
 	}
 

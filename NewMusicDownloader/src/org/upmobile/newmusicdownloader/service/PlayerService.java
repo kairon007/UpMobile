@@ -309,17 +309,18 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (null == arrayPlayback || arrayPlayback.isEmpty()) return;
 		int position = arrayPlayback.indexOf(playingSong);
 		helper(State.STOP, playingSong);
-		if (!enabledRepeat()) {
-			position += delta;
-			if (position == arrayPlayback.size() && delta == 0) {
-				position--;
-			}
-			else if (position >= arrayPlayback.size()) {
-				position = 0;
-			}
-			else if (position < 0) {
-				position = arrayPlayback.size() - 1;
-			}
+		if (enabledRepeat()) {
+			Message msgPlay = buildMessage(playingSong, MSG_PLAY, 0, 0);
+			handler.sendMessage(msgPlay);
+			return;
+		}
+		position += delta;
+		if (position == arrayPlayback.size() && delta == 0) {
+			position--;
+		} else if (position >= arrayPlayback.size()) {
+			position = 0;
+		} else if (position < 0) {
+			position = arrayPlayback.size() - 1;
 		}
 		previousSong = playingSong;
 		playingSong = arrayPlayback.get(position);
@@ -332,7 +333,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 
 	public void play(AbstractSong song) {
-		if (arrayPlayback == null && arrayPlayback.indexOf(song) == -1) return;
+		if (arrayPlayback == null && arrayPlayback.indexOf(song) == -1) {
+			return;
+		}
 		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
 			previousSong = playingSong;
@@ -357,6 +360,15 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				helper(State.STOP, previousSong);
 			}
 			play(msg);
+		}
+	}
+	
+	public void play() {
+		previousSong = playingSong;
+		if (check(SMODE_PREPARED)) {
+			helper(State.START, playingSong);
+		} else {
+			helper(State.UPDATE, playingSong);
 		}
 	}
 	
@@ -386,7 +398,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	public boolean offOnRepeat(){
 		mode ^= SMODE_REPEAT;
-		return enabledRepeat();
+		return (mode & SMODE_REPEAT) == SMODE_REPEAT;
 	}
 	
 	private void play(Message msg) {
