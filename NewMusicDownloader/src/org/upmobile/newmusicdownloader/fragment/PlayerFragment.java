@@ -111,7 +111,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					getCover(song);
 					setImageButton();
 					setClickablePlayerElement(true);
-					changePlayPauseView(false);
+					changePlayPauseView(!player.isPlaying());
 					int pos = player.getCurrentPosition();
 					wait.setVisibility(View.INVISIBLE);
 					playerProgress.setVisibility(View.VISIBLE);
@@ -149,7 +149,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		((MainActivity) getActivity()).showPlayerElement(true);
 		setImageButton();
 		setClickablePlayerElement(true);
-		changePlayPauseView(false);
+		changePlayPauseView(!player.isPlaying());
 		setElementsView(0);
 		playerProgress.post(progressAction);
 		wait.setVisibility(View.INVISIBLE);
