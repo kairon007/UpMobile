@@ -1,6 +1,7 @@
 package org.upmobile.newmusicdownloader.activity;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
@@ -11,6 +12,8 @@ import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDrawerCallbacks;
+
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -23,7 +26,9 @@ import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends Activity implements NavigationDrawerCallbacks {
 
+	private static final String ARRAY_SAVE = "extras_array_save";
 	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+	private PlayerService service;
 	
 	private NavigationDrawerFragment navigationDrawerFragment;
 
@@ -41,14 +46,18 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	};
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				PlayerService.get(MainActivity.this);
+				service = PlayerService.get(MainActivity.this);
+				if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
+					ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
+					service.setArrayPlayback(list);
+				}
 				if (PlayerService.get(MainActivity.this).isPlaying()) showPlayerElement(true);
 			}
 			
@@ -96,6 +105,14 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			getFragmentManager().popBackStack();
 		} else {
 			finish();
+		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle out) {
+		super.onSaveInstanceState(out);
+		if (service.hasArray()) {
+			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
 		}
 	}
 	

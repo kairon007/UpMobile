@@ -612,6 +612,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return result;
 	}
 	
+	public boolean hasArray() {
+		return arrayPlayback != null && !arrayPlayback.isEmpty();
+	}
+	
+	public ArrayList<AbstractSong> getArrayPlayback() {
+		return arrayPlayback;
+	}
+	
 	public boolean isCorrectlyState(Class calledClass, int transferSize) {
 		if (arrayPlayback == null) return false;
 		if (transferSize != arrayPlayback.size()) return false;
