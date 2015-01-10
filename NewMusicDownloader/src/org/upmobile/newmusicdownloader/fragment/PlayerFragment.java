@@ -109,6 +109,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				if (player.getPlayingSong() != null) {
 					player.setStatePlayerListener(this);
 					song = player.getPlayingSong();
+					downloadButtonState(true);
 					getCover(song);
 					setImageButton();
 					setClickablePlayerElement(true);
