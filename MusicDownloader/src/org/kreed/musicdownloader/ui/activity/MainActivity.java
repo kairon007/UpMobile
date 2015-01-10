@@ -10,9 +10,10 @@ import org.kreed.musicdownloader.CompatHoneycomb;
 import org.kreed.musicdownloader.Constants;
 import org.kreed.musicdownloader.CustomEqualizer;
 import org.kreed.musicdownloader.Nulldroid_Advertisement;
+import org.kreed.musicdownloader.Nulldroid_Settings;
+import org.kreed.musicdownloader.PlayerService;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.Nulldroid_Settings;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.Player;
@@ -110,6 +111,7 @@ public class MainActivity extends Activity {
 	private boolean mSearchBoxVisible;
 	private boolean mFakeTarget;
 	private boolean isHidePlayer = true;
+	private PlayerService service;
 	
 	
 	FileObserver observer; {
@@ -263,7 +265,7 @@ public class MainActivity extends Activity {
 			clearAll.setVisibility(View.GONE);
 		}
 		if (null != state && state.containsKey(SAVE_PLAYER_STATE)) isHidePlayer = state.getBoolean(SAVE_PLAYER_STATE);
-		if (!isHidePlayer) {
+		if (!isHidePlayer && null == MusicDownloaderApp.getService() ) {
 			player = MusicDownloaderApp.getService().getPlayer();
 			player.setEqualizer(this);
 			player.getView(footer);
