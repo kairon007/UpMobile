@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="bottom"
-    android:orientation="vertical" >
+     tools:ignore="ContentDescription"  >
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right"
-            android:orientation="vertical"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp" >
+            android:layout_height="0dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/albumCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:minHeight="208dp"
+                android:minWidth="208dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/no_cover_art_big" />
 
             <ImageButton
                 android:id="@+id/player_lyrics"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
                 android:background="@drawable/selectable_item_bg"
                 android:src="@drawable/ic_player_lyrics" />
 
             <ImageButton
                 android:id="@+id/player_edit_tags"
-                android:layout_width="40dp"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/player_lyrics"
                 android:background="@drawable/selectable_item_bg"
                 android:src="@drawable/ic_player_edit" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/albumCover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/no_cover_art_big" />
-    </FrameLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical" >
 
             <RelativeLayout
@@ -124,6 +126,7 @@
                             android:id="@+id/progress_track"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="4dp"
                             android:max="100"
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
@@ -239,7 +242,6 @@
                 layout="@layout/lyrics_frame"
                 android:visibility="gone" />
         </LinearLayout>
+    </LinearLayout>
 
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>
