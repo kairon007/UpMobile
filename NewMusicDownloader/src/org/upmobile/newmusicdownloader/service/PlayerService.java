@@ -228,8 +228,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (song.equals(playingSong)) {
 			int pos = arrayPlayback.indexOf(playingSong);
 			arrayPlayback.remove(song);
-			if (pos > -1) {
-				playingSong = arrayPlayback.get(pos);
+			if (pos > 0) {
+				playingSong = arrayPlayback.get(pos - 1);
 				if (check(SMODE_PLAYING)) {
 					shift(0);
 				} else if (check(SMODE_PAUSE)){
