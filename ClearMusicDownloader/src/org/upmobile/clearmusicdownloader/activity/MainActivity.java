@@ -1,6 +1,7 @@
 package org.upmobile.clearmusicdownloader.activity;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
@@ -10,6 +11,7 @@ import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -23,6 +25,7 @@ import com.special.menu.ResideMenuItem;
 
 public class MainActivity extends BaseClearActivity {
 
+	private final String ARRAY_SAVE = "extras_array_save";
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
 	private String[] titles;
@@ -42,12 +45,17 @@ public class MainActivity extends BaseClearActivity {
 	};
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(final Bundle savedInstanceState) {
 		new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				player = PlayerService.get(MainActivity.this);
+				player = PlayerService.get(MainActivity.this);
+				if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
+					ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
+					player.setArrayPlayback(list);
+				}
 			}
 		}).start();
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -91,6 +99,14 @@ public class MainActivity extends BaseClearActivity {
 	protected String[] getTitlePage() {
 		titles = getResources().getStringArray(R.array.titles);
 		return titles;
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle out) {
+		super.onSaveInstanceState(out);
+		if (player.hasArray()) {
+			out.putParcelableArrayList(ARRAY_SAVE, player.getArrayPlayback());
+		}
 	}
 	
 	@Override

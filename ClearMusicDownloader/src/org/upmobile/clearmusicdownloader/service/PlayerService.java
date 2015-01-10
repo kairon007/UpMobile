@@ -489,6 +489,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return check(SMODE_GET_URL);
 	}
 	
+	public boolean hasArray() {
+		return arrayPlayback != null && !arrayPlayback.isEmpty();
+	}
+	
+	public ArrayList<AbstractSong> getArrayPlayback() {
+		return arrayPlayback;
+	}
+	
 	public boolean isPlaying() {
 		boolean result=  false;
 		if (check(SMODE_PLAYING)) {
