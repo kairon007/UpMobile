@@ -90,6 +90,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		isDestroy = false;
 		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
+		downloadButtonState(false);
 		playerProgress.setVisibility(View.INVISIBLE);
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ANDROID_MEDIA_VOLUME_CHANGED_ACTION);
@@ -145,6 +146,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void start(AbstractSong s) {
 		this.song = s;
+		downloadButtonState(true);
 		if (isDestroy) return;
 		((MainActivity) getActivity()).showPlayerElement(true);
 		setImageButton();
@@ -570,9 +572,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (delta > 0) {
 			player.shift(1);
 			getCover(player.getPlayingSong());
+			downloadButtonState(false);
 		} else if (delta < 0) {
 			player.shift(-1);
 			getCover(player.getPlayingSong());
+			downloadButtonState(false);
 		}
 	}
 
@@ -605,6 +609,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				playerCover.setImageResource(R.drawable.no_cover_art_big);
 			}
 		}
+	}
+	
+	private void downloadButtonState(boolean state) {
+		download.setClickable(state);
+		download.setEnabled(state);
 	}
 	
 	private void download() {
