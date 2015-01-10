@@ -26,7 +26,7 @@ import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends Activity implements NavigationDrawerCallbacks {
 
-	private static final String ARRAY_SAVE = "extras_array_save";
+	private final String ARRAY_SAVE = "extras_array_save";
 	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private PlayerService service;
 	
