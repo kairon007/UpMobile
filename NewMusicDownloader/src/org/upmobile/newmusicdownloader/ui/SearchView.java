@@ -49,7 +49,6 @@ public class SearchView extends OnlineSearchView {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 			for (AbstractSong abstractSong : getResultAdapter().getAll()) {
 				list.add(abstractSong.cloneSong());
-				android.util.Log.d("logd", "click: ");
 			}
 			service.setArrayPlayback(list);
 		} 
@@ -57,6 +56,7 @@ public class SearchView extends OnlineSearchView {
 		bundle.putParcelable(Constants.KEY_SELECTED_SONG, getResultAdapter().getItem(position).cloneSong());
 		PlayerFragment playerFragment = new PlayerFragment();
 		playerFragment.setArguments(bundle);
+		((MainActivity) getContext()).showPlayerElement(true);
 		((MainActivity) view.getContext()).changeFragment(playerFragment);
 		((MainActivity) getContext()).overridePendingTransition(0, 0);
 		super.click(view, position);
