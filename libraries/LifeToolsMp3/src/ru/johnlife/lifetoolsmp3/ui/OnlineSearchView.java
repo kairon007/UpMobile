@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.json.JSONArray;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
@@ -77,6 +75,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 public abstract class OnlineSearchView extends View {
 
 	public static List<Engine> engines = null;
@@ -113,6 +113,7 @@ public abstract class OnlineSearchView extends View {
 	private String keyEngines;
 	private int clickPosition;
 	private boolean isRestored = false;
+	private BaseSearchTask searchTask;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -225,10 +226,13 @@ public abstract class OnlineSearchView extends View {
 		@Override
 		public void onFinishParsing(List<Song> songsList) {
 			hideRefreshProgress();
-			if (keeper.checkState(StateKeeper.SEARCH_STOP_OPTION)) return;
+			if (keeper.checkState(StateKeeper.SEARCH_STOP_OPTION)) {
+				resultAdapter.clear();
+				return;
+			}
 			//TODO: set result
 			if (songsList.isEmpty()) {
-				getNextResults();
+				getNextResults(false);
 				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
 					try {
 						String src = getContext().getResources().getText(R.string.search_no_results_for).toString() + " " + searchField.getText().toString();
@@ -452,7 +456,6 @@ public abstract class OnlineSearchView extends View {
 				for (int page = 1; page <= maxPages; page++) {
 					engines.add(new Engine(engineClass, page));
 				}
-			
 		}
 	}
 	
@@ -657,10 +660,9 @@ public abstract class OnlineSearchView extends View {
 					}
 				});
 			}
-			
 			if (position == getCount() - 1) {
 				showRefreshProgress();
-				getNextResults();
+				getNextResults(false);
 			}
 			View v = builder.build();
 			v.findViewById(R.id.boxInfoItem).setOnClickListener(new OnClickListener() {
@@ -767,10 +769,8 @@ public abstract class OnlineSearchView extends View {
 		keeper.deactivateOptions(StateKeeper.SEARCH_STOP_OPTION);
 		if (isBlacklistedQuery(songName)) {
 			ArrayList<Engine> nothingSearch = new ArrayList<Engine>();
-
-				Class<? extends BaseSearchTask> engineClass = getSearchEngineClass("SearchNothing");
-				nothingSearch.add(new Engine(engineClass, 1));
-
+			Class<? extends BaseSearchTask> engineClass = getSearchEngineClass("SearchNothing");
+			nothingSearch.add(new Engine(engineClass, 1));
 			taskIterator = nothingSearch.iterator();
 		} else {
 			taskIterator = engines.iterator();
@@ -778,28 +778,31 @@ public abstract class OnlineSearchView extends View {
 		resultAdapter.clear();
 		setMessage("");
 		showBaseProgress();
-		getNextResults();
+		getNextResults(true);
 	}
 
-	private void getNextResults() {
+	private void getNextResults(boolean cancel) {
 		showRefreshProgress();
 		if (!taskIterator.hasNext()) {
 			hideRefreshProgress();
 			keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			return;
 		}
+		if (null != searchTask && cancel) {
+			searchTask.cancel(false);
+		}
 		try {
 			Engine engine = taskIterator.next();
 			String str = null != extraSearch ? extraSearch : searchField.getText().toString();
 			extraSearch = null;
-			BaseSearchTask searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, str});
+			searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, str});
 			if (searchTask instanceof SearchWithPages) {
 				int page = engine.getPage();
 				((SearchWithPages) searchTask).setPage(page);
 			}
 			searchTask.execute(NO_PARAMS);
 		} catch (Exception e) {
-			getNextResults();
+			getNextResults(false);
 		}
 	}
 
