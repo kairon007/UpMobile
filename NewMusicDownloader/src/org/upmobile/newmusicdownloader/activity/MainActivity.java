@@ -14,13 +14,14 @@ import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 
@@ -82,7 +83,11 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	        changeFragment(new LibraryFragment());
 			break;
 		case 3:
-			changeFragment(new PlayerFragment());
+			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+			String lastFragmentName = backEntry.getName();
+		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
+		    	changeFragment(new PlayerFragment());
+		    }
 			break;
 		default:
 			break;
