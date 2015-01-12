@@ -228,8 +228,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (song.equals(playingSong)) {
 			int pos = arrayPlayback.indexOf(playingSong);
 			arrayPlayback.remove(song);
-			if (pos > 0) {
-				playingSong = arrayPlayback.get(pos - 1);
+			if (pos >= 0 && !arrayPlayback.isEmpty()) {
+				if (pos == 0) playingSong = arrayPlayback.get(pos);
+				else if (pos >= arrayPlayback.size() )playingSong = arrayPlayback.get(pos - 1);
+				else playingSong = arrayPlayback.get(pos);
 				if (check(SMODE_PLAYING)) {
 					shift(0);
 				} else if (check(SMODE_PAUSE)){
@@ -447,6 +449,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 				@Override
 				public void success(String url) {
+					if (playingSong.getClass() == MusicData.class) return;
 					((RemoteSong) playingSong).setDownloadUrl(url);
 					offMode(SMODE_GET_URL);
 					offMode(SMODE_PLAY_PAUSE);

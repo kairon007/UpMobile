@@ -127,6 +127,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		}
 		MusicData d = new MusicData();
 		d.populate(cursor);
+		d.getCover(getActivity());
 		result.add(d);
 		while (cursor.moveToNext()) {
 			MusicData data = new MusicData();
