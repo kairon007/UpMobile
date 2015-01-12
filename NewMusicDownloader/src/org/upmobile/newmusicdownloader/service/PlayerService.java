@@ -355,9 +355,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			return;
 		}
 		position += delta;
-		if (position == arrayPlayback.size()) {
-			position--;
-		} else if (position >= arrayPlayback.size()) {
+		if (position >= arrayPlayback.size()) {
 			position = 0;
 		} else if (position < 0) {
 			position = arrayPlayback.size() - 1;
