@@ -106,21 +106,27 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			hadInstance = true;
 			if (PlayerService.hasInstance()) {
 				player = PlayerService.get(getActivity());
-				if (player.getPlayingSong() != null) {
-					player.setStatePlayerListener(this);
-					song = player.getPlayingSong();
-					downloadButtonState(true);
-					getCover(song);
-					setImageButton();
+				int pos;
+				if (player.getPlayingSong() != null && !player.isGettingURl() && player.isPrepared()) {
 					setClickablePlayerElement(true);
-					changePlayPauseView(!player.isPlaying());
-					int pos = player.getCurrentPosition();
+					pos = player.getCurrentPosition();
 					wait.setVisibility(View.INVISIBLE);
 					playerProgress.setVisibility(View.VISIBLE);
-					setElementsView(pos);
-					playerProgress.post(progressAction);
-					return parentView;
+				} else {
+					setClickablePlayerElement(false);
+					pos = 0;
+					wait.setVisibility(View.VISIBLE);
+					playerProgress.setVisibility(View.INVISIBLE);
 				}
+				player.setStatePlayerListener(this);
+				song = player.getPlayingSong();
+				downloadButtonState(true);
+				getCover(song);
+				setImageButton();
+				changePlayPauseView(!player.isPlaying());
+				setElementsView(pos);
+				playerProgress.post(progressAction);
+				return parentView;
 			}
 		}
 		new Thread(new Runnable() {
