@@ -1,5 +1,6 @@
 package org.upmobile.newmusicdownloader.adapter;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
@@ -140,9 +141,10 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			} else {
 				setButtonBackground(BTN_PLAY);
 			}
-			Bitmap bitmap = data.getCover(getContext());
-			if (null != bitmap) {
-				cover.setImageBitmap(bitmap);
+			cover.setImageResource(R.drawable.no_cover_art_big);
+			WeakReference<Bitmap> bitmap = new WeakReference<Bitmap>(data.getCover(getContext()));
+			if (null != bitmap && null != bitmap.get()) {
+				cover.setImageBitmap(bitmap.get());
 			}
 			setListener();
 		}
