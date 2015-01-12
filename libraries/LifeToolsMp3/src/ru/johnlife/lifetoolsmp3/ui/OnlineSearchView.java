@@ -635,11 +635,11 @@ public abstract class OnlineSearchView extends View {
 		public View getView(final int position, final View convertView, ViewGroup parent) {
 			final Song song = getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()));
-			String title = song.getTitle().replace("&#039;", "'");
-			builder.setLine1(title, Util.getFormatedStrDuration(song.getDuration()))
+			builder.setLine1(song.getTitle().replace("&#039;", "'"),
+					Util.getFormatedStrDuration(song.getDuration()))
 					.setLongClickable(false)
 					.setExpandable(false)
-					.setLine2(song.getArtist())
+					.setLine2(song.getArtist().replace("&#039;", "'"))
 					.setId(position)
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover())
 					.setButtonVisible(showDownloadButton() ? true : false);
