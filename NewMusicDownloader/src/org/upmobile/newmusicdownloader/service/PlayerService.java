@@ -386,12 +386,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		playingSong = arrayPlayback.get(position);
 		Message msg = new Message();
 		if (check(SMODE_PREPARED)) {
-			if (check(SMODE_PLAY_PAUSE)) {
+			if (check(SMODE_PAUSE)) {
 				msg.what = MSG_PLAY;
-				offMode(SMODE_PLAY_PAUSE);
+				offMode(SMODE_PLAYING);
 			} else {
 				msg.what = MSG_PAUSE;
-				onMode(SMODE_PLAY_PAUSE);
+				onMode(SMODE_PAUSE);
 			}
 			msg.obj = playingSong;
 			handler.sendMessage(msg);
@@ -416,7 +416,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (check(SMODE_PREPARED)) {
 			player.pause();
 			player.seekTo(0);
-			onMode(SMODE_PLAY_PAUSE);
+			offMode(SMODE_PLAYING);
+			onMode(SMODE_PAUSE);
 		}
 		helper(State.STOP, playingSong);
 	}
