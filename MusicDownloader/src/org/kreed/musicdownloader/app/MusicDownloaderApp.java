@@ -15,9 +15,9 @@ public class MusicDownloaderApp extends MusicApp {
 	public static Typeface FONT_LIGHT;
 	public static Typeface FONT_REGULAR;
 	public static Typeface FONT_BOLD;
-	private static PlayerService service;
+	private static PlayerService playerService;
 		
-	private ServiceConnection serviceConnection = new ServiceConnection() {
+	private ServiceConnection playerServiceConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceDisconnected(ComponentName paramComponentName) {}
@@ -25,8 +25,9 @@ public class MusicDownloaderApp extends MusicApp {
 		@Override
 		public void onServiceConnected(ComponentName paramComponentName, IBinder paramIBinder) {
 			try {
-				service = ((PlayerService.PlayerBinder) paramIBinder).getService();
+				MusicDownloaderApp.this.playerService = ((PlayerService.PlayerBinder) paramIBinder).getService();
 			} catch (Exception e) {
+				e.printStackTrace();
 				Log.e(getClass().getSimpleName(), e.getMessage());
 			}
 		}
@@ -36,10 +37,10 @@ public class MusicDownloaderApp extends MusicApp {
 	public void onCreate() {
 		super.onCreate();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		bindService(new Intent(this, PlayerService.class), serviceConnection, BIND_AUTO_CREATE);
+		bindService(new Intent(this, PlayerService.class), playerServiceConnection, BIND_AUTO_CREATE);
 	}
 
 	public static PlayerService getService() {
-		return service;
+		return playerService;
 	}
 }
