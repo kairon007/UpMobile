@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -21,6 +20,7 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.mp3.MP3File;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.DownloadCache;
@@ -318,10 +318,29 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			return false;
 		}
+		
+		//
+		try {
+			MP3File mp3File = (MP3File) AudioFileIO.read(src);
+			android.util.Log.d("logd", "first v1 = " + mp3File.getID3v1Tag() + ", v2 = " 
+					+ mp3File.getID3v2Tag() + ", v24 = " + mp3File.getID3v2TagAsv24());
+			if (mp3File.hasID3v1Tag()) {
+				mp3File.delete(mp3File.getID3v1Tag());
+			}
+			if (mp3File.hasID3v2Tag()) {
+				mp3File.delete(mp3File.getID3v2Tag());
+				mp3File.delete(mp3File.getID3v2TagAsv24());
+			}
+			mp3File = (MP3File) AudioFileIO.read(src);
+			android.util.Log.d("logd", "second v1 = " + mp3File.getID3v1Tag() + ", v2 = " 
+					+ mp3File.getID3v2Tag() + ", v24 = " + mp3File.getID3v2TagAsv24());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//
+		
 		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-		metadata.clearPictureList();
-		metadata.clearArtist();
-		metadata.clearSongTitle();
+		metadata.clear();
 		metadata.setSongTitle(song.getTitle().trim());
 		metadata.setArtist(song.getArtist().trim());
 		if (null != cover && useCover) {
