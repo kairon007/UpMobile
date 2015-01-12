@@ -55,6 +55,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private PlayerService player;
 	private LyricsFetcher lyricsFetcher;
 	private DownloadListener downloadListener;
+	private IntentFilter filter;
 	private View parentView;
 	private SeekBar playerProgress;
 	private SeekBar volume;
@@ -92,9 +93,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		init();
 		downloadButtonState(false);
 		playerProgress.setVisibility(View.INVISIBLE);
-		IntentFilter filter = new IntentFilter();
+		filter = new IntentFilter();
 		filter.addAction(ANDROID_MEDIA_VOLUME_CHANGED_ACTION);
-		getActivity().registerReceiver(volumeReceiver, filter);
 		audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
@@ -192,9 +192,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void onPause() {
-		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
-		}
+		if (null != lyricsFetcher) lyricsFetcher.cancel();
+		if (null != volumeReceiver) getActivity().unregisterReceiver(volumeReceiver);
 		super.onPause();
 	}
 
@@ -222,34 +221,34 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	};
 
-/*	@Override
+	@Override
 	public void onResume() {
 		super.onResume();
-		getView().setFocusableInTouchMode(true);
-		getView().requestFocus();
-		getView().setOnKeyListener(new View.OnKeyListener() {
-			
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				switch (keyCode) {
-				case KeyEvent.KEYCODE_VOLUME_DOWN:
-					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-					break;
-				case KeyEvent.KEYCODE_VOLUME_UP:
-					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-					break;
-				default:
-					break;
-				}
-				return false;
-			}
-		});
-	}*/
+		getActivity().registerReceiver(volumeReceiver, filter); 
+//		getView().setFocusableInTouchMode(true);
+//		getView().requestFocus();
+//		getView().setOnKeyListener(new View.OnKeyListener() {
+//			
+//			@Override
+//			public boolean onKey(View v, int keyCode, KeyEvent event) {
+//				switch (keyCode) {
+//				case KeyEvent.KEYCODE_VOLUME_DOWN:
+//					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
+//					break;
+//				case KeyEvent.KEYCODE_VOLUME_UP:
+//					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
+//					break;
+//				default:
+//					break;
+//				}
+//				return false;
+//			}
+//		});
+	}
 	
 	@Override
 	public void onDestroy() {
 		isDestroy = true;
-		getActivity().unregisterReceiver(volumeReceiver);
 		super.onDestroy();
 	}
 
