@@ -265,7 +265,7 @@ public class MainActivity extends Activity {
 			clearAll.setVisibility(View.GONE);
 		}
 		if (null != state && state.containsKey(SAVE_PLAYER_STATE)) isHidePlayer = state.getBoolean(SAVE_PLAYER_STATE);
-		if (!isHidePlayer && null == MusicDownloaderApp.getService() ) {
+		if (!isHidePlayer && null != MusicDownloaderApp.getService() ) {
 			player = MusicDownloaderApp.getService().getPlayer();
 			player.setEqualizer(this);
 			player.getView(footer);
