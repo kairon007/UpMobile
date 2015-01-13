@@ -12,7 +12,9 @@
         android:id="@+id/scroller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
         android:fillViewport="true"
+        android:descendantFocusability="beforeDescendants"
         app:headerView="@+id/layout_top" >
 
         <RelativeLayout

@@ -107,7 +107,6 @@ public class RenameTask {
 	}
 
 	private void success() {
-		listener.success(newFile.getPath());
 		new Thread(new Runnable() {
 			
 			@Override
@@ -135,12 +134,15 @@ public class RenameTask {
 			}
 		}).start();
 		cancelProgress();
+		if (listener == null) return;
+		listener.success(newFile.getPath());
 	}
 
 	private void error() {
 		Toast toast = Toast.makeText(context, R.string.bad_file, Toast.LENGTH_SHORT);
 		toast.show();
 		cancelProgress();
+		if (listener == null) return;
 		listener.error();
 	}
 	

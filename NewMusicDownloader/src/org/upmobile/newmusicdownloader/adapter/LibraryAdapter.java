@@ -37,8 +37,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void start(AbstractSong song) {
-			if (song.getClass() != MusicData.class)
-				return;
+			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
 			data.setPlaying(true);
 			notifyDataSetChanged();
@@ -46,8 +45,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void play(AbstractSong song) {
-			if (song.getClass() != MusicData.class)
-				return;
+			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
 			data.setPlaying(true);
 			notifyDataSetChanged();
@@ -55,8 +53,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void pause(AbstractSong song) {
-			if (song.getClass() != MusicData.class)
-				return;
+			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
 			data.setPlaying(false);
 			notifyDataSetChanged();
@@ -64,8 +61,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void update(AbstractSong song) {
-			if (song.getClass() != MusicData.class)
-				return;
+			if (song.getClass() != MusicData.class)	return;
 			MusicData data = get(song);
 			data.setPlaying(true);
 			notifyDataSetChanged();
