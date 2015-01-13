@@ -218,7 +218,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		if (view == null) {
 			MainActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
-			View downloadView = DownloadsTab.getInstanceView(inflater, activity);
 			switch (type) {
 			case 0:
 				if (searchView == null) {
@@ -228,12 +227,10 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 				container.addView(viewSearchActivity);
 				return viewSearchActivity;
 			case 1:
+				View downloadView = DownloadsTab.getInstanceView(inflater, activity);
 				if (null != downloadView) {
 					container.addView(downloadView);
-				} else {
-					downloadView = DownloadsTab.getInstanceView(inflater, activity);
-					container.addView(downloadView);
-				}
+				}				
 				return downloadView;
 			case 2:
 				adapterLibrary = new LibraryTab(0, activity);
