@@ -129,7 +129,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.equalizer_main);
-
+		if (null == getEqualizer() || null == getVirtualizer() || null == getBassBoost()) finish();
 		startService(new Intent(this, MyService.class));
 		prefs = getPreferences(MODE_PRIVATE);
 
@@ -287,13 +287,15 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 	public void initBassBoost() {
 		try {
 			bassBoost = getBassBoost();
-			bassBoost.setEnabled(true);
-			BassBoost.Settings bassBoostSettingTemp = bassBoost.getProperties();
-			BassBoost.Settings bassBoostSetting = new BassBoost.Settings(bassBoostSettingTemp.toString());
-			bassBoostSetting.strength = 0;
-			bassBoost.setProperties(bassBoostSetting);
-			Log.e("bbSetTemp", bassBoost.getProperties().toString());
-			ok = true;
+			if (null != bassBoost) {
+				bassBoost.setEnabled(true);
+				BassBoost.Settings bassBoostSettingTemp = bassBoost.getProperties();
+				BassBoost.Settings bassBoostSetting = new BassBoost.Settings(bassBoostSettingTemp.toString());
+				bassBoostSetting.strength = 0;
+				bassBoost.setProperties(bassBoostSetting);
+				Log.e("bbSetTemp", bassBoost.getProperties().toString());
+				ok = true;
+			}
 		} catch (Exception localException) {
 			localException.printStackTrace();
 		}
@@ -302,8 +304,10 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 	public void initVirtualizer() {
 		try {
 			virtualizer = getVirtualizer();
-			virtualizer.setEnabled(true);
-			virtualizer.setStrength((short) 0);
+			if (null != virtualizer) {
+				virtualizer.setEnabled(true);
+				virtualizer.setStrength((short) 0);
+			}
 		} catch (Exception localException) {
 			localException.printStackTrace();
 		}
@@ -334,17 +338,19 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		try {
 			manager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 			equalizer = getEqualizer();
-			int val = equalizer.setEnabled(true);
-			if (val != Equalizer.SUCCESS)
-				Log.e("A", "EQUALIZER NON ATTIVO");
-			setVolumeControlStream(AudioManager.STREAM_MUSIC);
-			bands = equalizer.getNumberOfBands();
-			minEQLevel = equalizer.getBandLevelRange()[0];
-			maxEQLevel = equalizer.getBandLevelRange()[1];
-			initBassBoost();
-			initVirtualizer();
-			initDB();
-			showEqLevels();
+			if (null != equalizer) {
+				int val = equalizer.setEnabled(true);
+				if (val != Equalizer.SUCCESS)
+					Log.e("A", "EQUALIZER NON ATTIVO");
+				setVolumeControlStream(AudioManager.STREAM_MUSIC);
+				bands = equalizer.getNumberOfBands();
+				minEQLevel = equalizer.getBandLevelRange()[0];
+				maxEQLevel = equalizer.getBandLevelRange()[1];
+				initBassBoost();
+				initVirtualizer();
+				initDB();
+				showEqLevels();
+			}
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -479,7 +485,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 
 		sk1.setOnSeekBarChangeListener(this);
 		sk2.setOnSeekBarChangeListener(this);
-
+		if (getEqualizer() == null || getBassBoost() == null || getVirtualizer() == null) return;
 		testMethod();
 		setPresets();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -758,7 +764,9 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 	@Override
 	protected void onResume() {
 		if (Utils.isOn)
-			myProgressDataSource.open();
+			if (null != myProgressDataSource) {
+				myProgressDataSource.open();
+		}
 		super.onResume();
 	}
 

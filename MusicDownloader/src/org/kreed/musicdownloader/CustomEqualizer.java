@@ -11,16 +11,22 @@ public class CustomEqualizer extends MyEqualizer {
 
 	@Override
 	protected BassBoost getBassBoost() {
-		return MusicDownloaderApp.getService().getPlayer().getBassBoost();
+		if (null == MusicDownloaderApp.getService() || !MusicDownloaderApp.getService().containsPlayer()) {
+			return null;
+		} else return MusicDownloaderApp.getService().getPlayer().getBassBoost();
 	}
 
 	@Override
 	protected Virtualizer getVirtualizer() {
-		return MusicDownloaderApp.getService().getPlayer().getVirtualizer();
+		if (null == MusicDownloaderApp.getService() || !MusicDownloaderApp.getService().containsPlayer()) {
+			return null;
+		} else return MusicDownloaderApp.getService().getPlayer().getVirtualizer();
 	}
 
 	@Override
 	protected Equalizer getEqualizer() {
-		return MusicDownloaderApp.getService().getPlayer().getEqualizer();
+		if (null == MusicDownloaderApp.getService() || !MusicDownloaderApp.getService().containsPlayer()) {
+			return null;
+		} else return MusicDownloaderApp.getService().getPlayer().getEqualizer();
 	}
 }
