@@ -1,4 +1,4 @@
-package org.kreed.musicdownloader.ui.tab;
+package org.kreed.musicdownloader.ui.tabs;
 
 import java.util.ArrayList;
 import java.util.Collection;

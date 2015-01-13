@@ -23,7 +23,7 @@
 package org.kreed.musicdownloader;
 
 import org.kreed.musicdownloader.ui.activity.MainActivity;
-import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
+import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;

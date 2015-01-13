@@ -1,6 +1,6 @@
 package org.kreed.musicdownloader.app;
 
-import org.kreed.musicdownloader.PlayerService;
+import org.kreed.musicdownloader.services.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.content.ComponentName;

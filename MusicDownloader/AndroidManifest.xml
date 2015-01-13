@@ -67,7 +67,7 @@
         <activity android:name=".CustomEqualizer" />
 
         <!-- PlayerService -->
-        <service android:name=".PlayerService" />
+        <service android:name="org.kreed.musicdownloader.services.PlayerService" />
 
         <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
 

@@ -5,7 +5,7 @@ import java.io.File;
 import org.kreed.musicdownloader.DBHelper;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.ui.tab.DownloadsTab;
+import org.kreed.musicdownloader.ui.tabs.DownloadsTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.Util;

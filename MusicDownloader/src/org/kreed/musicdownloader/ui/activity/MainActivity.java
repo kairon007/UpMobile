@@ -11,14 +11,14 @@ import org.kreed.musicdownloader.Constants;
 import org.kreed.musicdownloader.CustomEqualizer;
 import org.kreed.musicdownloader.Nulldroid_Advertisement;
 import org.kreed.musicdownloader.Nulldroid_Settings;
-import org.kreed.musicdownloader.PlayerService;
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
+import org.kreed.musicdownloader.services.PlayerService;
 import org.kreed.musicdownloader.ui.Player;
-import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
-import org.kreed.musicdownloader.ui.tab.DownloadsTab;
+import org.kreed.musicdownloader.ui.tabs.DownloadsTab;
+import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.RenameTask;
@@ -77,9 +77,6 @@ import com.viewpagerindicator.TabPageIndicator;
 public class MainActivity extends Activity {
 
 	private static final String SAVE_PLAYER_STATE = "save_player_state";
-	private static final String SAVE_PLAYER_VIEW = "SAVE_PLAYER_VIEW";
-	private static final String SAVE_BUTTONPLAY_PROGRESS = "SAVE_BUTTONPLAY_PROGRESS";
-	private static final String SAVE_SEEKBAR_PROGRESS = "SAVE_SEEKBAR_PROGRESS";
 	private final static int DELETE = 1;
 	private final static int EDIT_TAG = 2;
 	private ArrayList<String> uriDownloadedFilesBefore;
@@ -108,7 +105,6 @@ public class MainActivity extends Activity {
 	private String textFilterLibrary = "";
 	private int page;
 	private int lastPage = -1;
-	private boolean mSearchBoxVisible;
 	private boolean mFakeTarget;
 	private boolean isHidePlayer = true;
 	private PlayerService service;

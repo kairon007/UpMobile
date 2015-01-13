@@ -1,4 +1,4 @@
-package org.kreed.musicdownloader.ui.tab;
+package org.kreed.musicdownloader.ui.tabs;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.listeners.DownloadListener;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
-import org.kreed.musicdownloader.ui.adapter.ViewPagerAdapter;
+import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.BaseConstants;
@@ -27,13 +27,13 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class SearchView  extends OnlineSearchView {
+public class SearchViewTab  extends OnlineSearchView {
 	
 	private MainActivity activity;
 	private ViewPagerAdapter parentAdapter;
 	private String path;
 
-	public SearchView(LayoutInflater inflater, ViewPagerAdapter parentAdapter, MainActivity activity) {
+	public SearchViewTab(LayoutInflater inflater, ViewPagerAdapter parentAdapter, MainActivity activity) {
 		super(inflater);
 		this.parentAdapter = parentAdapter;
 		this.activity = activity;
@@ -102,7 +102,7 @@ public class SearchView  extends OnlineSearchView {
 				@Override
 				public void success(String url) {
 					path = url;
-					SearchView.this.alertProgressDialog.dismiss();
+					SearchViewTab.this.alertProgressDialog.dismiss();
 					StateKeeper.getInstance().closeDialog(StateKeeper.PROGRESS_DIALOG);
 					startPlay(song, data);
 				}

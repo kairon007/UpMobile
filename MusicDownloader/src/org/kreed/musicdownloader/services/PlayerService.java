@@ -1,4 +1,4 @@
-package org.kreed.musicdownloader;
+package org.kreed.musicdownloader.services;
 
 import org.kreed.musicdownloader.ui.Player;
 

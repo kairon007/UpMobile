@@ -1,4 +1,4 @@
-package org.kreed.musicdownloader.ui.adapter;
+package org.kreed.musicdownloader.ui.viewpager;
 
 /*
  * Copyright (C) 2012 Christopher Eby <kreed@kreed.org>
@@ -29,8 +29,9 @@ import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
-import org.kreed.musicdownloader.ui.tab.DownloadsTab;
-import org.kreed.musicdownloader.ui.tab.SearchView;
+import org.kreed.musicdownloader.ui.tabs.DownloadsTab;
+import org.kreed.musicdownloader.ui.tabs.LibraryTab;
+import org.kreed.musicdownloader.ui.tabs.SearchViewTab;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import android.content.ContentResolver;
@@ -106,7 +107,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	public int mLibraryPosition = -1;
 
 	private int currentType = -1;
-	public LibraryTabAdapter adapterLibrary = null;
+	public LibraryTab adapterLibrary = null;
 
 	/**
 	 * Create the LibraryPager.
@@ -217,22 +218,25 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		if (view == null) {
 			MainActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
+			View downloadView = DownloadsTab.getInstanceView(inflater, activity);
 			switch (type) {
 			case 0:
 				if (searchView == null) {
-					searchView = new SearchView(inflater, this, mActivity);
+					searchView = new SearchViewTab(inflater, this, mActivity);
 					viewSearchActivity = searchView.getView();
 				}
 				container.addView(viewSearchActivity);
 				return viewSearchActivity;
 			case 1:
-				View downloadView = DownloadsTab.getInstanceView(inflater, activity);
 				if (null != downloadView) {
+					container.addView(downloadView);
+				} else {
+					downloadView = DownloadsTab.getInstanceView(inflater, activity);
 					container.addView(downloadView);
 				}
 				return downloadView;
 			case 2:
-				adapterLibrary = new LibraryTabAdapter(0, activity);
+				adapterLibrary = new LibraryTab(0, activity);
 				view = (ListView) inflater.inflate(R.layout.listview, null);
 				view.setAdapter(adapterLibrary);
 				view.setDivider(mActivity.getResources().getDrawable(R.drawable.layout_divider));
@@ -260,7 +264,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		}
 		adapterLibrary.clear();
 		querySong();
-		android.util.Log.d("logd", "fillLibrary: ");
 		mActivity.runOnUiThread(new Runnable() {
 			
 			@Override
@@ -348,7 +351,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		out.putIntArray(CURRENT_POSITION, savedPositions);
 		return out;
 	}
-	private SearchView searchView;
+	private SearchViewTab searchView;
 	private View viewSearchActivity;
 
 	@Override
@@ -409,7 +412,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		mActivity.setFakeTarget(false);
 	}
 
-	public SearchView getSearchView() {
+	public SearchViewTab getSearchView() {
 		return searchView;
 	}
 	

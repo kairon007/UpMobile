@@ -1,7 +1,10 @@
-package org.kreed.musicdownloader.ui.adapter;
+package org.kreed.musicdownloader.ui.tabs;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
+
 import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -22,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWatcher {
+public class LibraryTab extends ArrayAdapter<MusicData> implements TextWatcher {
 
 	private final Object lock = new Object();
 	private ArrayList<MusicData> mObjects;
@@ -42,7 +46,7 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 	};
 	
 
-	public LibraryTabAdapter(int resource, MainActivity activity) {
+	public LibraryTab(int resource, MainActivity activity) {
 		super(activity, resource);
 		mObjects = new ArrayList<MusicData>();
 		this.activity = activity;
@@ -67,6 +71,30 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 			mObjects.add(object);
 		}
 		activity.runOnUiThread(reDraw);
+	}
+	
+	@Override
+	public void addAll(Collection<? extends MusicData> collection) {
+        synchronized (lock) {
+            if (mOriginalValues != null) {
+                mOriginalValues.addAll(collection);
+            } else {
+                mObjects.addAll(collection);
+            }
+        }
+        activity.runOnUiThread(reDraw);
+	}
+	
+	@Override
+	public void addAll(MusicData... items) {
+        synchronized (lock) {
+            if (mOriginalValues != null) {
+                Collections.addAll(mOriginalValues, items);
+            } else {
+                Collections.addAll(mObjects, items);
+            }
+        }
+        activity.runOnUiThread(reDraw);
 	}
 	
 	@Override
@@ -143,7 +171,19 @@ public class LibraryTabAdapter extends ArrayAdapter<MusicData> implements TextWa
 		}
 		activity.runOnUiThread(reDraw);
 	}
-
+	
+	@Override
+	public void insert(MusicData object, int index) {
+        synchronized (lock) {
+            if (mOriginalValues != null) {
+                mOriginalValues.add(index, object);
+            } else {
+                mObjects.add(index, object);
+            }
+        }
+        activity.runOnUiThread(reDraw);
+	}
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolderItem holder;
