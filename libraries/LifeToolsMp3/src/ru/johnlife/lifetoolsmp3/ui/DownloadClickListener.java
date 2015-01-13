@@ -454,6 +454,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							insertToMediaStore(song, path);
 						}
 						setFileUri(currentDownloadId, src.getAbsolutePath());
+						prepare(src, song, path);
 						DownloadCache.getInstanse().remove(artist, title);
 						this.cancel();
 					}
