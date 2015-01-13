@@ -37,6 +37,8 @@ import ru.johnlife.lifetoolsmp3.BaseConstants;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.MediaScannerConnection.MediaScannerConnectionClient;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,7 +59,7 @@ import android.widget.ListView;
 /**
  * PagerAdapter that manages the library media ListViews.
  */
-public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener {
+public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener, MediaScannerConnectionClient {
 	
 	private static final String CURRENT_POSITION = "current_position_bundle";
 	/**
@@ -262,6 +264,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		}
 		adapterLibrary.clear();
 		querySong();
+		android.util.Log.d("logd", "fillLibrary: ");
 		mActivity.runOnUiThread(new Runnable() {
 			
 			@Override
@@ -272,18 +275,16 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	}
 	
 	private void querySong() {
-		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		Cursor cursor = buildQuery(mActivity.getContentResolver());
 		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
 			return;
 		}
 		MusicData d = new MusicData();
 		d.populate(cursor);
-		result.add(d);
+		adapterLibrary.add(d);
 		while (cursor.moveToNext()) {
 			MusicData data = new MusicData();
 			data.populate(cursor);
-			result.add(data);
 			adapterLibrary.add(data);
 		}
 		cursor.close();
@@ -418,5 +419,16 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	
 	public ListView getListView(){
 		return mLists[mCurrentPage];
+	}
+
+	@Override
+	public void onMediaScannerConnected() {
+		android.util.Log.d("logd", "onMediaScannerConnected: ");
+	}
+
+	@Override
+	public void onScanCompleted(String path, Uri uri) {
+		android.util.Log.d("logd", "onScanCompleted: " + path  + " - "  + uri);
+		
 	}
 }
