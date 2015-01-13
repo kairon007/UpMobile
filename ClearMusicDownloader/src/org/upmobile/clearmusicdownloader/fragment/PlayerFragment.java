@@ -72,14 +72,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
-	private ImageButton showLyrics;
-	private ImageButton editTag;
 	private ImageView playerCover;
 	private ImageView lyricsLoader;
+	private ImageView playerTitleBarCover;
 	private Button download;
 	private Button playerSaveTags;
 	private Button playerCancelTags;
-	private Button playerCancelLyrics;
 	private Button playerTitleBarBack;
 	private TextView playerTitle;
 	private TextView playerArtist;
@@ -98,6 +96,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private int left;
 	private int width;
 	private int height;
+	private int deltaLeftTitleBar;
+	private int deltaTopTitleBar;
+	private float scaleWidthTitleBar;
+	private float scaleHeightTitleBar;
     private float scale_width;
     private float scale_height;
     private boolean isDestroy;
@@ -178,7 +180,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void run() {
 						getCover(song);
-						startImageAnimation();
+						startImageAnimation(playerCover);
 						setElementsView(current);
 						if (!enabledPlayerElement) {
 							setClickablePlayerElement(false);
@@ -192,6 +194,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				});
 			}
 		}).start();
+		showLyrics();
 		return parentView;
 	}
 
@@ -298,9 +301,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		previous = (ImageButton) parentView.findViewById(R.id.player_previous);
 		forward = (ImageButton) parentView.findViewById(R.id.player_forward);
 		download = (Button) parentView.findViewById(R.id.player_download);
-		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
 		lyricsLoader= (ImageView) parentView.findViewById(R.id.lyrics_load_image);
-		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
 		playerTitleBarBack = (Button) parentView.findViewById(R.id.title_bar_left_menu);
 		playerProgress = (SeekBar) parentView.findViewById(R.id.player_progress);
 		playerTitle = (TextView) parentView.findViewById(R.id.player_title);
@@ -310,23 +311,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	    playerTitleBar = (FrameLayout) parentView.findViewById(R.id.layout_top);   
 	    playerTitleBarArtis = (TextView) parentView.findViewById(R.id.titleBarArtist);
 	    playerTitleBarTitle = (TextView) parentView.findViewById(R.id.titleBarTitle);
+	    playerTitleBarCover = (ImageView) parentView.findViewById(R.id.titleBarCover);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
 		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
 		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
 		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
-		playerCancelLyrics = (Button) parentView.findViewById(R.id.player_cancel_lyrics);
 		playerTagsArtist = (EditText) parentView.findViewById(R.id.editTextArtist);
 		playerTagsTitle = (EditText) parentView.findViewById(R.id.editTextTitle);
 		playerTagsAlbum = (EditText) parentView.findViewById(R.id.editTextAlbum);
 		playerTagsCheckBox = (CheckBox) parentView.findViewById(R.id.isUseCover);
 		playerProgress.setOnSeekBarChangeListener(this);
-		playerCancelLyrics.setOnClickListener(this);
 		play.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
 		download.setOnClickListener(this);
-		editTag.setOnClickListener(this);
-		showLyrics.setOnClickListener(this);
 		playerCancelTags.setOnClickListener(this);
 		playerSaveTags.setOnClickListener(this);
 		playerTitleBarBack.setOnClickListener(this);
@@ -360,6 +358,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (!playerTagsCheckBox.isChecked()) {
 			if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(false);
 			playerCover.setImageResource(R.drawable.def_cover_circle_web);
+			playerTitleBarCover.setImageResource(R.drawable.def_cover_circle);
 		}
 	}
 	
@@ -381,19 +380,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.player_download:
 			download();
 			break;
-		case R.id.player_lyrics:
-			showLyrics();
-			break;
-		case R.id.player_edit_tags:
-			showEditTagDialog();
-			break;
 		case R.id.player_save_tags:
 			saveTags();
 		case R.id.player_cancel_tags:
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
-			break;
-		case R.id.player_cancel_lyrics:
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 			break;
 		case R.id.title_bar_left_menu: 
 			onBackPress();
@@ -452,35 +442,32 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void showLyrics() {
-		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
-			lyricsLoader.setVisibility(View.VISIBLE);
-			lyricsLoader.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-			final int [] location = new int[2];
-			playerLyricsView.getLocationOnScreen(location);
-			animateOpenViews(location);
-			lyricsFetcher = new LyricsFetcher(getActivity());
-			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
-			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+		parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
+		playerLyricsView.setText("");
+		lyricsLoader.setVisibility(View.VISIBLE);
+		lyricsLoader.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
+		final int[] location = new int[2];
+		playerLyricsView.getLocationOnScreen(location);
+		animateOpenViews(location);
+		lyricsFetcher = new LyricsFetcher(getActivity());
+		lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
+		lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
 
-				@Override
-				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-					try {
-						lyricsLoader.clearAnimation();
-						lyricsLoader.setVisibility(View.GONE);
-						if (foundLyrics) {
-							playerLyricsView.setText(Html.fromHtml(lyrics));
-						} else {
-							String songName = song.getArtist() + " - " + song.getTitle();
-							playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
-						}
-					} catch (Exception e) {
+			@Override
+			public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+				try {
+					lyricsLoader.clearAnimation();
+					lyricsLoader.setVisibility(View.GONE);
+					if (foundLyrics) {
+						playerLyricsView.setText(Html.fromHtml(lyrics));
+					} else {
+						String songName = song.getArtist() + " - " + song.getTitle();
+						playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
 					}
+				} catch (Exception e) {
 				}
-			});
-		} else {
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
-		}
+			}
+		});
 	}
 
 	private void showEditTagDialog() {
@@ -602,8 +589,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						playerCover.setImageBitmap(bmp);
+						playerTitleBarCover.setImageBitmap(bmp);
 					} else {
 						playerCover.setImageResource(R.drawable.def_cover_circle_web);
+						playerTitleBarCover.setImageResource(R.drawable.def_cover_circle);
 					}
 				}
 				
@@ -616,10 +605,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void run() {
 						playerCover.setImageBitmap(bitmap);
+						playerTitleBarCover.setImageBitmap(bitmap);
 					}
 				});
 			} else {
 				playerCover.setImageResource(R.drawable.def_cover_circle_web);
+				playerTitleBarCover.setImageResource(R.drawable.def_cover_circle);
 			}
 		}
 	}
@@ -655,7 +646,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		});
 	}
 	
-	private void startImageAnimation() {
+	private void startImageAnimation(ImageView view) {
 		ViewTreeObserver observer = playerCover.getViewTreeObserver();
 		observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 			@Override
@@ -667,7 +658,28 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				delta_top = top - screen_location[1];
 				scale_width = (float) width / playerCover.getWidth();
 				scale_height = (float) height / playerCover.getHeight();
-				runEnterAnimation();
+				runEnterAnimation(playerCover, false);
+				return true;
+			}
+		});
+	}
+	
+	private void startTitleBarAnimation (final ImageView view) {
+		ViewTreeObserver observer = view.getViewTreeObserver();
+		observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+			@Override
+			public boolean onPreDraw() {
+				view.getViewTreeObserver().removeOnPreDrawListener(this);
+				int[] screen_location = new int[2];
+				view.getLocationOnScreen(screen_location);
+				int[] playerCoverScreenLocation = new int[2];
+				playerCover.getLocationOnScreen(playerCoverScreenLocation);
+				deltaLeftTitleBar = playerCoverScreenLocation[0] - screen_location[0];
+				deltaTopTitleBar = playerCoverScreenLocation[1] - screen_location[1];
+				scaleWidthTitleBar = (float) playerCover.getWidth() / view.getWidth();
+				scaleHeightTitleBar = (float) playerCover.getHeight() / view.getHeight();
+				runEnterAnimation(view, true);
 				return true;
 			}
 		});
@@ -682,17 +694,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				((MainActivity) getActivity()).onBackPressed();
 				((MainActivity) getActivity()).overridePendingTransition(0, 0);
 			}
-		});
+		}, playerCover, false);
 	}
 	
-    private void runEnterAnimation() {
-        ViewHelper.setPivotX(playerCover, 0.f);
-        ViewHelper.setPivotY(playerCover, 0.f);
-        ViewHelper.setScaleX(playerCover, scale_width);
-        ViewHelper.setScaleY(playerCover, scale_height);
-        ViewHelper.setTranslationX(playerCover, delta_left);
-        ViewHelper.setTranslationY(playerCover, delta_top);
-        animate(playerCover).
+    private void runEnterAnimation(ImageView view, boolean flag) {
+        ViewHelper.setPivotX(view, 0.f);
+        ViewHelper.setPivotY(view, 0.f);
+        ViewHelper.setScaleX(view, flag ? scaleWidthTitleBar : scale_width);
+        ViewHelper.setScaleY(view, flag ? scaleHeightTitleBar : scale_height);
+        ViewHelper.setTranslationX(view,flag ? deltaLeftTitleBar : delta_left);
+        ViewHelper.setTranslationY(view, flag ? deltaTopTitleBar : delta_top);
+        animate(view).
                 setDuration(DURATION).
                 scaleX(1.f).
                 scaleY(1.f).
@@ -706,42 +718,43 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         			}
         		});
 
-        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", 0f, 1f);
+        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", flag ? 1f : 0f, 1f);
         bg_anim.setDuration(DURATION);
         bg_anim.start();
     }
     
-    private void runExitAnimation(final Runnable end_action) {
-    	ViewHelper.setPivotX(playerCover, 0.f);
-    	ViewHelper.setPivotY(playerCover, 0.f);
-    	ViewHelper.setScaleX(playerCover, 1.f);
-    	ViewHelper.setScaleY(playerCover, 1.f);
-    	ViewHelper.setTranslationX(playerCover, 0.f);
-    	ViewHelper.setTranslationY(playerCover, 0.f);
+    private void runExitAnimation(final Runnable end_action, ImageView view, boolean flag) {
+    	ViewHelper.setPivotX(view, 0.f);
+    	ViewHelper.setPivotY(view, 0.f);
+    	ViewHelper.setScaleX(view, 1.f);
+    	ViewHelper.setScaleY(view, 1.f);
+    	ViewHelper.setTranslationX(view, 0.f);
+    	ViewHelper.setTranslationY(view, 0.f);
 
-    	animate(playerCover).
+    	animate(view).
                 setDuration(DURATION).
-                scaleX(scale_width).
-                scaleY(scale_height).
-                translationX(delta_left).
-                translationY(delta_top).
+                scaleX(flag ? scaleWidthTitleBar : scale_width).
+                scaleY(flag ? scaleHeightTitleBar : scale_height).
+                translationX(flag ? deltaLeftTitleBar : delta_left).
+                translationY(flag ? deltaTopTitleBar : delta_top).
                 setInterpolator(new DecelerateInterpolator()).
                 setListener(new AnimatorListenerAdapter() {  
 
                 	@Override
                 	    public void onAnimationEnd(Animator animation) {
+                		if (null == end_action) return;
                 	    end_action.run();
                 	}
                 });
 
-        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", 1f, 0f);
+        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", 1f, flag ? 1f : 0f);
         bg_anim.setDuration(DURATION);
         bg_anim.start();
     }
     
     private UIParallaxScroll.OnScrollChangedListener mOnScrollChangedListener = new UIParallaxScroll.OnScrollChangedListener() {
         public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
-        	final float headerHeight = ViewHelper.getY(playerArtist) - (playerTitleBar.getHeight() - playerArtist.getHeight());
+        	final float headerHeight = ViewHelper.getY(parentView.findViewById(R.id.player_artist_frame)) - (playerTitleBar.getHeight() - parentView.findViewById(R.id.player_artist_frame).getHeight());
             final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
             final int newAlpha = (int) (ratio * 255);
             playerTitleBar.getBackground().setAlpha(newAlpha);
@@ -750,14 +763,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
             if (newAlpha == 255 && playerTitleBarArtis.getVisibility() != View.VISIBLE && !animationFadeIn.hasStarted()){
             	playerTitleBarArtis.setVisibility(View.VISIBLE);
             	playerTitleBarTitle.setVisibility(View.VISIBLE);
+            	playerTitleBarCover.setVisibility(View.VISIBLE);
             	playerTitleBarArtis.startAnimation(animationFadeIn);
             	playerTitleBarTitle.startAnimation(animationFadeIn);
+            	startTitleBarAnimation(playerTitleBarCover);
             } else if (newAlpha < 255 && !animationFadeOut.hasStarted() && playerTitleBarArtis.getVisibility() != View.INVISIBLE)  { 	
             	playerTitleBarArtis.startAnimation(animationFadeOut);
             	playerTitleBarArtis.setVisibility(View.INVISIBLE);
             	playerTitleBarTitle.startAnimation(animationFadeOut);
             	playerTitleBarTitle.setVisibility(View.INVISIBLE);
+            	runExitAnimation(null, playerTitleBarCover, true);
             }
+        	if (newAlpha < 220) {
+        		playerTitleBarCover.setVisibility(View.GONE);
+        	}
         }
     };
 }
