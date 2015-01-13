@@ -23,7 +23,6 @@ package org.kreed.musicdownloader.ui.adapter;
  */
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.musicdownloader.PrefKeys;
@@ -37,9 +36,6 @@ import ru.johnlife.lifetoolsmp3.BaseConstants;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.media.MediaScannerConnection.MediaScannerConnectionClient;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -59,7 +55,7 @@ import android.widget.ListView;
 /**
  * PagerAdapter that manages the library media ListViews.
  */
-public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener, MediaScannerConnectionClient {
+public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener {
 	
 	private static final String CURRENT_POSITION = "current_position_bundle";
 	/**
@@ -419,16 +415,5 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 	
 	public ListView getListView(){
 		return mLists[mCurrentPage];
-	}
-
-	@Override
-	public void onMediaScannerConnected() {
-		android.util.Log.d("logd", "onMediaScannerConnected: ");
-	}
-
-	@Override
-	public void onScanCompleted(String path, Uri uri) {
-		android.util.Log.d("logd", "onScanCompleted: " + path  + " - "  + uri);
-		
 	}
 }
