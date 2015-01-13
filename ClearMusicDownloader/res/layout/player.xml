@@ -134,11 +134,6 @@
                 android:orientation="vertical" >
 
                 <include
-                    android:id="@+id/player_edit_tag_dialog"
-                    layout="@layout/edit_tag"
-                    android:visibility="gone" />
-
-                <include
                     android:id="@+id/player_lyrics_frame"
                     layout="@layout/lyrics_frame"
                     android:visibility="gone" />
