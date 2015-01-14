@@ -5,12 +5,10 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <FrameLayout
-            android:id="@+id/FrameLayout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" >
@@ -50,7 +48,6 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
-                android:background="@drawable/search_background"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -74,7 +71,7 @@
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:lines="1"
-                            android:paddingRight="50dp"
+                            android:paddingRight="48dp"
                             android:singleLine="true" />
 
                         <ImageButton
