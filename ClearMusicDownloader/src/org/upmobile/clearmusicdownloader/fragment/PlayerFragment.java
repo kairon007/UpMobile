@@ -33,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -40,7 +41,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -69,7 +69,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private LyricsFetcher lyricsFetcher;
 	private View parentView;
 	private SeekBar playerProgress;
-	private CheckBox playerTagsCheckBox;
 	private FrameLayout playerTitleBar;
 	private ImageButton play;
 	private ImageButton previous;
@@ -243,14 +242,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onResume() {
 		super.onResume();
+		setKeyListener();
+	}
+
+	private void setKeyListener() {
 		getView().setFocusableInTouchMode(true);
 		getView().requestFocus();
 		getView().setOnKeyListener(new View.OnKeyListener() {
-			
+
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-					onBackPress();
+					if (!closeEditViews()) {
+						onBackPress();
+					}
 					return true;
 				}
 				return false;
@@ -321,7 +326,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	    playerTitleBarCover = (ImageView) parentView.findViewById(R.id.titleBarCover);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
 		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
-		playerTagsCheckBox = (CheckBox) parentView.findViewById(R.id.isUseCover);
 	}
 
 	private void setListener() {
@@ -333,17 +337,49 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerBtnTitle.setOnClickListener(this);
 		download.setOnClickListener(this);
 		playerTitleBarBack.setOnClickListener(this);
-		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnTouchListener(new OnTouchListener() {
-			
+		playerEtArtist.setOnKeyListener(new OnKeyListener() {
+
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				editTag(v);
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+					closeEditViews();
+					return true;
+				}
 				return false;
 			}
+		});
+		playerEtTitle.setOnKeyListener(new OnKeyListener() {
 
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+					closeEditViews();
+					return true;
+				}
+				return false;
+			}
+		});
+		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				editTag();
+				return false;
+			}
 		});
 	}
 	
+	private boolean closeEditViews() {
+		if (playerEtArtist.getVisibility() == View.VISIBLE || playerEtTitle.getVisibility() == View.VISIBLE) {
+			playerTvArtist.setVisibility(View.VISIBLE);
+			playerTvTitle.setVisibility(View.VISIBLE);
+			playerBtnArtist.setVisibility(View.VISIBLE);
+			playerBtnTitle.setVisibility(View.VISIBLE);
+			playerEtArtist.setVisibility(View.GONE);
+			playerEtTitle.setVisibility(View.GONE);
+			return true;
+		} else return false;
+	}
 	
 	private void setElementsView(int progress) {
 		if (song.getClass() == MusicData.class) {
@@ -374,7 +410,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void onClick(View v) {
-		editTag(v);
+		editTag();
 		switch (v.getId()) {
 		case R.id.player_play:
 			play(0);
@@ -426,7 +462,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 	
-	private void editTag(View v) {
+	private void editTag() {
         if (playerEtArtist.getVisibility() == View.VISIBLE) {
         	playerTvArtist.setVisibility(View.VISIBLE);
 			playerEtArtist.setVisibility(View.GONE);
@@ -467,16 +503,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		renameTask.start(true, false);
 	}
 	
-//	private void hideOpenViews() {
-//		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
-//			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
-//		}
-//		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.VISIBLE) {
-//			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
-//		}
-//		isUseAlbumCover = true;
-//	}
-
 	private Runnable progressAction = new Runnable() {
 
 		@Override
@@ -543,19 +569,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		});
 	}
-
-
-	private void animateOpenViews(final int[] location) {
-		
-		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).post(new Runnable() {
-			public void run() {
-	            Animation open = AnimationUtils.loadAnimation(getActivity(),R.anim.open);
-	            ((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setAnimation(open);
-				((UIParallaxScroll) parentView.findViewById(R.id.scroller)).scrollTo(0, location[1]);
-			}
-		});
-	}
-	
 	
 	/**
 	 * @param delta
