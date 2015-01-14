@@ -51,7 +51,6 @@ public class MainActivity extends BaseClearActivity {
 			@Override
 			public void run() {
 				player = PlayerService.get(MainActivity.this);
-				player = PlayerService.get(MainActivity.this);
 				if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
 					ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
 					player.setArrayPlayback(list);
@@ -137,5 +136,11 @@ public class MainActivity extends BaseClearActivity {
 	public void setResideMenuListener(ResideMenu.OnMenuListener listener) {
 		getResideMenu().setMenuListener(listener);
 	}
-
+	
+	@Override
+	public void stopChildsServices() {
+		if (null != player) {
+			player.reset();
+		}
+	}
 }

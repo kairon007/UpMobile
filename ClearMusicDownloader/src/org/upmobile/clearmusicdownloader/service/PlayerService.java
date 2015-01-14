@@ -173,6 +173,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	@Override
 	public void onDestroy() {
+		unregisterReceiver(headsetReceiver);
+		handler.removeCallbacksAndMessages(null);
 		player.release();
 		looper.quit();
 		super.onDestroy();
@@ -453,6 +455,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		return player.getCurrentPosition();
 	}
 	
+	public void reset() {
+		Message msg = new Message();
+		msg.what = MSG_RESET;
+		handler.sendMessage(msg);
+	}
+	
 	public AbstractSong getPlayingSong() {
 		return playingSong;
 	}
@@ -534,5 +542,4 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public IBinder onBind(Intent paramIntent) {
 		return null;
 	}
-
 }

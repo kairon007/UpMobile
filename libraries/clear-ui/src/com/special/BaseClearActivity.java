@@ -138,6 +138,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
 			tvTitle.setText(lastFragmentName.replace(FRAGMENT, ""));
 		} else {
+			stopChildsServices();
 			finish();
 		}
 	}
@@ -180,4 +181,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     public void showPlayerElement() {
     	resideMenu.showLastElement();
     }
+    
+   public void stopChildsServices(){
+   }
 }

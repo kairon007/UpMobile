@@ -204,7 +204,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	@Override
 	public void onDestroy() {
+		unregisterReceiver(headsetReceiver);
 		player.release();
+		handler.removeCallbacksAndMessages(null);
 		looper.quit();
 		super.onDestroy();
 	}

@@ -16,6 +16,7 @@ import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDra
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -70,7 +71,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	
 	@Override
 	protected void onResume() {
-		if (null != service) {
+		if (null != service && service.isPlaying()) {
 			showPlayerElement(true);
 		}
 		super.onResume();
@@ -115,6 +116,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		if (null != player && player.isVisible()) {
 			getFragmentManager().popBackStack();
 		} else {
+			if (null != service) {
+				service.reset();
+			}
 			finish();
 		}
 	}
@@ -132,5 +136,4 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			navigationDrawerFragment.setAdapter(flag);
 		}
 	}
-
 }
