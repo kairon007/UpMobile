@@ -20,8 +20,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 
@@ -59,7 +57,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 					ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
 					service.setArrayPlayback(list);
 				}
-				if (PlayerService.get(MainActivity.this).isPlaying()) showPlayerElement(true);
+				if (service.isPlaying()) showPlayerElement(true);
 			}
 			
 		}).start();
@@ -68,6 +66,14 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		File file = new File(folderPath);
 		if (!file.exists()) file.mkdirs();
 		fileObserver.startWatching();
+	}
+	
+	@Override
+	protected void onResume() {
+		if (null != service) {
+			showPlayerElement(true);
+		}
+		super.onResume();
 	}
 	
 	@Override
