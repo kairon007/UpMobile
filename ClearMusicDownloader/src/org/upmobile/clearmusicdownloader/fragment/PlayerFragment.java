@@ -99,6 +99,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private int height;
 	private int deltaLeftTitleBar;
 	private int deltaTopTitleBar;
+	private int currLyricsFetchedId;
 	private float scaleWidthTitleBar;
 	private float scaleHeightTitleBar;
     private float scale_width;
@@ -525,13 +526,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		lyricsLoader.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
 		lyricsFetcher = new LyricsFetcher(getActivity());
 		lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
-		lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
-
+		OnLyricsFetchedListener fetchedListener = new OnLyricsFetchedListener() {
+			
 			@Override
 			public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+				if (hashCode() != currLyricsFetchedId) return;
 				lyricsLoader.clearAnimation();
 				lyricsLoader.setVisibility(View.GONE);
-				try {	
+				try {
 					if (foundLyrics) {
 						playerLyricsView.setVisibility(View.VISIBLE);
 						playerLyricsView.setText(Html.fromHtml(lyrics));
@@ -541,7 +543,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				} catch (Exception e) {
 				}
 			}
-		});
+			
+		};
+		currLyricsFetchedId = fetchedListener.hashCode();
+		lyricsFetcher.setOnLyricsFetchedListener(fetchedListener);
 	}
 
 
