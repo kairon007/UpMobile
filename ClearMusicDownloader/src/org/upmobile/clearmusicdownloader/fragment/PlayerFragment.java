@@ -21,9 +21,7 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,14 +33,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -186,7 +182,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void run() {
 						getCover(song);
-						showLyrics("new Thread");
+						showLyrics();
 						startImageAnimation(playerCover);
 						setElementsView(current);
 						if (!enabledPlayerElement) {
@@ -236,7 +232,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void update(final AbstractSong song, int position) {
 				if (isDestroy) return;
 				PlayerFragment.this.song = song;
-				showLyrics("update");
+				showLyrics();
 				setElementsView(0);
 				setClickablePlayerElement(false);
 			}
@@ -373,11 +369,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTvTitle.setText(song.getTitle());
 		playerTitleBarArtis.setText(song.getArtist());
 		playerTitleBarTitle.setText(song.getTitle());
-		if (!playerTagsCheckBox.isChecked()) {
-			if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(false);
-			playerCover.setImageResource(R.drawable.def_cover_circle_web);
-			playerTitleBarCover.setImageResource(R.drawable.def_cover_circle);
-		}
+		if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(true);
 	}
 	
 	@Override
@@ -389,11 +381,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			break;
 		case R.id.player_previous:
 			play(-1);
-//			hideOpenViews();
 			break;
 		case R.id.player_forward:
 			play(1);
-//			hideOpFenViews();
 			break;
 		case R.id.player_download:
 			download();
@@ -528,14 +518,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	
-	private void showLyrics(String from) {
+	private void showLyrics() {
 		parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
 		playerLyricsView.setText("");
 		lyricsLoader.setVisibility(View.VISIBLE);
 		lyricsLoader.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-		final int[] location = new int[2];
-		playerLyricsView.getLocationOnScreen(location);
-		animateOpenViews(location);
 		lyricsFetcher = new LyricsFetcher(getActivity());
 		lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 		lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
