@@ -11,6 +11,7 @@ import org.jsoup.nodes.Element;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.util.Log;
 
 public class LyricsFetcher {
@@ -66,7 +67,11 @@ public class LyricsFetcher {
 			new FetchLyrics().execute("");
 		}
 		String urlString = "http://www.azlyrics.com/lyrics/" + deleteSpecialCharacters(artistName.toLowerCase(locale)) + "/" + deleteSpecialCharacters(songName.toLowerCase(locale)) + ".html";
-		fetchLyrics = new FetchLyrics().execute(urlString);
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+			fetchLyrics = new FetchLyrics().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urlString);
+		} else {
+			fetchLyrics = new FetchLyrics().execute(urlString);
+		}
 	}
 
 	private boolean checkParameter(String songName, String artistName) {
