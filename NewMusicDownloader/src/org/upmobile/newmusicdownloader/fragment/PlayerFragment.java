@@ -594,6 +594,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				public void onBitmapReady(Bitmap bmp) {
 					if (null != bmp) {
 						playerTagsCheckBox.setClickable(true);
+						playerTagsCheckBox.setEnabled(true);
 						((RemoteSong) song).setHasCover(true);
 						playerCover.setImageBitmap(bmp);
 					} else {
@@ -609,6 +610,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					
 					@Override
 					public void run() {
+						playerTagsCheckBox.setClickable(true);
+						playerTagsCheckBox.setEnabled(true);
 						playerCover.setImageBitmap(bitmap);
 					}
 				});
