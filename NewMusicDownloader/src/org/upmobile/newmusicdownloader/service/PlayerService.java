@@ -37,7 +37,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	/**
 	 * bit 1 (true) - play, bit 0 (false) - pause
 	 */
-	private static final int SMODE_PLAY_PAUSE = 0x00000004;
 	private static final int SMODE_PLAYING = 0x00000008;
 	private static final int SMODE_PAUSE = 0x00000010;
 	private static final int SMODE_SHUFFLE = 0x00000020;
@@ -106,9 +105,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 		if (check(SMODE_PAUSE)) {
 			builder.append("| SMODE_PAUSE");
-		}
-		if (check(SMODE_PLAY_PAUSE)) {
-			builder.append("| SMODE_PLAY_PAUSE");
 		}
 		if (check(SMODE_PLAYING)) {
 			builder.append("| SMODE_PLAYING");
@@ -293,7 +289,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			try {
 				player.setDataSource(this, uri);
 				onMode(SMODE_START_PREPARE);
-				player.prepareAsync();
+				player.prepare();
 			} catch (Exception e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
@@ -380,6 +376,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		if (null != playingSong) {
 			previousSong = playingSong;
 			if (!playingSong.equals(song)) {
+				if (playingSong.getClass() != MusicData.class) {
+					((RemoteSong) playingSong).cancelTasks();
+				}
 				reset();
 			}
 		}
@@ -453,7 +452,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					if (playingSong.getClass() == MusicData.class) return;
 					((RemoteSong) playingSong).setDownloadUrl(url);
 					offMode(SMODE_GET_URL);
-					offMode(SMODE_PLAY_PAUSE);
+					offMode(SMODE_PAUSE);
 					Message msg = buildMessage(url, MSG_START, 0, 0);
 					handler.sendMessage(msg);
 				}
@@ -465,7 +464,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			});
 			return;
 		}
-		offMode(SMODE_PLAY_PAUSE);
+		offMode(SMODE_PAUSE);
 		msg = buildMessage(playingSong.getPath(), MSG_START, 0, 0);
 		handler.sendMessage(msg);
 	}
@@ -554,9 +553,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public void onPrepared(MediaPlayer mp) {
 		synchronized (LOCK) {
 			onMode(SMODE_PREPARED);
+			onMode(SMODE_PLAYING);
 			helper(State.START, playingSong);
 			mp.start();
-			onMode(SMODE_PLAYING);
 		}
 	}
 	
@@ -573,10 +572,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		synchronized (LOCK) {
 			return arrayPlayback.indexOf(playingSong);
 		}
-	}
-	
-	public boolean showPlayPause() {
-		return check(SMODE_PLAY_PAUSE);
 	}
 
 	public boolean enabledShuffle() {
@@ -606,7 +601,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public boolean isPlaying() {
-		boolean result=  false;
+		boolean result = false;
 		if (check(SMODE_PLAYING)) {
 			result = true;
 		}
