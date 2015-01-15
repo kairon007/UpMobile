@@ -107,31 +107,6 @@ public class MainActivity extends BaseClearActivity {
 			out.putParcelableArrayList(ARRAY_SAVE, player.getArrayPlayback());
 		}
 	}
-	
-	@Override
-	public void showTopFrame() {
-		super.showTopFrame();
-	}
-	
-	@Override
-	public void hideTopFrame() {
-		super.hideTopFrame();
-	}
-	
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-	}
-	
-	@Override
-	public void hidePlayerElement() {
-		super.hidePlayerElement();
-	}
-	
-	@Override
-	public void showPlayerElement() {
-		super.showPlayerElement();
-	}
 
 	public void setResideMenuListener(ResideMenu.OnMenuListener listener) {
 		getResideMenu().setMenuListener(listener);
