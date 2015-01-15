@@ -136,7 +136,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				player = PlayerService.get(getActivity());
 				player.setStatePlayerListener(PlayerFragment.this);
 				if (!hadInstance) {
-					if (song.equals(player.getPlayingSong())) {
+					if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
 						player.play();
 					} else {
 						player.play(song);

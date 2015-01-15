@@ -160,7 +160,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						enabledPlayerElement = true;
 					}
 				} else {
-					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition) {
+					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition && player.isPrepared()) {
 						boolean check = player.isPlaying();
 						current = player.getCurrentPosition();
 						enabledPlayerElement = true;
