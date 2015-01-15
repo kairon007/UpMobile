@@ -234,7 +234,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
 			break;
-
 		case MSG_PLAY_CURRENT:
 			if (check(SMODE_PREPARED)) {
 				helper(State.PLAY);
@@ -242,7 +241,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				onMode(SMODE_PLAYING);
 			}
 			break;
-
 		case MSG_PAUSE:
 			if (check(SMODE_PREPARED)) {
 				helper(State.PAUSE);
@@ -250,33 +248,24 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				onMode(SMODE_STOPPING);
 			}
 			break;
-
 		case MSG_SEEK_TO:
 			if(check(SMODE_PREPARED)){
 				player.seekTo(msg.arg1);
 			}
 			break;
-			
 		case MSG_ERROR:
 			offMode(SMODE_PREPARED);
+			player.reset();
 			player.release();
 			player = new MediaPlayer();
 			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			player.setOnCompletionListener(this);
 			player.setOnErrorListener(this);
 			player.setOnPreparedListener(this);
-			try {
-				player.setDataSource(playingSong.getPath());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			break;
-			
 		case MSG_RESET:
-			if(check(SMODE_PREPARED)){
 				offMode(SMODE_PREPARED);
 				player.reset();
-			}
 			break;
 		default:
 			break;
@@ -456,6 +445,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public void reset() {
+		handler.removeCallbacksAndMessages(null);
+		offMode(SMODE_PREPARED);
 		Message msg = new Message();
 		msg.what = MSG_RESET;
 		handler.sendMessage(msg);
