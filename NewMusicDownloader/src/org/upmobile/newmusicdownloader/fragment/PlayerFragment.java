@@ -499,6 +499,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void saveTags() {
+		final int pos[] = player.getPosition(song);
 		boolean manipulate = manipulateText();
 		isUseAlbumCover = playerTagsCheckBox.isChecked();
 		if (!manipulate && playerTagsCheckBox.isChecked()) {
@@ -520,6 +521,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				song.setPath(path);
 				renameTask.cancelProgress();
 				parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+				player.update(pos[0], pos[1], song.getTitle(), song.getArtist(), song.getPath(), song.getAlbum());
 			}
 
 			@Override
@@ -544,7 +546,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	public boolean manipulateText() {
-		int pos[] = player.getPosition(song);
 		boolean result = false;
 		if (!song.getTitle().equals(playerTagsTitle.getText().toString())) {
 			song.setTitle(playerTagsTitle.getText().toString());
@@ -557,9 +558,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (song.getAlbum() != null && !song.getAlbum().equals(playerTagsAlbum.getText().toString())) {
 			song.setAlbum(playerTagsAlbum.getText().toString());
 			result = true;
-		}
-		if (result) {
-			player.update(pos[0], pos[1], song.getTitle(), song.getArtist(), song.getPath(), song.getAlbum());
 		}
 		return result;
 	}

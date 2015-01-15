@@ -264,13 +264,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			data.setArtist(artist);
 			data.setTitle(title);
 			data.setAlbum(album);
-			data.setPath(path);
 			if (null == arrayPlaybackOriginal) return;
 			RemoteSong dataOrig = (RemoteSong) arrayPlaybackOriginal.get(position);
 			dataOrig.setArtist(artist);
 			dataOrig.setTitle(title);
 			dataOrig.setAlbum(album);
-			dataOrig.setPath(path);
 		}
 	}
 	

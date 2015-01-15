@@ -477,7 +477,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(playerEtArtist.getWindowToken(), 0);
 			String artist =  playerEtArtist.getText().toString();
-			if (!artist.equals(song.getArtist())){
+			if (!artist.equals(song.getArtist()	)){
 				song.setArtist(artist);
 				saveTag();
 			}
@@ -504,6 +504,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void success(String path) {
 				song.setPath(path);
 				renameTask.cancelProgress();
+				player.update(currentPosition, song.getTitle(), song.getArtist(), song.getPath());
 			}
 
 			@Override
