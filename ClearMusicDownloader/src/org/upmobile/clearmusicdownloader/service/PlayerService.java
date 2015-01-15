@@ -280,7 +280,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			state = State.NONE;
 			if(playingPosition == arrayPlayback.size()) playingPosition--;
 			else if (playingPosition > arrayPlayback.size()) playingPosition = arrayPlayback.size() - 1;
-		} else if (0 <= buf && buf <= arrayPlayback.size()) {
+		} else if (0 <= buf && buf < arrayPlayback.size()) {
 			playingPosition  =  buf;
 		} else if (buf >= arrayPlayback.size()) {
 			playingPosition = 0;
