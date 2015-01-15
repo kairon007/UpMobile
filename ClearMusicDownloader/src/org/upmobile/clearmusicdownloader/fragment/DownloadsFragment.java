@@ -10,7 +10,6 @@ import org.upmobile.clearmusicdownloader.adapters.DownloadsAdapter;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import android.app.DownloadManager;
 import android.content.Context;

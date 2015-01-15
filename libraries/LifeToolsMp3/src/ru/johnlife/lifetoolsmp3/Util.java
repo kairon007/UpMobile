@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 public final class Util {
@@ -173,5 +174,11 @@ public final class Util {
 	    	Log.e(Util.class.getSimpleName(), e.getMessage());
 	        return "";
 	    }
+	}
+	
+	public static int dpToPx(Context context, int dp) {
+	    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+	    int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));       
+	    return px;
 	}
 }

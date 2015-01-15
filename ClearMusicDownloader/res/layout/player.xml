@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:fillViewport="true"
         android:descendantFocusability="beforeDescendants"
+        android:fillViewport="true"
         app:headerView="@+id/layout_top" >
 
         <RelativeLayout
@@ -22,11 +22,113 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
+            <View
+                android:id="@+id/cover_empty_view"
+                android:layout_width="208dp"
+                android:layout_height="256dp"
+                android:layout_centerHorizontal="true" />
+
+            <RelativeLayout
+                android:id="@+id/player_artist_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cover_empty_view"
+                android:layout_centerHorizontal="false"
+                android:layout_centerVertical="false" >
+
+                <TextView
+                    android:id="@+id/player_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="Teeext"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/textsize_xlarge" />
+
+                <EditText
+                    android:id="@+id/player_artist_edit_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/player_artist"
+                    android:layout_alignBottom="@+id/player_artist"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/tab_default_border"
+                    android:ems="10"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:inputType="textNoSuggestions"
+                    android:textCursorDrawable="@null"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/player_edit_artist"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignBottom="@+id/player_artist"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/player_artist"
+                    android:background="@drawable/button_selector_inverse_light"
+                    android:src="@drawable/ic_player_edit" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/player_title_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/player_artist_frame"
+                android:paddingBottom="8dp" >
+
+                <TextView
+                    android:id="@+id/player_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/sumary_placeholder"
+                    android:textColor="@color/white_transparent"
+                    android:textSize="@dimen/textsize_medium_small" />
+
+                <ImageView
+                    android:id="@+id/player_edit_title"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignBottom="@+id/player_title"
+                    android:layout_alignTop="@+id/player_title"
+                    android:layout_toRightOf="@+id/player_title"
+                    android:background="@drawable/button_selector_inverse_light"
+                    android:src="@drawable/ic_player_edit" />
+
+                <EditText
+                    android:id="@+id/player_title_edit_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/player_title"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/tab_default_border"
+                    android:ems="10"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:inputType="textNoSuggestions"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@null"
+                    android:visibility="gone" >
+
+                    <requestFocus />
+                </EditText>
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/player_statistics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/player_title_frame"
+                android:layout_below="@id/player_title_frame"
                 android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:padding="4dp" >
@@ -138,117 +240,6 @@
                     layout="@layout/lyrics_frame"
                     android:visibility="gone" />
             </LinearLayout>
-
-            <com.special.utils.UICircularImage
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/player_cover"
-                android:layout_width="208dp"
-                android:layout_height="208dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="50dp"
-                android:src="@drawable/def_cover_circle_web"
-                app:line_color="@android:color/white"
-                app:line_color_press="@color/theme_color"
-                app:line_width="1dp"
-                app:padding="0dp" />
-
-            <RelativeLayout
-                android:id="@+id/player_title_frame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/player_artist_frame"
-                android:layout_centerHorizontal="true"
-                android:padding="8dp" >
-
-                <TextView
-                    android:id="@+id/player_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="@string/sumary_placeholder"
-                    android:textColor="@color/white_transparent"
-                    android:textSize="@dimen/textsize_medium_small" />
-
-                <ImageView
-                    android:id="@+id/player_edit_title"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_alignBottom="@+id/player_title"
-                    android:layout_alignTop="@+id/player_title"
-                    android:layout_toRightOf="@+id/player_title"
-                    android:background="@drawable/button_selector_inverse_light"
-                    android:src="@drawable/ic_player_edit" />
-
-                <EditText
-                    android:id="@+id/player_title_edit_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/player_title"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/tab_default_border"
-                    android:ems="10"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:inputType="textNoSuggestions"
-                    android:singleLine="true"
-                    android:textCursorDrawable="@null"
-                    android:visibility="gone" >
-
-                    <requestFocus />
-                </EditText>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/player_artist_frame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/player_cover"
-                android:layout_centerHorizontal="true"
-                android:padding="8dp" >
-
-                <TextView
-                    android:id="@+id/player_artist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:text="Teeext"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/textsize_xlarge" />
-
-                <EditText
-                    android:id="@+id/player_artist_edit_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/player_artist"
-                    android:layout_alignBottom="@+id/player_artist"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/tab_default_border"
-                    android:ems="10"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:inputType="textNoSuggestions"
-                    android:textCursorDrawable="@null"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/player_edit_artist"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_alignBottom="@+id/player_artist"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/player_artist"
-                    android:background="@drawable/button_selector_inverse_light"
-                    android:src="@drawable/ic_player_edit" />
-            </RelativeLayout>
         </RelativeLayout>
     </com.special.utils.UIParallaxScroll>
 
@@ -275,46 +266,49 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/titlebar_back_selector" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_gravity="center" >
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="104dp" >
 
-                <com.special.utils.UICircularImage
-                    android:id="@+id/titleBarCover"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/def_cover_circle"
-                    android:visibility="gone" />
-
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/titleBarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/titleBarCover" >
+                    android:layout_gravity="center_horizontal"
+                    android:ellipsize="marquee"
+                    android:fontFamily="sans-serif-light"
+                    android:singleLine="true"
+                    android:text="Title"
+                    android:textColor="@android:color/white" />
 
-                    <TextView
-                        android:id="@+id/titleBarTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:fontFamily="sans-serif-light"
-                        android:singleLine="true"
-                        android:layout_below="@+id/titleBarArtist"
-                        android:textColor="@android:color/white" />
-
-                    <TextView
-                        android:id="@+id/titleBarArtist"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:fontFamily="sans-serif-light"
-                        android:singleLine="true"
-                        android:textColor="@android:color/white" />
-                </RelativeLayout>
-            </RelativeLayout>
+                <TextView
+                    android:id="@+id/titleBarArtist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fontFamily="sans-serif-light"
+                    android:singleLine="true"
+                    android:text="Artist"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
+
+    <com.special.utils.UICircularImage
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/player_cover"
+        android:layout_width="208dp"
+        android:layout_height="208dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/def_cover_circle_web"
+        app:line_color="@android:color/white"
+        app:line_color_press="@color/theme_color"
+        app:line_width="1dp"
+        app:padding="0dp" />
 
 </RelativeLayout>
