@@ -89,7 +89,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 				service.setStatePlayerListener(stateListener);
 			}
 		}).start();
-		
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {

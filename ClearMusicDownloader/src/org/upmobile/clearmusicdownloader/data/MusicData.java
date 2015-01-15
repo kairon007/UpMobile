@@ -79,7 +79,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 				resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, where, null);
 				File file = new File(path);
 				if (file.exists()) file.delete();
-				else android.util.Log.i(getClass().getCanonicalName(), "Attention! File "+ artist + " - " + title + ".mp3 " + " doesn't exist");
+				else android.util.Log.i(getClass().getCanonicalName(), "Attention! File " + artist + " - " + title + ".mp3 " + " doesn't exist");
 			}
 		}).start();
 	}
@@ -93,7 +93,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			cover = Util.getArtworkImage(2, metadata);
 		} catch (Exception e) {
-			android.util.Log.d(getClass().getSimpleName(), "Exeption! Metadata is bad. " + e.getMessage());
+			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
 			return null;
 		}
 		return cover;

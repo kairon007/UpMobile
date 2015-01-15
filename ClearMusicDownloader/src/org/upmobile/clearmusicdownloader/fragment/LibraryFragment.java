@@ -1,7 +1,6 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
@@ -48,6 +47,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 		
 		@Override
 		public void onChange(boolean selfChange) {
+			android.util.Log.d("logd", "onChange()");
 			ArrayList<MusicData> list = querySong();
 			customList(list);
 			Message msg = new Message();
@@ -58,6 +58,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
+			android.util.Log.d("logd", "onChange2()");
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)){
 				ArrayList<MusicData> list = querySong();
 				customList(list);
