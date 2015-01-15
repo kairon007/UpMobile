@@ -35,6 +35,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -390,6 +391,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.player_save_tags:
 			saveTags();
 		case R.id.player_cancel_tags:
+			hideKeyboard();
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 			break;
 		case R.id.player_cancel_lyrics:
@@ -484,6 +486,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void showEditTagDialog() {
 		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
+			hideKeyboard();
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 		} else {
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.VISIBLE);
@@ -499,7 +502,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 
+	private void hideKeyboard() {
+		View hideVeiw = parentView.findViewById(R.id.player_edit_tag_dialog);
+		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(hideVeiw.getWindowToken(), 0);
+	}
+	
 	private void saveTags() {
+		hideKeyboard();
 		final int pos[] = player.getPosition(song);
 		boolean manipulate = manipulateText();
 		isUseAlbumCover = playerTagsCheckBox.isChecked();
