@@ -239,6 +239,12 @@
                     android:id="@+id/player_lyrics_frame"
                     layout="@layout/lyrics_frame"
                     android:visibility="gone" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" >
+                </FrameLayout>
+
             </LinearLayout>
         </RelativeLayout>
     </com.special.utils.UIParallaxScroll>

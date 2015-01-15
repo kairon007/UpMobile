@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +41,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -472,6 +474,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         	playerTvArtist.setVisibility(View.VISIBLE);
 			playerEtArtist.setVisibility(View.GONE);
 			playerBtnArtist.setVisibility(View.VISIBLE);
+			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(playerEtArtist.getWindowToken(), 0);
 			String artist =  playerEtArtist.getText().toString();
 			if (!artist.equals(song.getArtist())){
 				song.setArtist(artist);
@@ -481,6 +485,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         	playerTvTitle.setVisibility(View.VISIBLE);
 			playerEtTitle.setVisibility(View.GONE);
 			playerBtnTitle.setVisibility(View.VISIBLE);
+			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(playerEtTitle.getWindowToken(), 0);
 			String title = playerEtTitle.getText().toString();
 			if (!title.equals(song.getTitle())){
 				song.setTitle(title);

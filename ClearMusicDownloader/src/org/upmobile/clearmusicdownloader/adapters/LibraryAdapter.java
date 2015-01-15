@@ -137,7 +137,11 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 	}
 
 	public void cancelTimer() {
-		timer.cancel();
+		if (null != timer) {
+			timer.cancel();
+			timer.purge();
+			timer = null;
+		}
 	}
 
 	private void timer(MusicData musicData, View v) {
