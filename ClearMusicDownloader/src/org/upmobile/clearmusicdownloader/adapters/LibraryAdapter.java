@@ -33,7 +33,7 @@ import android.widget.TextView;
 import com.special.utils.UICircularImage;
 import com.special.utils.UISwipableList;
 
-public class LibraryAdapter extends BaseAdapter<MusicData> {
+public class LibraryAdapter extends BaseAdapter<MusicData>{
 	
 	private static final int DELAY = 5000;
 	private PlayerService service;
@@ -44,6 +44,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
     private Timer timer;
 	private Animation anim;
 	private MusicData previous;
+	private LibraryViewHolder libraryViewHolder;
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
 		@Override
@@ -72,7 +73,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		
 		@Override
 		public void pause() {
-			
+			libraryViewHolder.setButtonBackground(BTN_PLAY);
 		}
 	};
 	
@@ -107,7 +108,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 	@Override
 	protected ViewHolder<MusicData> createViewHolder(View v) {
-		return new LibraryViewHolder(v);
+		libraryViewHolder = new LibraryViewHolder(v);
+		return libraryViewHolder;
 	}
 	
 	@Override
