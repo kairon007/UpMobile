@@ -334,7 +334,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 				@Override
 				public void success(String url) {
-					((RemoteSong) playingSong).setDownloadUrl(url);
+					if (playingSong.getClass() != MusicData.class) {
+						((RemoteSong) playingSong).setDownloadUrl(url);
+					}
 					offMode(SMODE_GET_URL);
 					offMode(SMODE_PLAY_PAUSE);
 					Message msg = new Message();
