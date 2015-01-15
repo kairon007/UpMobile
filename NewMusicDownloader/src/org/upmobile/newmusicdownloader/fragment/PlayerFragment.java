@@ -19,6 +19,7 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -548,15 +549,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public boolean manipulateText() {
 		boolean result = false;
 		if (!song.getTitle().equals(playerTagsTitle.getText().toString())) {
-			song.setTitle(playerTagsTitle.getText().toString());
+			song.setTitle(playerTagsTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerTagsTitle.getText().toString());
 			result = true;
 		}
 		if (!song.getArtist().equals(playerTagsArtist.getText().toString())) {
-			song.setArtist(playerTagsArtist.getText().toString());
+			song.setArtist(playerTagsArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerTagsArtist.getText().toString());
 			result = true;
 		}
 		if (song.getAlbum() != null && !song.getAlbum().equals(playerTagsAlbum.getText().toString())) {
-			song.setAlbum(playerTagsAlbum.getText().toString());
+			song.setAlbum(playerTagsAlbum.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerTagsAlbum.getText().toString());
 			result = true;
 		}
 		return result;

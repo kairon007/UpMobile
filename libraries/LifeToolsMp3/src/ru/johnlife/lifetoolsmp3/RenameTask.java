@@ -7,6 +7,7 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -57,7 +58,6 @@ public class RenameTask {
 	 */
 	public void start(boolean deleteCover, boolean onlyCover) {
 		showProgress();
-		boolean isChange = false;
 		try {
 			if (null != file && !file.exists()) {
 				error();
@@ -77,21 +77,17 @@ public class RenameTask {
 				return;
 			}
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-			if (!album.equals("")) {
-				isChange = true;
-				metadata.setAlbum(album);
+			metadata.setAlbum(album.isEmpty() ? MP3Editor.UNKNOWN : album);
+			metadata.setSongTitle(title.isEmpty() ? MP3Editor.UNKNOWN : title);
+			metadata.setArtist(artist.isEmpty() ? MP3Editor.UNKNOWN : artist);
+			if (artist.isEmpty()) {
+				artist = MP3Editor.UNKNOWN;
 			}
-			if (!title.equals("")) {
-				isChange = true;
-				metadata.setSongTitle(title);
+			if (title.isEmpty()) {
+				title = MP3Editor.UNKNOWN;
 			}
-			if (!artist.equals("")) {
-				isChange = true;
-				metadata.setArtist(artist);
-			}
-			if (!isChange) {
-				error();
-				return;
+			if (album.isEmpty()) {
+				album = MP3Editor.UNKNOWN;
 			}
 			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist.replaceAll("/", "-"), title.replaceAll("/", "-")));
 			if (file.renameTo(newFile)) {
