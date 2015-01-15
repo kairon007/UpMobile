@@ -519,6 +519,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public void setArrayPlayback(ArrayList<AbstractSong> arrayPlayback) {
+		playingPosition = -1;
 		this.arrayPlayback = arrayPlayback;
 	}
 	
