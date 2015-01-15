@@ -69,6 +69,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private int mode;
 	private boolean flag = false;
 	private boolean disabledDuringCall = false;
+	private boolean unplugHeadphones = false;
 	
 	public interface OnStatePlayerListener {
 		
@@ -93,6 +94,22 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				Message msg = buildMessage(playingSong, MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
 				if (flag) disabledDuringCall = true;
+			}
+		}
+	};
+	
+	private BroadcastReceiver headsetPlug = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+				int state = intent.getIntExtra("state", -1);
+				switch (state) {
+				case 0:
+					unplugHeadphones = true;
+					break;
+				case 1:
+					unplugHeadphones = false;
+				}
 			}
 		}
 	};
@@ -185,6 +202,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 		registerReceiver(headsetReceiver, filter);
+		registerReceiver(headsetPlug, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 		player = new MediaPlayer();
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		player.setOnCompletionListener(this);
@@ -201,6 +219,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	@Override
 	public void onDestroy() {
 		unregisterReceiver(headsetReceiver);
+		unregisterReceiver(headsetPlug);
 		player.release();
 		handler.removeCallbacksAndMessages(null);
 		looper.quit();
@@ -550,10 +569,18 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		synchronized (LOCK) {
-			onMode(SMODE_PREPARED);
-			onMode(SMODE_PLAYING);
-			helper(State.START, playingSong);
-			mp.start();
+			if (!unplugHeadphones) {
+				onMode(SMODE_PREPARED);
+				onMode(SMODE_PLAYING);
+				helper(State.START, playingSong);
+				mp.start();
+			} else {
+				onMode(SMODE_PREPARED);
+				onMode(SMODE_PAUSE);
+				helper(State.START, playingSong);
+				mp.pause();
+				unplugHeadphones = false;
+			}
 		}
 	}
 	
