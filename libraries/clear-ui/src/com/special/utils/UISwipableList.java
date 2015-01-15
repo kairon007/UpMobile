@@ -208,7 +208,7 @@ public class UISwipableList extends ListView {
 //                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (ev.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
 //                    super.onTouchEvent(cancelEvent);
                 }
-            } else if (isSwipeHorizontal(deltaX, deltaY) && Math.abs(deltaX) > mSwipeMin) {   	
+            } else if (isSwipeHorizontal(deltaX, deltaY) && Math.abs(deltaX) > mSwipeMin) {
             	if(null != swipableListener && selectedObject != null){
             		swipableListener.onSwipeGone(selectedObject, v);
             	}
@@ -230,7 +230,7 @@ public class UISwipableList extends ListView {
             		e.printStackTrace();
             	}
                 return true;
-            } else selectedObject = null;
+            } 
             break;
         }
         }
