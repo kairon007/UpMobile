@@ -278,7 +278,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
 		case MSG_START:
-			if (check(SMODE_START_PREPARE) || check(SMODE_START_PREPARE)) {
+			if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
 				player.reset();
 			}	
 			if (check(SMODE_GET_URL)) {
