@@ -289,7 +289,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			try {
 				player.setDataSource(this, uri);
 				onMode(SMODE_START_PREPARE);
-				player.prepare();
+				player.prepareAsync();
 			} catch (Exception e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
