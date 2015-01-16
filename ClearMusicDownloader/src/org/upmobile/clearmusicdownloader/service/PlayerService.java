@@ -193,9 +193,18 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				return;
 			}
 			if (song.equals(playingSong)) {
+				int pos = arrayPlayback.indexOf(playingSong);
 				arrayPlayback.remove(song);
-				if (check(SMODE_PLAYING)) {
-					shift(0);
+				if (pos >= 0) {
+					if (pos == 0) playingSong = arrayPlayback.get(pos);
+					else if (pos >= arrayPlayback.size()) playingSong = arrayPlayback.get(pos - 1);
+					else playingSong = arrayPlayback.get(pos);
+					if (check(SMODE_PLAYING)) {
+						shift(0);
+					} else if (!check(SMODE_PLAY_PAUSE)) {
+						System.out.println("!!! SMODE_PLAY_PAUSE");
+						reset();
+					}
 				}
 			} else {
 				arrayPlayback.remove(song);

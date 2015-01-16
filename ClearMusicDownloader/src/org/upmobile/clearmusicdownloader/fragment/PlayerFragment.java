@@ -178,7 +178,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					} else {
 						mode = 0;
 						current = 0;
-						enabledPlayerElement = false;
+						enabledPlayerElement = true;
 						player.setPlayingPosition(-1);
 						player.play(currentPosition);
 					}
