@@ -559,6 +559,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (unplugHeadphones) {
 				Message msg = buildMessage(playingSong, MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
+				unplugHeadphones = false;
 			}
 		}
 	}
