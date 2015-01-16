@@ -115,10 +115,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					wait.setVisibility(View.INVISIBLE);
 					playerProgress.setVisibility(View.VISIBLE);
 				} else {
-					setClickablePlayerElement(false);
 					pos = 0;
-					wait.setVisibility(View.VISIBLE);
-					playerProgress.setVisibility(View.INVISIBLE);
+					wait.setVisibility(View.INVISIBLE);
+					playerProgress.setVisibility(View.VISIBLE);
 				}
 				player.setStatePlayerListener(this);
 				song = player.getPlayingSong();
