@@ -93,23 +93,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
 				Message msg = buildMessage(playingSong, MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
+				unplugHeadphones = true;
 				if (flag) disabledDuringCall = true;
-			}
-		}
-	};
-	
-	private BroadcastReceiver headsetPlug = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
-				int state = intent.getIntExtra("state", -1);
-				switch (state) {
-				case 0:
-					unplugHeadphones = true;
-					break;
-				case 1:
-					unplugHeadphones = false;
-				}
 			}
 		}
 	};
@@ -202,7 +187,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 		registerReceiver(headsetReceiver, filter);
-		registerReceiver(headsetPlug, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 		player = new MediaPlayer();
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		player.setOnCompletionListener(this);
@@ -219,7 +203,6 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	@Override
 	public void onDestroy() {
 		unregisterReceiver(headsetReceiver);
-		unregisterReceiver(headsetPlug);
 		player.release();
 		handler.removeCallbacksAndMessages(null);
 		looper.quit();
@@ -295,7 +278,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
 		case MSG_START:
-			if (check(SMODE_START_PREPARE) || check(SMODE_START_PREPARE)) {
+			if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
 				player.reset();
 			}	
 			if (check(SMODE_GET_URL)) {
@@ -569,16 +552,13 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		synchronized (LOCK) {
-			if (!unplugHeadphones) {
-				onMode(SMODE_PREPARED);
-				onMode(SMODE_PLAYING);
-				helper(State.START, playingSong);
-				mp.start();
-			} else {
-				onMode(SMODE_PREPARED);
-				onMode(SMODE_PAUSE);
-				helper(State.START, playingSong);
-				mp.pause();
+			onMode(SMODE_PREPARED);
+			onMode(SMODE_PLAYING);
+			helper(State.START, playingSong);
+			mp.start();
+			if (unplugHeadphones) {
+				Message msg = buildMessage(playingSong, MSG_PAUSE, 0, 0);
+				handler.sendMessage(msg);
 				unplugHeadphones = false;
 			}
 		}

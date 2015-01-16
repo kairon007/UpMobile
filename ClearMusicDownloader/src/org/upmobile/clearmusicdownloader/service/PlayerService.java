@@ -67,6 +67,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	private int mode;
 	private boolean flag = false;
 	private boolean disabledDuringCall = false;
+	private boolean unplugHeadphones = false;
 	
 	public interface OnStatePlayerListener {
 		
@@ -89,6 +90,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
 				Message msg = buildMessage(MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
+				unplugHeadphones = true;
 				if (flag) disabledDuringCall = true;
 			}
 		}
@@ -334,9 +336,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 				@Override
 				public void success(String url) {
-					if (playingSong.getClass() != MusicData.class) {
-						((RemoteSong) playingSong).setDownloadUrl(url);
-					}
+					if (playingSong.getClass() == MusicData.class) return;
+					((RemoteSong) playingSong).setDownloadUrl(url);
 					offMode(SMODE_GET_URL);
 					offMode(SMODE_PLAY_PAUSE);
 					Message msg = new Message();
@@ -439,6 +440,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		onMode(SMODE_PREPARED);
 		mp.start();
 		helper(State.START);
+		if (unplugHeadphones) {
+			Message msg = buildMessage(MSG_PAUSE, 0, 0);
+			handler.sendMessage(msg);
+			unplugHeadphones = false;
+		}
 	}
 	
 	public int getCurrentPosition() {
