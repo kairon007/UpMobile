@@ -493,12 +493,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
-			if (song.isHasCover()) {
-				playerTagsCheckBox.setChecked(true);
-			} else {
-				playerTagsCheckBox.setChecked(false);
-				playerTagsCheckBox.setClickable(false);
-			}
 		}
 	}
 
@@ -584,6 +578,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			return;
 		}
 		player.stop();
+		playerCover.invalidate();
 		if (delta > 0) {
 			player.shift(1);
 			getCover(player.getPlayingSong());
@@ -602,15 +597,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
 					if (null != bmp) {
-						playerTagsCheckBox.setClickable(true);
-						playerTagsCheckBox.setEnabled(true);
+						checkBoxState(true);
 						((RemoteSong) song).setHasCover(true);
+						playerCover.setImageResource(0);
 						playerCover.setImageBitmap(bmp);
 					} else {
 						playerCover.setImageResource(R.drawable.no_cover_art_big);
+						checkBoxState(false);
 					}
 				}
-				
 			});
 		} else {
 			final Bitmap bitmap = ((MusicData) song).getCover(getActivity());
@@ -619,15 +614,22 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					
 					@Override
 					public void run() {
-						playerTagsCheckBox.setClickable(true);
-						playerTagsCheckBox.setEnabled(true);
+						playerCover.setImageResource(0);
+						checkBoxState(true);
 						playerCover.setImageBitmap(bitmap);
 					}
 				});
 			} else {
 				playerCover.setImageResource(R.drawable.no_cover_art_big);
+				checkBoxState(false);
 			}
 		}
+	}
+	
+	private void checkBoxState(boolean state) {
+		playerTagsCheckBox.setEnabled(state);
+		playerTagsCheckBox.setChecked(state);
+		playerTagsCheckBox.setClickable(state);
 	}
 	
 	private void downloadButtonState(boolean state) {
