@@ -125,6 +125,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
 		playerCover.bringToFront();
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
+		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtTitle);
+		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtArtist);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			hadInstance = false;
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
