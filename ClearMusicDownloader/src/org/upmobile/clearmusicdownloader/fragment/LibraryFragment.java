@@ -1,7 +1,6 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;

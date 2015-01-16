@@ -377,6 +377,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private boolean closeEditViews() {
+		hideKeyboard();
 		if (playerEtArtist.getVisibility() == View.VISIBLE || playerEtTitle.getVisibility() == View.VISIBLE) {
 			playerTvArtist.setVisibility(View.VISIBLE);
 			playerTvTitle.setVisibility(View.VISIBLE);
@@ -385,7 +386,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtArtist.setVisibility(View.GONE);
 			playerEtTitle.setVisibility(View.GONE);
 			return true;
-		} else return false;
+		} else {
+			return false;
+		}
+	}
+
+	private void hideKeyboard() {
+		View hideVeiw = parentView.findViewById(R.id.scroller);
+		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(hideVeiw.getWindowToken(), 0);
 	}
 	
 	private void setElementsView(int progress) {
@@ -417,6 +426,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void onClick(View v) {
+		if (v.getId() == R.id.title_bar_left_menu) {
+			if (!closeEditViews()) {
+				onBackPress();
+			}
+			return;
+		}
 		editTag();
 		switch (v.getId()) {
 		case R.id.player_play:
@@ -430,9 +445,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			break;
 		case R.id.player_download:
 			download();
-			break;
-		case R.id.title_bar_left_menu: 
-			onBackPress();
 			break;
 		case R.id.player_edit_title:
 			openTitleField();
@@ -474,8 +486,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         	playerTvArtist.setVisibility(View.VISIBLE);
 			playerEtArtist.setVisibility(View.GONE);
 			playerBtnArtist.setVisibility(View.VISIBLE);
-			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(playerEtArtist.getWindowToken(), 0);
+			hideKeyboard();
 			String artist =  playerEtArtist.getText().toString();
 			if (!artist.equals(song.getArtist()	)){
 				song.setArtist(artist);
@@ -485,8 +496,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         	playerTvTitle.setVisibility(View.VISIBLE);
 			playerEtTitle.setVisibility(View.GONE);
 			playerBtnTitle.setVisibility(View.VISIBLE);
-			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(playerEtTitle.getWindowToken(), 0);
+			hideKeyboard();
 			String title = playerEtTitle.getText().toString();
 			if (!title.equals(song.getTitle())){
 				song.setTitle(title);
