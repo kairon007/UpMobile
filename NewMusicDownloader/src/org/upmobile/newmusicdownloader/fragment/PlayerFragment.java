@@ -345,6 +345,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (!playerTagsCheckBox.isChecked()) {
 			if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(false);
 			playerCover.setImageResource(R.drawable.no_cover_art_big);
+			checkBoxState(false);
 		}
 	}
 	
@@ -393,6 +394,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.player_cancel_tags:
 			hideKeyboard();
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
+				playerTagsCheckBox.setChecked(true);
+			}
 			break;
 		case R.id.player_cancel_lyrics:
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
@@ -405,6 +409,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void hideOpenViews() {
 		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
+				playerTagsCheckBox.setChecked(true);
+			}
 		}
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.VISIBLE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
@@ -492,6 +499,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
 			hideKeyboard();
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
+				playerTagsCheckBox.setChecked(true);
+			}
 		} else {
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.VISIBLE);
 			playerTagsArtist.setText(song.getArtist());
@@ -530,6 +540,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				song.setPath(path);
 				renameTask.cancelProgress();
 				parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+				if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
+					playerTagsCheckBox.setChecked(true);
+				}
 				player.update(pos[0], pos[1], song.getTitle(), song.getArtist(), song.getPath(), song.getAlbum());
 			}
 
