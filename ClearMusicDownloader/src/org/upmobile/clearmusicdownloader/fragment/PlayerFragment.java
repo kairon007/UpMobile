@@ -178,7 +178,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					} else {
 						mode = 0;
 						current = 0;
-						enabledPlayerElement = true;
+						enabledPlayerElement = false;
 						player.setPlayingPosition(-1);
 						player.play(currentPosition);
 					}
@@ -220,6 +220,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					PlayerFragment.this.song = song;
 				}
 				if (isDestroy) return;
+				android.util.Log.d("log", "bind to player - start");
 				setClickablePlayerElement(true);
 				setElementsView(0);
 				playerProgress.post(progressAction);
