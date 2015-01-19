@@ -35,8 +35,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -116,8 +116,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					playerProgress.setVisibility(View.VISIBLE);
 				} else {
 					pos = 0;
-					wait.setVisibility(View.INVISIBLE);
-					playerProgress.setVisibility(View.VISIBLE);
+					setClickablePlayerElement(false);
+					wait.setVisibility(View.VISIBLE);
+					playerProgress.setVisibility(View.INVISIBLE);
 				}
 				player.setStatePlayerListener(this);
 				song = player.getPlayingSong();
