@@ -639,7 +639,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
-		if (downloadListener.isBadInet()) return;
+		if (downloadListener.isBadInet()) {
+			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.search_message_no_internet, Toast.LENGTH_SHORT).show();
+			return;
+		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
