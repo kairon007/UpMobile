@@ -120,6 +120,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(mOnScrollChangedListener);
 		init();
 		setListener();
+		downloadButtonState(false);
 		playerTitleBar.getBackground().setAlpha(0);
 		playerTitleBarArtis.setVisibility(View.INVISIBLE);
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
@@ -145,6 +146,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void run() {
 				player = PlayerService.get(getActivity());
 				bindToPlayer();
+				if (player.isGettingURl()) downloadButtonState(true);
 				final int current;
 				final int mode;
 				final boolean enabledPlayerElement;
@@ -214,6 +216,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public void start(AbstractSong song, int position) {
+				downloadButtonState(true);
 				if (song.getClass() != MusicData.class) {
 					PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
 				} else {
@@ -611,9 +614,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (delta > 0) {
 			player.shift(1);
 			getCover(player.getPlayingSong());
+			downloadButtonState(false);
 		} else if (delta < 0) {
 			player.shift(-1);
 			getCover(player.getPlayingSong());
+			downloadButtonState(false);
 		} else {
 			player.play(player.getPlayingPosition());
 		}
@@ -700,6 +705,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				return true;
 			}
 		});
+	}
+	
+	private void downloadButtonState(boolean state) {
+		download.setClickable(state);
+		download.setEnabled(state);
 	}
 	
 	private void onBackPress() {
