@@ -460,6 +460,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void showLyrics() {
+		if (null != lyricsFetcher) {
+			lyricsFetcher.cancel();
+			playerLyricsView.setText("");
+		}
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
 			lyricsFetcher = new LyricsFetcher(getActivity());
