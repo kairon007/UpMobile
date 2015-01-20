@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
@@ -16,7 +17,6 @@ import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDra
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -93,7 +93,11 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
-		    	changeFragment(new PlayerFragment());
+		    	Fragment fragment = new PlayerFragment();
+		    	Bundle args = new Bundle();
+		    	args.putParcelable(Constants.KEY_SELECTED_SONG, (MusicData) service.getPlayingSong());
+		    	fragment.setArguments(args);
+		    	changeFragment(fragment);
 		    }
 			break;
 		default:
