@@ -223,20 +223,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					PlayerFragment.this.song = song;
 				}
 				if (isDestroy) return;
-				android.util.Log.d("log", "bind to player - start");
 				setClickablePlayerElement(true);
 				setElementsView(0);
 				playerProgress.post(progressAction);
 			}
 			
 			@Override
-			public void pause() {
+			public void pause(AbstractSong song, int position) {
 				if (isDestroy) return;
 				changePlayPauseView(true);
 			}
 
 			@Override
-			public void play() {
+			public void play(AbstractSong song, int position) {
 				if (isDestroy) return;
 				changePlayPauseView(false);
 			}

@@ -50,7 +50,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	//multy-threading section
 	private static final Object LOCK = new Object();
-	private static final Object WAIT = new Object();
+	private static final Object WAIT = new Object();	
 	private Looper looper;
 	private Handler handler;
 	
@@ -76,8 +76,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		}
 		
 		public void start(AbstractSong song, int position);
-		public void play();
-		public void	pause();
+		public void play(AbstractSong song, int position);
+		public void	pause(AbstractSong song, int position);
 		public void update(AbstractSong song, int position);
 			
 	}
@@ -88,6 +88,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
+				onMode(SMODE_PLAY_PAUSE);
 				Message msg = buildMessage(MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
 				unplugHeadphones = true;
@@ -380,10 +381,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					stateListener.start(playingSong, position);
 					break;
 				case PLAY:
-					stateListener.play();
+					stateListener.play(playingSong, position);
 					break;
 				case PAUSE:
-					stateListener.pause();
+					stateListener.pause(playingSong, position);
 					break;
 				case UPDATE:
 					AbstractSong buf = arrayPlayback.get(position);

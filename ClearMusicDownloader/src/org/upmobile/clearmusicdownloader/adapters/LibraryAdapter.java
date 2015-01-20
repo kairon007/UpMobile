@@ -67,12 +67,14 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 		}
 		
 		@Override
-		public void play() {
-			
+		public void play(AbstractSong song, int position) {
+			if (song.getClass() != MusicData.class || position == -1) return;
+			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
+			notifyDataSetChanged();
 		}
 		
 		@Override
-		public void pause() {
+		public void pause(AbstractSong song, int position) {
 			libraryViewHolder.setButtonBackground(BTN_PLAY);
 		}
 	};
