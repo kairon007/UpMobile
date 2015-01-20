@@ -96,8 +96,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		    	Fragment fragment = new PlayerFragment();
 		    	Bundle args = new Bundle();
 				if (service.getPlayingSong().getClass() == MusicData.class) {
-					args.putParcelable(Constants.KEY_SELECTED_SONG,
-							(MusicData) service.getPlayingSong());
+					args.putParcelable(Constants.KEY_SELECTED_SONG, (MusicData) service.getPlayingSong());
 				} else {
 					args = null;
 				}
