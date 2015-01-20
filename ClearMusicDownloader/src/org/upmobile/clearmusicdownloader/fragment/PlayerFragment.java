@@ -43,6 +43,9 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -60,7 +63,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.special.utils.UIParallaxScroll;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener {
 
     public static final int DURATION = 500; // in ms
     private String PACKAGE = "IDENTIFY";
@@ -75,6 +78,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
+	private CheckBox useCover;
 	private ImageView playerBtnTitle;
 	private ImageView playerBtnArtist;
 	private EditText playerEtTitle;
@@ -146,7 +150,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void run() {
 				player = PlayerService.get(getActivity());
 				bindToPlayer();
-				if (player.isGettingURl()) downloadButtonState(true);
 				final int current;
 				final int mode;
 				final boolean enabledPlayerElement;
@@ -166,6 +169,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 							mode = 1;
 						}
 						enabledPlayerElement = true;
+						downloadButtonState(true);
 					}
 				} else {
 					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition && player.isPrepared()) {
@@ -177,6 +181,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						} else {
 							mode = 1;
 						}
+						downloadButtonState(true);
 					} else {
 						mode = 0;
 						current = 0;
@@ -338,6 +343,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	    playerTitleBarTitle = (TextView) parentView.findViewById(R.id.titleBarTitle);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
 		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
+		useCover = (CheckBox) parentView.findViewById(R.id.use_cover);
 	}
 
 	private void setListener() {
@@ -349,6 +355,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerBtnTitle.setOnClickListener(this);
 		download.setOnClickListener(this);
 		playerTitleBarBack.setOnClickListener(this);
+		useCover.setOnCheckedChangeListener(this);
 		playerEtArtist.setOnKeyListener(new OnKeyListener() {
 
 			@Override
@@ -379,6 +386,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				return false;
 			}
 		});
+	}
+	
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		//TODO remove  cover!!!!!!!!
 	}
 	
 	private boolean closeEditViews() {
@@ -593,7 +605,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						playerLyricsView.setVisibility(View.VISIBLE);
 						playerLyricsView.setText(Html.fromHtml(lyrics));
 					} else {
-						playerLyricsView.setVisibility(View.GONE);
+						playerLyricsView.setVisibility(View.VISIBLE);
+						playerLyricsView.setText(String.format(getString(R.string.download_dialog_no_lyrics), song.getTitle() + " - " + song.getArtist()));
 					}
 				} catch (Exception e) {
 				}
@@ -706,9 +719,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		});
 	}
 	
-	private void downloadButtonState(boolean state) {
-		download.setClickable(state);
-		download.setEnabled(state);
+	private void downloadButtonState(final boolean state) {
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
+			
+			@Override
+			public void run() {
+				download.setClickable(state);
+				download.setEnabled(state);
+			}
+		});
 	}
 	
 	private void onBackPress() {
@@ -804,4 +823,5 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
             ViewHelper.setScaleY(playerCover, 1.f - deltaScale * ratio);
         }
     };
+
 }
