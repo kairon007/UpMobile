@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -391,6 +392,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		//TODO remove  cover!!!!!!!!
+		isUseAlbumCover = isChecked;
+		if (!isChecked) {
+			if (song.getClass() == MusicData.class) {
+				playerCover.setImageResource(R.drawable.def_cover_circle_web);
+				useCover.setVisibility(View.GONE);
+				File file = new File(song.getPath());
+				RenameTask.deleteCoverFromFile(file);
+			}
+		}
 	}
 	
 	private boolean closeEditViews() {
@@ -647,6 +657,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						playerCover.setImageBitmap(bmp);
 					} else {
 						playerCover.setImageResource(R.drawable.def_cover_circle_web);
+						useCover.setVisibility(View.GONE);
 					}
 				}
 				
@@ -662,6 +673,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					}
 				});
 			} else {
+				useCover.setVisibility(View.GONE);
 				playerCover.setImageResource(R.drawable.def_cover_circle_web);
 			}
 		}

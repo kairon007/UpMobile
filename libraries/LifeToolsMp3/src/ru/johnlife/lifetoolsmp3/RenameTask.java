@@ -158,7 +158,7 @@ public class RenameTask {
 		return progress.isShowing();
 	}
 
-	private void deleteCoverFromFile(File file) {
+	public static void deleteCoverFromFile(File file) {
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			if (null == src_set) {
@@ -179,7 +179,7 @@ public class RenameTask {
 			new MyID3().write(file, temp1, src, metadata);
 			temp1.renameTo(file);
 		} catch (Exception e) {
-			android.util.Log.d(getClass().getSimpleName(), e.getMessage());
+			android.util.Log.d("RenameTask", e.getMessage());
 		}
 	}
 	

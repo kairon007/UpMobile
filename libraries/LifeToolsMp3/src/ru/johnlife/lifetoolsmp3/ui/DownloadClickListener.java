@@ -28,6 +28,7 @@ import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RefreshListener;
+import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
@@ -319,11 +320,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			return false;
 		}
 		
-		//
 		try {
 			MP3File mp3File = (MP3File) AudioFileIO.read(src);
-			android.util.Log.d("logd", "first v1 = " + mp3File.getID3v1Tag() + ", v2 = " 
-					+ mp3File.getID3v2Tag() + ", v24 = " + mp3File.getID3v2TagAsv24());
 			if (mp3File.hasID3v1Tag()) {
 				mp3File.delete(mp3File.getID3v1Tag());
 			}
@@ -332,12 +330,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				mp3File.delete(mp3File.getID3v2TagAsv24());
 			}
 			mp3File = (MP3File) AudioFileIO.read(src);
-			android.util.Log.d("logd", "second v1 = " + mp3File.getID3v1Tag() + ", v2 = " 
-					+ mp3File.getID3v2Tag() + ", v24 = " + mp3File.getID3v2TagAsv24());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//
 		
 		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 		metadata.clear();
@@ -347,6 +342,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);
 			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+		} else if (!useCover) {
+			RenameTask.deleteCoverFromFile(src);
 		}
 		File dst = new File(src.getParentFile(), src.getName() + "-1");
 		boolean isRename = false;
