@@ -229,8 +229,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			int pos = arrayPlayback.indexOf(playingSong);
 			arrayPlayback.remove(song);
 			if (arrayPlayback.isEmpty()) {
-				Message msg = buildMessage(null, MSG_RESET, 0, 0);
-				handler.sendMessage(msg);
+				reset();
 				return;
 			}
 			if (pos >= 0) {

@@ -42,11 +42,9 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		private ViewGroup frontView;
 		private ProgressBar progress;
 		private UICircularImage image;
-		private View v;
 		private MusicData item;
 
 		public DownloadsViewHolder(View v) {
-			this.v = v;
 			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
