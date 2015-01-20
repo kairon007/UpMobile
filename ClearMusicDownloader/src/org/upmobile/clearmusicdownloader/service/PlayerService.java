@@ -196,10 +196,18 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			if (song.equals(playingSong)) {
 				int pos = arrayPlayback.indexOf(playingSong);
 				arrayPlayback.remove(song);
+				if (arrayPlayback.isEmpty()) {
+					reset();
+					return;
+				}
 				if (pos >= 0) {
-					if (pos == 0) playingSong = arrayPlayback.get(pos);
-					else if (pos >= arrayPlayback.size()) playingSong = arrayPlayback.get(pos - 1);
-					else playingSong = arrayPlayback.get(pos);
+					if (pos == 0) {
+						playingSong = arrayPlayback.get(pos);
+					} else if (pos >= arrayPlayback.size()) {
+						playingSong = arrayPlayback.get(pos - 1);
+					} else {
+						playingSong = arrayPlayback.get(pos);
+					}
 					if (check(SMODE_PLAYING)) {
 						shift(0);
 					} else if (!check(SMODE_PLAY_PAUSE)) {
@@ -210,8 +218,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				arrayPlayback.remove(song);
 			}
 			if (arrayPlayback.isEmpty()) {
-				Message msg = buildMessage(MSG_RESET, 0, 0);
-				handler.sendMessage(msg);
+				reset();
 			}
 		}
 	}
