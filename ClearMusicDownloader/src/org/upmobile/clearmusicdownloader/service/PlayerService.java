@@ -37,7 +37,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	/**
 	 * bit 1 (true) - play, bit 0 (false) - pause
 	 */
-	private static final int SMODE_PLAY_PAUSE = 0x00000004;
+	private static final int SMODE_PAUSE = 0x00000004;
 	private static final int SMODE_PLAYING = 0x00000008;
 	private static final int SMODE_STOPPING = 0x00000010;
 	private static final int SMODE_START_PREPARE = 0x00000020;
@@ -50,7 +50,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	
 	//multy-threading section
 	private static final Object LOCK = new Object();
-	private static final Object WAIT = new Object();	
+	private static final Object WAIT = new Object();
 	private Looper looper;
 	private Handler handler;
 	
@@ -77,7 +77,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		
 		public void start(AbstractSong song, int position);
 		public void play(AbstractSong song, int position);
-		public void	pause(AbstractSong song, int position);
+		public void pause(AbstractSong song, int position);
 		public void update(AbstractSong song, int position);
 			
 	}
@@ -88,7 +88,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
-				onMode(SMODE_PLAY_PAUSE);
+				onMode(SMODE_PAUSE);
 				Message msg = buildMessage(MSG_PAUSE, 0, 0);
 				handler.sendMessage(msg);
 				unplugHeadphones = true;
@@ -210,7 +210,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					}
 					if (check(SMODE_PLAYING)) {
 						shift(0);
-					} else if (!check(SMODE_PLAY_PAUSE)) {
+					} else if (check(SMODE_PAUSE)) {
 						reset();
 					}
 				}
@@ -325,12 +325,12 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 		Message msg = new Message();
 		if (playingPosition == position && playingPosition != -1) {
 			if (!check(SMODE_PREPARED)) return;
-			if (check(SMODE_PLAY_PAUSE)) {
+			if (check(SMODE_PAUSE)) {
 				msg.what = MSG_PLAY_CURRENT;
-				offMode(SMODE_PLAY_PAUSE);
+				offMode(SMODE_PAUSE);
 			} else {
 				msg.what = MSG_PAUSE;
-				onMode(SMODE_PLAY_PAUSE);
+				onMode(SMODE_PAUSE);
 			}
 			handler.sendMessage(msg);
 		} else {
@@ -352,7 +352,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 					if (playingSong.getClass() == MusicData.class) return;
 					((RemoteSong) playingSong).setDownloadUrl(url);
 					offMode(SMODE_GET_URL);
-					offMode(SMODE_PLAY_PAUSE);
+					offMode(SMODE_PAUSE);
 					Message msg = new Message();
 					msg.what = MSG_PLAY;
 					msg.arg1 = playingPosition;
@@ -366,7 +366,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 			});
 			return;
 		}
-		offMode(SMODE_PLAY_PAUSE);
+		offMode(SMODE_PAUSE);
 		msg.what = MSG_PLAY;
 		msg.arg1 = playingPosition;
 		String str = playingSong.getPath();
@@ -488,7 +488,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 	}
 	
 	public boolean showPlayPause() {
-		return check(SMODE_PLAY_PAUSE);
+		return check(SMODE_PAUSE);
 	}
 	
 	public boolean hasValidSong(Class cl) {

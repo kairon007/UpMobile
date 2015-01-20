@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
@@ -106,6 +107,16 @@ public class MainActivity extends BaseClearActivity {
 		if (player.hasArray()) {
 			out.putParcelableArrayList(ARRAY_SAVE, player.getArrayPlayback());
 		}
+	}
+	
+	protected Bundle getArguments() {
+		if (null != player) {
+			Bundle args = new Bundle();
+			args.putParcelable(Constants.KEY_SELECTED_SONG, (MusicData) player.getPlayingSong());
+			args.putInt(Constants.KEY_SELECTED_POSITION, player.getPlayingPosition());
+			return args;
+		} else
+			return null;
 	}
 
 	public void setResideMenuListener(ResideMenu.OnMenuListener listener) {

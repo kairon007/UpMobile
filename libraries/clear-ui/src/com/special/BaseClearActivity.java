@@ -92,6 +92,9 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         			resideMenu.closeMenu();
         			return;
         		} else {
+        		if (fragments[i].getClass().getSimpleName().equals("PlayerFragment")) {
+        			fragments[i].setArguments(getArguments());
+        		}
         		changeFragment(fragments[i]);
         		tvTitle.setText(titles[i]);
         		}
@@ -99,6 +102,8 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         }
         resideMenu.closeMenu();
     }
+    
+    protected abstract Bundle getArguments();
 
 	//Example of menuListener
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
