@@ -134,6 +134,7 @@
 
                     <requestFocus />
                 </EditText>
+
             </LinearLayout>
 
             <LinearLayout
@@ -280,21 +281,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/player_artist_frame"
+                android:visibility="gone"
                 android:layout_alignRight="@id/cover_empty_view"
                 android:checked="true" />
 
-            <TextView
-                android:id="@+id/cancel_remove_cover"
+            <FrameLayout
+                android:id="@+id/cancel_removing_cover"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_alignBottom="@+id/cover_empty_view"
+                android:background="@drawable/button_selector_inverse_light"
                 android:layout_alignParentRight="true"
                 android:layout_toRightOf="@+id/cover_empty_view"
-                android:background="@drawable/button_selector_inverse_light"
-                android:text="Cover has been removed. Cancel"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
+                android:clickable="true"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="@string/warning_of_remove"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white" />
+
+            </FrameLayout>
+
         </RelativeLayout>
     </com.special.utils.UIParallaxScroll>
 
@@ -359,9 +371,9 @@
         android:layout_height="256dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
         android:src="@drawable/def_cover_circle_web"
         app:line_color="@android:color/white"
+        android:layout_marginTop="8dp"
         app:line_color_press="@android:color/white"
         app:line_width="1dp"
         app:padding="0dp" />
