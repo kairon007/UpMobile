@@ -79,8 +79,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton previous;
 	private ImageButton forward;
 	private CheckBox useCover;
-	private ImageView playerBtnTitle;
-	private ImageView playerBtnArtist;
+	private FrameLayout playerBtnTitle;
+	private FrameLayout playerBtnArtist;
 	private EditText playerEtTitle;
 	private EditText playerEtArtist;
 	private TextView playerTvTitle;
@@ -332,10 +332,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerProgress = (SeekBar) parentView.findViewById(R.id.player_progress);
 		playerTvTitle = (TextView) parentView.findViewById(R.id.player_title);
 		playerEtTitle = (EditText) parentView.findViewById(R.id.player_title_edit_view);
-		playerBtnTitle = (ImageView) parentView.findViewById(R.id.player_edit_title);
+		playerBtnTitle = (FrameLayout) parentView.findViewById(R.id.player_edit_title);
 		playerTvArtist = (TextView) parentView.findViewById(R.id.player_artist);
 		playerEtArtist = (EditText) parentView.findViewById(R.id.player_artist_edit_view);
-		playerBtnArtist = (ImageView) parentView.findViewById(R.id.player_edit_artist);
+		playerBtnArtist = (FrameLayout) parentView.findViewById(R.id.player_edit_artist);
 		playerCurrTime = (TextView) parentView.findViewById(R.id.player_current_time);
 		playerTotalTime = (TextView) parentView.findViewById(R.id.player_total_time);
 	    playerTitleBar = (FrameLayout) parentView.findViewById(R.id.layout_top);   
