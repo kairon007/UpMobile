@@ -249,4 +249,8 @@ public class MusicData implements Comparable<MusicData>, AbstractSong{
 		}
 		return null;
 	}
+	
+	public void clearCover() {
+		cover = null;
+	}
 }
