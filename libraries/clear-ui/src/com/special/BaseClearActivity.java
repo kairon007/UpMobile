@@ -32,6 +32,10 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     
     protected abstract String[] getTitlePage();
     
+    protected abstract Bundle getArguments();
+    
+    protected abstract Fragment getPlayerFragment();
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,18 +96,19 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         			resideMenu.closeMenu();
         			return;
         		} else {
-        		if (fragments[i].getClass().getSimpleName().equals("PlayerFragment")) {
-        			fragments[i].setArguments(getArguments());
+        		if (fragments[i].getClass().getSimpleName().equals("PlayerFragment") && null != getArguments()) {
+        			Fragment fragment = getPlayerFragment();
+        			fragment.setArguments(getArguments());
+        			changeFragment(fragment);
+        		} else {
+        			changeFragment(fragments[i]);
         		}
-        		changeFragment(fragments[i]);
         		tvTitle.setText(titles[i]);
         		}
         	}
         }
         resideMenu.closeMenu();
     }
-    
-    protected abstract Bundle getArguments();
 
 	//Example of menuListener
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {

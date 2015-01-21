@@ -109,6 +109,7 @@ public class MainActivity extends BaseClearActivity {
 		}
 	}
 	
+	@Override
 	protected Bundle getArguments() {
 		if (null != player && player.getPlayingSong().getClass() == MusicData.class) {
 			Bundle args = new Bundle();
@@ -119,6 +120,11 @@ public class MainActivity extends BaseClearActivity {
 			return null;
 	}
 
+	@Override
+	protected Fragment getPlayerFragment() {
+		return new PlayerFragment();
+	}
+	
 	public void setResideMenuListener(ResideMenu.OnMenuListener listener) {
 		getResideMenu().setMenuListener(listener);
 	}
