@@ -44,32 +44,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:ellipsize="end"
-                    android:gravity="center"
                     android:layout_weight="1"
+                    android:ellipsize="end"
                     android:fontFamily="sans-serif-light"
+                    android:gravity="center"
                     android:singleLine="true"
-                    android:text="Teeext"
+                    android:text="Teeeeeeeext"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/textsize_xlarge" />
 
                 <EditText
                     android:id="@+id/player_artist_edit_view"
+                    style="@style/EditTextAppTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ems="10"
-                    style="@style/EditTextAppTheme"
+                    android:focusableInTouchMode="true"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:inputType="textNoSuggestions"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/textsize_xlarge"
                     android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/player_edit_artist"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:alpha="0.7"
                     android:background="@drawable/button_selector_inverse_light"
@@ -95,30 +97,32 @@
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="@string/sumary_placeholder"
+                    android:text="teeeeeeeeeeeeeeeeeeeext"
                     android:textColor="@color/white_transparent"
                     android:textSize="@dimen/textsize_medium_small" />
 
                 <ImageView
                     android:id="@+id/player_edit_title"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:alpha="0.7"
                     android:background="@drawable/button_selector_inverse_light"
                     android:src="@drawable/ic_player_edit" />
 
                 <EditText
                     android:id="@+id/player_title_edit_view"
+                    style="@style/EditTextAppTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ems="10"
-                    style="@style/EditTextAppTheme"
+                    android:focusableInTouchMode="true"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:inputType="textNoSuggestions"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/textsize_medium_small"
                     android:visibility="gone" >
 
                     <requestFocus />
@@ -265,12 +269,26 @@
 
             <CheckBox
                 android:id="@+id/use_cover"
+                style="@style/CheckBoxAppTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/CheckBoxAppTheme"
                 android:layout_above="@+id/player_artist_frame"
                 android:layout_alignRight="@id/cover_empty_view"
-                android:checked="true"/>
+                android:background="@drawable/button_selector_inverse_light"
+                android:checked="true" />
+
+            <TextView
+                android:id="@+id/cancel_remove_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/cover_empty_view"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/cover_empty_view"
+                android:text="Cover has been removed. Cancel"
+                android:visibility="gone"
+                android:background="@drawable/button_selector_inverse_light"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/white" />
 
         </RelativeLayout>
     </com.special.utils.UIParallaxScroll>
