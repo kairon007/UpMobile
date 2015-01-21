@@ -91,6 +91,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:ellipsize="end"
+                        android:textColor="@color/primary_text_color"
                         android:lines="1"
                         android:text="@string/list_title_placeholder"
                         android:textAppearance="?android:textAppearanceMedium" />
@@ -101,6 +102,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="clip_vertical"
                         android:layout_weight="1"
+                        android:textColor="@color/primary_text_color"
                         android:text="00:00"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:visibility="gone" />
@@ -114,6 +116,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-light"
+                    android:textColor="@color/second_text_color"
                     android:lines="1"
                     android:paddingRight="5dp"
                     android:text="@string/list_description_placeholder" />
