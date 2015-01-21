@@ -660,6 +660,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						playerCover.setImageBitmap(bmp);
+						useCover.setVisibility(View.VISIBLE);
 					} else {
 						playerCover.setImageResource(R.drawable.def_cover_circle_web);
 						useCover.setVisibility(View.GONE);
@@ -675,6 +676,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void run() {
 						playerCover.setImageBitmap(bitmap);
+						useCover.setVisibility(View.VISIBLE);
 					}
 				});
 			} else {
