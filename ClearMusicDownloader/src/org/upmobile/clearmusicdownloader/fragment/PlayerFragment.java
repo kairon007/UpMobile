@@ -21,7 +21,6 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -419,9 +418,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void hideKeyboard() {
-		View hideVeiw = parentView.findViewById(R.id.scroller);
+		View hideView = parentView.findViewById(R.id.scroller);
 		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(hideVeiw.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(hideView.getWindowToken(), 0);
 	}
 	
 	private void setElementsView(int progress) {
@@ -486,8 +485,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void openArtistField() {
 		if (playerTvArtist.getVisibility() == View.VISIBLE) {
+			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 			playerTvArtist.setVisibility(View.GONE);
 			playerEtArtist.setVisibility(View.VISIBLE);
+			playerEtArtist.requestFocus();
 			playerEtArtist.setText(song.getArtist());
 			playerBtnArtist.setVisibility(View.GONE);
 		} else {
@@ -498,8 +500,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void openTitleField() {
 		if (playerTvTitle.getVisibility() == View.VISIBLE) {
+			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 			playerTvTitle.setVisibility(View.GONE);
 			playerEtTitle.setVisibility(View.VISIBLE);
+			playerEtTitle.requestFocus();
 			playerEtTitle.setText(song.getTitle());
 			playerBtnTitle.setVisibility(View.GONE);
 		} else {
