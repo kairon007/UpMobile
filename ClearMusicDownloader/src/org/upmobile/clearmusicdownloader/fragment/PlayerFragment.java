@@ -418,12 +418,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			removeCover = true;
 			if (song.getClass() == MusicData.class) {
 				playerCancelRemoving.setVisibility(View.VISIBLE);
+				playerCover.setImageResource(R.drawable.def_cover_circle_web);
 				Runnable run = new Runnable() {
 
 					@Override
 					public void run() {
-						if (!removeCover || this.hashCode() != checkIdRmvTask) return;
-						playerCover.setImageResource(R.drawable.def_cover_circle_web);
+						if (!removeCover || this.hashCode() != checkIdRmvTask) {
+							playerCover.setImageBitmap(song.getCover(getActivity()));
+							return;
+						}
 						playerCancelRemoving.setVisibility(View.GONE);
 						useCover.setVisibility(View.GONE);
 						((MusicData) song).clearCover();
@@ -437,6 +440,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		} else {
 			removeCover = false;
+			playerCover.setImageBitmap(song.getCover(getActivity()));
 			playerCancelRemoving.setVisibility(View.GONE);
 		}
 	}
@@ -500,6 +504,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		editTag();
 		switch (v.getId()) {
 		case R.id.cancel_removing_cover:
+			playerCover.setImageBitmap(song.getCover(getActivity()));
 			prepareCover();
 			removeCover = false;
 			break;

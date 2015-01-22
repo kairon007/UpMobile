@@ -465,9 +465,11 @@ public abstract class OnlineSearchView extends View {
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				adapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
 			} else {
-				adapter = new CustomSpinnerAdapter(getContext(), 0, list, isWhiteTheme(getContext()));
+				adapter = new CustomSpinnerAdapter(getContext(), R.layout.item_of_engine, list, isWhiteTheme(getContext()));	
 			}
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			if (!isClearMusic()) {
+				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			}
 			spEnginesChoiser.setAdapter(adapter);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				android.view.ViewGroup.LayoutParams params = spEnginesChoiser.getLayoutParams();
@@ -533,6 +535,10 @@ public abstract class OnlineSearchView extends View {
 		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
 		emptyHeader = inflate(getContext(), R.layout.empty_header, null);
 		specialInit(view);
+	}
+	
+	public boolean isClearMusic(){
+		return false;
 	}
 	
 	public void specialInit(View view) {

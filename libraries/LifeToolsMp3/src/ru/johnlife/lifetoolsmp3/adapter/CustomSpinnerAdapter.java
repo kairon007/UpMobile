@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 	
-	public boolean isWhiteTheme;
+	private boolean isWhiteTheme;
 	
 	public CustomSpinnerAdapter(Context context, int resource, List<String> objects, boolean isWhiteTheme) {
 		super(context, resource, objects);
