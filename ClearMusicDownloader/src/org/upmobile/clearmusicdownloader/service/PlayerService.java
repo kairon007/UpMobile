@@ -197,6 +197,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				int pos = arrayPlayback.indexOf(playingSong);
 				arrayPlayback.remove(song);
 				if (arrayPlayback.isEmpty()) {
+					((MainActivity) context).hidePlayerElement();
 					reset();
 					return;
 				}
@@ -218,6 +219,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 				arrayPlayback.remove(song);
 			}
 			if (arrayPlayback.isEmpty()) {
+				((MainActivity) context).hidePlayerElement();
 				reset();
 			}
 		}
