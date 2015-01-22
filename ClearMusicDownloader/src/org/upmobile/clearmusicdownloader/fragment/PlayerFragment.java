@@ -8,6 +8,7 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.activity.MainActivity.OrientationListener;
 import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener;
@@ -22,12 +23,14 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -63,7 +66,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.special.utils.UIParallaxScroll;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener, OrientationListener {
 
     public static final int DURATION = 500; // in ms
     private String PACKAGE = "IDENTIFY";
@@ -114,6 +117,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private float scaleHeightTitleBar;
     private float scale_width;
     private float scale_height;
+	private float ratio;
     private boolean isDestroy;
     private boolean hadInstance;
     private boolean isUseAlbumCover = true;
@@ -125,6 +129,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		parentView = inflater.inflate(R.layout.player, container, false);
 		((MainActivity) getActivity()).hideTopFrame();
 		((MainActivity) getActivity()).showPlayerElement();
+		((MainActivity) getActivity()).setOrientationListener(this);
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(mOnScrollChangedListener);
 		init();
 		setListener();
@@ -201,9 +206,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						showLyrics();
 						startImageAnimation(playerCover);
 						setElementsView(current);
-						maxTranslationX = Util.dpToPx(getActivity(), 48) - playerCover.getX();
-						maxTranslationY = 0 - playerCover.getY() + Util.dpToPx(getActivity(), 4);
-						deltaScale = 1 - (float)Util.dpToPx(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
+						coverTitleBarLocation(false);
+						deltaScale = 1 - (float)convertDpToPixel(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
 						if (!enabledPlayerElement) {
 							setClickablePlayerElement(false);
 						}
@@ -217,6 +221,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		}).start();
 		return parentView;
+	}
+	
+	private void coverTitleBarLocation(boolean isLandskape) {
+		int[] locat = new int[2];
+		parentView.findViewById(R.id.title_bar_left_menu).getLocationOnScreen(locat);
+		maxTranslationX = Util.dpToPx(getActivity(), 48) - playerCover.getX();
+		maxTranslationY = 0 - playerCover.getY() + Util.dpToPx(getActivity(), 4);
+//		if (isLandskape) {
+//			maxTranslationX = -locat[0];
+//			maxTranslationY = locat[1] - convertDpToPixel(getActivity(), 48);
+//		} else {
+//			maxTranslationX = -locat[0];
+//			maxTranslationY = locat[1] - convertDpToPixel(getActivity(), 48);	
+//		}
 	}
 	
 	private void bindToPlayer() {
@@ -865,10 +883,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     }
     
     private UIParallaxScroll.OnScrollChangedListener mOnScrollChangedListener = new UIParallaxScroll.OnScrollChangedListener() {
-    	    	
-    	public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
+
+		public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
         	final float headerHeight = ViewHelper.getY(parentView.findViewById(R.id.player_artist_frame)) - (playerTitleBar.getHeight() - parentView.findViewById(R.id.player_artist_frame).getHeight());
-            final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
+            ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
             final int newAlpha = (int) (ratio * 255);
             playerTitleBar.getBackground().setAlpha(newAlpha);
             Animation animationFadeIn = AnimationUtils.loadAnimation(getActivity(),R.anim.fadein);
@@ -884,11 +902,33 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
             	playerTitleBarTitle.startAnimation(animationFadeOut);
             	playerTitleBarTitle.setVisibility(View.INVISIBLE);
             }
-            playerCover.setTranslationX(maxTranslationX * ratio);
-            playerCover.setTranslationY(maxTranslationY * ratio);
-            ViewHelper.setScaleX(playerCover, 1.f - deltaScale * ratio);
-            ViewHelper.setScaleY(playerCover, 1.f - deltaScale * ratio);
+            moveCover(ratio);
         }
     };
+    
+	private void moveCover(final float ratio) {
+		playerCover.setTranslationX(maxTranslationX * ratio);
+        playerCover.setTranslationY(maxTranslationY * ratio);
+        ViewHelper.setScaleX(playerCover, 1.f - deltaScale * ratio);
+        ViewHelper.setScaleY(playerCover, 1.f - deltaScale * ratio);
+	}
 
+	@Override
+	public void landscapeOrientation() {
+		coverTitleBarLocation(true);
+		moveCover(ratio);
+	}
+
+	@Override
+	public void portraitOrientation() {
+		coverTitleBarLocation(false);
+		moveCover(ratio);
+	}
+	
+	public static float convertDpToPixel(Context context, float dp){
+	    Resources resources = context.getResources();
+	    DisplayMetrics metrics = resources.getDisplayMetrics();
+	    float px = dp * (metrics.densityDpi / 160f);
+	    return px;
+	}
 }

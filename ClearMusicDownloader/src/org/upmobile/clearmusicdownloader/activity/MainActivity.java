@@ -13,6 +13,7 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -31,6 +32,7 @@ public class MainActivity extends BaseClearActivity {
 	private ResideMenuItem[] items;
 	private String[] titles;
 	private PlayerService player;
+	private OrientationListener orientationListener;
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
 		
 		@Override
@@ -134,5 +136,36 @@ public class MainActivity extends BaseClearActivity {
 		if (null != player) {
 			player.reset();
 		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		int orientation = newConfig.orientation;
+		switch (orientation) {
+		case Configuration.ORIENTATION_LANDSCAPE:
+			if (null != orientationListener) {
+				orientationListener.landscapeOrientation();
+			}
+			break;
+		case Configuration.ORIENTATION_PORTRAIT:
+			if (null != orientationListener) {
+				orientationListener.portraitOrientation();
+			}
+			break;
+		}
+		super.onConfigurationChanged(newConfig);
+	}
+	
+	public OrientationListener getOrientationListener() {
+		return orientationListener;
+	}
+
+	public void setOrientationListener(OrientationListener orientationListener) {
+		this.orientationListener = orientationListener;
+	}
+
+	public interface OrientationListener {
+		public void landscapeOrientation();
+		public void portraitOrientation();
 	}
 }
