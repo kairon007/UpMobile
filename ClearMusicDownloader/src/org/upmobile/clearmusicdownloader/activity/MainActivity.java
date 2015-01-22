@@ -140,18 +140,8 @@ public class MainActivity extends BaseClearActivity {
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		int orientation = newConfig.orientation;
-		switch (orientation) {
-		case Configuration.ORIENTATION_LANDSCAPE:
-			if (null != orientationListener) {
-				orientationListener.landscapeOrientation();
-			}
-			break;
-		case Configuration.ORIENTATION_PORTRAIT:
-			if (null != orientationListener) {
-				orientationListener.portraitOrientation();
-			}
-			break;
+		if (null != orientationListener) {
+			orientationListener.onOrientationChanged();
 		}
 		super.onConfigurationChanged(newConfig);
 	}
@@ -165,7 +155,6 @@ public class MainActivity extends BaseClearActivity {
 	}
 
 	public interface OrientationListener {
-		public void landscapeOrientation();
-		public void portraitOrientation();
+		public void onOrientationChanged();
 	}
 }

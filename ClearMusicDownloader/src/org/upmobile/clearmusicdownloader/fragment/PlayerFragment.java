@@ -23,14 +23,12 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -122,6 +120,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private boolean hadInstance;
     private boolean isUseAlbumCover = true;
     private boolean removeCover = false;
+    private boolean isNeedCalculateCover;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -206,8 +205,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						showLyrics();
 						startImageAnimation(playerCover);
 						setElementsView(current);
-						coverTitleBarLocation(false);
-						deltaScale = 1 - (float)convertDpToPixel(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
+						coverTitleBarLocation();
+						deltaScale = 1 - (float)Util.dpToPx(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
 						if (!enabledPlayerElement) {
 							setClickablePlayerElement(false);
 						}
@@ -223,18 +222,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		return parentView;
 	}
 	
-	private void coverTitleBarLocation(boolean isLandskape) {
-		int[] locat = new int[2];
-		parentView.findViewById(R.id.title_bar_left_menu).getLocationOnScreen(locat);
+	private void coverTitleBarLocation() {
 		maxTranslationX = Util.dpToPx(getActivity(), 48) - playerCover.getX();
 		maxTranslationY = 0 - playerCover.getY() + Util.dpToPx(getActivity(), 4);
-//		if (isLandskape) {
-//			maxTranslationX = -locat[0];
-//			maxTranslationY = locat[1] - convertDpToPixel(getActivity(), 48);
-//		} else {
-//			maxTranslationX = -locat[0];
-//			maxTranslationY = locat[1] - convertDpToPixel(getActivity(), 48);	
-//		}
 	}
 	
 	private void bindToPlayer() {
@@ -912,6 +902,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     };
     
 	private void moveCover(final float ratio) {
+		if (isNeedCalculateCover) {
+			coverTitleBarLocation();
+			isNeedCalculateCover = false;
+		}
 		playerCover.setTranslationX(maxTranslationX * ratio);
         playerCover.setTranslationY(maxTranslationY * ratio);
         ViewHelper.setScaleX(playerCover, 1.f - deltaScale * ratio);
@@ -919,21 +913,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	@Override
-	public void landscapeOrientation() {
-		coverTitleBarLocation(true);
-		moveCover(ratio);
-	}
-
-	@Override
-	public void portraitOrientation() {
-		coverTitleBarLocation(false);
-		moveCover(ratio);
-	}
-	
-	public static float convertDpToPixel(Context context, float dp){
-	    Resources resources = context.getResources();
-	    DisplayMetrics metrics = resources.getDisplayMetrics();
-	    float px = dp * (metrics.densityDpi / 160f);
-	    return px;
+	public void onOrientationChanged() {
+		isNeedCalculateCover = true;
 	}
 }
