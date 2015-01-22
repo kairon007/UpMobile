@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
-import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
+import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 
-import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -47,6 +46,11 @@ public class SearchView extends OnlineSearchView {
 		View v = super.getView();
 		listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
 		return v;
+	}
+	
+	@Override
+	public boolean isClearMusic() {
+		return true;
 	}
 	
 	@Override
