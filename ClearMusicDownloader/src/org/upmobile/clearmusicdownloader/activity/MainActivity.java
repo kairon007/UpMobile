@@ -33,6 +33,7 @@ public class MainActivity extends BaseClearActivity {
 	private String[] titles;
 	private PlayerService player;
 	private OrientationListener orientationListener;
+	private boolean useCoverHelper = true;
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
 		
 		@Override
@@ -120,6 +121,14 @@ public class MainActivity extends BaseClearActivity {
 			return args;
 		} else
 			return null;
+	}
+	
+	public void setCoverHelper(boolean val) {
+		useCoverHelper = val;
+	}
+	
+	public boolean stateCoverHelper() {
+		return useCoverHelper;
 	}
 
 	@Override

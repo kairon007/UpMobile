@@ -140,6 +140,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtTitle);
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtArtist);
+		isUseAlbumCover = ((MainActivity) getActivity()).stateCoverHelper();
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			hadInstance = false;
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
@@ -404,6 +405,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		isUseAlbumCover = isChecked;
+		((MainActivity) getActivity()).setCoverHelper(isChecked);
 		if (!isChecked) {
 			removeCover = true;
 			if (song.getClass() == MusicData.class) {
@@ -729,7 +731,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void resetCover() {
-		isUseAlbumCover = false;
+		isUseAlbumCover = true;
+		((MainActivity) getActivity()).setCoverHelper(isUseAlbumCover);
 		useCover.setVisibility(View.GONE);
 		playerCancelRemoving.setVisibility(View.GONE);
 		playerCover.setImageResource(R.drawable.def_cover_circle_web);
@@ -741,8 +744,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void prepareCover() {
 		useCover.setVisibility(View.VISIBLE);
 		playerCancelRemoving.setVisibility(View.GONE);
-		isUseAlbumCover = true;
-		useCover.setChecked(true);
+		useCover.setChecked(isUseAlbumCover);
 	}
 	
 	
