@@ -7,13 +7,13 @@ import java.util.TimerTask;
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
-import org.upmobile.clearmusicdownloader.data.MusicData;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.service.PlayerService;
 import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;

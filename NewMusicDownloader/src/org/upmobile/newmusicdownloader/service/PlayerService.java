@@ -3,10 +3,10 @@ package org.upmobile.newmusicdownloader.service;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener.State;
 
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.app.Service;

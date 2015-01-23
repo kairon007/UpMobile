@@ -7,10 +7,10 @@ import java.util.TimerTask;
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.DownloadsAdapter;
-import org.upmobile.clearmusicdownloader.data.MusicData;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.database.Cursor;

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
-import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
@@ -15,6 +14,7 @@ import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
