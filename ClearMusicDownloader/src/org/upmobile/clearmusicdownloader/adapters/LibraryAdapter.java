@@ -14,10 +14,8 @@ import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerList
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,8 +35,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 	
 	private static final int DELAY = 5000;
 	private PlayerService service;
-	private final Drawable BTN_PLAY;
-	private final Drawable BTN_PAUSE;
+	private final int BTN_PLAY = R.drawable.play_white;;
+	private final int BTN_PAUSE= R.drawable.pause_white;
 	private MusicData currentPlayData; 
     private String PACKAGE = "IDENTIFY";
     private Timer timer;
@@ -75,14 +73,14 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 		
 		@Override
 		public void pause(AbstractSong song, int position) {
-			libraryViewHolder.setButtonBackground(BTN_PLAY);
+			if (null != libraryViewHolder) {
+				libraryViewHolder.setButtonBackground(BTN_PLAY);
+			}
 		}
 	};
 	
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
-		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
-		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		new Thread(new Runnable() {
 			
 			@Override
@@ -95,8 +93,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
-		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		new Thread(new Runnable() {
 			
 			@Override
@@ -248,13 +244,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 			setListener(item);
 		}
 
-		@SuppressLint("NewApi")
-		private void setButtonBackground(Drawable drawable) {
-			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN){
-				button.setBackgroundDrawable(drawable);
-			} else {
-				button.setBackground(drawable);
-			}
+		private void setButtonBackground(int resid) {
+			button.setBackgroundResource(resid);
 		}
 
 		private void setListener(final MusicData item) {
