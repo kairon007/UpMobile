@@ -23,7 +23,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View view = inflater.inflate(R.layout.item_spinner, parent);
+		View view = inflater.inflate(R.layout.item_spinner, parent, false);
 		TextView tvItem = (TextView) view.findViewById(R.id.spinnerItem);
 		if (isWhiteTheme) {
 			tvItem.setTextColor(getContext().getResources().getColor(android.R.color.black));
