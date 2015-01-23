@@ -58,6 +58,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -230,7 +231,6 @@ public abstract class OnlineSearchView extends View {
 				resultAdapter.clear();
 				return;
 			}
-			//TODO: set result
 			if (songsList.isEmpty()) {
 				getNextResults(false);
 				if (!taskIterator.hasNext() && resultAdapter.isEmpty()) {
@@ -416,6 +416,11 @@ public abstract class OnlineSearchView extends View {
 	    int top = c.getTop();
 	    return -top + firstVisiblePosition * c.getHeight();
 	}
+	
+	private void hideKeyboard(View view) {
+		InputMethodManager imm = (InputMethodManager)getView().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
 
 	public void initSearchEngines(Context context, String valueEngines) {
 		// TODO this set number engines
@@ -478,6 +483,16 @@ public abstract class OnlineSearchView extends View {
 			}
 			int id = adapter.getPosition(keyEngines);
 			spEnginesChoiser.setSelection(id);
+			spEnginesChoiser.setOnTouchListener(new OnTouchListener() {
+
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					if (((Activity) getContext()).getWindowManager().getDefaultDisplay().getHeight() < 400) {
+						hideKeyboard(searchField);
+					}
+					return false;
+				}
+			});
 			spEnginesChoiser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 				@Override
