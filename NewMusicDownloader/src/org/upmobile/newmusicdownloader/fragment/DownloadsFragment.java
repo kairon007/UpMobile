@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.adapter.DownloadsAdapter;
 import org.upmobile.newmusicdownloader.data.MusicData;
 
@@ -71,6 +72,7 @@ public class DownloadsFragment extends Fragment {
 			updater = new Updater();
 			timer.schedule(updater, 100, 1000);
 		}
+		((MainActivity) getActivity()).setSelectedItem(1);
 		super.onResume();
 	}
 

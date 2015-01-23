@@ -235,6 +235,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onResume() {
 		super.onResume();
 		getActivity().registerReceiver(volumeReceiver, filter); 
+		((MainActivity) getActivity()).setSelectedItem(3);
 //		getView().setFocusableInTouchMode(true);
 //		getView().requestFocus();
 //		getView().setOnKeyListener(new View.OnKeyListener() {

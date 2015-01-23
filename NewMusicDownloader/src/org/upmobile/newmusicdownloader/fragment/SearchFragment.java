@@ -1,7 +1,9 @@
 package org.upmobile.newmusicdownloader.fragment;
 
+import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.ui.SearchView;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,5 +23,11 @@ public class SearchFragment extends Fragment {
 	public void onPause() {
 		searchView.saveState();
 		super.onPause();
+	}
+	
+	@Override
+	public void onResume() {
+		((MainActivity) getActivity()).setSelectedItem(0);
+		super.onResume();
 	}
 }
