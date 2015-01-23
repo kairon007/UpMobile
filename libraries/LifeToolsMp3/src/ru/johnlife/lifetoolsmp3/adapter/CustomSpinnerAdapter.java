@@ -2,9 +2,9 @@ package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.R;
 import android.content.Context;
-import android.text.TextUtils.TruncateAt;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,24 +13,22 @@ import android.widget.TextView;
 public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 	
 	private boolean isWhiteTheme;
+	private LayoutInflater inflater;
 	
 	public CustomSpinnerAdapter(Context context, int resource, List<String> objects, boolean isWhiteTheme) {
 		super(context, resource, objects);
 		this.isWhiteTheme = isWhiteTheme;
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView tvItem = new TextView(getContext());
-		tvItem.setTextSize(16);
+		View view = inflater.inflate(R.layout.item_spinner, parent, false);
+		TextView tvItem = (TextView) view.findViewById(R.id.spinnerItem);
 		if (isWhiteTheme) {
 			tvItem.setTextColor(getContext().getResources().getColor(android.R.color.black));
 		}
-		tvItem.setGravity(Gravity.LEFT);
 		tvItem.setText(getItem(position).toString());
-		tvItem.setEllipsize(TruncateAt.START);
-		tvItem.setLines(1);
-		tvItem.setSingleLine(true);
 		return tvItem;
 	}
 }

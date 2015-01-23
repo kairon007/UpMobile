@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.newmusicdownloader.data.MusicData;
 import org.upmobile.newmusicdownloader.service.PlayerService;
@@ -159,5 +160,11 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public void onResume() {
+		((MainActivity) getActivity()).setSelectedItem(2);
+		super.onResume();
 	}
 }

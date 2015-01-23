@@ -323,9 +323,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnEr
 
 	public void play(int position) {
 		if (arrayPlayback == null) return;
+		AbstractSong previousSong = playingSong;
 		playingSong = arrayPlayback.get(position);
 		Message msg = new Message();
-		if (playingPosition == position && playingPosition != -1) {
+		if (playingPosition == position && playingPosition != -1 && previousSong == arrayPlayback.get(position)) {
 			if (!check(SMODE_PREPARED)) return;
 			if (check(SMODE_PAUSE)) {
 				msg.what = MSG_PLAY_CURRENT;

@@ -223,4 +223,10 @@ public class NavigationDrawerFragment extends Fragment {
          */
         void onNavigationDrawerItemSelected(int position);
     }
+    
+    public void setSelectedItem(int position){
+        if (mDrawerListView != null) {
+            mDrawerListView.setItemChecked(position, true);
+        }
+    }
 }

@@ -144,4 +144,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			navigationDrawerFragment.setAdapter(flag);
 		}
 	}
+	
+	public void setSelectedItem(int position) {
+		if (null != navigationDrawerFragment) {
+			navigationDrawerFragment.setSelectedItem(position);
+		}
+	}
 }
