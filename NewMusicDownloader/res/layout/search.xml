@@ -119,6 +119,8 @@
                 <Spinner
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
+                    android:spinnerMode="dropdown"
+                    android:popupBackground="@android:color/black"
                     android:layout_height="48dp" />
             </LinearLayout>
         </LinearLayout>
