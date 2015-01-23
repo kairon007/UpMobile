@@ -84,6 +84,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private EditText playerTagsAlbum;
 	private EditText playerTagsTitle;
 	private EditText playerTagsArtist;
+	private int checkIdCover;
     private boolean isDestroy;
     private boolean hadInstance;
     private boolean isUseAlbumCover = true;
@@ -612,10 +613,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void getCover(final AbstractSong song) {
 		if (song.getClass() != MusicData.class) {
-			((RemoteSong) song).getCover(new OnBitmapReadyListener() {
+			playerCover.setImageResource(R.drawable.no_cover_art_big);
+			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
+					if (this.hashCode() != checkIdCover)return;
 					if (null != bmp) {
 						checkBoxState(true);
 						((RemoteSong) song).setHasCover(true);
@@ -626,7 +629,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						checkBoxState(false);
 					}
 				}
-			});
+			};
+			checkIdCover  = readyListener.hashCode();
+			((RemoteSong) song).getCover(readyListener);
 		} else {
 			final Bitmap bitmap = ((MusicData) song).getCover(getActivity());
 			if (bitmap != null) {
