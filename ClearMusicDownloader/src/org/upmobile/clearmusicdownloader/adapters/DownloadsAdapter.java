@@ -8,6 +8,7 @@ import org.upmobile.clearmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -211,5 +212,10 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 			}
 			return false;
 		}
+	}
+
+	@Override
+	protected boolean isSetListener() {
+		return true;
 	}
 }

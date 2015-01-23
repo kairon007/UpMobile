@@ -12,6 +12,7 @@ import org.upmobile.clearmusicdownloader.service.PlayerService;
 import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
@@ -35,7 +36,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 	
 	private static final int DELAY = 5000;
 	private PlayerService service;
-	private final int BTN_PLAY = R.drawable.play_white;;
+	private final int BTN_PLAY = R.drawable.play_white;
 	private final int BTN_PAUSE= R.drawable.pause_white;
 	private MusicData currentPlayData; 
     private String PACKAGE = "IDENTIFY";
@@ -319,4 +320,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 		}
 	}
 
+	@Override
+	protected boolean isSetListener() {
+		return true;
+	}
 }

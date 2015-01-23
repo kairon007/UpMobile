@@ -156,7 +156,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 				adapter = new LibraryAdapter(getActivity(), R.layout.library_item, array);
 				listView.setAdapter(adapter);
 			} else {
-				adapter.changeAll(array);
+				adapter.changeArray(array);
 			}
 		}
 		return true;

@@ -11,6 +11,7 @@ import org.upmobile.newmusicdownloader.service.PlayerService;
 import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
@@ -214,6 +215,11 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 			return true;
 		}
+	}
+
+	@Override
+	protected boolean isSetListener() {
+		return false;
 	}
 
 }
