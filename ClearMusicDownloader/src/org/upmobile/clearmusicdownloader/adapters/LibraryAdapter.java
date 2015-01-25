@@ -8,9 +8,9 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
-import org.upmobile.clearmusicdownloader.service.PlayerService;
-import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -35,7 +35,7 @@ import com.special.utils.UISwipableList;
 public class LibraryAdapter extends BaseAdapter<MusicData>{
 	
 	private static final int DELAY = 5000;
-	private PlayerService service;
+	private PlaybackService service;
 	private final int BTN_PLAY = R.drawable.play_white;
 	private final int BTN_PAUSE= R.drawable.pause_white;
 	private MusicData currentPlayData; 
@@ -47,61 +47,55 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
 		@Override
-		public void update(AbstractSong song, int position) {
+		public void start(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
-			if (position > 0) {
-				((MusicData) getItem(position - 1)).turnOff(MusicData.MODE_PLAYING);
-			} else if (position == 0) {
-				((MusicData) getItem(getCount() - 1)).turnOff(MusicData.MODE_PLAYING);
-			}
+//			if (position == getCount()) --position;
+//			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
+			((MusicData) song).turnOn(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();
 		}
-		
+
 		@Override
-		public void start(AbstractSong song, int position) {
-			if (song.getClass() != MusicData.class || position == -1) return;
-			if (position == getCount()) --position;
-			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
+		public void play(AbstractSong song) {
+			if (song.getClass() != MusicData.class) return;
+			((MusicData) song).turnOn(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();
 		}
-		
+
 		@Override
-		public void play(AbstractSong song, int position) {
-			if (song.getClass() != MusicData.class || position == -1) return;
-			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
-			notifyDataSetChanged();
-		}
-		
-		@Override
-		public void pause(AbstractSong song, int position) {
+		public void pause(AbstractSong song) {
 			if (null != libraryViewHolder) {
 				libraryViewHolder.setButtonBackground(BTN_PLAY);
 			}
+		}
+
+		@Override
+		public void stop(AbstractSong song) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void update(AbstractSong song) {
+			if (song.getClass() != MusicData.class) return;
+			((MusicData) song).turnOff(MusicData.MODE_PLAYING);
+			notifyDataSetChanged();
 		}
 	};
 	
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				service = PlayerService.get(getContext());
-				service.setStatePlayerListener(stateListener);
-			}
-		}).start();
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				service = PlayerService.get(getContext());
-				service.setStatePlayerListener(stateListener);
-			}
-		}).start();
+	}
+	
+	private void checkService() {
+		if (service == null) {
+			service = PlaybackService.get(getContext());
+			service.setStatePlayerListener(stateListener);
+		}
 	}
 
 	@Override
@@ -256,6 +250,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_UP:
+						checkService();
 						if (!service.isCorrectlyState(MusicData.class, getCount())) {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 							service.setArrayPlayback(list);
@@ -286,12 +281,13 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 
 				@Override
 				public void onClick(View v) {
+					checkService();
 					if (!service.isCorrectlyState(MusicData.class, getCount())) {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
 					}
 					((MainActivity) getContext()).showPlayerElement();
-					service.play(getPosition(item));
+					service.play(item);
 					if (item.check(MusicData.MODE_PLAYING)) {
 						item.turnOff(MusicData.MODE_PLAYING);
 						setButtonBackground(BTN_PLAY);

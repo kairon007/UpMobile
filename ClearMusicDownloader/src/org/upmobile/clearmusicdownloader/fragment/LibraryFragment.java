@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
-import org.upmobile.clearmusicdownloader.service.PlayerService;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.ContentResolver;
@@ -37,7 +37,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	private static final int MSG_FILL_ADAPTER = 1;
 	private View parentView;
 	private UISwipableList listView;
-	private PlayerService service;
+	private PlaybackService service;
 	private LibraryAdapter adapter;
 	private ResideMenu resideMenu;
 	private Handler uiHandler;
@@ -78,14 +78,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback, OnScr
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				service = PlayerService.get(getActivity());
-			}
-			
-		}).start();
+		service = PlaybackService.get(getActivity());
 		uiHandler = new Handler(this);
 		getActivity().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false, observer);
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);

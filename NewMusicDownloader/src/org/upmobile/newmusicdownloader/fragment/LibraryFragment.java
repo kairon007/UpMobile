@@ -6,8 +6,8 @@ import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.adapter.LibraryAdapter;
-import org.upmobile.newmusicdownloader.service.PlayerService;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Fragment;
@@ -29,7 +29,7 @@ import android.widget.TextView;
 public class LibraryFragment extends Fragment implements Handler.Callback {
 
 	private final int MSG_FILL_ADAPTER = 1;
-	private PlayerService service;
+	private PlaybackService service;
 	private LibraryAdapter adapter;
 	private Handler uiHandler;
 	private View parentView;
@@ -80,14 +80,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				service = PlayerService.get(getActivity());
-			}
-
-		}).start();
 		uiHandler = new Handler(this);
 		getActivity().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false, observer);
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
@@ -160,6 +152,14 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public void onStart() {
+		if (PlaybackService.hasInstance()) {
+			service = PlaybackService.get(getActivity());
+		}
+		super.onStart();
 	}
 	
 	@Override
