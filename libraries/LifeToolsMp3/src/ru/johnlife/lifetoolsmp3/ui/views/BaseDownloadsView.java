@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui.fragments;
+package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -7,26 +7,26 @@ import java.util.TimerTask;
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public abstract class BaseDownloadsFragment<T> extends Fragment{
-	
+public abstract class BaseDownloadsView extends View{
+
 	private View parentView;
 	private ListView listView;
+	private ViewGroup view;
 	private ArrayAdapter<MusicData> adapter;
 	private DownloadManager manager;
 	private Timer timer;
@@ -45,30 +45,30 @@ public abstract class BaseDownloadsFragment<T> extends Fragment{
 	
 	protected abstract ListView getListView(View view);
 	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		parentView = inflater.inflate(getLayoutId(), container, false);
-		init();
+	public BaseDownloadsView(LayoutInflater inflater) {
+		super(inflater.getContext());
+		init(inflater);
 		listView.setAdapter(adapter);
-		return parentView;
 	}
 	
-	private void init() {
-		listView = getListView(parentView);
+	public View getView() {
+		return view;
+	}
+	
+	private void init(LayoutInflater inflater) {
+		view = (ViewGroup) inflater.inflate(getLayoutId(), null);
+		listView = getListView(view);
 //		messageView = (TextView) parentView.findViewById(R.id.message_listview);
 		adapter = getAdapter();
-		manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+		manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 		timer = new Timer();
 		updater = new Updater();
 	}
 	
-	@Override
 	public void onPause() {
 		timer.cancel();
-		super.onPause();
 	}
 
-	@Override
 	public void onResume() {
 		try {
 			timer.schedule(updater, 100, 1000);
@@ -78,7 +78,6 @@ public abstract class BaseDownloadsFragment<T> extends Fragment{
 			updater = new Updater();
 			timer.schedule(updater, 100, 1000);
 		}
-		super.onResume();
 	}
 	
 	private ArrayList<MusicData> checkDownloads() {
@@ -155,7 +154,7 @@ public abstract class BaseDownloadsFragment<T> extends Fragment{
 	private void removeItem(final MusicData musicData) {
 		synchronized (lock) {
 			try {
-				getActivity().runOnUiThread(new Runnable() {
+				((Activity) getContext()).runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
@@ -211,7 +210,8 @@ public abstract class BaseDownloadsFragment<T> extends Fragment{
 					@Override
 					public void run() {
 //						messageView.setVisibility(View.VISIBLE);
-//						messageView.setText(getActivity().getString(R.string.downloads_empty));
+////						messageView.setText(getContext().getString(R.string.downloads_empty));
+//						messageView.setText("Empty");
 					}
 				};
 				new Handler(Looper.getMainLooper()).post(runnable);

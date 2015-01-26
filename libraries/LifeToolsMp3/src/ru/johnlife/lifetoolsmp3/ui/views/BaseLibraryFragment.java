@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui.fragments;
+package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.util.ArrayList;
 
