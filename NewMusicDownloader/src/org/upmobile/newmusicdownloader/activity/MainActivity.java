@@ -23,7 +23,12 @@ import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 public class MainActivity extends Activity implements NavigationDrawerCallbacks {
 
@@ -45,6 +50,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			}
 		}
 	};
+	private SearchView searchView;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -62,6 +68,41 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		 getMenuInflater().inflate(R.menu.menu, menu);
+		 MenuItem searchItem = menu.findItem(R.id.action_search);
+		 searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+		 searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
+		 searchView.setIconified(true);
+		 searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				changeFragment(new SearchFragment(query));
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch(item.getItemId()){
+
+        case R.id.action_search:
+            searchView.setIconified(false);// to Expand the SearchView when clicked
+            return true;
+    }    
+		return false;
 	}
 	
 	@Override
