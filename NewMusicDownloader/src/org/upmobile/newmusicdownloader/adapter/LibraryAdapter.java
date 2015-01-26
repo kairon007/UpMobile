@@ -40,7 +40,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		public void start(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
-			data.setPlaying(true);
+			data.turnOn(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();
 		}
 
@@ -48,7 +48,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		public void play(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
-			data.setPlaying(true);
+			data.turnOn(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();
 		}
 
@@ -56,7 +56,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		public void pause(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
-			data.setPlaying(false);
+			data.turnOff(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();
 		}
 
@@ -64,12 +64,20 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		public void stop(AbstractSong song) {
 			MusicData data = get(song);
 			if (song.getClass() != MusicData.class || data == null) return;
-			data.setPlaying(false);
+			data.turnOff(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();
 		}
 		
 	};
-
+	
+	public LibraryAdapter(Context context, int resource) {
+		super(context, resource);
+		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
+		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
+		service = PlaybackService.get(getContext());
+		service.setStatePlayerListener(stateListener);
+	}
+	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
@@ -119,7 +127,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			title.setText(data.getTitle());
 			artist.setText(data.getArtist());
 			duration.setText(Util.getFormatedStrDuration(data.getDuration()));
-			if (data.isPlaying()) {
+			if (data.check(MusicData.MODE_PLAYING)) {
 				setButtonBackground(BTN_PAUSE);
 			} else {
 				setButtonBackground(BTN_PLAY);

@@ -29,7 +29,7 @@ public class LibraryView extends BaseLibraryView implements Handler.Callback, Co
 
 	@Override
 	protected ArrayAdapter<MusicData> getAdapter() {
-		return new LibraryAdapter(getContext(), R.layout.library_item, querySong());
+		return new LibraryAdapter(getContext(), R.layout.library_item);
 	}
 
 	@Override
