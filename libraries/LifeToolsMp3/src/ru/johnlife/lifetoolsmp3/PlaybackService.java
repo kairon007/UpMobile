@@ -222,6 +222,9 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 			playingSong.setArtist(artist);
 			playingSong.setTitle(title);
 			playingSong.setPath(path);
+		} else {
+			playingSong.setArtist(artist);
+			playingSong.setTitle(title);
 		}
 	}
 	
