@@ -15,6 +15,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenu.OnMenuListener;
@@ -112,6 +113,11 @@ public class DownloadsView extends BaseDownloadsView implements OnScrollListener
 		listView.setIgnoredViewHandler(resideMenu);
 		listView.setOnScrollListener(this);
 		return listView;
+	}
+
+	@Override
+	protected TextView getMessageView(View view) {
+		return null;
 	}
 
 }

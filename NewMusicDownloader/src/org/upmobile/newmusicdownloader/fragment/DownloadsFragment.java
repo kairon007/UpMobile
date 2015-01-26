@@ -1,5 +1,6 @@
 package org.upmobile.newmusicdownloader.fragment;
 
+import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.ui.DownloadsView;
 
 import android.app.Fragment;
@@ -20,6 +21,7 @@ public class DownloadsFragment extends Fragment {
 	@Override
 	public void onPause() {
 		downloadsView.onPause();
+		((MainActivity) getActivity()).setSelectedItem(1);
 		super.onPause();
 	}
 

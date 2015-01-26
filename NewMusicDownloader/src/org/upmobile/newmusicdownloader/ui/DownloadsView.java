@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class DownloadsView extends BaseDownloadsView{
 
@@ -42,4 +43,10 @@ public class DownloadsView extends BaseDownloadsView{
 	protected ListView getListView(View view) {
 		return (ListView) view.findViewById(R.id.listView);
 	}
+
+	@Override
+	protected TextView getMessageView(View view) {
+		return (TextView) view.findViewById(R.id.message_listview);
+	}
+	
 }

@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
+import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -24,7 +25,6 @@ import android.widget.TextView;
 
 public abstract class BaseDownloadsView extends View{
 
-	private View parentView;
 	private ListView listView;
 	private ViewGroup view;
 	private ArrayAdapter<MusicData> adapter;
@@ -32,7 +32,6 @@ public abstract class BaseDownloadsView extends View{
 	private Timer timer;
 	private Updater updater;
 	private static final int DEFAULT_SONG = 7340032; // 7 Mb
-//	private MainActivity activity;
 	private int progress;
 	private Object lock  = new Object();
 	private TextView messageView;
@@ -44,6 +43,8 @@ public abstract class BaseDownloadsView extends View{
 	protected abstract ArrayAdapter<MusicData> getAdapter();
 	
 	protected abstract ListView getListView(View view);
+	
+	protected abstract TextView getMessageView(View view);
 	
 	public BaseDownloadsView(LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -58,7 +59,7 @@ public abstract class BaseDownloadsView extends View{
 	private void init(LayoutInflater inflater) {
 		view = (ViewGroup) inflater.inflate(getLayoutId(), null);
 		listView = getListView(view);
-//		messageView = (TextView) parentView.findViewById(R.id.message_listview);
+		messageView = getMessageView(view);
 		adapter = getAdapter();
 		manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 		timer = new Timer();
@@ -209,9 +210,9 @@ public abstract class BaseDownloadsView extends View{
 
 					@Override
 					public void run() {
-//						messageView.setVisibility(View.VISIBLE);
-////						messageView.setText(getContext().getString(R.string.downloads_empty));
-//						messageView.setText("Empty");
+						if (null == messageView) return;
+						messageView.setVisibility(View.VISIBLE);
+						messageView.setText(getContext().getString(R.string.downloads_empty));
 					}
 				};
 				new Handler(Looper.getMainLooper()).post(runnable);
