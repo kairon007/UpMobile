@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content" >
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout1"
+        android:id="@+id/touch_interceptor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <FrameLayout
-            android:id="@+id/FrameLayout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" >
@@ -119,11 +117,11 @@
                 <Spinner
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
-                    android:spinnerMode="dropdown"
+                    android:layout_height="48dp"
                     android:popupBackground="@android:color/black"
-                    android:layout_height="48dp" />
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>

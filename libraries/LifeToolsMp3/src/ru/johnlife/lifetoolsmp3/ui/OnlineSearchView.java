@@ -395,6 +395,16 @@ public abstract class OnlineSearchView extends View {
 				trySearch();
 			}
 		});
+		view.findViewById(R.id.touch_interceptor).setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN && v.getId() != R.id.text) {
+					hideKeyboard(searchField);
+				}
+				return v.performClick();
+			}
+		});
 		if (extraSearch != null) {
 			searchField.setText(extraSearch);
 			trySearch();
@@ -408,8 +418,7 @@ public abstract class OnlineSearchView extends View {
 		return view;
 	}
 	
-	public int getScrollListView()
-	{
+	public int getScrollListView() {
 	    View c = listView.getChildAt(1);
 	    if (c == null) return 0;
 	    int firstVisiblePosition = listView.getFirstVisiblePosition();
@@ -721,8 +730,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public void trySearch() {
-		InputMethodManager imm = (InputMethodManager) searchField.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+		hideKeyboard(searchField);
 		String searchString = searchField.getText().toString();
 		if (isOffline(searchField.getContext())) {
 			message.setText(R.string.search_message_no_internet);

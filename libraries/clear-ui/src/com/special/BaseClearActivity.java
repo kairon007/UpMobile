@@ -1,5 +1,6 @@
 package com.special;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -72,6 +74,8 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         findViewById(R.id.title_bar_left_menu).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				InputMethodManager imm = (InputMethodManager)BaseClearActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 				resideMenu.openMenu();
 			}
 		});
@@ -90,6 +94,8 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 
     @Override
     public void onClick(View view) {
+		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         for (int i = 0; i < menuItems.length; i++) {
         	if (view == menuItems[i]) {
         		if (lastOpenedFragment.getClass().getSimpleName().equals(fragments[i].getClass().getSimpleName())) {

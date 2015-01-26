@@ -17,6 +17,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,8 +26,11 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
@@ -35,7 +39,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	private final String ARRAY_SAVE = "extras_array_save";
 	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private PlaybackService service;
-	
+	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
 
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
@@ -50,7 +54,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			}
 		}
 	};
-	private SearchView searchView;
+	
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -96,6 +100,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		View view  = findViewById(R.id.drawer_layout);
+		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	    switch(item.getItemId()){
 
         case R.id.action_search:
