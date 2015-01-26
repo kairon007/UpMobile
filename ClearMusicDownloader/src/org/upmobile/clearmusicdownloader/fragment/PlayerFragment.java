@@ -109,7 +109,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private int checkIdRmvTask;
 	private float maxTranslationX;
 	private float maxTranslationY;
-	private float deltaScale;
+	private float deltaScale = Float.NaN;
 	private float scaleWidthTitleBar;
 	private float scaleHeightTitleBar;
     private float scale_width;
@@ -143,7 +143,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		isUseAlbumCover = ((MainActivity) getActivity()).stateCoverHelper();
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			android.util.Log.d("logks", "title (!= )" + song.getTitle());
 			top = getArguments().getInt(PACKAGE + ".top");
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
@@ -166,7 +165,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		startImageAnimation(playerCover);
 		setElementsView(player.getCurrentPosition());
 		coverTitleBarLocation();
-		deltaScale = 1 - (float)Util.dpToPx(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
+//		deltaScale = 1 - (float)Util.dpToPx(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
 		return parentView;
 	}
 	
@@ -851,6 +850,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         }
     };
     
+    
 	private void moveCover(final float ratio) {
 		if (isNeedCalculateCover) {
 			coverTitleBarLocation();
@@ -858,7 +858,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		playerCover.setTranslationX(maxTranslationX * ratio);
         playerCover.setTranslationY(maxTranslationY * ratio);
-        ViewHelper.setScaleX(playerCover, 1.f - deltaScale * ratio);
+        if (deltaScale == Float.NaN) {
+			deltaScale = 1 - (float) Util.dpToPx(getActivity(), 48) / (float) playerCover.getMeasuredHeight();
+		}
+		ViewHelper.setScaleX(playerCover, 1.f - deltaScale * ratio);
         ViewHelper.setScaleY(playerCover, 1.f - deltaScale * ratio);
 	}
 
