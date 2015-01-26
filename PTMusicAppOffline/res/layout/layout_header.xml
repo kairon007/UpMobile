@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout.FillWidth"
+    android:background="@drawable/bg_header" >
+
+    <org.upmobile.musicpro.widget.AutoBgButton
+        android:id="@+id/btnMenu"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/btn_menu" />
+
+    <TextView
+        android:id="@+id/lblHeader"
+        style="@style/Text.Shadow"
+        android:layout_centerVertical="true"
+        android:text="@string/app_name"
+        android:textSize="20sp" />
+
+</RelativeLayout>

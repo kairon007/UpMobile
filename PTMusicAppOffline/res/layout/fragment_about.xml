@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Layout.FillWidthHeight.Vertical"
+    android:background="@android:color/white"
+    tools:context=".fragment.SettingsFragment" >
+
+    <include layout="@layout/layout_header" />  
+	<ScrollView android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	    <LinearLayout android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical">
+		    <TextView android:id="@+id/lblCompanyName"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingLeft="20sp"
+		        android:paddingRight="20sp"
+		        android:paddingTop="20sp"
+		        android:textSize="20sp"
+		        android:textColor="@color/green"
+		        android:text="@string/company"/>
+		    
+		    <TextView android:id="@+id/lblCompanyDescription1"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingLeft="20sp"
+		        android:paddingRight="20sp"
+		        android:paddingTop="20sp"
+		        android:textSize="20sp"
+		        android:textColor="@color/orange"
+		        android:text="@string/companyDescription1"/>
+		    
+		    <TextView android:id="@+id/lblCompanyDescription2"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingTop="20sp"
+		        android:paddingLeft="20sp"
+		        android:paddingRight="20sp"
+		        android:textSize="20sp"
+		        android:textColor="@color/gray_dark"        
+		        android:text="@string/companyDescription2"/>
+		    
+		    <TextView android:id="@+id/lblCompanyWebsite"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingTop="20sp"
+		        android:paddingLeft="20sp"
+		        android:paddingRight="20sp"
+		        android:textSize="20sp"
+		        android:textColor="@color/blue"
+		        android:text="@string/companyWebsite"/>
+	    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

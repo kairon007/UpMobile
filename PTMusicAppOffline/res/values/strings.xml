@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PT Music App</string>
+    <string name="doubleBackToExit">Please press BACK again to exit.</string>
+    <string name="msgQuitApp">Do you want to quit app?</string>
+    <string name="timeStart">00:00</string>
+    <string name="searching">Search&#8230;</string>
+    <string name="downloading">Downloading&#8230;</string>
+    <string name="getListSongs">Get list songs&#8230;</string>
+    <string name="downloadComplete">Download successfully !</string>
+    <string name="songExisted">This song is existed in SD Card.</string>
+    <string name="noFoundMatch">No result is found !</string>
+    <string name="search">Search</string>
+    <string name="share">Share</string>
+    <string name="dd">đ</string>
+    <string name="DD">Đ</string>
+
+    <!-- Menu -->
+    <string name="music">MUSIC</string>
+    <string name="tool">TOOL</string>
+    <string name="topChart">Top Songs</string>
+    <string name="nominations">Nomination</string>
+    <string name="categoryMusic">Categories</string>
+    <string name="playlist">Playlist</string>
+    <string name="goodApp">Good app</string>
+    <string name="settings">Settings</string>    
+    <string name="exitApp">Exit app</string>
+
+    <!-- Message -->
+    <string name="yes">yes</string>
+    <string name="no">No</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="noNetwork">Network is not available.</string>
+    <string name="enableRepeat">Enable repeat mode.</string>
+    <string name="offRepeat">Off repeat mode.</string>
+    <string name="enableShuffle">Enable shuffle mode.</string>
+    <string name="offShuffle">Off shuffle mode.</string>
+    <string name="msgRestartApp">Restart app to complete change language.</string>
+    <string name="endPage">No more data.</string>
+
+    <!-- Setting -->
+    <string name="language">Language</string>
+    <string name="vietnamese">Tiếng Việt</string>
+    <string name="about">About</string>
+    
+    <!--  About -->
+    <string name="company">ProjecTemplate</string>
+    <string name="companyDescription1">ProjecTemplate is TRUSTFUL brand of mobile app source codes and outsource/offshore development services.</string>
+    <string name="companyDescription2">ProjecTemplate saves you MONEY and TIME with ready made source codes and professional services.</string>
+    <string name="companyWebsite">http://projectemplate.com</string>
+
+    <!-- Playlist -->
+    <string name="creatNewPlaylist">Creat new playlist</string>
+    <string name="playlistName">Playlist name</string>
+    <string name="chooseSong">Select song</string>
+
+    <string-array name="arrayLanguage">
+        <item>English</item>
+        <item>Tiếng Việt</item>
+    </string-array>
+
+</resources>

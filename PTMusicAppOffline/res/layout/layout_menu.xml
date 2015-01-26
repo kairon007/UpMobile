@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout.FillWidthHeight.Vertical"
+    android:background="@drawable/bg_menu" >
+
+    <TextView
+        style="@style/Layout.FillWidth"
+        android:layout_margin="10dp"
+        android:text="@string/music"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/divider" />
+
+    <TextView
+        android:id="@+id/lblTopChart"
+        style="@style/Text.Menu"
+        android:background="@drawable/bg_item_menu_select"
+        android:drawableLeft="@drawable/ic_top_chart"
+        android:text="@string/topChart" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/bg_divider" />
+
+    <TextView
+        android:id="@+id/lblNominations"
+        style="@style/Text.Menu"
+        android:drawableLeft="@drawable/ic_nominations"
+        android:text="@string/nominations" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/bg_divider" />
+
+    <TextView
+        android:id="@+id/lblCategoryMusic"
+        style="@style/Text.Menu"
+        android:drawableLeft="@drawable/ic_music_node_small"
+        android:text="@string/categoryMusic" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/bg_divider" />
+
+    <TextView
+        android:id="@+id/lblPlaylist"
+        style="@style/Text.Menu"
+        android:drawableLeft="@drawable/ic_playlist"
+        android:text="@string/playlist" />
+
+    <TextView
+        style="@style/Layout.FillWidth"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/tool"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/divider" />
+
+    <TextView
+        android:id="@+id/lblSearch"
+        style="@style/Text.Menu"
+        android:drawableLeft="@drawable/ic_search"
+        android:text="@string/search" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/bg_divider" />
+
+    <TextView
+        android:id="@+id/lblGoodApp"
+        style="@style/Text.Menu"
+        android:drawableLeft="@drawable/ic_play_store"
+        android:text="@string/goodApp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/bg_divider" />
+
+    <TextView
+        android:id="@+id/lblAbout"
+        style="@style/Text.Menu"
+        android:drawableLeft="@drawable/ic_about"
+        android:text="@string/about" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/bg_divider" />
+
+    <TextView
+        android:id="@+id/lblExitApp"
+        style="@style/Text.Menu"
+        android:drawableLeft="@drawable/ic_exit"
+        android:text="@string/exitApp" />
+
+</LinearLayout>
