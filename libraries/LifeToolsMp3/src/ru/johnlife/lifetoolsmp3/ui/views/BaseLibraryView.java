@@ -1,10 +1,10 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.util.ArrayList;
-
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.ContentObserver;
@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+@SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View {
 
 	protected static final int MSG_FILL_ADAPTER = 1;
@@ -72,6 +73,7 @@ public abstract class BaseLibraryView extends View {
 		service = PlaybackService.get(getContext());
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false, observer);
 		ArrayList<MusicData> srcList = querySong();
+		init(inflater);
 		if (!srcList.isEmpty()) {
 			if (null != service && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
 				int pos = service.getPlayingPosition();
@@ -80,8 +82,8 @@ public abstract class BaseLibraryView extends View {
 				}
 			}
 		}
-		init(inflater);
 		if (null != listView) {
+			adapter.addAll(srcList);
 			listView.setAdapter(adapter);
 		}
 	}

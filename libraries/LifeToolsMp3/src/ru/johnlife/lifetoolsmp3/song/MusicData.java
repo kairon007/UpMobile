@@ -34,7 +34,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	private long id;
 	private long duration;
 	private int progress;
-	private boolean isPlaying;
 
 	public MusicData() {
 
@@ -172,12 +171,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		return progress;
 	}
 	
-	public boolean isPlaying() {
-		return isPlaying;
-	}
-
-
-	
 	@Override
 	public void setArtist(String artist) {
 		this.artist = artist;
@@ -199,10 +192,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 
 	public void setProgress(int progress) {
 		this.progress = progress;
-	}
-
-	public void setPlaying(boolean isPlaying) {
-		this.isPlaying = isPlaying;
 	}
 	
 	@Override
