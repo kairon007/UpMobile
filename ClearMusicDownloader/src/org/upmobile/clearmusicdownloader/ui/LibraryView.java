@@ -41,10 +41,7 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 
 	@Override
 	protected ArrayAdapter<MusicData> getAdapter() {
-		ArrayList<MusicData> srcList = querySong();
-		adapter = new LibraryAdapter(getContext(), R.layout.library_item);
-		adapter.addAll(srcList);
-		return adapter;
+		return adapter = new LibraryAdapter(getContext(), R.layout.library_item);
 	}
 
 	@Override
