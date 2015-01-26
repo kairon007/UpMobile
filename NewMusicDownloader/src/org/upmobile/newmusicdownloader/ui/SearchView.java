@@ -8,8 +8,8 @@ import org.upmobile.newmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
-import org.upmobile.newmusicdownloader.service.PlayerService;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -23,17 +23,10 @@ import android.widget.ListView;
 
 public class SearchView extends OnlineSearchView {
 
-	private PlayerService service;
+	private PlaybackService service;
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				service = PlayerService.get(getContext());
-			}
-		}).start();
 	}
 
 	@Override
@@ -45,6 +38,9 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	protected void click(final View view, int position) {
+		if (null == service) {
+			service = PlaybackService.get(getContext());
+		}
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 			for (AbstractSong abstractSong : getResultAdapter().getAll()) {

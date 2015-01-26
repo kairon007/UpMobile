@@ -9,9 +9,9 @@ import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.activity.MainActivity.OrientationListener;
-import org.upmobile.clearmusicdownloader.service.PlayerService;
-import org.upmobile.clearmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -70,7 +70,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private String PACKAGE = "IDENTIFY";
 	private AbstractSong song;
 	private RenameTask renameTask;
-	private PlayerService player;
+	private PlaybackService player;
 	private DownloadListener downloadListener;
 	private LyricsFetcher lyricsFetcher;
 	private View parentView;
@@ -156,7 +156,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public void run() {
-				player = PlayerService.get(getActivity());
+				player = PlaybackService.get(getActivity());
 				bindToPlayer();
 				final int current;
 				final int mode;
@@ -194,8 +194,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						mode = 0;
 						current = 0;
 						enabledPlayerElement = false;
-						player.setPlayingPosition(-1);
-						player.play(currentPosition);
+						player.play(song);
 					}
 				}
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -230,9 +229,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void bindToPlayer() {
 		player.setStatePlayerListener(new OnStatePlayerListener() {
-			
+
 			@Override
-			public void start(AbstractSong song, int position) {
+			public void start(AbstractSong song) {
 				downloadButtonState(true);
 				if (song.getClass() != MusicData.class) {
 					PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
@@ -244,21 +243,26 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				setElementsView(0);
 				playerProgress.post(progressAction);
 			}
-			
-			@Override
-			public void pause(AbstractSong song, int position) {
-				if (isDestroy) return;
-				changePlayPauseView(true);
-			}
 
 			@Override
-			public void play(AbstractSong song, int position) {
+			public void play(AbstractSong song) {
 				if (isDestroy) return;
 				changePlayPauseView(false);
 			}
 
 			@Override
-			public void update(final AbstractSong song, int position) {
+			public void pause(AbstractSong song) {
+				if (isDestroy) return;
+				changePlayPauseView(true);
+			}
+
+			@Override
+			public void stop(AbstractSong song) {
+				
+			}
+
+			@Override
+			public void update(AbstractSong song) {
 				if (isDestroy) return;
 				PlayerFragment.this.song = song;
 				showLyrics();
@@ -689,7 +693,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			getCover(player.getPlayingSong());
 			downloadButtonState(false);
 		} else {
-			player.play(player.getPlayingPosition());
+			player.play(song);
 		}
 	}
 	

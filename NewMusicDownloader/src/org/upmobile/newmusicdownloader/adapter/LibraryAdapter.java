@@ -7,9 +7,9 @@ import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
-import org.upmobile.newmusicdownloader.service.PlayerService;
-import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -31,13 +31,14 @@ import android.widget.TextView;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 
-	private PlayerService service;
+	private PlaybackService service;
 	private final Drawable BTN_PLAY;
 	private final Drawable BTN_PAUSE;
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
 		public void start(AbstractSong song) {
+			android.util.Log.d("logks", "call START in library adapter");
 			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
 			data.setPlaying(true);
@@ -46,6 +47,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void play(AbstractSong song) {
+			android.util.Log.d("logks", "call PLAY in library adapter");
 			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
 			data.setPlaying(true);
@@ -54,6 +56,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void pause(AbstractSong song) {
+			android.util.Log.d("logks", "call PAUSE in library adapter");
 			if (song.getClass() != MusicData.class) return;
 			MusicData data = get(song);
 			data.setPlaying(false);
@@ -62,6 +65,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void update(AbstractSong song) {
+			android.util.Log.d("logks", "call UPDATE in library adapter");
 			if (song.getClass() != MusicData.class)	return;
 			MusicData data = get(song);
 			data.setPlaying(true);
@@ -70,6 +74,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		public void stop(AbstractSong song) {
+			android.util.Log.d("logks", "call START in library adapter");
 			MusicData data = get(song);
 			if (song.getClass() != MusicData.class || data == null) return;
 			data.setPlaying(false);
@@ -82,14 +87,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		super(context, resource, array);
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
 		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				service = PlayerService.get(getContext());
-				service.setStatePlayerListener(stateListener);
-			}
-		}).start();
+		service = PlaybackService.get(getContext());
+		service.setStatePlayerListener(stateListener);
 	}
 
 	public MusicData get(AbstractSong data) {
@@ -183,7 +182,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				if (!service.isCorrectlyState(MusicData.class, getCount())) {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);
-				}
+				} 
 				service.play(data);
 				((MainActivity) getContext()).showPlayerElement(true);
 				break;
@@ -215,6 +214,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 			return true;
 		}
+
 	}
 
 	@Override

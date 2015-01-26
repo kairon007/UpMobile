@@ -47,7 +47,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="org.upmobile.newmusicdownloader.service.PlayerService" />
+        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService" />
         
         
         

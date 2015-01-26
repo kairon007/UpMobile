@@ -6,9 +6,9 @@ import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DownloadListener;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
-import org.upmobile.newmusicdownloader.service.PlayerService;
-import org.upmobile.newmusicdownloader.service.PlayerService.OnStatePlayerListener;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -54,7 +54,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private AbstractSong song;
 	private AudioManager audio;
 	private RenameTask renameTask;
-	private PlayerService player;
+	private PlaybackService player;
 	private LyricsFetcher lyricsFetcher;
 	private DownloadListener downloadListener;
 	private IntentFilter filter;
@@ -107,8 +107,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			getCover(song);
 		} else {
 			hadInstance = true;
-			if (PlayerService.hasInstance()) {
-				player = PlayerService.get(getActivity());
+			if (PlaybackService.hasInstance()) {
+				player = PlaybackService.get(getActivity());
 				int pos;
 				if (player.getPlayingSong() != null && !player.isGettingURl() && player.isPrepared()) {
 					setClickablePlayerElement(true);
@@ -134,22 +134,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				return parentView;
 			}
 		}
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				player = PlayerService.get(getActivity());
-				player.setStatePlayerListener(PlayerFragment.this);
-				if (!hadInstance) {
-					if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
-						player.play();
-					} else {
-						player.play(song);
-					}
-				}
+		player = PlaybackService.get(getActivity());
+		player.setStatePlayerListener(PlayerFragment.this);
+		if (!hadInstance) {
+			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
+				player.play();
+			} else {
+				player.play(song);
 			}
-			
-		}).start();
+		}
 		setClickablePlayerElement(false);
 		changePlayPauseView(true);
 		return parentView;
@@ -547,7 +540,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 					playerTagsCheckBox.setChecked(true);
 				}
-				player.update(pos[0], pos[1], song.getTitle(), song.getArtist(), song.getPath(), song.getAlbum());
+//				player.update(pos[0], pos[1], song.getTitle(), song.getArtist(), song.getPath(), song.getAlbum());
 			}
 
 			@Override

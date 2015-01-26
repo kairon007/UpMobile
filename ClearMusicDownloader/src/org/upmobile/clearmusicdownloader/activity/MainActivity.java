@@ -9,10 +9,11 @@ import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
-import org.upmobile.clearmusicdownloader.service.PlayerService;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,7 +32,7 @@ public class MainActivity extends BaseClearActivity {
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
 	private String[] titles;
-	private PlayerService player;
+	private PlaybackService player;
 	private OrientationListener orientationListener;
 	private boolean useCoverHelper = true;
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
@@ -50,17 +51,13 @@ public class MainActivity extends BaseClearActivity {
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				player = PlayerService.get(MainActivity.this);
-				if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
-					ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
-					player.setArrayPlayback(list);
-				}
+		if (PlaybackService.hasInstance()) {
+			player = PlaybackService.get(MainActivity.this);
+			if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
+				ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
+				player.setArrayPlayback(list);
 			}
-		}).start();
+		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		File file = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
 		if (!file.exists()){
@@ -81,11 +78,24 @@ public class MainActivity extends BaseClearActivity {
 	}
 	
 	@Override
+	protected void onStart() {
+		startService(new Intent(this, PlaybackService.class));
+		super.onStart();
+	}
+	
+	@Override
 	protected void onResume() {
+		checkService();
 		if (null != player && player.isPlaying()) {
 			showPlayerElement();
 		}
 		super.onResume();
+	}
+
+	private void checkService() {
+		if (PlaybackService.hasInstance()) {
+			player = PlaybackService.get(this);
+		}
 	}
 
 	@Override
@@ -107,6 +117,7 @@ public class MainActivity extends BaseClearActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
+		checkService();
 		if (player.hasArray()) {
 			out.putParcelableArrayList(ARRAY_SAVE, player.getArrayPlayback());
 		}
