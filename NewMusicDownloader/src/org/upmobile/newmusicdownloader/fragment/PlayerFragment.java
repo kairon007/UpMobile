@@ -150,7 +150,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void start(AbstractSong s) {
-		this.song = s;
+		song = s;
 		downloadButtonState(true);
 		if (isDestroy) return;
 		((MainActivity) getActivity()).showPlayerElement(true);
@@ -173,24 +173,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void play(AbstractSong song) {
 		if (isDestroy) return;
 		changePlayPauseView(false);
+		wait.setVisibility(View.INVISIBLE);
+		playerProgress.setVisibility(View.VISIBLE);
 	}
 
-
-	@Override
-	public void update(AbstractSong current) {
-		if (isDestroy) return;
-		song = current;
-		setElementsView(0);
-		setClickablePlayerElement(false);
-		playerProgress.setVisibility(View.INVISIBLE);
-		wait.setVisibility(View.VISIBLE);
-	}
 	
 	@Override
-	public void stop(AbstractSong song) {
+	public void stop(AbstractSong s) {
 		if (isDestroy) return;
+		song = s;
 		setElementsView(0);
 		changePlayPauseView(true);
+		playerProgress.setVisibility(View.INVISIBLE);
+		wait.setVisibility(View.VISIBLE);
 		setClickablePlayerElement(player.isPrepared());
 	}
 	

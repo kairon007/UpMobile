@@ -85,6 +85,7 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 		parentView = inflater.inflate(R.layout.fragment_list_transition, container, false);
 		init();
 		ArrayList<MusicData> srcList = querySong();
+		service = PlaybackService.get(getActivity());
 		if (!srcList.isEmpty()) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
 			if (null != service && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
@@ -152,14 +153,6 @@ public class LibraryFragment extends Fragment implements Handler.Callback {
 			}
 		}
 		return true;
-	}
-	
-	@Override
-	public void onStart() {
-		if (PlaybackService.hasInstance()) {
-			service = PlaybackService.get(getActivity());
-		}
-		super.onStart();
 	}
 	
 	@Override

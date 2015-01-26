@@ -64,15 +64,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		}
 
 		@Override
-		public void update(AbstractSong song) {
-			android.util.Log.d("logks", "call UPDATE in library adapter");
-			if (song.getClass() != MusicData.class)	return;
-			MusicData data = get(song);
-			data.setPlaying(true);
-			notifyDataSetChanged();
-		}
-
-		@Override
 		public void stop(AbstractSong song) {
 			android.util.Log.d("logks", "call START in library adapter");
 			MusicData data = get(song);
@@ -133,8 +124,10 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			artist.setText(data.getArtist());
 			duration.setText(Util.getFormatedStrDuration(data.getDuration()));
 			if (data.isPlaying()) {
+				android.util.Log.d("logks", "LibraryAdapter.LibraryViewHolder, hold: isPlaying - " + position + " position");
 				setButtonBackground(BTN_PAUSE);
 			} else {
+				android.util.Log.d("logks", "LibraryAdapter.LibraryViewHolder, hold: isn't playing - " + position + " position");
 				setButtonBackground(BTN_PLAY);
 			}
 			cover.setImageResource(R.drawable.no_cover_art_big);

@@ -49,16 +49,20 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 		@Override
 		public void start(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
-//			if (position == getCount()) --position;
-//			((MusicData) getItem(position)).turnOn(MusicData.MODE_PLAYING);
-			((MusicData) song).turnOn(MusicData.MODE_PLAYING);
+			MusicData data = get(song);
+			if (data != null) {
+				data.turnOn(MusicData.MODE_PLAYING);
+			}
 			notifyDataSetChanged();
 		}
 
 		@Override
 		public void play(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
-			((MusicData) song).turnOn(MusicData.MODE_PLAYING);
+			MusicData data = get(song);
+			if (data != null) {
+				data.turnOn(MusicData.MODE_PLAYING);
+			}
 			notifyDataSetChanged();
 		}
 
@@ -71,33 +75,30 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 
 		@Override
 		public void stop(AbstractSong song) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void update(AbstractSong song) {
 			if (song.getClass() != MusicData.class) return;
-			((MusicData) song).turnOff(MusicData.MODE_PLAYING);
+			MusicData data = get(song);
+			if (data != null) {
+				data.turnOff(MusicData.MODE_PLAYING);
+			}
 			notifyDataSetChanged();
 		}
+		
 	};
 	
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
+		if (PlaybackService.hasInstance()) {
+			initService();
+		}
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-	}
-	
-	private void checkService() {
-		if (service == null) {
-			service = PlaybackService.get(getContext());
-			service.setStatePlayerListener(stateListener);
+		if (PlaybackService.hasInstance()) {
+			initService();
 		}
 	}
-
+	
 	@Override
 	protected ViewHolder<MusicData> createViewHolder(View v) {
 		libraryViewHolder = new LibraryViewHolder(v);
@@ -126,6 +127,17 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 			previous = null;
 		}
 		((MusicData) selected).turnOff(MusicData.MODE_VISIBLITY);
+	}
+	
+	public MusicData get(AbstractSong data) {
+		if (data == null) return null;
+		for (int i = 0; i < getCount(); i++) {
+			MusicData buf = getItem(i);
+			if (buf.equals(data)) {
+				return getItem(i);
+			}
+		}
+		return null;
 	}
 
 	public void cancelTimer() {
@@ -250,7 +262,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_UP:
-						checkService();
+						if (service == null) {
+							initService();
+						}
 						if (!service.isCorrectlyState(MusicData.class, getCount())) {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 							service.setArrayPlayback(list);
@@ -281,7 +295,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 
 				@Override
 				public void onClick(View v) {
-					checkService();
+					if (service == null) {
+						initService();
+					}
 					if (!service.isCorrectlyState(MusicData.class, getCount())) {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
@@ -319,5 +335,10 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 	@Override
 	protected boolean isSetListener() {
 		return true;
+	}
+	
+	private void initService() {
+		service = PlaybackService.get(getContext());
+		service.setStatePlayerListener(stateListener);
 	}
 }

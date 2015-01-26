@@ -74,14 +74,13 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	public interface OnStatePlayerListener {
 		
 		public enum State {
-			START, PLAY, PAUSE, UPDATE, STOP, NONE
+			START, PLAY, PAUSE, STOP, NONE
 		}
 		
 		public void start(AbstractSong song);
 		public void play(AbstractSong song);
 		public void	pause(AbstractSong song);
 		public void stop (AbstractSong song);
-		public void update(AbstractSong song);
 			
 	}
 	
@@ -312,7 +311,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		playingSong = arrayPlayback.get(position);
 		handler.removeCallbacksAndMessages(null);
 		buildSendMessage(null, MSG_RESET, 0, 0);
-		helper(State.UPDATE, playingSong);
 		play(playingSong.getClass() != MusicData.class);
 	}
 
@@ -320,7 +318,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		if (arrayPlayback == null && arrayPlayback.indexOf(song) == -1) {
 			return;
 		}
-		printStateDebug();
 		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
 			previousSong = playingSong;
@@ -360,7 +357,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		if (check(SMODE_PREPARED)) {
 			helper(State.START, playingSong);
 		} else {
-			helper(State.UPDATE, playingSong);
+			helper(State.STOP, playingSong);
 		}
 	}
 	
@@ -435,9 +432,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 					break;
 				case PAUSE:
 					stateListener.pause(targetSong);
-					break;
-				case UPDATE:
-					stateListener.update(targetSong);
 					break;
 				case STOP:
 					stateListener.stop(targetSong);

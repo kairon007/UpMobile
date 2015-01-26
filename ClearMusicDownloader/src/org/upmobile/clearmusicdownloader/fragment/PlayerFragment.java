@@ -240,6 +240,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				}
 				if (isDestroy) return;
 				setClickablePlayerElement(true);
+				showLyrics();
 				setElementsView(0);
 				playerProgress.post(progressAction);
 			}
@@ -258,16 +259,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 			@Override
 			public void stop(AbstractSong song) {
-				
-			}
-
-			@Override
-			public void update(AbstractSong song) {
-				if (isDestroy) return;
 				PlayerFragment.this.song = song;
-				showLyrics();
 				setElementsView(0);
-				setClickablePlayerElement(false);
+				setClickablePlayerElement(player.isPrepared());
 			}
 			
 		});
