@@ -27,8 +27,6 @@ import com.special.menu.ResideMenu.OnMenuListener;
 import com.special.utils.UISwipableList;
 
 public class LibraryView extends BaseLibraryView implements OnScrollListener, OnMenuListener, Constants, Handler.Callback {
-
-	private static final int MSG_FILL_ADAPTER = 1;
 	
 	private ResideMenu resideMenu;
 	private UISwipableList listView;

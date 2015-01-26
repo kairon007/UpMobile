@@ -21,7 +21,7 @@ import android.widget.ListView;
 
 public abstract class BaseLibraryView extends View {
 
-	private static final int MSG_FILL_ADAPTER = 1;
+	protected static final int MSG_FILL_ADAPTER = 1;
 	
 	private ViewGroup view;
 	private ArrayAdapter<MusicData> adapter;
@@ -69,6 +69,7 @@ public abstract class BaseLibraryView extends View {
 	public BaseLibraryView(LayoutInflater inflater) {
 		super(inflater.getContext());
 		uiHandler = new Handler();
+		service = PlaybackService.get(getContext());
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false, observer);
 		ArrayList<MusicData> srcList = querySong();
 		if (!srcList.isEmpty()) {
