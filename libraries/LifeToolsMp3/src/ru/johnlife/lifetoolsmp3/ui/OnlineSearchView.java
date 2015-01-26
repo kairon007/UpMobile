@@ -661,7 +661,7 @@ public abstract class OnlineSearchView extends View {
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()));
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
-			song.setArtist(title);
+			song.setTitle(title);
 			song.setArtist(artist);
 			builder.setLine1(title,
 					Util.getFormatedStrDuration(song.getDuration()))
