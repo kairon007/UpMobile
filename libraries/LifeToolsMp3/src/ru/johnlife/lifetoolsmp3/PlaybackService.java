@@ -217,12 +217,11 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		}
 	}
 	
-	public void update(int position, String title, String artist, String path){
+	public void update(String title, String artist, String path){
 		if (playingSong.getClass() == MusicData.class){
-			MusicData data = (MusicData) arrayPlayback.get(position);
-			data.setArtist(artist);
-			data.setTitle(title);
-			data.setPath(path);
+			playingSong.setArtist(artist);
+			playingSong.setTitle(title);
+			playingSong.setPath(path);
 		}
 	}
 	
@@ -329,7 +328,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 				reset();
 			}
 		}
-		
 		playingSong = arrayPlayback.get(position);
 		if (check(SMODE_PREPARED)) {
 			Message msg = new Message();

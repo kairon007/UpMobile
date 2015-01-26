@@ -73,11 +73,10 @@ public abstract class BaseLibraryView extends View {
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false, observer);
 		ArrayList<MusicData> srcList = querySong();
 		if (!srcList.isEmpty()) {
-			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(srcList);
 			if (null != service && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
 				int pos = service.getPlayingPosition();
-				if (pos >= 0 && pos < list.size()) {
-					((MusicData) list.get(pos)).turnOn(MusicData.MODE_PLAYING);
+				if (pos >= 0 && pos < srcList.size()) {
+					((MusicData) srcList.get(pos)).turnOn(MusicData.MODE_PLAYING);
 				}
 			}
 		}

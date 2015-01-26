@@ -96,7 +96,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private TextView playerTitleBarTitle;
 	private TextView playerTitleBarArtis;
 	private FrameLayout playerCancelRemoving;
-	private int currentPosition;
     private int delta_top;
     private int delta_left;
 	private int top;
@@ -117,7 +116,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private float scale_height;
 	private float ratio;
     private boolean isDestroy;
-    private boolean hadInstance;
     private boolean isUseAlbumCover = true;
     private boolean removeCover = false;
     private boolean isNeedCalculateCover;
@@ -133,6 +131,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		init();
 		setListener();
 		downloadButtonState(false);
+		player = PlaybackService.get(getActivity());
+		bindToPlayer();
 		playerTitleBar.getBackground().setAlpha(0);
 		playerTitleBarArtis.setVisibility(View.INVISIBLE);
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
@@ -142,83 +142,31 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtArtist);
 		isUseAlbumCover = ((MainActivity) getActivity()).stateCoverHelper();
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
-			hadInstance = false;
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			currentPosition = getArguments().getInt(Constants.KEY_SELECTED_POSITION);
+			android.util.Log.d("logks", "title (!= )" + song.getTitle());
 			top = getArguments().getInt(PACKAGE + ".top");
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
-		} else {
-			hadInstance = true;
-		}
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				player = PlaybackService.get(getActivity());
-				bindToPlayer();
-				final int current;
-				final int mode;
-				final boolean enabledPlayerElement;
-				if (hadInstance) {
-					song = player.getPlayingSong();
-					currentPosition = player.getPlayingPosition();
-					if (player.isGettingURl() || !player.isPrepared()) {
-						enabledPlayerElement = false;
-						current = 0;
-						mode = 0;
-					} else {
-						boolean check = player.isPlaying();
-						current = player.getCurrentPosition();
-						if (check) {
-							mode = -1;
-						} else {
-							mode = 1;
-						}
-						enabledPlayerElement = true;
-						downloadButtonState(true);
-					}
-				} else {
-					if (player.hasValidSong(song.getClass()) && player.getPlayingPosition() == currentPosition && player.isPrepared()) {
-						boolean check = player.isPlaying();
-						current = player.getCurrentPosition();
-						enabledPlayerElement = true;
-						if (check) {
-							mode = -1;
-						} else {
-							mode = 1;
-						}
-						downloadButtonState(true);
-					} else {
-						mode = 0;
-						current = 0;
-						enabledPlayerElement = false;
-						player.play(song);
-					}
-				}
-				new Handler(Looper.getMainLooper()).post(new Runnable() {
-					
-					@Override
-					public void run() {
-						getCover(song);
-						showLyrics();
-						startImageAnimation(playerCover);
-						setElementsView(current);
-						coverTitleBarLocation();
-						deltaScale = 1 - (float)Util.dpToPx(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
-						if (!enabledPlayerElement) {
-							setClickablePlayerElement(false);
-						}
-						if (mode > 0) {
-							changePlayPauseView(true);
-						} else if (mode < 0){
-							changePlayPauseView(false);
-						}
-					}
-				});
+			if (!player.hasValidSong(song.getClass()) || !player.isPrepared()) {
+				play(0);
 			}
-		}).start();
+		} else {
+			song = player.getPlayingSong();
+		}
+		boolean prepared = player.isPrepared();
+		setClickablePlayerElement(prepared);
+		if (prepared) {
+			changePlayPauseView(!player.isPlaying());
+		} else {
+			changePlayPauseView(false);
+		}
+		getCover(song);
+		showLyrics();
+		startImageAnimation(playerCover);
+		setElementsView(player.getCurrentPosition());
+		coverTitleBarLocation();
+		deltaScale = 1 - (float)Util.dpToPx(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
 		return parentView;
 	}
 	
@@ -260,7 +208,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			@Override
 			public void stop(AbstractSong song) {
 				PlayerFragment.this.song = song;
-				setElementsView(0);
+				playerProgress.removeCallbacks(progressAction);
+				playerProgress.setProgress(0);
 				setClickablePlayerElement(player.isPrepared());
 			}
 			
@@ -584,7 +533,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void success(String path) {
 				song.setPath(path);
 				renameTask.cancelProgress();
-				player.update(currentPosition, song.getTitle(), song.getArtist(), song.getPath());
+				player.update(song.getTitle(), song.getArtist(), song.getPath());
 			}
 
 			@Override

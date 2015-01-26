@@ -86,7 +86,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private EditText playerTagsArtist;
 	private int checkIdCover;
     private boolean isDestroy;
-    private boolean hadInstance;
     private boolean isUseAlbumCover = true;
 	
 	@Override
@@ -101,50 +100,31 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
-			hadInstance = false;
-			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			getCover(song);
-		} else {
-			hadInstance = true;
-			if (PlaybackService.hasInstance()) {
-				player = PlaybackService.get(getActivity());
-				int pos;
-				if (player.getPlayingSong() != null && !player.isGettingURl() && player.isPrepared()) {
-					setClickablePlayerElement(true);
-					pos = player.getCurrentPosition();
-					wait.setVisibility(View.INVISIBLE);
-					playerProgress.setVisibility(View.VISIBLE);
-				} else {
-					pos = 0;
-					setClickablePlayerElement(false);
-					wait.setVisibility(View.VISIBLE);
-					playerProgress.setVisibility(View.INVISIBLE);
-				}
-				player.setStatePlayerListener(this);
-				song = player.getPlayingSong();
-				if (player.isPrepared() || player.isPlaying()) {
-					downloadButtonState(true);
-				}
-				getCover(song);
-				setImageButton();
-				changePlayPauseView(!player.isPlaying());
-				setElementsView(pos);
-				playerProgress.post(progressAction);
-				return parentView;
-			}
-		}
 		player = PlaybackService.get(getActivity());
-		player.setStatePlayerListener(PlayerFragment.this);
-		if (!hadInstance) {
+		player.setStatePlayerListener(this);
+		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
+			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
 				player.play();
 			} else {
 				player.play(song);
 			}
+		} else {
+			song = player.getPlayingSong();
 		}
-		setClickablePlayerElement(false);
-		changePlayPauseView(true);
+		setImageButton();
+		getCover(song);
+		setElementsView(player.getCurrentPosition());
+		boolean prepared = player.isPrepared();
+		setClickablePlayerElement(prepared);
+		if (prepared) {
+			changePlayPauseView(!player.isPlaying());
+			if ( player.isPlaying()) {
+				downloadButtonState(true);
+			}
+		} else {
+			changePlayPauseView(false);
+		}
 		return parentView;
 	}
 	
@@ -158,9 +138,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setClickablePlayerElement(true);
 		changePlayPauseView(!player.isPlaying());
 		setElementsView(0);
-		playerProgress.post(progressAction);
-		wait.setVisibility(View.INVISIBLE);
-		playerProgress.setVisibility(View.VISIBLE);
 	}
 	
 	@Override
@@ -176,7 +153,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		wait.setVisibility(View.INVISIBLE);
 		playerProgress.setVisibility(View.VISIBLE);
 	}
-
 	
 	@Override
 	public void stop(AbstractSong s) {
@@ -184,8 +160,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		song = s;
 		setElementsView(0);
 		changePlayPauseView(true);
-		playerProgress.setVisibility(View.INVISIBLE);
-		wait.setVisibility(View.VISIBLE);
 		setClickablePlayerElement(player.isPrepared());
 	}
 	
@@ -260,6 +234,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (!isClickable) {
 			playerCurrTime.setText("0:00");
 			playerProgress.setProgress(0);
+			playerProgress.setVisibility(View.INVISIBLE);
+			wait.setVisibility(View.VISIBLE);
+		} else {
+			playerProgress.setVisibility(View.VISIBLE);
+			wait.setVisibility(View.INVISIBLE);
 		}
 	}
 	
@@ -510,7 +489,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void saveTags() {
 		hideKeyboard();
-		final int pos[] = player.getPosition(song);
 		boolean manipulate = manipulateText();
 		isUseAlbumCover = playerTagsCheckBox.isChecked();
 		if (!manipulate && playerTagsCheckBox.isChecked()) {

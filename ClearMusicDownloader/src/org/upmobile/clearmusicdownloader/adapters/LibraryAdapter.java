@@ -274,7 +274,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 				        view.getLocationOnScreen(screen_location);
 				        Bundle bundle = new Bundle();
 				        bundle.putParcelable(Constants.KEY_SELECTED_SONG, item);
-				        bundle.putInt(Constants.KEY_SELECTED_POSITION, getPosition(item));
 				        bundle.putInt(PACKAGE + ".left", screen_location[0]);
 				        bundle.putInt(PACKAGE + ".top", screen_location[1]);
 				        bundle.putInt(PACKAGE + ".width", view.getWidth());

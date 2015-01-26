@@ -128,7 +128,6 @@ public class MainActivity extends BaseClearActivity {
 		if (null != player && player.getPlayingSong().getClass() == MusicData.class) {
 			Bundle args = new Bundle();
 			args.putParcelable(Constants.KEY_SELECTED_SONG, (MusicData) player.getPlayingSong());
-			args.putInt(Constants.KEY_SELECTED_POSITION, player.getPlayingPosition());
 			return args;
 		} else
 			return null;
