@@ -109,7 +109,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private int checkIdRmvTask;
 	private float maxTranslationX;
 	private float maxTranslationY;
-	private float deltaScale = Float.NaN;
+	private float deltaScale = 0;
 	private float scaleWidthTitleBar;
 	private float scaleHeightTitleBar;
     private float scale_width;
@@ -165,7 +165,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		startImageAnimation(playerCover);
 		setElementsView(player.getCurrentPosition());
 		coverTitleBarLocation();
-//		deltaScale = 1 - (float)Util.dpToPx(getActivity(), 48) / (float)playerCover.getMeasuredHeight();
 		return parentView;
 	}
 	
@@ -691,10 +690,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void prepareCover() {
 		useCover.setVisibility(View.VISIBLE);
 		playerCancelRemoving.setVisibility(View.GONE);
+		isUseAlbumCover = true;
 		useCover.setChecked(isUseAlbumCover);
 	}
-	
-	
 
 	private void download() {
 		((MainActivity)getActivity()).setCoverHelper(true);
@@ -859,7 +857,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		playerCover.setTranslationX(maxTranslationX * ratio);
         playerCover.setTranslationY(maxTranslationY * ratio);
-        if (deltaScale == Float.NaN) {
+        if (deltaScale == 0) {
 			deltaScale = 1 - (float) Util.dpToPx(getActivity(), 48) / (float) playerCover.getMeasuredHeight();
 		}
 		ViewHelper.setScaleX(playerCover, 1.f - deltaScale * ratio);
