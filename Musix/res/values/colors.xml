@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="wet_asphalt">#334960</color>
+    <color name="wet_asphalt_alpha">#B3334960</color>
+    <color name="clouds">#ECF0F1</color>
+    <color name="concrete">#95A5A5</color>
+    <color name="main_color">#EA4B36</color>
+    <color name="belize_hole">#227FBC</color>
+    <color name="orange_light">#FFB61C</color>
+    <color name="blue_light">#8AD5F0</color>
+
+</resources>
