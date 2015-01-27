@@ -347,6 +347,9 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 			msg.obj = playingSong;
 			handler.sendMessage(msg);
 		} else {
+			if (null != previousSong) {
+				helper(State.STOP, previousSong);
+			}
 			play(playingSong.getClass() != MusicData.class);
 		}
 	}
