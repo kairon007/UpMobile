@@ -427,8 +427,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTvTitle.setText(song.getTitle());
 		playerTitleBarArtis.setText(song.getArtist());
 		playerTitleBarTitle.setText(song.getTitle());
-		player.update(song.getTitle(), song.getArtist(), null);
-		if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(true);
+		if (song.getClass() != MusicData.class) {
+			((RemoteSong) song).setHasCover(true);
+			player.update(song.getTitle(), song.getArtist(), null);
+		}
 	}
 	
 	@Override
