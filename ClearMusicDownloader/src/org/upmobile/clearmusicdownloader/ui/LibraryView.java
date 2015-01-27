@@ -1,17 +1,14 @@
 package org.upmobile.clearmusicdownloader.ui;
 
-import java.util.ArrayList;
-
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 
+import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -19,19 +16,17 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenu.OnMenuListener;
 import com.special.utils.UISwipableList;
 
-public class LibraryView extends BaseLibraryView implements OnScrollListener, OnMenuListener, Constants, Handler.Callback {
+public class LibraryView extends BaseLibraryView implements OnScrollListener, OnMenuListener, Constants {
 	
 	private ResideMenu resideMenu;
 	private UISwipableList listView;
 	private Animation anim;
-	private LibraryAdapter adapter;
 
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
@@ -40,8 +35,8 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 	}
 
 	@Override
-	protected ArrayAdapter<MusicData> getAdapter() {
-		return adapter = new LibraryAdapter(getContext(), R.layout.library_item);
+	protected BaseAdapter<MusicData> getAdapter() {
+		return new LibraryAdapter(getContext(), R.layout.library_item);
 	}
 
 	@Override
@@ -66,11 +61,11 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 
 	@Override
 	public void openMenu() {
-		for (final MusicData item : adapter.getAll()) {
+		for (final MusicData item : getAdapter().getAll()) {
 			if (item.check(MusicData.MODE_VISIBLITY)) {
 				item.reset(getContext());
-				adapter.remove(item);
-				deleteItem(item);
+				deleteAdapterItem(item);
+				deleteServiceItem(item);
 			}
 		}
 	}
@@ -82,9 +77,9 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		for (final MusicData item : adapter.getAll()) {
+		for (final MusicData item : getAdapter().getAll()) {
 			if (item.check(MusicData.MODE_VISIBLITY)) {
-				int wantedPosition = adapter.getPosition(item);
+				int wantedPosition = getAdapter().getPosition(item);
 				int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
 				int wantedChild = wantedPosition - firstPosition;
 				if (wantedChild < 0 || wantedChild >= listView.getChildCount()) return;
@@ -94,7 +89,7 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 
 					@Override
 					public void onAnimationStart(Animation paramAnimation) {
-						adapter.cancelTimer();
+						adapterCancelTimer();
 					}
 
 					@Override
@@ -104,8 +99,8 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 					@Override
 					public void onAnimationEnd(Animation paramAnimation) {
 						item.reset(getContext());
-						adapter.remove(item);
-						deleteItem(item);
+						deleteAdapterItem(item);
+						deleteServiceItem(item);
 					}
 				});
 				listView.getChildAt(wantedChild).startAnimation(anim);
@@ -114,24 +109,7 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 	}
 
 	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
-
-	}
-
-	@Override
-	public boolean handleMessage(Message msg) {
-		if (msg.what == MSG_FILL_ADAPTER) {
-			ArrayList<MusicData> array = (ArrayList<MusicData>) msg.obj;
-			if (adapter.isEmpty()) {
-				adapter = new LibraryAdapter(getContext(), R.layout.library_item, array);
-				listView.setAdapter(adapter);
-				listView.setOnScrollListener(this);
-			} else {
-				adapter.changeArray((ArrayList<MusicData>) msg.obj);
-			}
-		}
-		return true;
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 	}
 
 }

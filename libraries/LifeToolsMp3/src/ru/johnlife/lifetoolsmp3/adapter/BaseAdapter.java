@@ -31,11 +31,11 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 
 	protected abstract ViewHolder<T> createViewHolder(final View v);
 
-	protected void onItemSwipeVisible(Object selected, View v) {
-	}
+	protected void onItemSwipeVisible(Object selected, View v) {}
 
-	protected void onItemSwipeGone(Object selected, View v) {
-	}
+	protected void onItemSwipeGone(Object selected, View v) {}
+	
+	public void cancelTimer() {}
 	
 	protected abstract boolean isSetListener();
 	

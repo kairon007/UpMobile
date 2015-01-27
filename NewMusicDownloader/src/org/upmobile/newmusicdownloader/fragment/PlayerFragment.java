@@ -164,6 +164,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	@Override
+	public void error() {
+		Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public void update(AbstractSong current) {
+		if (isDestroy) return;
+		song = current;
+		setElementsView(0);
+		setClickablePlayerElement(false);
+		playerProgress.setVisibility(View.INVISIBLE);
+		wait.setVisibility(View.VISIBLE);
+	}
+	
+	@Override
 	public void onPause() {
 		if (null != lyricsFetcher) lyricsFetcher.cancel();
 		if (null != volumeReceiver) getActivity().unregisterReceiver(volumeReceiver);

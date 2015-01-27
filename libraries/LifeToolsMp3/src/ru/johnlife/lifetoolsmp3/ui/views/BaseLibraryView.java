@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3.ui.views;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -16,16 +17,15 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 @SuppressLint("NewApi")
-public abstract class BaseLibraryView extends View {
+public abstract class BaseLibraryView extends View implements Handler.Callback {
 
 	protected static final int MSG_FILL_ADAPTER = 1;
 	
 	private ViewGroup view;
-	private ArrayAdapter<MusicData> adapter;
+	private BaseAdapter<MusicData> adapter;
 	private ListView listView;
 	private PlaybackService service;
 	private Handler uiHandler;
@@ -63,7 +63,7 @@ public abstract class BaseLibraryView extends View {
 		};
 	};
 	
-	protected abstract ArrayAdapter<MusicData> getAdapter();
+	protected abstract BaseAdapter<MusicData> getAdapter();
 	protected abstract ListView getListView(View view);
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
@@ -93,7 +93,15 @@ public abstract class BaseLibraryView extends View {
 		return view;
 	}
 	
-	protected void deleteItem(MusicData item) {
+	protected void adapterCancelTimer() {
+		adapter.cancelTimer();
+	}
+	
+	protected void deleteAdapterItem(MusicData item) {
+		adapter.remove(item);
+	}
+	
+	protected void deleteServiceItem(MusicData item) {
 		service.remove(item);
 	}
 	
@@ -125,6 +133,19 @@ public abstract class BaseLibraryView extends View {
 		String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%'";
 		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		return cursor;
+	}
+	
+	@Override
+	public boolean handleMessage(Message msg) {
+		if (msg.what == MSG_FILL_ADAPTER) {
+			if (adapter.isEmpty()) {
+				adapter = getAdapter();
+				listView.setAdapter(adapter);
+			} else {
+				adapter.changeArray((ArrayList<MusicData>) msg.obj);
+			}
+		}
+		return true;
 	}
 
 }
