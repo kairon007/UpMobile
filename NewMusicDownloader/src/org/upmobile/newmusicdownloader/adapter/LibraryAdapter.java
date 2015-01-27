@@ -188,7 +188,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		public boolean onLongClick(View view) {
 			if (view.getId() == cover.getId() || view.getId() == info.getId()) {
 				PopupMenu menu = new PopupMenu(getContext(), view);
-				menu.getMenuInflater().inflate(R.menu.menu, menu.getMenu());
+				menu.getMenuInflater().inflate(R.menu.deletemenu, menu.getMenu());
 				menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
