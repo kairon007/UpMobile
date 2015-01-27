@@ -160,6 +160,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			changePlayPauseView(false);
 		}
+		downloadButtonState(!player.isGettingURl());
 		getCover(song);
 		showLyrics();
 		startImageAnimation(playerCover);
