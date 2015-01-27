@@ -118,7 +118,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private boolean isDestroy;
     private boolean isUseAlbumCover = true;
     private boolean removeCover = false;
-    private boolean isNeedCalculateCover;
+    private boolean isNeedCalculateCover = true;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -164,13 +164,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		showLyrics();
 		startImageAnimation(playerCover);
 		setElementsView(player.getCurrentPosition());
-		coverTitleBarLocation();
 		return parentView;
 	}
 	
 	private void coverTitleBarLocation() {
 		maxTranslationX = Util.dpToPx(getActivity(), 48) - playerCover.getX();
 		maxTranslationY = 0 - playerCover.getY() + Util.dpToPx(getActivity(), 4);
+		deltaScale = 1 - (float) Util.dpToPx(getActivity(), 48) / (float) playerCover.getMeasuredHeight();
 	}
 	
 	private void bindToPlayer() {
@@ -873,9 +873,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		playerCover.setTranslationX(maxTranslationX * ratio);
         playerCover.setTranslationY(maxTranslationY * ratio);
-        if (deltaScale == 0) {
-			deltaScale = 1 - (float) Util.dpToPx(getActivity(), 48) / (float) playerCover.getMeasuredHeight();
-		}
 		ViewHelper.setScaleX(playerCover, 1.f - deltaScale * ratio);
         ViewHelper.setScaleY(playerCover, 1.f - deltaScale * ratio);
 	}

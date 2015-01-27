@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingRight="8dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:paddingLeft="8dp"
-    android:orientation="vertical" >
+    android:paddingRight="8dp" >
 
     <ImageView
         android:id="@+id/lyrics_load_image"
@@ -16,10 +17,18 @@
         android:visibility="gone" />
 
     <TextView
-        android:layout_weight="1"
         android:id="@+id/player_lyrics_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:text="Lyrics, lyrics, lyrics,
+        lyrics, lyrics, lyrics, lyrics...
+        lyrics, lyrics, lyrics...
+        lyrics, lyrics, lyrics, lyrics...
+        lyrics, lyrics, lyrics...
+        lyrics, lyrics, lyrics, lyrics...
+        lyrics, lyrics, lyrics, lyrics, lyrics...
+        lyrics, lyrics, lyrics...
+        lyrics, lyrics, lyrics..." />
 
 </LinearLayout>
