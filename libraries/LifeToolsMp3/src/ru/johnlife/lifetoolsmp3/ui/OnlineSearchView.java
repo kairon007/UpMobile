@@ -426,6 +426,10 @@ public abstract class OnlineSearchView extends View {
 	    return -top + firstVisiblePosition * c.getHeight();
 	}
 	
+	protected void setSearchBoxBackground(int color) {
+		spEnginesChoiserLayout.setBackgroundColor(color);
+	}
+	
 	private void hideKeyboard(View view) {
 		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -722,7 +726,7 @@ public abstract class OnlineSearchView extends View {
 			refreshSpinner.setVisibility(View.GONE);
 		}
 	}
-
+	
 	public static boolean isOffline(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

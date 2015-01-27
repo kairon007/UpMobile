@@ -6,12 +6,14 @@ import org.upmobile.musicpro.Nulldroid_Settings;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		setSearchBoxBackground(Color.TRANSPARENT);
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class SearchView extends OnlineSearchView {
 	public void refreshLibrary() {
 
 	}
-
+	
 	@Override
 	public boolean isWhiteTheme(Context context) {
 		return false;
