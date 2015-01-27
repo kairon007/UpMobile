@@ -159,7 +159,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 		registerReceiver(headsetReceiver, filter);
 		player = new MediaPlayer();
-		android.util.Log.d("logks", "PlaybackService, onCreate:");
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
@@ -176,7 +175,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	public void onDestroy() {
 		unregisterReceiver(headsetReceiver);
 		handler.removeCallbacksAndMessages(null);
-		android.util.Log.d("logks", "PlaybackService, onDestroy: ");
 		player.release();
 		looper.quit();
 		super.onDestroy();
@@ -234,11 +232,8 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	
 	@Override
 	public boolean handleMessage(Message msg) {
-		//TODO handleMessage()
-		android.util.Log.d("logks", "PlaybackService, >>>>>>>>>>handleMessage<<<<<<<<<<<<<< what - " + msg.what);
 		switch (msg.what) {
 		case MSG_START:
-			android.util.Log.d("logks", "PlaybackService, handleMessage: MSG_START, path - " + (String) msg.obj);
 			if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
 				player.reset();
 				offMode(SMODE_PREPARED);
@@ -250,17 +245,15 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 				Uri uri = Uri.parse((String) msg.obj);
 				player.setDataSource(this, uri);
 				mode |= SMODE_START_PREPARE;
-				android.util.Log.d("logks", "start prepareAsync()");
 				player.prepareAsync();
 			} catch (Exception e) {
-				android.util.Log.e("logks", "in method \"hanleMessage\" appear problem: " + e.toString());
+				android.util.Log.e(getClass().getSimpleName(), "!!! in method \"hanleMessage\" appear problem: " + e.toString());
 			}
 			break;
 
 		case MSG_PLAY:
 			if (check(SMODE_PREPARED)) {
 				helper(State.PLAY, (AbstractSong) msg.obj);
-				android.util.Log.d("logks", "in handle message, MSG_PLAY - " + ((AbstractSong) msg.obj).getTitle());
 				player.start();
 				mode |= SMODE_PLAYING;
 			}
@@ -304,12 +297,10 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	}
 	
 	public void shift(int delta) {
-		android.util.Log.d("logks", "PlaybackService, shift: delta = " + delta);
 		if (null == arrayPlayback || arrayPlayback.isEmpty()) return;
 		int position = arrayPlayback.indexOf(playingSong);
 		helper(State.STOP, playingSong);
 		if (enabledRepeat()) {
-			android.util.Log.d("logks", "enabledRepeat(), play - " + playingSong.getTitle());
 			buildSendMessage(playingSong, MSG_PLAY, 0, 0);
 			return;
 		}
@@ -342,6 +333,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 				reset();
 			}
 		}
+		printStateDebug();
 		playingSong = arrayPlayback.get(position);
 		if (check(SMODE_PREPARED)) {
 			Message msg = new Message();
@@ -352,7 +344,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 			} else {
 				onMode(SMODE_PAUSE);
 				msg.what = MSG_PAUSE;
-				
 			}
 			msg.obj = playingSong;
 			handler.sendMessage(msg);
@@ -501,18 +492,16 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 
 	@Override
 	public void onCompletion(MediaPlayer paramMediaPlayer) {
-		android.util.Log.d("logks", "PlaybackService, onCompletion:" );
 		shift(1);
 	}
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		//TODO onPrepared
 		synchronized (LOCK) {
 			onMode(SMODE_PREPARED);
 			onMode(SMODE_PLAYING);
 			printStateDebug();
-			helper(State.START, playingSong);android.util.Log.d("logks", "PlaybackService, onPrepared: song - " + playingSong.getPath());
+			helper(State.START, playingSong);
 			mp.start();
 			if ((mode & SMODE_UNPLUG_HEADPHONES) == SMODE_UNPLUG_HEADPHONES) {
 				buildSendMessage(playingSong, MSG_PAUSE, 0, 0);
@@ -555,6 +544,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	}
 	
 	public boolean isPrepared() {
+		printStateDebug();
 		return check(SMODE_PREPARED);
 	}
 	
@@ -640,7 +630,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		if (check(SMODE_START_PREPARE)) {
 			builder.append("| SMODE_START_PREPARE");
 		}
-		android.util.Log.d("logks", builder.toString());
+		android.util.Log.d(getClass().getSimpleName(),"!!! " + builder.toString());
 	}
 
 }

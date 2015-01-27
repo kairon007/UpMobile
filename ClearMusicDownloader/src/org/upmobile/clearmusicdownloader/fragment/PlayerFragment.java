@@ -147,10 +147,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
-			play(0);
+			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
+				player.play();
+			} else {
+				play(0);
+			}
 		} else {
 			song = player.getPlayingSong();
-			android.util.Log.d("logks", "PlayerFragment, onCreateView: 22222222222222");
 		}
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
@@ -864,7 +867,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
             moveCover(ratio);
         }
     };
-    
     
 	private void moveCover(final float ratio) {
 		if (isNeedCalculateCover) {
