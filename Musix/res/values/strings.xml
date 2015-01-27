@@ -6,6 +6,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- NavigationDrawer Menu -->
+    <string name="menu_search">Search</string>
     <string name="menu_songs">Songs</string>
     <string name="menu_artists">Artists</string>
     <string name="menu_albums">Albums</string>

@@ -95,6 +95,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         // lista de opciones del Navigation Drawer principal
         ArrayList<String> mNavigationDrawerMenuOptions = new ArrayList<String>();
+        mNavigationDrawerMenuOptions.add(getString(R.string.menu_search));
         mNavigationDrawerMenuOptions.add(getString(R.string.menu_songs));
 //        mNavigationDrawerMenuOptions.add(getString(R.string.menu_artists));
 //        mNavigationDrawerMenuOptions.add(getString(R.string.menu_fav));

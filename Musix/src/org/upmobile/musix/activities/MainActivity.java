@@ -5,6 +5,7 @@ import org.upmobile.musix.R;
 import org.upmobile.musix.fragments.ArtistsFragment;
 import org.upmobile.musix.fragments.FavFragment;
 import org.upmobile.musix.fragments.NavigationDrawerFragment;
+import org.upmobile.musix.fragments.SearchFragment;
 import org.upmobile.musix.fragments.SongsListFragment;
 
 import android.support.v4.app.Fragment;
@@ -54,6 +55,10 @@ public class MainActivity extends ActionBarActivity
         switch (position) {
 
             case 0:
+                mFragment = new SearchFragment();
+                break;
+                
+            case 1:
                 mFragment = new SongsListFragment();
                 break;
 
@@ -65,7 +70,7 @@ public class MainActivity extends ActionBarActivity
 //                mFragment = new FavFragment();
 //                break;
 
-            case 1:
+            case 2:
                 closeApplication();
                 break;
         }

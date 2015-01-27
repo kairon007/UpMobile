@@ -2,8 +2,8 @@
 <resources>
 
     <style name="MyTheme.Custom" parent="Theme.AppCompat">
-        <item name="colorPrimary">@color/wet_asphalt</item>
-        <item name="colorPrimaryDark">@color/blue_light</item>
+      <!--   <item name="colorPrimary">@color/wet_asphalt</item>
+        <item name="colorPrimaryDark">@color/blue_light</item> -->
         <item name="android:textColor">@color/wet_asphalt</item>
     </style>
 

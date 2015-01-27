@@ -76,13 +76,13 @@ public class NavigationDrawerListAdapter extends BaseAdapter {
             case 0: //
                 intDrawable = R.drawable.ic_menu_songs_new;
                 break;
-//            case 1: //
-//                intDrawable = R.drawable.ic_menu_artists;
-//                break;
+            case 1: //
+                intDrawable = R.drawable.ic_menu_artists;
+                break;
 //            case 2: //
 //                intDrawable = R.drawable.ic_menu_fav;
 //                break;
-            case 1: //
+            case 2: //
                 intDrawable = R.drawable.ic_menu_exit;
                 break;
         }

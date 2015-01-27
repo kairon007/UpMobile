@@ -8,4 +8,7 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
 
+    <style name="Theme.AppCompat.Light" parent="AppBaseTheme">
+        <!-- API 11 theme customizations can go here. -->
+    </style>
 </resources>
