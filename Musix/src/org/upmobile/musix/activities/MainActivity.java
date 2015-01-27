@@ -2,20 +2,18 @@ package org.upmobile.musix.activities;
 
 
 import org.upmobile.musix.R;
-import org.upmobile.musix.fragments.ArtistsFragment;
-import org.upmobile.musix.fragments.FavFragment;
 import org.upmobile.musix.fragments.NavigationDrawerFragment;
 import org.upmobile.musix.fragments.SearchFragment;
 import org.upmobile.musix.fragments.SongsListFragment;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -90,12 +88,12 @@ public class MainActivity extends ActionBarActivity
     public void setSectionTitle(int number) {
         switch (number) {
             case 0:
-                mTitle = getString(R.string.menu_songs);
+                mTitle = getString(R.string.menu_search);
                 break;
 
-//            case 1:
-//                mTitle = getString(R.string.menu_artists);
-//                break;
+            case 1:
+                mTitle = getString(R.string.menu_songs);
+                break;
 //
 //            case 2:
 //                mTitle = getString(R.string.menu_fav);

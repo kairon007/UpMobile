@@ -24,6 +24,7 @@
             android:lines="1"
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:padding="4dp"
+            android:textColor="@color/wet_asphalt"
             android:text="Song Title"
             android:id="@+id/rowView_SongTitle"
             android:layout_width="fill_parent"
