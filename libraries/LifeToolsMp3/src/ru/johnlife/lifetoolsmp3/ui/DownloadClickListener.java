@@ -169,9 +169,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
 				request.setDestinationInExternalPublicDir(dir, sb);
 			}
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				request.allowScanningByMediaScanner();
-			} 
 			try {
 				currentDownloadId = manager.enqueue(request);
 			} catch (IllegalArgumentException e) {
@@ -286,26 +283,37 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	private void insertToMediaStore(final RemoteSong song, final String pathToFile) {
-			ContentResolver resolver = context.getContentResolver();
-			int seconds = 0;
-			long ms = 0;
-			try {
-				File musicFile = new File(pathToFile);
-				seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
-				ms = seconds * 1000;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			ContentValues songValues = new ContentValues();
-			songValues.put(MediaStore.Audio.Media.DATA, pathToFile);
-			songValues.put(MediaStore.Audio.Media.ALBUM, song.getAlbum());
-			songValues.put(MediaStore.Audio.Media.ARTIST, song.getArtist());
-			songValues.put(MediaStore.Audio.Media.TITLE, song.getTitle());
-			songValues.put(MediaStore.Audio.Media.DURATION, ms);
-			resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues);
-			resolver.notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+		ContentResolver resolver = context.getContentResolver();
+		int seconds = 0;
+		long ms = 0;
+		File musicFile = null;
+		try {
+			musicFile = new File(pathToFile);
+			seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
+			ms = seconds * 1000;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ContentValues songValues = new ContentValues();
+		songValues.put(MediaStore.Audio.Media.DATA, pathToFile);
+		songValues.put(MediaStore.Audio.Media.ALBUM, song.getAlbum());
+		songValues.put(MediaStore.Audio.Media.ARTIST, song.getArtist());
+		songValues.put(MediaStore.Audio.Media.TITLE, song.getTitle());
+		songValues.put(MediaStore.Audio.Media.DURATION, ms);
+		DeleteMP3FromMediaStore(context, pathToFile);
+		Uri uri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues);
+		if (null == uri) {
+			Log.d(getClass().getSimpleName(), "Insert into MediaStore was failed");
+			return;
+		}
+		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(musicFile)));
 	}
 	
+	public void DeleteMP3FromMediaStore(Context context, String path) {
+		Uri rootUri = MediaStore.Audio.Media.getContentUriForPath(path);
+		context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[] {path});
+	}
+
 	private boolean setMetadataToFile(String path, File src, boolean useCover) {
 		MusicMetadataSet src_set = null;
 		try {
@@ -314,9 +322,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
 		}
 		if (null == src_set) {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-				insertToMediaStore(song, path);
-			}
+			insertToMediaStore(song, path);
 			return false;
 		}
 		
@@ -447,7 +453,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							}
 						}
 						src = new File(path);
-						if (setMetadataToFile(path, src, useCover) && Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+						if (setMetadataToFile(path, src, useCover)) {
 							insertToMediaStore(song, path);
 						}
 						setFileUri(currentDownloadId, src.getAbsolutePath());
@@ -624,7 +630,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			sendNotification(100, true);
 			setFileUri(idDownload, file.getAbsolutePath());
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) insertToMediaStore(song, file.getAbsolutePath());
+			insertToMediaStore(song, file.getAbsolutePath());
 			return;
 		}
 		

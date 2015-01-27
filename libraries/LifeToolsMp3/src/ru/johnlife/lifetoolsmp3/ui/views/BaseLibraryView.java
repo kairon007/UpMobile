@@ -1,16 +1,16 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Handler.Callback;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -33,6 +33,7 @@ public abstract class BaseLibraryView extends View {
 
 		@Override
 		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
 			ArrayList<MusicData> list = querySong();
 			customList(list);
 			Message msg = new Message();
@@ -43,6 +44,7 @@ public abstract class BaseLibraryView extends View {
 
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
 				ArrayList<MusicData> list = querySong();
 				customList(list);
@@ -54,8 +56,7 @@ public abstract class BaseLibraryView extends View {
 		};
 
 		private void customList(ArrayList<MusicData> list) {
-			if (service.getPlayingPosition() >= 0 && service.isPlaying()
-					&& service.getPlayingSong().getClass() == MusicData.class) {
+			if (service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
 				int i = service.getPlayingPosition();
 				list.get(i).turnOn(MusicData.MODE_PLAYING);
 			}
@@ -69,9 +70,9 @@ public abstract class BaseLibraryView extends View {
 	
 	public BaseLibraryView(LayoutInflater inflater) {
 		super(inflater.getContext());
-		uiHandler = new Handler();
+		uiHandler = new Handler((Callback) this);
 		service = PlaybackService.get(getContext());
-		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false, observer);
+		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		ArrayList<MusicData> srcList = querySong();
 		init(inflater);
 		if (!srcList.isEmpty()) {
@@ -104,7 +105,7 @@ public abstract class BaseLibraryView extends View {
 	
 	protected ArrayList<MusicData> querySong() {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
-		Cursor cursor = buildQuery(((Activity) getContext()).getContentResolver(), getFolderPath());
+		Cursor cursor = buildQuery(getContext().getContentResolver(), getFolderPath());
 		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
 			return result;
 		}
