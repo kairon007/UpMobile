@@ -42,7 +42,6 @@ public class SearchSogou extends SearchWithPages {
 	protected Void doInBackground(Void... params) {
 		try {
 			String link = String.format(basicUrl, URLEncoder.encode(getSongName(), "UTF-8"), page);
-			android.util.Log.d("logd", "doInBackground: " + link);
 			Document doc = Jsoup.connect(link)
 					.userAgent("Mozilla/5.0 (iPad; CPU OS 6_1 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B141 Safari/8536.25")
 					.timeout(20000)
@@ -77,7 +76,7 @@ public class SearchSogou extends SearchWithPages {
 			}
 			
 		
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), "IOError", e);
 		}
 		return null;

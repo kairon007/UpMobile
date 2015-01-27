@@ -18,4 +18,9 @@ public class SearchFragment extends Fragment {
 		return searchView.getView();
 	}
 
+	@Override
+	public void onPause() {
+		searchView.saveState();
+		super.onPause();
+	}
 }
