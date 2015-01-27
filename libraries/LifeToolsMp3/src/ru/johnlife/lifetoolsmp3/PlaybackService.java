@@ -333,7 +333,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 				reset();
 			}
 		}
-		printStateDebug();
 		playingSong = arrayPlayback.get(position);
 		if (check(SMODE_PREPARED)) {
 			Message msg = new Message();
@@ -500,7 +499,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		synchronized (LOCK) {
 			onMode(SMODE_PREPARED);
 			onMode(SMODE_PLAYING);
-			printStateDebug();
 			helper(State.START, playingSong);
 			mp.start();
 			if ((mode & SMODE_UNPLUG_HEADPHONES) == SMODE_UNPLUG_HEADPHONES) {
@@ -544,7 +542,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	}
 	
 	public boolean isPrepared() {
-		printStateDebug();
 		return check(SMODE_PREPARED);
 	}
 	
