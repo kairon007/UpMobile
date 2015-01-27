@@ -26,6 +26,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
@@ -66,6 +67,15 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			if (song.getClass() != MusicData.class || data == null) return;
 			data.turnOff(MusicData.MODE_PLAYING);
 			notifyDataSetChanged();
+		}
+		
+		@Override
+		public void error() {
+		}
+
+		@Override
+		public void update(AbstractSong song) {
+			
 		}
 		
 	};

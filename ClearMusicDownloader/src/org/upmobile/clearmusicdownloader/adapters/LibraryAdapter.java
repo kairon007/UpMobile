@@ -82,6 +82,16 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 			}
 			notifyDataSetChanged();
 		}
+
+		@Override
+		public void error() {
+			
+		}
+
+		@Override
+		public void update(AbstractSong song) {
+			
+		}
 		
 	};
 	

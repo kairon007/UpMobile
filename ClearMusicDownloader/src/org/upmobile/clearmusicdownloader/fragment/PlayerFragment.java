@@ -147,11 +147,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
-			if (!player.hasValidSong(song.getClass()) || !player.isPrepared()) {
-				play(0);
-			}
+			play(0);
 		} else {
 			song = player.getPlayingSong();
+			android.util.Log.d("logks", "PlayerFragment, onCreateView: 22222222222222");
 		}
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
@@ -210,6 +209,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				playerProgress.removeCallbacks(progressAction);
 				playerProgress.setProgress(0);
 				setClickablePlayerElement(player.isPrepared());
+			}
+			
+			@Override
+			public void error() {
+				Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
+			}
+			
+			@Override
+			public void update(AbstractSong song) {
+				if (isDestroy) return;
+				PlayerFragment.this.song = song;
+				showLyrics();
+				setElementsView(0);
+				setClickablePlayerElement(false);
 			}
 			
 		});
