@@ -427,7 +427,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void hideKeyboard(View view) {
-		InputMethodManager imm = (InputMethodManager)getView().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
