@@ -13,7 +13,6 @@ public class SearchView extends OnlineSearchView {
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
-		setSearchBoxBackground(Color.TRANSPARENT);
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	public boolean isWhiteTheme(Context context) {
-		return false;
+		return true;
 	}
 
 }

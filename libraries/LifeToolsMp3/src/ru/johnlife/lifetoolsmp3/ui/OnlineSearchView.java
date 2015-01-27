@@ -426,10 +426,6 @@ public abstract class OnlineSearchView extends View {
 	    return -top + firstVisiblePosition * c.getHeight();
 	}
 	
-	protected void setSearchBoxBackground(int color) {
-		spEnginesChoiserLayout.setBackgroundColor(color);
-	}
-	
 	private void hideKeyboard(View view) {
 		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
