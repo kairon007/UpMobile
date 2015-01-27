@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Layout.FillWidthHeight.Vertical"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context=".fragment.SettingsFragment" >
+
+    <include layout="@layout/layout_header" />
+
+    <FrameLayout
+        android:id="@+id/container_search_online"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+	
+</LinearLayout>

@@ -12,6 +12,7 @@
     <string name="songExisted">This song is existed in SD Card.</string>
     <string name="noFoundMatch">No result is found !</string>
     <string name="search">Search</string>
+    <string name="search_online">Search in internet</string>
     <string name="share">Share</string>
     <string name="dd">đ</string>
     <string name="DD">Đ</string>

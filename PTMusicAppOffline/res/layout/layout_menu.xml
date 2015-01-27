@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Layout.FillWidthHeight.Vertical"
-    android:background="@drawable/bg_menu" >
+    android:background="@drawable/bg_menu"
+    android:orientation="vertical" >
 
     <TextView
         style="@style/Layout.FillWidth"
@@ -99,6 +100,17 @@
         android:drawableLeft="@drawable/ic_about"
         android:text="@string/about" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/bg_divider" />
+
+    <TextView
+        android:id="@+id/lblSearchOnline"
+        style="@style/Text.Menu"
+        android:drawableLeft="@drawable/ic_search_online"
+        android:text="@string/search_online" />
+    
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"

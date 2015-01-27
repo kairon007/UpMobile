@@ -1,14 +1,14 @@
-package org.kreed.vanilla;
+package org.upmobile.musicpro.widget;
 
-import ru.johnlife.lifetoolsmp3.Util;
+import org.upmobile.musicpro.Nulldroid_Advertisement;
+import org.upmobile.musicpro.Nulldroid_Settings;
+
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
-	
-	private PlaybackService service;
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
@@ -32,18 +32,18 @@ public class SearchView extends OnlineSearchView {
 	}
 
 	@Override
-	public void refreshLibrary() {
-		// do nothing, just for others projects
+	protected void stopSystemPlayer(Context context) {
+
 	}
 
 	@Override
-	protected void stopSystemPlayer(Context context) {
-		service = PlaybackService.get(context);
-		service.pause();
+	public void refreshLibrary() {
+
 	}
 
 	@Override
 	public boolean isWhiteTheme(Context context) {
-		return Util.isDifferentApp(context);
+		return false;
 	}
+
 }
