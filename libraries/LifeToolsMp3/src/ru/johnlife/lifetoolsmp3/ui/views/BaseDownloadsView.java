@@ -15,7 +15,6 @@ import android.database.Cursor;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +73,7 @@ public abstract class BaseDownloadsView extends View{
 		try {
 			timer.schedule(updater, 100, 1000);
 		} catch (Exception e) {
-			android.util.Log.d("log", "in " + getClass().getName() + " appear problem: " + e);
+			android.util.Log.d(getClass().getName(), " appear problem: " + e);
 			timer = new Timer();
 			updater = new Updater();
 			timer.schedule(updater, 100, 1000);
@@ -86,9 +85,29 @@ public abstract class BaseDownloadsView extends View{
 		synchronized (lock) {
 			try {
 				if (null != manager) {
+					Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
+					if (pending!=null) {
+						updateList(pending, list);
+						pending.close();
+					}
+					Cursor paused = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PAUSED));
+					if (paused != null) {
+						updateList(paused, list);
+						paused.close();
+					}
+					Cursor waitingNetwork = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_WAITING_FOR_NETWORK));
+					if (waitingNetwork != null) {
+						updateList(waitingNetwork, list);
+						waitingNetwork.close();
+					}
+					Cursor unknown = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_UNKNOWN));
+					if (unknown != null) {
+						updateList(unknown, list);
+						unknown.close();
+					}
 					Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 					if (running != null) {
-						list = updateList(running);
+						updateList(running, list);
 						running.close();
 					}
 				}
@@ -98,12 +117,13 @@ public abstract class BaseDownloadsView extends View{
 		return list;
 	}
 
-	private ArrayList<MusicData> updateList(Cursor c) {
-		ArrayList<MusicData> result = new ArrayList<MusicData>();
+	private ArrayList<MusicData> updateList(Cursor c, ArrayList<MusicData> result) {
 		while (c.moveToNext()) {
 			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
 			if (c.getString(8).contains(Environment.getExternalStorageDirectory() + getDirectory())) {
-				result.add(song);
+				if (!result.contains(song)){
+					result.add(song);
+				}
 			}
 		}
 		ArrayList<DownloadCache.Item> list = DownloadCache.getInstanse().getCachedItems();
