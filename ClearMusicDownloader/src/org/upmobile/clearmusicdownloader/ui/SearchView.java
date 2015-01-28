@@ -42,7 +42,7 @@ public class SearchView extends OnlineSearchView {
 	}
 	
 	@Override
-	public boolean isClearMusic() {
+	public boolean isUseDefaultSpinner() {
 		return true;
 	}
 	

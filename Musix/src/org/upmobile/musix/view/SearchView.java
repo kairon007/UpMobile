@@ -64,4 +64,9 @@ public class SearchView extends OnlineSearchView {
 	public void saveState() {
 		StateKeeper.getInstance().saveStateAdapter(this);
 	}
+	
+	@Override
+	public boolean isUseDefaultSpinner() {
+		return true;
+	}
 }

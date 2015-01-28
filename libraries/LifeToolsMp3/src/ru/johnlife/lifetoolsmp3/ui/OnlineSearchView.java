@@ -481,7 +481,7 @@ public abstract class OnlineSearchView extends View {
 			} else {
 				adapter = new CustomSpinnerAdapter(getContext(), R.layout.item_of_engine, list, isWhiteTheme(getContext()));	
 			}
-			if (!isClearMusic()) {
+			if (!isUseDefaultSpinner()) {
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			}
 			spEnginesChoiser.setAdapter(adapter);
@@ -561,7 +561,7 @@ public abstract class OnlineSearchView extends View {
 		specialInit(view);
 	}
 	
-	public boolean isClearMusic(){
+	public boolean isUseDefaultSpinner(){
 		return false;
 	}
 	
