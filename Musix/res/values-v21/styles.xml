@@ -9,7 +9,12 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
         <item name="colorPrimary">@color/wet_asphalt</item>
         <item name="colorPrimaryDark">@color/blue_light</item>
-        <item name="android:textColor">@color/wet_asphalt</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:alertDialogTheme">@style/Theme.AlertDialog</item>
+    </style>
+
+    <style name="Theme.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:background">@color/wet_asphalt</item>
     </style>
 
 </resources>

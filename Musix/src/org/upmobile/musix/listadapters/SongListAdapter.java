@@ -43,7 +43,7 @@ public class SongListAdapter extends BaseAdapter {
         bitmapHelper = new BitmapHelper(mContext);
         musicResolver = mContext.getContentResolver();
         typefaceHelper = new TypefaceHelper(mContext);
-        defaultImage = mContext.getResources().getDrawable(R.drawable.ic_launcher);
+        defaultImage = mContext.getResources().getDrawable(R.drawable.def_player_cover);
     }
 
     public void add(Song song) {
