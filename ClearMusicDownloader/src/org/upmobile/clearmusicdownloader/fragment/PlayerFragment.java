@@ -162,7 +162,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			changePlayPauseView(false);
 		}
-		downloadButtonState(!player.isGettingURl());
+		downloadButtonState(player.isGettingURl());
 		getCover(song);
 		showLyrics();
 		startImageAnimation(playerCover);
@@ -277,7 +277,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			play.setImageResource(R.drawable.pause);
 			play.setVisibility(View.VISIBLE);
 			parentView.findViewById(R.id.player_play_progress).setVisibility(View.GONE);
-			
 		} else {
 			playerCurrTime.setText("0:00");
 			playerProgress.setProgress(0);
@@ -767,15 +766,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		});
 	}
 	
-	private void downloadButtonState(final boolean state) {
-		new Handler(Looper.getMainLooper()).post(new Runnable() {
-			
-			@Override
-			public void run() {
-				download.setClickable(state);
-				download.setEnabled(state);
-			}
-		});
+	private void downloadButtonState(boolean state) {
+		download.setClickable(state);
+		download.setEnabled(state);
 	}
 	
 	private void onBackPress() {

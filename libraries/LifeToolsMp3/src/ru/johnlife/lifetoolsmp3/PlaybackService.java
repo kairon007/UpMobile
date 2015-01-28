@@ -501,6 +501,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		synchronized (LOCK) {
 			onMode(SMODE_PREPARED);
 			onMode(SMODE_PLAYING);
+			helper(State.START, playingSong);
 			mp.start();
 			if ((mode & SMODE_UNPLUG_HEADPHONES) == SMODE_UNPLUG_HEADPHONES) {
 				buildSendMessage(playingSong, MSG_PAUSE, 0, 0);
