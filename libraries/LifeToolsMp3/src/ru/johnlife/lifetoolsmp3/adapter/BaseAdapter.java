@@ -61,8 +61,12 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	private void setListener(ViewGroup p, View v, final int position) {
 		if (null == parent) {
 			parent = p;
-			ViewGroup menu = (ViewGroup) p.getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent();
-			((UISwipableList) parent).setIgnoredViewHandler((ResideMenu) menu);
+			try {
+				ViewGroup menu = (ViewGroup) p.getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent();
+				((UISwipableList) parent).setIgnoredViewHandler((ResideMenu) menu);
+			} catch (Exception e) {
+				android.util.Log.d(getClass().getName(), e.getMessage());
+			}
 		}
 		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
 

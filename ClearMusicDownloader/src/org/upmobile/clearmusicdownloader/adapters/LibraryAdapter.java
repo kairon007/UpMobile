@@ -68,9 +68,12 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 
 		@Override
 		public void pause(AbstractSong song) {
-			if (null != libraryViewHolder) {
-				libraryViewHolder.setButtonBackground(BTN_PLAY);
+			if (song.getClass() != MusicData.class) return;
+			MusicData data = get(song);
+			if (data != null) {
+				data.turnOff(MusicData.MODE_PLAYING);
 			}
+			notifyDataSetChanged();
 		}
 
 		@Override

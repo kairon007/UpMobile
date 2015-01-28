@@ -74,7 +74,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	public interface OnStatePlayerListener {
 		
 		public enum State {
-			START, PLAY, PAUSE, STOP, ERROR, UPDATE, NONE
+			START, PLAY, PAUSE, STOP, ERROR, UPDATE
 		}
 		
 		public void start(AbstractSong song);
@@ -417,7 +417,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	}
 	
 	private void helper(final State state, final AbstractSong targetSong) {
-		if (stateListener == null || state.equals(State.NONE)) {
+		if (stateListener == null) {
 			return;
 		}
 		Handler handler = new Handler(getMainLooper());
@@ -443,8 +443,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 					break;
 				case UPDATE:
 					stateListener.update(targetSong);
-					break;
-				case NONE:
 					break;
 				}
 			}
@@ -500,11 +498,9 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		//TODO onPrepared
 		synchronized (LOCK) {
 			onMode(SMODE_PREPARED);
 			onMode(SMODE_PLAYING);
-			printStateDebug();
 			mp.start();
 			if ((mode & SMODE_UNPLUG_HEADPHONES) == SMODE_UNPLUG_HEADPHONES) {
 				buildSendMessage(playingSong, MSG_PAUSE, 0, 0);
