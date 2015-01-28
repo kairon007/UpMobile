@@ -93,7 +93,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		isDestroy = false;
 		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
-		downloadButtonState(false);
 		playerProgress.setVisibility(View.INVISIBLE);
 		filter = new IntentFilter();
 		filter.addAction(ANDROID_MEDIA_VOLUME_CHANGED_ACTION);
@@ -117,13 +116,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
+		downloadButtonState(prepared);
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
-			if ( player.isPlaying()) {
-				downloadButtonState(true);
-			}
 		} else {
-			changePlayPauseView(false);
+			changePlayPauseView(prepared);
 		}
 		return parentView;
 	}
