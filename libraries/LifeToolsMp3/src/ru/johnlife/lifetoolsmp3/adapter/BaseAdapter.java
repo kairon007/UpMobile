@@ -62,7 +62,10 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		if (null == parent) {
 			parent = p;
 			try {
-				ViewGroup menu = (ViewGroup) p.getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent();
+				ViewGroup menu = findResideMenu(parent);
+				if (null == menu) android.util.Log.d("logks", "null");
+				else android.util.Log.d("logks", "!null");
+//				ViewGroup menu = (ViewGroup) p.getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent();
 				((UISwipableList) parent).setIgnoredViewHandler((ResideMenu) menu);
 			} catch (Exception e) {
 				android.util.Log.d(getClass().getName(), e.getMessage());
@@ -80,6 +83,24 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 				onItemSwipeGone(selected, v);
 			}
 		});
+	}
+
+	private ViewGroup findResideMenu(ViewGroup p) {
+		ViewGroup par = (ViewGroup) p.getParent();
+		if (null != par) {
+			if (par.getClass() == ResideMenu.class) {
+				return par;
+			}
+			par = findResideMenu(par);
+		} else {
+			return null;
+		}
+		return par;
+	}
+
+	private ViewGroup findResideMenu() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public ArrayList<T> getAll() {

@@ -43,16 +43,18 @@ public class AdapterHelper {
 		private boolean fullAction = true;
 		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
 		
-		private ViewBuilder(View view, boolean whiteTheme) {
+		private ViewBuilder(View view, boolean whiteTheme, boolean isCustomView) {
 			view.setTag(this);
 			this.view = view;
 			view.setLongClickable(true);
 			init(view);
-			titleLine.setTypeface(MusicApp.FONT_REGULAR);
-			artistLine.setTypeface(MusicApp.FONT_LIGHT);
-			chunkTime.setTypeface(MusicApp.FONT_REGULAR);
-			number.setTypeface(MusicApp.FONT_LIGHT);
-			caption.setTypeface(MusicApp.FONT_LIGHT);
+			if (!isCustomView) {
+				titleLine.setTypeface(MusicApp.FONT_REGULAR);
+				artistLine.setTypeface(MusicApp.FONT_LIGHT);
+				chunkTime.setTypeface(MusicApp.FONT_REGULAR);
+				number.setTypeface(MusicApp.FONT_LIGHT);
+				caption.setTypeface(MusicApp.FONT_LIGHT);
+			}
 		}
 
 		private void init(View view) {
@@ -256,11 +258,14 @@ public class AdapterHelper {
 		}
 	}
 
-	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater, boolean whiteTheme) {
+	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater, boolean whiteTheme, int idCustomView) {
 		View target = convertView;
 		ViewBuilder builder;
 		if (null == target) {
-			if (whiteTheme) {
+			boolean isCustomView = idCustomView > 0;
+			if (isCustomView) {
+				target = inflater.inflate(idCustomView, null);
+			} else if (whiteTheme) {
 				target = inflater.inflate(R.layout.row_online_search_white2, null);
 			} else {
 				if (Util.getSimpleThemeName(inflater.getContext()).equals("AppTheme.White")) {
@@ -269,12 +274,12 @@ public class AdapterHelper {
 					target = inflater.inflate(R.layout.row_online_search, null);
 				}
 			}
-			builder = new ViewBuilder(target, whiteTheme);
+			builder = new ViewBuilder(target, whiteTheme, isCustomView);
 		} else {
 			try {
 				builder = (ViewBuilder) target.getTag();
 			} catch (Exception e) {
-				return getViewBuilder(null, inflater, whiteTheme); // something wrong with the supplied view - create new one
+				return getViewBuilder(null, inflater, whiteTheme, idCustomView); // something wrong with the supplied view - create new one
 			}
 		}
 		return builder;

@@ -2,11 +2,11 @@ package org.upmobile.musicpro.widget;
 
 import org.upmobile.musicpro.Nulldroid_Advertisement;
 import org.upmobile.musicpro.Nulldroid_Settings;
+import org.upmobile.musicpro.R;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
@@ -43,8 +43,23 @@ public class SearchView extends OnlineSearchView {
 	}
 	
 	@Override
+	public int defaultCover() {
+		return R.drawable.ic_music_node_search;
+	}
+	
+	@Override
+	protected int getAdapterBackground() {
+		return R.drawable.bg_item_song;
+	}
+	
+	@Override
+	protected int getIdCustomView() {
+		return R.layout.row_online_search_pt;
+	}
+	
+	@Override
 	public boolean isWhiteTheme(Context context) {
-		return true;
+		return false;
 	}
 
 }

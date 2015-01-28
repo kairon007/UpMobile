@@ -44,6 +44,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -279,6 +280,14 @@ public abstract class OnlineSearchView extends View {
 	
 	protected void hideView () {
 		//hide player in MusicDownloder application
+	}
+	
+	protected int getAdapterBackground () {
+		return 0;
+	}
+	
+	protected int  getIdCustomView() {
+		return 0;
 	}
 	
 	public OnlineSearchView(LayoutInflater inflater) {
@@ -665,9 +674,9 @@ public abstract class OnlineSearchView extends View {
 		}
 
 		@Override
-		public View getView(final int position, final View convertView, ViewGroup parent) {
-			final Song song = getItem(position);
-			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()));
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			Song song = getItem(position);
+			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()), getIdCustomView());
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
 			song.setTitle(title);
@@ -710,6 +719,13 @@ public abstract class OnlineSearchView extends View {
 						listView.performItemClick(v, position, v.getId());
 					}
 				});
+			}
+			if (getAdapterBackground() > 0) {
+				if (position % 2 == 0) {
+					v.setBackgroundResource(getAdapterBackground());
+				} else {
+					v.setBackgroundColor(Color.TRANSPARENT);
+				}
 			}
 			return v;
 		}
