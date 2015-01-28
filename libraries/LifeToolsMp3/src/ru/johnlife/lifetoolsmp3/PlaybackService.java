@@ -106,7 +106,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
-			Message msg = null;
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
 				if (check(SMODE_PLAYING)) {
@@ -247,7 +246,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 				mode |= SMODE_START_PREPARE;
 				player.prepareAsync();
 			} catch (Exception e) {
-				android.util.Log.e(getClass().getSimpleName(), "!!! in method \"hanleMessage\" appear problem: " + e.toString());
+				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
 			break;
 
@@ -272,6 +271,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 			break;
 		case MSG_ERROR:
 			offMode(SMODE_PREPARED);
+			helper(State.ERROR, (AbstractSong) msg.obj);
 			player.release();
 			player = new MediaPlayer();
 			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -290,7 +290,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 			}
 			break;
 		default:
-			Log.d(getClass().getName(), "invalid message send from Handler");
+			Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
 			break;
 		}
 		return true;
@@ -444,6 +444,8 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 				case UPDATE:
 					stateListener.update(targetSong);
 					break;
+				case NONE:
+					break;
 				}
 			}
 		});
@@ -486,7 +488,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 
 	@Override
 	public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
-		helper(State.ERROR, null);
 		buildSendMessage(playingSong, MSG_ERROR, what, extra);
 		shift(1);
 		return true;
@@ -499,10 +500,11 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
+		//TODO onPrepared
 		synchronized (LOCK) {
 			onMode(SMODE_PREPARED);
 			onMode(SMODE_PLAYING);
-			helper(State.START, playingSong);
+			printStateDebug();
 			mp.start();
 			if ((mode & SMODE_UNPLUG_HEADPHONES) == SMODE_UNPLUG_HEADPHONES) {
 				buildSendMessage(playingSong, MSG_PAUSE, 0, 0);
@@ -534,16 +536,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		return check(SMODE_REPEAT);
 	}
 	
-	public boolean hasValidSong(Class cl) {
-		boolean result = false;
-		if (null != playingSong) {
-			if (playingSong.getClass() == cl) {
-				result = true;
-			}
-		}
-		return result;
-	}
-	
 	public boolean isPrepared() {
 		return check(SMODE_PREPARED);
 	}
@@ -571,7 +563,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		return arrayPlayback;
 	}
 	
-	public boolean isCorrectlyState(Class calledClass, int transferSize) {
+	public <T> boolean isCorrectlyState(Class<T> calledClass, int transferSize) {
 		if (arrayPlayback == null) return false;
 		if (transferSize != arrayPlayback.size()) return false;
 		if (playingSong != null) {
@@ -586,14 +578,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	
 	public void setStatePlayerListener(OnStatePlayerListener stateListener) {
 		this.stateListener = stateListener;
-	}
-	
-	public void setPlayingSong(AbstractSong playingSong) {
-		this.playingSong = playingSong;
-	}
-	
-	public int[] getPosition(AbstractSong song) {
-		return new int[] { arrayPlayback.indexOf(song), null != arrayPlaybackOriginal ? arrayPlaybackOriginal.indexOf(song) : -1 };
 	}
 	
 	@Override
@@ -629,8 +613,8 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		}
 		if (check(SMODE_START_PREPARE)) {
 			builder.append("| SMODE_START_PREPARE");
-		}
-		android.util.Log.d(getClass().getSimpleName(),"!!! " + builder.toString());
+		}	
+		android.util.Log.d("logks", builder.toString());
 	}
 
 }
