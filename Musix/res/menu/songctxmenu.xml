@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_song_details"
-        android:title="Song Details"
+        android:title="@string/song_details"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

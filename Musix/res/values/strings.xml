@@ -19,5 +19,7 @@
     <string name="song_tittle">Title</string>
     <string name="song_artist_name">Artist</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="song_options">Song options</string>
+    <string name="song_details">Song Details</string>
 
 </resources>

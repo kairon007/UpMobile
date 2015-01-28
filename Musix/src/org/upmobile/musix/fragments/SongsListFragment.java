@@ -472,7 +472,7 @@ public class SongsListFragment extends Fragment
                     if (albumArt != null) {
                         playingAlbumCover.setImageBitmap(albumArt);
                     } else {
-                        playingAlbumCover.setImageDrawable(getResources().getDrawable(R.drawable.def_player_cover));
+                        playingAlbumCover.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
                     }
 
                     txtCurrentSongTitle.setText(currentSong.getTitle());
@@ -586,12 +586,7 @@ public class SongsListFragment extends Fragment
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-
         MenuInflater inflater = getActivity().getMenuInflater();
-
-        menu.setHeaderTitle("Song options");
-        menu.setHeaderIcon(R.drawable.def_player_cover);
-
         inflater.inflate(R.menu.songctxmenu, menu);
     }
 
