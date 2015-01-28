@@ -5,6 +5,7 @@ import org.upmobile.musix.R;
 import org.upmobile.musix.fragments.NavigationDrawerFragment;
 import org.upmobile.musix.fragments.SearchFragment;
 import org.upmobile.musix.fragments.SongsListFragment;
+import org.upmobile.musix.services.MusicService;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,7 +40,6 @@ public class MainActivity extends ActionBarActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
     }

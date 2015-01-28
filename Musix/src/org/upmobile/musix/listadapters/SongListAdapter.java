@@ -2,13 +2,14 @@ package org.upmobile.musix.listadapters;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.upmobile.musix.R;
-import org.upmobile.musix.models.Song;
 import org.upmobile.musix.utils.BitmapHelper;
 import org.upmobile.musix.utils.TypefaceHelper;
 
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -29,15 +30,13 @@ import android.widget.TextView;
 public class SongListAdapter extends BaseAdapter {
 
     TypefaceHelper typefaceHelper;
-    ArrayList<Song> songArrayList;
+    ArrayList<MusicData> songArrayList;
     private Context mContext;
     BitmapHelper bitmapHelper;
     Drawable defaultImage;
     ContentResolver musicResolver;
 
-    GetAlbumBitmapAsync bitmapAsync;
-
-    public SongListAdapter(Context context, ArrayList<Song> songs) {
+    public SongListAdapter(Context context, ArrayList<MusicData> songs) {
         mContext = context;
         songArrayList = songs;
         bitmapHelper = new BitmapHelper(mContext);
@@ -46,7 +45,7 @@ public class SongListAdapter extends BaseAdapter {
         defaultImage = mContext.getResources().getDrawable(R.drawable.def_player_cover);
     }
 
-    public void add(Song song) {
+    public void add(MusicData song) {
         if (songArrayList != null) {
             songArrayList.add(song);
             notifyDataSetChanged();
@@ -59,7 +58,7 @@ public class SongListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Song getItem(int position) {
+    public MusicData getItem(int position) {
         return songArrayList.get(position);
     }
 
@@ -72,7 +71,7 @@ public class SongListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ViewHolder viewHolder;
-        Song song;
+        MusicData song;
 
         if (row == null) {
 
@@ -93,20 +92,15 @@ public class SongListAdapter extends BaseAdapter {
         song = songArrayList.get(position);
 
         viewHolder.txtSongTitle.setText(song.getTitle());
-        viewHolder.txtArtistName.setText(song.getArtistName());
+        viewHolder.txtArtistName.setText(song.getArtist());
 
         viewHolder.txtSongTitle.setTypeface(typefaceHelper.getRobotoLight());
         viewHolder.txtArtistName.setTypeface(typefaceHelper.getRobotoLight());
-        viewHolder.albumCover.setId(position);
-
-        try {
-            // album covert art (Async task)
-            bitmapAsync = new GetAlbumBitmapAsync(viewHolder.albumCover, defaultImage);
-            bitmapAsync.execute(song.getUri());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        viewHolder.albumCover.setImageResource(R.drawable.ic_launcher);
+		WeakReference<Bitmap> bitmap = new WeakReference<Bitmap>(song.getCover(row.getContext()));
+		if (null != bitmap && null != bitmap.get()) {
+			viewHolder.albumCover.setImageBitmap(bitmap.get());
+		} 
 
         return row;
     }
@@ -115,49 +109,6 @@ public class SongListAdapter extends BaseAdapter {
         ImageView albumCover;
         TextView txtSongTitle;
         TextView txtArtistName;
-    }
-
-    @SuppressLint("NewApi")
-	private class GetAlbumBitmapAsync extends AsyncTask<Uri, Void, Bitmap> {
-        int position;
-        Bitmap bitmapAlbumArt = null;
-        InputStream inputStream;
-        ImageView imageView;
-
-        public GetAlbumBitmapAsync(ImageView imageViewHolder, Drawable imageHolder) {
-            imageView = imageViewHolder;
-            imageView.setImageDrawable(imageHolder);
-            position = imageView.getId();
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmapResult) {
-            bitmapAsync = null;
-
-            if (bitmapResult != null) {
-
-                if (imageView != null && position == imageView.getId()) {
-                    imageView.setImageBitmap(bitmapResult);
-                    songArrayList.get(position).setAlbumCoverArt(bitmapResult);
-                }
-            }
-        }
-
-        @Override
-        protected Bitmap doInBackground(Uri... uris) {
-            try {
-
-                inputStream = musicResolver.openInputStream(uris[0]);
-                bitmapAlbumArt = bitmapHelper.decodeSampledBitmapFromResourceMemOpt(inputStream, 130, 130);
-
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (Exception ex){
-                ex.printStackTrace();
-            }
-
-            return bitmapAlbumArt;
-        }
     }
 
 }

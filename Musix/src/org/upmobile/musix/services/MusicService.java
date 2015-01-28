@@ -5,13 +5,14 @@ import java.util.Random;
 
 import org.upmobile.musix.R;
 import org.upmobile.musix.activities.MainActivity;
-import org.upmobile.musix.models.Song;
 
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -23,18 +24,20 @@ import android.os.PowerManager;
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
 	private final IBinder musicBind = new MusicBinder();
+	private static MusicService instance;
 
 	// media player
 	private MediaPlayer player;
 
 	// song list
-	private ArrayList<Song> songs;
+	private ArrayList<MusicData> songs;
 
 	// current position
 	private int songPosition;
 
 	private boolean shuffle = false;
 	private Random random;
+	private static Object WAIT = new Object();
 
 	public MusicService() {
 	}
@@ -50,8 +53,36 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
 		// create player
 		player = new MediaPlayer();
+		
+		instance = this;
+		
+		synchronized (WAIT ) {
+			WAIT.notifyAll();
+		}
 
 		initMusicPlayer();
+	}
+	
+	public static MusicService get(Context context) {
+		if (instance == null) {
+			context.startService(new Intent(context, MusicService.class));
+			try {
+				synchronized (WAIT) {
+					WAIT.wait();
+				}
+			} catch (InterruptedException ignored) {
+			}
+		}
+		return instance;
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		return Service.START_NOT_STICKY;
+	}
+	
+	public static boolean hasInstance()	{
+		return instance != null;
 	}
 
 	public void initMusicPlayer() {
@@ -63,7 +94,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		player.setOnErrorListener(this);
 	}
 
-	public void setList(ArrayList<Song> theSongs) {
+	public void setList(ArrayList<MusicData> theSongs) {
 		songs = theSongs;
 	}
 
@@ -157,7 +188,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			// play a song
 			player.reset();
 			// get song
-			Song playSong = songs.get(songPosition);
+			MusicData playSong = songs.get(songPosition);
 			// get id
 			long currentSong = playSong.getId();
 			// set uri
@@ -193,7 +224,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		// start playback
 		mp.start();
 
-		Song playingSong = songs.get(songPosition);
+		MusicData playingSong = songs.get(songPosition);
 
 		Intent notIntent = new Intent(this, MainActivity.class);
 		notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -202,7 +233,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		Notification.Builder builder = new Notification.Builder(this);
 
 		builder.setContentIntent(pendingIntent).setSmallIcon(R.drawable.ic_action_play).setTicker(playingSong.getTitle()).setOngoing(true)
-				.setContentTitle(playingSong.getTitle()).setContentText(playingSong.getArtistName());
+				.setContentTitle(playingSong.getTitle()).setContentText(playingSong.getArtist());
 
 		Notification notification = builder.build();
 

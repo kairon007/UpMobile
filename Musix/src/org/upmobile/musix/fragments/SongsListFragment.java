@@ -6,22 +6,18 @@ import java.util.concurrent.TimeUnit;
 import org.upmobile.musix.R;
 import org.upmobile.musix.activities.SongDetailsActivity;
 import org.upmobile.musix.listadapters.SongListAdapter;
-import org.upmobile.musix.models.Song;
 import org.upmobile.musix.services.MusicService;
 import org.upmobile.musix.utils.TypefaceHelper;
 
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -54,7 +50,7 @@ public class SongsListFragment extends Fragment
     private static View rootView;
     TypefaceHelper typefaceHelper;
     ProgressDialog progressDialog;
-    ArrayList<Song> songArrayList = new ArrayList<Song>();
+    ArrayList<MusicData> songArrayList = new ArrayList<MusicData>();
 
     private MusicService musicService;
     private Intent playIntent;
@@ -75,27 +71,21 @@ public class SongsListFragment extends Fragment
     ImageButton btnPrev, btnNext, btnStop, btnPlayPause, btnShuffle;
     TextView txtStartTimeField, txtEndTimeField, txtCurrentSongTitle, txtCurrentSongArtistName;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        try {
-
-            rootView = inflater.inflate(R.layout.fragment_songs, container, false);
-            mContext = rootView.getContext();
-            setupViews(rootView);
-
-        } catch (Exception ex) {
-            //ex.printStackTrace();
-        }
-
-        return rootView;
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		try {
+			rootView = inflater.inflate(R.layout.fragment_songs, container, false);
+			mContext = rootView.getContext();
+			setupViews(rootView);
+		} catch (Exception ex) {
+			// ex.printStackTrace();
+		}
+		return rootView;
+	}
 
     @Override
     public void onStart() {
         super.onStart();
-
         try {
             if (playIntent == null) {
                 playIntent = new Intent(mContext, MusicService.class);
@@ -273,134 +263,43 @@ public class SongsListFragment extends Fragment
         songListAdapter = new SongListAdapter(mContext, songArrayList);
         listView.setAdapter(songListAdapter);
 
-        getSongsTask();
+        querySong();
     }
-
-    private void getSongsTask() {
-        try {
-
-            GetSongsTask getSongsTask = new GetSongsTask();
-            getSongsTask.execute();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    
+	public ArrayList<MusicData> querySong() {
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		Cursor cursor = buildQuery(getActivity().getContentResolver());
+		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			return result;
+		}
+		MusicData d = new MusicData();
+		d.populate(cursor);
+		songListAdapter.add(d);
+		while (cursor.moveToNext()) {
+			MusicData data = new MusicData();
+			data.populate(cursor);
+			songListAdapter.add(data);
+		}
+		cursor.close();
+		return result;
+	}
+	
+	private Cursor buildQuery(ContentResolver resolver) {
+		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, null, null, null);
+		return cursor;
+	}
 
     private void viewSongDetails(int position) {
-        Song song = songArrayList.get(position);
+        MusicData song = songArrayList.get(position);
         Intent intent = new Intent(mContext, SongDetailsActivity.class);
-        intent.putExtra("ALBUM_ID", song.getAlbumId());
-        intent.putExtra("ALBUM_TITLE", song.getAlbumTitle());
-        intent.putExtra("ARTIST_NAME", song.getArtistName());
+//        intent.putExtra("ALBUM_ID", song.getAlbumId());
+        intent.putExtra("ALBUM_TITLE", song.getAlbum());
+        intent.putExtra("ARTIST_NAME", song.getArtist());
         intent.putExtra("SONG_TITLE", song.getTitle());
-        intent.putExtra("SONG_GENRE", song.getGenre());
+//        intent.putExtra("SONG_GENRE", song.getGenre());
 
         startActivity(intent);
     }
-
-    private class GetSongsTask extends AsyncTask<Void, Void, Boolean> {
-        Uri externalContentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Uri albumArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            progressDialog.dismiss();
-        }
-
-        Cursor musicCursor = null;
-        ContentResolver musicResolver = mContext.getContentResolver();
-
-        Bitmap bitmapAlbumArt = null;
-        Uri albumURI;
-
-        boolean result = false;
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-
-                // try to get music from external storage first
-                musicCursor = musicResolver.query(externalContentUri, null, null, null, MediaStore.Audio.Media.TITLE);
-                if (musicCursor != null && musicCursor.moveToFirst()) {
-                    runCursor();
-                }
-
-                result = true;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        private void runCursor() {
-            //get columns
-            int idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID);
-            int titleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-            int albumIdColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
-            int albumTitleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
-            int genreColumn = musicCursor.getColumnIndex("genre_name");
-
-            // check columns
-            int is_ringtoneColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.IS_RINGTONE);
-            int is_notificationColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.IS_NOTIFICATION);
-            int is_alarmColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.IS_ALARM);
-
-            do {
-
-                long songId = musicCursor.getLong(idColumn);
-                String songTitle = musicCursor.getString(titleColumn);
-                String songArtistName = musicCursor.getString(artistColumn);
-                String songAlbumName = musicCursor.getString(albumTitleColumn);
-                String genreName = "";
-                if (genreColumn >= 0) {
-                    genreName = musicCursor.getString(genreColumn);
-                } else {
-                    genreName = "N/A";
-                }
-
-                int songAlbumId = musicCursor.getInt(albumIdColumn);
-
-                // check if is music
-                int isRingtone = musicCursor.getInt(is_ringtoneColumn);
-                int isNotifitcation = musicCursor.getInt(is_notificationColumn);
-                int isAlarm = musicCursor.getInt(is_alarmColumn);
-
-                if (isRingtone == 1 || isNotifitcation == 1 || isAlarm == 1) {
-                    continue;
-                }
-
-                bitmapAlbumArt = null;
-                if (songAlbumId > 0) {
-                    // get album art
-                    albumURI = ContentUris.withAppendedId(albumArtworkUri, songAlbumId);
-                }
-
-                //add songs to list
-                Song song = new Song(songId, songTitle, songArtistName,
-                        songAlbumName, songAlbumId,
-                        bitmapAlbumArt, genreName, albumURI);
-
-                try {
-                    songListAdapter.add(song);
-                } catch (Exception e) {
-                    //e.printStackTrace();
-                }
-
-            }
-            while (musicCursor.moveToNext());
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(mContext);
-            progressDialog.setMessage("Scanning..");
-            progressDialog.show();
-        }
-    }// end Task
 
     @Override
     public void start() {
@@ -465,18 +364,18 @@ public class SongsListFragment extends Fragment
             }
 
             try {
-                Song currentSong = songArrayList.get(getCurrentListPosition());
+                MusicData currentSong = songArrayList.get(getCurrentListPosition());
                 if (currentSong != null) {
 
-                    Bitmap albumArt = songListAdapter.getItem(getCurrentListPosition()).getAlbumCoverArt();
-                    if (albumArt != null) {
-                        playingAlbumCover.setImageBitmap(albumArt);
-                    } else {
+//                    Bitmap albumArt = songListAdapter.getItem(getCurrentListPosition()).getAlbumCoverArt();
+//                    if (albumArt != null) {
+//                        playingAlbumCover.setImageBitmap(albumArt);
+//                    } else {
                         playingAlbumCover.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-                    }
+//                    }
 
                     txtCurrentSongTitle.setText(currentSong.getTitle());
-                    txtCurrentSongArtistName.setText(currentSong.getArtistName());
+                    txtCurrentSongArtistName.setText(currentSong.getArtist());
 
                     txtCurrentSongTitle.requestFocus();
                     txtCurrentSongArtistName.requestFocus();
