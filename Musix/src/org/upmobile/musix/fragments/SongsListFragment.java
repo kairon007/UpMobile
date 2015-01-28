@@ -472,7 +472,7 @@ public class SongsListFragment extends Fragment
                     if (albumArt != null) {
                         playingAlbumCover.setImageBitmap(albumArt);
                     } else {
-                        playingAlbumCover.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+                        playingAlbumCover.setImageDrawable(getResources().getDrawable(R.drawable.def_player_cover));
                     }
 
                     txtCurrentSongTitle.setText(currentSong.getTitle());
@@ -590,7 +590,7 @@ public class SongsListFragment extends Fragment
         MenuInflater inflater = getActivity().getMenuInflater();
 
         menu.setHeaderTitle("Song options");
-        menu.setHeaderIcon(R.drawable.ic_launcher);
+        menu.setHeaderIcon(R.drawable.def_player_cover);
 
         inflater.inflate(R.menu.songctxmenu, menu);
     }

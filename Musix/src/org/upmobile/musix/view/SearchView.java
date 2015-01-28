@@ -8,6 +8,7 @@ import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
@@ -58,7 +59,7 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	public int defaultCover() {
-		return R.drawable.ic_launcher;
+		return R.drawable.def_player_cover;
 	}
 	
 	public void saveState() {

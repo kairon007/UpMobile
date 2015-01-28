@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="MyTheme.Custom" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/wet_asphalt</item>
         <item name="colorPrimaryDark">@color/blue_light</item>
-        <item name="android:textColor">@color/wet_asphalt</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:alertDialogTheme">@style/Theme.AlertDialog</item>
     </style>
 
-</resources>
+    <style name="Theme.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:background">@color/wet_asphalt</item>
+    </style>
+</resources>
