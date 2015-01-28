@@ -2,14 +2,15 @@ package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
 
-import com.special.utils.UISwipableList;
-import com.special.utils.UISwipableList.OnSwipableListener;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+
+import com.special.menu.ResideMenu;
+import com.special.utils.UISwipableList;
+import com.special.utils.UISwipableList.OnSwipableListener;
 
 public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 
@@ -60,6 +61,8 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	private void setListener(ViewGroup p, View v, final int position) {
 		if (null == parent) {
 			parent = p;
+			ViewGroup menu = (ViewGroup) p.getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent();
+			((UISwipableList) parent).setIgnoredViewHandler((ResideMenu) menu);
 		}
 		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
 
