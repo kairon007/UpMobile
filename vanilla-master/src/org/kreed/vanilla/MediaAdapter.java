@@ -451,7 +451,7 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		ViewBuilder builder = AdapterHelper.getViewBuilder(view, mInflater, false);
+		ViewBuilder builder = AdapterHelper.getViewBuilder(view, mInflater, false, 0);
 		Cursor cursor = mCursor;
 		cursor.moveToPosition(position);
 		int count = cursor.getColumnCount();

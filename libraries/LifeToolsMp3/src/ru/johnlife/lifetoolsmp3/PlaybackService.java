@@ -373,13 +373,17 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		helper(State.STOP, playingSong);
 	}
 	
-	public boolean offOnShuffle(){
+	public boolean offOnShuffle() {
 		mode ^= SMODE_SHUFFLE;
 		boolean result = enabledShuffle();
 		if (result) {
 			arrayPlaybackOriginal = new ArrayList<AbstractSong>();
-			for (AbstractSong song : arrayPlayback) {
-				arrayPlaybackOriginal.add(song.cloneSong());
+			try {
+				for (AbstractSong song : arrayPlayback) {
+					arrayPlaybackOriginal.add(song.cloneSong());
+				}
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
 			}
 			Collections.shuffle(arrayPlayback);
 		} else {

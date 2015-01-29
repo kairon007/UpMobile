@@ -33,6 +33,6 @@ public interface AbstractSong extends Parcelable, Cloneable{
 	
 	public void setPath(String path);
 	
-	public AbstractSong cloneSong();
+	public AbstractSong cloneSong() throws CloneNotSupportedException;
 
 }

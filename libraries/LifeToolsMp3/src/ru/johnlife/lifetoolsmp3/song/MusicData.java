@@ -195,8 +195,13 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	}
 	
 	@Override
-	public AbstractSong cloneSong() {
-		return null;
+	public MusicData cloneSong() throws CloneNotSupportedException {
+		return clone();
+	}
+
+	@Override
+	protected MusicData clone() throws CloneNotSupportedException {
+		return (MusicData) super.clone();
 	}
 
 	@Override

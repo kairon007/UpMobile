@@ -341,9 +341,15 @@ public class Song implements Comparable<Song>, AbstractSong {
 		this.title = title;
 	}
 
+	
 	@Override
-	public AbstractSong cloneSong() {
-		return null;
+	public Song cloneSong() throws CloneNotSupportedException {
+		return clone();
+	}
+
+	@Override
+	protected Song clone() throws CloneNotSupportedException {
+		return (Song) super.clone();
 	}
 
 	@Override

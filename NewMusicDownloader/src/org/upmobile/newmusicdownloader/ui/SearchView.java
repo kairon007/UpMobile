@@ -44,12 +44,20 @@ public class SearchView extends OnlineSearchView {
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 			for (AbstractSong abstractSong : getResultAdapter().getAll()) {
-				list.add(abstractSong.cloneSong());
+				try {
+					list.add(abstractSong.cloneSong());
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
 			}
 			service.setArrayPlayback(list);
 		} 
 		Bundle bundle = new Bundle();
-		bundle.putParcelable(Constants.KEY_SELECTED_SONG, getResultAdapter().getItem(position).cloneSong());
+		try {
+			bundle.putParcelable(Constants.KEY_SELECTED_SONG, getResultAdapter().getItem(position).cloneSong());
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		PlayerFragment playerFragment = new PlayerFragment();
 		playerFragment.setArguments(bundle);
 		((MainActivity) getContext()).showPlayerElement(true);

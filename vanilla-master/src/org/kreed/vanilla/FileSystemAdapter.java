@@ -202,7 +202,7 @@ public class FileSystemAdapter
 	{
 		File file = mFiles[pos];
 		boolean isDirectory = file.isDirectory();
-		ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, mInflater, false);
+		ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, mInflater, false, 0);
 		builder
 			.setArrowClickListener(this)
 			.setMainClickListener(this)
