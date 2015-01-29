@@ -6,21 +6,20 @@ import java.util.concurrent.TimeUnit;
 import org.upmobile.musix.R;
 import org.upmobile.musix.activities.SongDetailsActivity;
 import org.upmobile.musix.listadapters.SongListAdapter;
-import org.upmobile.musix.services.MusicService;
 import org.upmobile.musix.utils.TypefaceHelper;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
-import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -37,24 +36,22 @@ import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class SongsListFragment extends Fragment
-        implements MediaController.MediaPlayerControl {
+public class SongsListFragment extends Fragment  implements MediaController.MediaPlayerControl, OnStatePlayerListener{
 
 
     public SongsListFragment() {
         // Required empty public constructor
     }
 
-    Context mContext;
-    ListView listView;
+    private Context mContext;
+    private ListView listView;
     private static View rootView;
-    TypefaceHelper typefaceHelper;
-    ProgressDialog progressDialog;
-    ArrayList<MusicData> songArrayList = new ArrayList<MusicData>();
-
-    private MusicService musicService;
-    private Intent playIntent;
+    private TypefaceHelper typefaceHelper;
+    private ArrayList<MusicData> songArrayList = new ArrayList<MusicData>();
+    private ArrayList<AbstractSong> abstractSongArrayList;
+    private PlaybackService musicService;
     private boolean musicBound = false;
+    private AbstractSong song;
     private boolean paused = false, playbackPaused = false;
 
     // controller variables
@@ -62,14 +59,11 @@ public class SongsListFragment extends Fragment
     private double finalTime = 0;
     private Handler myHandler = new Handler();
 
-    SongListAdapter songListAdapter;
-
-    //    private int forwardTime = 5000;
-//    private int backwardTime = 5000;
-    SeekBar seekBar;
-    ImageView playingAlbumCover;
-    ImageButton btnPrev, btnNext, btnStop, btnPlayPause, btnShuffle;
-    TextView txtStartTimeField, txtEndTimeField, txtCurrentSongTitle, txtCurrentSongArtistName;
+    private SongListAdapter songListAdapter;
+    private SeekBar seekBar;
+    private ImageView playingAlbumCover;
+    private ImageButton btnPrev, btnNext, btnStop, btnPlayPause, btnShuffle;
+    private TextView txtStartTimeField, txtEndTimeField, txtCurrentSongTitle, txtCurrentSongArtistName;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,22 +74,14 @@ public class SongsListFragment extends Fragment
 		} catch (Exception ex) {
 			// ex.printStackTrace();
 		}
+		musicService = PlaybackService.get(getActivity());
+		musicService.setStatePlayerListener(this);
+		abstractSongArrayList = new ArrayList<AbstractSong>(songArrayList);
+		musicService.setArrayPlayback(abstractSongArrayList);
+		if (!abstractSongArrayList.isEmpty()) song = abstractSongArrayList.get(0);
+		musicBound = true;
 		return rootView;
 	}
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        try {
-            if (playIntent == null) {
-                playIntent = new Intent(mContext, MusicService.class);
-                mContext.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-                mContext.startService(playIntent);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @Override
     public void onPause() {
@@ -114,24 +100,9 @@ public class SongsListFragment extends Fragment
         }
     }
 
-    @Override
-    public void onDestroy() {
-        mContext.stopService(playIntent);
-        musicService = null;
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
     private void setupViews(View root) {
-
         setHasOptionsMenu(true);
-
         typefaceHelper = new TypefaceHelper(mContext);
-
         seekBar = (SeekBar) root.findViewById(R.id.songSeekBar);
         txtStartTimeField = (TextView) root.findViewById(R.id.songStartTime);
         txtEndTimeField = (TextView) root.findViewById(R.id.songTotalTime);
@@ -143,11 +114,12 @@ public class SongsListFragment extends Fragment
         txtCurrentSongTitle = (TextView) root.findViewById(R.id.txtCurrentSongTitle);
         txtCurrentSongArtistName = (TextView) root.findViewById(R.id.txtCurrentSongArtistName);
         playingAlbumCover = (ImageView) root.findViewById(R.id.imageAlbumPlaying);
-
-        seekBar.setClickable(true);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            	if (b) {
+            		seekTo(i);
+            	}
             }
 
             @Override
@@ -156,11 +128,6 @@ public class SongsListFragment extends Fragment
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                int seekPosition;
-                seekPosition = seekBar.getProgress();
-
-                // forward or backward to certain seconds
-                seekTo(seekPosition);
             }
         });
 
@@ -171,18 +138,19 @@ public class SongsListFragment extends Fragment
 
         listView = (ListView) root.findViewById(R.id.listViewSongs);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
+
+			@Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                musicService.setSong(position);
-                musicService.playSong();
-
+            	song = ((AbstractSong) parent.getAdapter().getItem(position));
+            	if (song.equals(musicService.getPlayingSong()) && musicService.isPrepared()) {
+            		musicService.play();
+    			} else {
+    				musicService.play(song);
+    			}
                 btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
-
                 if (playbackPaused) {
                     playbackPaused = false;
                 }
-
                 updateProgressBar();
 
             }
@@ -191,12 +159,10 @@ public class SongsListFragment extends Fragment
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                musicService.playPrev();
-
+                musicService.shift(-1);
                 if (playbackPaused) {
                     playbackPaused = false;
                 }
-
                 updateProgressBar();
             }
         });
@@ -204,7 +170,7 @@ public class SongsListFragment extends Fragment
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                musicService.playNext();
+            	musicService.shift(1);
                 if (playbackPaused) {
                     playbackPaused = false;
                 }
@@ -212,39 +178,35 @@ public class SongsListFragment extends Fragment
             }
         });
 
-        btnPlayPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    if (isPlaying()) {
-                        pause();
-                        btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
-                    } else {
-
-                        if (playbackPaused) {
-                            playbackPaused = false;
-                            start();
-                        } else {
-                            musicService.setSong(0);
-                            musicService.playSong();
-                        }
-
-                        btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
-                    }
-                } catch (Resources.NotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                updateProgressBar();
-            }
-        });
+		btnPlayPause.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					if (isPlaying()) {
+						pause();
+						btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
+					} else {
+						if (playbackPaused) {
+							playbackPaused = false;
+							musicService.play(song);
+						} else {
+							musicService.play(song);
+							updateProgressBar();
+						}
+						btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
+					}
+				} catch (Resources.NotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isPlaying()) {
                     playbackPaused = false;
-                    musicService.stopPlayer();
+                    musicService.stop();
                     btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
                 }
             }
@@ -253,7 +215,7 @@ public class SongsListFragment extends Fragment
         btnShuffle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                musicService.setShuffle();
+                musicService.offOnShuffle();
             }
         });
 
@@ -303,7 +265,7 @@ public class SongsListFragment extends Fragment
 
     @Override
     public void start() {
-        musicService.start();
+        musicService.play(song);
     }
 
     private void updateProgressBar() {
@@ -347,7 +309,6 @@ public class SongsListFragment extends Fragment
 
                 txtEndTimeField.setText(mins + ":" + secs);
             }
-
             minutes = TimeUnit.MILLISECONDS.toMinutes((long) startTime);
             seconds = TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime));
@@ -367,23 +328,19 @@ public class SongsListFragment extends Fragment
                 MusicData currentSong = songArrayList.get(getCurrentListPosition());
                 if (currentSong != null) {
 
-//                    Bitmap albumArt = songListAdapter.getItem(getCurrentListPosition()).getAlbumCoverArt();
-//                    if (albumArt != null) {
-//                        playingAlbumCover.setImageBitmap(albumArt);
-//                    } else {
+                    Bitmap albumArt = songListAdapter.getItem(getCurrentListPosition()).getCover(mContext);
+                    if (albumArt != null) {
+                        playingAlbumCover.setImageBitmap(albumArt);
+                    } else {
                         playingAlbumCover.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-//                    }
-
+                    }
                     txtCurrentSongTitle.setText(currentSong.getTitle());
                     txtCurrentSongArtistName.setText(currentSong.getArtist());
-
                     txtCurrentSongTitle.requestFocus();
                     txtCurrentSongArtistName.requestFocus();
-
                 } else {
                     txtCurrentSongTitle.setText("");
                     txtCurrentSongArtistName.setText("");
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -398,7 +355,7 @@ public class SongsListFragment extends Fragment
     @Override
     public void pause() {
         playbackPaused = true;
-        musicService.pausePlayer();
+        musicService.play(song);
     }
 
     @Override
@@ -412,21 +369,21 @@ public class SongsListFragment extends Fragment
     @Override
     public int getCurrentPosition() {
         if (musicService != null && musicBound && musicService.isPlaying()) {
-            return musicService.getPosition();
+            return musicService.getCurrentPosition();
         }
         return 0;
     }
 
     public int getCurrentListPosition() {
         if (musicService != null && musicBound && musicService.isPlaying()) {
-            return musicService.getCurrenListPosition();
+            return musicService.getPlayingPosition();
         }
         return 0;
     }
 
     @Override
     public void seekTo(int pos) {
-        musicService.seek(pos);
+        musicService.seekTo(pos);
     }
 
     @Override
@@ -461,26 +418,6 @@ public class SongsListFragment extends Fragment
     public int getAudioSessionId() {
         return 0;
     }
-    // -------------------------}
-
-    //connect to the service
-    private ServiceConnection musicConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
-            //get service
-            musicService = binder.getService();
-            //pass list
-            musicService.setList(songArrayList);
-            musicBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            musicBound = false;
-        }
-    };
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -499,5 +436,37 @@ public class SongsListFragment extends Fragment
         }
         return true;
     }
+
+	@Override
+	public void start(AbstractSong song) {
+		this.song = song;
+		
+	}
+
+	@Override
+	public void play(AbstractSong song) {
+		this.song = song;
+	}
+
+	@Override
+	public void pause(AbstractSong song) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void stop(AbstractSong song) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(AbstractSong song) {
+		this.song = song;
+	}
+
+	@Override
+	public void error() {
+		// TODO Auto-generated method stub
+	}
 
 }

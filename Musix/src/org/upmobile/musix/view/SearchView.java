@@ -4,18 +4,17 @@ import org.upmobile.musix.Nulldroid_Advertisement;
 import org.upmobile.musix.Nulldroid_Settings;
 import org.upmobile.musix.R;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 
 public class SearchView extends OnlineSearchView {
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -37,14 +36,11 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
-		// TODO Auto-generated method stub
-		
+		PlaybackService.get(context).stop();
 	}
 
 	@Override
 	public void refreshLibrary() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

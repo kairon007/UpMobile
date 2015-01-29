@@ -5,8 +5,9 @@ import org.upmobile.musix.R;
 import org.upmobile.musix.fragments.NavigationDrawerFragment;
 import org.upmobile.musix.fragments.SearchFragment;
 import org.upmobile.musix.fragments.SongsListFragment;
-import org.upmobile.musix.services.MusicService;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,8 +17,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 
-public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -79,6 +79,12 @@ public class MainActivity extends ActionBarActivity
                     .commit();
             setSectionTitle(position);
         }
+    }
+    
+    @Override
+    protected void onStart() {
+    	startService(new Intent(this, PlaybackService.class));
+    	super.onStart();
     }
 
     private void closeApplication() {

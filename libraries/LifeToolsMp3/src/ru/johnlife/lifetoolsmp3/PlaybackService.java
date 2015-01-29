@@ -515,6 +515,11 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		return player.getCurrentPosition();
 	}
 	
+	public int getDuration() {
+		if (!check(SMODE_PREPARED)) return 0;
+		return player.getDuration();
+	}
+	
 	public AbstractSong getPlayingSong() {
 		return playingSong;
 	}
