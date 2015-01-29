@@ -19,7 +19,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -36,34 +35,34 @@ import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class SongsListFragment extends Fragment  implements MediaController.MediaPlayerControl, OnStatePlayerListener{
+public class SongsListFragment extends Fragment implements MediaController.MediaPlayerControl, OnStatePlayerListener {
 
+	private static final String EXTRA_SONG_DETAIL = "EXTRA_SONG_DETAIL";
 
-    public SongsListFragment() {
-        // Required empty public constructor
-    }
+	public SongsListFragment() {
+		// Required empty public constructor
+	}
 
-    private Context mContext;
-    private ListView listView;
-    private static View rootView;
-    private TypefaceHelper typefaceHelper;
-    private ArrayList<MusicData> songArrayList = new ArrayList<MusicData>();
-    private ArrayList<AbstractSong> abstractSongArrayList;
-    private PlaybackService musicService;
-    private boolean musicBound = false;
-    private AbstractSong song;
-    private boolean paused = false, playbackPaused = false;
+	private Context mContext;
+	private ListView listView;
+	private static View rootView;
+	private TypefaceHelper typefaceHelper;
+	private ArrayList<MusicData> songArrayList = new ArrayList<MusicData>();
+	private ArrayList<AbstractSong> abstractSongArrayList;
+	private PlaybackService musicService;
+	private boolean musicBound = false;
+	private AbstractSong song;
+	private boolean paused = false, playbackPaused = false;
 
-    // controller variables
-    private double startTime = 0;
-    private double finalTime = 0;
-    private Handler myHandler = new Handler();
+	// controller variables
+	private double startTime = 0;
+	private double finalTime = 0;
 
-    private SongListAdapter songListAdapter;
-    private SeekBar seekBar;
-    private ImageView playingAlbumCover;
-    private ImageButton btnPrev, btnNext, btnStop, btnPlayPause, btnShuffle;
-    private TextView txtStartTimeField, txtEndTimeField, txtCurrentSongTitle, txtCurrentSongArtistName;
+	private SongListAdapter songListAdapter;
+	private SeekBar seekBar;
+	private ImageView playingAlbumCover;
+	private ImageButton btnPrev, btnNext, btnStop, btnPlayPause, btnShuffle;
+	private TextView txtStartTimeField, txtEndTimeField, txtCurrentSongTitle, txtCurrentSongArtistName;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,111 +77,134 @@ public class SongsListFragment extends Fragment  implements MediaController.Medi
 		musicService.setStatePlayerListener(this);
 		abstractSongArrayList = new ArrayList<AbstractSong>(songArrayList);
 		musicService.setArrayPlayback(abstractSongArrayList);
-		if (!abstractSongArrayList.isEmpty()) song = abstractSongArrayList.get(0);
+		if (null != musicService.getPlayingSong()) {
+			song = musicService.getPlayingSong();
+		} else {
+			if (!abstractSongArrayList.isEmpty()) {
+				song = abstractSongArrayList.get(0);
+			}
+		}
+		if (!musicService.enabledShuffle()) {
+			btnShuffle.setAlpha((float) 0.5);
+		} else {
+			btnShuffle.setAlpha((float) 1);
+		}
 		musicBound = true;
 		return rootView;
 	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        paused = true;
-    }
+	@Override
+	public void onPause() {
+		super.onPause();
+		paused = true;
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (paused) {
-            paused = false;
-        }
-        if (isPlaying()) {
-            updateProgressBar();
-        }
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (paused) {
+			paused = false;
+		}
+		if (isPlaying()) {
+			seekBar.removeCallbacks(UpdateSongTime);
+			seekBar.post(UpdateSongTime);
+			setPlayerCover();
+			btnPlayPause.setImageResource(R.drawable.ic_action_pause);
+		}
+	}
 
-    private void setupViews(View root) {
-        setHasOptionsMenu(true);
-        typefaceHelper = new TypefaceHelper(mContext);
-        seekBar = (SeekBar) root.findViewById(R.id.songSeekBar);
-        txtStartTimeField = (TextView) root.findViewById(R.id.songStartTime);
-        txtEndTimeField = (TextView) root.findViewById(R.id.songTotalTime);
-        btnNext = (ImageButton) root.findViewById(R.id.btnNext);
-        btnPlayPause = (ImageButton) root.findViewById(R.id.btnPlayPause);
-        btnPrev = (ImageButton) root.findViewById(R.id.btnPrev);
-        btnShuffle = (ImageButton) root.findViewById(R.id.btnRandom);
-        btnStop = (ImageButton) root.findViewById(R.id.btnStop);
-        txtCurrentSongTitle = (TextView) root.findViewById(R.id.txtCurrentSongTitle);
-        txtCurrentSongArtistName = (TextView) root.findViewById(R.id.txtCurrentSongArtistName);
-        playingAlbumCover = (ImageView) root.findViewById(R.id.imageAlbumPlaying);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-            	if (b) {
-            		seekTo(i);
-            	}
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-        txtStartTimeField.setTypeface(typefaceHelper.getRobotoLight());
-        txtEndTimeField.setTypeface(typefaceHelper.getRobotoLight());
-        txtCurrentSongTitle.setTypeface(typefaceHelper.getRobotoLight());
-        txtCurrentSongArtistName.setTypeface(typefaceHelper.getRobotoLight());
-
-        listView = (ListView) root.findViewById(R.id.listViewSongs);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	private void setupViews(View root) {
+		setHasOptionsMenu(true);
+		typefaceHelper = new TypefaceHelper(mContext);
+		seekBar = (SeekBar) root.findViewById(R.id.songSeekBar);
+		txtStartTimeField = (TextView) root.findViewById(R.id.songStartTime);
+		txtEndTimeField = (TextView) root.findViewById(R.id.songTotalTime);
+		btnNext = (ImageButton) root.findViewById(R.id.btnNext);
+		btnPlayPause = (ImageButton) root.findViewById(R.id.btnPlayPause);
+		btnPrev = (ImageButton) root.findViewById(R.id.btnPrev);
+		btnShuffle = (ImageButton) root.findViewById(R.id.btnRandom);
+		btnStop = (ImageButton) root.findViewById(R.id.btnStop);
+		txtCurrentSongTitle = (TextView) root.findViewById(R.id.txtCurrentSongTitle);
+		txtCurrentSongArtistName = (TextView) root.findViewById(R.id.txtCurrentSongArtistName);
+		playingAlbumCover = (ImageView) root.findViewById(R.id.imageAlbumPlaying);
+		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+				if (b) {
+					seekTo(i);
+				}
+			}
 
 			@Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            	song = ((AbstractSong) parent.getAdapter().getItem(position));
-            	if (song.equals(musicService.getPlayingSong()) && musicService.isPrepared()) {
-            		musicService.play();
-    			} else {
-    				musicService.play(song);
-    			}
-                btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
-                if (playbackPaused) {
-                    playbackPaused = false;
-                }
-                updateProgressBar();
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
 
-            }
-        });
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+		});
 
-        btnPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                musicService.shift(-1);
-                if (playbackPaused) {
-                    playbackPaused = false;
-                }
-                updateProgressBar();
-            }
-        });
+		txtStartTimeField.setTypeface(typefaceHelper.getRobotoLight());
+		txtEndTimeField.setTypeface(typefaceHelper.getRobotoLight());
+		txtCurrentSongTitle.setTypeface(typefaceHelper.getRobotoLight());
+		txtCurrentSongArtistName.setTypeface(typefaceHelper.getRobotoLight());
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	musicService.shift(1);
-                if (playbackPaused) {
-                    playbackPaused = false;
-                }
-                updateProgressBar();
-            }
-        });
+		listView = (ListView) root.findViewById(R.id.listViewSongs);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				song = ((AbstractSong) parent.getAdapter().getItem(position));
+				if (song.equals(musicService.getPlayingSong()) && musicService.isPrepared()) {
+					musicService.play();
+				} else {
+					musicService.play(song);
+				}
+				btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
+				if (playbackPaused) {
+					playbackPaused = false;
+				}
+				setPlayerCover();
+				seekBar.removeCallbacks(UpdateSongTime);
+				seekBar.post(UpdateSongTime);
+
+			}
+		});
+
+		btnPrev.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				musicService.shift(-1);
+				if (playbackPaused) {
+					playbackPaused = false;
+				}
+				setPlayerCover();
+				seekBar.removeCallbacks(UpdateSongTime);
+				seekBar.post(UpdateSongTime);
+				btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
+			}
+		});
+
+		btnNext.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				musicService.shift(1);
+				if (playbackPaused) {
+					playbackPaused = false;
+				}
+				setPlayerCover();
+				seekBar.removeCallbacks(UpdateSongTime);
+				seekBar.post(UpdateSongTime);
+				btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
+			}
+		});
 
 		btnPlayPause.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
 					if (isPlaying()) {
+						seekBar.removeCallbacks(UpdateSongTime);
 						pause();
 						btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
 					} else {
@@ -191,8 +213,10 @@ public class SongsListFragment extends Fragment  implements MediaController.Medi
 							musicService.play(song);
 						} else {
 							musicService.play(song);
-							updateProgressBar();
 						}
+						seekBar.removeCallbacks(UpdateSongTime);
+						seekBar.post(UpdateSongTime);
+						setPlayerCover();
 						btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
 					}
 				} catch (Resources.NotFoundException e) {
@@ -201,33 +225,36 @@ public class SongsListFragment extends Fragment  implements MediaController.Medi
 			}
 		});
 
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPlaying()) {
-                    playbackPaused = false;
-                    musicService.stop();
-                    btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
-                }
-            }
-        });
+		btnStop.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (isPlaying()) {
+					playbackPaused = false;
+					musicService.stop();
+					btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
+					seekBar.removeCallbacks(UpdateSongTime);
+					seekBar.post(UpdateSongTime);
+				}
+			}
+		});
 
-        btnShuffle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                musicService.offOnShuffle();
-            }
-        });
+		btnShuffle.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				musicService.offOnShuffle();
+				if (!musicService.enabledShuffle()) {
+					btnShuffle.setAlpha((float) 0.5);
+				} else {
+					btnShuffle.setAlpha((float) 1);
+				}
+			}
+		});
+		registerForContextMenu(listView);
+		songListAdapter = new SongListAdapter(mContext, songArrayList);
+		listView.setAdapter(songListAdapter);
+		querySong();
+	}
 
-        registerForContextMenu(listView);
-
-
-        songListAdapter = new SongListAdapter(mContext, songArrayList);
-        listView.setAdapter(songListAdapter);
-
-        querySong();
-    }
-    
 	public ArrayList<MusicData> querySong() {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		Cursor cursor = buildQuery(getActivity().getContentResolver());
@@ -245,202 +272,178 @@ public class SongsListFragment extends Fragment  implements MediaController.Medi
 		cursor.close();
 		return result;
 	}
-	
+
 	private Cursor buildQuery(ContentResolver resolver) {
 		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, null, null, null);
 		return cursor;
 	}
 
-    private void viewSongDetails(int position) {
-        MusicData song = songArrayList.get(position);
-        Intent intent = new Intent(mContext, SongDetailsActivity.class);
-//        intent.putExtra("ALBUM_ID", song.getAlbumId());
-        intent.putExtra("ALBUM_TITLE", song.getAlbum());
-        intent.putExtra("ARTIST_NAME", song.getArtist());
-        intent.putExtra("SONG_TITLE", song.getTitle());
-//        intent.putExtra("SONG_GENRE", song.getGenre());
+	private void viewSongDetails(int position) {
+		MusicData song = songArrayList.get(position);
+		Intent intent = new Intent(mContext, SongDetailsActivity.class);
+		intent.putExtra(EXTRA_SONG_DETAIL, song);
+		startActivity(intent);
+	}
 
-        startActivity(intent);
-    }
+	@Override
+	public void start() {
+		musicService.play(song);
+	}
 
-    @Override
-    public void start() {
-        musicService.play(song);
-    }
+	private Runnable UpdateSongTime = new Runnable() {
+		public void run() {
 
-    private void updateProgressBar() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+			finalTime = getDuration();
+			startTime = getCurrentPosition();
 
-        startTime = 0;
-        seekBar.setProgress((int) startTime);
-        myHandler.postDelayed(UpdateSongTime, 100);
-    }
+			long minutes, seconds;
+			String mins, secs;
 
-    private Runnable UpdateSongTime = new Runnable() {
-        public void run() {
+			if (finalTime > 0) {
+				seekBar.setMax((int) finalTime);
+				minutes = TimeUnit.MILLISECONDS.toMinutes((long) finalTime);
+				seconds = TimeUnit.MILLISECONDS.toSeconds((long) finalTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) finalTime));
+				if (minutes < 10) {
+					mins = String.format("0%d", minutes);
+				} else {
+					mins = String.valueOf(minutes);
+				}
+				if (seconds < 10) {
+					secs = String.format("0%d", seconds);
+				} else {
+					secs = String.valueOf(seconds);
+				}
+				txtEndTimeField.setText(mins + ":" + secs);
+			}
+			minutes = TimeUnit.MILLISECONDS.toMinutes((long) startTime);
+			seconds = TimeUnit.MILLISECONDS.toSeconds((long) startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime));
 
-            finalTime = getDuration();
-            startTime = getCurrentPosition();
+			if (minutes < 10) {
+				mins = String.format("0%d", minutes);
+			} else {
+				mins = String.valueOf(minutes);
+			}
+			if (seconds < 10) {
+				secs = String.format("0%d", seconds);
+			} else {
+				secs = String.valueOf(seconds);
+			}
+			try {
+				if (song != null) {
+					txtCurrentSongTitle.setText(song.getTitle());
+					txtCurrentSongArtistName.setText(song.getArtist());
+				} else {
+					txtCurrentSongTitle.setText("");
+					txtCurrentSongArtistName.setText("");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			android.util.Log.d("logd", "run: " + startTime);
+			txtStartTimeField.setText(mins + ":" + secs);
+			seekBar.setProgress((int) startTime);
+			seekBar.postDelayed(this, 1000);
+		}
+	};
 
-            long minutes, seconds;
-            String mins, secs;
+	private void setPlayerCover() {
+		Bitmap albumArt = musicService.getPlayingSong().getCover(mContext);
+		if (albumArt != null) {
+			playingAlbumCover.setImageBitmap(albumArt);
+		} else {
+			playingAlbumCover.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+		}
+	}
 
-            if (finalTime > 0) {
-                seekBar.setMax((int) finalTime);
+	@Override
+	public void pause() {
+		playbackPaused = true;
+		musicService.play(song);
+	}
 
-                minutes = TimeUnit.MILLISECONDS.toMinutes((long) finalTime);
-                seconds = TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) finalTime));
+	@Override
+	public int getDuration() {
+		if (musicService != null && musicBound && musicService.isPlaying()) {
+			return musicService.getDuration();
+		}
+		return 0;
+	}
 
-                if (minutes < 10) {
-                    mins = String.format("0%d", minutes);
-                } else {
-                    mins = String.valueOf(minutes);
-                }
-                if (seconds < 10) {
-                    secs = String.format("0%d", seconds);
-                } else {
-                    secs = String.valueOf(seconds);
-                }
+	@Override
+	public int getCurrentPosition() {
+		if (musicService != null && musicBound && musicService.isPrepared()) {
+			return musicService.getCurrentPosition();
+		}
+		return 0;
+	}
 
-                txtEndTimeField.setText(mins + ":" + secs);
-            }
-            minutes = TimeUnit.MILLISECONDS.toMinutes((long) startTime);
-            seconds = TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime));
+	public int getCurrentListPosition() {
+		if (musicService != null && musicBound && musicService.isPlaying()) {
+			return musicService.getPlayingPosition();
+		}
+		return 0;
+	}
 
-            if (minutes < 10) {
-                mins = String.format("0%d", minutes);
-            } else {
-                mins = String.valueOf(minutes);
-            }
-            if (seconds < 10) {
-                secs = String.format("0%d", seconds);
-            } else {
-                secs = String.valueOf(seconds);
-            }
+	@Override
+	public void seekTo(int pos) {
+		musicService.seekTo(pos);
+	}
 
-            try {
-                MusicData currentSong = songArrayList.get(getCurrentListPosition());
-                if (currentSong != null) {
+	@Override
+	public boolean isPlaying() {
+		if (musicService != null && musicBound && musicService.isPlaying()) {
+			return musicService.isPlaying();
+		}
+		return false;
+	}
 
-                    Bitmap albumArt = songListAdapter.getItem(getCurrentListPosition()).getCover(mContext);
-                    if (albumArt != null) {
-                        playingAlbumCover.setImageBitmap(albumArt);
-                    } else {
-                        playingAlbumCover.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-                    }
-                    txtCurrentSongTitle.setText(currentSong.getTitle());
-                    txtCurrentSongArtistName.setText(currentSong.getArtist());
-                    txtCurrentSongTitle.requestFocus();
-                    txtCurrentSongArtistName.requestFocus();
-                } else {
-                    txtCurrentSongTitle.setText("");
-                    txtCurrentSongArtistName.setText("");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+	@Override
+	public int getBufferPercentage() {
+		return 0;
+	}
 
-            txtStartTimeField.setText(mins + ":" + secs);
-            seekBar.setProgress((int) startTime);
-            myHandler.postDelayed(this, 100);
-        }
-    };
+	@Override
+	public boolean canPause() {
+		return true;
+	}
 
-    @Override
-    public void pause() {
-        playbackPaused = true;
-        musicService.play(song);
-    }
+	@Override
+	public boolean canSeekBackward() {
+		return true;
+	}
 
-    @Override
-    public int getDuration() {
-        if (musicService != null && musicBound && musicService.isPlaying()) {
-            return musicService.getDuration();
-        }
-        return 0;
-    }
+	@Override
+	public boolean canSeekForward() {
+		return true;
+	}
 
-    @Override
-    public int getCurrentPosition() {
-        if (musicService != null && musicBound && musicService.isPlaying()) {
-            return musicService.getCurrentPosition();
-        }
-        return 0;
-    }
+	@Override
+	public int getAudioSessionId() {
+		return 0;
+	}
 
-    public int getCurrentListPosition() {
-        if (musicService != null && musicBound && musicService.isPlaying()) {
-            return musicService.getPlayingPosition();
-        }
-        return 0;
-    }
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.songctxmenu, menu);
+	}
 
-    @Override
-    public void seekTo(int pos) {
-        musicService.seekTo(pos);
-    }
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-    @Override
-    public boolean isPlaying() {
-        if (musicService != null && musicBound && musicService.isPlaying()) {
-            return musicService.isPlaying();
-        }
-        return false;
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return 0;
-    }
-
-    @Override
-    public boolean canPause() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekBackward() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekForward() {
-        return true;
-    }
-
-    @Override
-    public int getAudioSessionId() {
-        return 0;
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.songctxmenu, menu);
-    }
-
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-        switch (item.getItemId()) {
-            case R.id.action_song_details:
-                viewSongDetails(info.position);
-                break;
-        }
-        return true;
-    }
+		switch (item.getItemId()) {
+		case R.id.action_song_details:
+			viewSongDetails(info.position);
+			break;
+		}
+		return true;
+	}
 
 	@Override
 	public void start(AbstractSong song) {
 		this.song = song;
-		
+
 	}
 
 	@Override
@@ -456,7 +459,7 @@ public class SongsListFragment extends Fragment  implements MediaController.Medi
 	@Override
 	public void stop(AbstractSong song) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
