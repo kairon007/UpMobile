@@ -2,6 +2,7 @@ package org.upmobile.clearmusicdownloader.ui;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.DownloadsAdapter;
 
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -17,13 +18,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenu.OnMenuListener;
 import com.special.utils.UISwipableList;
 
 public class DownloadsView extends BaseDownloadsView implements OnScrollListener, OnMenuListener{
 	
-	private ResideMenu resideMenu;
 	private UISwipableList listView;
 	private Animation anim;
 	private DownloadsAdapter adapter;
@@ -110,7 +109,7 @@ public class DownloadsView extends BaseDownloadsView implements OnScrollListener
 		listView = (UISwipableList) view.findViewById(R.id.listView);
 		listView.setActionLayout(R.id.hidden_view);
 		listView.setItemLayout(R.id.front_layout);
-		listView.setIgnoredViewHandler(resideMenu);
+		listView.setIgnoredViewHandler(((MainActivity) getContext()).getResideMenu());
 		listView.setOnScrollListener(this);
 		return listView;
 	}

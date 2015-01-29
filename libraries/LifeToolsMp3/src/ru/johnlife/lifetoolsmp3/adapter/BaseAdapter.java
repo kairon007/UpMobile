@@ -61,12 +61,6 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	private void setListener(ViewGroup p, View v, final int position) {
 		if (null == parent) {
 			parent = p;
-			try {
-				ViewGroup menu = findResideMenu(parent);
-				((UISwipableList) parent).setIgnoredViewHandler((ResideMenu) menu);
-			} catch (Exception e) {
-				android.util.Log.d(getClass().getName(), e.getMessage());
-			}
 		}
 		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
 
@@ -80,19 +74,6 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 				onItemSwipeGone(selected, v);
 			}
 		});
-	}
-
-	private ViewGroup findResideMenu(ViewGroup p) {
-		ViewGroup par = (ViewGroup) p.getParent();
-		if (null != par) {
-			if (par.getClass() == ResideMenu.class) {
-				return par;
-			}
-			par = findResideMenu(par);
-		} else {
-			return null;
-		}
-		return par;
 	}
 
 	public ArrayList<T> getAll() {

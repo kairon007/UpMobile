@@ -18,19 +18,16 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
-import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenu.OnMenuListener;
 import com.special.utils.UISwipableList;
 
 public class LibraryView extends BaseLibraryView implements OnScrollListener, OnMenuListener, Constants {
 	
-	private ResideMenu resideMenu;
 	private UISwipableList listView;
 	private Animation anim;
 
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
-		resideMenu = ((MainActivity) getContext()).getResideMenu();
 		((MainActivity) getContext()).setResideMenuListener(this);
 	}
 
@@ -44,7 +41,7 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 		listView = (UISwipableList) view.findViewById(R.id.listView);
 		listView.setActionLayout(R.id.hidden_view);
 		listView.setItemLayout(R.id.front_layout);
-		listView.setIgnoredViewHandler(resideMenu);
+		listView.setIgnoredViewHandler(((MainActivity) getContext()).getResideMenu());
 		listView.setOnScrollListener(this);
 		return listView;
 	}
@@ -71,9 +68,7 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 	}
 
 	@Override
-	public void closeMenu() {
-
-	}
+	public void closeMenu() { }
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
