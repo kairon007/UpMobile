@@ -25,6 +25,7 @@ public class SearchFragment extends Fragment {
 		searchView = new SearchView(getActivity().getLayoutInflater());
 		if (null != query) {
 			searchView.setExtraSearch(query);
+			searchView.setSearchField(query);
 			searchView.trySearch();
 			query = null;
 		}
