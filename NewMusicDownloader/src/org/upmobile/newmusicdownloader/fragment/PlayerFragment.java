@@ -328,9 +328,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());
 		if (!playerTagsCheckBox.isChecked()) {
-			if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(false);
+			if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(false); 
 			playerCover.setImageResource(R.drawable.no_cover_art_big);
 			checkBoxState(false);
+		}
+		if (song.getClass() != MusicData.class) {
+			player.update(song.getTitle(), song.getArtist(), null);
 		}
 	}
 	
@@ -527,7 +530,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 					playerTagsCheckBox.setChecked(true);
 				}
-//				player.update(pos[0], pos[1], song.getTitle(), song.getArtist(), song.getPath(), song.getAlbum());
+				player.update(song.getTitle(), song.getArtist(), song.getPath());
 			}
 
 			@Override
