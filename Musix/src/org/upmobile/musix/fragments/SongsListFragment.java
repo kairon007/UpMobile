@@ -79,8 +79,10 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		musicService.setArrayPlayback(abstractSongArrayList);
 		if (null != musicService.getPlayingSong()) {
 			song = musicService.getPlayingSong();
-			updateViews();
 			setPlayerCover();
+			setTime();
+			seekBar.setMax(musicService.getDuration());
+			seekBar.setProgress(musicService.getCurrentPosition());
 		} else {
 			if (!abstractSongArrayList.isEmpty()) {
 				song = abstractSongArrayList.get(0);
@@ -279,6 +281,55 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, null, null, null);
 		return cursor;
 	}
+	
+	private void setTime() {
+		finalTime = musicService.getDuration();
+		startTime = musicService.getCurrentPosition();
+
+		long minutes, seconds;
+		String mins, secs;
+
+		if (finalTime > 0) {
+			seekBar.setMax((int) finalTime);
+			minutes = TimeUnit.MILLISECONDS.toMinutes((long) finalTime);
+			seconds = TimeUnit.MILLISECONDS.toSeconds((long) finalTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) finalTime));
+			if (minutes < 10) {
+				mins = String.format("0%d", minutes);
+			} else {
+				mins = String.valueOf(minutes);
+			}
+			if (seconds < 10) {
+				secs = String.format("0%d", seconds);
+			} else {
+				secs = String.valueOf(seconds);
+			}
+			txtEndTimeField.setText(mins + ":" + secs);
+		}
+		minutes = TimeUnit.MILLISECONDS.toMinutes((long) startTime);
+		seconds = TimeUnit.MILLISECONDS.toSeconds((long) startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime));
+
+		if (minutes < 10) {
+			mins = String.format("0%d", minutes);
+		} else {
+			mins = String.valueOf(minutes);
+		}
+		if (seconds < 10) {
+			secs = String.format("0%d", seconds);
+		} else {
+			secs = String.valueOf(seconds);
+		}
+		try {
+			if (song != null) {
+				updateViews();
+			} else {
+				txtCurrentSongTitle.setText("");
+				txtCurrentSongArtistName.setText("");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		txtStartTimeField.setText(mins + ":" + secs);
+	}
 
 	private void viewSongDetails(int position) {
 		MusicData song = songArrayList.get(position);
@@ -295,53 +346,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	private Runnable UpdateSongTime = new Runnable() {
 		public void run() {
 
-			finalTime = getDuration();
-			startTime = getCurrentPosition();
-
-			long minutes, seconds;
-			String mins, secs;
-
-			if (finalTime > 0) {
-				seekBar.setMax((int) finalTime);
-				minutes = TimeUnit.MILLISECONDS.toMinutes((long) finalTime);
-				seconds = TimeUnit.MILLISECONDS.toSeconds((long) finalTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) finalTime));
-				if (minutes < 10) {
-					mins = String.format("0%d", minutes);
-				} else {
-					mins = String.valueOf(minutes);
-				}
-				if (seconds < 10) {
-					secs = String.format("0%d", seconds);
-				} else {
-					secs = String.valueOf(seconds);
-				}
-				txtEndTimeField.setText(mins + ":" + secs);
-			}
-			minutes = TimeUnit.MILLISECONDS.toMinutes((long) startTime);
-			seconds = TimeUnit.MILLISECONDS.toSeconds((long) startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime));
-
-			if (minutes < 10) {
-				mins = String.format("0%d", minutes);
-			} else {
-				mins = String.valueOf(minutes);
-			}
-			if (seconds < 10) {
-				secs = String.format("0%d", seconds);
-			} else {
-				secs = String.valueOf(seconds);
-			}
-			try {
-				if (song != null) {
-					updateViews();
-				} else {
-					txtCurrentSongTitle.setText("");
-					txtCurrentSongArtistName.setText("");
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			android.util.Log.d("logd", "run: " + startTime);
-			txtStartTimeField.setText(mins + ":" + secs);
+			setTime();
 			seekBar.setProgress((int) startTime);
 			seekBar.postDelayed(this, 1000);
 		}
@@ -369,7 +374,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 
 	@Override
 	public int getDuration() {
-		if (musicService != null && musicBound && musicService.isPlaying()) {
+		if (musicService != null && musicBound && musicService.isPrepared()) {
 			return musicService.getDuration();
 		}
 		return 0;
@@ -379,13 +384,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	public int getCurrentPosition() {
 		if (musicService != null && musicBound && musicService.isPrepared()) {
 			return musicService.getCurrentPosition();
-		}
-		return 0;
-	}
-
-	public int getCurrentListPosition() {
-		if (musicService != null && musicBound && musicService.isPlaying()) {
-			return musicService.getPlayingPosition();
 		}
 		return 0;
 	}
