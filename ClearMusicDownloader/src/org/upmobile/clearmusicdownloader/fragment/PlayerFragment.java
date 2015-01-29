@@ -527,7 +527,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtArtist.setVisibility(View.GONE);
 			playerBtnArtist.setVisibility(View.VISIBLE);
 			hideKeyboard();
-			String artist =  playerEtArtist.getText().toString();
+			String artist = Util.removeSpecialCharacters(playerEtArtist.getText().toString());
 			if (!artist.equals(song.getArtist()	)){
 				song.setArtist(artist);
 				saveTag();
@@ -537,7 +537,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtTitle.setVisibility(View.GONE);
 			playerBtnTitle.setVisibility(View.VISIBLE);
 			hideKeyboard();
-			String title = playerEtTitle.getText().toString();
+			String title = Util.removeSpecialCharacters(playerEtTitle.getText().toString());
 			if (!title.equals(song.getTitle())){
 				song.setTitle(title);
 				saveTag();
