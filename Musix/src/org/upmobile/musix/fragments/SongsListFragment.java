@@ -123,6 +123,11 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
+			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
+				songListAdapter.clear();
+				querySong();
+				setPlayback();
+			}
 		};
 	};
 
@@ -290,7 +295,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 
 	public ArrayList<MusicData> querySong() {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
-		Cursor cursor = buildQuery(getActivity().getContentResolver());
+		Cursor cursor = buildQuery(mContext.getContentResolver());
 		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
 			return result;
 		}
@@ -301,7 +306,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			MusicData data = new MusicData();
 			data.populate(cursor);
 			songListAdapter.add(data);
-			android.util.Log.d("logd", "querySong: ");
 		}
 		cursor.close();
 		return result;

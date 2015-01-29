@@ -8,6 +8,7 @@ import org.upmobile.musix.utils.TypefaceHelper;
 
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -29,18 +30,24 @@ public class SongListAdapter extends BaseAdapter {
         typefaceHelper = new TypefaceHelper(mContext);
     }
 
-    public void add(MusicData song) {
-        if (songArrayList != null) {
-            try {
-				songArrayList.add(song.cloneSong());
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
-            notifyDataSetChanged();
-        }
-    }
+	public void add(MusicData song) {
+		if (songArrayList != null) {
+			songArrayList.add(song);
+			reDraw();
+		}
+	}
 
-    @Override
+	public void reDraw() {
+		((Activity) mContext).runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				notifyDataSetChanged();
+			}
+		});
+	}
+
+	@Override
     public int getCount() {
         return songArrayList.size();
     }
@@ -93,7 +100,6 @@ public class SongListAdapter extends BaseAdapter {
 
 	public void clear() {
 		songArrayList.clear();
-		notifyDataSetChanged();
 	}
 
 }
