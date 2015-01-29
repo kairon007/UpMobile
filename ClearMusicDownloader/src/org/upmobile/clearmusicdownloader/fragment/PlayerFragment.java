@@ -208,7 +208,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 			@Override
 			public void stop(AbstractSong song) {
-				PlayerFragment.this.song = song;
 				playerProgress.removeCallbacks(progressAction);
 				playerProgress.setProgress(0);
 				setClickablePlayerElement(player.isPrepared());
@@ -496,6 +495,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtArtist.setVisibility(View.VISIBLE);
 			playerEtArtist.requestFocus();
 			playerEtArtist.setText(song.getArtist());
+			int size = song.getArtist().length();
+			playerEtArtist.setSelection(size);
 			playerBtnArtist.setVisibility(View.GONE);
 		} else {
 			playerTvArtist.setVisibility(View.VISIBLE);
@@ -511,6 +512,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtTitle.setVisibility(View.VISIBLE);
 			playerEtTitle.requestFocus();
 			playerEtTitle.setText(song.getTitle());
+			int size = song.getTitle().length();
+			playerEtTitle.setSelection(size);
 			playerBtnTitle.setVisibility(View.GONE);
 		} else {
 			playerTvTitle.setVisibility(View.VISIBLE);
