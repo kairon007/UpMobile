@@ -79,6 +79,8 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		musicService.setArrayPlayback(abstractSongArrayList);
 		if (null != musicService.getPlayingSong()) {
 			song = musicService.getPlayingSong();
+			updateViews();
+			setPlayerCover();
 		} else {
 			if (!abstractSongArrayList.isEmpty()) {
 				song = abstractSongArrayList.get(0);
@@ -330,8 +332,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			}
 			try {
 				if (song != null) {
-					txtCurrentSongTitle.setText(song.getTitle());
-					txtCurrentSongArtistName.setText(song.getArtist());
+					updateViews();
 				} else {
 					txtCurrentSongTitle.setText("");
 					txtCurrentSongArtistName.setText("");
@@ -346,6 +347,11 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		}
 	};
 
+	private void updateViews() {
+		txtCurrentSongTitle.setText(song.getTitle());
+		txtCurrentSongArtistName.setText(song.getArtist());
+	}
+	
 	private void setPlayerCover() {
 		Bitmap albumArt = musicService.getPlayingSong().getCover(mContext);
 		if (albumArt != null) {
