@@ -32,6 +32,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -97,6 +98,7 @@ public abstract class OnlineSearchView extends View {
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private SongSearchAdapter resultAdapter;
+	protected ProgressDialog progressSecond;// For PtMusicAppOffline
 	private ViewGroup view;
 	private View spEnginesChoiserLayout;
 	private View spEnginesChoiserScroll;
@@ -492,6 +494,10 @@ public abstract class OnlineSearchView extends View {
 			}
 			if (!isUseDefaultSpinner()) {
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			} else {
+				if (getDropDownViewResource() > 0) {
+					adapter.setDropDownViewResource(getDropDownViewResource());
+				}
 			}
 			spEnginesChoiser.setAdapter(adapter);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -574,15 +580,26 @@ public abstract class OnlineSearchView extends View {
 		return false;
 	}
 	
+	protected int getDropDownViewResource() {
+		return 0;
+	}
+	
 	public void specialInit(View view) {
 	}
 
 	public void hideBaseProgress() {
 		progress.setVisibility(View.GONE);
+		if (null != progressSecond) {
+			progressSecond.hide();
+		}
 	}
 	
 	public void showBaseProgress() {
-		progress.setVisibility(View.VISIBLE);
+		if (null != progressSecond) {
+			progressSecond.show();
+		} else {
+			progress.setVisibility(View.VISIBLE);
+		}
 	}
 
 	public static String getDownloadPath(Context context) {

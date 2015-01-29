@@ -26,12 +26,11 @@
 
             <ListView
                 android:id="@+id/list"
+                style="@style/ListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:cacheColorHint="@android:color/transparent"
                 android:clickable="true"
-                android:listSelector="@drawable/selectable_item_bg"
-                android:scrollbarStyle="outsideInset" />
+                android:listSelector="@drawable/selectable_item_bg" />
 
             <TextView
                 android:id="@+id/message"
@@ -48,7 +47,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
-
         </FrameLayout>
 
         <LinearLayout
@@ -70,7 +68,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@drawable/layout_divider"
+                    android:divider="@drawable/divider"
                     android:dividerPadding="4dp"
                     android:orientation="horizontal"
                     android:showDividers="middle" >

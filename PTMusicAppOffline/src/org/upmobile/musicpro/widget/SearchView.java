@@ -6,8 +6,10 @@ import org.upmobile.musicpro.R;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 
 public class SearchView extends OnlineSearchView {
 
@@ -36,10 +38,25 @@ public class SearchView extends OnlineSearchView {
 	protected void stopSystemPlayer(Context context) {
 
 	}
+	
+	@Override
+	protected int getDropDownViewResource() {
+		return R.layout.item_drop_down;
+	}
+	
+	@Override
+	public boolean isUseDefaultSpinner() {
+		return true;
+	}
 
 	@Override
 	public void refreshLibrary() {
 
+	}
+	
+	@Override
+	public void specialInit(View view) {
+		progressSecond = ProgressDialog.show(view.getContext(), getResources().getString(R.string.app_name), getResources().getString(R.string.searching), true);
 	}
 	
 	@Override
