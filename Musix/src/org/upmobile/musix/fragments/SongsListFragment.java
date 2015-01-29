@@ -16,8 +16,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -47,7 +49,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	private ListView listView;
 	private static View rootView;
 	private TypefaceHelper typefaceHelper;
-	private ArrayList<MusicData> songArrayList = new ArrayList<MusicData>();
 	private ArrayList<AbstractSong> abstractSongArrayList;
 	private PlaybackService musicService;
 	private boolean musicBound = false;
@@ -66,23 +67,26 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		abstractSongArrayList = new ArrayList<AbstractSong>();
 		try {
 			rootView = inflater.inflate(R.layout.fragment_songs, container, false);
 			mContext = rootView.getContext();
 			setupViews(rootView);
 		} catch (Exception ex) {
-			// ex.printStackTrace();
 		}
+		mContext.getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		musicService = PlaybackService.get(getActivity());
 		musicService.setStatePlayerListener(this);
-		abstractSongArrayList = new ArrayList<AbstractSong>(songArrayList);
-		musicService.setArrayPlayback(abstractSongArrayList);
+		if (!musicService.hasArray()) {
+			setPlayback();
+		}
 		if (null != musicService.getPlayingSong()) {
 			song = musicService.getPlayingSong();
 			setPlayerCover();
 			setTime();
 			seekBar.setMax(musicService.getDuration());
 			seekBar.setProgress(musicService.getCurrentPosition());
+			abstractSongArrayList = musicService.getArrayPlayback();
 		} else {
 			if (!abstractSongArrayList.isEmpty()) {
 				song = abstractSongArrayList.get(0);
@@ -96,6 +100,31 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		musicBound = true;
 		return rootView;
 	}
+
+	private void setPlayback() {
+		ArrayList<AbstractSong> clone = new ArrayList<>();
+		for (AbstractSong abstractSong : abstractSongArrayList) {
+			try {
+				clone.add(abstractSong.cloneSong());
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+		}
+		musicService.setArrayPlayback(clone);
+	}
+	
+	private ContentObserver observer = new ContentObserver(null) {
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+		};
+	};
 
 	@Override
 	public void onPause() {
@@ -171,7 +200,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 				setPlayerCover();
 				seekBar.removeCallbacks(UpdateSongTime);
 				seekBar.post(UpdateSongTime);
-
 			}
 		});
 
@@ -238,6 +266,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 					btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
 					seekBar.removeCallbacks(UpdateSongTime);
 					seekBar.post(UpdateSongTime);
+					seekBar.setProgress(0);
 				}
 			}
 		});
@@ -254,7 +283,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			}
 		});
 		registerForContextMenu(listView);
-		songListAdapter = new SongListAdapter(mContext, songArrayList);
+		songListAdapter = new SongListAdapter(mContext, abstractSongArrayList);
 		listView.setAdapter(songListAdapter);
 		querySong();
 	}
@@ -272,6 +301,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			MusicData data = new MusicData();
 			data.populate(cursor);
 			songListAdapter.add(data);
+			android.util.Log.d("logd", "querySong: ");
 		}
 		cursor.close();
 		return result;
@@ -332,7 +362,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	}
 
 	private void viewSongDetails(int position) {
-		MusicData song = songArrayList.get(position);
+		AbstractSong song = abstractSongArrayList.get(position);
 		Intent intent = new Intent(mContext, SongDetailsActivity.class);
 		intent.putExtra(EXTRA_SONG_DETAIL, song);
 		startActivity(intent);
