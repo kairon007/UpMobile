@@ -172,6 +172,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		looper = thread.getLooper();
 		handler = new Handler(looper, this);
 		instance = this;
+		showNotification(true);
 		synchronized (WAIT) {
 			WAIT.notifyAll();
 		}
@@ -666,14 +667,14 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	    stopForeground(true);
 	}  
 	
-	public void showNotification() {
-		onMode(SMODE_NOTIFICATION);
+	public void showNotification(boolean flag) {
+		if (flag) {
+			onMode(SMODE_NOTIFICATION);
+		} else {
+			offMode(SMODE_NOTIFICATION);
+		}
 	}
-	
-	public void hideNotification() {
-		offMode(SMODE_NOTIFICATION);
-	}
-	
+
 	// it design for debug
 	private void printStateDebug() {
 		StringBuilder builder = new StringBuilder();
