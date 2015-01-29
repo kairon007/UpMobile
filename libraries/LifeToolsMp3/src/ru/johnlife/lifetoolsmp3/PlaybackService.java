@@ -8,11 +8,16 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -25,11 +30,12 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-public class PlaybackService  extends Service implements OnCompletionListener, OnErrorListener, OnPreparedListener, Handler.Callback {
+public class PlaybackService  extends Service implements Constants, OnCompletionListener, OnErrorListener, OnPreparedListener, Handler.Callback {
 	
 	//constants section
 	private static final int SMODE_GET_URL = 0x00000001;
@@ -45,6 +51,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	private static final int SMODE_DISABLED_DURING_CALL = 0x00000080;
 	private static final int SMODE_UNPLUG_HEADPHONES = 0x00000100;
 	private static final int SMODE_CALL_RINGING = 0x00000200;
+	private static final int SMODE_NOTIFICATION = 0x00000400;
 	private static final int MSG_START = 1;
 	private static final int MSG_PLAY = 2;
 	private static final int MSG_PAUSE = 3;
@@ -176,6 +183,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		handler.removeCallbacksAndMessages(null);
 		player.release();
 		looper.quit();
+		removeNotification();
 		super.onDestroy();
 	}
 	
@@ -249,7 +257,6 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
 			break;
-
 		case MSG_PLAY:
 			if (check(SMODE_PREPARED)) {
 				helper(State.PLAY, (AbstractSong) msg.obj);
@@ -316,6 +323,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 		handler.removeCallbacksAndMessages(null);
 		buildSendMessage(null, MSG_RESET, 0, 0);
 		play(playingSong.getClass() != MusicData.class);
+		sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
 	}
 
 	public void play(AbstractSong song) {
@@ -340,15 +348,19 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 				msg.what = MSG_PLAY;
 				mode &= ~SMODE_PAUSE;
 				offMode(SMODE_PLAYING);
+				sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
 			} else {
 				onMode(SMODE_PAUSE);
 				msg.what = MSG_PAUSE;
+				sendNotification(android.R.drawable.ic_media_play, getString(R.string.play));
+				stopForeground(true);
 			}
 			msg.obj = playingSong;
 			handler.sendMessage(msg);
 		} else {
 			if (null != previousSong) {
 				helper(State.STOP, previousSong);
+				sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
 			}
 			play(playingSong.getClass() != MusicData.class);
 		}
@@ -371,6 +383,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 			onMode(SMODE_PAUSE);
 		}
 		helper(State.STOP, playingSong);
+		removeNotification();
 	}
 	
 	public boolean offOnShuffle() {
@@ -418,6 +431,7 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 			return;
 		}
 		buildSendMessage(playingSong.getPath(), MSG_START, 0, 0);
+		sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
 	}
 	
 	private void helper(final State state, final AbstractSong targetSong) {
@@ -588,12 +602,76 @@ public class PlaybackService  extends Service implements OnCompletionListener, O
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		return Service.START_NOT_STICKY;
+		if (null != intent && null != intent.getAction() && !intent.getAction().isEmpty()) {
+			switch(intent.getAction()) {
+			case PREV_ACTION :
+				shift(-1);
+				break;
+			case PLAY_ACTION :
+				play(playingSong);
+				break;
+			case NEXT_ACTION :
+				shift(1);
+				break;
+			}
+		}
+		return Service.START_FLAG_REDELIVERY;
 	}
 
 	@Override
 	public IBinder onBind(Intent paramIntent) {
 		return null;
+	}
+	
+	private void sendNotification(int draweble, String state) {
+		if (!check(SMODE_NOTIFICATION)) return;
+		Bitmap cover = playingSong.getCover(this);
+		if (null == cover) {
+			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), android.R.drawable.ic_media_ff);
+		}
+		Intent notificationIntent = new Intent(this, new Activity().getClass());
+		notificationIntent.setAction(MAIN_ACTION);
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+		Intent previousIntent = new Intent(this, PlaybackService.class);
+		previousIntent.setAction(PREV_ACTION);
+		PendingIntent ppreviousIntent = PendingIntent.getService(this, 0, previousIntent, 0);
+
+		Intent playIntent = new Intent(this, PlaybackService.class);
+		playIntent.setAction(PLAY_ACTION);
+		PendingIntent pplayIntent = PendingIntent.getService(this, 0, playIntent, 0);
+
+		Intent nextIntent = new Intent(this, PlaybackService.class);
+		nextIntent.setAction(NEXT_ACTION);
+		PendingIntent pnextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
+
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+				.setPriority(NotificationCompat.PRIORITY_MAX)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setLargeIcon(Bitmap.createScaledBitmap(cover, 128, 128, false))
+				.setContentTitle(playingSong.getTitle())
+				.setContentText(playingSong.getArtist())
+				.setContentIntent(pendingIntent)
+				.setOngoing(true)
+				.addAction(android.R.drawable.ic_media_previous, getString(R.string.previous), ppreviousIntent)
+				.addAction(draweble, state, pplayIntent)
+				.addAction(android.R.drawable.ic_media_next, getString(R.string.next), pnextIntent);
+		startForeground(NOTIFICATION_ID, builder.build());
+	}
+	
+	private void removeNotification() {  
+	    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
+	    manager.cancel(NOTIFICATION_ID);  
+	    stopForeground(true);
+	}  
+	
+	public void showNotification() {
+		onMode(SMODE_NOTIFICATION);
+	}
+	
+	public void hideNotification() {
+		offMode(SMODE_NOTIFICATION);
 	}
 	
 	// it design for debug

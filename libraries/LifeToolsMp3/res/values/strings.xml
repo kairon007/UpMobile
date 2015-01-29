@@ -28,6 +28,11 @@
     <string name="loading_song_details">Loading song details...</string>
     <string name="please_wait">Please Wait...</string>
     -->
+    
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
     <string name="download_failed">Download is failed</string>
     <string name="download_finished">Download is finished</string>
     <string name="download_started">Download is started for </string>
