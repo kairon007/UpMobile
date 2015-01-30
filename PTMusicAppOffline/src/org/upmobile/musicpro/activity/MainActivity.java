@@ -1,4 +1,4 @@
-package org.upmobile.musicpro.activity;
+	package org.upmobile.musicpro.activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -555,6 +555,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private void onClickPlayerFooter() {
 		toMusicPlayer = FROM_OTHER;
+		layoutPlayerFooter.setVisibility(View.GONE);
 		gotoFragment(PLAYER_FRAGMENT);
 	}
 
