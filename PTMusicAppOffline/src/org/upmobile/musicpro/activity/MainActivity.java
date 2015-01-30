@@ -84,7 +84,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public int currentFragment;
 	public int currentMusicType;
 	public int toMusicPlayer;
-	public Playlist currentPlaylist;
+	private Playlist currentPlaylist;
 
 	public String nextPageNomination;
 	public String nextPageTopWeek;
@@ -665,5 +665,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 							}
 						}).setNegativeButton(android.R.string.cancel, null)
 				.create().show();
+	}
+	
+	public void setPlaylist(Playlist playlist) {
+		currentPlaylist = playlist;
+	}
+	
+	public Playlist getPlaylist() {
+		return currentPlaylist;
 	}
 }

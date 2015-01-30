@@ -78,9 +78,8 @@ public class PlaylistFragment extends BaseFragment {
 		lsvPlaylist.setAdapter(playlistAdapter);
 		lsvPlaylist.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> av, View v, int position,
-					long l) {
-				getMainActivity().currentPlaylist = listPlaylists.get(position);
+			public void onItemClick(AdapterView<?> av, View v, int position, long l) {
+				getMainActivity().setPlaylist(listPlaylists.get(position));
 				getMainActivity().gotoFragment(MainActivity.LIST_SONG_FRAGMENT);
 			}
 		});

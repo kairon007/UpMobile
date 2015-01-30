@@ -38,8 +38,7 @@ public class ListSongsFragment extends BaseFragment {
 	private View view;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_list_song, container, false);
 		initUIBase(view);
 		initControl(view);
@@ -50,8 +49,7 @@ public class ListSongsFragment extends BaseFragment {
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if (!hidden) {
-			getMainActivity().menu
-					.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+			getMainActivity().menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 			getMainActivity().setVisibilityFooter();
 			initData();
 		}
@@ -86,10 +84,7 @@ public class ListSongsFragment extends BaseFragment {
 		lsvActually.setAdapter(songAdapter);
 		lsvSong.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> av, View v, int position,
-					long l) {
-				Logger.e("currentFragment: "
-						+ getMainActivity().currentFragment);
+			public void onItemClick(AdapterView<?> av, View v, int position, long l) {
 				getMainActivity().toMusicPlayer = MainActivity.FROM_LIST_SONG;
 				GlobalValue.currentSongPlay = (int) l;
 				GlobalValue.listSongPlay.clear();
@@ -314,9 +309,10 @@ public class ListSongsFragment extends BaseFragment {
 			break;
 
 		case MainActivity.PLAYLIST:
-			setHeaderTitle(getMainActivity().currentPlaylist.getName());
+			if (null == getMainActivity().getPlaylist()) return;
+			setHeaderTitle(getMainActivity().getPlaylist().getName());
 			listSongs.clear();
-			listSongs.addAll(getMainActivity().currentPlaylist.getListSongs());
+			listSongs.addAll(getMainActivity().getPlaylist().getListSongs());
 			songAdapter.notifyDataSetChanged();
 			setButtonBack(view);
 			break;

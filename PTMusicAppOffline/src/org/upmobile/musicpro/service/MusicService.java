@@ -179,6 +179,8 @@ public class MusicService extends Service {
 					resumeMusic();
 				} else {
 					try {
+						mPlayer.reset();			
+						setPlayer(mPlayer);
 						mPlayer.setDataSource(listSongs.get(0).getUrl());
 						mPlayer.prepare();
 					} catch (Exception e) {
