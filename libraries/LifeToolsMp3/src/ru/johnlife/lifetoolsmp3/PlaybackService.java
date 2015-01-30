@@ -70,6 +70,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private ArrayList<AbstractSong> arrayPlayback;
 	private ArrayList<AbstractSong> arrayPlaybackOriginal;
 	private OnStatePlayerListener stateListener;
+	private OnPlaybackServiceDestroyListener destroyListener;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
@@ -91,6 +92,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		public void update (AbstractSong song);
 		public void	error ();
 			
+	}
+	
+	public interface OnPlaybackServiceDestroyListener {
+		public void playbackServiceIsDestroyed();
 	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -181,6 +186,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	@Override
 	public void onDestroy() {
 		unregisterReceiver(headsetReceiver);
+		if (null != destroyListener) {
+			destroyListener.playbackServiceIsDestroyed();
+		}
 		handler.removeCallbacksAndMessages(null);
 		player.release();
 		looper.quit();
@@ -605,6 +613,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		this.stateListener = stateListener;
 	}
 	
+	public void setDestroyListener(OnPlaybackServiceDestroyListener destroyListener) {
+		this.destroyListener = destroyListener;
+	}
+
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (null != intent && null != intent.getAction() && !intent.getAction().isEmpty()) {
@@ -701,5 +714,4 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}	
 		android.util.Log.d("logks", builder.toString());
 	}
-
 }
