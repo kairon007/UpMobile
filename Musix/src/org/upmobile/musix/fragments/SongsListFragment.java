@@ -77,6 +77,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		mContext.getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		musicService = PlaybackService.get(getActivity());
 		musicService.setStatePlayerListener(this);
+		musicService.showNotification(false);
 		if (!musicService.hasArray()) {
 			setPlayback();
 		}
