@@ -3,6 +3,7 @@ package org.upmobile.musicpro.widget;
 import org.upmobile.musicpro.Nulldroid_Advertisement;
 import org.upmobile.musicpro.Nulldroid_Settings;
 import org.upmobile.musicpro.R;
+import org.upmobile.musicpro.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
@@ -36,7 +37,8 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
-
+		((MainActivity) getContext()).mService.pauseMusic();
+		((MainActivity) getContext()).setButtonPlay();
 	}
 	
 	@Override
