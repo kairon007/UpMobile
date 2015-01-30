@@ -7,15 +7,16 @@
     <include layout="@layout/layout_header" />
 
     <LinearLayout
-        style="@style/Layout.FillWidth"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:background="@drawable/bg_search_bar"
         android:gravity="center_vertical" >
 
         <EditText
             android:id="@+id/txtKeyword"
             style="@style/Layout.Weight.Width"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="72dp"
             android:background="@android:color/transparent"
             android:hint="@string/search"
             android:imeOptions="actionSearch"
