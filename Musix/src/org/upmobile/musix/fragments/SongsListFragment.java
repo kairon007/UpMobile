@@ -192,12 +192,13 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				song = ((AbstractSong) parent.getAdapter().getItem(position));
-				if (song.equals(musicService.getPlayingSong()) && musicService.isPrepared()) {
-					musicService.play();
-				} else {
-					musicService.play(song);
+				if (musicService.enabledShuffle()) {
+					musicService.offOnShuffle();
+					btnShuffle.setAlpha((float) 0.5);
 				}
+				stop();
+				song = ((AbstractSong) parent.getAdapter().getItem(position));
+				musicService.play(song);
 				btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
 				if (playbackPaused) {
 					playbackPaused = false;
@@ -266,12 +267,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			@Override
 			public void onClick(View v) {
 				if (isPlaying()) {
-					playbackPaused = false;
-					musicService.stop();
-					btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
-					seekBar.removeCallbacks(UpdateSongTime);
-					seekBar.post(UpdateSongTime);
-					seekBar.setProgress(0);
+					stop();
 				}
 			}
 		});
@@ -291,6 +287,15 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		songListAdapter = new SongListAdapter(mContext, abstractSongArrayList);
 		listView.setAdapter(songListAdapter);
 		querySong();
+	}
+	
+	private void stop() {
+		playbackPaused = false;
+		musicService.stop();
+		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
+		seekBar.removeCallbacks(UpdateSongTime);
+		seekBar.post(UpdateSongTime);
+		seekBar.setProgress(0);
 	}
 
 	public ArrayList<MusicData> querySong() {
