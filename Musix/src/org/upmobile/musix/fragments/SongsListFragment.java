@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.upmobile.musix.R;
+import org.upmobile.musix.activities.MainActivity;
 import org.upmobile.musix.activities.SongDetailsActivity;
 import org.upmobile.musix.listadapters.SongListAdapter;
 import org.upmobile.musix.utils.TypefaceHelper;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnPlaybackServiceDestroyListener;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -37,7 +39,7 @@ import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class SongsListFragment extends Fragment implements MediaController.MediaPlayerControl, OnStatePlayerListener {
+public class SongsListFragment extends Fragment implements MediaController.MediaPlayerControl, OnStatePlayerListener, OnPlaybackServiceDestroyListener {
 
 	private static final String EXTRA_SONG_DETAIL = "EXTRA_SONG_DETAIL";
 
@@ -77,7 +79,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		mContext.getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		musicService = PlaybackService.get(getActivity());
 		musicService.setStatePlayerListener(this);
-		musicService.showNotification(false);
+		musicService.setDestroyListener(this);
 		if (!musicService.hasArray()) {
 			setPlayback();
 		}
@@ -514,6 +516,12 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	@Override
 	public void error() {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void playbackServiceIsDestroyed() {
+		seekBar.removeCallbacks(UpdateSongTime);
+		((MainActivity) mContext).finish();
 	}
 
 }
