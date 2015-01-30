@@ -7,6 +7,8 @@ import org.upmobile.musicpro.util.Logger;
 import org.upmobile.musicpro.util.StringUtil;
 
 import android.annotation.SuppressLint;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.os.ParcelableCompat;
 
 public class Song extends ParcelableCompat {
@@ -28,6 +30,20 @@ public class Song extends ParcelableCompat {
 		this.url = url;
 		image = "";
 	}
+	
+	private Song(Parcel parcel) { }
+
+	public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>() {
+		@Override
+		public Song createFromParcel(Parcel source) {
+			return new Song(source);
+		}
+
+		@Override
+		public Song[] newArray(int size) {
+			return new Song[size];
+		}
+	};
 
 	public Song(JSONObject object) {
 		Logger.e(object);
