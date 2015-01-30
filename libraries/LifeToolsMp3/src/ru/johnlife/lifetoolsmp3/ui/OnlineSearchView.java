@@ -888,6 +888,7 @@ public abstract class OnlineSearchView extends View {
 		listViewImage = null;
 		if (!((ImageView) view.findViewById(R.id.cover)).getContentDescription().equals(getResources().getString(R.string.default_cover))) {
 			Drawable draw = ((ImageView) view.findViewById(R.id.cover)).getDrawable();
+			listViewImage.recycle();
 			listViewImage = ((BitmapDrawable) draw).getBitmap();
 		}
 		boolean isRestored = keeper.checkState(StateKeeper.PROGRESS_DIALOG);
