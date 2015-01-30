@@ -18,15 +18,18 @@ import org.upmobile.musicpro.util.Logger;
 import org.upmobile.musicpro.widget.AutoBgButton;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +38,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -42,6 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
+	private static final String EXTRA_IS_PLAYING_BEFORE = "EXTRA_IS_PLAYING_BEFORE";
 	private static final String EXTRA_FOOTER_VISIBILITY = "EXTRA_FOOTER_VISIBILITY";
 	public static final int TOP_CHART = 0;
 	public static final int NOMINATIONS = 1;
@@ -75,6 +81,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private Fragment[] arrayFragments;
 	public SlidingMenu menu;
 	public ModelManager modelManager;
+	private HeadsetIntentReceiver headsetReceiver;
+	private TelephonyManager telephonyManager;
 
 	private AutoBgButton btnPreviousFooter, btnPlayFooter, btnNextFooter;
 	// private ImageView imgSongFooter;
@@ -85,6 +93,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblPlaylist, lblSearch, lblGoodApp, lblAbout, lblExitApp, lblSearchOnline, lblLibrary;
 
 	private boolean doubleBackToExitPressedOnce;
+	private boolean isPlayingBeforeCall;
 
 	public int currentFragment;
 	public int currentMusicType;
@@ -117,12 +126,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 				@Override
 				public void onChangeSong(int indexSong) {
-					((PlayerFragment) arrayFragments[PLAYER_FRAGMENT])
-							.changeSong(indexSong);
-					lblSongNameFooter.setText(GlobalValue.getCurrentSong()
-							.getName());
-					lblArtistFooter.setText(GlobalValue.getCurrentSong()
-							.getArtist());
+					((PlayerFragment) arrayFragments[PLAYER_FRAGMENT]).changeSong(indexSong);
+					lblSongNameFooter.setText(GlobalValue.getCurrentSong().getName());
+					lblArtistFooter.setText(GlobalValue.getCurrentSong().getArtist());
 				}
 			});
 			setVisibilityFooter();
@@ -130,6 +136,39 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
+		}
+	};
+	
+	private class HeadsetIntentReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
+				mService.pauseMusic();
+				setButtonPlay();
+			}
+		}
+	};
+	
+	PhoneStateListener phoneStateListener = new PhoneStateListener() {
+
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber) {
+			switch (state) {
+			case TelephonyManager.CALL_STATE_RINGING:
+				isPlayingBeforeCall = mService.isPlay();
+				mService.pauseMusic();
+				setButtonPlay();
+				break;
+			case TelephonyManager.CALL_STATE_IDLE:
+				if (isPlayingBeforeCall) {
+					mService.playOrPauseMusic();
+					setButtonPlay();
+				}
+				break;
+			}
+			super.onCallStateChanged(state, incomingNumber);
 		}
 	};
 
@@ -146,6 +185,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		initUI();
 		initControl();
 		initFragment();
+		telephonyManager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
+		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		try {
 			getIntent().getExtras().get("notification");
 			toMusicPlayer = MainActivity.FROM_NOTICATION;
@@ -157,7 +198,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setSelect(GlobalValue.currentMenu);
 			}
 		}
+		headsetReceiver = new HeadsetIntentReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+		registerReceiver(headsetReceiver, filter);
+
 		if (null != savedInstanceState) {
+			isPlayingBeforeCall = savedInstanceState.getBoolean(EXTRA_IS_PLAYING_BEFORE);
 			if (savedInstanceState.getBoolean(EXTRA_FOOTER_VISIBILITY)) {
 				if (GlobalValue.currentMenu !=  PLAYER_FRAGMENT) {
 					layoutPlayerFooter.setVisibility(View.VISIBLE);
@@ -731,6 +778,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(EXTRA_FOOTER_VISIBILITY, layoutPlayerFooter.getVisibility() == View.VISIBLE);
+		outState.putBoolean(EXTRA_IS_PLAYING_BEFORE,isPlayingBeforeCall);
 		super.onSaveInstanceState(outState);
 	}
 }
