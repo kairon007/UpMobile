@@ -122,7 +122,7 @@ public class UISwipableList extends ListView {
         case MotionEvent.ACTION_DOWN:
             mFirstX = lastX;
             mFirstY = lastY;
-
+            mSwipeDownView = null;
             Rect rect = new Rect();
             int childCount = getChildCount();
             int[] listViewCoords = new int[2];
@@ -158,12 +158,10 @@ public class UISwipableList extends ListView {
                     }
                 }
             }
-
             if (mSwipeDownView != null) {
                 mDownX = ev.getRawX();
             }
             break;
-
         case MotionEvent.ACTION_MOVE:
             float deltaX = lastX - mFirstX;
             float deltaY = lastY - mFirstY;
