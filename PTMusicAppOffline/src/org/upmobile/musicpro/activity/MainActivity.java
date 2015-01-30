@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
+	private static final String EXTRA_FOOTER_VISIBILITY = "EXTRA_FOOTER_VISIBILITY";
 	public static final int TOP_CHART = 0;
 	public static final int NOMINATIONS = 1;
 	public static final int CATEGORY_MUSIC = 2;
@@ -120,6 +121,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 							.getArtist());
 				}
 			});
+			setVisibilityFooter();
 		}
 
 		@Override
@@ -145,7 +147,18 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			toMusicPlayer = MainActivity.FROM_NOTICATION;
 			showFragment(PLAYER_FRAGMENT);
 		} catch (Exception e) {
-			setSelect(GlobalValue.currentMenu);
+			if (GlobalValue.currentMenu == PLAYER_FRAGMENT) {
+				onClickPlayerFooter();
+			} else {
+				setSelect(GlobalValue.currentMenu);
+			}
+		}
+		if (null != savedInstanceState) {
+			if (savedInstanceState.getBoolean(EXTRA_FOOTER_VISIBILITY)) {
+				if (GlobalValue.currentMenu !=  PLAYER_FRAGMENT) {
+					layoutPlayerFooter.setVisibility(View.VISIBLE);
+				}
+			}
 		}
 	}
 
@@ -164,13 +177,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
-		setVisibilityFooter();
 	}
 
 	public void setVisibilityFooter() {
 		try {
 			if (mService.isPause() || mService.isPlay()) {
-				layoutPlayerFooter.setVisibility(View.VISIBLE);
+				if (GlobalValue.currentMenu !=  PLAYER_FRAGMENT) {
+					layoutPlayerFooter.setVisibility(View.VISIBLE);
+				}
 			} else {
 				layoutPlayerFooter.setVisibility(View.GONE);
 			}
@@ -348,6 +362,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	public void gotoFragment(int fragment) {
+		GlobalValue.currentMenu = fragment;
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.setCustomAnimations(R.anim.slide_in_left,
 				R.anim.slide_out_left);
@@ -358,6 +373,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	public void backFragment(int fragment) {
+		GlobalValue.currentMenu = fragment;
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.setCustomAnimations(R.anim.slide_in_right,
 				R.anim.slide_out_right);
@@ -556,6 +572,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private void onClickPlayerFooter() {
 		toMusicPlayer = FROM_OTHER;
 		layoutPlayerFooter.setVisibility(View.GONE);
+		GlobalValue.currentMenu = PLAYER_FRAGMENT;
 		gotoFragment(PLAYER_FRAGMENT);
 	}
 
@@ -673,5 +690,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	
 	public Playlist getPlaylist() {
 		return currentPlaylist;
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean(EXTRA_FOOTER_VISIBILITY, layoutPlayerFooter.getVisibility() == View.VISIBLE);
+		super.onSaveInstanceState(outState);
 	}
 }
