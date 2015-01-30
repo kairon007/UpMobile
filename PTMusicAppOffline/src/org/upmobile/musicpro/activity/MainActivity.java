@@ -17,8 +17,6 @@ import org.upmobile.musicpro.slidingmenu.SlidingMenu;
 import org.upmobile.musicpro.util.Logger;
 import org.upmobile.musicpro.widget.AutoBgButton;
 
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.ComponentName;
@@ -147,7 +145,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			toMusicPlayer = MainActivity.FROM_NOTICATION;
 			showFragment(PLAYER_FRAGMENT);
 		} catch (Exception e) {
-			setSelect(TOP_CHART);
+			setSelect(GlobalValue.currentMenu);
 		}
 	}
 
