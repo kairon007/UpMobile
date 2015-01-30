@@ -290,6 +290,7 @@ public class MusicService extends Service {
 	}
 
 	public void seekTo(int progress) {
+		if (null == mPlayer) return;
 		mPlayer.seekTo(lengthSong * progress / 100);
 	}
 
