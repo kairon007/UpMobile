@@ -88,6 +88,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     private void closeApplication() {
+    	if (PlaybackService.hasInstance()) {
+    		PlaybackService.get(this).stop();
+    	}
         this.finish();
     }
 
