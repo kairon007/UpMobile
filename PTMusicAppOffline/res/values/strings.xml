@@ -52,7 +52,7 @@
     <string name="companyWebsite">http://projectemplate.com</string>
 
     <!-- Playlist -->
-    <string name="creatNewPlaylist">Creat new playlist</string>
+    <string name="creatNewPlaylist">Create new playlist</string>
     <string name="playlistName">Playlist name</string>
     <string name="chooseSong">Select song</string>
 
