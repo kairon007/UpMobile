@@ -608,16 +608,12 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (null != intent && null != intent.getAction() && !intent.getAction().isEmpty()) {
-			switch(intent.getAction()) {
-			case PREV_ACTION :
+			if (intent.getAction().equals(PREV_ACTION)) {
 				shift(-1);
-				break;
-			case PLAY_ACTION :
+			} else if (intent.getAction().equals(PLAY_ACTION)) {
 				play(playingSong);
-				break;
-			case NEXT_ACTION :
+			} else if (intent.getAction().equals(NEXT_ACTION)) {
 				shift(1);
-				break;
 			}
 		}
 		return Service.START_FLAG_REDELIVERY;

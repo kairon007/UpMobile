@@ -27,7 +27,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private ViewGroup view;
 	private BaseAdapter<MusicData> adapter;
 	private ListView listView;
-	private PlaybackService service;
 	private Handler uiHandler;
 	private ContentObserver observer = new ContentObserver(null) {
 
@@ -56,8 +55,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		};
 
 		private void customList(ArrayList<MusicData> list) {
-			if (service.getPlayingPosition() >= 0 && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
-				int i = service.getPlayingPosition();
+			if (getService().getPlayingPosition() >= 0 && getService().isPlaying() && getService().getPlayingSong().getClass() == MusicData.class) {
+				int i = getService().getPlayingPosition();
 				list.get(i).turnOn(MusicData.MODE_PLAYING);
 			}
 		};
@@ -68,16 +67,23 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
 	
+	private PlaybackService getService() {
+		if (PlaybackService.hasInstance()) {
+			return PlaybackService.get(getContext());
+		} else {
+			return null;
+		}
+	}
+	
 	public BaseLibraryView(LayoutInflater inflater) {
 		super(inflater.getContext());
 		uiHandler = new Handler((Callback) this);
-		service = PlaybackService.get(getContext());
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		ArrayList<MusicData> srcList = querySong();
 		init(inflater);
 		if (!srcList.isEmpty()) {
-			if (null != service && service.isPlaying() && service.getPlayingSong().getClass() == MusicData.class) {
-				int pos = service.getPlayingPosition();
+			if (null != getService() && getService().isPlaying() && getService().getPlayingSong().getClass() == MusicData.class) {
+				int pos = getService().getPlayingPosition();
 				if (pos >= 0 && pos < srcList.size()) {
 					((MusicData) srcList.get(pos)).turnOn(MusicData.MODE_PLAYING);
 				}
@@ -102,7 +108,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	}
 	
 	protected void deleteServiceItem(MusicData item) {
-		service.remove(item);
+		getService().remove(item);
 	}
 	
 	private void init(LayoutInflater inflater) {

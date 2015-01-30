@@ -87,6 +87,12 @@
         android:id="@+id/fragmentSearchOnline"
         android:name="org.upmobile.musicpro.fragment.OnlineSearchFragment"
         style="@style/Layout.FillWidthHeight" />
+    
+    <fragment
+        android:id="@+id/fragmentLibrary"
+        android:name="org.upmobile.musicpro.fragment.LibraryFragment"
+        style="@style/Layout.FillWidthHeight"
+        />
 
     <fragment
         android:id="@+id/fragmentPlayer"

@@ -1,4 +1,4 @@
-	package org.upmobile.musicpro.activity;
+package org.upmobile.musicpro.activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,8 @@ import org.upmobile.musicpro.service.PlayerListener;
 import org.upmobile.musicpro.slidingmenu.SlidingMenu;
 import org.upmobile.musicpro.util.Logger;
 import org.upmobile.musicpro.widget.AutoBgButton;
+
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -50,6 +52,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public static final int ABOUT = 6;
 	public static final int EXIT_APP = 7;
 	public static final int SEARCH_ONLINE = 8;
+	public static final int LIBRARY = 9;
 
 	public static final int LIST_SONG_FRAGMENT = 0;
 	public static final int CATEGORY_MUSIC_FRAGMENT = 1;
@@ -59,6 +62,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public static final int PLAYER_FRAGMENT = 5;
 	public static final int ABOUT_FRAGMENT = 6;
 	public static final int SEARCH_ONLINE_FRAGMENT = 7;
+	public static final int LIBRARY_FRAGMENT = 8;
 
 	public static final int FROM_LIST_SONG = 0;
 	public static final int FROM_NOTICATION = 1;
@@ -78,7 +82,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private TextView lblSongNameFooter, lblArtistFooter;
 
 	private TextView lblTopChart, lblNominations, lblCategoryMusic,
-			lblPlaylist, lblSearch, lblGoodApp, lblAbout, lblExitApp, lblSearchOnline;
+			lblPlaylist, lblSearch, lblGoodApp, lblAbout, lblExitApp, lblSearchOnline, lblLibrary;
 
 	private boolean doubleBackToExitPressedOnce;
 
@@ -135,7 +139,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		initList();
 		databaseUtility = new DatabaseUtility(this);
 		setContentView(R.layout.activity_main);
-
+		startService(new Intent(this, PlaybackService.class));
 		modelManager = new ModelManager(this);
 		initService();
 		initMenu();
@@ -216,6 +220,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		lblAbout = (TextView) menu.findViewById(R.id.lblAbout);
 		lblExitApp = (TextView) menu.findViewById(R.id.lblExitApp);
 		lblSearchOnline = (TextView) menu.findViewById(R.id.lblSearchOnline);
+		lblLibrary = (TextView) menu.findViewById(R.id.lblLibrary);
 
 		if(GlobalValue.getCurrentSong() != null){
 			lblSongNameFooter.setText(GlobalValue.getCurrentSong()
@@ -240,13 +245,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		lblAbout.setOnClickListener(this);
 		lblExitApp.setOnClickListener(this);
 		lblSearchOnline.setOnClickListener(this);
+		lblLibrary.setOnClickListener(this);
 		lblSongNameFooter.setSelected(true);
 		lblArtistFooter.setSelected(true);
 	}
 
 	private void initFragment() {
 		fm = getSupportFragmentManager();
-		arrayFragments = new Fragment[8];
+		arrayFragments = new Fragment[9];
 		arrayFragments[LIST_SONG_FRAGMENT] = fm
 				.findFragmentById(R.id.fragmentListSongs);
 		arrayFragments[CATEGORY_MUSIC_FRAGMENT] = fm
@@ -263,6 +269,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				.findFragmentById(R.id.fragmentAbout);
 		arrayFragments[SEARCH_ONLINE_FRAGMENT] = fm
 				.findFragmentById(R.id.fragmentSearchOnline);
+		arrayFragments[LIBRARY_FRAGMENT] = fm
+				.findFragmentById(R.id.fragmentLibrary);
 
 		FragmentTransaction transaction = fm.beginTransaction();
 		for (Fragment fragment : arrayFragments) {
@@ -281,7 +289,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		transaction.commit();
 		Logger.e(fragmentIndex);
 	}
-
+	
 	private void initList() {
 		listNominations = new ArrayList<Song>();
 		listTopWeek = new ArrayList<Song>();
@@ -396,6 +404,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblAbout.setBackgroundColor(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
+			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(LIST_SONG_FRAGMENT);
 			break;
 
@@ -410,6 +419,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblAbout.setBackgroundColor(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
+			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(LIST_SONG_FRAGMENT);
 			break;
 
@@ -424,6 +434,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblAbout.setBackgroundColor(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
+			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(CATEGORY_MUSIC_FRAGMENT);
 			break;
 
@@ -436,6 +447,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
 			lblAbout.setBackgroundColor(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
+			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(PLAYLIST_FRAGMENT);
 			break;
 
@@ -449,6 +461,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblAbout.setBackgroundColor(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
+			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(SEARCH_FRAGMENT);
 			break;
 
@@ -462,6 +475,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblAbout.setBackgroundResource(R.drawable.bg_item_menu_select);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
+			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(ABOUT_FRAGMENT);
 			break;
 			
@@ -475,7 +489,22 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblAbout.setBackgroundResource(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 			lblSearchOnline.setBackgroundColor(R.drawable.bg_item_menu_select);
+			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(SEARCH_ONLINE_FRAGMENT);
+			break;
+			
+		case LIBRARY:
+			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
+			lblNominations.setBackgroundColor(Color.TRANSPARENT);
+			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
+			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
+			lblSearch.setBackgroundColor(Color.TRANSPARENT);
+			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
+			lblAbout.setBackgroundResource(Color.TRANSPARENT);
+			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
+			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
+			lblLibrary.setBackgroundColor(R.drawable.bg_item_menu_select);
+			showFragment(LIBRARY_FRAGMENT);
 			break;
 
 		case GOOD_APP:
@@ -553,6 +582,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		case R.id.lblSearchOnline:
 			onClickSearchOnline();
 			break;
+		case R.id.lblLibrary:
+			onClickLibrary();
+			break;
 		}
 	}
 
@@ -598,6 +630,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	
 	private void onClickSearchOnline() {
 		setSelect(SEARCH_ONLINE);
+	}
+	
+	private void onClickLibrary() {
+		setSelect(LIBRARY);
 	}
 
 	private void onClickGoodApp() {

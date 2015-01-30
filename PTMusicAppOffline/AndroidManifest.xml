@@ -39,6 +39,8 @@
             android:theme="@android:style/Theme.Dialog" />
 
         <service android:name=".service.MusicService" />
+        
+        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService"></service>
 
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
