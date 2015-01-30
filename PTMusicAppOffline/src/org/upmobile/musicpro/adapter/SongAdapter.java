@@ -1,5 +1,6 @@
 package org.upmobile.musicpro.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.upmobile.musicpro.R;
@@ -7,6 +8,7 @@ import org.upmobile.musicpro.object.Song;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,5 +58,16 @@ public class SongAdapter extends BaseAdapter {
 			layoutSong.setBackgroundColor(Color.TRANSPARENT);
 		}
 		return convertView;
+	}
+	
+	public void addAll(ArrayList<? extends Parcelable> arrayList) {
+		if (arrayList.isEmpty()) return;
+		listSongs.clear();
+		for (int i=0; i<arrayList.size(); i++)
+			listSongs.add((Song) arrayList.get(i));
+	}
+	
+	public List<Song> getAll() {
+		return listSongs;
 	}
 }

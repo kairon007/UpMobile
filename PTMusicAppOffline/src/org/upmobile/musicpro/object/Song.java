@@ -7,8 +7,9 @@ import org.upmobile.musicpro.util.Logger;
 import org.upmobile.musicpro.util.StringUtil;
 
 import android.annotation.SuppressLint;
+import android.support.v4.os.ParcelableCompat;
 
-public class Song {
+public class Song extends ParcelableCompat {
 	private String id;
 	private String idType;
 	private String name;

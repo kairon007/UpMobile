@@ -1,9 +1,11 @@
 package org.upmobile.musicpro.fragment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.upmobile.musicpro.BaseFragment;
+import org.upmobile.musicpro.Constants;
 import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.activity.MainActivity;
 import org.upmobile.musicpro.adapter.SongAdapter;
@@ -17,6 +19,7 @@ import org.upmobile.musicpro.widget.AutoBgButton;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class SearchFragment extends BaseFragment {
+public class SearchFragment extends BaseFragment implements Constants {
 	private AutoBgButton btnSearch;
 	private EditText txtKeyword;
 	private ListView lsvResult;
@@ -44,9 +47,19 @@ public class SearchFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_search, container, false);
+		listResult = new ArrayList<Song>();
+		if (null != savedInstanceState) {
+			listResult.addAll((Collection<? extends Song>) savedInstanceState.getParcelableArrayList(STATE_SEARCH_RESULTS));
+		}
 		initUIBase(view);
 		initControl(view);
 		return view;
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putParcelableArrayList(STATE_SEARCH_RESULTS, (ArrayList<? extends Parcelable>) listResult);
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
@@ -79,7 +92,6 @@ public class SearchFragment extends BaseFragment {
 		});
 
 		setHeaderTitle(R.string.search);
-		listResult = new ArrayList<Song>();
 		songAdapter = new SongAdapter(getActivity(), listResult);
 		lsvResult.setAdapter(songAdapter);
 		lsvResult.setOnItemClickListener(new OnItemClickListener() {
