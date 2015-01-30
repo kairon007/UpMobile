@@ -37,6 +37,9 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
+		if (null ==(MainActivity) getContext() || null == ((MainActivity) getContext()).mService){
+			return;
+		}
 		((MainActivity) getContext()).mService.pauseMusic();
 		((MainActivity) getContext()).setButtonPlay();
 	}
