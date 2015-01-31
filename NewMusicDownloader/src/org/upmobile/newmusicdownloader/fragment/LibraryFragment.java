@@ -24,4 +24,5 @@ public class LibraryFragment extends Fragment{
 		((MainActivity) getActivity()).setSelectedItem(2);
 		super.onResume();
 	}
+	
 }

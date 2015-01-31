@@ -290,6 +290,12 @@ public class MusicService extends Service {
 		} catch (Exception e) {
 		}
 	}
+	
+	public void reset() {
+		if (null != mPlayer && isPlay()) {
+			mPlayer.reset();
+		}
+	}
 
 	public void seekTo(int progress) {
 		if (null == mPlayer) return;

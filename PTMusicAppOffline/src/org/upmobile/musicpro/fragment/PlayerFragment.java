@@ -6,6 +6,7 @@ import org.upmobile.musicpro.BaseFragment;
 import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.activity.MainActivity;
 import org.upmobile.musicpro.config.GlobalValue;
+import org.upmobile.musicpro.service.MusicService;
 import org.upmobile.musicpro.slidingmenu.SlidingMenu;
 import org.upmobile.musicpro.widget.AutoBgButton;
 
@@ -40,7 +41,7 @@ public class PlayerFragment extends BaseFragment implements OnClickListener {
 
 	public PlayerListPlayingFragment playerListPlayingFragment;
 	public PlayerThumbFragment playerThumbFragment;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_player, container, false);
@@ -61,7 +62,7 @@ public class PlayerFragment extends BaseFragment implements OnClickListener {
 			switch (getMainActivity().toMusicPlayer) {
 			case MainActivity.FROM_LIST_SONG:
 			case MainActivity.FROM_SEARCH:
-				getMainActivity().mService.setListSongs(GlobalValue.listSongPlay);
+				getMainActivity().getService(true).setListSongs(GlobalValue.listSongPlay);
 				setCurrentSong(GlobalValue.currentSongPlay);
 				playerListPlayingFragment.refreshListPlaying();
 				playerThumbFragment.refreshData();
@@ -128,7 +129,7 @@ public class PlayerFragment extends BaseFragment implements OnClickListener {
 		seekBarLength.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				getMainActivity().mService.seekTo(seekBar.getProgress());
+				getMainActivity().getService(true).seekTo(seekBar.getProgress());
 			}
 
 			@Override
@@ -173,7 +174,7 @@ public class PlayerFragment extends BaseFragment implements OnClickListener {
 	private void setCurrentSong(int position) {
 		playerListPlayingFragment.refreshListPlaying();
 		playerThumbFragment.refreshData();
-		getMainActivity().mService.startMusic(position);
+		getMainActivity().getService(true).startMusic(position);
 	}
 
 	public void seekChanged(String lengthTime, String currentTime, int progress) {
@@ -184,13 +185,13 @@ public class PlayerFragment extends BaseFragment implements OnClickListener {
 
 	public void changeSong(int indexSong) {
 		lblTimeCurrent.setText(getString(R.string.timeStart));
-		lblTimeLength.setText(getMainActivity().mService.getLengSong());
+		lblTimeLength.setText(getMainActivity().getService(true).getLengSong());
 		playerListPlayingFragment.refreshListPlaying();
 		playerThumbFragment.refreshData();
 	}
 
 	public void setButtonPlay() {
-		if (getMainActivity().mService.isPause()) {
+		if (getMainActivity().getService(true).isPause()) {
 			btnPlay.setBackgroundResource(R.drawable.btn_play);
 		} else {
 			btnPlay.setBackgroundResource(R.drawable.btn_pause);
@@ -223,25 +224,25 @@ public class PlayerFragment extends BaseFragment implements OnClickListener {
 	}
 
 	private void onClickShuffle() {
-		getMainActivity().mService.setShuffle(btnShuffle.isChecked());
+		getMainActivity().getService(true).setShuffle(btnShuffle.isChecked());
 	}
 
 	private void onClickBackward() {
-		getMainActivity().mService.backSongByOnClick();
+		getMainActivity().getService(true).backSongByOnClick();
 	}
 
 	private void onClickPlay() {
-		getMainActivity().mService.playOrPauseMusic();
+		getMainActivity().getService(true).playOrPauseMusic();
 		getMainActivity().setButtonPlay();
 	}
 
 	private void onClickForward() {
-		getMainActivity().mService.nextSongByOnClick();
+		getMainActivity().getService(true).nextSongByOnClick();
 	}
 
 	private void onClickRepeat() {
-		getMainActivity().mService.setRepeat(btnRepeat.isChecked());
-		if (getMainActivity().mService.isRepeat()) {
+		getMainActivity().getService(true).setRepeat(btnRepeat.isChecked());
+		if (getMainActivity().getService(true).isRepeat()) {
 			showToast(R.string.enableRepeat);
 		} else {
 			showToast(R.string.offRepeat);

@@ -4,6 +4,7 @@ import org.upmobile.musicpro.Nulldroid_Advertisement;
 import org.upmobile.musicpro.Nulldroid_Settings;
 import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.activity.MainActivity;
+import org.upmobile.musicpro.service.MusicService;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
@@ -37,11 +38,11 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
-		if (null ==(MainActivity) getContext() || null == ((MainActivity) getContext()).mService){
-			return;
+		MusicService service  = ((MainActivity) getContext()).getService(false);
+		if (null != service && service.isPlay()){
+			service.pauseMusic();
+			((MainActivity) getContext()).setButtonPlay();
 		}
-		((MainActivity) getContext()).mService.pauseMusic();
-		((MainActivity) getContext()).setButtonPlay();
 	}
 	
 	@Override

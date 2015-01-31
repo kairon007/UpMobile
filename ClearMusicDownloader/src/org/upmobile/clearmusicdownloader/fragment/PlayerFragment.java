@@ -119,6 +119,59 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private boolean isUseAlbumCover = true;
     private boolean removeCover = false;
     private boolean isNeedCalculateCover = true;
+    
+    private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+
+		@Override
+		public void start(AbstractSong song) {
+			downloadButtonState(true);
+			if (song.getClass() != MusicData.class) {
+				PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
+			} else {
+				PlayerFragment.this.song = song;
+			}
+			if (isDestroy) return;
+			setClickablePlayerElement(true);
+			showLyrics();
+			setElementsView(0);
+			playerProgress.post(progressAction);
+		}
+
+		@Override
+		public void play(AbstractSong song) {
+			if (isDestroy) return;
+			changePlayPauseView(false);
+		}
+
+		@Override
+		public void pause(AbstractSong song) {
+			if (isDestroy) return;
+			changePlayPauseView(true);
+		}
+
+		@Override
+		public void stop(AbstractSong song) {
+			playerProgress.removeCallbacks(progressAction);
+			playerProgress.setProgress(0);
+			setClickablePlayerElement(player.isPrepared());
+		}
+		
+		@Override
+		public void error() {
+			if (isDestroy) return;
+			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
+		}
+		
+		@Override
+		public void update(AbstractSong song) {
+			if (isDestroy) return;
+			PlayerFragment.this.song = song;
+			showLyrics();
+			setElementsView(0);
+			setClickablePlayerElement(false);
+		}
+		
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -132,11 +185,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setListener();
 		downloadButtonState(false);
 		player = PlaybackService.get(getActivity());
-		bindToPlayer();
+		player.addStatePlayerListener(stateListener);
 		playerTitleBar.getBackground().setAlpha(0);
 		playerTitleBarArtis.setVisibility(View.INVISIBLE);
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
-		playerCover.bringToFront();
+		playerCover.bringToFront();	
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtTitle);
 		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtArtist);
@@ -176,60 +229,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		deltaScale = 1 - (float) Util.dpToPx(getActivity(), 48) / (float) playerCover.getMeasuredHeight();
 	}
 	
-	private void bindToPlayer() {
-		player.setStatePlayerListener(new OnStatePlayerListener() {
-
-			@Override
-			public void start(AbstractSong song) {
-				downloadButtonState(true);
-				if (song.getClass() != MusicData.class) {
-					PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
-				} else {
-					PlayerFragment.this.song = song;
-				}
-				if (isDestroy) return;
-				setClickablePlayerElement(true);
-				showLyrics();
-				setElementsView(0);
-				playerProgress.post(progressAction);
-			}
-
-			@Override
-			public void play(AbstractSong song) {
-				if (isDestroy) return;
-				changePlayPauseView(false);
-			}
-
-			@Override
-			public void pause(AbstractSong song) {
-				if (isDestroy) return;
-				changePlayPauseView(true);
-			}
-
-			@Override
-			public void stop(AbstractSong song) {
-				playerProgress.removeCallbacks(progressAction);
-				playerProgress.setProgress(0);
-				setClickablePlayerElement(player.isPrepared());
-			}
-			
-			@Override
-			public void error() {
-				if (isDestroy) return;
-				Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
-			}
-			
-			@Override
-			public void update(AbstractSong song) {
-				if (isDestroy) return;
-				PlayerFragment.this.song = song;
-				showLyrics();
-				setElementsView(0);
-				setClickablePlayerElement(false);
-			}
-			
-		});
+	@Override
+	public void onDestroyView() {
+		player.removeStatePlayerListener(stateListener);
+		super.onDestroyView();
 	}
+	
 
 	@Override
 	public void onResume() {

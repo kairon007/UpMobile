@@ -18,6 +18,8 @@ import org.upmobile.musicpro.util.Logger;
 import org.upmobile.musicpro.widget.AutoBgButton;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -108,7 +110,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	public DatabaseUtility databaseUtility;
 
-	public MusicService mService;
+	private MusicService mService;
 	private Intent intentService;
 	private ServiceConnection mConnection = new ServiceConnection() {
 		@Override
@@ -170,6 +172,47 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}
 			super.onCallStateChanged(state, incomingNumber);
 		}
+	};
+
+
+	private boolean fromLibrary = false; //indicate ñalling music - true from library PlayerService
+	private PlaybackService playbackService;
+	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+		
+		@Override
+		public void start(AbstractSong song) {
+			btnPlayFooter.setBackgroundResource(R.drawable.bg_btn_pause_small);
+			lblSongNameFooter.setText(song.getTitle());
+			lblArtistFooter.setText(song.getArtist());
+		}
+
+		@Override
+		public void play(AbstractSong song) {
+			btnPlayFooter.setBackgroundResource(R.drawable.bg_btn_pause_small);
+		}
+
+		@Override
+		public void pause(AbstractSong song) {
+			btnPlayFooter.setBackgroundResource(R.drawable.bg_btn_play_small);
+		}
+
+		@Override
+		public void stop(AbstractSong song) {
+			
+		}
+
+		@Override
+		public void update(AbstractSong song) {
+			lblSongNameFooter.setText(song.getTitle());
+			lblSongNameFooter.setText(song.getTitle());
+			lblArtistFooter.setText(song.getArtist());
+		}
+
+		@Override
+		public void error() {
+			
+		}
+		
 	};
 
 	@Override
@@ -415,7 +458,23 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		// });
 		// }
 	}
-
+	
+	public void initPlayback() {
+		fromLibrary = true;
+		playbackService = PlaybackService.get(this);
+		playbackService.addStatePlayerListener(stateListener);
+	}
+	
+	public MusicService getService(boolean fromApp){
+		if (fromApp) {
+			fromLibrary = !fromApp;
+			if (null != playbackService) {
+				playbackService.reset();
+			}
+		}
+		return mService;
+	}
+	
 	public void gotoFragment(int fragment) {
 		GlobalValue.currentMenu = fragment;
 		FragmentTransaction transaction = fm.beginTransaction();
@@ -579,15 +638,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btnPreviousFooter:
-			onClickPreviousFooter();
+			if (fromLibrary) {
+				playbackService.shift(-1);
+			} else {
+				onClickPreviousFooter();
+			}
 			break;
 
 		case R.id.btnPlayFooter:
-			onClickPlayFooter();
+			if (fromLibrary) {
+				playbackService.play(playbackService.getPlayingSong());
+			} else {
+				onClickPlayFooter();
+			}
 			break;
 
 		case R.id.btnNextFooter:
-			onClickNextFooter();
+			if (fromLibrary) {
+				playbackService.shift(1);
+			} else {
+				onClickNextFooter();
+			}
 			break;
 
 		case R.id.layoutPlayerFooter:

@@ -69,7 +69,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	//instance section
 	private ArrayList<AbstractSong> arrayPlayback;
 	private ArrayList<AbstractSong> arrayPlaybackOriginal;
-	private OnStatePlayerListener stateListener;
+	private ArrayList<OnStatePlayerListener> stateListeners = new ArrayList<OnStatePlayerListener>();
 	private OnPlaybackServiceDestroyListener destroyListener;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
@@ -444,36 +444,38 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	private void helper(final State state, final AbstractSong targetSong) {
-		if (stateListener == null) {
+		if (stateListeners == null) {
 			return;
 		}
 		Handler handler = new Handler(getMainLooper());
-		handler.post(new Runnable() {
-			
-			@Override
-			public void run() {
-				switch (state) {
-				case START:
-					stateListener.start(targetSong);
-					break;
-				case PLAY:
-					stateListener.play(targetSong);
-					break;
-				case PAUSE:
-					stateListener.pause(targetSong);
-					break;
-				case STOP:
-					stateListener.stop(targetSong);
-					break;
-				case ERROR:
-					stateListener.error();
-					break;
-				case UPDATE:
-					stateListener.update(targetSong);
-					break;
+		for (final OnStatePlayerListener stateListener : stateListeners) {
+			handler.post(new Runnable() {
+
+				@Override
+				public void run() {
+					switch (state) {
+					case START:
+						stateListener.start(targetSong);
+						break;
+					case PLAY:
+						stateListener.play(targetSong);
+						break;
+					case PAUSE:
+						stateListener.pause(targetSong);
+						break;
+					case STOP:
+						stateListener.stop(targetSong);
+						break;
+					case ERROR:
+						stateListener.error();
+						break;
+					case UPDATE:
+						stateListener.update(targetSong);
+						break;
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	private void offMode(int flag) {
@@ -609,8 +611,12 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		this.arrayPlayback = arrayPlayback;
 	}
 	
-	public void setStatePlayerListener(OnStatePlayerListener stateListener) {
-		this.stateListener = stateListener;
+	public void addStatePlayerListener(OnStatePlayerListener stateListener) {
+		this.stateListeners.add(stateListener);
+	}
+	
+	public void removeStatePlayerListener(OnStatePlayerListener stateListener) {
+		this.stateListeners.remove(stateListener);
 	}
 	
 	public void setDestroyListener(OnPlaybackServiceDestroyListener destroyListener) {

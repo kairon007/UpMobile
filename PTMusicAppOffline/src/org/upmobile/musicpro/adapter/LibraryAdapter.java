@@ -3,6 +3,7 @@ package org.upmobile.musicpro.adapter;
 import java.util.ArrayList;
 
 import org.upmobile.musicpro.R;
+import org.upmobile.musicpro.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -116,14 +117,20 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				
 				@Override
 				public void onClick(View v) {
+					if (null != ((MainActivity) getContext()).getService(false)) {
+//						((MainActivity) getContext()).mService.pauseMusic();
+						((MainActivity) getContext()).getService(false).reset();
+						((MainActivity) getContext()).setButtonPlay();
+					}
 					if (PlaybackService.hasInstance()) {
-						PlaybackService.get(getContext()).setStatePlayerListener(stateListener);
+						PlaybackService.get(getContext()).addStatePlayerListener(stateListener);
 					}
 					if (!PlaybackService.get(getContext()).isCorrectlyState(MusicData.class, getCount())) {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						PlaybackService.get(getContext()).setArrayPlayback(list);
 					} 
 					PlaybackService.get(getContext()).play(item);
+					((MainActivity) getContext()).initPlayback();
 				}
 			});
 		}

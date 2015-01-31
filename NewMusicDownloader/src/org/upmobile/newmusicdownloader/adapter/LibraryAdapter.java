@@ -85,7 +85,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
 		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		service = PlaybackService.get(getContext());
-		service.setStatePlayerListener(stateListener);
+		service.addStatePlayerListener(stateListener);
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
@@ -93,7 +93,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
 		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		service = PlaybackService.get(getContext());
-		service.setStatePlayerListener(stateListener);
+		service.addStatePlayerListener(stateListener);
 	}
 
 	public MusicData get(AbstractSong data) {

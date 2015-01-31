@@ -351,6 +351,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 	
 	private void initService() {
 		service = PlaybackService.get(getContext());
-		service.setStatePlayerListener(stateListener);
+		service.addStatePlayerListener(stateListener);
 	}
 }

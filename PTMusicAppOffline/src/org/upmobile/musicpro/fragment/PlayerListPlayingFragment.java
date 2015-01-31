@@ -27,7 +27,7 @@ public class PlayerListPlayingFragment extends BaseFragment {
 		lsvSongPlaying.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> av, View v, int position, long l) {
-				getMainActivity().mService.startMusic(position);
+				getMainActivity().getService(true).startMusic(position);
 			}
 		});
 		//setButtonMenu(view);

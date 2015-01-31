@@ -100,7 +100,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
 		player = PlaybackService.get(getActivity());
-		player.setStatePlayerListener(this);
+		player.addStatePlayerListener(this);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
@@ -123,6 +123,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			changePlayPauseView(prepared);
 		}
 		return parentView;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		player.removeStatePlayerListener(this);
+		super.onDestroyView();
 	}
 	
 	@Override
