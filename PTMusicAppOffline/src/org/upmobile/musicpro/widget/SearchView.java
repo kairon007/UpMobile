@@ -6,10 +6,12 @@ import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.activity.MainActivity;
 import org.upmobile.musicpro.service.MusicService;
 
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -22,6 +24,12 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	protected BaseSettings getSettings() {
 		return new Nulldroid_Settings();
+	}
+	
+	@Override
+	protected Parcelable onSaveInstanceState() {
+		
+		return super.onSaveInstanceState();
 	}
 
 	@Override
@@ -62,7 +70,9 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	public void specialInit(View view) {
-		progressSecond = ProgressDialog.show(view.getContext(), getResources().getString(R.string.app_name), getResources().getString(R.string.searching), true);
+		if (StateKeeper.getInstance().checkState(StateKeeper.SEARCH_EXE_OPTION)) {
+			progressSecond = ProgressDialog.show(view.getContext(), getResources().getString(R.string.app_name), getResources().getString(R.string.searching), true);
+		}
 	}
 	
 	@Override
