@@ -105,7 +105,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	}
 
 	private void setPlayback() {
-		ArrayList<AbstractSong> clone = new ArrayList<>();
+		ArrayList<AbstractSong> clone = new ArrayList<AbstractSong>();
 		for (AbstractSong abstractSong : abstractSongArrayList) {
 			try {
 				clone.add(abstractSong.cloneSong());
