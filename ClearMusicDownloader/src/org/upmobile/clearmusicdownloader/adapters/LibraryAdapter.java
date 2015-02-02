@@ -3,18 +3,17 @@ package org.upmobile.clearmusicdownloader.adapters;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
-
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -26,9 +25,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.special.utils.UICircularImage;
 import com.special.utils.UISwipableList;
 
@@ -222,7 +222,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 		private TextView artist;
 		private TextView duration;
 		private LinearLayout hidenView;
-		private TextView cancel;
+		private FrameLayout cancel;
 		private UICircularImage image;
 
 		public LibraryViewHolder(View v) {
@@ -233,7 +233,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 			image = (UICircularImage) v.findViewById(R.id.item_image);
 			duration = (TextView) v.findViewById(R.id.item_duration);
 			hidenView = (LinearLayout) v.findViewById(R.id.hidden_view);
-			cancel = (TextView) v.findViewById(R.id.cancel);
+			cancel = (FrameLayout) v.findViewById(R.id.cancel);
 		}
 
 		@Override
@@ -265,7 +265,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 		}
 
 		private void setButtonBackground(int resid) {
-			button.setBackgroundResource(resid);
+			((ImageButton) button).setImageResource(resid);
 		}
 
 		private void setListener(final MusicData item) {
@@ -274,6 +274,11 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						frontView.setBackgroundColor(getContext().getResources().getColor(R.color.theme_color));
+						break;
+					case MotionEvent.ACTION_SCROLL:
+						break;
 					case MotionEvent.ACTION_UP:
 						if (service == null) {
 							initService();
@@ -296,6 +301,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 						((MainActivity) v.getContext()).changeFragment(playerFragment);
 						break;
 					case MotionEvent.ACTION_CANCEL:
+						frontView.setBackgroundColor(getContext().getResources().getColor(R.color.white_transparent));
 					case MotionEvent.ACTION_MOVE:
 						((UISwipableList) parent).setSelectedPosition(item, v);
 						break;
