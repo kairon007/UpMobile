@@ -129,7 +129,7 @@ public abstract class BaseDownloadsView extends View{
 		ArrayList<DownloadCache.Item> list = DownloadCache.getInstanse().getCachedItems();
 		for (Item item : list) {
 			MusicData song = new MusicData(item.getTitle(), item.getArtist(), item.getId(), -1);
-			if (item.isCached()) {
+			if (item.isCached() && !result.contains(song)) {
 				result.add(song);
 			}
 		}
