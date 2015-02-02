@@ -11,7 +11,6 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -19,6 +18,7 @@ public class SearchView extends OnlineSearchView {
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		StateKeeper.getInstance().activateOptions(StateKeeper.IS_PT_TEXT);
 	}
 
 	@Override

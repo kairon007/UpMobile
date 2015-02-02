@@ -5,6 +5,6 @@
     android:layout_height="48dp"
     android:gravity="center_vertical"
 	android:paddingLeft="8dp"
-    android:background="@color/cyan"
+    android:background="@android:color/white"
     android:ellipsize="marquee"
     android:singleLine="true" />

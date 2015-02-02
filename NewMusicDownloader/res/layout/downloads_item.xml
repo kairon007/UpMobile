@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     android:descendantFocusability="blocksDescendants" >
 
     <LinearLayout
@@ -17,12 +18,15 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_margin="5dp"
+            android:clickable="false"
             android:padding="10dp" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:clickable="false" >
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -30,7 +30,6 @@ public class StateKeeper {
 	private int clickPosition;
 	private int currentPlayersId;
 	private int tempID3UseCover;
-	private boolean useCover = true;
 	/**
 	 * The class flags hold various states.
 	 */
@@ -83,6 +82,8 @@ public class StateKeeper {
 	 * Indicate state spinner
 	 */
 	public static final int IS_EXPANDING_OPTION = 0x00000800;// 12
+	public static final int USE_COVER = 0x00001000;// 13
+	public static final int IS_PT_TEXT = 0x00002000;// 14
 	/**
      * Mask for use with setFlags indicating bits used for search options.
      */
@@ -94,6 +95,7 @@ public class StateKeeper {
 	
 	
 	private StateKeeper() {
+		generalFlags |= USE_COVER;
 	}
 
 	public static StateKeeper getInstance() {
@@ -125,7 +127,7 @@ public class StateKeeper {
 			titleArtistLyrics = null;
 			currentPlayersId = 0;
 			lyrics = null;
-			useCover = true;
+			generalFlags |= USE_COVER;
 		} else if (flag == EDITTAG_DIALOG) {
 			deactivateOptions(MANIPULATE_TEXT_OPTION);
 			tempID3UseCover = 0;
@@ -254,11 +256,15 @@ public class StateKeeper {
 	}
 	
 	public boolean isUseCover() {
-		return useCover;
+		return checkState(USE_COVER);
 	}
 
 	public void setUseCover(boolean useCover) {
-		this.useCover = useCover;
+		if (useCover) {
+			generalFlags |= USE_COVER;
+		} else {
+			generalFlags &= ~USE_COVER;
+		}
 	}
 
 	public void setDownloadSong(RemoteSong downloadSong) {

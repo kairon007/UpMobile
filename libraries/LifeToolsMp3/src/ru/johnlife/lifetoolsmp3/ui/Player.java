@@ -218,6 +218,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		directoryChooserDialog.createNewDirDialog(name);
 	}
 	
+	@SuppressLint("NewApi")
 	public void createLyricsDialog() {
 		keeper.openDialog(StateKeeper.LYRICS_DIALOG);
 		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);

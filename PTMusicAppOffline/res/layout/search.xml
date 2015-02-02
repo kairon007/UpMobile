@@ -62,7 +62,7 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
-                android:background="@color/cyan"
+                android:background="@android:color/white"
                 android:orientation="vertical" >
 
                 <LinearLayout

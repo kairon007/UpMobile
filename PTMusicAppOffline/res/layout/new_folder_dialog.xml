@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="@drawable/divider"
-    android:background="@color/cyan"
+    android:background="@android:color/white"
     android:orientation="vertical"
     android:padding="8dp"
     android:showDividers="middle" >
@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:textColor="@android:color/black"
             android:paddingLeft="8dp"
             android:text="@string/new_folder_dialog_title"
             android:textSize="@dimen/text_title_size" />
@@ -30,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:textColor="@android:color/black"
             android:inputType="textNoSuggestions"
             android:textSize="@dimen/dialog_default_text_size" />
     </FrameLayout>

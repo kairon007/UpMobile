@@ -351,7 +351,7 @@ public class DirectoryChooserDialog {
 					tv.getLayoutParams().width = LayoutParams.MATCH_PARENT;
 					tv.setGravity(Gravity.CENTER_VERTICAL);
 					if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-						if (isWhiteTheme || Util.getThemeName(m_context).equals(Util.WHITE_THEME)) {
+						if (isWhiteTheme || Util.getThemeName(m_context).equals(Util.WHITE_THEME) || keeper.checkState(StateKeeper.IS_PT_TEXT)) {
 							int white = Color.BLACK;
 							tv.setTextColor(white);
 						} else {
