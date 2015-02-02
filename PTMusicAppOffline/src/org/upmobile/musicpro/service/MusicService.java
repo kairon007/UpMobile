@@ -266,7 +266,7 @@ public class MusicService extends Service {
 
 	public void resumeMusic() {
 		if (isPause) {
-			mPlayer.seekTo(length);
+			if (!seekTo(length)) return;
 			mPlayer.start();
 			isPause = false;
 			sendNotification();
@@ -297,9 +297,10 @@ public class MusicService extends Service {
 		}
 	}
 
-	public void seekTo(int progress) {
-		if (null == mPlayer) return;
+	public boolean seekTo(int progress) {
+		if (null == mPlayer) return false;
 		mPlayer.seekTo(lengthSong * progress / 100);
+		return true;
 	}
 
 	public void backSong() {
