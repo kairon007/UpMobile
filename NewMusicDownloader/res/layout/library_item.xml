@@ -11,6 +11,8 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center"
+        android:clickable="true"
+    	android:background="@drawable/selectable_item_bg"
         android:src="@drawable/no_cover_art_light_big_dark" />
 
     <LinearLayout
@@ -18,6 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:clickable="true"
+    	android:background="@drawable/selectable_item_bg"
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
