@@ -90,6 +90,10 @@ public class RenameTask {
 				album = MP3Editor.UNKNOWN;
 			}
 			newFile = new File(MessageFormat.format("{0}/{1} - {2}.mp3", file.getParentFile(), artist.replaceAll("/", "-"), title.replaceAll("/", "-")));
+			if (newFile.exists()) {
+				cancelProgress();
+				return;
+			}
 			if (file.renameTo(newFile)) {
 				new MyID3().update(newFile, src_set, metadata);
 				success();
@@ -112,18 +116,22 @@ public class RenameTask {
 					String[] projection = new String[] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE };
 					Cursor c = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
 					c.moveToFirst();
-					while (c.moveToNext()) {
-						if (file.getPath().equals(c.getString(1))) {
-							int id = c.getInt(0);
-							ContentValues songValues = new ContentValues();
-							songValues.put(MediaStore.Audio.Media.DATA, newFile.getPath());
-							songValues.put(MediaStore.Audio.Media.ALBUM, album);
-							songValues.put(MediaStore.Audio.Media.ARTIST, artist);
-							songValues.put(MediaStore.Audio.Media.TITLE, title);
-							String where = MediaStore.Audio.Media._ID + "=" + id;
-							resolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues, where, null);
-							break;
+					try {
+						while (c.moveToNext()) {
+							if (file.getPath().equals(c.getString(1))) {
+								int id = c.getInt(0);
+								ContentValues songValues = new ContentValues();
+								songValues.put(MediaStore.Audio.Media.DATA, newFile.getPath());
+								songValues.put(MediaStore.Audio.Media.ALBUM, album);
+								songValues.put(MediaStore.Audio.Media.ARTIST, artist);
+								songValues.put(MediaStore.Audio.Media.TITLE, title);
+								String where = MediaStore.Audio.Media._ID + "=" + id;
+								resolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues, where, null);
+								break;
+							}
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 					c.close();
 				}

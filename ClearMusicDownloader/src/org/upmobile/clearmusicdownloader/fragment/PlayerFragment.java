@@ -3,6 +3,7 @@ package org.upmobile.clearmusicdownloader.fragment;
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 import java.io.File;
+import java.text.MessageFormat;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
@@ -22,6 +23,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -532,8 +534,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtArtist.setVisibility(View.GONE);
 			playerBtnArtist.setVisibility(View.VISIBLE);
 			hideKeyboard();
-			String artist = Util.removeSpecialCharacters(playerEtArtist.getText().toString());
-			if (!artist.equals(song.getArtist()	)){
+			artist = Util.removeSpecialCharacters(playerEtArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerEtArtist.getText().toString());
+			if (!artist.equals(song.getArtist())){
+				if (checkUnique(song.getTitle(),artist)) {
+					Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
+					toast.show();
+					return;
+				}
 				song.setArtist(artist);
 				saveTag();
 			}
@@ -542,12 +549,25 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtTitle.setVisibility(View.GONE);
 			playerBtnTitle.setVisibility(View.VISIBLE);
 			hideKeyboard();
-			String title = Util.removeSpecialCharacters(playerEtTitle.getText().toString());
-			if (!title.equals(song.getTitle())){
+			title = Util.removeSpecialCharacters(playerEtTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerEtTitle.getText().toString());
+			if (!title.equals(song.getTitle())){ 
+				if (checkUnique(title, song.getArtist())) {
+					Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
+					toast.show();
+					return;
+				}
 				song.setTitle(title);
 				saveTag();
 			}
         }
+	}
+	
+	private boolean checkUnique(String title, String artist) {
+		if (song.getClass() == MusicData.class) {
+			return new File(MessageFormat.format("{0}/{1} - {2}.mp3", new File(song.getPath()).getParentFile(), artist, title)).exists();
+		} else {
+			return false;
+		}
 	}
 	
 	private void saveTag() {
@@ -869,6 +889,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
             moveCover(ratio);
         }
     };
+	private String title;
+	private String artist;
     
 	private void moveCover(final float ratio) {
 		if (isNeedCalculateCover) {
