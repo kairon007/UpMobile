@@ -175,7 +175,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	};
 
 
-	private boolean fromLibrary = false; //indicate ñalling music - true from library PlayerService
+	private boolean fromLibrary = false; //indicate ï¿½alling music - true from library PlayerService
 	private PlaybackService playbackService;
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
@@ -271,6 +271,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(headsetReceiver);
+		super.onDestroy();
 	}
 
 	public void setVisibilityFooter() {

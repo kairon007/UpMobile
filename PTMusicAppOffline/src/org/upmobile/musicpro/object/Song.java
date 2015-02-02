@@ -31,7 +31,11 @@ public class Song extends ParcelableCompat {
 		image = "";
 	}
 	
-	private Song(Parcel parcel) { }
+	private Song(Parcel parcel) { 
+		name = parcel.readString();
+		artist = parcel.readString();
+		url = parcel.readString();
+	}
 
 	public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>() {
 		@Override
