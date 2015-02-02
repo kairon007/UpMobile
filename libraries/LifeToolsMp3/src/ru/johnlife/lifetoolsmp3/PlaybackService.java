@@ -67,6 +67,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private Handler handler;
 	
 	//instance section
+	private Context activityContext;
 	private ArrayList<AbstractSong> arrayPlayback;
 	private ArrayList<AbstractSong> arrayPlaybackOriginal;
 	private ArrayList<OnStatePlayerListener> stateListeners = new ArrayList<OnStatePlayerListener>();
@@ -149,6 +150,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			} catch (InterruptedException ignored) {
 			}
 		}
+		instance.activityContext = context;
 		return instance;
 	}
 	
@@ -649,7 +651,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (null == cover) {
 			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), android.R.drawable.ic_media_ff);
 		}
-		Intent notificationIntent = new Intent(this, new Activity().getClass());
+		Intent notificationIntent = new Intent(this, ((Activity) activityContext).getClass());
 		notificationIntent.setAction(MAIN_ACTION);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
