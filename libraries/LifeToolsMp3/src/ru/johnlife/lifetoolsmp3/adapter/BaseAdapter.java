@@ -2,13 +2,13 @@ package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
 
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.special.menu.ResideMenu;
 import com.special.utils.UISwipableList;
 import com.special.utils.UISwipableList.OnSwipableListener;
 
@@ -92,6 +92,16 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		}
 		notifyDataSetChanged();
 	}
+	
+	public boolean contains(T data) {
+		for (int i = 0; i < getCount(); i++) {
+			if (getItem(i).equals(data)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	public static abstract class ViewHolder<T> {
 		protected abstract void hold(T item, int position);

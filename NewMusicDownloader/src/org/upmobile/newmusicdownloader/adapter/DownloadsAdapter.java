@@ -23,11 +23,8 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		private ImageView cancel;
 		private ImageView image;
 		private ProgressBar progress;
-		private View v;
-		private MusicData item;
 
 		public DownloadsViewHolder(View v) {
-			this.v = v;
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
 			duration = (TextView) v.findViewById(R.id.item_duration);
@@ -38,7 +35,6 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		protected void hold(MusicData item, int position) {
-			this.item = item;
 			image.setImageResource(R.drawable.no_cover_art_light_big_dark);
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
@@ -78,15 +74,6 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		} catch (UnsupportedOperationException e) {
 			android.util.Log.d(getClass().getSimpleName(), e + "");
 		}
-	}
-
-	public boolean contains(MusicData song) {
-		for (int i = 0; i < getCount(); i++) {
-			if (getItem(i).equals(song)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override

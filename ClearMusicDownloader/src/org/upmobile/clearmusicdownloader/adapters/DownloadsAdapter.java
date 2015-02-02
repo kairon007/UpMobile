@@ -203,17 +203,6 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		}
 	}
 
-	public boolean contains(MusicData song) {
-		synchronized (lock) {
-			for (int i = 0; i < getCount(); i++) {
-				if (getItem(i).equals(song)) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-
 	@Override
 	protected boolean isSetListener() {
 		return true;

@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class DownloadCache {
 	
-	private final int CACHE_CAPACITY = 3;
+	private final int CACHE_CAPACITY = 12;
 
 	private static DownloadCache instanse = null;
 	private ArrayList<Item> cache = new ArrayList<Item>();
