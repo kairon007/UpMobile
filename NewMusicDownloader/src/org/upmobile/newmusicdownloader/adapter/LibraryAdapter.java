@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -33,8 +34,6 @@ import android.widget.TextView;
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 	private PlaybackService service;
-	private final Drawable BTN_PLAY;
-	private final Drawable BTN_PAUSE;
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
@@ -82,16 +81,12 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
-		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
-		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		service = PlaybackService.get(getContext());
 		service.addStatePlayerListener(stateListener);
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		BTN_PAUSE = context.getResources().getDrawable(R.drawable.pause_white);
-		BTN_PLAY = context.getResources().getDrawable(R.drawable.play_white);
 		service = PlaybackService.get(getContext());
 		service.addStatePlayerListener(stateListener);
 	}
@@ -116,7 +111,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		private MusicData data;
 		private ViewGroup info;
-		private View button;
+		private ImageButton button;
 		private ImageView cover;
 		private TextView title;
 		private TextView artist;
@@ -124,7 +119,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.item_box_info);
-			button = v.findViewById(R.id.item_play);
+			button = (ImageButton) v.findViewById(R.id.item_play);
 			cover = (ImageView) v.findViewById(R.id.item_cover);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_artist);
@@ -138,9 +133,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			artist.setText(data.getArtist());
 			duration.setText(Util.getFormatedStrDuration(data.getDuration()));
 			if (data.check(MusicData.MODE_PLAYING)) {
-				setButtonBackground(BTN_PAUSE);
+				button.setImageResource(R.drawable.pause_white);
 			} else {
-				setButtonBackground(BTN_PLAY);
+				button.setImageResource(R.drawable.play_white);
 			}
 			cover.setImageResource(R.drawable.no_cover_art_big);
 			WeakReference<Bitmap> bitmap = new WeakReference<Bitmap>(data.getCover(getContext()));
@@ -156,15 +151,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			info.setOnClickListener(this);
 			info.setOnLongClickListener(this);
 			button.setOnClickListener(this);
-		}
-
-		@SuppressLint("NewApi")
-		private void setButtonBackground(Drawable drawable) {
-			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-				button.setBackgroundDrawable(drawable);
-			} else {
-				button.setBackground(drawable);
-			}
 		}
 
 		@Override
