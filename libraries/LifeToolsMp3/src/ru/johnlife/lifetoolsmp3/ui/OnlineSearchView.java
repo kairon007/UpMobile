@@ -412,6 +412,17 @@ public abstract class OnlineSearchView extends View {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN && v.getId() != R.id.text) {
 					hideKeyboard(searchField);
+					view.findViewById(R.id.text).setFocusable(false);
+				}
+				return v.performClick();
+			}
+		});
+		view.findViewById(R.id.text).setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					v.setFocusableInTouchMode(true);
 				}
 				return v.performClick();
 			}
