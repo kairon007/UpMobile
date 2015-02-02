@@ -9,9 +9,8 @@ import org.upmobile.musicpro.util.StringUtil;
 import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.os.ParcelableCompat;
 
-public class Song extends ParcelableCompat {
+public class Song implements Parcelable {
 	private String id;
 	private String idType;
 	private String name;
@@ -35,6 +34,13 @@ public class Song extends ParcelableCompat {
 		name = parcel.readString();
 		artist = parcel.readString();
 		url = parcel.readString();
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(name);
+		dest.writeString(artist);
+		dest.writeString(url);
 	}
 
 	public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>() {
@@ -168,5 +174,10 @@ public class Song extends ParcelableCompat {
 			e.printStackTrace();
 		}
 		return object;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
 	}
 }
