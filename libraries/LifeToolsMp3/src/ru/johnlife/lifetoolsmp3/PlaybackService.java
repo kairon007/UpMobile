@@ -204,7 +204,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public void reset() {
 		handler.removeCallbacksAndMessages(null);
-		mode &= SMODE_PREPARED;
+		mode &= ~SMODE_PREPARED;
 		buildSendMessage(null, MSG_RESET, 0, 0);
 	}
 	
@@ -383,6 +383,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			helper(State.START, playingSong);
 		} else {
 			helper(State.STOP, playingSong);
+			stopForeground(true);
 		}
 	}
 	
@@ -432,6 +433,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					((RemoteSong) playingSong).setDownloadUrl(url);
 					mode &= ~SMODE_GET_URL;
 					buildSendMessage(url, MSG_START, 0, 0);
+					sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
 				}
 
 				@Override
@@ -646,10 +648,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	private void sendNotification(int draweble, String state) {
+		removeNotification();
 		if (!check(SMODE_NOTIFICATION)) return;
 		Bitmap cover = playingSong.getCover(this);
 		if (null == cover) {
-			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), android.R.drawable.ic_media_ff);
+			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_launcher);
 		}
 		Intent notificationIntent = new Intent(this, ((Activity) activityContext).getClass());
 		notificationIntent.setAction(MAIN_ACTION);
@@ -682,8 +685,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		startForeground(NOTIFICATION_ID, builder.build());
 	}
 	
-	private void removeNotification() {  
-	    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
+	private void removeNotification() {
+		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
 	    manager.cancel(NOTIFICATION_ID);  
 	    stopForeground(true);
 	}  
@@ -720,6 +723,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (check(SMODE_START_PREPARE)) {
 			builder.append("| SMODE_START_PREPARE");
 		}	
+		if (check(SMODE_NOTIFICATION)) {
+			builder.append("| SMODE_NOTIFICATION");
+		}
 		android.util.Log.d("logks", builder.toString());
 	}
 }
