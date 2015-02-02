@@ -25,12 +25,6 @@ public class SearchView extends OnlineSearchView {
 	protected BaseSettings getSettings() {
 		return new Nulldroid_Settings();
 	}
-	
-	@Override
-	protected Parcelable onSaveInstanceState() {
-		
-		return super.onSaveInstanceState();
-	}
 
 	@Override
 	protected Nulldroid_Advertisement getAdvertisment() {
