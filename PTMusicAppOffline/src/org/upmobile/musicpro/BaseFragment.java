@@ -3,11 +3,13 @@ package org.upmobile.musicpro;
 import org.upmobile.musicpro.activity.MainActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +35,17 @@ public class BaseFragment extends Fragment {
 			}
 		});
 	}
+	
+	protected void hideKeyBoard(){
+		
+	}
 
 	protected void setButtonMenu(View view) {
 		view.findViewById(R.id.btnMenu).setBackgroundResource(R.drawable.btn_menu);
 		view.findViewById(R.id.btnMenu).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				hideKeyBoard();
 				getMainActivity().menu.showMenu();
 			}
 		});

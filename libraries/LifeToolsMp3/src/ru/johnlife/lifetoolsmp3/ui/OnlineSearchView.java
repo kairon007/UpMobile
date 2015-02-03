@@ -410,7 +410,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN && v.getId() != R.id.text) {
-					hideKeyboard(searchField);
+					hideKeyboard();
 					view.findViewById(R.id.text).setFocusable(false);
 				}
 				return v.performClick();
@@ -447,9 +447,11 @@ public abstract class OnlineSearchView extends View {
 	    return -top + firstVisiblePosition * c.getHeight();
 	}
 	
-	private void hideKeyboard(View view) {
+	public void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		searchField.setFocusable(false);
+		searchField.setFocusable(true);
 	}
 
 	public void initSearchEngines(Context context, String valueEngines) {
@@ -522,7 +524,7 @@ public abstract class OnlineSearchView extends View {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					if (((Activity) getContext()).getWindowManager().getDefaultDisplay().getHeight() < 400) {
-						hideKeyboard(searchField);
+						hideKeyboard();
 					}
 					return false;
 				}
@@ -766,7 +768,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public void trySearch() {
-		hideKeyboard(searchField);
+		hideKeyboard();
 		String searchString = searchField.getText().toString();
 		if (isOffline(searchField.getContext())) {
 			message.setText(R.string.search_message_no_internet);
