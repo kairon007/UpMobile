@@ -70,7 +70,6 @@ public class PlayerFragment extends BaseFragment implements OnClickListener {
 				viewPager.setCurrentItem(THUMB_PLAYING);
 				getMainActivity().setButtonPlay();
 				break;
-
 			case MainActivity.FROM_NOTICATION:
 				try {
 					playerListPlayingFragment.refreshListPlaying();
@@ -80,6 +79,8 @@ public class PlayerFragment extends BaseFragment implements OnClickListener {
 				}
 				break;
 			case MainActivity.FROM_OTHER:
+				playerListPlayingFragment.refreshListPlaying();
+				playerThumbFragment.refreshData();
 				break;
 			}
 		}

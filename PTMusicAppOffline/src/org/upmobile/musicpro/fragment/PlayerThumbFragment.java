@@ -32,8 +32,9 @@ public class PlayerThumbFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_player_thumb, container, false);
-		initUI(view);
 		listAq = new AQuery(getActivity());
+		initUI(view);
+		refreshData();
 		return view;
 	}
 
@@ -64,7 +65,7 @@ public class PlayerThumbFragment extends BaseFragment {
 		}
 	}
 
-	public void refreshData() {		
+	public void refreshData() {	
 		if (lblNameSong != null && lblArtist != null) {
 			lblNameSong.setText(GlobalValue.getCurrentSong().getName());
 			lblArtist.setText(GlobalValue.getCurrentSong().getArtist());
