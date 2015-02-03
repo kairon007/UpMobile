@@ -9,5 +9,6 @@
     <color name="green">#239e26</color>
     <color name="orange">#ffa80c</color>
     <color name="red_light">#E1675A</color>
-
+    <color name="bg_item_song">#ddd8d3</color>
+    
 </resources>

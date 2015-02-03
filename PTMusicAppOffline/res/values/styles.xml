@@ -2,6 +2,8 @@
 
     <style name="AppTheme" parent="android:Theme.Holo.Light">
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
     </style>
 
     <style name="Text.Menu">
@@ -21,6 +23,27 @@
 
     <style name="ProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress</item>
+    </style>
+
+    <style name="CustomAlertDialogStyle">
+        <item name="android:bottomDark">@color/bg_item_song</item>
+        <item name="android:bottomMedium">@color/bg_item_song</item>
+        <item name="android:topDark">@color/bg_item_song</item>
+    </style>
+
+    <style name="AlertDialogTheme">
+        <item name="android:showDividers">middle</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:buttonBarButtonStyle">@style/dialogButtonBar</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    
+    <style name="dialogButtonBar">
+    	<item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
 </resources>

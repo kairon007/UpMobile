@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-	<style name="AppTheme" parent="android:Theme.Holo.Light">
-    	<item name="android:windowTranslucentStatus">false</item>
-	</style>
-    
+
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
+    </style>
+
 </resources>
