@@ -63,6 +63,11 @@ public class SearchView extends OnlineSearchView {
 	}
 	
 	@Override
+		protected int getAdapterBackground() {
+			return R.drawable.bg_item_song;
+	}
+	
+	@Override
 	public void specialInit(View view) {
 		if (StateKeeper.getInstance().checkState(StateKeeper.SEARCH_EXE_OPTION)) {
 			progressSecond = ProgressDialog.show(view.getContext(), getResources().getString(R.string.app_name), getResources().getString(R.string.searching), true);

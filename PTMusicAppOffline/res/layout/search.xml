@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@android:color/transparent"
     android:layout_height="wrap_content" >
-
-    <ImageView
-        style="@style/Layout.FillWidthHeight"
-        android:background="@drawable/bg_white_transparent"
-        android:contentDescription="@string/app_name" />
 
     <RelativeLayout
         android:id="@+id/touch_interceptor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent" >
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             android:layout_weight="1" >
 
             <ListView
@@ -24,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="true"
+                android:background="@android:color/transparent"
                 android:listSelector="@drawable/selectable_item_bg" />
 
             <TextView

@@ -3,11 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_item_song"
-    android:divider="@drawable/divider"
-    android:dividerPadding="4dp"
     android:minHeight="64dp"
-    android:orientation="vertical"
-    android:showDividers="end" >
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/boxInfoItem"
