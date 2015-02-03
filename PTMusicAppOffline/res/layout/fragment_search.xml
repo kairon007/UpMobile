@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Layout.FillWidthHeight.Vertical"
+    android:background="@drawable/bg_app"
     tools:context=".fragment.SearchFragment" >
 
     <include layout="@layout/layout_header" />
@@ -30,18 +31,9 @@
             android:background="@drawable/btn_search" />
     </LinearLayout>
 
-    <RelativeLayout style="@style/Layout.FillWidthHeight" >
-
-        <ImageView
-            style="@style/Layout.WrapWidthHeight"
-            android:layout_centerInParent="true"
-            android:background="@drawable/bg_search"
-            android:contentDescription="@string/app_name" />
-
-        <ImageView
-            style="@style/Layout.FillWidthHeight"
-            android:background="@drawable/bg_white_transparent"
-            android:contentDescription="@string/app_name" />
+    <RelativeLayout
+        style="@style/Layout.FillWidthHeight"
+        android:background="@android:color/transparent" >
 
         <ListView
             android:id="@+id/lsvResult"
