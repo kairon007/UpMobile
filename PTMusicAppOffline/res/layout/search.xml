@@ -4,12 +4,6 @@
     android:layout_height="wrap_content" >
 
     <ImageView
-        style="@style/Layout.WrapWidthHeight"
-        android:layout_gravity="center"
-        android:background="@drawable/bg_search"
-        android:contentDescription="@string/app_name" />
-
-    <ImageView
         style="@style/Layout.FillWidthHeight"
         android:background="@drawable/bg_white_transparent"
         android:contentDescription="@string/app_name" />
@@ -62,7 +56,7 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
-                android:background="@android:color/white"
+                android:background="@drawable/bg_header"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -85,6 +79,8 @@
                             android:hint="@string/hint_main_search"
                             android:imeOptions="actionSearch"
                             android:inputType="text"
+                            android:textColor="@android:color/white"
+                            android:textColorHint="@android:color/white"
                             android:lines="1"
                             android:paddingRight="48dp"
                             android:singleLine="true" />
@@ -95,7 +91,7 @@
                             android:layout_height="48dp"
                             android:layout_gravity="center_vertical|right"
                             android:background="@drawable/selectable_item_bg"
-                            android:src="@drawable/close" />
+                            android:src="@android:drawable/ic_menu_close_clear_cancel" />
                     </FrameLayout>
 
                     <ImageButton
@@ -103,7 +99,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@drawable/selectable_item_bg"
-                        android:src="@drawable/ic_menu_search" />
+                        android:src="@android:drawable/ic_menu_search" />
 
                     <ImageButton
                         android:id="@+id/downloads"
@@ -111,12 +107,14 @@
                         android:layout_height="48dp"
                         android:layout_gravity="center"
                         android:background="@drawable/selectable_item_bg"
-                        android:src="@drawable/ic_download" />
+                        android:src="@android:drawable/ic_menu_save" />
                 </LinearLayout>
 
                 <Spinner
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
+                    android:spinnerMode="dropdown"
+                    android:popupBackground="@drawable/bg_header"
                     android:layout_height="48dp" />
             </LinearLayout>
         </LinearLayout>

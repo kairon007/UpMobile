@@ -5,6 +5,7 @@
     android:divider="@drawable/divider"
     android:dividerPadding="4dp"
     android:minHeight="64dp"
+    android:background="@drawable/bg_item_song"
     android:orientation="horizontal"
     android:showDividers="middle" >
 

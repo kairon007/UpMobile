@@ -1,6 +1,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="android:Theme.Holo.Light" />
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 
     <style name="Text.Menu">
         <item name="android:layout_width">match_parent</item>
@@ -19,6 +21,6 @@
 
     <style name="ProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress</item>
-     </style>
+    </style>
 
 </resources>

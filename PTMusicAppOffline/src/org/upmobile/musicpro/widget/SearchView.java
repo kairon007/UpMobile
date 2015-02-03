@@ -49,7 +49,7 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	protected int getDropDownViewResource() {
-		return R.layout.item_drop_down;
+		return 0;
 	}
 	
 	@Override
@@ -75,18 +75,12 @@ public class SearchView extends OnlineSearchView {
 	}
 	
 	@Override
-	protected int getAdapterBackground() {
-		return R.drawable.bg_item_song;
-	}
-	
-	@Override
 	protected int getIdCustomView() {
 		return R.layout.row_online_search_pt;
 	}
-	
+
 	@Override
 	public boolean isWhiteTheme(Context context) {
 		return false;
 	}
-
 }

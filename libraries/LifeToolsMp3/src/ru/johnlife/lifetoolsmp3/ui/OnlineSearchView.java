@@ -45,7 +45,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -747,13 +746,6 @@ public abstract class OnlineSearchView extends View {
 						listView.performItemClick(v, position, v.getId());
 					}
 				});
-			}
-			if (getAdapterBackground() > 0) {
-				if (position % 2 == 0) {
-					v.setBackgroundResource(getAdapterBackground());
-				} else {
-					v.setBackgroundColor(Color.TRANSPARENT);
-				}
 			}
 			return v;
 		}
