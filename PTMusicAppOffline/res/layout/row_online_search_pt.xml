@@ -2,28 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_item_song"
     android:divider="@drawable/divider"
     android:dividerPadding="4dp"
     android:minHeight="64dp"
-    android:background="@drawable/bg_item_song"
-    android:orientation="horizontal"
-    android:showDividers="middle" >
+    android:orientation="vertical"
+    android:showDividers="end" >
 
     <LinearLayout
         android:id="@+id/boxInfoItem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/selectable_item_bg"
         android:clickable="true"
+        android:divider="@drawable/bg_divider"
         android:paddingLeft="8dp"
         android:paddingStart="8dp" >
 
         <FrameLayout
             android:layout_width="48dp"
-            android:layout_height="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:minHeight="48dp" >
+            android:minHeight="48dp"
+            android:visibility="visible" >
 
             <RelativeLayout
                 android:id="@+id/RelativeLayout1"
@@ -59,19 +62,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/default_cover"
-                android:scaleType="fitCenter"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_music_node_search" />
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
+            android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp" >
 
@@ -85,6 +88,8 @@
                     style="@style/Text.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ellipsize="end"
                     android:layout_weight="1"
                     android:text="@string/app_name"
                     android:textColor="@color/gray_dark" />
@@ -94,10 +99,12 @@
                     style="@style/Text.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="3"
                     android:gravity="right"
                     android:text="@string/app_name"
                     android:textColor="@color/gray_dark" />
+
             </LinearLayout>
 
             <TextView
@@ -105,18 +112,20 @@
                 style="@style/Text.Content.DarkerGray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:text="@string/app_name"
                 android:textColor="@color/gray_dark"
                 android:textStyle="italic" />
+
         </LinearLayout>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/btnDownload"
         android:layout_width="48dp"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@drawable/selectable_item_bg"
         android:contentDescription="@string/expand"
