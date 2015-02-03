@@ -522,8 +522,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		case NOMINATIONS:
 			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
-			lblNominations
-					.setBackgroundResource(R.drawable.bg_item_menu_select);
+			lblNominations.setBackgroundResource(R.drawable.bg_item_menu_select);
 			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
 			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
 			lblSearch.setBackgroundColor(Color.TRANSPARENT);
@@ -538,8 +537,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		case CATEGORY_MUSIC:
 			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
 			lblNominations.setBackgroundColor(Color.TRANSPARENT);
-			lblCategoryMusic
-					.setBackgroundResource(R.drawable.bg_item_menu_select);
+			lblCategoryMusic.setBackgroundResource(R.drawable.bg_item_menu_select);
 			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
 			lblSearch.setBackgroundColor(Color.TRANSPARENT);
 			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
@@ -559,6 +557,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
 			lblAbout.setBackgroundColor(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
+			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
 			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(PLAYLIST_FRAGMENT);
 			break;
@@ -600,7 +599,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
 			lblAbout.setBackgroundResource(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundColor(R.drawable.bg_item_menu_select);
+			lblSearchOnline.setBackgroundResource(R.drawable.bg_item_menu_select);
 			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 			showFragment(SEARCH_ONLINE_FRAGMENT);
 			break;
@@ -615,7 +614,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblAbout.setBackgroundResource(Color.TRANSPARENT);
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
-			lblLibrary.setBackgroundColor(R.drawable.bg_item_menu_select);
+			lblLibrary.setBackgroundResource(R.drawable.bg_item_menu_select);
 			showFragment(LIBRARY_FRAGMENT);
 			break;
 
