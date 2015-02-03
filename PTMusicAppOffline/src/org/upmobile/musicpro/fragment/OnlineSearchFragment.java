@@ -29,6 +29,7 @@ public class OnlineSearchFragment extends BaseFragment{
 		layout.addView(viewSearchActivity);
 		initUIBase(view);
 		setButtonMenu(view);
+		setHeaderTitle(R.string.search_online);
 		view.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
