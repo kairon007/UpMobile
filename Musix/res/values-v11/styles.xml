@@ -5,6 +5,8 @@
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <item name="android:alertDialogTheme">@style/AlertDialog</item>
+        <item name="android:alertDialogStyle">@style/AlertDialogStyle</item>
         <!-- API 11 theme customizations can go here. -->
     </style>
 

@@ -43,9 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="org.upmobile.musix.activities.SplashActivity"
-            android:label="@string/app_name" />
 
         <service
             android:name="ru.johnlife.lifetoolsmp3.PlaybackService"

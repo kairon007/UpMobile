@@ -5,10 +5,27 @@
         <item name="colorPrimary">@color/wet_asphalt</item>
         <item name="colorPrimaryDark">@color/blue_light</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:alertDialogTheme">@style/Theme.AlertDialog</item>
+        <item name="android:alertDialogTheme">@style/AlertDialog</item>
+        <item name="android:alertDialogStyle">@style/AlertDialogStyle</item>
     </style>
 
-    <style name="Theme.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog">
-        <item name="android:background">@color/wet_asphalt</item>
+    <!-- <style name="Theme.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog"> -->
+    <!-- <item name="android:windowBackground">@android:color/transparent</item> -->
+    <!-- </style> -->
+
+    <style name="AlertDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- <item name="android:buttonBarButtonStyle">@style/dialogButtonBar</item> -->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowIsFloating">true</item>
     </style>
-</resources>
+
+    <style name="AlertDialogStyle">
+        <item name="android:bottomDark">@color/wet_asphalt</item>
+        <item name="android:bottomMedium">@color/wet_asphalt</item>
+        <item name="android:topDark">@color/wet_asphalt</item>
+    </style>
+
+</resources>
