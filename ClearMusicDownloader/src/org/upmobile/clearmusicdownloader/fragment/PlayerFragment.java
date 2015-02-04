@@ -9,7 +9,6 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
-import org.upmobile.clearmusicdownloader.activity.MainActivity.OrientationListener;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -25,6 +24,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +38,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -66,7 +67,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.special.utils.UIParallaxScroll;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener, OrientationListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener {
 
     public static final int DURATION = 500; // in ms
     private String PACKAGE = "IDENTIFY";
@@ -98,6 +99,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private TextView playerTitleBarTitle;
 	private TextView playerTitleBarArtis;
 	private FrameLayout playerCancelRemoving;
+	private String title;
+	private String artist;
     private int delta_top;
     private int delta_left;
 	private int top;
@@ -174,14 +177,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		
 	};
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
 		parentView = inflater.inflate(R.layout.player, container, false);
 		((MainActivity) getActivity()).hideTopFrame();
 		((MainActivity) getActivity()).showPlayerElement();
-		((MainActivity) getActivity()).setOrientationListener(this);
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(mOnScrollChangedListener);
 		init();
 		setListener();
@@ -226,8 +228,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void coverTitleBarLocation() {
-		maxTranslationX = Util.dpToPx(getActivity(), 48) - playerCover.getX();
-		maxTranslationY = 0 - playerCover.getY() + Util.dpToPx(getActivity(), 4);
+		maxTranslationX = Util.dpToPx(getActivity(), 48) - playerCover.getLeft();
+		maxTranslationY = 0 - playerCover.getTop() + Util.dpToPx(getActivity(), 4) - playerCover.getTranslationY();
 		deltaScale = 1 - (float) Util.dpToPx(getActivity(), 48) / (float) playerCover.getMeasuredHeight();
 	}
 	
@@ -366,6 +368,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public boolean onTouch(View v, MotionEvent event) {
 				editTag();
 				return false;
+			}
+		});
+		parentView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+			
+			@Override
+			public void onLayoutChange(View v, int left, int top, int right,int bottom, int oldLeft, 
+					int oldTop, int oldRight, int oldBottom) {
+				if (isNeedCalculateCover) {
+					moveCover(ratio);
+				}
 			}
 		});
 	}
@@ -889,8 +901,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
             moveCover(ratio);
         }
     };
-	private String title;
-	private String artist;
     
 	private void moveCover(final float ratio) {
 		if (isNeedCalculateCover) {
@@ -902,9 +912,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		ViewHelper.setScaleX(playerCover, 1.f - deltaScale * ratio);
         ViewHelper.setScaleY(playerCover, 1.f - deltaScale * ratio);
 	}
-
+	
 	@Override
-	public void onOrientationChanged() {
+	public void onConfigurationChanged(Configuration newConfig) {
 		isNeedCalculateCover = true;
+		super.onConfigurationChanged(newConfig);
 	}
 }

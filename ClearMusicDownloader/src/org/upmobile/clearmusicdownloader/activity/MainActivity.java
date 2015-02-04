@@ -14,7 +14,6 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -33,7 +32,6 @@ public class MainActivity extends BaseClearActivity {
 	private ResideMenuItem[] items;
 	private String[] titles;
 	private PlaybackService player;
-	private OrientationListener orientationListener;
 	private boolean useCoverHelper = true;
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
 		
@@ -155,25 +153,5 @@ public class MainActivity extends BaseClearActivity {
 		if (null != player) {
 			player.reset();
 		}
-	}
-	
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		if (null != orientationListener) {
-			orientationListener.onOrientationChanged();
-		}
-		super.onConfigurationChanged(newConfig);
-	}
-	
-	public OrientationListener getOrientationListener() {
-		return orientationListener;
-	}
-
-	public void setOrientationListener(OrientationListener orientationListener) {
-		this.orientationListener = orientationListener;
-	}
-
-	public interface OrientationListener {
-		public void onOrientationChanged();
 	}
 }
