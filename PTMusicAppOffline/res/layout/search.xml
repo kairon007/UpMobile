@@ -52,6 +52,9 @@
             android:layout_alignParentTop="true"
             android:orientation="vertical"
             android:scrollbars="none">
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/white"/>
 
             <LinearLayout
                 android:id="@+id/choise_engines_layout"
