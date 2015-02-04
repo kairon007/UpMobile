@@ -123,8 +123,12 @@ public class SearchFragment extends BaseFragment implements Constants {
 
 	private void showLoadingDialog() {
 		if (progressDialog == null) {
-			progressDialog = ProgressDialog.show(getActivity(), getString(R.string.app_name),
-					getString(R.string.searching), true);
+//			progressDialog = ProgressDialog.show(getActivity(), getString(R.string.app_name),
+//					getString(R.string.searching), true);
+			View dialoglayout = LayoutInflater.from(getActivity()).inflate(R.layout.custom_progress, null);
+			progressDialog = new ProgressDialog(getActivity());
+			progressDialog.show();
+			progressDialog.setContentView(dialoglayout);
 		} else {
 			progressDialog.show();
 		}
