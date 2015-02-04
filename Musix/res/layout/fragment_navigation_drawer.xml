@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:choiceMode="singleChoice"
-    android:divider="@color/main_color"
+    android:divider="@color/blue_holo"
     android:dividerHeight="0.4dp"
     android:background="@color/wet_asphalt"
     tools:context="org.upmobile.musix.fragments.NavigationDrawerFragment" />
