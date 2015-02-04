@@ -23,7 +23,7 @@
 	
 	        <ru.johnlife.lifetoolsmp3.ui.ScrollingTextView
 	            android:id="@+id/download_title"
-	            android:layout_width="match_parent"
+	            android:layout_width="match_parent" 
 	            android:layout_height="48dp"
 	            android:layout_gravity="center_vertical"
 	            android:ellipsize="marquee"
@@ -80,12 +80,11 @@
 	                    android:layout_width="match_parent"
 	                    android:layout_height="match_parent"
 	                    android:orientation="vertical" >
-	
+
 	                    <ImageButton
 	                        android:id="@+id/pause"
 	                        android:layout_width="match_parent"
 	                        android:layout_height="0dp"
-	                        android:layout_gravity="center_horizontal"
 	                        android:layout_weight="1"
 	                        android:background="@drawable/selectable_item_bg"
 	                        android:src="@drawable/pause"
@@ -179,7 +178,7 @@
 	                        android:layout_gravity="center"
 	                        android:background="@android:color/transparent"
 	                        android:clickable="false"
-	                        android:src="@android:drawable/ic_menu_edit" />
+	                        android:src="@drawable/edit_black" />
 	
 	                    <TextView
 	                        android:id="@+id/tv_edit_mp3_tag"

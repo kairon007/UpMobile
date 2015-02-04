@@ -12,6 +12,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import android.R.bool;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -80,6 +81,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean spinnerVisible = true;
 	private boolean isWhiteTheme;
 	private boolean isDefaultCover = true;
+	private boolean isAppPT = false;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -101,6 +103,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (textView != null) {
 			textView.setText(title);
 		}
+	}
+	
+	public void setIsAppPT(boolean value){
+		isAppPT = value;
 	}
 	
 	public void setDownloadSong(RemoteSong downloadSong) {
@@ -445,12 +451,20 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void onPaused() {
-		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
+		if (!isAppPT) {
+			imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
+		} else {
+			imagePause = R.drawable.play_pt;
+		}
 		button.setImageResource(imagePause);
 	}
 
 	public void onResumed() {
-		imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
+		if (!isAppPT) {
+			imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
+		} else {
+			imagePause = R.drawable.pause_pt;
+		}
 		button.setImageResource(imagePause);
 	}
 
@@ -490,8 +504,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 					int current = mp.hashCode();
 					if (keeper.checkState(StateKeeper.STREAM_DIALOG) && last == current) {
 						prepared = true;
-						imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.pause_white : R.drawable.pause;
-						button.setImageResource(imagePause);
+						onResumed();
 						mp.start();
 						keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
 						mp.setOnCompletionListener(new OnCompletionListener() {

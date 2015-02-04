@@ -181,7 +181,7 @@
                             android:layout_gravity="center"
                             android:background="@android:color/transparent"
                             android:clickable="false"
-                            android:src="@android:drawable/ic_menu_edit" />
+                            android:src="@drawable/edit_black" />
 
                         <TextView
                             android:id="@+id/tv_edit_mp3_tag"

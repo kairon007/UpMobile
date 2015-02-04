@@ -275,6 +275,10 @@ public abstract class OnlineSearchView extends View {
 	protected void click(View view, int position) {
 
 	}
+	
+	protected boolean isAppPT () {
+		return false;
+	}
 
 	protected boolean onlyOnWifi() {
 		return true;
@@ -1010,6 +1014,7 @@ public abstract class OnlineSearchView extends View {
 			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
 			player = new Player(v, song, isWhiteTheme(getContext()));
 			player.setTitle(song.getArtist() + " - " + song.getTitle());
+			player.setIsAppPT(isAppPT());
 			player.execute(song.getUrl());
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());

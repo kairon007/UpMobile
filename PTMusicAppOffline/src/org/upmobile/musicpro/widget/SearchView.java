@@ -37,6 +37,11 @@ public class SearchView extends OnlineSearchView {
 		}
 		return null;
 	}
+	
+	@Override
+	protected boolean isAppPT() {
+		return true;
+	}
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
