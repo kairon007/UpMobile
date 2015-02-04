@@ -25,7 +25,7 @@
             android:configChanges="screenSize|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        	android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,8 +37,7 @@
             android:theme="@android:style/Theme.Dialog" />
 
         <service android:name=".service.MusicService" />
-        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService" >
-        </service>
+        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService" />
 
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
