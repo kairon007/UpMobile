@@ -5,14 +5,14 @@
     android:background="@drawable/bg_item_song"
     android:orientation="vertical" >
 
-    <LinearLayout 
+    <LinearLayout
         android:id="@+id/boxInfoItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:background="@drawable/selectable_item_bg"
         android:clickable="true"
         android:divider="@drawable/bg_divider"
+        android:gravity="center"
         android:paddingLeft="8dp"
         android:paddingStart="8dp" >
 
@@ -67,25 +67,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp" >
+            android:padding="8dp" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" >
+                android:layout_height="wrap_content" >
 
                 <TextView
                     android:id="@+id/artistLine"
                     style="@style/Text.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:ellipsize="end"
+                    android:gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="@string/app_name"
                     android:textColor="@color/gray_dark" />
@@ -105,15 +101,13 @@
 
             <TextView
                 android:id="@+id/titleLine"
-                style="@style/Text.Content.DarkerGray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:singleLine="true"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="1"
                 android:text="@string/app_name"
-                android:textColor="@color/gray_dark"
-                android:textStyle="italic" />
+                android:textColor="@color/gray_dark" />
 
         </LinearLayout>
     </LinearLayout>
