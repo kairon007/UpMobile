@@ -8,13 +8,17 @@ import org.upmobile.musicpro.config.GlobalValue;
 import org.upmobile.musicpro.database.DatabaseUtility;
 import org.upmobile.musicpro.fragment.PlayerFragment;
 import org.upmobile.musicpro.modelmanager.ModelManager;
+import org.upmobile.musicpro.modelmanager.ModelManagerListener;
+import org.upmobile.musicpro.object.CategoryMusic;
 import org.upmobile.musicpro.object.Playlist;
 import org.upmobile.musicpro.object.Song;
 import org.upmobile.musicpro.service.MusicService;
 import org.upmobile.musicpro.service.MusicService.ServiceBinder;
 import org.upmobile.musicpro.service.PlayerListener;
 import org.upmobile.musicpro.slidingmenu.SlidingMenu;
+import org.upmobile.musicpro.util.LanguageUtil;
 import org.upmobile.musicpro.util.Logger;
+import org.upmobile.musicpro.util.MySharedPreferences;
 import org.upmobile.musicpro.widget.AutoBgButton;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
@@ -219,6 +223,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		splashLogics();
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		initList();
 		databaseUtility = new DatabaseUtility(this);
@@ -279,6 +284,40 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	protected void onDestroy() {
 		unregisterReceiver(headsetReceiver);
 		super.onDestroy();
+	}
+	
+	private void splashLogics() {
+		LanguageUtil.setLocale(new MySharedPreferences(this).getLanguage(),
+				this);
+
+		GlobalValue.constructor(this);
+		modelManager = new ModelManager(this);
+		modelManager.getBaseUrl(new ModelManagerListener() {
+			@Override
+			public void onSuccess(Object object) {
+				getListMusicType();
+			}
+
+			@Override
+			public void onError() {
+				getListMusicType();
+			}
+		});
+	}
+	
+	private void getListMusicType() {
+		modelManager.getListMusicTypes(new ModelManagerListener() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onSuccess(Object object) {
+				GlobalValue.listCategoryMusics.addAll((List<CategoryMusic>) object);
+			}
+
+			@Override
+			public void onError() {
+				Toast.makeText(getApplicationContext(), "There is an error with the internet connection. Music data cannot be loaded.", Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 
 	public void setVisibilityFooter() {

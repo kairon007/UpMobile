@@ -157,6 +157,7 @@ public class MusicService extends Service {
 		if (this.listSongs == null) {
 			this.listSongs = new ArrayList<Song>();
 		}
+		if (null == listSongs) return;
 		this.listSongs.clear();
 		this.listSongs.addAll(listSongs);
 	}

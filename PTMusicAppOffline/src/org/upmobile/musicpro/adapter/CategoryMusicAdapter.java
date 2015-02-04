@@ -27,7 +27,10 @@ public class CategoryMusicAdapter extends BaseAdapter {
 	}
 
 	public int getCount() {
-		return listCategoryMusics.size();
+		if (listCategoryMusics != null)
+			return listCategoryMusics.size();
+		else
+			return 0;
 	}
 
 	public Object getItem(int position) {
