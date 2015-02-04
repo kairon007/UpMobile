@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="64dp"
     android:background="@drawable/bg_item_song"
-    android:minHeight="64dp"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <LinearLayout 
         android:id="@+id/boxInfoItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +18,7 @@
 
         <FrameLayout
             android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:minHeight="48dp"
@@ -57,9 +56,9 @@
             <ImageView
                 android:id="@+id/cover"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="64dp"
                 android:contentDescription="@string/default_cover"
-                android:scaleType="centerInside"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_music_node_search" />
         </FrameLayout>
 
@@ -122,13 +121,12 @@
     <ImageView
         android:id="@+id/btnDownload"
         android:layout_width="48dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_gravity="center_vertical"
         android:background="@drawable/selectable_item_bg"
         android:contentDescription="@string/expand"
         android:longClickable="true"
         android:scaleType="center"
-        android:src="@drawable/icon_download"
         android:visibility="gone" />
 
 </LinearLayout>
