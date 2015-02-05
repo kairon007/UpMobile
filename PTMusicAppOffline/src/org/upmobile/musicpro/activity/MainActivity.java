@@ -813,7 +813,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void onClickExitApp() {
-		showQuitDialog();
+		finish();
 	}
 
 	@Override
@@ -866,22 +866,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				doubleBackToExitPressedOnce = false;
 			}
 		}, 2000);
-	}
-
-	private void showQuitDialog() {
-		new AlertDialog.Builder(this)
-				.setTitle(R.string.app_name)
-				.setMessage(R.string.msgQuitApp)
-				.setPositiveButton(android.R.string.ok,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								stopService(intentService);
-								cancelNotification();
-								finish();
-							}
-						}).setNegativeButton(android.R.string.cancel, null)
-				.create().show();
 	}
 	
 	public void setPlaylist(Playlist playlist) {
