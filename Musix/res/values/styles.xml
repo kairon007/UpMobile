@@ -2,6 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="MyTheme.Custom" parent="Theme.AppCompat">
+        <item name="android:itemBackground">@color/wet_asphalt_alpha</item>
         <item name="colorPrimary">@color/wet_asphalt</item>
         <item name="colorPrimaryDark">@color/blue_light</item>
         <item name="android:textColor">@android:color/white</item>
@@ -27,5 +28,5 @@
         <item name="android:bottomMedium">@color/wet_asphalt</item>
         <item name="android:topDark">@color/wet_asphalt</item>
     </style>
-
+    
 </resources>
