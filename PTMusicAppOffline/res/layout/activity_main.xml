@@ -77,11 +77,6 @@
         android:id="@+id/fragmentSetting"
         android:name="org.upmobile.musicpro.fragment.SettingsFragment"
         style="@style/Layout.FillWidthHeight" />
-
-    <fragment
-        android:id="@+id/fragmentAbout"
-        android:name="org.upmobile.musicpro.fragment.AboutFragment"
-        style="@style/Layout.FillWidthHeight" />
     
     <fragment
         android:id="@+id/fragmentSearchOnline"

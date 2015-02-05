@@ -24,19 +24,16 @@ import org.upmobile.musicpro.widget.AutoBgButton;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -61,11 +58,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public static final int CATEGORY_MUSIC = 2;
 	public static final int PLAYLIST = 3;
 	public static final int SEARCH = 4;
-	public static final int GOOD_APP = 5;
-	public static final int ABOUT = 6;
-	public static final int EXIT_APP = 7;
-	public static final int SEARCH_ONLINE = 8;
-	public static final int LIBRARY = 9;
+	public static final int EXIT_APP = 5;
+	public static final int SEARCH_ONLINE = 6;
+	public static final int LIBRARY = 7;
 
 	public static final int LIST_SONG_FRAGMENT = 0;
 	public static final int CATEGORY_MUSIC_FRAGMENT = 1;
@@ -73,9 +68,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public static final int SEARCH_FRAGMENT = 3;
 	public static final int SETTING_FRAGMENT = 4;
 	public static final int PLAYER_FRAGMENT = 5;
-	public static final int ABOUT_FRAGMENT = 6;
-	public static final int SEARCH_ONLINE_FRAGMENT = 7;
-	public static final int LIBRARY_FRAGMENT = 8;
+	public static final int SEARCH_ONLINE_FRAGMENT = 6;
+	public static final int LIBRARY_FRAGMENT = 7;
 
 	public static final int FROM_LIST_SONG = 0;
 	public static final int FROM_NOTICATION = 1;
@@ -97,7 +91,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private TextView lblSongNameFooter, lblArtistFooter;
 
 	private TextView lblTopChart, lblNominations, lblCategoryMusic,
-			lblPlaylist, lblSearch, lblGoodApp, lblAbout, lblExitApp, lblSearchOnline, lblLibrary;
+			lblPlaylist, lblSearch, lblExitApp, lblSearchOnline, lblLibrary;
 
 	private boolean doubleBackToExitPressedOnce;
 	private boolean isPlayingBeforeCall;
@@ -353,8 +347,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		lblCategoryMusic = (TextView) menu.findViewById(R.id.lblCategoryMusic);
 		lblPlaylist = (TextView) menu.findViewById(R.id.lblPlaylist);
 		lblSearch = (TextView) menu.findViewById(R.id.lblSearch);
-		lblGoodApp = (TextView) menu.findViewById(R.id.lblGoodApp);
-		lblAbout = (TextView) menu.findViewById(R.id.lblAbout);
 		lblExitApp = (TextView) menu.findViewById(R.id.lblExitApp);
 		lblSearchOnline = (TextView) menu.findViewById(R.id.lblSearchOnline);
 		lblLibrary = (TextView) menu.findViewById(R.id.lblLibrary);
@@ -378,8 +370,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		lblCategoryMusic.setOnClickListener(this);
 		lblPlaylist.setOnClickListener(this);
 		lblSearch.setOnClickListener(this);
-		lblGoodApp.setOnClickListener(this);
-		lblAbout.setOnClickListener(this);
 		lblExitApp.setOnClickListener(this);
 		lblSearchOnline.setOnClickListener(this);
 		lblLibrary.setOnClickListener(this);
@@ -389,26 +379,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private void initFragment() {
 		fm = getSupportFragmentManager();
-		arrayFragments = new Fragment[9];
-		arrayFragments[LIST_SONG_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentListSongs);
-		arrayFragments[CATEGORY_MUSIC_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentCategoryMusic);
-		arrayFragments[PLAYLIST_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentPlaylist);
-		arrayFragments[SEARCH_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentSearch);
-		arrayFragments[SETTING_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentSetting);
-		arrayFragments[PLAYER_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentPlayer);
-		arrayFragments[ABOUT_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentAbout);
-		arrayFragments[SEARCH_ONLINE_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentSearchOnline);
-		arrayFragments[LIBRARY_FRAGMENT] = fm
-				.findFragmentById(R.id.fragmentLibrary);
-
+		arrayFragments = new Fragment[8];
+		arrayFragments[LIST_SONG_FRAGMENT] = fm.findFragmentById(R.id.fragmentListSongs);
+		arrayFragments[CATEGORY_MUSIC_FRAGMENT] = fm.findFragmentById(R.id.fragmentCategoryMusic);
+		arrayFragments[PLAYLIST_FRAGMENT] = fm.findFragmentById(R.id.fragmentPlaylist);
+		arrayFragments[SEARCH_FRAGMENT] = fm.findFragmentById(R.id.fragmentSearch);
+		arrayFragments[SETTING_FRAGMENT] = fm.findFragmentById(R.id.fragmentSetting);
+		arrayFragments[PLAYER_FRAGMENT] = fm.findFragmentById(R.id.fragmentPlayer);
+		arrayFragments[SEARCH_ONLINE_FRAGMENT] = fm.findFragmentById(R.id.fragmentSearchOnline);
+		arrayFragments[LIBRARY_FRAGMENT] = fm.findFragmentById(R.id.fragmentLibrary);
 		FragmentTransaction transaction = fm.beginTransaction();
 		for (Fragment fragment : arrayFragments) {
 			transaction.hide(fragment);
@@ -572,11 +551,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			showFragment(SEARCH_FRAGMENT);
 			break;
 
-		case ABOUT:
-			setBackgroundColorDrawer(ABOUT);
-			showFragment(ABOUT_FRAGMENT);
-			break;
-			
 		case SEARCH_ONLINE:
 			setBackgroundColorDrawer(SEARCH_ONLINE);
 			showFragment(SEARCH_ONLINE_FRAGMENT);
@@ -587,7 +561,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			showFragment(LIBRARY_FRAGMENT);
 			break;
 
-		case GOOD_APP:
 		case EXIT_APP:
 			return;
 		}
@@ -620,11 +593,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		} else {
 			lblSearch.setBackgroundColor(Color.TRANSPARENT);
 		}
-		if (fragmentId == ABOUT) {
-			lblAbout.setBackgroundResource(R.drawable.bg_item_menu_select);
-		} else {
-			lblAbout.setBackgroundColor(Color.TRANSPARENT);
-		}
 		if (fragmentId == SEARCH_ONLINE) {
 			lblSearchOnline.setBackgroundResource(R.drawable.bg_item_menu_select);
 		} else {
@@ -635,7 +603,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		} else {
 			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 		}
-		lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
 		lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 	}
 
@@ -704,14 +671,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			onClickSearch();
 			break;
 
-		case R.id.lblGoodApp:
-			onClickGoodApp();
-			break;
-
-		case R.id.lblAbout:
-			onClickAbout();
-			break;
-
 		case R.id.lblExitApp:
 			onClickExitApp();
 			break;
@@ -771,18 +730,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	
 	private void onClickLibrary() {
 		setSelect(LIBRARY);
-	}
-
-	private void onClickGoodApp() {
-		Intent browserIntent = new Intent(
-				Intent.ACTION_VIEW,
-				Uri.parse("https://play.google.com/store/apps/collection/topselling_new_free"));
-		startActivity(browserIntent);
-		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
-	}
-
-	private void onClickAbout() {
-		setSelect(ABOUT);
 	}
 
 	private void onClickExitApp() {

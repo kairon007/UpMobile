@@ -8,8 +8,6 @@ import org.upmobile.musicpro.util.MySharedPreferences;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +17,7 @@ import android.widget.TextView;
 
 public class SettingsFragment extends BaseFragment {
 	private View layoutLanguage;
-	private TextView lblLanguage, lblLanguageSelect, lblAbout;
+	private TextView lblLanguage, lblLanguageSelect;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,7 +42,6 @@ public class SettingsFragment extends BaseFragment {
 		layoutLanguage = view.findViewById(R.id.layoutLanguage);
 		lblLanguage = (TextView) view.findViewById(R.id.lblLanguage);
 		lblLanguageSelect = (TextView) view.findViewById(R.id.lblLanguageSelect);
-		lblAbout = (TextView) view.findViewById(R.id.lblAbout);
 
 		lblLanguageSelect.setText(getResources().getStringArray(R.array.arrayLanguage)[new MySharedPreferences(
 				getActivity()).getLanguage()]);
@@ -58,22 +55,12 @@ public class SettingsFragment extends BaseFragment {
 							public void onClick(DialogInterface dialog, int which) {
 								LanguageUtil.setLocale(which, getActivity());
 								lblLanguage.setText(R.string.language);
-								lblAbout.setText(R.string.about);
 								lblLanguageSelect.setText(getResources().getStringArray(R.array.arrayLanguage)[which]);
 								showToast(R.string.msgRestartApp);
 								new MySharedPreferences(getActivity()).putLanguage(which);
 							}
 						});
 				builder.create().show();
-			}
-		});
-
-		lblAbout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Uri uriUrl = Uri.parse("http://projectemplate.com/");
-				Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-				startActivity(launchBrowser);
 			}
 		});
 	}

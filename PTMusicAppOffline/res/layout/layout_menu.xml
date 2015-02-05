@@ -100,28 +100,6 @@
             android:background="@drawable/bg_divider" />
 
         <TextView
-            android:id="@+id/lblGoodApp"
-            style="@style/Text.Menu"
-            android:drawableLeft="@drawable/ic_play_store"
-            android:text="@string/goodApp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@drawable/bg_divider" />
-
-        <TextView
-            android:id="@+id/lblAbout"
-            style="@style/Text.Menu"
-            android:drawableLeft="@drawable/ic_about"
-            android:text="@string/about" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@drawable/bg_divider" />
-
-        <TextView
             android:id="@+id/lblSearchOnline"
             style="@style/Text.Menu"
             android:drawableLeft="@drawable/ic_search_online"

@@ -26,20 +26,4 @@
             android:text="@string/vietnamese" />
     </org.upmobile.musicpro.widget.AutoBgLinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:visibility="gone"
-        android:background="@android:color/darker_gray" />
-
-    <org.upmobile.musicpro.widget.AutoBgTextView
-        android:id="@+id/lblAbout"
-        style="@style/Text.Title.Black"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/bg_white"
-        android:paddingBottom="20dp"
-        android:layout_marginLeft="10dp"
-        android:paddingTop="20dp"
-        android:text="@string/about" />
-
 </LinearLayout>
