@@ -2,8 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="@drawable/layout_divider"
     android:orientation="vertical"
-    android:padding="8dp" >
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="8dp"
+    android:showDividers="end" >
 
     <LinearLayout
         android:id="@+id/download_progress"
@@ -56,7 +60,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:fillViewport="true"
-        android:minHeight="48dp" >
+        android:minHeight="48dp"
+        android:paddingBottom="16dp" >
 
         <TextView
             android:id="@+id/lyrics"

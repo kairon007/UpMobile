@@ -4,8 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/wet_asphalt"
+    android:divider="@drawable/layout_divider"
+    android:dividerPadding="2dp"
     android:orientation="vertical"
-    android:padding="8dp" >
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="8dp"
+    android:showDividers="middle|end" >
 
     <ScrollView
         android:id="@+id/scroll"
@@ -17,7 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:divider="@drawable/layout_divider"
+            android:dividerPadding="2dp"
             android:orientation="vertical"
+            android:paddingBottom="16dp"
             android:showDividers="middle|end"
             android:visibility="visible" >
 

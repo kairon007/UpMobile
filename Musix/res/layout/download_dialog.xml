@@ -4,20 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/wet_asphalt"
+    android:divider="@drawable/layout_divider"
+    android:showDividers="middle|end"
     android:orientation="vertical"
-    android:padding="8dp" >
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="4dp" >
 
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/container_player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:divider="@drawable/layout_divider"
+            android:dividerPadding="4dp"
             android:orientation="vertical"
+            android:paddingBottom="16dp"
             android:showDividers="middle|end"
             android:visibility="visible" >
 

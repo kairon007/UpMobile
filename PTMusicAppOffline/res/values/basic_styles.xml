@@ -104,7 +104,6 @@
 
     <style name="Text.Title" parent="Layout.FillWidth">
         <item name="android:textSize">17sp</item>
-        <item name="android:singleLine">true</item>
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:ellipsize">marquee</item>
     </style>
