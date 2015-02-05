@@ -55,6 +55,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	private PlaybackService musicService;
 	private boolean musicBound = false;
 	private AbstractSong song;
+	private Object lock = new Object();
 	private boolean paused = false, playbackPaused = false;
 
 	// controller variables
@@ -123,13 +124,20 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			super.onChange(selfChange);
 		}
 
+		public boolean deliverSelfNotifications() {
+			return false;
+		};
+
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
-				songListAdapter.clear();
-				querySong();
-				setPlayback();
+				synchronized (lock) {
+					songListAdapter.clear();
+					querySong();
+					abstractSongArrayList = songListAdapter.getList();
+					setPlayback();
+				}
 			}
 		};
 	};
@@ -301,21 +309,24 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	}
 
 	public ArrayList<MusicData> querySong() {
-		ArrayList<MusicData> result = new ArrayList<MusicData>();
-		Cursor cursor = buildQuery(mContext.getContentResolver());
-		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+		synchronized (lock) {
+			ArrayList<MusicData> result = new ArrayList<MusicData>();
+			Cursor cursor = buildQuery(mContext.getContentResolver());
+			if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+				return result;
+			}
+			try {
+				for (int i = 0; i < cursor.getCount(); i++) {
+					MusicData data = new MusicData();
+					data.populate(cursor);
+					songListAdapter.add(data);
+					cursor.moveToNext();
+				}
+			} catch (Exception e) {
+			}
+			cursor.close();
 			return result;
 		}
-		MusicData d = new MusicData();
-		d.populate(cursor);
-		songListAdapter.add(d);
-		while (cursor.moveToNext()) {
-			MusicData data = new MusicData();
-			data.populate(cursor);
-			songListAdapter.add(data);
-		}
-		cursor.close();
-		return result;
 	}
 
 	private Cursor buildQuery(ContentResolver resolver) {

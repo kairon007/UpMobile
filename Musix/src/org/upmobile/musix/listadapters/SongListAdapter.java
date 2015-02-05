@@ -25,8 +25,8 @@ public class SongListAdapter extends BaseAdapter {
     private Context mContext;
 
     public SongListAdapter(Context context, ArrayList<AbstractSong> songs) {
-        mContext = context;
-        songArrayList = songs;
+        this.mContext = context;
+        this.songArrayList = songs;
         typefaceHelper = new TypefaceHelper(mContext);
     }
 
@@ -100,6 +100,10 @@ public class SongListAdapter extends BaseAdapter {
 
 	public void clear() {
 		songArrayList.clear();
+	}
+	
+	public ArrayList<AbstractSong> getList() {
+		return songArrayList;
 	}
 
 }
