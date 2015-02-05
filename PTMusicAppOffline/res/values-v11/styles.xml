@@ -2,7 +2,7 @@
 
     <style name="AppTheme" parent="android:Theme.Holo.Light">
         <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
-        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
+        <item name="android:alertDialogStyle">@style/AlertDialogStyle</item>
     </style>
 
 </resources>
