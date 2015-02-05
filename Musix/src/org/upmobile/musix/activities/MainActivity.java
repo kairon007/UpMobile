@@ -7,13 +7,11 @@ import org.upmobile.musix.fragments.SearchFragment;
 import org.upmobile.musix.fragments.SongsListFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-import android.app.FragmentManager.BackStackEntry;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -28,16 +26,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
+    private String mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-
             mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-            mTitle = getTitle();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,6 +47,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment mFragment = null;
         String lastFragmentName = "";
+        setActionBarTitle(setSectionTitle(position));
         int backStackEntry = fragmentManager.getBackStackEntryCount() - 1;
         if (backStackEntry != -1) {
         	android.support.v4.app.FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
@@ -66,14 +63,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             	if (lastFragmentName.equals(SongsListFragment.class.getSimpleName())) return;
                 mFragment = new SongsListFragment();
                 break;
-
-//            case 1:
-//                mFragment = new ArtistsFragment();
-//                break;
-//
-//            case 2:
-//                mFragment = new FavFragment();
-//                break;
 
             case 2:
                 closeApplication();
@@ -102,32 +91,21 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         this.finish();
     }
 
-    public void setSectionTitle(int number) {
+    public String setSectionTitle(int number) {
         switch (number) {
             case 0:
-                mTitle = getString(R.string.menu_search);
+                setmTitle(getString(R.string.menu_search));
                 break;
 
             case 1:
-                mTitle = getString(R.string.menu_songs);
+                setmTitle(getString(R.string.menu_songs));
                 break;
-//
-//            case 2:
-//                mTitle = getString(R.string.menu_fav);
-//                break;
 
-            case 3:
-                mTitle = getString(R.string.menu_exit);
+            case 2:
+                setmTitle(getString(R.string.menu_exit));
                 break;
         }
-        getSupportActionBar().setTitle(mTitle);
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+       return getmTitle();
     }
 
     @Override
@@ -137,7 +115,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             //getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -152,16 +129,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         return super.onKeyDown(keyCode, event);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    
+    public void setActionBarTitle(String title) {
+    	getSupportActionBar().setTitle(title);
+    }
 
+	public String getmTitle() {
+		return mTitle;
+	}
+
+	public void setmTitle(String mTitle) {
+		this.mTitle = mTitle;
+	}
 }
