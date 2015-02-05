@@ -270,9 +270,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		btnStop.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (isPlaying()) {
-					stop();
-				}
+				stop();
 			}
 		});
 
