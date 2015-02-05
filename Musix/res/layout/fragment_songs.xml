@@ -33,7 +33,7 @@
         <ImageButton
             android:layout_weight="1"
             android:padding="5dp"
-            android:background="@drawable/bg_btn"
+            android:background="@drawable/selectable_item_bg"
             android:src="@drawable/ic_action_prev"
             android:id="@+id/btnPrev"
             android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
         <ImageButton
             android:layout_weight="1"
             android:padding="5dp"
-            android:background="@drawable/bg_btn"
+            android:background="@drawable/selectable_item_bg"
             android:src="@drawable/ic_action_stop"
             android:id="@+id/btnStop"
             android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
         <ImageButton
             android:layout_weight="1"
             android:padding="5dp"
-            android:background="@drawable/bg_btn"
+            android:background="@drawable/selectable_item_bg"
             android:src="@drawable/ic_action_play"
             android:id="@+id/btnPlayPause"
             android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
         <ImageButton
             android:layout_weight="1"
             android:padding="5dp"
-            android:background="@drawable/bg_btn"
+            android:background="@drawable/selectable_item_bg"
             android:src="@drawable/ic_action_random"
             android:id="@+id/btnRandom"
             android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
         <ImageButton
             android:layout_weight="1"
             android:padding="5dp"
-            android:background="@drawable/bg_btn"
+            android:background="@drawable/selectable_item_bg"
             android:src="@drawable/ic_action_next"
             android:id="@+id/btnNext"
             android:layout_width="wrap_content"
