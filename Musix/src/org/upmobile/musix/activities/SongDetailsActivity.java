@@ -1,18 +1,11 @@
 package org.upmobile.musix.activities;
 
-import java.io.InputStream;
-
 import org.upmobile.musix.R;
-import org.upmobile.musix.utils.BitmapHelper;
 import org.upmobile.musix.utils.TypefaceHelper;
 
 import ru.johnlife.lifetoolsmp3.song.MusicData;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;

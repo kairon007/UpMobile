@@ -533,11 +533,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		currentFragment = fragment;
 	}
 
-	public void backFragment(int fragment) {
+	public void backFragment(int fragment, int fragmentId) {
+		setBackgroundColorDrawer(fragmentId);
 		GlobalValue.currentMenu = fragment;
 		FragmentTransaction transaction = fm.beginTransaction();
-		transaction.setCustomAnimations(R.anim.slide_in_right,
-				R.anim.slide_out_right);
+		transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
 		transaction.show(arrayFragments[fragment]);
 		transaction.hide(arrayFragments[currentFragment]);
 		transaction.commit();
@@ -548,114 +548,42 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		GlobalValue.currentMenu = select;
 		switch (select) {
 		case TOP_CHART:
-			lblTopChart.setBackgroundResource(R.drawable.bg_item_menu_select);
-			lblNominations.setBackgroundColor(Color.TRANSPARENT);
-			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
-			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
-			lblSearch.setBackgroundColor(Color.TRANSPARENT);
-			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
-			lblAbout.setBackgroundColor(Color.TRANSPARENT);
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
-			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
+			setBackgroundColorDrawer(TOP_CHART);
 			showFragment(LIST_SONG_FRAGMENT);
 			break;
 
 		case NOMINATIONS:
-			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
-			lblNominations.setBackgroundResource(R.drawable.bg_item_menu_select);
-			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
-			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
-			lblSearch.setBackgroundColor(Color.TRANSPARENT);
-			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
-			lblAbout.setBackgroundColor(Color.TRANSPARENT);
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
-			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
+			setBackgroundColorDrawer(NOMINATIONS);
 			showFragment(LIST_SONG_FRAGMENT);
 			break;
 
 		case CATEGORY_MUSIC:
-			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
-			lblNominations.setBackgroundColor(Color.TRANSPARENT);
-			lblCategoryMusic.setBackgroundResource(R.drawable.bg_item_menu_select);
-			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
-			lblSearch.setBackgroundColor(Color.TRANSPARENT);
-			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
-			lblAbout.setBackgroundColor(Color.TRANSPARENT);
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
-			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
+			setBackgroundColorDrawer(CATEGORY_MUSIC);
 			showFragment(CATEGORY_MUSIC_FRAGMENT);
 			break;
 
 		case PLAYLIST:
-			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
-			lblNominations.setBackgroundColor(Color.TRANSPARENT);
-			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
-			lblPlaylist.setBackgroundResource(R.drawable.bg_item_menu_select);
-			lblSearch.setBackgroundColor(Color.TRANSPARENT);
-			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
-			lblAbout.setBackgroundColor(Color.TRANSPARENT);
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
-			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
+			setBackgroundColorDrawer(PLAYLIST);
 			showFragment(PLAYLIST_FRAGMENT);
 			break;
 
 		case SEARCH:
-			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
-			lblNominations.setBackgroundColor(Color.TRANSPARENT);
-			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
-			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
-			lblSearch.setBackgroundResource(R.drawable.bg_item_menu_select);
-			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
-			lblAbout.setBackgroundColor(Color.TRANSPARENT);
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
-			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
+			setBackgroundColorDrawer(SEARCH);
 			showFragment(SEARCH_FRAGMENT);
 			break;
 
 		case ABOUT:
-			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
-			lblNominations.setBackgroundColor(Color.TRANSPARENT);
-			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
-			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
-			lblSearch.setBackgroundColor(Color.TRANSPARENT);
-			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
-			lblAbout.setBackgroundResource(R.drawable.bg_item_menu_select);
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
-			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
+			setBackgroundColorDrawer(ABOUT);
 			showFragment(ABOUT_FRAGMENT);
 			break;
 			
 		case SEARCH_ONLINE:
-			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
-			lblNominations.setBackgroundColor(Color.TRANSPARENT);
-			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
-			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
-			lblSearch.setBackgroundColor(Color.TRANSPARENT);
-			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
-			lblAbout.setBackgroundResource(Color.TRANSPARENT);
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundResource(R.drawable.bg_item_menu_select);
-			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
+			setBackgroundColorDrawer(SEARCH_ONLINE);
 			showFragment(SEARCH_ONLINE_FRAGMENT);
 			break;
 			
 		case LIBRARY:
-			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
-			lblNominations.setBackgroundColor(Color.TRANSPARENT);
-			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
-			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
-			lblSearch.setBackgroundColor(Color.TRANSPARENT);
-			lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
-			lblAbout.setBackgroundResource(Color.TRANSPARENT);
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
-			lblLibrary.setBackgroundResource(R.drawable.bg_item_menu_select);
+			setBackgroundColorDrawer(LIBRARY);
 			showFragment(LIBRARY_FRAGMENT);
 			break;
 
@@ -664,6 +592,51 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			return;
 		}
 		menu.showContent();
+	}
+
+	private void setBackgroundColorDrawer(int fragmentId) {
+		if (fragmentId == TOP_CHART) {
+			lblTopChart.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblTopChart.setBackgroundColor(Color.TRANSPARENT);
+		}
+		if (fragmentId == NOMINATIONS) {
+			lblNominations.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblNominations.setBackgroundColor(Color.TRANSPARENT);
+		}
+		if (fragmentId == CATEGORY_MUSIC) {
+			lblCategoryMusic.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblCategoryMusic.setBackgroundColor(Color.TRANSPARENT);
+		}
+		if (fragmentId == PLAYLIST) {
+			lblPlaylist.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblPlaylist.setBackgroundColor(Color.TRANSPARENT);
+		}
+		if (fragmentId == SEARCH) {
+			lblSearch.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblSearch.setBackgroundColor(Color.TRANSPARENT);
+		}
+		if (fragmentId == ABOUT) {
+			lblAbout.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblAbout.setBackgroundColor(Color.TRANSPARENT);
+		}
+		if (fragmentId == SEARCH_ONLINE) {
+			lblSearchOnline.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblSearchOnline.setBackgroundColor(Color.TRANSPARENT);
+		}
+		if (fragmentId == LIBRARY) {
+			lblLibrary.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
+		}
+		lblGoodApp.setBackgroundColor(Color.TRANSPARENT);
+		lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 	}
 
 	public void setButtonPlay() {
@@ -824,17 +797,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			switch (currentFragment) {
 			case PLAYER_FRAGMENT:
 				if (toMusicPlayer == FROM_SEARCH) {
-					backFragment(SEARCH_FRAGMENT);
+					backFragment(SEARCH_FRAGMENT, SEARCH);
 				} else {
-					backFragment(LIST_SONG_FRAGMENT);
+					backFragment(LIST_SONG_FRAGMENT, TOP_CHART);
 				}
 				break;
 
 			case LIST_SONG_FRAGMENT:
 				if (GlobalValue.currentMenu == CATEGORY_MUSIC) {
-					backFragment(CATEGORY_MUSIC_FRAGMENT);
+					backFragment(CATEGORY_MUSIC_FRAGMENT, CATEGORY_MUSIC);
 				} else if (GlobalValue.currentMenu == PLAYLIST) {
-					backFragment(PLAYLIST_FRAGMENT);
+					backFragment(PLAYLIST_FRAGMENT, PLAYLIST);
 				} else {
 					quitApp();
 				}
