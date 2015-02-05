@@ -364,7 +364,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				onMode(SMODE_PAUSE);
 				msg.what = MSG_PAUSE;
 				sendNotification(android.R.drawable.ic_media_play, getString(R.string.play));
-				stopForeground(true);
 			}
 			msg.obj = playingSong;
 			handler.sendMessage(msg);
@@ -632,11 +631,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (null != intent && null != intent.getAction() && !intent.getAction().isEmpty()) {
 			if (intent.getAction().equals(CLOSE_ACTION)) {
-				//shift(-1);
-				System.out.println("!!! removeNotification");
-				removeNotification();
 				stop();
-				//TODO close service
 			} else if (intent.getAction().equals(PLAY_ACTION)) {
 				play(playingSong);
 			} else if (intent.getAction().equals(NEXT_ACTION)) {
