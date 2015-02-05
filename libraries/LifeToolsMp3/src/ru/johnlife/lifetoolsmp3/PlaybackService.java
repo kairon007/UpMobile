@@ -631,8 +631,12 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (null != intent && null != intent.getAction() && !intent.getAction().isEmpty()) {
-			if (intent.getAction().equals(PREV_ACTION)) {
-				shift(-1);
+			if (intent.getAction().equals(CLOSE_ACTION)) {
+				//shift(-1);
+				System.out.println("!!! removeNotification");
+				removeNotification();
+				stop();
+				//TODO close service
 			} else if (intent.getAction().equals(PLAY_ACTION)) {
 				play(playingSong);
 			} else if (intent.getAction().equals(NEXT_ACTION)) {
@@ -659,10 +663,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-		Intent previousIntent = new Intent(this, PlaybackService.class);
-		previousIntent.setAction(PREV_ACTION);
-		PendingIntent ppreviousIntent = PendingIntent.getService(this, 0, previousIntent, 0);
-
 		Intent playIntent = new Intent(this, PlaybackService.class);
 		playIntent.setAction(PLAY_ACTION);
 		PendingIntent pplayIntent = PendingIntent.getService(this, 0, playIntent, 0);
@@ -670,6 +670,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		Intent nextIntent = new Intent(this, PlaybackService.class);
 		nextIntent.setAction(NEXT_ACTION);
 		PendingIntent pnextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
+		
+		Intent closeIntent = new Intent(this, PlaybackService.class);
+		closeIntent.setAction(CLOSE_ACTION);
+		PendingIntent pcloseIntent = PendingIntent.getService(this, 0, closeIntent, 0);		
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
 				.setPriority(NotificationCompat.PRIORITY_MAX)
@@ -679,9 +683,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				.setContentText(playingSong.getArtist())
 				.setContentIntent(pendingIntent)
 				.setOngoing(true)
-				.addAction(android.R.drawable.ic_media_previous, getString(R.string.previous), ppreviousIntent)
 				.addAction(draweble, state, pplayIntent)
-				.addAction(android.R.drawable.ic_media_next, getString(R.string.next), pnextIntent);
+				.addAction(android.R.drawable.ic_media_next, getString(R.string.next), pnextIntent)
+				.addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.close), pcloseIntent);
 		startForeground(NOTIFICATION_ID, builder.build());
 	}
 	

@@ -31,8 +31,8 @@
     
     <string name="play">Play</string>
     <string name="pause">Pause</string>
-    <string name="previous">Previous</string>
     <string name="next">Next</string>
+    <string name="close">Close</string>
     <string name="download_failed">Download is failed</string>
     <string name="download_finished">Download is finished</string>
     <string name="download_started">Download is started for </string>
