@@ -7,6 +7,7 @@ import org.upmobile.musix.fragments.SearchFragment;
 import org.upmobile.musix.fragments.SongsListFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import android.app.FragmentManager.BackStackEntry;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,14 +50,20 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment mFragment = null;
-
+        String lastFragmentName = "";
+        int backStackEntry = fragmentManager.getBackStackEntryCount() - 1;
+        if (backStackEntry != -1) {
+        	android.support.v4.app.FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
+			lastFragmentName = backEntry.getName();
+        }
         switch (position) {
 
             case 0:
+            	if (lastFragmentName.equals(SearchFragment.class.getSimpleName())) return;
                 mFragment = new SearchFragment();
                 break;
-                
             case 1:
+            	if (lastFragmentName.equals(SongsListFragment.class.getSimpleName())) return;
                 mFragment = new SongsListFragment();
                 break;
 
@@ -76,6 +83,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         if (mFragment != null) {
             fragmentManager.beginTransaction()
                     .replace(R.id.container, mFragment)
+                    .addToBackStack(mFragment.getClass().getSimpleName())
                     .commit();
             setSectionTitle(position);
         }
