@@ -172,6 +172,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			super.onCallStateChanged(state, incomingNumber);
 		}
 	};
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+	};
 
 
 	private boolean fromLibrary = false; //indicate �alling music - true from library PlayerService
@@ -277,6 +282,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		unregisterReceiver(headsetReceiver);
+		cancelNotification();
 		super.onDestroy();
 	}
 	
