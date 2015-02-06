@@ -12,10 +12,16 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 
 public class LibraryAdapter extends BaseAdapter<MusicData> {
 
@@ -89,8 +95,11 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		return false;
 	}
 
-	private class LibraryViewHolder extends ViewHolder<MusicData> {
+	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnLongClickListener{
 		
+		private MusicData data;
+		private ViewGroup info;
+		private ImageView cover;
 		private TextView tvTitle;
 		private TextView tvArtist;
 		private TextView tvDuration;
@@ -98,6 +107,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		private LibraryViewHolder(View v) {
 			tvTitle = (TextView) v.findViewById(R.id.lib_title);
+			info = (ViewGroup) v.findViewById(R.id.item_box_info);
+			cover = (ImageView) v.findViewById(R.id.lib_cover);
 			tvArtist = (TextView) v.findViewById(R.id.lib_artist);
 			tvDuration = (TextView) v.findViewById(R.id.lib_duration);
 			btnPlayback = (ImageButton) v.findViewById(R.id.lib_play);
@@ -105,9 +116,12 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		protected void hold(final MusicData item, int position) {
+			data = item;
 			tvTitle.setText(item.getTitle());
 			tvArtist.setText(item.getArtist());
 			tvDuration.setText(Util.getFormatedStrDuration(item.getDuration()));
+			info.setOnLongClickListener(this);
+			cover.setOnLongClickListener(this);
 			if (item.check(MusicData.MODE_PLAYING)) {
 				btnPlayback.setImageResource(R.drawable.btn_pause);
 			} else {
@@ -118,7 +132,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				@Override
 				public void onClick(View v) {
 					if (null != ((MainActivity) getContext()).getService(false)) {
-//						((MainActivity) getContext()).mService.pauseMusic();
 						((MainActivity) getContext()).getService(false).reset();
 						((MainActivity) getContext()).setButtonPlay();
 					}
@@ -133,6 +146,26 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 					((MainActivity) getContext()).initPlayback();
 				}
 			});
+		}
+		
+		@Override
+		public boolean onLongClick(View view) {
+			if (view.getId() != btnPlayback.getId() ) {
+				PopupMenu menu = new PopupMenu(getContext(), view);
+				menu.getMenuInflater().inflate(R.menu.deletemenu, menu.getMenu());
+				menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						remove(data);
+						PlaybackService.get(getContext()).remove(data);
+						data.reset(getContext());
+						return false;
+					}
+				});
+				menu.show();
+			}
+			return true;
 		}
 
 	}

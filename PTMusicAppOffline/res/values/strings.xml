@@ -56,6 +56,7 @@
     <string name="creatNewPlaylist">Create new playlist</string>
     <string name="playlistName">Playlist name</string>
     <string name="chooseSong">Select song</string>
+    <string name="delete_item">Delete item</string>
 
     <string-array name="arrayLanguage">
         <item>English</item>

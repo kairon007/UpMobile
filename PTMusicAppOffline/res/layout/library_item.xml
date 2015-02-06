@@ -11,6 +11,8 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center"
+        android:clickable="true"
+        android:longClickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_music_node_search_small" />
 
@@ -19,6 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:clickable="true"
+        android:longClickable="true"
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
