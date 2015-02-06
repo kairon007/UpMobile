@@ -494,9 +494,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public MusicService getService(boolean fromApp){
 		if (fromApp) {
 			fromLibrary = !fromApp;
-			if (null != playbackService) {
-				playbackService.reset();
-			}
 		}
 		return mService;
 	}
