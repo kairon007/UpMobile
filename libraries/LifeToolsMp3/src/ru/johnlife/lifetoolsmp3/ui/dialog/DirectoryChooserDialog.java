@@ -226,6 +226,7 @@ public class DirectoryChooserDialog {
 					enableButtons();
 					return;
 				}
+				if (null == parent) return;
 				m_dir = parent.getPath();
 				if (m_dir.equals(STORAGE)) {
 					keeper.deactivateOptions(StateKeeper.BTN_ENABLED);
@@ -251,6 +252,9 @@ public class DirectoryChooserDialog {
 				if (directory.equals(""))
 					return;
 				m_dir += "/" + directory;
+				if (!m_dir.equals(STORAGE)) {
+					keeper.activateOptions(StateKeeper.BTN_ENABLED);
+				}
 				enableButtons();
 				updateDirectory();
 			}
