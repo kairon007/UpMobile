@@ -19,10 +19,7 @@
         <FrameLayout
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:minHeight="48dp"
-            android:visibility="visible" >
+            android:minHeight="48dp" >
 
             <RelativeLayout
                 android:id="@+id/RelativeLayout1"
