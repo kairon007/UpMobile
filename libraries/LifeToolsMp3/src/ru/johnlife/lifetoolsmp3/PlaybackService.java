@@ -1,6 +1,8 @@
 package ru.johnlife.lifetoolsmp3;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener.State;
@@ -24,6 +26,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -34,6 +37,7 @@ import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 public class PlaybackService  extends Service implements Constants, OnCompletionListener, OnErrorListener, OnPreparedListener, Handler.Callback {
 	
@@ -647,12 +651,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	private void sendNotification(int draweble, String state) {
-		removeNotification();
-		if (!check(SMODE_NOTIFICATION)) return;
+		if (!check(SMODE_NOTIFICATION))
+			return;
 		Bitmap cover = playingSong.getCover(this);
 		if (null == cover) {
 			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_launcher);
 		}
+
 		Intent notificationIntent = new Intent(this, ((Activity) activityContext).getClass());
 		notificationIntent.setAction(MAIN_ACTION);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -665,22 +670,40 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		Intent nextIntent = new Intent(this, PlaybackService.class);
 		nextIntent.setAction(NEXT_ACTION);
 		PendingIntent pnextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
-		
+
 		Intent closeIntent = new Intent(this, PlaybackService.class);
 		closeIntent.setAction(CLOSE_ACTION);
-		PendingIntent pcloseIntent = PendingIntent.getService(this, 0, closeIntent, 0);		
+		PendingIntent pcloseIntent = PendingIntent.getService(this, 0, closeIntent, 0);
 
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-				.setPriority(NotificationCompat.PRIORITY_MAX)
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setLargeIcon(Bitmap.createScaledBitmap(cover, 128, 128, false))
-				.setContentTitle(playingSong.getTitle())
-				.setContentText(playingSong.getArtist())
-				.setContentIntent(pendingIntent)
-				.setOngoing(true)
-				.addAction(draweble, state, pplayIntent)
-				.addAction(android.R.drawable.ic_media_next, getString(R.string.next), pnextIntent)
-				.addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.close), pcloseIntent);
+		NotificationCompat.Builder builder = null;
+		
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+			RemoteViews view = new RemoteViews(getPackageName(), R.layout.notification_player);
+			Calendar calendar = Calendar.getInstance();
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+			view.setTextViewText(R.id.txt_music, playingSong.getArtist() + " - " + playingSong.getTitle());
+			view.setTextViewText(R.id.txt_time, simpleDateFormat.format(calendar.getTime()));
+			view.setImageViewResource(R.id.btn_play, draweble);
+			view.setOnClickPendingIntent(R.id.btn_play, pplayIntent);
+			view.setOnClickPendingIntent(R.id.btn_next, pnextIntent);
+			view.setOnClickPendingIntent(R.id.btn_close, pcloseIntent);
+			builder = new NotificationCompat.Builder(this)
+					.setSmallIcon(R.drawable.ic_launcher)
+					.setLargeIcon(Bitmap.createScaledBitmap(cover, 128, 128, false))
+					.setContentIntent(pendingIntent).setContent(view);
+		} else {
+			builder = new NotificationCompat.Builder(this)
+					.setPriority(NotificationCompat.PRIORITY_MAX)
+					.setSmallIcon(R.drawable.ic_launcher)
+					.setLargeIcon(Bitmap.createScaledBitmap(cover, 128, 128, false))
+					.setContentTitle(playingSong.getTitle())
+					.setContentText(playingSong.getArtist())
+					.setContentIntent(pendingIntent)
+					.setOngoing(true)
+					.addAction(draweble, state, pplayIntent)
+					.addAction(android.R.drawable.ic_media_next, getString(R.string.next), pnextIntent)
+					.addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.close), pcloseIntent);
+		}
 		startForeground(NOTIFICATION_ID, builder.build());
 	}
 	
