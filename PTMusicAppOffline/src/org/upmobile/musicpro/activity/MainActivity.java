@@ -499,6 +499,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void gotoFragment(int fragment) {
+		if (fragment == PLAYER_FRAGMENT) {
+			if (PlaybackService.hasInstance()) {
+				PlaybackService.get(this).stop();
+			}
+		}
 		GlobalValue.currentMenu = fragment;
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.setCustomAnimations(R.anim.slide_in_left,

@@ -131,6 +131,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 				
 				@Override
 				public void onClick(View v) {
+					((MainActivity) getContext()).cancelNotification();
 					if (null != ((MainActivity) getContext()).getService(false)) {
 						((MainActivity) getContext()).getService(false).reset();
 						((MainActivity) getContext()).setButtonPlay();
