@@ -104,8 +104,8 @@ public class NavigationDrawerFragment extends Fragment {
 
 //        View header = getLayoutInflater(savedInstanceState).inflate(R.layout.menu_header, null);//
 //        mDrawerListView.addHeaderView(header);
-
-        mDrawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        View parentView = (View) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        mDrawerListView = (ListView) parentView.findViewById(R.id.navigation_drawer_listview);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,7 +114,7 @@ public class NavigationDrawerFragment extends Fragment {
         });
         mDrawerListView.setAdapter(new NavigationDrawerListAdapter(getActivity().getApplicationContext(), mNavigationDrawerMenuOptions));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+        return parentView;
     }
 
 //    @Override
