@@ -330,8 +330,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	}
 
 	private Cursor buildQuery(ContentResolver resolver) {
-		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, null, null, null);
-		return cursor;
+		return resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, MediaStore.Audio.Media.IS_MUSIC + "> 0", null, null);
 	}
 	
 	private void setTime() {
