@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@color/blue_holo"
+    android:orientation="vertical"
+    android:showDividers="middle|end" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingRight="8dp"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selectable_item_bg"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/arrow_down_grey" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" >
+
+            <TextView
+                android:id="@+id/directoryTitleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/download_dialog_download_location"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+            <TextView
+                android:id="@+id/directoryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:ellipsize="start"
+                android:fontFamily="sans-serif-light"
+                android:gravity="left|center_vertical"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:singleLine="true"
+                android:text="path directory"
+                android:textSize="@dimen/dialog_default_text_size" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selectable_item_bg"
+            android:src="@drawable/ic_menu_add" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@android:color/transparent"
+        android:clickable="true"
+        android:paddingBottom="16dp"
+        android:paddingTop="8dp" >
+
+    </ListView>
+
+</LinearLayout>
