@@ -22,5 +22,8 @@
     <string name="song_options">Song options</string>
     <string name="song_details">Song Details</string>
     <string name="delete_item">Delete item</string>
+    <string name="stop">Stop</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="cover">Cover</string>
 
 </resources>
