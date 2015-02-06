@@ -2,6 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="MyTheme.Custom" parent="Theme.AppCompat">
+         <item name="android:dropDownListViewStyle">@style/mySpinnerStyle</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -15,6 +16,11 @@
 
     <style name="Theme.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="android:background">@color/wet_asphalt</item>
+    </style>
+    
+    <style name="mySpinnerStyle" parent="android:Widget.ListView.DropDown">
+        <item name="android:divider">@color/blue_holo</item>
+        <item name="android:dividerHeight">1dp</item>
     </style>
 
 </resources>
