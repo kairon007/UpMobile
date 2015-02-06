@@ -203,10 +203,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (musicService.enabledShuffle()) {
-					musicService.offOnShuffle();
-					btnShuffle.setAlpha((float) 0.5);
-				}
 				stop();
 				song = ((AbstractSong) parent.getAdapter().getItem(position));
 				musicService.play(song);
