@@ -34,7 +34,6 @@ public class PlayerThumbFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_player_thumb, container, false);
 		listAq = new AQuery(getActivity());
 		initUI(view);
-		refreshData();
 		return view;
 	}
 
