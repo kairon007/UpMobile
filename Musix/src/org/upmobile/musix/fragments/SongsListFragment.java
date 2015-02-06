@@ -30,14 +30,18 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MediaController;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 
 public class SongsListFragment extends Fragment implements MediaController.MediaPlayerControl, OnStatePlayerListener, OnPlaybackServiceDestroyListener {
 
@@ -488,10 +492,19 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		case R.id.action_song_details:
 			viewSongDetails(info.position);
 			break;
+		case R.id.action_song_delete:
+			int position = info.position;
+			AbstractSong song = abstractSongArrayList.get(info.position);
+			((SongListAdapter)listView.getAdapter()).remove(position);
+			PlaybackService.get(getActivity()).remove(song);
+			if (song.getClass() == MusicData.class) {
+				((MusicData)song).reset(getActivity());
+			}
+			break;
 		}
 		return true;
 	}
-
+	
 	@Override
 	public void start(AbstractSong song) {
 		this.song = song;

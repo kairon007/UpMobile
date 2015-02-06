@@ -102,6 +102,14 @@ public class SongListAdapter extends BaseAdapter {
 		songArrayList.clear();
 	}
 	
+	public void remove(int position) {
+		 if ((position < 0) || getCount() < position) {
+			 return;
+		 }
+		 songArrayList.remove(position);
+		 notifyDataSetChanged();
+	}
+	
 	public ArrayList<AbstractSong> getList() {
 		return songArrayList;
 	}

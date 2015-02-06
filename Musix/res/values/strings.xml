@@ -21,5 +21,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="song_options">Song options</string>
     <string name="song_details">Song Details</string>
+    <string name="delete_item">Delete item</string>
 
 </resources>
