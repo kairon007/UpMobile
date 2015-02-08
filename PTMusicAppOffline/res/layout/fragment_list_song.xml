@@ -11,8 +11,6 @@
         style="@style/ListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1px"
         ptr:ptrMode="both" />
 
 </LinearLayout>

@@ -155,9 +155,10 @@
 
     <!-- List View -->
     <style name="ListView" parent="Layout.FillWidth">
+        <item name="android:dividerHeight">1px</item>
+        <item name="android:divider">@android:color/darker_gray</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:divider">@android:color/transparent</item>
     </style>
     
     <style name="EditTextAppTheme" parent="android:Widget.EditText">
