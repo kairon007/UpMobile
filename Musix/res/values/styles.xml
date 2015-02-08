@@ -11,6 +11,15 @@
         <item name="android:alertDialogStyle">@style/AlertDialogStyle</item>
     </style>
 
+    <style name="MyListView" parent="android:Widget.ListView">
+        <item name="android:listSelector">@drawable/selectable_item_bg</item>
+    </style>
+
+    <style name="MyDropDownNav" parent="android:style/Widget.DropDownItem.Spinner">
+        <item name="android:popupBackground">@color/wet_asphalt</item>
+        <item name="android:dropDownSelector">@drawable/selectable_item_bg</item>
+    </style>
+
     <style name="mySpinnerStyle" parent="android:Widget.ListView.DropDown">
         <item name="android:divider">@color/blue_holo</item>
         <item name="android:dividerHeight">1dp</item>
