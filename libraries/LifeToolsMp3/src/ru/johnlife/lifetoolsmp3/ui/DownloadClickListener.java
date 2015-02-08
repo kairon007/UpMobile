@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -164,16 +165,15 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				request.setTitle(songArtist);
 				request.setDescription(songTitle);
 				request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
-			} catch (Exception e) { 
+			} catch (Exception e) {
 				Log.e(getClass().getSimpleName(), e.getMessage());
-				String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
-				request.setDestinationInExternalPublicDir(dir, sb);
+				Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+				return;
 			}
 			try {
 				currentDownloadId = manager.enqueue(request);
 			} catch (IllegalArgumentException e) {
-				Toast toast = Toast.makeText(context, R.string.turn_on_dm, Toast.LENGTH_LONG);
-				toast.show();
+				Toast.makeText(context, R.string.turn_on_dm, Toast.LENGTH_LONG).show();
 				return;
 			}
 			boolean isUpdated = continueDownload(id, currentDownloadId);
