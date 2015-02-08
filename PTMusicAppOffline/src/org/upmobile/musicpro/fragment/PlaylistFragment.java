@@ -46,6 +46,7 @@ public class PlaylistFragment extends BaseFragment {
 				false);
 		initUIBase(view);
 		setButtonMenu(view);
+		setHeaderTitle(R.string.playlist);
 		return view;
 	}
 

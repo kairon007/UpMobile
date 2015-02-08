@@ -1,6 +1,7 @@
 package org.upmobile.musicpro.fragment;
 
 import org.upmobile.musicpro.BaseFragment;
+import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.slidingmenu.SlidingMenu;
 import org.upmobile.musicpro.widget.LibraryView;
 
@@ -19,6 +20,7 @@ public class LibraryFragment extends BaseFragment {
 		View view = libraryView.getView();
 		initUIBase(view);
 		setButtonMenu(view);
+		setHeaderTitle(R.string.library);
 		return view;
 	}
 
