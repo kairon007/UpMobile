@@ -7,11 +7,10 @@
     android:weightSum="1"
     tools:context=".fragments.SongsFragment" >
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
         android:padding="8dp" >
 
         <ListView
@@ -20,7 +19,17 @@
             android:layout_height="match_parent"
             android:divider="@color/wet_asphalt"
             android:dividerHeight="0.5dp" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvEmptyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/wet_asphalt"
+            android:visibility="gone"
+            android:text="@string/library_empty" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/musicControllerView"
@@ -34,8 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="@string/next"
             android:background="@drawable/selectable_item_bg"
+            android:contentDescription="@string/next"
             android:padding="4dp"
             android:src="@drawable/ic_action_prev" />
 
@@ -44,8 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="@string/stop"
             android:background="@drawable/selectable_item_bg"
+            android:contentDescription="@string/stop"
             android:padding="4dp"
             android:src="@drawable/ic_action_stop" />
 
@@ -54,8 +63,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="@string/pause"
             android:background="@drawable/selectable_item_bg"
+            android:contentDescription="@string/pause"
             android:padding="4dp"
             android:src="@drawable/ic_action_play" />
 
@@ -63,9 +72,9 @@
             android:id="@+id/btnRandom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/shuffle"
             android:layout_weight="1"
             android:background="@drawable/selectable_item_bg"
+            android:contentDescription="@string/shuffle"
             android:padding="4dp"
             android:src="@drawable/ic_action_random" />
 
@@ -74,8 +83,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="@string/next"
             android:background="@drawable/selectable_item_bg"
+            android:contentDescription="@string/next"
             android:padding="4dp"
             android:src="@drawable/ic_action_next" />
     </LinearLayout>
@@ -126,8 +135,8 @@
             android:id="@+id/imageAlbumPlaying"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:contentDescription="@string/cover"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/cover"
             android:padding="4dp"
             android:src="@drawable/ic_launcher" />
 
@@ -135,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="8dp">
+            android:paddingLeft="8dp" >
 
             <TextView
                 android:id="@+id/txtCurrentSongTitle"
@@ -145,8 +154,8 @@
                 android:ellipsize="marquee"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:lines="1"
                 android:gravity="center_vertical"
+                android:lines="1"
                 android:scrollHorizontally="true"
                 android:text="@string/song_tittle"
                 android:textColor="@color/blue_light" />
@@ -158,13 +167,12 @@
                 android:layout_weight="1"
                 android:ellipsize="marquee"
                 android:focusable="true"
-                android:lines="1"
                 android:focusableInTouchMode="true"
                 android:gravity="center_vertical"
+                android:lines="1"
                 android:scrollHorizontally="true"
                 android:text="@string/song_artist_name"
                 android:textColor="@color/clouds" />
-
         </LinearLayout>
     </LinearLayout>
 

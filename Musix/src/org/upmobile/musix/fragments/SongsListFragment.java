@@ -53,6 +53,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 
 	private Context mContext;
 	private ListView listView;
+	private TextView emptyMessage;
 	private static View rootView;
 	private TypefaceHelper typefaceHelper;
 	private ArrayList<AbstractSong> abstractSongArrayList;
@@ -202,6 +203,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		txtCurrentSongTitle.setTypeface(typefaceHelper.getRobotoLight());
 		txtCurrentSongArtistName.setTypeface(typefaceHelper.getRobotoLight());
 
+		emptyMessage = (TextView) root.findViewById(R.id.tvEmptyMessage);
 		listView = (ListView) root.findViewById(R.id.listViewSongs);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -295,7 +297,12 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		});
 		registerForContextMenu(listView);
 		songListAdapter = new SongListAdapter(mContext, abstractSongArrayList);
-		listView.setAdapter(songListAdapter);
+		if (!songListAdapter.isEmpty()) {
+			listView.setAdapter(songListAdapter);
+			emptyMessage.setVisibility(View.GONE);
+		} else {
+			emptyMessage.setVisibility(View.VISIBLE);
+		}
 		querySong();
 	}
 	
