@@ -26,6 +26,7 @@
     </style>
 
     <style name="AlertDialogStyle">
+        <item name="android:fullDark">@color/bg_item_song</item>
         <item name="android:bottomDark">@color/bg_item_song</item>
         <item name="android:bottomMedium">@color/bg_item_song</item>
         <item name="android:centerDark">@color/bg_item_song</item>
