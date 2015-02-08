@@ -5,7 +5,7 @@
     android:divider="@drawable/divider"
     android:orientation="vertical"
     android:padding="8dp"
-    android:showDividers="middle" >
+    android:showDividers="middle|end" >
 
     <FrameLayout
         android:layout_width="match_parent"

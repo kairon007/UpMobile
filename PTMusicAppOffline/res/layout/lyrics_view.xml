@@ -3,8 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_item_song"
+    android:divider="@drawable/divider"
     android:orientation="vertical"
-    android:padding="8dp" >
+    android:padding="8dp"
+    android:showDividers="middle|end" >
 
     <LinearLayout
         android:id="@+id/download_progress"
