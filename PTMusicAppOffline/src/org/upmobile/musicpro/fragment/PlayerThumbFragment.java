@@ -8,10 +8,16 @@ import org.upmobile.musicpro.activity.DownloadUpdateActivity;
 import org.upmobile.musicpro.config.GlobalValue;
 import org.upmobile.musicpro.object.Song;
 
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -83,15 +89,33 @@ public class PlayerThumbFragment extends BaseFragment {
 
 	private void onClickDownload() {
 		Song currentSong = GlobalValue.getCurrentSong();
-		File file = new File(rootFolder, currentSong.getName() + " - " + currentSong.getArtist() + ".mp3");
-		if (file.exists()) {
-			Toast.makeText(getActivity(), R.string.songExisted, Toast.LENGTH_SHORT).show();
-		} else {
-			Intent intent = new Intent(getActivity(), DownloadUpdateActivity.class);
-			intent.putExtra("url_song", currentSong.getUrl());
-			intent.putExtra("file_name", currentSong.getName() + " - " + currentSong.getArtist() + ".mp3");
-			startActivity(intent);
+		StringBuilder stringBuilder = new StringBuilder(currentSong.getName()).append(" - ").append(currentSong.getArtist()).append(".mp3");
+		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
+		File file = new File(rootFolder);
+		final DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+		Uri uri = Uri.parse(currentSong.getUrl());
+		DownloadManager.Request request = new DownloadManager.Request(uri).addRequestHeader("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
+		request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI	| DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(sb);
+		try {
+			request.setTitle(currentSong.getArtist());
+			request.setDescription(currentSong.getName());
+			request.setDestinationInExternalPublicDir(getSimpleDownloadPath(file.getAbsolutePath()), sb);
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
+			Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+			return;
 		}
+		try {
+			manager.enqueue(request);
+		} catch (IllegalArgumentException e) {
+			Toast.makeText(getActivity(), R.string.turn_on_dm, Toast.LENGTH_LONG).show();
+			return;
+		}
+		Toast.makeText(getActivity(), getActivity().getString(R.string.download_started) + " " + sb, Toast.LENGTH_SHORT).show();
+	}
+	
+	public String getSimpleDownloadPath(String absPath) {
+		return absPath.replace(Environment.getExternalStorageDirectory().getAbsolutePath(), "");
 	}
 
 	private void onClickShare() {
