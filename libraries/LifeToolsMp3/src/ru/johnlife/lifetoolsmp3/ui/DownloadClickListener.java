@@ -300,6 +300,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		songValues.put(MediaStore.Audio.Media.ARTIST, song.getArtist());
 		songValues.put(MediaStore.Audio.Media.TITLE, song.getTitle());
 		songValues.put(MediaStore.Audio.Media.DURATION, ms);
+		songValues.put(MediaStore.Audio.Media.IS_MUSIC, 1);
 		DeleteMP3FromMediaStore(context, pathToFile);
 		Uri uri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues);
 		if (null == uri) {
