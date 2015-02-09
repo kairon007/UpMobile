@@ -329,6 +329,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 					setTitle(downloadSong.getArtist() + " - " + downloadSong.getTitle());
 				}
 				keeper.setUseCover(editor.useAlbumCover());
+				hideKeyboard(view.getContext(), editorView);
 				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
 		});
@@ -336,8 +337,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(editorView.getWindowToken(), 0);
+				hideKeyboard(view.getContext(), editorView);
 				cancelDialog(dialog, StateKeeper.EDITTAG_DIALOG);
 			}
 		});
@@ -352,6 +352,11 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		id3Dialog.setOnShowListener(dialogShowListener);
 		id3Dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		id3Dialog.show();
+	}
+	
+	public void hideKeyboard(Context context, View view) {
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 	
 	private void cancelDialog(DialogInterface dialog, int flag) {
