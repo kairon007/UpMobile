@@ -82,9 +82,9 @@ public class NavigationDrawerListAdapter extends BaseAdapter {
 //            case 2: //
 //                intDrawable = R.drawable.ic_menu_fav;
 //                break;
-            case 2: //
-                intDrawable = R.drawable.ic_menu_exit;
-                break;
+//            case 2: //
+//                intDrawable = R.drawable.ic_menu_exit;
+//                break;
         }
 
         Drawable drawable = row.getResources().getDrawable(intDrawable);

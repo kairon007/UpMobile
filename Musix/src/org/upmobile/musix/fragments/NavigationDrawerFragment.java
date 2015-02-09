@@ -100,7 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
         mNavigationDrawerMenuOptions.add(getString(R.string.menu_songs));
 //        mNavigationDrawerMenuOptions.add(getString(R.string.menu_artists));
 //        mNavigationDrawerMenuOptions.add(getString(R.string.menu_fav));
-        mNavigationDrawerMenuOptions.add(getString(R.string.menu_exit));
+//        mNavigationDrawerMenuOptions.add(getString(R.string.menu_exit));
 
 //        View header = getLayoutInflater(savedInstanceState).inflate(R.layout.menu_header, null);//
 //        mDrawerListView.addHeaderView(header);

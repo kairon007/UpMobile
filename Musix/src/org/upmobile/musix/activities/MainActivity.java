@@ -100,10 +100,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             case 1:
                 setmTitle(getString(R.string.menu_songs));
                 break;
-
-            case 2:
-                setmTitle(getString(R.string.menu_exit));
-                break;
         }
        return getmTitle();
     }
