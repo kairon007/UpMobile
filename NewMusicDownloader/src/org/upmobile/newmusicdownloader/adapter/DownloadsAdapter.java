@@ -2,10 +2,8 @@ package org.upmobile.newmusicdownloader.adapter;
 
 import org.upmobile.newmusicdownloader.R;
 
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import adapter.BaseDownloadsAdapter;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.View;
@@ -14,16 +12,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class DownloadsAdapter extends BaseAdapter<MusicData> {
+public class DownloadsAdapter extends BaseDownloadsAdapter {
 
-	private class DownloadsViewHolder extends ViewHolder<MusicData> {
-		private TextView title;
-		private TextView artist;
-		private TextView duration;
+	private class DownloadsViewHolder extends BaseDownloadsViewHolder {
+
 		private ImageView cancel;
-		private ImageView image;
-		private ProgressBar progress;
-
+		
 		public DownloadsViewHolder(View v) {
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
@@ -35,12 +29,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		protected void hold(MusicData item, int position) {
-			image.setImageResource(R.drawable.no_cover_art_light_big_dark);
-			title.setText(item.getTitle());
-			artist.setText(item.getArtist());
-			progress.setIndeterminate(item.getProgress() == 0);
-			progress.setProgress(item.getProgress());
-			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
+			super.hold(item, position);
 			setListener(item);
 		}
 
@@ -64,9 +53,9 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 		return new DownloadsViewHolder(v);
 	}
 
-	public void removeItem(MusicData item) {
-		DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
-		remove(item);
+	@Override
+	protected void removeItem(MusicData item) {
+		super.removeItem(item);
 		if (item.getId() == -1)	return;
 		DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 		try {
@@ -79,5 +68,10 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	@Override
 	protected boolean isSetListener() {
 		return false;
+	}
+
+	@Override
+	protected int getDefaultCover() {
+		return R.drawable.no_cover_art_light_big_dark;
 	}
 }

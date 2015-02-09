@@ -7,9 +7,8 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import adapter.BaseDownloadsAdapter;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.MotionEvent;
@@ -27,23 +26,17 @@ import android.widget.TextView;
 import com.special.utils.UICircularImage;
 import com.special.utils.UISwipableList;
 
-public class DownloadsAdapter extends BaseAdapter<MusicData> {
+public class DownloadsAdapter extends BaseDownloadsAdapter {
 
-	private Object lock = new Object();
 	private Timer timer;
 	private final static int DELAY = 2000;
 	private MusicData previous;
 
-	private class DownloadsViewHolder extends ViewHolder<MusicData> {
-		private TextView title;
-		private TextView artist;
-		private TextView duration;
+	private class DownloadsViewHolder extends BaseDownloadsViewHolder {
+
 		private TextView cancel;
 		private LinearLayout hidenView;
 		private ViewGroup frontView;
-		private ProgressBar progress;
-		private UICircularImage image;
-		private MusicData item;
 
 		public DownloadsViewHolder(View v) {
 			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
@@ -58,7 +51,6 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 
 		@Override
 		protected void hold(MusicData item, int position) {
-			this.item = item;
 			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
 				hidenView.setVisibility(View.GONE);
 				frontView.setX(0);
@@ -67,12 +59,7 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 				frontView.setX(startPosition);
 				hidenView.setVisibility(View.VISIBLE);
 			}
-			title.setText(item.getTitle());
-			artist.setText(item.getArtist());
-			image.setImageResource(R.drawable.def_cover_circle);
-			progress.setIndeterminate(item.getProgress() == 0);
-			progress.setProgress(item.getProgress());
-			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
+			super.hold(item, position);
 			setListener(item);
 		}
 
@@ -206,5 +193,10 @@ public class DownloadsAdapter extends BaseAdapter<MusicData> {
 	@Override
 	protected boolean isSetListener() {
 		return true;
+	}
+
+	@Override
+	protected int getDefaultCover() {
+		return R.drawable.def_cover_circle;
 	}
 }
