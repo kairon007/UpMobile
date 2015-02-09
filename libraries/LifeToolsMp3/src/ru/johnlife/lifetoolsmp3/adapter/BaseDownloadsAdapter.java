@@ -1,8 +1,7 @@
-package adapter;
+package ru.johnlife.lifetoolsmp3.adapter;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.widget.ImageView;

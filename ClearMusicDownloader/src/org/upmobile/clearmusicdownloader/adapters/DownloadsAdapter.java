@@ -7,8 +7,8 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
+import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
-import adapter.BaseDownloadsAdapter;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.MotionEvent;

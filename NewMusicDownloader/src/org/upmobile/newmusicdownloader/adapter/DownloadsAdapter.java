@@ -2,8 +2,8 @@ package org.upmobile.newmusicdownloader.adapter;
 
 import org.upmobile.newmusicdownloader.R;
 
+import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
-import adapter.BaseDownloadsAdapter;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.View;

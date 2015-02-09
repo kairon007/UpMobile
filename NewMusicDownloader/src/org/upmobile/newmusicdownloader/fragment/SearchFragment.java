@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class SearchFragment extends Fragment {
+
 	private SearchView searchView;
 	private String query;
 
@@ -17,8 +18,7 @@ public class SearchFragment extends Fragment {
 		this.query = query;
 	}
 
-	public SearchFragment() {
-	}
+	public SearchFragment() {}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

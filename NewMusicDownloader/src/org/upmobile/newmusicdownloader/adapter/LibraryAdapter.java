@@ -7,9 +7,9 @@ import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 
+import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
-import adapter.BaseLibraryAdapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
