@@ -520,27 +520,27 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	@Override
 	public void play(AbstractSong song) {
 		this.song = song;
+		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
 	}
 
 	@Override
 	public void pause(AbstractSong song) {
-		// TODO Auto-generated method stub
+		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
 	}
 
 	@Override
 	public void stop(AbstractSong song) {
-		// TODO Auto-generated method stub
-
+		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
 	}
 
 	@Override
 	public void update(AbstractSong song) {
 		this.song = song;
+		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
 	}
 
 	@Override
 	public void error() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
