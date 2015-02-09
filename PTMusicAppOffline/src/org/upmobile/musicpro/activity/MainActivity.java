@@ -568,6 +568,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 
 		case EXIT_APP:
+			setBackgroundColorDrawer(EXIT_APP);
 			return;
 		}
 		menu.showContent();
@@ -609,7 +610,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		} else {
 			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 		}
-		lblExitApp.setBackgroundColor(Color.TRANSPARENT);
+		if (fragmentId == EXIT_APP) {
+			System.out.println("!!! EXIT APP");
+			lblExitApp.setBackgroundResource(R.drawable.bg_item_menu_select);
+		} else {
+			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
+		}
+		//lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 	}
 
 	public void setButtonPlay() {
@@ -739,6 +746,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void onClickExitApp() {
+		setSelect(EXIT_APP);
 		finish();
 	}
 

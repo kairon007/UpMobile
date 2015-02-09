@@ -16,10 +16,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class SongAdapter extends BaseAdapter {
+	
+	private Context context;
 	private List<Song> listSongs;
 	private LayoutInflater layoutInflater;
 
 	public SongAdapter(Context context, List<Song> listSongs) {
+		this.context = context;
 		this.listSongs = listSongs;
 		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -53,7 +56,7 @@ public class SongAdapter extends BaseAdapter {
 		}
 
 		if (position % 2 == 0) {
-			layoutSong.setBackgroundResource(R.drawable.bg_item_song);
+			layoutSong.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_list_selector));
 		} else {
 			layoutSong.setBackgroundColor(Color.TRANSPARENT);
 		}
