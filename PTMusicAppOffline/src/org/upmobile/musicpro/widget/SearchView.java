@@ -6,6 +6,7 @@ import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.activity.MainActivity;
 import org.upmobile.musicpro.service.MusicService;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
@@ -16,8 +17,11 @@ import android.view.View;
 
 public class SearchView extends OnlineSearchView {
 
+	private Context context;
+	
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		context = inflater.getContext();
 		StateKeeper.getInstance().activateOptions(StateKeeper.IS_PT_TEXT);
 	}
 
@@ -46,8 +50,10 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	protected void stopSystemPlayer(Context context) {
 		MusicService service  = ((MainActivity) getContext()).getService(false);
-		if (null != service && service.isPlay()){
+		PlaybackService playbackService = PlaybackService.get(context);
+		if ((null != service && service.isPlay()) || (null != playbackService && playbackService.isPlaying())){
 			service.pauseMusic();
+			playbackService.stop();
 			((MainActivity) getContext()).setButtonPlay();
 		}
 	}

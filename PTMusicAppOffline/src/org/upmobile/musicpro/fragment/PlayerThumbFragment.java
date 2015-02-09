@@ -4,12 +4,10 @@ import java.io.File;
 
 import org.upmobile.musicpro.BaseFragment;
 import org.upmobile.musicpro.R;
-import org.upmobile.musicpro.activity.DownloadUpdateActivity;
 import org.upmobile.musicpro.config.GlobalValue;
 import org.upmobile.musicpro.object.Song;
 
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
