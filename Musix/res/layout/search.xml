@@ -42,16 +42,14 @@
             android:layout_height="96dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@color/wet_asphalt"
             android:orientation="vertical"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
             android:scrollbars="none" >
 
             <LinearLayout
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
+                android:background="@color/wet_asphalt"
                 android:divider="@drawable/layout_divider"
                 android:orientation="vertical"
                 android:showDividers="beginning|end" >
