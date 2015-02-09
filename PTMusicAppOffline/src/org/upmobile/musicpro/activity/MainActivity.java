@@ -505,6 +505,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void gotoFragment(int fragment) {
+		if (currentFragment == fragment) {
+			return;
+		}
 		if (fragment == PLAYER_FRAGMENT && PlaybackService.hasInstance()) {
 			PlaybackService.get(this).stop();
 		}
@@ -611,7 +614,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 		}
 		if (fragmentId == EXIT_APP) {
-			System.out.println("!!! EXIT APP");
 			lblExitApp.setBackgroundResource(R.drawable.bg_item_menu_select);
 		} else {
 			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
