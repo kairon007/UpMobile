@@ -255,7 +255,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			@Override
 			public void onClick(View v) {
 				try {
-					if (abstractSongArrayList.isEmpty()) return;
+					if (abstractSongArrayList.isEmpty() || null == song) return;
 					if (isPlaying()) {
 						seekBar.removeCallbacks(UpdateSongTime);
 						pause();
