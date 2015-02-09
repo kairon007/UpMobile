@@ -1,6 +1,5 @@
 package org.upmobile.newmusicdownloader.adapter;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
@@ -8,14 +7,10 @@ import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import adapter.BaseLibraryAdapter;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,75 +23,16 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
-public class LibraryAdapter extends BaseAdapter<MusicData> {
+public class LibraryAdapter extends BaseLibraryAdapter {
 
-	private PlaybackService service;
-	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
-
-		@Override
-		public void start(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			data.turnOn(MusicData.MODE_PLAYING);
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void play(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			data.turnOn(MusicData.MODE_PLAYING);
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void pause(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			data.turnOff(MusicData.MODE_PLAYING);
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void stop(AbstractSong song) {
-			MusicData data = get(song);
-			if (song.getClass() != MusicData.class || data == null) return;
-			data.turnOff(MusicData.MODE_PLAYING);
-			notifyDataSetChanged();
-		}
-		
-		@Override
-		public void error() {
-		}
-
-		@Override
-		public void update(AbstractSong song) {
-			
-		}
-		
-	};
-	
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
-		service = PlaybackService.get(getContext());
-		service.addStatePlayerListener(stateListener);
+		initService();
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		service = PlaybackService.get(getContext());
-		service.addStatePlayerListener(stateListener);
-	}
-
-	public MusicData get(AbstractSong data) {
-		if (data == null) return null;
-		for (int i = 0; i < getCount(); i++) {
-			MusicData buf = getItem(i);
-			if (buf.equals(data)) {
-				return getItem(i);
-			}
-		}
-		return null;
+		initService();
 	}
 
 	@Override
@@ -104,15 +40,11 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnClickListener, OnLongClickListener {
+	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener, OnLongClickListener {
 
 		private MusicData data;
 		private ViewGroup info;
 		private ImageButton button;
-		private ImageView cover;
-		private TextView title;
-		private TextView artist;
-		private TextView duration;
 
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.item_box_info);
@@ -126,18 +58,11 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		@Override
 		protected void hold(MusicData data, int position) {
 			this.data = data;
-			title.setText(data.getTitle());
-			artist.setText(data.getArtist());
-			duration.setText(Util.getFormatedStrDuration(data.getDuration()));
+			super.hold(data, position);
 			if (data.check(MusicData.MODE_PLAYING)) {
 				button.setImageResource(R.drawable.pause_white);
 			} else {
 				button.setImageResource(R.drawable.play_white);
-			}
-			cover.setImageResource(R.drawable.no_cover_art_big);
-			WeakReference<Bitmap> bitmap = new WeakReference<Bitmap>(data.getCover(getContext()));
-			if (null != bitmap && null != bitmap.get()) {
-				cover.setImageBitmap(bitmap.get());
 			}
 			setListener();
 		}
@@ -202,7 +127,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 			}
 			return true;
 		}
-
 	}
 
 	@Override
@@ -210,4 +134,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 		return false;
 	}
 
+	@Override
+	protected int getDefaultCover() {
+		return R.drawable.no_cover_art_big;
+	}
 }

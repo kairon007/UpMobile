@@ -10,13 +10,10 @@ import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import adapter.BaseLibraryAdapter;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,10 +31,9 @@ import android.widget.TextView;
 import com.special.utils.UICircularImage;
 import com.special.utils.UISwipableList;
 
-public class LibraryAdapter extends BaseAdapter<MusicData>{
+public class LibraryAdapter extends BaseLibraryAdapter {
 	
 	private static final int DELAY = 5000;
-	private PlaybackService service;
 	private final int BTN_PLAY = R.drawable.play_white;
 	private final int BTN_PAUSE= R.drawable.pause_white;
 	private MusicData currentPlayData; 
@@ -45,60 +41,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
     private Timer timer;
 	private Animation anim;
 	private MusicData previous;
-	private LibraryViewHolder libraryViewHolder;
-	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
-		
-		@Override
-		public void start(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			if (data != null) {
-				data.turnOn(MusicData.MODE_PLAYING);
-			}
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void play(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			if (data != null) {
-				data.turnOn(MusicData.MODE_PLAYING);
-			}
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void pause(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			if (data != null) {
-				data.turnOff(MusicData.MODE_PLAYING);
-			}
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void stop(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			if (data != null) {
-				data.turnOff(MusicData.MODE_PLAYING);
-			}
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void error() {
-			
-		}
-
-		@Override
-		public void update(AbstractSong song) {
-			
-		}
-		
-	};
 	
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
@@ -116,8 +58,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 	
 	@Override
 	protected ViewHolder<MusicData> createViewHolder(View v) {
-		libraryViewHolder = new LibraryViewHolder(v);
-		return libraryViewHolder;
+		return new LibraryViewHolder(v);
 	}
 	
 	@Override
@@ -216,23 +157,19 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 		}
 	}
 
-	private class LibraryViewHolder extends ViewHolder<MusicData> {
+	private class LibraryViewHolder extends BaseLibraryViewHolder {
 		
 		private ViewGroup frontView;
 		private View button;
-		private TextView title;
-		private TextView artist;
-		private TextView duration;
 		private LinearLayout hidenView;
 		private FrameLayout cancel;
-		private UICircularImage image;
 
 		public LibraryViewHolder(View v) {
 			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
 			button = v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
-			image = (UICircularImage) v.findViewById(R.id.item_image);
+			cover = (UICircularImage) v.findViewById(R.id.item_image);
 			duration = (TextView) v.findViewById(R.id.item_duration);
 			hidenView = (LinearLayout) v.findViewById(R.id.hidden_view);
 			cancel = (FrameLayout) v.findViewById(R.id.cancel);
@@ -240,8 +177,7 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 
 		@Override
 		protected void hold(MusicData item, int position) {
-			title.setText(item.getTitle());
-			artist.setText(item.getArtist());
+			super.hold(item, position);
 			if (!item.check(MusicData.MODE_VISIBLITY) && hidenView.getVisibility() == View.VISIBLE) {
 				hidenView.setVisibility(View.GONE);
 				frontView.setX(0);
@@ -255,13 +191,6 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 				currentPlayData = item;
 			} else {
 				setButtonBackground(BTN_PLAY);
-			}
-			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-			Bitmap bitmap = item.getCover(getContext());
-			if (bitmap == null) {
-				image.setImageResource(R.drawable.def_cover_circle);
-			} else {
-				image.setImageBitmap(bitmap);
 			}
 			setListener(item);
 		}
@@ -357,8 +286,8 @@ public class LibraryAdapter extends BaseAdapter<MusicData>{
 		return true;
 	}
 	
-	private void initService() {
-		service = PlaybackService.get(getContext());
-		service.addStatePlayerListener(stateListener);
+	@Override
+	protected int getDefaultCover() {
+		return R.drawable.def_cover_circle;
 	}
 }
