@@ -1,6 +1,7 @@
 package org.upmobile.musix.fragments;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.upmobile.musix.R;
@@ -14,6 +15,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService.OnPlaybackServiceDestroyListener
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -56,11 +60,10 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	private TextView emptyMessage;
 	private static View rootView;
 	private TypefaceHelper typefaceHelper;
-	private ArrayList<AbstractSong> abstractSongArrayList;
+	private ArrayList<MusicData> abstractSongArrayList;
 	private PlaybackService musicService;
 	private boolean musicBound = false;
 	private AbstractSong song;
-	private Object lock = new Object();
 	private boolean paused = false, playbackPaused = false;
 
 	// controller variables
@@ -75,13 +78,11 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		abstractSongArrayList = new ArrayList<AbstractSong>();
-		try {
-			rootView = inflater.inflate(R.layout.fragment_songs, container, false);
-			mContext = rootView.getContext();
-			setupViews(rootView);
-		} catch (Exception ex) {
-		}
+		abstractSongArrayList = new ArrayList<MusicData>();
+		rootView = inflater.inflate(R.layout.fragment_songs, container, false);
+		mContext = rootView.getContext();
+		init(rootView);
+		registerForContextMenu(listView);
 		mContext.getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		musicService = PlaybackService.get(getActivity());
 		musicService.addStatePlayerListener(this);
@@ -95,12 +96,16 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			setTime();
 			seekBar.setMax(musicService.getDuration());
 			seekBar.setProgress(musicService.getCurrentPosition());
-			abstractSongArrayList = musicService.getArrayPlayback();
+			abstractSongArrayList = new ArrayList<MusicData>((Collection<? extends MusicData>) musicService.getArrayPlayback());
 		} else {
 			if (!abstractSongArrayList.isEmpty()) {
 				song = abstractSongArrayList.get(0);
+			} else {
+				abstractSongArrayList = querySong();
+				musicService.setArrayPlayback(new ArrayList<AbstractSong>(abstractSongArrayList));
 			}
 		}
+		setupViews();
 		if (!musicService.enabledShuffle()) {
 			btnShuffle.setAlpha((float) 0.5);
 		} else {
@@ -127,24 +132,34 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
+			changeArrayPlayback();
 		}
 
-		public boolean deliverSelfNotifications() {
-			return false;
-		};
-
+		@SuppressLint("NewApi")
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
-				synchronized (lock) {
-					songListAdapter.clear();
-					querySong();
-					abstractSongArrayList = songListAdapter.getList();
-					setPlayback();
-				}
+				changeArrayPlayback();
 			}
-		};
+		}
+
+		private void changeArrayPlayback() {
+			abstractSongArrayList = querySong();
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				
+				@Override
+				public void run() {
+					if (abstractSongArrayList.size() <= songListAdapter.getCount()) {
+						return;
+					}
+					songListAdapter.clear();
+					setPlayback();
+					songListAdapter.addAll(abstractSongArrayList);
+				}
+			});
+		}
+
 	};
 
 	@Override
@@ -167,20 +182,8 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		}
 	}
 
-	private void setupViews(View root) {
+	private void setupViews() {
 		setHasOptionsMenu(true);
-		typefaceHelper = new TypefaceHelper(mContext);
-		seekBar = (SeekBar) root.findViewById(R.id.songSeekBar);
-		txtStartTimeField = (TextView) root.findViewById(R.id.songStartTime);
-		txtEndTimeField = (TextView) root.findViewById(R.id.songTotalTime);
-		btnNext = (ImageButton) root.findViewById(R.id.btnNext);
-		btnPlayPause = (ImageButton) root.findViewById(R.id.btnPlayPause);
-		btnPrev = (ImageButton) root.findViewById(R.id.btnPrev);
-		btnShuffle = (ImageButton) root.findViewById(R.id.btnRandom);
-		btnStop = (ImageButton) root.findViewById(R.id.btnStop);
-		txtCurrentSongTitle = (TextView) root.findViewById(R.id.txtCurrentSongTitle);
-		txtCurrentSongArtistName = (TextView) root.findViewById(R.id.txtCurrentSongArtistName);
-		playingAlbumCover = (ImageView) root.findViewById(R.id.imageAlbumPlaying);
 		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -203,8 +206,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		txtCurrentSongTitle.setTypeface(typefaceHelper.getRobotoLight());
 		txtCurrentSongArtistName.setTypeface(typefaceHelper.getRobotoLight());
 
-		emptyMessage = (TextView) root.findViewById(R.id.tvEmptyMessage);
-		listView = (ListView) root.findViewById(R.id.listViewSongs);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -295,7 +296,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 				}
 			}
 		});
-		registerForContextMenu(listView);
 		songListAdapter = new SongListAdapter(mContext, abstractSongArrayList);
 		if (!songListAdapter.isEmpty()) {
 			listView.setAdapter(songListAdapter);
@@ -303,7 +303,23 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		} else {
 			emptyMessage.setVisibility(View.VISIBLE);
 		}
-		querySong();
+	}
+
+	private void init(View root) {
+		typefaceHelper = new TypefaceHelper(mContext);
+		seekBar = (SeekBar) root.findViewById(R.id.songSeekBar);
+		txtStartTimeField = (TextView) root.findViewById(R.id.songStartTime);
+		txtEndTimeField = (TextView) root.findViewById(R.id.songTotalTime);
+		btnNext = (ImageButton) root.findViewById(R.id.btnNext);
+		btnPlayPause = (ImageButton) root.findViewById(R.id.btnPlayPause);
+		btnPrev = (ImageButton) root.findViewById(R.id.btnPrev);
+		btnShuffle = (ImageButton) root.findViewById(R.id.btnRandom);
+		btnStop = (ImageButton) root.findViewById(R.id.btnStop);
+		txtCurrentSongTitle = (TextView) root.findViewById(R.id.txtCurrentSongTitle);
+		txtCurrentSongArtistName = (TextView) root.findViewById(R.id.txtCurrentSongArtistName);
+		playingAlbumCover = (ImageView) root.findViewById(R.id.imageAlbumPlaying);
+		emptyMessage = (TextView) root.findViewById(R.id.tvEmptyMessage);
+		listView = (ListView) root.findViewById(R.id.listViewSongs);
 	}
 	
 	private void stop() {
@@ -316,24 +332,21 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	}
 
 	public ArrayList<MusicData> querySong() {
-		synchronized (lock) {
-			ArrayList<MusicData> result = new ArrayList<MusicData>();
-			Cursor cursor = buildQuery(mContext.getContentResolver());
-			if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
-				return result;
-			}
-			try {
-				for (int i = 0; i < cursor.getCount(); i++) {
-					MusicData data = new MusicData();
-					data.populate(cursor);
-					songListAdapter.add(data);
-					cursor.moveToNext();
-				}
-			} catch (Exception e) {
-			}
-			cursor.close();
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		Cursor cursor = buildQuery(mContext.getContentResolver());
+		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
 			return result;
 		}
+		MusicData d = new MusicData();
+		d.populate(cursor);
+		result.add(d);
+		while (cursor.moveToNext()) {
+			MusicData data = new MusicData();
+			data.populate(cursor);
+			result.add(data);
+		}
+		cursor.close();
+		return result;
 	}
 
 	private Cursor buildQuery(ContentResolver resolver) {

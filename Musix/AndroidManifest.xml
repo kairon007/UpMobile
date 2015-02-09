@@ -3,7 +3,7 @@
     package="org.upmobile.musix" >
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
    					 <!-- PERMISSIONS -->

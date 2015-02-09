@@ -21,10 +21,10 @@ import android.widget.TextView;
 public class SongListAdapter extends BaseAdapter {
 
 	private TypefaceHelper typefaceHelper;
-	private ArrayList<AbstractSong> songArrayList;
+	private ArrayList<MusicData> songArrayList;
     private Context mContext;
 
-    public SongListAdapter(Context context, ArrayList<AbstractSong> songs) {
+    public SongListAdapter(Context context, ArrayList<MusicData> songs) {
         this.mContext = context;
         this.songArrayList = songs;
         typefaceHelper = new TypefaceHelper(mContext);
@@ -46,7 +46,7 @@ public class SongListAdapter extends BaseAdapter {
 			}
 		});
 	}
-
+	
 	@Override
     public int getCount() {
         return songArrayList.size();
@@ -102,6 +102,11 @@ public class SongListAdapter extends BaseAdapter {
 		songArrayList.clear();
 	}
 	
+	public void addAll(ArrayList<MusicData> list) {
+		songArrayList.addAll(list);
+		notifyDataSetChanged();
+	}
+	
 	public void remove(int position) {
 		 if ((position < 0) || getCount() < position) {
 			 return;
@@ -110,7 +115,7 @@ public class SongListAdapter extends BaseAdapter {
 		 notifyDataSetChanged();
 	}
 	
-	public ArrayList<AbstractSong> getList() {
+	public ArrayList<MusicData> getList() {
 		return songArrayList;
 	}
 
