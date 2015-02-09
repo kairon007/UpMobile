@@ -110,11 +110,6 @@
             android:layout_height="1px"
             android:background="@drawable/bg_divider" />
 
-        <TextView
-            android:id="@+id/lblExitApp"
-            style="@style/Text.Menu"
-            android:drawableLeft="@drawable/ic_exit"
-            android:text="@string/exitApp" />
     </LinearLayout>
 
 </ScrollView>

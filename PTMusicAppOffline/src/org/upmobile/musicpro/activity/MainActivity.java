@@ -58,7 +58,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public static final int CATEGORY_MUSIC = 2;
 	public static final int PLAYLIST = 3;
 	public static final int SEARCH = 4;
-	public static final int EXIT_APP = 5;
 	public static final int SEARCH_ONLINE = 6;
 	public static final int LIBRARY = 7;
 
@@ -91,7 +90,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private TextView lblSongNameFooter, lblArtistFooter;
 
 	private TextView lblTopChart, lblNominations, lblCategoryMusic,
-			lblPlaylist, lblSearch, lblExitApp, lblSearchOnline, lblLibrary;
+			lblPlaylist, lblSearch, lblSearchOnline, lblLibrary;
 
 	private boolean doubleBackToExitPressedOnce;
 	private boolean isPlayingBeforeCall;
@@ -353,7 +352,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		lblCategoryMusic = (TextView) menu.findViewById(R.id.lblCategoryMusic);
 		lblPlaylist = (TextView) menu.findViewById(R.id.lblPlaylist);
 		lblSearch = (TextView) menu.findViewById(R.id.lblSearch);
-		lblExitApp = (TextView) menu.findViewById(R.id.lblExitApp);
 		lblSearchOnline = (TextView) menu.findViewById(R.id.lblSearchOnline);
 		lblLibrary = (TextView) menu.findViewById(R.id.lblLibrary);
 
@@ -376,7 +374,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		lblCategoryMusic.setOnClickListener(this);
 		lblPlaylist.setOnClickListener(this);
 		lblSearch.setOnClickListener(this);
-		lblExitApp.setOnClickListener(this);
 		lblSearchOnline.setOnClickListener(this);
 		lblLibrary.setOnClickListener(this);
 		lblSongNameFooter.setSelected(true);
@@ -570,9 +567,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			showFragment(LIBRARY_FRAGMENT);
 			break;
 
-		case EXIT_APP:
-			setBackgroundColorDrawer(EXIT_APP);
-			return;
 		}
 		menu.showContent();
 	}
@@ -613,12 +607,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		} else {
 			lblLibrary.setBackgroundColor(Color.TRANSPARENT);
 		}
-		if (fragmentId == EXIT_APP) {
-			lblExitApp.setBackgroundResource(R.drawable.bg_item_menu_select);
-		} else {
-			lblExitApp.setBackgroundColor(Color.TRANSPARENT);
-		}
-		//lblExitApp.setBackgroundColor(Color.TRANSPARENT);
 	}
 
 	public void setButtonPlay() {
@@ -686,10 +674,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			onClickSearch();
 			break;
 
-		case R.id.lblExitApp:
-			onClickExitApp();
-			break;
-			
 		case R.id.lblSearchOnline:
 			onClickSearchOnline();
 			break;
@@ -745,11 +729,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	
 	private void onClickLibrary() {
 		setSelect(LIBRARY);
-	}
-
-	private void onClickExitApp() {
-		setSelect(EXIT_APP);
-		finish();
 	}
 
 	@Override
