@@ -120,7 +120,6 @@
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
                     android:spinnerMode="dropdown"
-                    android:background="@color/red_light"
                     android:popupBackground="@drawable/bg_header"
                     android:layout_height="48dp" />
             </LinearLayout>

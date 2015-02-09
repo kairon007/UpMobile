@@ -112,7 +112,6 @@
                     android:layout_width="match_parent"
                     android:spinnerMode="dropdown"
                     android:popupBackground="@color/wet_asphalt"
-                    android:background="@drawable/selectable_item_bg"
                     android:layout_height="48dp" />
             </LinearLayout>
         </LinearLayout>

@@ -2,7 +2,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="MyTheme.Custom" parent="Theme.AppCompat">
-        <item name="android:dropDownListViewStyle">@style/mySpinnerStyle</item>
+        <item name="android:spinnerStyle">@style/SpinnerAppTheme</item>
+<!--         <item name="android:dropDownListViewStyle">@style/mySpinnerStyle</item> -->
         <item name="android:itemBackground">@color/wet_asphalt_alpha</item>
         <item name="colorPrimary">@color/wet_asphalt</item>
         <item name="colorPrimaryDark">@color/blue_light</item>
@@ -42,6 +43,10 @@
         <item name="android:bottomDark">@color/wet_asphalt</item>
         <item name="android:bottomMedium">@color/wet_asphalt</item>
         <item name="android:topDark">@color/wet_asphalt</item>
+    </style>
+    
+    <style name="SpinnerAppTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/spinner_background</item>
     </style>
 
 </resources>
