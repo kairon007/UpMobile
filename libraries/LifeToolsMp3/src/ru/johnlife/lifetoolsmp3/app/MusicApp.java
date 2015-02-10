@@ -10,11 +10,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.preference.PreferenceManager;
+
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 
 public class MusicApp extends Application {
 	
@@ -37,8 +39,7 @@ public class MusicApp extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		ImageLoaderConfiguration.Builder b = new ImageLoaderConfiguration.Builder(getApplicationContext())
-        .discCacheExtraOptions(0, 0, CompressFormat.PNG, 100, null);
+		ImageLoaderConfiguration.Builder b = new ImageLoaderConfiguration.Builder(getApplicationContext());
 		if (Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
 			b.taskExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
 			 .taskExecutorForCachedImages(AsyncTask.THREAD_POOL_EXECUTOR);
