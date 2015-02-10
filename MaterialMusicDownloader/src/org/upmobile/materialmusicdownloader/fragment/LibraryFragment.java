@@ -21,7 +21,7 @@ public class LibraryFragment extends Fragment{
 	
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setSelectedItem(2);
+//		((MainActivity) getActivity()).setSelectedItem(2);
 		super.onResume();
 	}
 	

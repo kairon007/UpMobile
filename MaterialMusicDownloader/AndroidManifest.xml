@@ -34,12 +34,13 @@
         android:name="org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp"
         android:allowBackup="true"
         android:backupAgent="PreferencesBackupAgent"
-        android:theme="@android:style/Theme.Holo">
+        android:theme="@style/AppTheme.NoActionBar" >
         <activity
             android:name="org.upmobile.materialmusicdownloader.activity.MainActivity"
             android:configChanges="screenSize|orientation"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
