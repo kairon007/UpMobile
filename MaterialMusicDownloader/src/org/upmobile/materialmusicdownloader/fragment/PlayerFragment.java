@@ -47,6 +47,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.csform.android.uiapptemplate.font.RobotoTextView;
+
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener {
 
 	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
@@ -72,7 +74,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton repeat;
 	private ImageButton stop;
 	private ImageView playerCover;
-	private Button download;
+	private RobotoTextView download;
 	private Button playerSaveTags;
 	private Button playerCancelTags;
 	private Button playerCancelLyrics;
@@ -279,7 +281,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
 		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
 		stop = (ImageButton) parentView.findViewById(R.id.stop);
-		download = (Button) parentView.findViewById(R.id.download);
+		download = (RobotoTextView) parentView.findViewById(R.id.download);
 		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
 		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
 		volume = (SeekBar) parentView.findViewById(R.id.progress_volume);
