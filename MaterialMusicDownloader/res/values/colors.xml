@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="holo_button_highlight">#9933b5e5</color>
+    <color name="holo_button_highlight_low">#5533b5e5</color>
+    <color name="nowplaying_secondary_text">#ff868686</color>
+
+</resources>
