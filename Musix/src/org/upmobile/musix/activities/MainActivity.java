@@ -9,12 +9,13 @@ import org.upmobile.musix.fragments.SongsListFragment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.view.KeyEvent;
 import android.view.Menu;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -27,6 +28,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private String mTitle;
+    private boolean doubleBackToExitPressedOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,16 +117,22 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
         return super.onCreateOptionsMenu(menu);
     }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            moveTaskToBack(true);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
+    
+	@Override
+	public void onBackPressed() {
+		if (doubleBackToExitPressedOnce) {
+			finish();
+			return;
+		}
+		this.doubleBackToExitPressedOnce = true;
+		Toast.makeText(this, R.string.doubleBackToExit, Toast.LENGTH_SHORT).show();
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				doubleBackToExitPressedOnce = false;
+			}
+		}, 2000);
+	}
     
     public void setActionBarTitle(String title) {
     	getSupportActionBar().setTitle(title);

@@ -4,6 +4,7 @@
     <string name="app_name">MusiX</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="doubleBackToExit">Please press BACK again to exit.</string>
 
     <!-- NavigationDrawer Menu -->
     <string name="menu_search">Search</string>
