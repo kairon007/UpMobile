@@ -756,7 +756,7 @@ public abstract class OnlineSearchView extends View {
 			}
 			if (getAdapterBackground() > 0) {
 				if (position % 2 == 0) {
-					v.setBackgroundResource(getAdapterBackground());
+					v.setBackgroundDrawable(getContext().getResources().getDrawable(getAdapterBackground()));
 				} else {
 					v.setBackgroundColor(Color.TRANSPARENT);
 				}

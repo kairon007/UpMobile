@@ -75,7 +75,7 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 		protected int getAdapterBackground() {
-			return R.drawable.bg_item_song;
+			return R.drawable.bg_list_selector;
 	}
 	
 	@Override
