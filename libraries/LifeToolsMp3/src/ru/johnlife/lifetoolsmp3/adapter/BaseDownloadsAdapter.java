@@ -29,7 +29,9 @@ public abstract class BaseDownloadsAdapter extends BaseAdapter<MusicData> {
 			image.setImageResource(getDefaultCover());
 			progress.setIndeterminate(item.getProgress() == 0);
 			progress.setProgress(item.getProgress());
-			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
+			if (duration != null) {
+				duration.setText(Util.getFormatedStrDuration(item.getDuration()));
+			}
 		}
 	}
 	
