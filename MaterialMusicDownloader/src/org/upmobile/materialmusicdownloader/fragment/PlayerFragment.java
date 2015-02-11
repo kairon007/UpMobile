@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -47,7 +48,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.csform.android.uiapptemplate.font.RobotoTextView;
+import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener {
 
@@ -74,7 +75,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton repeat;
 	private ImageButton stop;
 	private ImageView playerCover;
-	private RobotoTextView download;
+	private CircularProgressButton download;
 	private Button playerSaveTags;
 	private Button playerCancelTags;
 	private Button playerCancelLyrics;
@@ -90,6 +91,38 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private boolean isDestroy;
     private boolean isUseAlbumCover = true;
 	
+	private class FalseProgress extends AsyncTask<Integer, Integer, Integer> {
+		
+		private CircularProgressButton cpb;
+		public FalseProgress(CircularProgressButton cpb) {
+			this.cpb = cpb;
+		}
+		
+		@Override
+		protected Integer doInBackground(Integer... params) {
+			for (int progress = 0; progress < 100; progress += 5) {
+				publishProgress(progress);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return params[0];
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			cpb.setProgress(result);
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			int progress = values[0];
+			cpb.setProgress(progress);
+		}
+	}
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
@@ -281,7 +314,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
 		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
 		stop = (ImageButton) parentView.findViewById(R.id.stop);
-		download = (RobotoTextView) parentView.findViewById(R.id.download);
+		download = (CircularProgressButton) parentView.findViewById(R.id.download);
 		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
 		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
 		volume = (SeekBar) parentView.findViewById(R.id.progress_volume);
@@ -377,6 +410,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			player.stop();
 			break;
 		case R.id.download:
+			new FalseProgress((CircularProgressButton) v).execute(100);
 			download();
 			break;
 		case R.id.player_lyrics:
@@ -680,7 +714,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				};
 				new Handler(Looper.getMainLooper()).post(callbackRun);
 			}
-
 			@Override
 			public void error(String error) {
 			}

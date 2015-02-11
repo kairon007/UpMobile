@@ -55,8 +55,8 @@
                 <ImageButton
                     android:id="@+id/player_edit_tags"
                     android:layout_width="48dp"
+                    android:background="@android:color/transparent"
                     android:layout_height="48dp"
-                    android:background="@drawable/selectable_item_bg"
                     android:src="@drawable/ic_player_edit" />
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
         </RelativeLayout>
@@ -287,11 +287,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" >
 
-                <com.csform.android.uiapptemplate.font.RobotoTextView
+                <com.csform.android.uiapptemplate.view.cpb.CircularProgressButton
                     android:id="@+id/download"
-                    style="@style/ButtonStyle.RaisedEmpty"
-                    android:layout_width="112dp"
+                    style="@style/CircularProgressBarStyle.Empty"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:layout_gravity="center"
                     android:text="@string/download" />
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>

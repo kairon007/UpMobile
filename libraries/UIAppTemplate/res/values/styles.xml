@@ -78,7 +78,7 @@
     <!-- Ripple related styles -->
     <style name="RippleStyle">
         <item name="rippleOverlay">true</item>
-        <item name="rippleColor">@color/main_color_500</item>
+        <item name="rippleColor">@color/main_color_grey_500</item>
         <item name="rippleAlpha">0.7</item>
         <item name="rippleDimension">45dp</item>
         <item name="rippleHover">true</item>
