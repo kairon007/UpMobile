@@ -22,8 +22,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="sans-serif-condensed"
                 android:text="@string/edit_mp3"
+                style="@style/TextViewAppearance.Display2"
                 android:textSize="@dimen/text_title_size" />
         </FrameLayout>
 
@@ -39,10 +39,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:fontFamily="sans-serif-condensed"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/edit_mp3_title"
+                style="@style/TextViewAppearance.Headline1"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <EditText
@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:fontFamily="sans-serif-condensed"
+                style="@style/TextViewAppearance.Headline1"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/edit_mp3_artist"
@@ -84,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:fontFamily="sans-serif-condensed"
+                style="@style/TextViewAppearance.Headline1"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/edit_mp3_album"
@@ -116,11 +116,10 @@
                     android:id="@+id/text_check_box"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
+                    style="@style/TextViewAppearance.Headline1"
                     android:paddingLeft="8dp"
                     android:text="@string/edit_mp3_use_album_cover"
                     android:textSize="@dimen/dialog_default_text_size" />
-
             </LinearLayout>
         </LinearLayout>
 
@@ -128,23 +127,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="8dp"
-            android:paddingTop="8dp" >
+            android:paddingTop="8dp"
+            android:gravity="center" >
 
-            <Button
-                android:id="@+id/player_cancel_tags"
+            <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                style="@style/RippleStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:text="@string/edit_mp3_cancel" />
+                android:layout_gravity="center" >
 
-            <Button
-                android:id="@+id/player_save_tags"
+                <Button
+                    android:id="@+id/player_cancel_tags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="@string/edit_mp3_cancel" />
+            </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+            <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                style="@style/RippleStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:text="@string/edit_mp3_ok" />
+                android:layout_gravity="center" >
+
+                <Button
+                    android:id="@+id/player_save_tags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="@string/edit_mp3_ok" />
+            </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
         </LinearLayout>
     </LinearLayout>
 
