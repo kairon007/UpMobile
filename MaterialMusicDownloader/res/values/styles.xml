@@ -1,24 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <style name="fragment_text">
         <item name="android:textColor">#ffacacac</item>
         <item name="android:textSize">25sp</item>
     </style>
-	
-	<style name="AppThemeTrans" parent="@style/AppTheme">
-	     <item name="android:windowIsTranslucent">true</item>
-    	 <item name="android:windowBackground">@android:color/transparent</item>
-	</style>
-    
-	<style name="InfoSubText" parent="android:Widget.TextView">
+
+    <style name="AppTheme" parent="android:Theme.Holo.Light"></style>
+
+    <style name="AppThemeTrans" parent="@style/AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="InfoSubText" parent="android:Widget.TextView">
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:textColor">@color/info_sub_text_color</item>
         <item name="android:textColorHighlight">@android:color/white</item>
     </style>
-    
-	<style name="PlayerButton" parent="android:Widget.Holo.ImageButton">
+
+    <style name="PlayerButton" parent="android:Widget.Holo.ImageButton">
         <item name="android:background">?android:attr/actionBarItemBackground</item>
         <item name="android:minHeight">@dimen/playerbutton_height</item>
     </style>
-	
+
+    <style name="TextViewAppearance.Title" parent="TextViewAppearance.Title1">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+    
+ 	<style name="TextViewApperance.Title.NoPadding" parent="TextViewAppearance.Title1">
+ 	    <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+ 	</style>   
+
+    <style name="TextViewAppearance.Body" parent="TextViewAppearance.Body1">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="TextViewAppearance.Caption" parent="TextViewAppearance.Caption1">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+    
+    <style name="TextViewAppearance.Caption.NoPadding" parent="TextViewAppearance.Caption1">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
+    <style name="TextViewAppearance.Headline" parent="TextViewAppearance.Headline1">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+
+    <style name="TextViewAppearance.Display" parent="TextViewAppearance.Display1">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+
 </resources>
