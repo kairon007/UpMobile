@@ -34,7 +34,7 @@ import com.csform.android.uiapptemplate.fragment.SplashScreensFragment;
 import com.csform.android.uiapptemplate.fragment.TextViewsFragment;
 import com.csform.android.uiapptemplate.model.DrawerItem;
 
-public class MainActivity extends ActionBarActivity {
+public class UIMainActivity extends ActionBarActivity {
 
 	private ListView mDrawerList;
 	private List<DrawerItem> mDrawerItems;
@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_material_main);
 /*
 		mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -86,7 +86,7 @@ public class MainActivity extends ActionBarActivity {
 			mDrawerLayout.openDrawer(mDrawerList);
 		}*/
 		
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.material_toolbar);
 		setSupportActionBar(toolbar);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,

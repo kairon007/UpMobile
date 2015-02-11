@@ -21,7 +21,7 @@ public class DownloadsFragment extends Fragment {
 	@Override
 	public void onPause() {
 		downloadsView.onPause();
-		((MainActivity) getActivity()).setSelectedItem(1);
+//		((MainActivity) getActivity()).setSelectedItem(1);
 		super.onPause();
 	}
 

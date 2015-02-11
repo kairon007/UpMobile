@@ -2,15 +2,11 @@ package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
 
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-
-import com.special.utils.UISwipableList;
-import com.special.utils.UISwipableList.OnSwipableListener;
 
 public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 
@@ -53,28 +49,28 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		} else {
 			h = (BaseAdapter.ViewHolder<T>) v.getTag();
 		}
-		if (isSetListener()) setListener(p, v, position);
+//		if (isSetListener()) setListener(p, v, position);
 		h.hold(item, position);
 		return v;
 	}
 
-	private void setListener(ViewGroup p, View v, final int position) {
-		if (null == parent) {
-			parent = p;
-		}
-		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
-
-			@Override
-			public void onSwipeVisible(Object selected, View v) {
-				onItemSwipeVisible(selected, v);
-			}
-
-			@Override
-			public void onSwipeGone(Object selected, View v) {
-				onItemSwipeGone(selected, v);
-			}
-		});
-	}
+//	private void setListener(ViewGroup p, View v, final int position) {
+//		if (null == parent) {
+//			parent = p;
+//		}
+//		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
+//
+//			@Override
+//			public void onSwipeVisible(Object selected, View v) {
+//				onItemSwipeVisible(selected, v);
+//			}
+//
+//			@Override
+//			public void onSwipeGone(Object selected, View v) {
+//				onItemSwipeGone(selected, v);
+//			}
+//		});
+//	}
 
 	public ArrayList<T> getAll() {
 		ArrayList<T> result = new ArrayList<T>();

@@ -40,7 +40,7 @@ public class SearchFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setSelectedItem(0);
+//		((MainActivity) getActivity()).setSelectedItem(0);
 		super.onResume();
 	}
 }

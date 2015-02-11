@@ -88,7 +88,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 				bundle.putParcelable(Constants.KEY_SELECTED_SONG, data);
 				PlayerFragment playerFragment = new PlayerFragment();
 				playerFragment.setArguments(bundle);
-				((MainActivity) view.getContext()).changeFragment(playerFragment);
+//				((MainActivity) view.getContext()).changeFragment(playerFragment);
 				((MainActivity) getContext()).overridePendingTransition(0, 0);
 				break;
 			case R.id.item_play:
@@ -97,7 +97,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 					service.setArrayPlayback(list);
 				} 
 				service.play(data);
-				((MainActivity) getContext()).showPlayerElement(true);
+//				((MainActivity) getContext()).showPlayerElement(true);
 				break;
 			}
 		}
@@ -115,7 +115,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 						service.remove(data);
 						data.reset(getContext());
 						if (isEmpty()) {
-							((MainActivity) getContext()).showPlayerElement(false);
+//							((MainActivity) getContext()).showPlayerElement(false);
 							TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
 							emptyMsg.setVisibility(View.VISIBLE);
 							emptyMsg.setText(R.string.library_empty);
