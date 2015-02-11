@@ -19,7 +19,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
 
 public class SearchView extends OnlineSearchView implements Constants {
 
@@ -27,13 +26,6 @@ public class SearchView extends OnlineSearchView implements Constants {
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
-	}
-
-	@Override
-	public View getView() {
-		View v = super.getView();
-		listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
-		return v;
 	}
 	
 	@Override

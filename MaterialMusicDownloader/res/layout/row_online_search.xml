@@ -56,7 +56,6 @@
                 android:id="@+id/cover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="4dp"
                 android:contentDescription="@string/default_cover"
                 android:padding="8dp" >
             </ImageView>
@@ -67,23 +66,24 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:padding="8dp" >
+            android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" >
 
-                <TextView
+                <com.csform.android.uiapptemplate.font.RobotoTextView
                     android:id="@+id/artistLine"
+                    style="@style/TextViewAppearance.Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/font_size_title" />
+                    android:textSize="@dimen/font_size_title"
+                    android:text="Artist Line" />
 
                 <TextView
                     android:id="@+id/chunkTime"
@@ -101,14 +101,16 @@
 
             <!-- android:textColor="@color/dimmed" -->
 
-            <TextView
+            <com.csform.android.uiapptemplate.font.RobotoTextView
                 android:id="@+id/titleLine"
+                style="@style/TextViewAppearance.Caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textSize="@dimen/font_size_normal" />
+                android:textSize="@dimen/font_size_normal"
+                android:text="Title Line" />
         </LinearLayout>
     </LinearLayout>
 
