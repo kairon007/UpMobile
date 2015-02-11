@@ -18,11 +18,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:id="@+id/player_cancel_lyrics"
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/edit_mp3_cancel" />
+        android:layout_gravity="center" >
+
+        <Button
+            android:id="@+id/player_cancel_lyrics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:text="@string/edit_mp3_cancel" />
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
 </LinearLayout>
