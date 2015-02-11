@@ -78,14 +78,14 @@
 
                 <com.csform.android.uiapptemplate.font.RobotoTextView
                     android:id="@+id/songName"
-                    style="@style/TextViewAppearance.Display2"
+                    style="@style/TextViewAppearance.Display"
                     android:layout_alignParentTop="true"
                     android:ellipsize="marquee"
                     android:singleLine="true" />
 
                 <com.csform.android.uiapptemplate.font.RobotoTextView
                     android:id="@+id/artistName"
-                    style="@style/TextViewAppearance.Headline1"
+                    style="@style/TextViewAppearance.Headline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/songName"

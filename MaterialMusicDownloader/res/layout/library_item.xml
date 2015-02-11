@@ -11,17 +11,17 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center"
+        android:background="@drawable/selectable_item_bg"
         android:clickable="true"
-    	android:background="@drawable/selectable_item_bg"
         android:src="@drawable/no_cover_art_light_big_dark" />
 
     <LinearLayout
         android:id="@+id/item_box_info"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:background="@drawable/selectable_item_bg"
         android:clickable="true"
-    	android:background="@drawable/selectable_item_bg"
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
@@ -32,16 +32,15 @@
             android:layout_weight="1"
             android:orientation="horizontal" >
 
-            <TextView
+            <com.csform.android.uiapptemplate.font.RobotoTextView
                 android:id="@+id/item_title"
-                android:layout_width="wrap_content"
+                style="@style/TextViewAppearance.Body"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Title"
-                android:textAppearance="?android:textAppearanceMedium" />
+                android:text="Title" />
 
             <TextView
                 android:id="@+id/item_duration"
@@ -53,16 +52,14 @@
                 android:textAppearance="?android:textAppearanceMedium" />
         </LinearLayout>
 
-        <TextView
+        <com.csform.android.uiapptemplate.font.RobotoTextView
             android:id="@+id/item_artist"
+            style="@style/TextViewAppearance.Caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-light"
             android:text="Artist" />
     </LinearLayout>
-    <FrameLayout android:layout_width="wrap_content" android:layout_height="match_parent"></FrameLayout>
 
     <ImageButton
         android:id="@+id/item_play"
