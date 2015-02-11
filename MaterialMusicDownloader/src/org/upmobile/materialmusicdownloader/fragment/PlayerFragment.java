@@ -5,7 +5,6 @@ import java.io.File;
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -48,9 +47,10 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener, BaseMaterialFragment {
 
 	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
 	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
@@ -718,5 +718,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void error(String error) {
 			}
 		});
+	}
+
+	@Override
+	public int getDrawerIcon() {
+		return com.csform.android.uiapptemplate.R.string.drawer_icon_search_bars;
+	}
+
+	@Override
+	public int getDrawerTitle() {
+		return R.string.navigation_player;
+	}
+
+	@Override
+	public int getDrawerTag() {
+		return getClass().getSimpleName().hashCode();
 	}
 }

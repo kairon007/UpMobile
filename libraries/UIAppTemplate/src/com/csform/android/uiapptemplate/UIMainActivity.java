@@ -21,22 +21,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.csform.android.uiapptemplate.adapter.DrawerAdapter;
-import com.csform.android.uiapptemplate.fragment.CheckAndRadioBoxesFragment;
-import com.csform.android.uiapptemplate.fragment.ImageGalleryFragment;
-import com.csform.android.uiapptemplate.fragment.LeftMenusFragment;
-import com.csform.android.uiapptemplate.fragment.ListViewsFragment;
-import com.csform.android.uiapptemplate.fragment.LogInPageFragment;
-import com.csform.android.uiapptemplate.fragment.ParallaxEffectsFragment;
-import com.csform.android.uiapptemplate.fragment.ProgressBarsFragment;
-import com.csform.android.uiapptemplate.fragment.SearchBarsFragment;
-import com.csform.android.uiapptemplate.fragment.ShapeImageViewsFragment;
-import com.csform.android.uiapptemplate.fragment.SplashScreensFragment;
-import com.csform.android.uiapptemplate.fragment.TextViewsFragment;
+import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.model.DrawerItem;
 
-public class UIMainActivity extends ActionBarActivity {
+public abstract class UIMainActivity extends ActionBarActivity {
 
 	private ListView mDrawerList;
+	private List<BaseMaterialFragment> mFragments;
 	private List<DrawerItem> mDrawerItems;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -46,46 +37,12 @@ public class UIMainActivity extends ActionBarActivity {
 	
 	private Handler mHandler;
 
+	protected abstract <T extends BaseMaterialFragment> ArrayList<T> getFragments();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_material_main);
-/*
-		mTitle = mDrawerTitle = getTitle();
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.list_view);
-
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		prepareNavigationDrawerItems();
-		mDrawerList.setAdapter(new DrawerAdapter(this, mDrawerItems, true));
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, R.string.drawer_open,
-				R.string.drawer_close) {
-			public void onDrawerClosed(View view) {
-				getSupportActionBar().setTitle(mTitle);
-				invalidateOptionsMenu();
-			}
-
-			public void onDrawerOpened(View drawerView) {
-				getSupportActionBar().setTitle(mDrawerTitle);
-				invalidateOptionsMenu();
-			}
-		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		
-		mHandler = new Handler();
-		
-		if (savedInstanceState == null) {
-			int position = 0;
-			selectItem(position, mDrawerItems.get(position).getTag());
-			mDrawerLayout.openDrawer(mDrawerList);
-		}*/
-		
 		Toolbar toolbar = (Toolbar) findViewById(R.id.material_toolbar);
 		setSupportActionBar(toolbar);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -123,87 +80,11 @@ public class UIMainActivity extends ActionBarActivity {
 	}
 
 	private void prepareNavigationDrawerItems() {
-		mDrawerItems = new ArrayList<>();
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_list_views,
-						R.string.drawer_title_list_views,
-						DrawerItem.DRAWER_ITEM_TAG_LIST_VIEWS));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_parallax,
-						R.string.drawer_title_parallax,
-						DrawerItem.DRAWER_ITEM_TAG_PARALLAX));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_left_menus,
-						R.string.drawer_title_left_menus,
-						DrawerItem.DRAWER_ITEM_TAG_LEFT_MENUS));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_login_page,
-						R.string.drawer_title_login_page,
-						DrawerItem.DRAWER_ITEM_TAG_LOGIN_PAGE_AND_LOADERS));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_image_gallery,
-						R.string.drawer_title_image_gallery,
-						DrawerItem.DRAWER_ITEM_TAG_IMAGE_GALLERY));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_shape_image_views,
-						R.string.drawer_title_shape_image_views,
-						DrawerItem.DRAWER_ITEM_TAG_SHAPE_IMAGE_VIEWS));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_progress_bars,
-						R.string.drawer_title_progress_bars,
-						DrawerItem.DRAWER_ITEM_TAG_PROGRESS_BARS));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_check_and_radio_buttons,
-						R.string.drawer_title_check_and_radio_buttons,
-						DrawerItem.DRAWER_ITEM_TAG_CHECK_AND_RADIO_BOXES));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_splash_screens,
-						R.string.drawer_title_splash_screens,
-						DrawerItem.DRAWER_ITEM_TAG_SPLASH_SCREENS));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_search_bars,
-						R.string.drawer_title_search_bars,
-						DrawerItem.DRAWER_ITEM_TAG_SEARCH_BARS));
-		mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_text_views,
-						R.string.drawer_title_text_views,
-						DrawerItem.DRAWER_ITEM_TAG_TEXT_VIEWS));
-		/*mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_buttons,
-						R.string.drawer_title_buttons,
-						DrawerItem.DRAWER_ITEM_TAG_BUTTONS));*/
-		/*mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_audio_player,
-						R.string.drawer_title_audio_player,
-						DrawerItem.DRAWER_ITEM_TAG_BLOG));*/
-		/*mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_video_player,
-						R.string.drawer_title_video_player,
-						DrawerItem.DRAWER_ITEM_TAG_VIDEO_PLAYER));*/
-		/*mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_calendars,
-						R.string.drawer_title_calendars,
-						DrawerItem.DRAWER_ITEM_TAG_CALENDARS));*/
-		/*mDrawerItems.add(
-				new DrawerItem(
-						R.string.drawer_icon_dialogs,
-						R.string.drawer_title_dialogs,
-						DrawerItem.DRAWER_ITEM_TAG_DIALOGS));*/
+		mDrawerItems = new ArrayList<DrawerItem>();
+		mFragments = getFragments();
+		for (BaseMaterialFragment fragment : mFragments) {
+			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag()));
+		}
 	}
 
 	@Override
@@ -214,42 +95,17 @@ public class UIMainActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		//boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		//menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-		// Handle action buttons
-		/*switch (item.getItemId()) {
-		case R.id.action_websearch:
-			// create intent to perform web search for this planet
-			Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-			intent.putExtra(SearchManager.QUERY, getSupportActionBar().getTitle());
-			// catch event that there's no activity to handle intent
-			if (intent.resolveActivity(getPackageManager()) != null) {
-				startActivity(intent);
-			} else {
-				Toast.makeText(this, R.string.app_not_available,
-						Toast.LENGTH_LONG).show();
-			}
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}*/
 	}
 
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+		
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			selectItem(position, mDrawerItems.get(position).getTag());
 		}
 	}
@@ -264,43 +120,10 @@ public class UIMainActivity extends ActionBarActivity {
 	}
 	
 	private Fragment getFragmentByDrawerTag(int drawerTag) {
-		Fragment fragment;
-		if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_SPLASH_SCREENS) {
-			fragment = SplashScreensFragment.newInstance();
-		} else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_PROGRESS_BARS) {
-			fragment = ProgressBarsFragment.newInstance();
-		}/* else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_BUTTONS) {
-			fragment = ButtonsFragment.newInstance();
-		}*/ else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_SHAPE_IMAGE_VIEWS) {
-			fragment = ShapeImageViewsFragment.newInstance();
-		} else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_TEXT_VIEWS) {
-			fragment = TextViewsFragment.newInstance();
-		} else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_SEARCH_BARS) {
-			fragment = SearchBarsFragment.newInstance();
-		} else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_LOGIN_PAGE_AND_LOADERS) {
-			fragment = LogInPageFragment.newInstance();
-		}/* else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_AUDIO_PLAYER) {
-			fragment = AudioPlayerFragment.newInstance();
-		}*//* else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_VIDEO_PLAYER) {
-			fragment = VideoPlayerFragment.newInstance();
-		}*/ else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_IMAGE_GALLERY) {
-			fragment = ImageGalleryFragment.newInstance();
-		} else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_CHECK_AND_RADIO_BOXES) {
-			fragment = CheckAndRadioBoxesFragment.newInstance();
-		}/* else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_CALENDARS) {
-			fragment = CalendarsFragment.newInstance();
-		}*/ else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_LEFT_MENUS) {
-			fragment = LeftMenusFragment.newInstance();
-		} else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_LIST_VIEWS) {
-			fragment = ListViewsFragment.newInstance();
-		} else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_PARALLAX) {
-			fragment = ParallaxEffectsFragment.newInstance();
-		}/* else if (drawerTag == DrawerItem.DRAWER_ITEM_TAG_DIALOGS) {
-			fragment = DialogsFragment.newInstance();
-		} */else {
-			fragment = new Fragment();
+		for (BaseMaterialFragment fragment : mFragments) {
+			if (fragment.getDrawerTag() == drawerTag) return (Fragment) fragment;
 		}
-		return fragment;
+		return null;
 	}
 	
 	private class CommitFragmentRunnable implements Runnable {

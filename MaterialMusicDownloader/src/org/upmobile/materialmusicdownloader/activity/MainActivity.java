@@ -3,10 +3,16 @@ package org.upmobile.materialmusicdownloader.activity;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.apache.http.impl.cookie.BasicMaxAgeHandler;
 import org.upmobile.materialmusicdownloader.Constants;
+import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
+import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
+import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -15,6 +21,7 @@ import android.support.v7.internal.widget.ActionBarOverlayLayout;
 import android.widget.SearchView;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
+import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class MainActivity extends UIMainActivity implements Constants {
 
@@ -49,6 +56,16 @@ public class MainActivity extends UIMainActivity implements Constants {
 //			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
+	}
+
+	@Override
+	protected ArrayList<BaseMaterialFragment> getFragments() {
+		ArrayList<BaseMaterialFragment> fragments = new ArrayList<BaseMaterialFragment>();
+		fragments.add(new SearchFragment());
+		fragments.add(new DownloadsFragment());
+		fragments.add(new LibraryFragment());
+		fragments.add(new PlayerFragment());
+		return fragments;
 	}}
 	/*
 	@Override
