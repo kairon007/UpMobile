@@ -4,24 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
-import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
-import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.internal.widget.ActionBarOverlayLayout;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
 
