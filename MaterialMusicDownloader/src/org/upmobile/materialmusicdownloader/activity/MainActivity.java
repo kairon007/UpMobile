@@ -52,7 +52,7 @@ public class MainActivity extends UIMainActivity implements Constants {
 				ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
 				service.setArrayPlayback(list);
 			}
-//			if (service.isPlaying()) showPlayerElement(true);
+			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
 	}
@@ -116,7 +116,7 @@ public class MainActivity extends UIMainActivity implements Constants {
 	@Override
 	protected void onResume() {
 		if (null != service && service.isPlaying()) {
-//			showPlayerElement(true);
+			showPlayerElement(true);
 		} else if (PlaybackService.hasInstance()) {
 			service = PlaybackService.get(this);
 		}
