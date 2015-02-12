@@ -11,7 +11,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:paddingLeft="8dp" >
 
             <include
                 android:layout_width="match_parent"
@@ -57,7 +58,7 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
-                android:background="@android:color/transparent"
+                android:background="@color/background_material_light"
                 android:orientation="vertical" >
 
                 <LinearLayout
