@@ -5,7 +5,7 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
 import android.os.Environment;
@@ -32,7 +32,7 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 	}
 
 	@Override
-	protected BaseAdapter<MusicData> getAdapter() {
+	protected BaseAbstractAdapter<MusicData> getAdapter() {
 		return new LibraryAdapter(getContext(), R.layout.library_item);
 	}
 

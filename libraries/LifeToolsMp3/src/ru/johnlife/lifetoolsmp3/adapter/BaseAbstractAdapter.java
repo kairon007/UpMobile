@@ -138,6 +138,10 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		return items.get(paramInt).getId();
 	}
 	
+	public int getPosition(T item) {
+		return items.indexOf(item);
+	}
+	
 	public static abstract class ViewHolder<T extends AbstractSong> {
 		protected abstract void hold(T item, int position);
 	}

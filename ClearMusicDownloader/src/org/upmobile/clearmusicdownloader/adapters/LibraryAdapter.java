@@ -88,9 +88,9 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 	public MusicData get(AbstractSong data) {
 		if (data == null) return null;
 		for (int i = 0; i < getCount(); i++) {
-			MusicData buf = getItem(i);
+			MusicData buf = (MusicData) getItem(i);
 			if (buf.equals(data)) {
-				return getItem(i);
+				return (MusicData) getItem(i);
 			}
 		}
 		return null;

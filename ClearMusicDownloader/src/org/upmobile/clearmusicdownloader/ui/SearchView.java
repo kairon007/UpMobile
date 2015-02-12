@@ -64,7 +64,7 @@ public class SearchView extends OnlineSearchView {
 		} 
 		Bundle bundle = new Bundle();
 		try {
-			bundle.putParcelable(Constants.KEY_SELECTED_SONG, getResultAdapter().getItem(position).cloneSong());
+			bundle.putParcelable(Constants.KEY_SELECTED_SONG, ((Song)getResultAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}

@@ -5,6 +5,7 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.DownloadsAdapter;
 
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseDownloadsView;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -99,7 +99,7 @@ public class DownloadsView extends BaseDownloadsView implements OnScrollListener
 	}
 
 	@Override
-	protected ArrayAdapter<MusicData> getAdapter() {
+	protected BaseAbstractAdapter<MusicData> getAdapter() {
 		adapter = new DownloadsAdapter(getContext(), org.upmobile.clearmusicdownloader.R.layout.downloads_item);
 		return adapter;
 	}
