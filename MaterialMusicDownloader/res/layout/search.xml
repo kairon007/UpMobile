@@ -57,7 +57,7 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
-                android:background="@drawable/search_background"
+                android:background="@android:color/transparent"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -118,7 +118,6 @@
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:popupBackground="@android:color/black"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
         </LinearLayout>
