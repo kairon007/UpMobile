@@ -11,6 +11,11 @@
 
 package mp3.music.player.us.widgets;
 
+import mp3.music.player.us.R;
+import mp3.music.player.us.ui.activities.ProfileActivity;
+import mp3.music.player.us.utils.ApolloUtils;
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -19,17 +24,11 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import mp3.music.player.us.R;
-import mp3.music.player.us.ui.activities.ProfileActivity;
-import mp3.music.player.us.utils.ApolloUtils;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
 
 /**
  * A custom {@link HorizontalScrollView} that displays up to two "tabs" in the

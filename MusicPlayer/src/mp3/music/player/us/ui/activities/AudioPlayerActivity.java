@@ -13,6 +13,24 @@ package mp3.music.player.us.ui.activities;
 
 import static mp3.music.player.us.utils.MusicUtils.mService;
 
+import java.lang.ref.WeakReference;
+
+import mp3.music.player.us.IApolloService;
+import mp3.music.player.us.MusicPlaybackService;
+import mp3.music.player.us.R;
+import mp3.music.player.us.adapters.PagerAdapter;
+import mp3.music.player.us.cache.ImageFetcher;
+import mp3.music.player.us.ui.fragments.QueueFragment;
+import mp3.music.player.us.utils.ApolloUtils;
+import mp3.music.player.us.utils.MusicUtils;
+import mp3.music.player.us.utils.MusicUtils.ServiceToken;
+import mp3.music.player.us.utils.NavUtils;
+import mp3.music.player.us.utils.ThemeUtils;
+import mp3.music.player.us.widgets.PlayPauseButton;
+import mp3.music.player.us.widgets.RepeatButton;
+import mp3.music.player.us.widgets.RepeatingImageButton;
+import mp3.music.player.us.widgets.ShuffleButton;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
@@ -49,24 +67,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
-import mp3.music.player.us.IApolloService;
-import mp3.music.player.us.MusicPlaybackService;
-import mp3.music.player.us.R;
-import mp3.music.player.us.adapters.PagerAdapter;
-import mp3.music.player.us.cache.ImageFetcher;
-import mp3.music.player.us.ui.fragments.QueueFragment;
-import mp3.music.player.us.utils.ApolloUtils;
-import mp3.music.player.us.utils.MusicUtils;
-import mp3.music.player.us.utils.MusicUtils.ServiceToken;
-import mp3.music.player.us.utils.NavUtils;
-import mp3.music.player.us.utils.ThemeUtils;
-import mp3.music.player.us.widgets.PlayPauseButton;
-import mp3.music.player.us.widgets.RepeatButton;
-import mp3.music.player.us.widgets.RepeatingImageButton;
-import mp3.music.player.us.widgets.ShuffleButton;
-import com.nineoldandroids.animation.ObjectAnimator;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Apollo's "now playing" interface.
