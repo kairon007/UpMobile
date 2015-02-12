@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public abstract class BaseDownloadsAdapter extends BaseAdapter<MusicData> {
+public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData> {
 
 	public BaseDownloadsAdapter(Context context, int resource) {
 		super(context, resource);

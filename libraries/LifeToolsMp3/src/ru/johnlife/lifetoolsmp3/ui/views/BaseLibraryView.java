@@ -3,7 +3,7 @@ package ru.johnlife.lifetoolsmp3.ui.views;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -25,7 +25,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	protected static final int MSG_FILL_ADAPTER = 1;
 	
 	private ViewGroup view;
-	private BaseAdapter<MusicData> adapter;
+	private BaseAbstractAdapter<MusicData> adapter;
 	private ListView listView;
 	private Handler uiHandler;
 	private ContentObserver observer = new ContentObserver(null) {
@@ -62,7 +62,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		};
 	};
 	
-	protected abstract BaseAdapter<MusicData> getAdapter();
+	protected abstract BaseAbstractAdapter<MusicData> getAdapter();
 	protected abstract ListView getListView(View view);
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
@@ -90,7 +90,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			}
 		}
 		if (null != listView) {
-			adapter.addAll(srcList);
+			adapter.add(srcList);
 			listView.setAdapter(adapter);
 		}
 	}
@@ -148,7 +148,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 				adapter = getAdapter();
 				listView.setAdapter(adapter);
 			} else {
-				adapter.changeArray((ArrayList<MusicData>) msg.obj);
+				adapter.add((ArrayList<MusicData>) msg.obj);
 			}
 		}
 		return true;

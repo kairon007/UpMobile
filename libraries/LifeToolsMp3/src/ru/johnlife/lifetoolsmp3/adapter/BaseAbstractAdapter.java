@@ -2,28 +2,31 @@ package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
 
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 
-public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
+public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAdapter {
 
 	private LayoutInflater inflater;
 	protected ViewGroup parent;
 	private int layoutId;
+	private ArrayList<T> items = new ArrayList<T>();
+	private Context context;
 
-	public BaseAdapter(Context context, int resource) {
-		super(context, resource, new ArrayList<T>());
+	public BaseAbstractAdapter(Context context, int resource) {
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.layoutId = resource;
+		this.context = context;
 	}
 
-	public BaseAdapter(Context context, int resource, ArrayList<T> array) {
-		super(context, resource, array);
+	public BaseAbstractAdapter(Context context, int resource, ArrayList<T> array) {
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.layoutId = resource;
+		this.context = context;
 	}
 
 	protected abstract ViewHolder<T> createViewHolder(final View v);
@@ -40,14 +43,14 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {
 		View v = convertView;
-		BaseAdapter.ViewHolder<T> h;
-		T item = getItem(position);
+		BaseAbstractAdapter.ViewHolder<T> h;
+		T item = (T)getItem(position);
 		if (v == null) {
 			v = inflater.inflate(layoutId, p, false);
 			h = createViewHolder(v);
 			v.setTag(h);
 		} else {
-			h = (BaseAdapter.ViewHolder<T>) v.getTag();
+			h = (BaseAbstractAdapter.ViewHolder<T>) v.getTag();
 		}
 //		if (isSetListener()) setListener(p, v, position);
 		h.hold(item, position);
@@ -72,20 +75,33 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 //		});
 //	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList<T> getAll() {
 		ArrayList<T> result = new ArrayList<T>();
 		for (int i = 0; i < getCount(); i++) {
-			result.add(getItem(i));
+			result.add((T) getItem(i));
 		}
 		return result;
 	}
-
-	public void changeArray(ArrayList<T> array) {
-		setNotifyOnChange(false);
-		clear();
-		for (T t : array) {
-			add(t);
-		}
+	
+	public void add(T item) {
+		items.add(item);
+		notifyDataSetChanged();
+	}
+	
+	public void add(ArrayList<T> array) {
+		items.clear();
+		items.addAll(array);
+		notifyDataSetChanged();
+	}
+	
+	public void changeData(ArrayList<T> array) {
+		this.items = array;
+		notifyDataSetChanged();
+	}
+	
+	public void clear() {
+		items.clear();
 		notifyDataSetChanged();
 	}
 	
@@ -98,8 +114,31 @@ public abstract class BaseAdapter<T> extends ArrayAdapter<T> {
 		return false;
 	}
 
-
-	public static abstract class ViewHolder<T> {
+	public void remove(T item) {
+		items.remove(item);
+		notifyDataSetChanged();
+	}
+	
+	public Context getContext() {
+		return context;
+	}
+	
+	@Override
+	public int getCount() {
+		return items.size();
+	}
+	
+	@Override
+	public Object getItem(int paramInt) {
+		return items.get(paramInt);
+	}
+	
+	@Override
+	public long getItemId(int paramInt) {
+		return items.get(paramInt).getId();
+	}
+	
+	public static abstract class ViewHolder<T extends AbstractSong> {
 		protected abstract void hold(T item, int position);
 	}
 }

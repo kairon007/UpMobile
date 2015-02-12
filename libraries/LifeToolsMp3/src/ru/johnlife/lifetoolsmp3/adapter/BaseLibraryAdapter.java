@@ -13,7 +13,7 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public abstract class BaseLibraryAdapter extends BaseAdapter<MusicData> {
+public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
 
 	protected PlaybackService service;
 	
@@ -84,9 +84,9 @@ public abstract class BaseLibraryAdapter extends BaseAdapter<MusicData> {
 	public MusicData get(AbstractSong data) {
 		if (data == null) return null;
 		for (int i = 0; i < getCount(); i++) {
-			MusicData buf = getItem(i);
+			MusicData buf = (MusicData) getItem(i);
 			if (buf.equals(data)) {
-				return getItem(i);
+				return (MusicData) getItem(i);
 			}
 		}
 		return null;

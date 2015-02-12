@@ -14,6 +14,7 @@ import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSpinnerAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
@@ -686,7 +687,7 @@ public abstract class OnlineSearchView extends View {
 		return R.drawable.fallback_cover;
 	}
 	
-	public class SongSearchAdapter extends ArrayAdapter<Song> {
+	public class SongSearchAdapter extends BaseAbstractAdapter<Song> {
 
 		private LayoutInflater inflater;
 		private FrameLayout footer;
@@ -702,14 +703,14 @@ public abstract class OnlineSearchView extends View {
 		public ArrayList<Song> getAll() {
 			ArrayList<Song> list = new ArrayList<Song>();
 			for (int i = 0; i < getCount(); i++) {
-				list.add(getItem(i));
+				list.add((Song) getItem(i));
 			}
 			return list;
 		}
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			Song song = getItem(position);
+			Song song = (Song) getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()), getIdCustomView());
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
@@ -770,6 +771,16 @@ public abstract class OnlineSearchView extends View {
 
 		public void hideProgress() {
 			refreshSpinner.setVisibility(View.GONE);
+		}
+
+		@Override
+		protected ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter.ViewHolder<Song> createViewHolder(View v) {
+			return null;
+		}
+
+		@Override
+		protected boolean isSetListener() {
+			return false;
 		}
 	}
 	

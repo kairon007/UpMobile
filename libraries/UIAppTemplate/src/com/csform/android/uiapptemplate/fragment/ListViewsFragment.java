@@ -43,8 +43,7 @@ public class ListViewsFragment extends Fragment implements OnItemClickListener {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_list_views, container, false);
 
 		mListView = (ListView) rootView.findViewById(R.id.list_view);

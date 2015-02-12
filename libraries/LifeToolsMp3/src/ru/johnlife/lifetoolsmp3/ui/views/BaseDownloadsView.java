@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -18,7 +19,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +26,7 @@ public abstract class BaseDownloadsView extends View{
 
 	private ListView listView;
 	private ViewGroup view;
-	private ArrayAdapter<MusicData> adapter;
+	private BaseAbstractAdapter<MusicData> adapter;
 	private DownloadManager manager;
 	private Timer timer;
 	private Updater updater;
@@ -39,7 +39,7 @@ public abstract class BaseDownloadsView extends View{
 	
 	protected abstract int getLayoutId();
 	
-	protected abstract ArrayAdapter<MusicData> getAdapter();
+	protected abstract BaseAbstractAdapter<MusicData> getAdapter();
 	
 	protected abstract ListView getListView(View view);
 	
@@ -193,7 +193,7 @@ public abstract class BaseDownloadsView extends View{
 
 		@Override
 		public void run() {
-			ArrayList<MusicData> list = checkDownloads();
+			final ArrayList<MusicData> list = checkDownloads();
 			Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 			while (c.moveToNext()) {
 				progress = 0;
@@ -217,11 +217,13 @@ public abstract class BaseDownloadsView extends View{
 				}
 			}
 			c.close();
-			adapter.setNotifyOnChange(false);
-			adapter.clear();
-			for (MusicData musicData : list) {
-				adapter.add(musicData);
-			}
+			((Activity)getContext()).runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					adapter.changeData(list);
+				}
+			});
 			checkCanceled();
 			checkFinished();
 			reDrawAdapter();

@@ -4,11 +4,11 @@ import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.adapter.DownloadsAdapter;
 
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseDownloadsView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,7 +35,7 @@ public class DownloadsView extends BaseDownloadsView implements Constants {
 	}
 
 	@Override
-	protected ArrayAdapter<MusicData> getAdapter() {
+	protected BaseAbstractAdapter<MusicData> getAdapter() {
 		return  new DownloadsAdapter(getContext(), R.layout.downloads_item);
 	}
 

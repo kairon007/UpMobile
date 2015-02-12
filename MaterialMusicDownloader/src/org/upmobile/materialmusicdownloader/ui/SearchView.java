@@ -20,12 +20,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+
 public class SearchView extends OnlineSearchView implements Constants {
 
 	private PlaybackService service;
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		setAnimationAdapter();
 	}
 	
 	@Override
@@ -46,7 +50,7 @@ public class SearchView extends OnlineSearchView implements Constants {
 		} 
 		Bundle bundle = new Bundle();
 		try {
-			bundle.putParcelable(KEY_SELECTED_SONG, getResultAdapter().getItem(position).cloneSong());
+			bundle.putParcelable(KEY_SELECTED_SONG, ((Song)getResultAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
@@ -100,5 +104,11 @@ public class SearchView extends OnlineSearchView implements Constants {
 	@Override
 	public int defaultCover() {
 		return R.drawable.no_cover_art_light_big_dark;
+	}
+	
+	public void setAnimationAdapter() {
+		AnimationAdapter animAdapter = new AlphaInAnimationAdapter(getResultAdapter());
+		animAdapter.setAbsListView(listView);
+		listView.setAdapter(animAdapter);
 	}
 }
