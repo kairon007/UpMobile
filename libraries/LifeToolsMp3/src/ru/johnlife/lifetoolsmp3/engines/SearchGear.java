@@ -3,10 +3,10 @@ package ru.johnlife.lifetoolsmp3.engines;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.GearSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.util.Log;
 
@@ -22,13 +22,12 @@ public class SearchGear extends SearchWithPages {
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
-			
 			String strLink = String.format(URL_PATTERN, (page-1), URLEncoder.encode(getSongName(), "UTF-8"));
-				
-			JSONArray items = new JSONArray(Jsoup.connect(strLink).userAgent("Dalvik/1.6.0 (Linux; U; Android 4.4.2; Google Nexus 5 - 4.4.2 - API 19 - 1080x1920 Build/KOT49H)").ignoreContentType(true).get().body().text());
-			
-			
-			
+			JSONArray items = new JSONArray(Jsoup.connect(strLink)
+					.userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0")
+					.ignoreContentType(true)
+					.get()
+					.body().text());
 			for (int i = 0; i < items.length(); i++) {
 				if (items.getJSONObject(i) != null) {
 					String author = items.getJSONObject(i).getString("artist");
