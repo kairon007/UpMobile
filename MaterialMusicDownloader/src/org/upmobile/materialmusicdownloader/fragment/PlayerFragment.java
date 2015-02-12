@@ -5,6 +5,7 @@ import java.io.File;
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -171,7 +172,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		song = s;
 		downloadButtonState(true);
 		if (isDestroy) return;
-//		((MainActivity) getActivity()).showPlayerElement(true);
+		((MainActivity) getActivity()).showPlayerElement(true);
 		setImageButton();
 		setClickablePlayerElement(true);
 		changePlayPauseView(!player.isPlaying());

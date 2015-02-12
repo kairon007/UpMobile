@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.csform.android.uiapptemplate.adapter.DrawerAdapter;
@@ -65,8 +66,7 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		mDrawerList = (ListView) findViewById(R.id.list_view);
 		
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		prepareNavigationDrawerItems();
-		mDrawerList.setAdapter(new DrawerAdapter(this, mDrawerItems, true));
+		setAdapter(false);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		
@@ -78,13 +78,17 @@ public abstract class UIMainActivity extends ActionBarActivity {
 			mDrawerLayout.openDrawer(mDrawerList);
 		}
 	}
-
-	private void prepareNavigationDrawerItems() {
+	
+	public void setAdapter(boolean isNowPlaying) {
 		mDrawerItems = new ArrayList<DrawerItem>();
 		mFragments = getFragments();
-		for (BaseMaterialFragment fragment : mFragments) {
+		int lenght = mFragments.size();
+		for(int i=0; i<lenght; i++) {
+			if (!isNowPlaying && (i == lenght-1)) break;
+			BaseMaterialFragment fragment = mFragments.get(i);
 			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag()));
 		}
+		mDrawerList.setAdapter(new DrawerAdapter(this, mDrawerItems, true));
 	}
 
 	@Override

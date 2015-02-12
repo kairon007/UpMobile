@@ -3,7 +3,6 @@ package org.upmobile.materialmusicdownloader.activity;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.apache.http.impl.cookie.BasicMaxAgeHandler;
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
@@ -13,11 +12,11 @@ import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
-import android.support.v7.internal.widget.ActionBarOverlayLayout;
 import android.widget.SearchView;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
@@ -66,45 +65,47 @@ public class MainActivity extends UIMainActivity implements Constants {
 		fragments.add(new LibraryFragment());
 		fragments.add(new PlayerFragment());
 		return fragments;
-	}}
-	/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		 getMenuInflater().inflate(R.menu.menu, menu);
-		 MenuItem searchItem = menu.findItem(R.id.action_search);
-		 searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-		 searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		 searchView.setIconified(true);
-		 searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				changeFragment(new SearchFragment(query));
-				return false;
-			}
-			
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
-		return super.onCreateOptionsMenu(menu);
 	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-//		View view  = findViewById(R.id.drawer_layout);
-//		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-//		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-	    switch(item.getItemId()){
 
-        case R.id.action_search:
-            searchView.setIconified(false);// to Expand the SearchView when clicked
-            return true;
-    }    
-		return false;
-	}
+
+	
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		 getMenuInflater().inflate(R.menu.menu, menu);
+//		 MenuItem searchItem = menu.findItem(R.id.action_search);
+//		 searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//		 searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
+//		 searchView.setIconified(true);
+//		 searchView.setOnQueryTextListener(new OnQueryTextListener() {
+//			
+//			@Override
+//			public boolean onQueryTextSubmit(String query) {
+//				changeFragment(new SearchFragment(query));
+//				return false;
+//			}
+//			
+//			@Override
+//			public boolean onQueryTextChange(String newText) {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//		});
+//		return super.onCreateOptionsMenu(menu);
+//	}
+	
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+////		View view  = findViewById(R.id.drawer_layout);
+////		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
+////		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//	    switch(item.getItemId()){
+//
+//        case R.id.action_search:
+//            searchView.setIconified(false);// to Expand the SearchView when clicked
+//            return true;
+//    }    
+//		return false;
+//	}
 	
 	@Override
 	protected void onStart() {
@@ -122,14 +123,14 @@ public class MainActivity extends UIMainActivity implements Constants {
 		super.onResume();
 	}
 	
-	public void changeFragment(Fragment targetFragment) {
-		getFragmentManager()
-		.beginTransaction()
-		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
-		.addToBackStack(targetFragment.getClass().getSimpleName())
-		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-		.commit();
-	}
+//	public void changeFragment(Fragment targetFragment) {
+//		getFragmentManager()
+//		.beginTransaction()
+//		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
+//		.addToBackStack(targetFragment.getClass().getSimpleName())
+//		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//		.commit();
+//	}
 	
 	@Override
 	public void onBackPressed() {
@@ -155,15 +156,13 @@ public class MainActivity extends UIMainActivity implements Constants {
 		}
 	}
 	
-//	public void showPlayerElement(boolean flag) {
-//		if (null != navigationDrawerFragment) {
-//			navigationDrawerFragment.setAdapter(flag);
-//		}
-//	}
+	public void showPlayerElement(boolean flag) {
+		setAdapter(flag);
+	}
 //	
 //	public void setSelectedItem(int position) {
 //		if (null != navigationDrawerFragment) {
 //			navigationDrawerFragment.setSelectedItem(position);
 //		}
 //	}
-}*/
+}
