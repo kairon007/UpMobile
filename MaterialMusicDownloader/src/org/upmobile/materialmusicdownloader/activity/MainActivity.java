@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
-import android.widget.SearchView;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
@@ -29,7 +28,6 @@ public class MainActivity extends UIMainActivity implements Constants {
 	private final String ARRAY_SAVE = "extras_array_save";
 	private final String folderPath = Environment.getExternalStorageDirectory() + DIRECTORY_PREFIX;
 	private PlaybackService service;
-	private SearchView searchView;
 
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
 
@@ -68,46 +66,11 @@ public class MainActivity extends UIMainActivity implements Constants {
 		fragments.add(new PlayerFragment());
 		return fragments;
 	}
-
-
 	
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		 getMenuInflater().inflate(R.menu.menu, menu);
-//		 MenuItem searchItem = menu.findItem(R.id.action_search);
-//		 searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//		 searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-//		 searchView.setIconified(true);
-//		 searchView.setOnQueryTextListener(new OnQueryTextListener() {
-//			
-//			@Override
-//			public boolean onQueryTextSubmit(String query) {
-//				changeFragment(new SearchFragment(query));
-//				return false;
-//			}
-//			
-//			@Override
-//			public boolean onQueryTextChange(String newText) {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//		});
-//		return super.onCreateOptionsMenu(menu);
-//	}
-	
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-////		View view  = findViewById(R.id.drawer_layout);
-////		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-////		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//	    switch(item.getItemId()){
-//
-//        case R.id.action_search:
-//            searchView.setIconified(false);// to Expand the SearchView when clicked
-//            return true;
-//    }    
-//		return false;
-//	}
+	@Override
+	protected void clickOnSearchView(String message) {
+		changeFragment(new SearchFragment(message));
+	}
 	
 	@Override
 	protected void onStart() {

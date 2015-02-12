@@ -13,13 +13,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 import com.csform.android.uiapptemplate.adapter.DrawerAdapter;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
@@ -37,8 +35,14 @@ public abstract class UIMainActivity extends ActionBarActivity {
 	private CharSequence mTitle;
 	
 	private Handler mHandler;
+	
+	SearchView searchView;
 
 	protected abstract <T extends BaseMaterialFragment> ArrayList<T> getFragments();
+	
+	protected void clickOnSearchView(String message) {
+		
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,23 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_material_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.material_toolbar);
 		setSupportActionBar(toolbar);
+		searchView = (SearchView) findViewById(R.id.bar_search_view_layout);
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				clickOnSearchView(query);
+				searchView.setIconified(true);
+				searchView.setIconified(true);
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
 				R.string.drawer_open,
@@ -89,21 +110,6 @@ public abstract class UIMainActivity extends ActionBarActivity {
 			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag()));
 		}
 		mDrawerList.setAdapter(new DrawerAdapter(this, mDrawerItems, true));
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {

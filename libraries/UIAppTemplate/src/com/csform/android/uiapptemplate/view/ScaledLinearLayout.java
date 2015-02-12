@@ -22,12 +22,10 @@ public class ScaledLinearLayout extends LinearLayout {
 		final int N = a.getIndexCount();
 		for (int i = 0; i < N; ++i) {
 			int attr = a.getIndex(i);
-			switch (attr) {
-			case R.styleable.ScaledLinearLayout_linear_layout_ratio:
+			if (attr == R.styleable.ScaledLinearLayout_linear_layout_ratio) {
 				float styleableRatio = a.getFloat(attr, widthRatio);
 				//Log.v("ratio", styleableRatio + "");
 				widthRatio = styleableRatio;
-				break;
 			}
 		}
 		a.recycle();
