@@ -88,7 +88,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 				bundle.putParcelable(Constants.KEY_SELECTED_SONG, data);
 				PlayerFragment playerFragment = new PlayerFragment();
 				playerFragment.setArguments(bundle);
-//				((MainActivity) view.getContext()).changeFragment(playerFragment);
+				((MainActivity) view.getContext()).changeFragment(playerFragment);
 				((MainActivity) getContext()).overridePendingTransition(0, 0);
 				break;
 			case R.id.item_play:

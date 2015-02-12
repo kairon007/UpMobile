@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
+import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
@@ -12,6 +13,7 @@ import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -123,14 +125,14 @@ public class MainActivity extends UIMainActivity implements Constants {
 		super.onResume();
 	}
 	
-//	public void changeFragment(Fragment targetFragment) {
-//		getFragmentManager()
-//		.beginTransaction()
-//		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
-//		.addToBackStack(targetFragment.getClass().getSimpleName())
-//		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//		.commit();
-//	}
+	public void changeFragment(Fragment targetFragment) {
+		getFragmentManager()
+		.beginTransaction()
+		.replace(R.id.content_frame, targetFragment, targetFragment.getClass().getSimpleName())
+		.addToBackStack(targetFragment.getClass().getSimpleName())
+		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+		.commit();
+	}
 	
 	@Override
 	public void onBackPressed() {

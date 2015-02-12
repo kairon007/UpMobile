@@ -53,7 +53,7 @@ public class SearchView extends OnlineSearchView implements Constants {
 		PlayerFragment playerFragment = new PlayerFragment();
 		playerFragment.setArguments(bundle);
 		((MainActivity) getContext()).showPlayerElement(true);
-//		((MainActivity) view.getContext()).changeFragment(playerFragment);
+		((MainActivity) view.getContext()).changeFragment(playerFragment);
 		((MainActivity) getContext()).overridePendingTransition(0, 0);
 		super.click(view, position);
 	}
