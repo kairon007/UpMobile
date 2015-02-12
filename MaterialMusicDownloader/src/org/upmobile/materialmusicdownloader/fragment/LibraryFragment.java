@@ -29,7 +29,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 
 	@Override
 	public int getDrawerIcon() {
-		return com.csform.android.uiapptemplate.R.string.drawer_icon_search_bars;
+		return R.drawable.ic_launcher_library;
 	}
 
 	@Override
