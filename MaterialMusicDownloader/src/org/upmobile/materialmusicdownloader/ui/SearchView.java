@@ -22,6 +22,7 @@ import android.view.View;
 
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 
 public class SearchView extends OnlineSearchView implements Constants {
 
@@ -29,7 +30,6 @@ public class SearchView extends OnlineSearchView implements Constants {
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
-		setAnimationAdapter();
 	}
 	
 	@Override
@@ -106,9 +106,10 @@ public class SearchView extends OnlineSearchView implements Constants {
 		return R.drawable.no_cover_art_light_big_dark;
 	}
 	
-	public void setAnimationAdapter() {
+	@Override
+	protected void animateListView() {
 		AnimationAdapter animAdapter = new AlphaInAnimationAdapter(getResultAdapter());
-		animAdapter.setAbsListView(listView);
-		listView.setAdapter(animAdapter);
+		animAdapter.setAbsListView((DynamicListView)listView);
+		((DynamicListView)listView).setAdapter(animAdapter);
 	}
 }

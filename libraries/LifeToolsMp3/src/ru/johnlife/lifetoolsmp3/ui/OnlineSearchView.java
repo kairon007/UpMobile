@@ -250,6 +250,7 @@ public abstract class OnlineSearchView extends View {
 				hideBaseProgress();
 				for (Song song : songsList) {
 					resultAdapter.add(song);
+					animateListView();
 				}
 			}
 		}
@@ -1142,6 +1143,10 @@ public abstract class OnlineSearchView extends View {
 	
 	public int getClickPosition() {
 		return clickPosition;
+	}
+	
+	protected void animateListView() {
+		// Animate list view in childs, if need
 	}
 	
 	public void restoreAdapter(ArrayList<Song> list, int position) {
