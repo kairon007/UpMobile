@@ -15,59 +15,71 @@
         android:clickable="true"
         android:src="@drawable/no_cover_art_light_big_dark" />
 
-    <LinearLayout
-        android:id="@+id/item_box_info"
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/selectable_item_bg"
-        android:clickable="true"
-        android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
 
         <LinearLayout
+            android:id="@+id/item_box_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <com.csform.android.uiapptemplate.font.RobotoTextView
+                    android:id="@+id/item_title"
+                    style="@style/TextViewAppearance.Body"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="Title" />
+
+                <TextView
+                    android:id="@+id/item_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:text="00:00"
+                    android:textAppearance="?android:textAppearanceMedium" />
+            </LinearLayout>
 
             <com.csform.android.uiapptemplate.font.RobotoTextView
-                android:id="@+id/item_title"
-                style="@style/TextViewAppearance.Body"
-                android:layout_width="0dp"
+                android:id="@+id/item_artist"
+                style="@style/TextViewAppearance.Caption"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
                 android:ellipsize="end"
-                android:singleLine="true"
-                android:text="Title" />
-
-            <TextView
-                android:id="@+id/item_duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="8dp"
-                android:text="00:00"
-                android:textAppearance="?android:textAppearanceMedium" />
+                android:text="Artist" />
         </LinearLayout>
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
-        <com.csform.android.uiapptemplate.font.RobotoTextView
-            android:id="@+id/item_artist"
-            style="@style/TextViewAppearance.Caption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:text="Artist" />
-    </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/item_play"
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/selectable_item_bg"
-        android:src="@drawable/play" />
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/item_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:src="@drawable/play" />
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
 </LinearLayout>

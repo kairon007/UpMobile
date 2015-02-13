@@ -87,21 +87,33 @@
                             android:singleLine="true"
                             android:textColor="@android:color/white" />
 
-                        <ImageButton
-                            android:id="@+id/clear"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_gravity="center_vertical|right"
-                            android:background="@drawable/selectable_item_bg"
-                            android:src="@drawable/close" />
+                        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                            style="@style/RippleStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|right" >
+
+                            <ImageButton
+                                android:id="@+id/clear"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@android:color/transparent"
+                                android:src="@drawable/close" />
+                        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
                     </FrameLayout>
 
-                    <ImageButton
-                        android:id="@+id/search"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/selectable_item_bg"
-                        android:src="@drawable/ic_menu_search" />
+                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                        style="@style/RippleStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <ImageButton
+                            android:id="@+id/search"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_menu_search" />
+                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
                     <ImageButton
                         android:id="@+id/downloads"

@@ -8,111 +8,117 @@
     android:orientation="horizontal"
     android:showDividers="middle" >
 
-    <LinearLayout
-        android:id="@+id/boxInfoItem"
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@drawable/selectable_item_bg"
-        android:clickable="true"
-        android:padding="4dp" >
-
-        <FrameLayout
-            android:layout_width="72dp"
-            android:layout_height="72dp" >
-
-            <RelativeLayout
-                android:id="@+id/RelativeLayout1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <TextView
-                    android:id="@+id/number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:lines="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="22sp" />
-
-                <!-- android:textColor="@color/dimmed" -->
-
-                <TextView
-                    android:id="@+id/caption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/number"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-8dp"
-                    android:gravity="center_horizontal"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/default_cover"
-                android:padding="8dp" >
-            </ImageView>
-        </FrameLayout>
+        android:layout_weight="1" >
 
         <LinearLayout
+            android:id="@+id/boxInfoItem"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:padding="4dp" >
+
+            <FrameLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp" >
+
+                <RelativeLayout
+                    android:id="@+id/RelativeLayout1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:id="@+id/number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:lines="1"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="22sp" />
+
+                    <!-- android:textColor="@color/dimmed" -->
+
+                    <TextView
+                        android:id="@+id/caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/number"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-8dp"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/default_cover"
+                    android:padding="8dp" >
+                </ImageView>
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" >
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" >
+
+                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                        android:id="@+id/artistLine"
+                        style="@style/TextViewAppearance.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="Artist Line"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/font_size_title" />
+
+                    <TextView
+                        android:id="@+id/chunkTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:gravity="right"
+                        android:singleLine="true"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/font_size_title"
+                        android:visibility="visible" />
+                </LinearLayout>
+                <!-- android:textColor="#ffff" -->
+
+
+                <!-- android:textColor="@color/dimmed" -->
 
                 <com.csform.android.uiapptemplate.font.RobotoTextView
-                    android:id="@+id/artistLine"
-                    style="@style/TextViewAppearance.Body"
+                    android:id="@+id/titleLine"
+                    style="@style/TextViewAppearance.Caption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/font_size_title"
-                    android:text="Artist Line" />
-
-                <TextView
-                    android:id="@+id/chunkTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:gravity="right"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/font_size_title"
-                    android:visibility="visible" />
+                    android:text="Title Line"
+                    android:textSize="@dimen/font_size_normal" />
             </LinearLayout>
-            <!-- android:textColor="#ffff" -->
-
-
-            <!-- android:textColor="@color/dimmed" -->
-
-            <com.csform.android.uiapptemplate.font.RobotoTextView
-                android:id="@+id/titleLine"
-                style="@style/TextViewAppearance.Caption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textSize="@dimen/font_size_normal"
-                android:text="Title Line" />
         </LinearLayout>
-    </LinearLayout>
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
     <ImageView
         android:id="@+id/btnDownload"
