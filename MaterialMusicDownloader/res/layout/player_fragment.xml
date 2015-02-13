@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:padding="16dp"
     tools:ignore="ContentDescription" >
 
     <LinearLayout
@@ -16,8 +17,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="16dp" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/albumCover"
@@ -33,21 +33,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <RelativeLayout
-                android:id="@+id/songInfo"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/holo_transparent_button"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp" >
+                android:orientation="vertical">
 
                 <FrameLayout
-                    android:id="@+id/flSongContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true" >
+                    android:layout_gravity="center_horizontal" >
 
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                         android:id="@+id/songNameBox"
@@ -59,37 +54,27 @@
                         <com.csform.android.uiapptemplate.font.RobotoTextView
                             android:id="@+id/songName"
                             style="@style/TextViewAppearance.Headline"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:clickable="true"
                             android:drawablePadding="4dp"
                             android:drawableRight="@drawable/ic_action_edit"
-                            android:ellipsize="marquee"
                             android:gravity="bottom"
-                            android:lines="1"
-                            android:text="Title of music" />
+                            android:lines="1" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
                     <EditText
                         android:id="@+id/songNameEdit"
                         style="@style/EditTextAppearance.Headline"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:focusableInTouchMode="true"
-                        android:fontFamily="sans-serif-light"
-                        android:inputType="textNoSuggestions"
-                        android:visibility="gone" >
-
-                        <requestFocus />
-                    </EditText>
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:visibility="gone" />
                 </FrameLayout>
 
                 <FrameLayout
-                    android:id="@+id/flArtistContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/flSongContainer"
-                    android:layout_centerHorizontal="true" >
+                    android:layout_gravity="center_horizontal" >
 
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                         android:id="@+id/artistNameBox"
@@ -106,7 +91,7 @@
                             android:drawablePadding="4dp"
                             android:drawableRight="@drawable/ic_action_edit"
                             android:gravity="bottom"
-                            android:text="name artist" />
+                            android:lines="1" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
                     <EditText
@@ -114,56 +99,47 @@
                         style="@style/EditTextAppearance.Title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="bottom"
                         android:visibility="gone" />
                 </FrameLayout>
 
-                <RelativeLayout
-                    android:id="@+id/progress_layout"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/flArtistContainer"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="8dp" >
+                    android:orientation="vertical" >
 
-                    <TextView
-                        android:id="@+id/trackTime"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:paddingLeft="8dp"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp" />
+                        android:orientation="horizontal" >
 
-                    <TextView
-                        android:id="@+id/trackTotalTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:paddingRight="8dp"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/trackTime"
+                            style="@style/TextViewAppearance.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start" />
+
+                        <TextView
+                            android:id="@+id/trackTotalTime"
+                            style="@style/TextViewAppearance.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end" />
+                    </LinearLayout>
 
                     <SeekBar
                         android:id="@+id/progress_track"
                         style="@style/SeerkBar.Indeterminate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/trackTime"
-                        android:layout_marginTop="4dp"
-                        android:max="100"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:progress="0" />
-                </RelativeLayout>
-            </RelativeLayout>
+                        android:max="100"/>
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/buttons_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:baselineAligned="false"
@@ -180,7 +156,6 @@
                         android:id="@+id/shuffle"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_media_shuffle" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -196,7 +171,6 @@
                         android:id="@+id/prev"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_media_previous" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -212,7 +186,6 @@
                         android:id="@+id/playpause"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_media_play" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -228,7 +201,6 @@
                         android:id="@+id/stop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_media_stop" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -244,7 +216,6 @@
                         android:id="@+id/next"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_media_next" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -260,7 +231,6 @@
                         android:id="@+id/repeat"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_media_repeat" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -285,14 +255,12 @@
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
             <FrameLayout
-                android:id="@+id/player_lyrics_frame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="48dp"
-                android:orientation="vertical" >
+                android:minHeight="48dp">
 
                 <ProgressBar
-                    android:id="@+id/lyrics_load_image"
+                    android:id="@+id/lyrics_progress"
                     style="@style/ProgressBarStyle.Big"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -301,10 +269,13 @@
                     android:visibility="visible" />
 
                 <com.csform.android.uiapptemplate.font.RobotoTextView
-                    android:id="@+id/player_lyrics_view"
+                    android:id="@+id/lyrics_text"
                     style="@style/TextViewAppearance.Body1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="gone" />
+
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>

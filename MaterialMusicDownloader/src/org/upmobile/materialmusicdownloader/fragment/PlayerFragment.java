@@ -6,7 +6,6 @@ import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.widget.UndoBarController;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -21,12 +20,8 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,8 +35,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -55,22 +48,20 @@ import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment {
 
-	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
-	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
 	private AbstractSong song;
 	private RenameTask renameTask;
 	private PlaybackService player;
-	private LyricsFetcher lyricsFetcher;
 	private DownloadListener downloadListener;
 
 	private View parentView;
-	private SeekBar playerProgress;
 	private ImageView playerCover;
 	private CircularProgressButton download;
 
+	// lyric sections
+	private LyricsFetcher lyricsFetcher;
 	private TextView playerLyricsView;
 
-	// playback section
+	// playback sections
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
@@ -78,15 +69,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private ImageButton repeat;
 	private ImageButton stop;
 
-	// info
+	// info sections
 	private TextView tvTitle;
 	private TextView tvArtist;
 	private EditText etTitle;
 	private EditText etArtist;
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
+	private SeekBar playerProgress;
 
 	private int checkIdCover;
+	private int checkIdRmvTask;
+	private int checkIdLyrics;
 	private boolean isDestroy;
 	private boolean isUseAlbumCover = true;
 
@@ -123,16 +117,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (isDestroy)
 				return;
 			changePlayPauseView(false);
-			playerProgress.setIndeterminate(false);
+			settingPlayerProgress();
 		}
 
 		@Override
 		public void stop(AbstractSong s) {
 			if (isDestroy)
 				return;
-			setElementsView(0);
 			changePlayPauseView(true);
-			setClickablePlayerElement(player.isPrepared());
+			setElementsView(0);
+			settingPlayerProgress();
 		}
 
 		@Override
@@ -153,6 +147,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setImageButton();
 			setClickablePlayerElement(true);
 			changePlayPauseView(!player.isPlaying());
+			settingPlayerProgress();
 			setElementsView(0);
 		}
 
@@ -163,7 +158,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			song = current;
 			setElementsView(0);
 			setClickablePlayerElement(false);
-			playerProgress.setIndeterminate(true);
+			settingPlayerProgress();
+			parentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
+			parentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 		}
 	};
 
@@ -220,8 +217,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		setImageButton();
 		getCover(song);
+		showLyrics();
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
+		settingPlayerProgress();
 		setClickablePlayerElement(prepared);
 		downloadButtonState(prepared);
 		if (prepared) {
@@ -250,7 +249,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		isDestroy = true;
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		closeEditViews();
@@ -294,6 +293,118 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
+	private void init() {
+		play = (ImageButton) parentView.findViewById(R.id.playpause);
+		previous = (ImageButton) parentView.findViewById(R.id.prev);
+		forward = (ImageButton) parentView.findViewById(R.id.next);
+		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
+		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
+		stop = (ImageButton) parentView.findViewById(R.id.stop);
+		download = (CircularProgressButton) parentView.findViewById(R.id.download);
+		playerProgress = (SeekBar) parentView.findViewById(R.id.progress_track);
+		tvTitle = (TextView) parentView.findViewById(R.id.songName);
+		etTitle = (EditText) parentView.findViewById(R.id.songNameEdit);
+		tvArtist = (TextView) parentView.findViewById(R.id.artistName);
+		etArtist = (EditText) parentView.findViewById(R.id.artistNameEdit);
+		playerCurrTime = (TextView) parentView.findViewById(R.id.trackTime);
+		playerTotalTime = (TextView) parentView.findViewById(R.id.trackTotalTime);
+		playerLyricsView = (TextView) parentView.findViewById(R.id.lyrics_text);
+		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
+	}
+
+	private void setListeners() {
+		play.setOnClickListener(this);
+		stop.setOnClickListener(this);
+		shuffle.setOnClickListener(this);
+		repeat.setOnClickListener(this);
+		previous.setOnClickListener(this);
+		forward.setOnClickListener(this);
+		tvTitle.setOnClickListener(this);
+		tvArtist.setOnClickListener(this);
+		download.setOnClickListener(this);
+		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				if (fromUser) {
+					try {
+						player.seekTo(progress);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+		});
+		parentView.findViewById(R.id.scroll).setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				closeEditViews();
+				return false;
+			}
+
+		});
+	}
+
+	/**
+	 * @param delta
+	 *            - delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 -
+	 *            current song
+	 */
+	private void play(int delta) throws IllegalArgumentException {
+		if (delta == 0) {
+			player.play(song);
+			return;
+		}
+		player.stop();
+		playerCover.invalidate();
+		if (delta > 0) {
+			player.shift(1);
+			getCover(player.getPlayingSong());
+			downloadButtonState(false);
+		} else if (delta < 0) {
+			player.shift(-1);
+			getCover(player.getPlayingSong());
+			downloadButtonState(false);
+		}
+	}
+
+	private void setElementsView(int progress) {
+		if (song.getClass() == MusicData.class) {
+			download.setVisibility(View.GONE);
+		} else {
+			download.setVisibility(View.VISIBLE);
+		}
+		tvArtist.setText(song.getArtist());
+		tvTitle.setText(song.getTitle());
+		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
+		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
+	}
+
+	private void settingPlayerProgress() {
+		if (player.isPrepared()) {
+			playerProgress.removeCallbacks(progressAction);
+			playerProgress.setIndeterminate(false);
+			playerProgress.setMax((int) song.getDuration());
+			playerProgress.setProgress(player.getCurrentPosition());
+			playerProgress.post(progressAction);
+		} else {
+			playerProgress.setProgress(0);
+			playerProgress.setEnabled(false);
+			playerProgress.setClickable(false);
+			playerProgress.setIndeterminate(true);
+		}
+	}
+	
 	private void setImageButton() {
 		if (!player.enabledRepeat()) {
 			repeat.setImageResource(R.drawable.ic_media_repeat);
@@ -310,12 +421,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setClickablePlayerElement(boolean isClickable) {
 		play.setClickable(isClickable);
 		stop.setClickable(isClickable);
-		playerProgress.setEnabled(isClickable);
-		playerProgress.setClickable(isClickable);
-		playerProgress.setIndeterminate(!isClickable);
 		if (!isClickable) {
 			playerCurrTime.setText("0:00");
-			playerProgress.setProgress(0);
 		}
 	}
 
@@ -332,64 +439,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
-	private void init() {
-		play = (ImageButton) parentView.findViewById(R.id.playpause);
-		previous = (ImageButton) parentView.findViewById(R.id.prev);
-		forward = (ImageButton) parentView.findViewById(R.id.next);
-		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
-		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
-		stop = (ImageButton) parentView.findViewById(R.id.stop);
-		download = (CircularProgressButton) parentView.findViewById(R.id.download);
-		playerProgress = (SeekBar) parentView.findViewById(R.id.progress_track);
-		tvTitle = (TextView) parentView.findViewById(R.id.songName);
-		etTitle = (EditText) parentView.findViewById(R.id.songNameEdit);
-		tvArtist = (TextView) parentView.findViewById(R.id.artistName);
-		etArtist = (EditText) parentView.findViewById(R.id.artistNameEdit);
-		playerCurrTime = (TextView) parentView.findViewById(R.id.trackTime);
-		playerTotalTime = (TextView) parentView.findViewById(R.id.trackTotalTime);
-		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
-		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
-	}
-
-	private void setListeners() {
-		play.setOnClickListener(this);
-		stop.setOnClickListener(this);
-		shuffle.setOnClickListener(this);
-		repeat.setOnClickListener(this);
-		previous.setOnClickListener(this);
-		forward.setOnClickListener(this);
-		tvTitle.setOnClickListener(this);
-		tvArtist.setOnClickListener(this);
-		download.setOnClickListener(this);
-		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) { }
-			
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {	}
-			
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				if (fromUser) {
-					try {
-						player.seekTo(progress);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			
-		});
-		parentView.findViewById(R.id.scroll).setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				closeEditViews();
-				return false;
-			}
-
-		});
+	private void downloadButtonState(boolean state) {
+		download.setClickable(state);
+		download.setEnabled(state);
 	}
 
 	private void openArtistField() {
@@ -425,7 +477,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void closeEditViews() {
-		// TODO closeEditViews
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
 			hideKeyboard();
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
@@ -447,55 +498,32 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
-	private void setElementsView(int progress) {
-		if (song.getClass() == MusicData.class) {
-			download.setVisibility(View.GONE);
-		} else {
-			download.setVisibility(View.VISIBLE);
-		}
-		playerProgress.removeCallbacks(progressAction);
-		tvArtist.setText(song.getArtist());
-		tvTitle.setText(song.getTitle());
-		long totalTime = song.getDuration();
-		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
-		playerProgress.setMax((int) totalTime);
-		playerProgress.setProgress(progress);
-		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
-		playerProgress.post(progressAction);
-	}
-
 	private void showLyrics() {
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
 			playerLyricsView.setText("");
 		}
-		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
-			lyricsFetcher = new LyricsFetcher(getActivity());
-			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
-			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+		lyricsFetcher = new LyricsFetcher(getActivity());
+		lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
+		OnLyricsFetchedListener fetchedListener = new OnLyricsFetchedListener() {
 
-				@Override
-				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-					try {
-						if (foundLyrics) {
-							playerLyricsView.setText(Html.fromHtml(lyrics));
-						} else {
-							String songName = song.getArtist() + " - " + song.getTitle();
-							playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
-						}
-					} catch (Exception e) {
-					}
+			@Override
+			public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+				if (hashCode() != checkIdLyrics) {
+					return;
 				}
-			});
-		} else {
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
-		}
-	}
-
-	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(parentView.getWindowToken(), 0);
+				parentView.findViewById(R.id.lyrics_progress).setVisibility(View.GONE);
+				parentView.findViewById(R.id.lyrics_text).setVisibility(View.VISIBLE);
+				if (foundLyrics) {
+					playerLyricsView.setText(Html.fromHtml(lyrics));
+				} else {
+					String songName = song.getArtist() + " - " + song.getTitle();
+					playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
+				}
+			}
+		};
+		lyricsFetcher.setOnLyricsFetchedListener(fetchedListener);
+		checkIdLyrics = fetchedListener.hashCode();
 	}
 
 	private void saveTags() {
@@ -521,29 +549,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		};
 		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
 		renameTask.start(true, false);
-	}
-
-	/**
-	 * @param delta
-	 *            - delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 -
-	 *            current song
-	 */
-	private void play(int delta) throws IllegalArgumentException {
-		if (delta == 0) {
-			player.play(song);
-			return;
-		}
-		player.stop();
-		playerCover.invalidate();
-		if (delta > 0) {
-			player.shift(1);
-			getCover(player.getPlayingSong());
-			downloadButtonState(false);
-		} else if (delta < 0) {
-			player.shift(-1);
-			getCover(player.getPlayingSong());
-			downloadButtonState(false);
-		}
 	}
 
 	private void getCover(final AbstractSong song) {
@@ -583,9 +588,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
-	private void downloadButtonState(boolean state) {
-		download.setClickable(state);
-		download.setEnabled(state);
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(parentView.getWindowToken(), 0);
 	}
 
 	private void download() {

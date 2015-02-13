@@ -85,6 +85,13 @@
         <item name="android:paddingRight">8dp</item>
     </style>
     
+    <style name="TextViewAppearence.Body" parent="TextViewAppearance.Body1">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+    
     <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">
        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
     </style>
