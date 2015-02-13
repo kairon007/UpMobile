@@ -17,6 +17,10 @@
     <string name="delete">Delete</string>
     <string name="download">Download</string>
     <string name="nothing_changed">Nothing changed</string>
+    
+    <!-- undo bar -->
+    <string name="undo">Undo</string>
+    <string name="retry">Retry</string>
 
     <string-array name="titles">
         <item>Search</item>

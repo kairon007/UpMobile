@@ -84,5 +84,9 @@
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
     </style>
+    
+    <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">
+       <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
+    </style>
 
 </resources>

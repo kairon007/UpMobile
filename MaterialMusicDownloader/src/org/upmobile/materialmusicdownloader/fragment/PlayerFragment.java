@@ -6,6 +6,7 @@ import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.widget.UndoBarController;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -52,53 +53,128 @@ import android.widget.Toast;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, BaseMaterialFragment {
+public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment {
 
 	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
 	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
 	private AbstractSong song;
-	private AudioManager audio;
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private LyricsFetcher lyricsFetcher;
 	private DownloadListener downloadListener;
-	private IntentFilter filter;
-	
-	
+
 	private View parentView;
 	private SeekBar playerProgress;
-	private SeekBar volume;
 	private ImageView playerCover;
 	private CircularProgressButton download;
-	private TextView playerCurrTime;
-	private TextView playerTotalTime;
-	private TextView playerLyricsView;
-	private View wait;
 
-	//playback section
+	private TextView playerLyricsView;
+
+	// playback section
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
 	private ImageButton shuffle;
 	private ImageButton repeat;
 	private ImageButton stop;
-	
+
+	// info
 	private TextView tvTitle;
 	private TextView tvArtist;
 	private EditText etTitle;
 	private EditText etArtist;
-	
+	private TextView playerCurrTime;
+	private TextView playerTotalTime;
+
 	private int checkIdCover;
-    private boolean isDestroy;
-    private boolean isUseAlbumCover = true;
-	
+	private boolean isDestroy;
+	private boolean isUseAlbumCover = true;
+
+	private Runnable progressAction = new Runnable() {
+
+		@Override
+		public void run() {
+			try {
+				playerProgress.removeCallbacks(this);
+				if (player.isPrepared()) {
+					int current = player.getCurrentPosition();
+					playerProgress.setProgress(current);
+					playerCurrTime.setText(Util.getFormatedStrDuration(current));
+				}
+				playerProgress.postDelayed(this, 1000);
+			} catch (Exception e) {
+				Log.d(getClass().getSimpleName(), e + "");
+			}
+		}
+
+	};
+
+	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+
+		@Override
+		public void pause(AbstractSong song) {
+			if (isDestroy)
+				return;
+			changePlayPauseView(true);
+		}
+
+		@Override
+		public void play(AbstractSong song) {
+			if (isDestroy)
+				return;
+			changePlayPauseView(false);
+			playerProgress.setIndeterminate(false);
+		}
+
+		@Override
+		public void stop(AbstractSong s) {
+			if (isDestroy)
+				return;
+			setElementsView(0);
+			changePlayPauseView(true);
+			setClickablePlayerElement(player.isPrepared());
+		}
+
+		@Override
+		public void error() {
+			if (isDestroy)
+				return;
+			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void start(AbstractSong s) {
+			song = s;
+			if (isDestroy)
+				return;
+			((MainActivity) getActivity()).showPlayerElement(true);
+			downloadButtonState(true);
+			showLyrics();
+			setImageButton();
+			setClickablePlayerElement(true);
+			changePlayPauseView(!player.isPlaying());
+			setElementsView(0);
+		}
+
+		@Override
+		public void update(AbstractSong current) {
+			if (isDestroy)
+				return;
+			song = current;
+			setElementsView(0);
+			setClickablePlayerElement(false);
+			playerProgress.setIndeterminate(true);
+		}
+	};
+
 	private class FalseProgress extends AsyncTask<Integer, Integer, Integer> {
-		
+
 		private CircularProgressButton cpb;
+
 		public FalseProgress(CircularProgressButton cpb) {
 			this.cpb = cpb;
 		}
-		
+
 		@Override
 		protected Integer doInBackground(Integer... params) {
 			for (int progress = 0; progress < 100; progress += 5) {
@@ -123,19 +199,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			cpb.setProgress(progress);
 		}
 	}
-    
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
 		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
 		setListeners();
-		playerProgress.setVisibility(View.GONE);
-		filter = new IntentFilter();
-		filter.addAction(ANDROID_MEDIA_VOLUME_CHANGED_ACTION);
-		audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
@@ -161,76 +231,71 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		return parentView;
 	}
-	
+
 	@Override
 	public void onDestroyView() {
 		player.removeStatePlayerListener(stateListener);
 		super.onDestroyView();
 	}
-	
+
 	@Override
 	public void onPause() {
-		if (null != lyricsFetcher) lyricsFetcher.cancel();
-		if (null != volumeReceiver) getActivity().unregisterReceiver(volumeReceiver);
+		if (null != lyricsFetcher)
+			lyricsFetcher.cancel();
 		super.onPause();
 	}
-	
-	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
-		
-		@Override
-		public void pause(AbstractSong song) {
-			if (isDestroy) return;
-			changePlayPauseView(true);
-		}
 
-		@Override
-		public void play(AbstractSong song) {
-			if (isDestroy) return;
-			changePlayPauseView(false);
-			wait.setVisibility(View.INVISIBLE);
-			playerProgress.setVisibility(View.VISIBLE);
-		}
-		
-		@Override
-		public void stop(AbstractSong s) {
-			if (isDestroy) return;
-			setElementsView(0);
-			changePlayPauseView(true);
-			setClickablePlayerElement(player.isPrepared());
-		}
-		
-		@Override
-		public void error() {
-			if (isDestroy) return;
-			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
-		}
-		
-		@Override
-		public void start(AbstractSong s) {
-			song = s;
-			if (isDestroy) return;
-			((MainActivity) getActivity()).showPlayerElement(true);
-			downloadButtonState(true);
-			showLyrics();
-			setImageButton();
-			setClickablePlayerElement(true);
-			changePlayPauseView(!player.isPlaying());
-			setElementsView(0);
-		}
-		
-		@Override
-		public void update(AbstractSong current) {
-			if (isDestroy) return;
-			song = current;
-			setElementsView(0);
-			setClickablePlayerElement(false);
-			playerProgress.setVisibility(View.INVISIBLE);
-			wait.setVisibility(View.VISIBLE);
-		}
-	};
+	@Override
+	public void onDestroy() {
+		isDestroy = true;
+		super.onDestroy();
+	}
 	
+	@Override
+	public void onClick(View v) {
+		closeEditViews();
+		switch (v.getId()) {
+		case R.id.playpause:
+			play(0);
+			break;
+		case R.id.prev:
+			play(-1);
+			break;
+		case R.id.next:
+			play(1);
+			break;
+		case R.id.repeat:
+			if (!player.offOnRepeat()) {
+				repeat.setImageResource(R.drawable.ic_media_repeat);
+			} else {
+				repeat.setImageResource(R.drawable.ic_media_repeat_on);
+			}
+			break;
+		case R.id.shuffle:
+			if (player.offOnShuffle()) {
+				shuffle.setImageResource(R.drawable.ic_media_shuffle_on);
+			} else {
+				shuffle.setImageResource(R.drawable.ic_media_shuffle);
+			}
+			break;
+		case R.id.stop:
+			player.stop();
+			break;
+		case R.id.download:
+			new FalseProgress((CircularProgressButton) v).execute(100);
+			download();
+			break;
+		case R.id.artistName:
+			openArtistField();
+			break;
+		case R.id.songName:
+			openTitleField();
+			break;
+		}
+	}
+
 	private void setImageButton() {
-		if(!player.enabledRepeat()) {
+		if (!player.enabledRepeat()) {
 			repeat.setImageResource(R.drawable.ic_media_repeat);
 		} else {
 			repeat.setImageResource(R.drawable.ic_media_repeat_on);
@@ -242,47 +307,22 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 
-	private final BroadcastReceiver volumeReceiver = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (null != intent.getAction() && ANDROID_MEDIA_VOLUME_CHANGED_ACTION.equals(intent.getAction())) {
-				if ((Integer) intent.getExtras().get(ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE) == volume.getProgress()) return;
-				volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-			}
-		}
-	};
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		getActivity().registerReceiver(volumeReceiver, filter); 
-	}
-	
-	@Override
-	public void onDestroy() {
-		isDestroy = true;
-		super.onDestroy();
-	}
-
 	private void setClickablePlayerElement(boolean isClickable) {
 		play.setClickable(isClickable);
 		stop.setClickable(isClickable);
 		playerProgress.setEnabled(isClickable);
 		playerProgress.setClickable(isClickable);
+		playerProgress.setIndeterminate(!isClickable);
 		if (!isClickable) {
 			playerCurrTime.setText("0:00");
 			playerProgress.setProgress(0);
-			playerProgress.setVisibility(View.INVISIBLE);
-			wait.setVisibility(View.VISIBLE);
-		} else {
-			playerProgress.setVisibility(View.VISIBLE);
-			wait.setVisibility(View.INVISIBLE);
 		}
 	}
-	
+
 	/**
-	 * @param isPlaying - If "true", the button changes the picture to "play", if "false" changes to "pause"
+	 * @param isPlaying
+	 *            - If "true", the button changes the picture to "play", if
+	 *            "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
 		if (isPlaying) {
@@ -291,17 +331,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			play.setImageResource(R.drawable.ic_media_pause);
 		}
 	}
-	
+
 	private void init() {
 		play = (ImageButton) parentView.findViewById(R.id.playpause);
-		wait = parentView.findViewById(R.id.player_wait_song);
 		previous = (ImageButton) parentView.findViewById(R.id.prev);
 		forward = (ImageButton) parentView.findViewById(R.id.next);
 		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
 		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
 		stop = (ImageButton) parentView.findViewById(R.id.stop);
 		download = (CircularProgressButton) parentView.findViewById(R.id.download);
-		volume = (SeekBar) parentView.findViewById(R.id.progress_volume);
 		playerProgress = (SeekBar) parentView.findViewById(R.id.progress_track);
 		tvTitle = (TextView) parentView.findViewById(R.id.songName);
 		etTitle = (EditText) parentView.findViewById(R.id.songNameEdit);
@@ -314,8 +352,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void setListeners() {
-		playerProgress.setOnSeekBarChangeListener(this);
-		volume.setOnSeekBarChangeListener(this);
 		play.setOnClickListener(this);
 		stop.setOnClickListener(this);
 		shuffle.setOnClickListener(this);
@@ -325,6 +361,26 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		tvTitle.setOnClickListener(this);
 		tvArtist.setOnClickListener(this);
 		download.setOnClickListener(this);
+		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) { }
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {	}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				if (fromUser) {
+					try {
+						player.seekTo(progress);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		});
 		parentView.findViewById(R.id.scroll).setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -335,10 +391,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 		});
 	}
-	
+
 	private void openArtistField() {
 		if (tvArtist.getVisibility() == View.VISIBLE) {
-			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 			parentView.findViewById(R.id.artistNameBox).setVisibility(View.GONE);
 			etArtist.setVisibility(View.VISIBLE);
@@ -354,7 +410,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void openTitleField() {
 		if (tvTitle.getVisibility() == View.VISIBLE) {
-			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 			parentView.findViewById(R.id.songNameBox).setVisibility(View.GONE);
 			etTitle.setVisibility(View.VISIBLE);
@@ -367,7 +423,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			etTitle.setVisibility(View.GONE);
 		}
 	}
-	
+
 	private void closeEditViews() {
 		// TODO closeEditViews
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
@@ -407,97 +463,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
 		playerProgress.post(progressAction);
 	}
-	
-	@Override
-	public void onClick(View v) {
-		closeEditViews();
-		switch (v.getId()) {
-		case R.id.playpause:
-			play(0);
-			break;
-		case R.id.prev:
-			play(-1);	
-			break;
-		case R.id.next:
-			play(1);
-			break;
-		case R.id.repeat:
-			if (!player.offOnRepeat()){
-				repeat.setImageResource(R.drawable.ic_media_repeat);
-			} else {
-				repeat.setImageResource(R.drawable.ic_media_repeat_on);
-			}
-			break;
-		case R.id.shuffle:
-			if (player.offOnShuffle()) {
-				shuffle.setImageResource(R.drawable.ic_media_shuffle_on);
-			} else {
-				shuffle.setImageResource(R.drawable.ic_media_shuffle);
-			}
-			break;
-		case R.id.stop:
-			player.stop();
-			break;
-		case R.id.download:
-			new FalseProgress((CircularProgressButton) v).execute(100);
-			download();
-			break;
-		case R.id.artistName:
-			openArtistField();
-			break;
-		case R.id.songName:
-			openTitleField();
-			break;
-		}
-	}
 
-	private Runnable progressAction = new Runnable() {
-
-		@Override
-		public void run() {
-			try {
-				playerProgress.removeCallbacks(this);
-				if (player.isPrepared()) {
-					int current = player.getCurrentPosition();
-					playerProgress.setProgress(current);
-					playerCurrTime.setText(Util.getFormatedStrDuration(current));
-				} 
-				playerProgress.postDelayed(this, 1000);
-			} catch (Exception e) {
-				Log.d(getClass().getSimpleName(), e + "");
-			}
-		}
-
-	};
-
-	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		switch (seekBar.getId()) {
-		case R.id.progress_volume:
-			if (fromUser) {
-				audio.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-			}
-			break;
-		case R.id.progress_track:
-			if (fromUser) {
-				try {
-					player.seekTo(progress);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			break;
-		}
-	}
-
-	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {
-	}
-
-	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {
-	}
-	
 	private void showLyrics() {
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
@@ -528,10 +494,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(parentView.getWindowToken(), 0);
 	}
-	
+
 	private void saveTags() {
 		File f = new File(song.getPath());
 		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
@@ -547,20 +513,20 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				renameTask.cancelProgress();
 				player.update(song.getTitle(), song.getArtist(), path);
 			}
-			
+
 			@Override
 			public void error() {
 			}
-			
+
 		};
 		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
 		renameTask.start(true, false);
 	}
-	
+
 	/**
 	 * @param delta
-	 *  - 
-	 * delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
+	 *            - delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 -
+	 *            current song
 	 */
 	private void play(int delta) throws IllegalArgumentException {
 		if (delta == 0) {
@@ -584,10 +550,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (song.getClass() != MusicData.class) {
 			playerCover.setImageResource(R.drawable.no_cover_art_big);
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
-				
+
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover)return;
+					if (this.hashCode() != checkIdCover)
+						return;
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						playerCover.setImageResource(0);
@@ -597,13 +564,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					}
 				}
 			};
-			checkIdCover  = readyListener.hashCode();
+			checkIdCover = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);
 		} else {
 			final Bitmap bitmap = ((MusicData) song).getCover(getActivity());
 			if (bitmap != null) {
 				playerCover.post(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						playerCover.setImageResource(0);
@@ -615,12 +582,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		}
 	}
-	
+
 	private void downloadButtonState(boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
 	}
-	
+
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
@@ -648,6 +615,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				};
 				new Handler(Looper.getMainLooper()).post(callbackRun);
 			}
+
 			@Override
 			public void error(String error) {
 			}
