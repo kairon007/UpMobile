@@ -19,7 +19,6 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,8 +33,10 @@ import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -51,7 +52,7 @@ import android.widget.Toast;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener, BaseMaterialFragment {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, BaseMaterialFragment {
 
 	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
 	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
@@ -62,32 +63,32 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private LyricsFetcher lyricsFetcher;
 	private DownloadListener downloadListener;
 	private IntentFilter filter;
+	
+	
 	private View parentView;
 	private SeekBar playerProgress;
 	private SeekBar volume;
 	private CheckBox playerTagsCheckBox;
-	private ImageButton play;
-	private View wait;
-	private ImageButton previous;
-	private ImageButton forward;
-	private ImageButton editTag;
-	private ImageButton showLyrics;
-	private ImageButton shuffle;
-	private ImageButton repeat;
-	private ImageButton stop;
 	private ImageView playerCover;
 	private CircularProgressButton download;
-	private Button playerSaveTags;
-	private Button playerCancelTags;
-	private Button playerCancelLyrics;
-	private TextView playerTitle;
-	private TextView playerArtist;
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
 	private TextView playerLyricsView;
-	private EditText playerTagsAlbum;
-	private EditText playerTagsTitle;
-	private EditText playerTagsArtist;
+	private View wait;
+
+	//playback section
+	private ImageButton play;
+	private ImageButton previous;
+	private ImageButton forward;
+	private ImageButton shuffle;
+	private ImageButton repeat;
+	private ImageButton stop;
+	
+	private TextView tvTitle;
+	private TextView tvArtist;
+	private EditText etTitle;
+	private EditText etArtist;
+	
 	private int checkIdCover;
     private boolean isDestroy;
     private boolean isUseAlbumCover = true;
@@ -136,7 +137,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
 		player = PlaybackService.get(getActivity());
-		player.addStatePlayerListener(this);
+		player.addStatePlayerListener(stateListener);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
@@ -149,6 +150,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		setImageButton();
 		getCover(song);
+		showLyrics();
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
@@ -163,58 +165,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void onDestroyView() {
-		player.removeStatePlayerListener(this);
+		player.removeStatePlayerListener(stateListener);
 		super.onDestroyView();
-	}
-	
-	@Override
-	public void start(AbstractSong s) {
-		song = s;
-		downloadButtonState(true);
-		if (isDestroy) return;
-		((MainActivity) getActivity()).showPlayerElement(true);
-		setImageButton();
-		setClickablePlayerElement(true);
-		changePlayPauseView(!player.isPlaying());
-		setElementsView(0);
-	}
-	
-	@Override
-	public void pause(AbstractSong song) {
-		if (isDestroy) return;
-		changePlayPauseView(true);
-	}
-
-	@Override
-	public void play(AbstractSong song) {
-		if (isDestroy) return;
-		changePlayPauseView(false);
-		wait.setVisibility(View.INVISIBLE);
-		playerProgress.setVisibility(View.VISIBLE);
-	}
-	
-	@Override
-	public void stop(AbstractSong s) {
-		if (isDestroy) return;
-		setElementsView(0);
-		changePlayPauseView(true);
-		setClickablePlayerElement(player.isPrepared());
-	}
-	
-	@Override
-	public void error() {
-		if (isDestroy) return;
-		Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
-	}
-	
-	@Override
-	public void update(AbstractSong current) {
-		if (isDestroy) return;
-		song = current;
-		setElementsView(0);
-		setClickablePlayerElement(false);
-		playerProgress.setVisibility(View.INVISIBLE);
-		wait.setVisibility(View.VISIBLE);
 	}
 	
 	@Override
@@ -223,7 +175,60 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (null != volumeReceiver) getActivity().unregisterReceiver(volumeReceiver);
 		super.onPause();
 	}
+	
+	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+		
+		@Override
+		public void pause(AbstractSong song) {
+			if (isDestroy) return;
+			changePlayPauseView(true);
+		}
 
+		@Override
+		public void play(AbstractSong song) {
+			if (isDestroy) return;
+			changePlayPauseView(false);
+			wait.setVisibility(View.INVISIBLE);
+			playerProgress.setVisibility(View.VISIBLE);
+		}
+		
+		@Override
+		public void stop(AbstractSong s) {
+			if (isDestroy) return;
+			setElementsView(0);
+			changePlayPauseView(true);
+			setClickablePlayerElement(player.isPrepared());
+		}
+		
+		@Override
+		public void error() {
+			if (isDestroy) return;
+			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
+		}
+		
+		@Override
+		public void start(AbstractSong s) {
+			song = s;
+			downloadButtonState(true);
+			if (isDestroy) return;
+			((MainActivity) getActivity()).showPlayerElement(true);
+			setImageButton();
+			setClickablePlayerElement(true);
+			changePlayPauseView(!player.isPlaying());
+			setElementsView(0);
+		}
+		
+		@Override
+		public void update(AbstractSong current) {
+			if (isDestroy) return;
+			song = current;
+			setElementsView(0);
+			setClickablePlayerElement(false);
+			playerProgress.setVisibility(View.INVISIBLE);
+			wait.setVisibility(View.VISIBLE);
+		}
+	};
+	
 	private void setImageButton() {
 		if(!player.enabledRepeat()) {
 			repeat.setImageResource(R.drawable.ic_media_repeat);
@@ -252,26 +257,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onResume() {
 		super.onResume();
 		getActivity().registerReceiver(volumeReceiver, filter); 
-//		((MainActivity) getActivity()).setSelectedItem(3);
-//		getView().setFocusableInTouchMode(true);
-//		getView().requestFocus();
-//		getView().setOnKeyListener(new View.OnKeyListener() {
-//			
-//			@Override
-//			public boolean onKey(View v, int keyCode, KeyEvent event) {
-//				switch (keyCode) {
-//				case KeyEvent.KEYCODE_VOLUME_DOWN:
-//					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-//					break;
-//				case KeyEvent.KEYCODE_VOLUME_UP:
-//					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-//					break;
-//				default:
-//					break;
-//				}
-//				return false;
-//			}
-//		});
 	}
 	
 	@Override
@@ -316,39 +301,98 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
 		stop = (ImageButton) parentView.findViewById(R.id.stop);
 		download = (CircularProgressButton) parentView.findViewById(R.id.download);
-		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
-		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
 		volume = (SeekBar) parentView.findViewById(R.id.progress_volume);
 		playerProgress = (SeekBar) parentView.findViewById(R.id.progress_track);
-		playerTitle = (TextView) parentView.findViewById(R.id.songName);
-		playerArtist = (TextView) parentView.findViewById(R.id.artistName);
+		tvTitle = (TextView) parentView.findViewById(R.id.songName);
+		etTitle = (EditText) parentView.findViewById(R.id.songNameEdit);
+		tvArtist = (TextView) parentView.findViewById(R.id.artistName);
+		etArtist = (EditText) parentView.findViewById(R.id.artistNameEdit);
 		playerCurrTime = (TextView) parentView.findViewById(R.id.trackTime);
 		playerTotalTime = (TextView) parentView.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
-		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
-		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
 		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
-		playerCancelLyrics = (Button) parentView.findViewById(R.id.player_cancel_lyrics);
-		playerTagsArtist = (EditText) parentView.findViewById(R.id.editTextArtist);
-		playerTagsTitle = (EditText) parentView.findViewById(R.id.editTextTitle);
-		playerTagsAlbum = (EditText) parentView.findViewById(R.id.editTextAlbum);
 		playerTagsCheckBox = (CheckBox) parentView.findViewById(R.id.isUseCover);
+		setListeners();
+	}
+
+	private void setListeners() {
 		playerProgress.setOnSeekBarChangeListener(this);
 		volume.setOnSeekBarChangeListener(this);
-		playerCancelLyrics.setOnClickListener(this);
 		play.setOnClickListener(this);
 		stop.setOnClickListener(this);
 		shuffle.setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
-		editTag.setOnClickListener(this);
-		showLyrics.setOnClickListener(this);
+		tvTitle.setOnClickListener(this);
+		tvArtist.setOnClickListener(this);
 		download.setOnClickListener(this);
-		playerCancelTags.setOnClickListener(this);
-		playerSaveTags.setOnClickListener(this);
+		parentView.findViewById(R.id.scroll).setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				closeEditViews();
+				return false;
+			}
+
+		});
 	}
 	
+	private void openArtistField() {
+		if (tvArtist.getVisibility() == View.VISIBLE) {
+			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+			parentView.findViewById(R.id.artistNameBox).setVisibility(View.GONE);
+			etArtist.setVisibility(View.VISIBLE);
+			etArtist.requestFocus();
+			etArtist.setText(song.getArtist());
+			int size = song.getArtist().length();
+			etArtist.setSelection(size);
+		} else {
+			tvArtist.setVisibility(View.VISIBLE);
+			etArtist.setVisibility(View.GONE);
+		}
+	}
+
+	private void openTitleField() {
+		if (tvTitle.getVisibility() == View.VISIBLE) {
+			InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+			parentView.findViewById(R.id.songNameBox).setVisibility(View.GONE);
+			etTitle.setVisibility(View.VISIBLE);
+			etTitle.requestFocus();
+			etTitle.setText(song.getTitle());
+			int size = song.getTitle().length();
+			etTitle.setSelection(size);
+		} else {
+			tvTitle.setVisibility(View.VISIBLE);
+			etTitle.setVisibility(View.GONE);
+		}
+	}
+	
+	private void closeEditViews() {
+		// TODO closeEditViews
+		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
+			hideKeyboard();
+			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
+				song.setTitle(etTitle.getText().toString());
+				tvTitle.setText(song.getTitle());
+			} else if (etArtist.getVisibility() == View.VISIBLE && !song.getArtist().equals(etArtist.getText().toString())) {
+				song.setArtist(etArtist.getText().toString());
+				tvArtist.setText(song.getArtist());
+			}
+			parentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
+			parentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
+			etArtist.setVisibility(View.GONE);
+			etTitle.setVisibility(View.GONE);
+			if (song.getClass() != MusicData.class) {
+				player.update(song.getTitle(), song.getArtist(), null);
+			} else {
+				saveTags();
+			}
+		}
+	}
+
 	private void setElementsView(int progress) {
 		if (song.getClass() == MusicData.class) {
 			download.setVisibility(View.GONE);
@@ -356,8 +400,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			download.setVisibility(View.VISIBLE);
 		}
 		playerProgress.removeCallbacks(progressAction);
-		playerArtist.setText(song.getArtist());
-		playerTitle.setText(song.getTitle());
+		tvArtist.setText(song.getArtist());
+		tvTitle.setText(song.getTitle());
 		long totalTime = song.getDuration();
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
 		playerProgress.setMax((int) totalTime);
@@ -365,33 +409,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
 		playerProgress.post(progressAction);
 	}
-		
-	private void updateObject() {
-		playerArtist.setText(song.getArtist());
-		playerTitle.setText(song.getTitle());
-		if (!playerTagsCheckBox.isChecked()) {
-			if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(false); 
-			playerCover.setImageResource(R.drawable.no_cover_art_big);
-			checkBoxState(false);
-		}
-		if (song.getClass() != MusicData.class) {
-			player.update(song.getTitle(), song.getArtist(), null);
-		}
-	}
 	
 	@Override
 	public void onClick(View v) {
+		closeEditViews();
 		switch (v.getId()) {
 		case R.id.playpause:
 			play(0);
 			break;
 		case R.id.prev:
 			play(-1);	
-			hideOpenViews();
 			break;
 		case R.id.next:
 			play(1);
-			hideOpenViews();
 			break;
 		case R.id.repeat:
 			if (!player.offOnRepeat()){
@@ -414,40 +444,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			new FalseProgress((CircularProgressButton) v).execute(100);
 			download();
 			break;
-		case R.id.player_lyrics:
-			showLyrics();
+		case R.id.artistName:
+			openArtistField();
 			break;
-		case R.id.player_edit_tags:
-			showEditTagDialog();
-			break;
-		case R.id.player_save_tags:
-			saveTags();
-		case R.id.player_cancel_tags:
-			hideKeyboard();
-			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
-			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
-				playerTagsCheckBox.setChecked(true);
-			}
-			break;
-		case R.id.player_cancel_lyrics:
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
-			break;
-		default:
+		case R.id.songName:
+			openTitleField();
 			break;
 		}
-	}
-
-	private void hideOpenViews() {
-		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
-			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
-			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
-				playerTagsCheckBox.setChecked(true);
-			}
-		}
-		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.VISIBLE) {
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
-		}
-		isUseAlbumCover = true;
 	}
 
 	private Runnable progressAction = new Runnable() {
@@ -526,21 +529,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 
-	private void showEditTagDialog() {
-		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
-			hideKeyboard();
-			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
-			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
-				playerTagsCheckBox.setChecked(true);
-			}
-		} else {
-			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.VISIBLE);
-			playerTagsArtist.setText(song.getArtist());
-			playerTagsTitle.setText(song.getTitle());
-			playerTagsAlbum.setText(song.getAlbum());
-		}
-	}
-
 	private void hideKeyboard() {
 		View hideVeiw = parentView.findViewById(R.id.player_edit_tag_dialog);
 		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -548,15 +536,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void saveTags() {
-		hideKeyboard();
-		boolean manipulate = manipulateText();
-		isUseAlbumCover = playerTagsCheckBox.isChecked();
-		if (!manipulate && playerTagsCheckBox.isChecked()) {
-			return;
-		} else {
-			updateObject();
-		}
-		if (song.getClass() != MusicData.class) return;
 		File f = new File(song.getPath());
 		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists() && playerTagsCheckBox.isChecked()) {
 			Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
@@ -573,45 +552,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 					playerTagsCheckBox.setChecked(true);
 				}
-				player.update(song.getTitle(), song.getArtist(), song.getPath());
+				player.update(song.getTitle(), song.getArtist(), path);
 			}
-
+			
 			@Override
 			public void error() {
-
 			}
+			
 		};
 		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
-		if (manipulate && playerTagsCheckBox.isChecked()) { 			//if we change only text
-			if (song.getClass() == MusicData.class) {
-				renameTask.start(true, false);
-			}
-		} else if (!manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change only cover
-			if (song.getClass() == MusicData.class) {
-				renameTask.start(false, true);
-			}
-		} else if (manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change cover and fields
-			if (song.getClass() == MusicData.class) {
-				renameTask.start(false, false);
-			}
-		}
-	}
-
-	public boolean manipulateText() {
-		boolean result = false;
-		if (!song.getTitle().equals(playerTagsTitle.getText().toString())) {
-			song.setTitle(playerTagsTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : Util.removeSpecialCharacters(playerTagsTitle.getText().toString()));
-			result = true;
-		}
-		if (!song.getArtist().equals(playerTagsArtist.getText().toString())) {
-			song.setArtist(playerTagsArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : Util.removeSpecialCharacters(playerTagsArtist.getText().toString()));
-			result = true;
-		}
-		if (song.getAlbum() != null && !song.getAlbum().equals(playerTagsAlbum.getText().toString())) {
-			song.setAlbum(playerTagsAlbum.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : Util.removeSpecialCharacters(playerTagsAlbum.getText().toString()));
-			result = true;
-		}
-		return result;
+		renameTask.start(true, false);
 	}
 	
 	/**

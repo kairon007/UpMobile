@@ -31,6 +31,10 @@
         <item name="android:paddingRight">8dp</item>
     </style>
     
+    <style name="EditTextAppearance.Title" parent="@android:style/Widget.EditText">
+        <item name="android:textSize">20sp</item>
+    </style>
+    
  	<style name="TextViewApperance.Title.NoPadding" parent="TextViewAppearance.Title1">
  	    <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
@@ -45,6 +49,8 @@
         <item name="android:paddingRight">8dp</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
+    
+    
 
     <style name="TextViewAppearance.Caption" parent="TextViewAppearance.Caption1">
         <item name="android:paddingTop">4dp</item>
@@ -66,6 +72,10 @@
         <item name="android:paddingBottom">4dp</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
+    </style>
+    
+    <style name="EditTextAppearance.Headline" parent="@android:style/Widget.EditText">
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="TextViewAppearance.Display" parent="TextViewAppearance.Display1">
