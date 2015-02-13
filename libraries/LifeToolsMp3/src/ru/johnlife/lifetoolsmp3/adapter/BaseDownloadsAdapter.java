@@ -4,14 +4,25 @@ import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData> {
+	
+	protected void setListener(ViewGroup parent, View view, final int position) { }
 
 	public BaseDownloadsAdapter(Context context, int resource) {
 		super(context, resource);
+	}
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup p) {
+		View view = super.getView(position, convertView, p);
+		if (isSetListener()) setListener(p, view, position);
+		return view;
 	}
 	
 	protected abstract class BaseDownloadsViewHolder extends ViewHolder<MusicData> {

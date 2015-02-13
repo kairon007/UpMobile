@@ -20,7 +20,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected PlaybackService service;
 	
 	protected abstract int getDefaultCover();
-	protected abstract void setListener(ViewGroup parent, View view, final int position);
+	protected void setListener(ViewGroup parent, View view, final int position){ }
 	
 	protected OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
