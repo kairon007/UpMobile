@@ -47,7 +47,7 @@
         <LinearLayout
             android:id="@+id/search_scroll"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
+            android:layout_height="98dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:orientation="vertical"
@@ -56,9 +56,11 @@
             <LinearLayout
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
-                android:layout_height="96dp"
+                android:layout_height="match_parent"
                 android:background="@color/background_material_light"
-                android:orientation="vertical" >
+                android:divider="@drawable/layout_divider"
+                android:orientation="vertical"
+                android:showDividers="end" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -121,10 +123,6 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_download" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
 
                 <Spinner
                     android:id="@+id/choise_engines"
