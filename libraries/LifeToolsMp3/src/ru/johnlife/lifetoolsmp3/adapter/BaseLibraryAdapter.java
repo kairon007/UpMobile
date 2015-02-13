@@ -10,12 +10,17 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
 
 	protected PlaybackService service;
+	
+	protected abstract int getDefaultCover();
+	protected abstract void setListener(ViewGroup parent, View view, final int position);
 	
 	protected OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
@@ -79,7 +84,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		super(context, resource, array);
 	}
 	
-	protected abstract int getDefaultCover();
+	@Override
+	public View getView(int position, View convertView, ViewGroup p) {
+		View view = super.getView(position, convertView, p);
+		if (isSetListener()) setListener(p, view, position);
+		return view;
+	}
 
 	public MusicData get(AbstractSong data) {
 		if (data == null) return null;

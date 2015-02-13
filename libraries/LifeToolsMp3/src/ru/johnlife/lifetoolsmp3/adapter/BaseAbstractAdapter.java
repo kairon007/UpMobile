@@ -52,28 +52,9 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		} else {
 			h = (BaseAbstractAdapter.ViewHolder<T>) v.getTag();
 		}
-//		if (isSetListener()) setListener(p, v, position);
 		h.hold(item, position);
 		return v;
 	}
-
-//	private void setListener(ViewGroup p, View v, final int position) {
-//		if (null == parent) {
-//			parent = p;
-//		}
-//		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
-//
-//			@Override
-//			public void onSwipeVisible(Object selected, View v) {
-//				onItemSwipeVisible(selected, v);
-//			}
-//
-//			@Override
-//			public void onSwipeGone(Object selected, View v) {
-//				onItemSwipeGone(selected, v);
-//			}
-//		});
-//	}
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<T> getAll() {

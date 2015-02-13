@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.special.utils.UICircularImage;
 import com.special.utils.UISwipableList;
+import com.special.utils.UISwipableList.OnSwipableListener;
 
 public class LibraryAdapter extends BaseLibraryAdapter {
 	
@@ -289,5 +290,24 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 	@Override
 	protected int getDefaultCover() {
 		return R.drawable.def_cover_circle;
+	}
+
+	@Override
+	protected void setListener(ViewGroup p, View view, int position) {
+		if (null == parent) {
+			parent = p;
+		}
+		((UISwipableList) parent).setOnSwipableListener(new OnSwipableListener() {
+
+					@Override
+					public void onSwipeVisible(Object selected, View v) {
+						onItemSwipeVisible(selected, v);
+					}
+
+					@Override
+					public void onSwipeGone(Object selected, View v) {
+						onItemSwipeGone(selected, v);
+					}
+				});
 	}
 }
