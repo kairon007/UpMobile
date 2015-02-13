@@ -693,13 +693,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			view.setOnClickPendingIntent(R.id.btn_close, pcloseIntent);
 			builder = new NotificationCompat.Builder(this)
 					.setSmallIcon(R.drawable.ic_launcher)
-					.setLargeIcon(Bitmap.createScaledBitmap(cover, 128, 128, false))
+					.setLargeIcon(cover)
 					.setContentIntent(pendingIntent).setContent(view);
 		} else {
 			builder = new NotificationCompat.Builder(this)
 					.setPriority(NotificationCompat.PRIORITY_MAX)
 					.setSmallIcon(R.drawable.ic_launcher)
-					.setLargeIcon(Bitmap.createScaledBitmap(cover, 128, 128, false))
+					.setLargeIcon(cover)
 					.setContentTitle(playingSong.getTitle())
 					.setContentText(playingSong.getArtist())
 					.setContentIntent(pendingIntent)
