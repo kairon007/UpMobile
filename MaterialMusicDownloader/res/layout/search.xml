@@ -85,7 +85,7 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="50dp"
                             android:singleLine="true"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@color/main_color_grey_500" />
 
                         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                             style="@style/RippleStyle"
