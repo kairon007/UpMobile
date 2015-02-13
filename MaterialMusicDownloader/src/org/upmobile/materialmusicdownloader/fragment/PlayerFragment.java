@@ -68,7 +68,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private View parentView;
 	private SeekBar playerProgress;
 	private SeekBar volume;
-	private CheckBox playerTagsCheckBox;
 	private ImageView playerCover;
 	private CircularProgressButton download;
 	private TextView playerCurrTime;
@@ -130,7 +129,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		isDestroy = false;
 		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
-		playerProgress.setVisibility(View.INVISIBLE);
+		setListeners();
+		playerProgress.setVisibility(View.GONE);
 		filter = new IntentFilter();
 		filter.addAction(ANDROID_MEDIA_VOLUME_CHANGED_ACTION);
 		audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
@@ -150,7 +150,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		setImageButton();
 		getCover(song);
-		showLyrics();
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
@@ -209,9 +208,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		@Override
 		public void start(AbstractSong s) {
 			song = s;
-			downloadButtonState(true);
 			if (isDestroy) return;
 			((MainActivity) getActivity()).showPlayerElement(true);
+			downloadButtonState(true);
+			showLyrics();
 			setImageButton();
 			setClickablePlayerElement(true);
 			changePlayPauseView(!player.isPlaying());
@@ -311,8 +311,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTotalTime = (TextView) parentView.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
 		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
-		playerTagsCheckBox = (CheckBox) parentView.findViewById(R.id.isUseCover);
-		setListeners();
 	}
 
 	private void setListeners() {
@@ -530,14 +528,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void hideKeyboard() {
-		View hideVeiw = parentView.findViewById(R.id.player_edit_tag_dialog);
 		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(hideVeiw.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(parentView.getWindowToken(), 0);
 	}
 	
 	private void saveTags() {
 		File f = new File(song.getPath());
-		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists() && playerTagsCheckBox.isChecked()) {
+		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
 			Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
 			toast.show();
 			return;
@@ -548,10 +545,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void success(String path) {
 				song.setPath(path);
 				renameTask.cancelProgress();
-				parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
-				if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
-					playerTagsCheckBox.setChecked(true);
-				}
 				player.update(song.getTitle(), song.getArtist(), path);
 			}
 			
@@ -596,13 +589,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				public void onBitmapReady(Bitmap bmp) {
 					if (this.hashCode() != checkIdCover)return;
 					if (null != bmp) {
-						checkBoxState(true);
 						((RemoteSong) song).setHasCover(true);
 						playerCover.setImageResource(0);
 						playerCover.setImageBitmap(bmp);
 					} else {
 						playerCover.setImageResource(R.drawable.no_cover_art_big);
-						checkBoxState(false);
 					}
 				}
 			};
@@ -616,21 +607,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					@Override
 					public void run() {
 						playerCover.setImageResource(0);
-						checkBoxState(true);
 						playerCover.setImageBitmap(bitmap);
 					}
 				});
 			} else {
 				playerCover.setImageResource(R.drawable.no_cover_art_big);
-				checkBoxState(false);
 			}
 		}
-	}
-	
-	private void checkBoxState(boolean state) {
-		playerTagsCheckBox.setEnabled(state);
-		playerTagsCheckBox.setChecked(state);
-		playerTagsCheckBox.setClickable(state);
 	}
 	
 	private void downloadButtonState(boolean state) {

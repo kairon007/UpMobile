@@ -322,15 +322,29 @@
                     android:text="@string/download" />
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
-            <include
-                android:id="@+id/player_edit_tag_dialog"
-                layout="@layout/edit_tag"
-                android:visibility="gone" />
-
-            <include
+            <FrameLayout
                 android:id="@+id/player_lyrics_frame"
-                layout="@layout/lyrics_frame"
-                android:visibility="gone" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="48dp"
+                android:orientation="vertical" >
+
+                <ProgressBar
+                    android:id="@+id/lyrics_load_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    style="@style/ProgressBarStyle.Big"
+                    android:src="@drawable/loader_black"
+                    android:visibility="visible" />
+
+                <com.csform.android.uiapptemplate.font.RobotoTextView
+                    android:id="@+id/player_lyrics_view"
+                    style="@style/TextViewAppearance.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 
