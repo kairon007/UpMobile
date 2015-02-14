@@ -5,11 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/listView"
+    <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        layout="@layout/listview" />
 
     <TextView
         android:id="@+id/message_listview"

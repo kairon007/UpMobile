@@ -100,6 +100,11 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		notifyDataSetChanged();
 	}
 	
+	public void remove(int index) {
+		items.remove(index);
+		notifyDataSetChanged();
+	}
+	
 	public Context getContext() {
 		return context;
 	}

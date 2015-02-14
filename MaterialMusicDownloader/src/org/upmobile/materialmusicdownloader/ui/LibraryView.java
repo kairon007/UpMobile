@@ -25,7 +25,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 
 	@Override
 	protected ListView getListView(View view) {
-		return (ListView) view.findViewById(R.id.listView);
+		return (ListView) view.findViewById(R.id.list);
 	}
 
 	@Override

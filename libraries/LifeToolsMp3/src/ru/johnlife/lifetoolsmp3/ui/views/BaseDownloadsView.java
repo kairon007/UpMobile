@@ -189,6 +189,10 @@ public abstract class BaseDownloadsView extends View{
 		}
 	}
 
+	protected void animateListView(BaseAbstractAdapter<MusicData> adapter, ListView listView) {
+		//Animate listview in childs, if need
+	}
+	
 	private class Updater extends TimerTask {
 
 		@Override
@@ -222,6 +226,7 @@ public abstract class BaseDownloadsView extends View{
 				@Override
 				public void run() {
 					adapter.changeData(list);
+					animateListView(adapter, listView);
 				}
 			});
 			checkCanceled();

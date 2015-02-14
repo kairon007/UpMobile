@@ -2,17 +2,21 @@ package org.upmobile.materialmusicdownloader.adapter;
 
 import org.upmobile.materialmusicdownloader.R;
 
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
+
 import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class DownloadsAdapter extends BaseDownloadsAdapter {
+public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapter {
 
 	private class DownloadsViewHolder extends BaseDownloadsViewHolder {
 
@@ -73,5 +77,19 @@ public class DownloadsAdapter extends BaseDownloadsAdapter {
 	@Override
 	protected int getDefaultCover() {
 		return R.drawable.no_cover_art_light_big_dark;
+	}
+
+	@Override
+	public View getUndoView(int paramInt, View paramView, ViewGroup paramViewGroup) {
+		View view = paramView;
+		if (view == null) {
+			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view, paramViewGroup, false);
+		}
+		return view;
+	}
+
+	@Override
+	public View getUndoClickView(View paramView) {
+		return paramView.findViewById(R.id.undo_button);
 	}
 }

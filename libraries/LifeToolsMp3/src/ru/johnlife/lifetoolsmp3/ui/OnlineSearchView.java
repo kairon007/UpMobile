@@ -250,8 +250,8 @@ public abstract class OnlineSearchView extends View {
 				hideBaseProgress();
 				for (Song song : songsList) {
 					resultAdapter.add(song);
-					animateListView();
 				}
+				animateListView();
 			}
 		}
 	};
@@ -1151,9 +1151,7 @@ public abstract class OnlineSearchView extends View {
 	
 	public void restoreAdapter(ArrayList<Song> list, int position) {
 		resultAdapter = new SongSearchAdapter(getContext());
-		for (Song song : list) {
-			resultAdapter.add(song);
-		}
+		resultAdapter.add(list);
 		listView.addHeaderView(emptyHeader);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
