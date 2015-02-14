@@ -6,6 +6,9 @@ import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.widget.UndoBarController.AdvancedUndoListener;
+import org.upmobile.materialmusicdownloader.widget.UndoBarController.UndoBar;
+import org.upmobile.materialmusicdownloader.widget.UndoBarController.UndoListener;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -26,6 +29,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +41,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -46,16 +55,20 @@ import android.widget.Toast;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
-public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment {
+public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener {
 
+	private static final int MESSAGE_DURATION = 5000;
 	private AbstractSong song;
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
 
 	private View parentView;
-	private ImageView playerCover;
 	private CircularProgressButton download;
+	private UndoBar undo;
+	private ImageView playerCover;
+	private CheckBox cbUseCover;
+	
 
 	// lyric sections
 	private LyricsFetcher lyricsFetcher;
@@ -79,10 +92,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private SeekBar playerProgress;
 
 	private int checkIdCover;
-	private int checkIdRmvTask;
 	private int checkIdLyrics;
+	
 	private boolean isDestroy;
 	private boolean isUseAlbumCover = true;
+	private boolean prepareCover = false;
 
 	private Runnable progressAction = new Runnable() {
 
@@ -156,9 +170,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (isDestroy)
 				return;
 			song = current;
+			prepareCover = false;
 			setElementsView(0);
 			setClickablePlayerElement(false);
 			settingPlayerProgress();
+			setCheckBoxState(false);
+			clearCover();
 			parentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			parentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 		}
@@ -202,6 +219,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		isDestroy = false;
 		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
+		initUndoBar();
 		setListeners();
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
@@ -221,6 +239,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		settingPlayerProgress();
+		setCheckBoxState(false);
 		setClickablePlayerElement(prepared);
 		downloadButtonState(prepared);
 		if (prepared) {
@@ -293,6 +312,46 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		isUseAlbumCover = isChecked;
+		if (song.getClass() != MusicData.class || !prepareCover) {
+			return;
+		}
+		if (isChecked) {
+			playerCover.setImageBitmap(song.getCover(getActivity()));
+			undo.clear();
+		} else {
+			AdvancedUndoListener listener  = new AdvancedUndoListener() {
+				
+				@Override
+				public void onUndo(@Nullable Parcelable token) {
+					playerCover.setImageBitmap(song.getCover(getActivity()));
+					isUseAlbumCover = true;
+					cbUseCover.setChecked(true);
+				}
+				
+				@Override
+				public void onHide(@Nullable Parcelable token) {
+					clearCover();
+				}
+
+				@Override
+				public void onClear(@NonNull Parcelable[] token) { }
+				
+			};
+			playerCover.setImageResource(R.drawable.no_cover_art_big);
+			undo.listener(listener);
+			undo.show();
+		}
+	}
+	
+	private void clearCover() {
+		setCheckBoxState(false);
+		((MusicData) song).clearCover();
+		RenameTask.deleteCoverFromFile(new File(song.getPath()));
+	}
+
 	private void init() {
 		play = (ImageButton) parentView.findViewById(R.id.playpause);
 		previous = (ImageButton) parentView.findViewById(R.id.prev);
@@ -310,6 +369,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerTotalTime = (TextView) parentView.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.lyrics_text);
 		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
+		cbUseCover = (CheckBox)parentView.findViewById(R.id.cbUseCover);
+	}
+
+	private void initUndoBar() {
+		undo = new UndoBar(getActivity());
+		undo.message(R.string.message_undo_bar);
+		undo.duration(MESSAGE_DURATION);
 	}
 
 	private void setListeners() {
@@ -322,6 +388,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		tvTitle.setOnClickListener(this);
 		tvArtist.setOnClickListener(this);
 		download.setOnClickListener(this);
+		cbUseCover.setOnCheckedChangeListener(this);
 		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
@@ -558,15 +625,17 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover)
+					if (this.hashCode() != checkIdCover){
 						return;
+					}
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
-						playerCover.setImageResource(0);
 						playerCover.setImageBitmap(bmp);
 					} else {
 						playerCover.setImageResource(R.drawable.no_cover_art_big);
 					}
+					setCheckBoxState(((RemoteSong) song).isHasCover());
+					prepareCover = true;
 				}
 			};
 			checkIdCover = readyListener.hashCode();
@@ -578,14 +647,22 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 					@Override
 					public void run() {
-						playerCover.setImageResource(0);
 						playerCover.setImageBitmap(bitmap);
+						setCheckBoxState(true);
+						prepareCover = true;
 					}
 				});
 			} else {
 				playerCover.setImageResource(R.drawable.no_cover_art_big);
+				setCheckBoxState(false);
+				prepareCover = true;
 			}
 		}
+	}
+	
+	private void setCheckBoxState(boolean state) {
+		cbUseCover.setEnabled(state);
+		cbUseCover.setChecked(state);
 	}
 
 	private void hideKeyboard() {
