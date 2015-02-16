@@ -4,11 +4,11 @@ import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.DownloadsAdapter;
 
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseDownloadsView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,7 +35,7 @@ public class DownloadsView extends BaseDownloadsView{
 	}
 
 	@Override
-	protected ArrayAdapter<MusicData> getAdapter() {
+	protected BaseAbstractAdapter<MusicData> getAdapter() {
 		return  new DownloadsAdapter(getContext(), R.layout.downloads_item);
 	}
 

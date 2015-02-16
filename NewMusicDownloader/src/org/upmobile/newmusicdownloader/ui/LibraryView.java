@@ -4,7 +4,7 @@ import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.LibraryAdapter;
 
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
 import android.os.Environment;
@@ -19,7 +19,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	}
 
 	@Override
-	protected BaseAdapter<MusicData> getAdapter() {
+	protected BaseAbstractAdapter<MusicData> getAdapter() {
 		return new LibraryAdapter(getContext(), R.layout.library_item);
 	}
 
