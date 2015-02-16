@@ -187,9 +187,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(mOnScrollChangedListener);
 		init();
 		setListener();
-		downloadButtonState(false);
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
+		downloadButtonState(!player.isGettingURl());
 		playerTitleBar.getBackground().setAlpha(0);
 		playerTitleBarArtis.setVisibility(View.INVISIBLE);
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
@@ -219,7 +219,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			changePlayPauseView(false);
 		}
-		downloadButtonState(prepared);
+		downloadButtonState(!player.isGettingURl());
 		getCover(song);
 		showLyrics();
 		startImageAnimation(playerCover);
@@ -687,12 +687,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			resetCover();
 			player.shift(1);
 			getCover(player.getPlayingSong());
-			downloadButtonState(false);
+			downloadButtonState(!player.isGettingURl());
 		} else if (delta < 0) {
 			resetCover();
 			player.shift(-1);
 			getCover(player.getPlayingSong());
-			downloadButtonState(false);
+			downloadButtonState(!player.isGettingURl());
 		} else {
 			player.play(song);
 		}
