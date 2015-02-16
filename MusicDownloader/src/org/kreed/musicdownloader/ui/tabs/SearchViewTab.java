@@ -3,15 +3,14 @@ package org.kreed.musicdownloader.ui.tabs;
 import java.util.ArrayList;
 
 import org.kreed.musicdownloader.Nulldroid_Advertisement;
-import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.Nulldroid_Settings;
+import org.kreed.musicdownloader.R;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.listeners.DownloadListener;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
 
-import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -21,9 +20,13 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ public class SearchViewTab  extends OnlineSearchView {
 	private MainActivity activity;
 	private ViewPagerAdapter parentAdapter;
 	private String path;
+	private Bitmap listViewImage;
 
 	public SearchViewTab(LayoutInflater inflater, ViewPagerAdapter parentAdapter, MainActivity activity) {
 		super(inflater);
@@ -93,7 +97,7 @@ public class SearchViewTab  extends OnlineSearchView {
 			}
 		} else {
 			if (MusicDownloaderApp.getService().containsPlayer()) {
-				MusicDownloaderApp.getService().getPlayer().setNewName(data.getSongArtist(), data.getSongTitle(), true);
+				MusicDownloaderApp.getService().getPlayer().setNewName(data.getSongArtist(), data.getSongTitle(), true, getCoverFromList(view));
 			}
 			showProgressDialog(view, song, position);
 			((MainActivity) activity).stopPlayer();
@@ -104,12 +108,26 @@ public class SearchViewTab  extends OnlineSearchView {
 					path = url;
 					SearchViewTab.this.alertProgressDialog.dismiss();
 					StateKeeper.getInstance().closeDialog(StateKeeper.PROGRESS_DIALOG);
-					startPlay(song, data);
+					startPlay(song, data, getCoverFromList(view));
 				}
 				
 				@Override
 				public void error(String error) {}
 			});
+		}
+	}
+	
+	private Bitmap getCoverFromList(View v) {
+		listViewImage = null;
+		if (!((ImageView) v.findViewById(R.id.cover)).getContentDescription().equals(getResources().getString(R.string.default_cover))) {
+			Drawable draw = ((ImageView) v.findViewById(R.id.cover)).getDrawable();
+			if (null != listViewImage) {
+				listViewImage.recycle();
+			}
+			listViewImage = ((BitmapDrawable) draw).getBitmap();
+			return listViewImage;
+		} else {
+			return ((BitmapDrawable) getResources().getDrawable(R.drawable.fallback_cover)).getBitmap();
 		}
 	}
 	
@@ -160,7 +178,7 @@ public class SearchViewTab  extends OnlineSearchView {
 		return Util.isDifferentApp(context);
 	}
 	
-	private void startPlay(final RemoteSong song, final MusicData data) {
+	private void startPlay(final RemoteSong song, final MusicData data, final Bitmap bitmap) {
 		activity.runOnUiThread(new Runnable() {
 			
 			@Override
@@ -168,6 +186,7 @@ public class SearchViewTab  extends OnlineSearchView {
 				data.setFileUri(path);
 				ArrayList<String[]> headers = song.getHeaders();
 				((MainActivity) activity).play(headers, data);
+				((MainActivity) activity).setCoverToPlayer(bitmap);
 			}
 		});
 	}

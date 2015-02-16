@@ -9,23 +9,14 @@
     android:visibility="gone" >
 
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="56dp"
         android:layout_height="match_parent" >
 
-        <ImageButton
-            android:id="@+id/player_play_song"
+        <ImageView
+            android:id="@+id/player_cover"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/play" />
-
-        <ProgressBar
-            android:id="@+id/player_progress_play"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            android:src="@drawable/fallback_cover" />
     </FrameLayout>
 
     <LinearLayout
@@ -87,5 +78,25 @@
             android:paddingTop="@dimen/pading_min"
             android:visibility="gone" />
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" >
+
+        <ImageButton
+            android:id="@+id/player_play_song"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/play" />
+
+        <ProgressBar
+            android:id="@+id/player_progress_play"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>

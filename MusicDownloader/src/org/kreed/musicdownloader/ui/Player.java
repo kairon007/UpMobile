@@ -16,6 +16,7 @@ import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -50,12 +52,14 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	private SeekBar songProgress;
 	private ProgressBar buttonProgress;
 	private ImageButton buttonPlay;
+	private ImageView songCover;
 	private TextView songTitle;
 	private TextView songArtist;
 	private TextView songDuration;
 	private LinearLayout playerLayout;
 	private String title;
 	private String artist;
+	private Bitmap cover;
 	private Integer currentImageButton;
 	private boolean prepared = false;
 	private byte playerState = 0;
@@ -83,8 +87,10 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	public Player(ArrayList<String[]> header, MusicData data) {
 		title = data.getSongTitle();
 		artist = data.getSongArtist();
+		cover = data.getSongBitmap();
 		this.data = data;
 		this.header = header;
+		
 	}
 
 	public Player() {
@@ -97,6 +103,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		this.header = headers;
 		title = data.getSongTitle();
 		artist = data.getSongArtist();
+		cover = data.getSongBitmap();
 	}
 
 	public void setActivatedButton(boolean value) {
@@ -130,6 +137,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		songProgress.setOnSeekBarChangeListener(this);
 		songTitle.setText(title);
 		songArtist.setText(artist);
+		songCover.setImageBitmap(cover);
 		if (null != currentImageButton) buttonPlay.setImageResource(currentImageButton);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			Context context = view.getContext();
@@ -146,6 +154,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		songArtist = (TextView) view.findViewById(R.id.player_artist);
 		songTitle = (TextView) view.findViewById(R.id.player_title);
 		songDuration = (TextView) view.findViewById(R.id.player_duration_song);
+		songCover = (ImageView) view.findViewById(R.id.player_cover);
 	}
 
 	private void onPrepared() {
@@ -380,7 +389,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		}
 	}
 	
-	public void setNewName (final String artist, final String title,final boolean clearTime) {
+	public void setNewName (final String artist, final String title,final boolean clearTime, final Bitmap bitmap) {
 		if (null != view) {
 			((Activity) view.getContext()).runOnUiThread(new Runnable() {
 				
@@ -389,6 +398,11 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 					if (null != songArtist && null != songTitle) {
 						songArtist.setText(artist);
 						songTitle.setText(title);
+						if (null == bitmap) {
+							songCover.setImageResource(R.drawable.fallback_cover);
+						} else  {
+							songCover.setImageBitmap(bitmap);
+						}
 						if (clearTime) songDuration.setText("");
 					}
 				}
@@ -414,5 +428,13 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	
 	public int getCustomAudioSessionId() {
 		return customAudioSessionId;
+	}
+
+	public void setCover(Bitmap cover) {
+		if (null != cover) {
+			songCover.setImageBitmap(cover);
+		} else {
+			songCover.setImageResource(R.drawable.fallback_cover);
+		}
 	}
 }

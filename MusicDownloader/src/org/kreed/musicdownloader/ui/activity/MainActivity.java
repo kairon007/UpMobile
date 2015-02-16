@@ -40,6 +40,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -509,6 +510,10 @@ public class MainActivity extends Activity {
 		player.stateManagementPlayer(Constants.PLAY);
 	}
 	
+	public void setCoverToPlayer(Bitmap cover) {
+		player.setCover(cover);
+	}
+	
 
 	private void checkFile() {
 		File file = new File(deletedItem.getFileUri());
@@ -600,7 +605,7 @@ public class MainActivity extends Activity {
 					observer.startWatching();
 					checkDownloads(uriDownloadedFilesAfter, true);
 					if (MusicDownloaderApp.getService().containsPlayer() && MusicDownloaderApp.getService().getPlayer().getData().getFileUri().equals(newData.getFileUri())) {
-						MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle, false);
+						MusicDownloaderApp.getService().getPlayer().setNewName(artistName, songTitle, false, useCover ? newData.getSongBitmap() : null);
 					}
 				}
 
