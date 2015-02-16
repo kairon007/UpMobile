@@ -675,7 +675,7 @@ public class MainActivity extends Activity {
 		if (check && !uriDownloadedFilesAfter.equals(uriDownloadedFilesBefore)) {
 			for (String str : uriDownloadedFilesBefore) {
 				if (!uriDownloadedFilesAfter.contains(str)) {
-					if (str.endsWith(".mp3") || str.endsWith(".MP3"))
+					if (str.endsWith(".mp3") || str.endsWith(".MP3") || str.endsWith(".m4a") || str.endsWith(".M4A"))
 						try {
 							pagerAdapter.addMusicData(new MusicData(new File(URLDecoder.decode(str.replace("file://", ""), "UTF-8"))));
 						} catch (UnsupportedEncodingException e) {
@@ -732,7 +732,7 @@ public class MainActivity extends Activity {
 						setFileObserver();
 						break;
 					case FileObserver.MOVED_TO:
-						if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3"))
+						if (filePath.endsWith(".mp3") || filePath.endsWith(".MP3") || filePath.endsWith(".m4a") || filePath.endsWith(".M4A"))
 							pagerAdapter.addMusicData(new MusicData(new File(filePath)));
 						break;
 					}

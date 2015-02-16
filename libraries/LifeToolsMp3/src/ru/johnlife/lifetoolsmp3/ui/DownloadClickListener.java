@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -54,7 +53,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -135,7 +133,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Toast.makeText(context, context.getResources().getString(R.string.download_cached), Toast.LENGTH_SHORT).show();
 			return;
 		}
-		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(".mp3");
+		String format = (url.indexOf(".m4a?") > -1) ? ".m4a" : ".mp3";
+		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(format);
 		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
 		if (songId != -1) {
 			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
