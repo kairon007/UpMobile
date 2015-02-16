@@ -32,6 +32,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter {
 	private Timer timer;
 	private final static int DELAY = 2000;
 	private MusicData previous;
+	private boolean isCanNotify = true;
 
 	private class DownloadsViewHolder extends BaseDownloadsViewHolder {
 
@@ -127,11 +128,19 @@ public class DownloadsAdapter extends BaseDownloadsAdapter {
 		cancelDownload(item.getId());
 	}
 	
+	@Override
+	public void notifyDataSetChanged() {
+		if (isCanNotify) {
+			super.notifyDataSetChanged();
+		}
+	}
+	
 	public void cancelTimer() {
 		timer.cancel();
 	}
 
 	private void timer(MusicData musicData, View v) {
+		isCanNotify = false;
 		timer = new Timer();
 		RemoveTimer task = new RemoveTimer(musicData);
 		timer.schedule(task, DELAY);
@@ -166,6 +175,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter {
 
 							@Override
 							public void onAnimationEnd(Animation paramAnimation) {
+								isCanNotify = true;
 								removeItem(musicData);
 							}
 						});

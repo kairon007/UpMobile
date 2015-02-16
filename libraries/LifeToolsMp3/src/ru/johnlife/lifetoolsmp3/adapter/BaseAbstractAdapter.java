@@ -71,14 +71,12 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	}
 	
 	public void add(ArrayList<T> array) {
-		items.clear();
 		items.addAll(array);
 		notifyDataSetChanged();
 	}
 	
 	public void changeData(ArrayList<T> array) {
 		this.items = array;
-		notifyDataSetChanged();
 	}
 	
 	public void clear() {
