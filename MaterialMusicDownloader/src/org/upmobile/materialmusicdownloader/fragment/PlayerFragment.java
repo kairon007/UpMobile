@@ -47,12 +47,14 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
+import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener {
@@ -63,12 +65,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private PlaybackService player;
 	private DownloadListener downloadListener;
 
-	private View parentView;
+	private PullToZoomScrollView scrollView;
+	private View contentView;
+
 	private CircularProgressButton download;
 	private UndoBar undo;
-	private ImageView playerCover;
 	private CheckBox cbUseCover;
-	
 
 	// lyric sections
 	private LyricsFetcher lyricsFetcher;
@@ -90,13 +92,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
 	private SeekBar playerProgress;
+	private ProgressBar wait;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
-	
+
 	private boolean isDestroy;
 	private boolean isUseAlbumCover = true;
-	private boolean prepareCover = false;
 
 	private Runnable progressAction = new Runnable() {
 
@@ -121,63 +123,61 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 		@Override
 		public void pause(AbstractSong song) {
-			if (isDestroy)
+			if (isDestroy) {
 				return;
+			}
 			changePlayPauseView(true);
 		}
 
 		@Override
 		public void play(AbstractSong song) {
-			if (isDestroy)
+			if (isDestroy) {
 				return;
+			}
 			changePlayPauseView(false);
-			settingPlayerProgress();
 		}
 
 		@Override
 		public void stop(AbstractSong s) {
-			if (isDestroy)
+			if (isDestroy) {
 				return;
+			}
 			changePlayPauseView(true);
 			setElementsView(0);
-			settingPlayerProgress();
 		}
 
 		@Override
 		public void error() {
-			if (isDestroy)
+			if (isDestroy) {
 				return;
+			}
 			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void start(AbstractSong s) {
 			song = s;
-			if (isDestroy)
+			if (isDestroy) {
 				return;
+			}
 			((MainActivity) getActivity()).showPlayerElement(true);
 			downloadButtonState(true);
-			showLyrics();
-			setImageButton();
 			setClickablePlayerElement(true);
-			changePlayPauseView(!player.isPlaying());
-			settingPlayerProgress();
+			changePlayPauseView(true);
 			setElementsView(0);
 		}
 
 		@Override
 		public void update(AbstractSong current) {
-			if (isDestroy)
+			if (isDestroy) {
 				return;
+			}
 			song = current;
-			prepareCover = false;
+			getCover(song);
+			showLyrics();
 			setElementsView(0);
-			setClickablePlayerElement(false);
-			settingPlayerProgress();
-			setCheckBoxState(false);
-			clearCover();
-			parentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
-			parentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
+			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
+			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 		}
 	};
 
@@ -217,9 +217,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		parentView = inflater.inflate(R.layout.player_fragment, container, false);
+		scrollView = new PullToZoomScrollView(getActivity());
+		contentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
-		initUndoBar();
 		setListeners();
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
@@ -233,21 +233,20 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		} else {
 			song = player.getPlayingSong();
 		}
-		setImageButton();
+		setCoverToZoomView(null);
 		getCover(song);
+		setImageButton();
 		showLyrics();
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
-		settingPlayerProgress();
-		setCheckBoxState(false);
 		setClickablePlayerElement(prepared);
-		downloadButtonState(prepared);
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
 		} else {
 			changePlayPauseView(prepared);
 		}
-		return parentView;
+		scrollView.setContentContainerView(contentView);
+		return scrollView;
 	}
 
 	@Override
@@ -258,8 +257,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	@Override
 	public void onPause() {
-		if (null != lyricsFetcher)
+		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
+		}
 		super.onPause();
 	}
 
@@ -315,67 +315,66 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		isUseAlbumCover = isChecked;
-		if (song.getClass() != MusicData.class || !prepareCover) {
+		if (song.getClass() != MusicData.class) {
 			return;
 		}
 		if (isChecked) {
-			playerCover.setImageBitmap(song.getCover(getActivity()));
 			undo.clear();
 		} else {
-			AdvancedUndoListener listener  = new AdvancedUndoListener() {
-				
+			AdvancedUndoListener listener = new AdvancedUndoListener() {
+
 				@Override
 				public void onUndo(@Nullable Parcelable token) {
-					playerCover.setImageBitmap(song.getCover(getActivity()));
+					setCoverToZoomView(song.getCover(getActivity()));
 					isUseAlbumCover = true;
 					cbUseCover.setChecked(true);
 				}
-				
+
 				@Override
 				public void onHide(@Nullable Parcelable token) {
 					clearCover();
 				}
 
 				@Override
-				public void onClear(@NonNull Parcelable[] token) { }
-				
+				public void onClear(@NonNull Parcelable[] token) {
+				}
+
 			};
-			playerCover.setImageResource(R.drawable.no_cover_art_big);
+			undo.message(R.string.message_undo_bar);
+			undo.duration(MESSAGE_DURATION);
 			undo.listener(listener);
 			undo.show();
 		}
 	}
-	
+
 	private void clearCover() {
 		setCheckBoxState(false);
-		((MusicData) song).clearCover();
-		RenameTask.deleteCoverFromFile(new File(song.getPath()));
+		if (MusicData.class == song.getClass()) {
+			setCoverToZoomView(null);
+			((MusicData) song).clearCover();
+			RenameTask.deleteCoverFromFile(new File(song.getPath()));
+		}
 	}
 
 	private void init() {
-		play = (ImageButton) parentView.findViewById(R.id.playpause);
-		previous = (ImageButton) parentView.findViewById(R.id.prev);
-		forward = (ImageButton) parentView.findViewById(R.id.next);
-		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
-		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
-		stop = (ImageButton) parentView.findViewById(R.id.stop);
-		download = (CircularProgressButton) parentView.findViewById(R.id.download);
-		playerProgress = (SeekBar) parentView.findViewById(R.id.progress_track);
-		tvTitle = (TextView) parentView.findViewById(R.id.songName);
-		etTitle = (EditText) parentView.findViewById(R.id.songNameEdit);
-		tvArtist = (TextView) parentView.findViewById(R.id.artistName);
-		etArtist = (EditText) parentView.findViewById(R.id.artistNameEdit);
-		playerCurrTime = (TextView) parentView.findViewById(R.id.trackTime);
-		playerTotalTime = (TextView) parentView.findViewById(R.id.trackTotalTime);
-		playerLyricsView = (TextView) parentView.findViewById(R.id.lyrics_text);
-		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
-		cbUseCover = (CheckBox)parentView.findViewById(R.id.cbUseCover);
-	}
-
-	private void initUndoBar() {
+		play = (ImageButton) contentView.findViewById(R.id.playpause);
+		previous = (ImageButton) contentView.findViewById(R.id.prev);
+		forward = (ImageButton) contentView.findViewById(R.id.next);
+		shuffle = (ImageButton) contentView.findViewById(R.id.shuffle);
+		repeat = (ImageButton) contentView.findViewById(R.id.repeat);
+		stop = (ImageButton) contentView.findViewById(R.id.stop);
+		download = (CircularProgressButton) contentView.findViewById(R.id.download);
+		playerProgress = (SeekBar) contentView.findViewById(R.id.progress_track);
+		tvTitle = (TextView) contentView.findViewById(R.id.songName);
+		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
+		tvArtist = (TextView) contentView.findViewById(R.id.artistName);
+		etArtist = (EditText) contentView.findViewById(R.id.artistNameEdit);
+		playerCurrTime = (TextView) contentView.findViewById(R.id.trackTime);
+		playerTotalTime = (TextView) contentView.findViewById(R.id.trackTotalTime);
+		playerLyricsView = (TextView) contentView.findViewById(R.id.lyrics_text);
+		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
+		wait = (ProgressBar) contentView.findViewById(R.id.player_wait_song);
 		undo = new UndoBar(getActivity());
-		undo.message(R.string.message_undo_bar);
-		undo.duration(MESSAGE_DURATION);
 	}
 
 	private void setListeners() {
@@ -411,7 +410,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 
 		});
-		parentView.findViewById(R.id.scroll).setOnTouchListener(new OnTouchListener() {
+		scrollView.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -433,19 +432,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			return;
 		}
 		player.stop();
-		playerCover.invalidate();
-		if (delta > 0) {
-			player.shift(1);
-			getCover(player.getPlayingSong());
-			downloadButtonState(false);
-		} else if (delta < 0) {
-			player.shift(-1);
-			getCover(player.getPlayingSong());
-			downloadButtonState(false);
-		}
+		setClickablePlayerElement(false);
+		setCheckBoxState(false);
+		player.shift(delta);
+		downloadButtonState(false);
 	}
 
 	private void setElementsView(int progress) {
+		settingPlayerProgress();
 		if (song.getClass() == MusicData.class) {
 			download.setVisibility(View.GONE);
 		} else {
@@ -459,19 +453,28 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void settingPlayerProgress() {
 		if (player.isPrepared()) {
-			playerProgress.removeCallbacks(progressAction);
-			playerProgress.setIndeterminate(false);
 			playerProgress.setMax((int) song.getDuration());
 			playerProgress.setProgress(player.getCurrentPosition());
+			secondSetting(true);
 			playerProgress.post(progressAction);
 		} else {
 			playerProgress.setProgress(0);
-			playerProgress.setEnabled(false);
-			playerProgress.setClickable(false);
-			playerProgress.setIndeterminate(true);
+			secondSetting(false);
 		}
 	}
-	
+
+	private void secondSetting(boolean b) {
+		playerProgress.setEnabled(b);
+		playerProgress.setClickable(b);
+		if (b) {
+			playerProgress.setVisibility(View.VISIBLE);
+			wait.setVisibility(View.GONE);
+		} else {
+			playerProgress.setVisibility(View.GONE);
+			wait.setVisibility(View.VISIBLE);
+		}
+	}
+
 	private void setImageButton() {
 		if (!player.enabledRepeat()) {
 			repeat.setImageResource(R.drawable.ic_media_repeat);
@@ -499,7 +502,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 *            "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
-		if (isPlaying) {
+		if (!player.isPlaying()) {
 			play.setImageResource(R.drawable.ic_media_play);
 		} else {
 			play.setImageResource(R.drawable.ic_media_pause);
@@ -515,7 +518,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (tvArtist.getVisibility() == View.VISIBLE) {
 			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-			parentView.findViewById(R.id.artistNameBox).setVisibility(View.GONE);
+			contentView.findViewById(R.id.artistNameBox).setVisibility(View.GONE);
 			etArtist.setVisibility(View.VISIBLE);
 			etArtist.requestFocus();
 			etArtist.setText(song.getArtist());
@@ -531,7 +534,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (tvTitle.getVisibility() == View.VISIBLE) {
 			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-			parentView.findViewById(R.id.songNameBox).setVisibility(View.GONE);
+			contentView.findViewById(R.id.songNameBox).setVisibility(View.GONE);
 			etTitle.setVisibility(View.VISIBLE);
 			etTitle.requestFocus();
 			etTitle.setText(song.getTitle());
@@ -553,8 +556,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				song.setArtist(etArtist.getText().toString());
 				tvArtist.setText(song.getArtist());
 			}
-			parentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
-			parentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
+			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
+			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
 			etArtist.setVisibility(View.GONE);
 			etTitle.setVisibility(View.GONE);
 			if (song.getClass() != MusicData.class) {
@@ -579,8 +582,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				if (hashCode() != checkIdLyrics) {
 					return;
 				}
-				parentView.findViewById(R.id.lyrics_progress).setVisibility(View.GONE);
-				parentView.findViewById(R.id.lyrics_text).setVisibility(View.VISIBLE);
+				contentView.findViewById(R.id.lyrics_progress).setVisibility(View.GONE);
+				contentView.findViewById(R.id.lyrics_text).setVisibility(View.VISIBLE);
 				if (foundLyrics) {
 					playerLyricsView.setText(Html.fromHtml(lyrics));
 				} else {
@@ -619,55 +622,58 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void getCover(final AbstractSong song) {
+		setCheckBoxState(false);
 		if (song.getClass() != MusicData.class) {
-			playerCover.setImageResource(R.drawable.no_cover_art_big);
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover){
+					if (this.hashCode() != checkIdCover) {
 						return;
 					}
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
-						playerCover.setImageBitmap(bmp);
-					} else {
-						playerCover.setImageResource(R.drawable.no_cover_art_big);
+						setCoverToZoomView(bmp);
+						setCheckBoxState(true);
 					}
-					setCheckBoxState(((RemoteSong) song).isHasCover());
-					prepareCover = true;
 				}
 			};
 			checkIdCover = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);
 		} else {
-			final Bitmap bitmap = ((MusicData) song).getCover(getActivity());
+			Bitmap bitmap = ((MusicData) song).getCover(getActivity());
 			if (bitmap != null) {
-				playerCover.post(new Runnable() {
-
-					@Override
-					public void run() {
-						playerCover.setImageBitmap(bitmap);
-						setCheckBoxState(true);
-						prepareCover = true;
-					}
-				});
-			} else {
-				playerCover.setImageResource(R.drawable.no_cover_art_big);
-				setCheckBoxState(false);
-				prepareCover = true;
+				setCoverToZoomView(bitmap);
+				setCheckBoxState(true);
 			}
 		}
 	}
-	
+
+	/**
+	 * @param bitmap
+	 *            - set to image view, if bitmap == null then use default cover
+	 */
+	private void setCoverToZoomView(Bitmap bitmap) {
+		ImageView imageView = new ImageView(getActivity());
+		if (null == bitmap) {
+			imageView.setImageResource(R.drawable.default_cover_white);
+		} else {
+			imageView.setImageBitmap(bitmap);
+		}
+		scrollView.setZoomView(imageView);
+	}
+
 	private void setCheckBoxState(boolean state) {
+		cbUseCover.setOnCheckedChangeListener(null);
 		cbUseCover.setEnabled(state);
 		cbUseCover.setChecked(state);
+		cbUseCover.setClickable(state);
+		cbUseCover.setOnCheckedChangeListener(this);
 	}
 
 	private void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(parentView.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(contentView.getWindowToken(), 0);
 	}
 
 	private void download() {
@@ -692,7 +698,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 					@Override
 					public void run() {
-						downloadListener.onClick(parentView);
+						downloadListener.onClick(contentView);
 					}
 				};
 				new Handler(Looper.getMainLooper()).post(callbackRun);
