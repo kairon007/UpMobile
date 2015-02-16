@@ -9,10 +9,13 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -36,7 +39,7 @@ public abstract class UIMainActivity extends ActionBarActivity {
 	
 	private Handler mHandler;
 	
-	SearchView searchView;
+	private SearchView searchView;
 
 	protected abstract <T extends BaseMaterialFragment> ArrayList<T> getFragments();
 	
@@ -50,23 +53,6 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_material_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.material_toolbar);
 		setSupportActionBar(toolbar);
-		searchView = (SearchView) findViewById(R.id.bar_search_view_layout);
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				clickOnSearchView(query);
-				searchView.setIconified(true);
-				searchView.setIconified(true);
-				return false;
-			}
-			
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
 				R.string.drawer_open,
@@ -98,6 +84,38 @@ public abstract class UIMainActivity extends ActionBarActivity {
 			selectItem(position, mDrawerItems.get(position).getTag());
 			mDrawerLayout.openDrawer(mDrawerList);
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    getMenuInflater().inflate(R.menu.main, menu);
+	    MenuItem searchItem = menu.findItem(R.id.action_search);
+	    searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+	    searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				clickOnSearchView(query);
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String arg0) {
+				return false;
+			}
+		});
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    int itemId = item.getItemId();
+		if (itemId == R.id.action_search) {
+			searchView.setIconified(false);
+			searchView.setIconifiedByDefault(false);
+			return super.onOptionsItemSelected(item);
+		}
+	    return false;
 	}
 	
 	public void setAdapter(boolean isNowPlaying) {

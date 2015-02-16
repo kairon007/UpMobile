@@ -11,17 +11,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/material_toolbar" />
-
-        <SearchView
-            android:id="@+id/bar_search_view_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:gravity="right"
-            android:queryHint="@string/hint_main_search" >
-
-        </SearchView>
-
     </FrameLayout>
 
     <android.support.v4.widget.DrawerLayout

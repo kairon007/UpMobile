@@ -3,18 +3,19 @@
     <!-- Default application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarStyle">@style/ActionBarStyle</item>
-
-	    <item name="colorPrimary">@color/main_color_500</item>
-	    <item name="colorPrimaryDark">@color/main_color_700</item>
+        <item name="colorPrimary">@color/main_color_500</item>
+        <item name="colorPrimaryDark">@color/main_color_700</item>
+        <item name="searchViewStyle">@style/SearchView</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarStyle">@style/ActionBarStyle</item>
         <item name="windowActionBar">false</item>
-
-	    <item name="colorPrimary">@color/main_color_500</item>
-	    <item name="colorPrimaryDark">@color/main_color_700</item>
+        <item name="colorPrimary">@color/main_color_500</item>
+        <item name="colorPrimaryDark">@color/main_color_700</item>
+        <item name="searchViewStyle">@style/SearchView</item>
     </style>
+
     <style name="AppTheme.Title" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
@@ -133,5 +134,10 @@
         <item name="android:button">@drawable/checkbox_selector_light</item>
     </style>
     <!-- CheckBox related styles end here -->
+
+    <style name="SearchView">
+        <item name="closeIcon">@drawable/close</item>
+        <item name="searchIcon">@drawable/ic_action_search</item>
+    </style>
 
 </resources>
