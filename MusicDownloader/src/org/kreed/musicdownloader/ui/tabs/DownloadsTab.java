@@ -108,7 +108,7 @@ public class DownloadsTab implements LoadPercentageInterface {
 								DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 								long cancelledId = song.getDownloadId();
 								try {
-									int i = manager.remove(cancelledId);
+									manager.remove(cancelledId);
 								} catch (Exception e) {
 									android.util.Log.d(getClass().getName(), "" + e);
 								}

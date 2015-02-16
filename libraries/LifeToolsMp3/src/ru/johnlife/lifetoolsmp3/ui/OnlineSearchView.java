@@ -1125,10 +1125,9 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	private void showDownloadsList() {
-		final Context context = message.getContext();
 		Intent dm = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
 		dm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(dm);
+		getContext().startActivity(dm);
 	}
 
 	public void setSearchField(String str) {

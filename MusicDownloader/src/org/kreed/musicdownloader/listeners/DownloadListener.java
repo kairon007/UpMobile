@@ -36,12 +36,13 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected void prepare(File src, RemoteSong song, String pathToFile) {
-		((Activity)context).runOnUiThread(new Runnable() {	
-		@Override
-		public void run() {
-			String chuck = context.getString(R.string.download_finished);
-			String message = chuck + " " + songArtist + " - " +songTitle;
-			Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+		String chuck = context.getString(R.string.download_finished);
+		final String message = chuck + " " + songArtist + " - " + songTitle;
+		((Activity) context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 			}
 		});
 		MusicData data = new MusicData();
@@ -51,7 +52,6 @@ public class DownloadListener extends DownloadClickListener {
 		data.setSongBitmap(cover);
 		data.setFileUri(pathToFile);
 		DBHelper.getInstance(context).insert(data);
-		//adapter.changeArrayMusicData(data);
 	}
 
 	@Override

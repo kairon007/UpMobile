@@ -22,8 +22,8 @@ THE SOFTWARE.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -34,37 +34,30 @@ THE SOFTWARE.
         android:paddingLeft="4dp"
         android:paddingTop="4dp" >
 
-        <FrameLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:orientation="horizontal" >
 
             <EditText
                 android:id="@+id/filter_text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="@string/hint_main_search"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"
-                android:singleLine="true"
-                android:paddingRight="48dp" />
+                android:paddingRight="48dp"
+                android:singleLine="true" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right|center_vertical" >
-
-                <ImageButton
-                    android:id="@+id/clear_filter"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/selectable_item_bg"
-                    android:src="@drawable/close" />
-
-            </LinearLayout>
-
-        </FrameLayout>
+            <ImageButton
+                android:id="@+id/clear_filter"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/selectable_item_bg"
+                android:src="@drawable/close" />
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/clear_all_button"
@@ -72,74 +65,68 @@ THE SOFTWARE.
             android:layout_height="48dp"
             android:background="@drawable/selectable_item_bg"
             android:src="@drawable/icon_cancel" />
-
     </LinearLayout>
-    
-    
 
-		<LinearLayout
-            android:id="@+id/cross_promo_box"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/cross_promo_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#eeeeee"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" 
-            android:background="#eeeeee"
-            android:padding="4dp"
-            android:visibility="gone">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp" >
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-				android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/cross_promo_box_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#000000"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/cross_promo_box_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="11sp"
-                    android:textColor="#000000"
-                    android:text="" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/cross_promo_box_button"
+            <TextView
+                android:id="@+id/cross_promo_box_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="13sp"
-                android:text="" />
-        </LinearLayout>
-        
-    
-    	    <TextView
-	            android:id="@+id/editTextDisclaimer"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:padding="4dp"
-	            android:visibility="gone"
-	            android:text="@string/disclaimer"
-	             />
-	    
+                android:text=""
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
-    
+            <TextView
+                android:id="@+id/cross_promo_box_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#000000"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/cross_promo_box_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/editTextDisclaimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/disclaimer"
+        android:visibility="gone" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
-        android:layout_width="fill_parent"
-        android:layout_height="0px"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1" />
-<include layout="@layout/banner" />
+
+    <include layout="@layout/banner" />
+
     <FrameLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
@@ -148,18 +135,20 @@ THE SOFTWARE.
         <include layout="@layout/player" />
     </FrameLayout>
 
-    <HorizontalScrollView
-        android:id="@+id/limiter_scroller"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left" >
+    <!-- <HorizontalScrollView -->
+    <!-- android:id="@+id/limiter_scroller" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_gravity="bottom|left" > -->
 
-        <LinearLayout
-            android:id="@+id/limiter_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal" />
-    </HorizontalScrollView>
+
+    <!-- <LinearLayout -->
+    <!-- android:id="@+id/limiter_layout" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="match_parent" -->
+    <!-- android:orientation="horizontal" /> -->
+    <!-- </HorizontalScrollView> -->
+
 
     <!--
     <com.raivz.hbkds194978.AdView

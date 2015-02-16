@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="layout_library_height">80dp</dimen>
-    <dimen name="text_library_page_size">10dp</dimen>
-    <dimen name="pading_button_play">5dp</dimen>
+    <dimen name="text_library_page_size">8dp</dimen>
+    <dimen name="pading_button_play">4dp</dimen>
     <dimen name="pading_progress_song">4dp</dimen>
     <dimen name="pading_min">1dp</dimen>
     <dimen name="player_pading_side">8dp</dimen>

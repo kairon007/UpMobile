@@ -23,6 +23,7 @@ package org.kreed.musicdownloader.ui.viewpager;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.kreed.musicdownloader.PrefKeys;
@@ -56,7 +57,7 @@ import android.widget.ListView;
 /**
  * PagerAdapter that manages the library media ListViews.
  */
-public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener {
+public class ViewPagerAdapter extends PagerAdapter implements ViewPager.OnPageChangeListener {
 	
 	private static final String CURRENT_POSITION = "current_position_bundle";
 	/**
@@ -108,6 +109,8 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 
 	private int currentType = -1;
 	public LibraryTab adapterLibrary = null;
+	private SearchViewTab searchView;
+	private View viewSearchActivity;
 
 	/**
 	 * Create the LibraryPager.
@@ -192,7 +195,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		if (null != adapterLibrary) {
 			adapterLibrary.add(musicData);
 		}
-
 	}
 
 	public void removeMusicData(final MusicData musicData) {
@@ -242,10 +244,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 				}
 				fillLibrary();
 				break;				
-			default:
-				break;
 			}
-			view.setOnItemClickListener(this);
 			view.setTag(type);
 			enableFastScroll(view);
 			mLists[type] = view;
@@ -259,31 +258,28 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		if (!contentFile.exists()) {
 			contentFile.mkdirs();
 		}
+		adapterLibrary.setNotifyOnChange(false);
 		adapterLibrary.clear();
-		querySong();
-		mActivity.runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				adapterLibrary.notifyDataSetChanged();
-			}
-		});
+		adapterLibrary.addAll(querySong());
+		adapterLibrary.setNotifyOnChange(true);
 	}
 	
-	private void querySong() {
+	private ArrayList<MusicData> querySong() {
 		Cursor cursor = buildQuery(mActivity.getContentResolver());
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
-			return;
+			return result;
 		}
 		MusicData d = new MusicData();
 		d.populate(cursor);
-		adapterLibrary.add(d);
+		result.add(d);
 		while (cursor.moveToNext()) {
 			MusicData data = new MusicData();
 			data.populate(cursor);
-			adapterLibrary.add(data);
+			result.add(data);
 		}
 		cursor.close();
+		return result;
 	}
 	
 	private Cursor buildQuery(ContentResolver resolver) {
@@ -348,13 +344,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		out.putIntArray(CURRENT_POSITION, savedPositions);
 		return out;
 	}
-	private SearchViewTab searchView;
-	private View viewSearchActivity;
-
-	@Override
-	public boolean handleMessage(Message message) {
-		return true;
-	}
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
@@ -387,10 +376,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Handler.Callback, 
 		if (position == 0) {
 			searchView.notifyAdapter();
 		}
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> list, View view, int position, long id) {
 	}
 
 	/**
