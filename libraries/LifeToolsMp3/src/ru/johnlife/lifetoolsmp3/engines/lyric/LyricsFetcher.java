@@ -40,7 +40,6 @@ public class LyricsFetcher {
 					if (DEBUG) Log.i(TAG, "doesn't match");
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 			return null;
 		}

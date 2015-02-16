@@ -16,6 +16,11 @@ import android.util.Log;
 
 public class YouTubeSong extends SongWithCover {
 
+	private static final String CONVERTING = "converting";
+	private static final String LOADING = "loading";
+	private static final String TS_CREATE = "ts_create";
+	private static final String STATUS = "status";
+	private static final String H2 = "h2";
 	private Timer timer = new Timer();
 	private static String USER_AGENT = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.12 (KHTML, like Gecko) Maxthon/3.0 Chrome/26.0.1410.43 Safari/535.12";
 	private static String YOUTUBE_MP3_URL = "http://www.youtube-mp3.org";
@@ -115,6 +120,8 @@ public class YouTubeSong extends SongWithCover {
 		JSONObject h = null;
 		String hHash = null;
 		String status = null;
+		long tsCreate = 0;
+		String r = null;
 		try {
 			Document doc = Jsoup.connect(YOUTUBE_MP3_URL + sig_url("/a/itemInfo/?video_id=" + watchId + "&ac=www&t=grp&r=" + System.currentTimeMillis()))
 					.ignoreContentType(true)
@@ -123,18 +130,20 @@ public class YouTubeSong extends SongWithCover {
 					.get();
 			String body = doc.body().text().toString();
 			body = body.replace("info = ", "").replace(";", "");
-			body = body.substring(0, (body.indexOf("\"title\": \"")) + 10) + body.substring((body.indexOf("\"title\": \"") + 10), body.indexOf("\", \"progress\"")).replace("\"", "") + body.substring(body.indexOf("\", \"progress\""), body.indexOf("}")) + "}";
+			body = body.substring(0, (body.indexOf("\"title\": \"")) + 10) + body.substring((body.indexOf("\"title\": \"") + 10), body.indexOf("\", \"h\"")).replace("\"", "") + body.substring(body.indexOf("\", \"h\""), body.indexOf("}")) + "}";
 			h = new JSONObject(body);
-			hHash = h.getString("h");
-			status = h.getString("status");
-			if (PENDING.equals(status) || "loading".equals(status) || "converting".equals(status)) {
+			hHash = h.getString(H2);
+			status = h.getString(STATUS);
+			tsCreate = h.getLong(TS_CREATE);
+			r = h.getString("r");
+			if (PENDING.equals(status) || LOADING.equals(status) || CONVERTING.equals(status)) {
 				return PENDING;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if (hHash == null) return watchId;
-		long currentTimeMillis = System.currentTimeMillis();
-		String getItem = "/get?ab=128&video_id=" + watchId + "&h=" + hHash + "&r=" + currentTimeMillis + "." + decode(watchId + currentTimeMillis);
+		String getItem = "/get?video_id=" + watchId + "&ts_create=" + tsCreate + "&r=" + r.replace("=", "%3D") +"&h2=" + hHash;
 		return YOUTUBE_MP3_URL + sig_url(getItem);
 	}
 
