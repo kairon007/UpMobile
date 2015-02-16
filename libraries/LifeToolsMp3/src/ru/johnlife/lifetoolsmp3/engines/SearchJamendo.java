@@ -13,7 +13,7 @@ public class SearchJamendo extends SearchWithPages {
 	/**
 	 * If you need a search by artist, rather than on the track, it should be in front of the URL / tracks and put "/artists" after v3.0
 	 */
-	private final static String CLIENT_ID = "9c502a1d";
+	private final static String CLIENT_ID = "551aabd5";
 	private String url = "https://api.jamendo.com/v3.0/tracks?client_id=" + CLIENT_ID + "&format=jsonpretty&limit=150&namesearch=%s";
 
 	public SearchJamendo(FinishedParsingSongs dInterface, String songName) {

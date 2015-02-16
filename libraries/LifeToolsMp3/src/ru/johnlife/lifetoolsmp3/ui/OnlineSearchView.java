@@ -131,12 +131,7 @@ public abstract class OnlineSearchView extends View {
 	};
 
 	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
-		
-		
-		
 		if (searchEngineName != null) {
-			
-			
 			if (searchEngineName.equals("SearchMyFreeMp3")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3.class;
 			} else if (searchEngineName.equals("SearchGrooveshark")) {
@@ -173,11 +168,10 @@ public abstract class OnlineSearchView extends View {
 				return ru.johnlife.lifetoolsmp3.engines.SearchGear.class;
 			} else if (searchEngineName.equals("SearchSoArdIyyin")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin.class;
+			} else if (searchEngineName.equals("SearchJamendo")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchJamendo.class;
 			}
 		}
-		
-		
-		
 		return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
 	}
 
