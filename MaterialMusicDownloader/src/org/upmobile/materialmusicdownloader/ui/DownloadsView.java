@@ -2,6 +2,8 @@ package org.upmobile.materialmusicdownloader.ui;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.adapter.CustomSwipeUndoAdapter;
+import org.upmobile.materialmusicdownloader.adapter.CustomSwipeUndoAdapter.CanNotifyListener;
 import org.upmobile.materialmusicdownloader.adapter.DownloadsAdapter;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
@@ -16,18 +18,11 @@ import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 
 public class DownloadsView extends BaseDownloadsView implements Constants {
 
 	public DownloadsView(LayoutInflater inflater) {
 		super(inflater);
-	}
-	
-	@Override
-	public View getView() {
-		View v = super.getView();
-		return v;
 	}
 
 	@Override
@@ -42,21 +37,24 @@ public class DownloadsView extends BaseDownloadsView implements Constants {
 
 	@Override
 	protected void animateListView(final BaseAbstractAdapter<MusicData> adapter, ListView listView) {
-//		AnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);
-//		animAdapter.setAbsListView((DynamicListView)listView);
-//		((DynamicListView)listView).setAdapter(animAdapter);
-		SimpleSwipeUndoAdapter swipeUndoAdapter = new SimpleSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
-			        @Override
-			        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
-			            for (int position : reverseSortedPositions) {
-			            	adapter.remove(position);
-			            }
-			        }
-			    }
-			);
-			swipeUndoAdapter.setAbsListView((DynamicListView)listView);
-			((DynamicListView)listView).setAdapter(swipeUndoAdapter);
-			((DynamicListView)listView).enableSimpleSwipeUndo();
+		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+	        @Override
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	            for (int position : reverseSortedPositions) {
+	            	((DownloadsAdapter)adapter).removeItem((MusicData)adapter.getItem(position)); 
+	            }
+	        }
+	    });
+		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
+		swipeUndoAdapter.setCanNotifyListener(new CanNotifyListener() {
+			
+			@Override
+			public void canNotify(boolean isCan) {
+				((DownloadsAdapter)adapter).setCanNotify(isCan);
+			}
+		});
+		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
+		((DynamicListView)listView).enableSimpleSwipeUndo();
 	}
 	
 	@Override

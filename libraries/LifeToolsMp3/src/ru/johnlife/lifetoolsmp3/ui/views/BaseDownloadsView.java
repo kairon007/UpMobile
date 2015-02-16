@@ -49,6 +49,7 @@ public abstract class BaseDownloadsView extends View{
 		super(inflater.getContext());
 		init(inflater);
 		listView.setAdapter(adapter);
+		animateListView(adapter, listView);
 	}
 	
 	public View getView() {
@@ -226,7 +227,6 @@ public abstract class BaseDownloadsView extends View{
 				@Override
 				public void run() {
 					adapter.changeData(list);
-					animateListView(adapter, listView);
 				}
 			});
 			checkCanceled();

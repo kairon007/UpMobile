@@ -2,49 +2,31 @@ package org.upmobile.materialmusicdownloader.adapter;
 
 import org.upmobile.materialmusicdownloader.R;
 
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
-
 import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
+
 public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapter {
 
+	private boolean isCanNotify = true;
+	
 	private class DownloadsViewHolder extends BaseDownloadsViewHolder {
 
-		private ImageView cancel;
-		
 		public DownloadsViewHolder(View v) {
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
 			duration = (TextView) v.findViewById(R.id.item_duration);
 			progress = (ProgressBar) v.findViewById(R.id.item_progress);
 			image = (ImageView) v.findViewById(R.id.item_image);
-			cancel = (ImageView) v.findViewById(R.id.cancel);
-		}
-
-		@Override
-		protected void hold(MusicData item, int position) {
-			super.hold(item, position);
-			setListener(item);
-		}
-
-		private void setListener(final MusicData item) {
-			cancel.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					removeItem(item);
-				}
-			});
 		}
 	}
 
@@ -58,7 +40,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	}
 
 	@Override
-	protected void removeItem(MusicData item) {
+	public void removeItem(MusicData item) {
 		super.removeItem(item);
 		if (item.getId() == -1)	return;
 		DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
@@ -91,5 +73,16 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	@Override
 	public View getUndoClickView(View paramView) {
 		return paramView.findViewById(R.id.undo_button);
+	}
+	
+	@Override
+	public void notifyDataSetChanged() {
+		if (isCanNotify) {
+			super.notifyDataSetChanged();
+		}
+	}
+	
+	public void setCanNotify(boolean isCanNotify) {
+		this.isCanNotify = isCanNotify;
 	}
 }
