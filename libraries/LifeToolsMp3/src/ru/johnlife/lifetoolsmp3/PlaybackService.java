@@ -271,6 +271,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				player.setDataSource(this, uri);
 				mode |= SMODE_START_PREPARE;
 				player.prepareAsync();
+				sendNotification(true, getString(R.string.pause));
 			} catch (Exception e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
@@ -280,6 +281,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				helper(State.PLAY, (AbstractSong) msg.obj);
 				player.start();
 				mode |= SMODE_PLAYING;
+				sendNotification(true, getString(R.string.pause));
 			}
 			break;
 		case MSG_PAUSE:
@@ -287,6 +289,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				helper(State.PAUSE, (AbstractSong) msg.obj);
 				player.pause();
 				mode |= SMODE_PAUSE;
+				sendNotification(false, getString(R.string.play));
 			}
 			break;
 		case MSG_SEEK_TO:
@@ -312,6 +315,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			if (check(SMODE_PREPARED)) {
 				player.pause();
 				player.seekTo(0);
+				removeNotification();
 			}
 			break;
 		case MSG_SHIFT:
@@ -324,7 +328,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				previousSong = playingSong;
 				playingSong = arrayPlayback.get(msg.arg1);
 				helper(State.UPDATE, playingSong);
-				handler.removeCallbacksAndMessages(null);
 				play(playingSong.getClass() != MusicData.class);
 				sendNotification(true, getString(R.string.pause));
 			}
@@ -352,6 +355,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (arrayPlayback == null && arrayPlayback.indexOf(song) == -1) {
 			return;
 		}
+		if (null != previousSong) {
+			helper(State.STOP, previousSong);
+		}
 		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
 			previousSong = playingSong;
@@ -359,30 +365,21 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				if (playingSong.getClass() != MusicData.class) {
 					((RemoteSong) playingSong).cancelTasks();
 				}
-				mode &= ~SMODE_PREPARED;
 				reset();
 			}
 		}
 		playingSong = arrayPlayback.get(position);
 		if (check(SMODE_PREPARED)) {
-			Message msg = new Message();
+			int msg;
 			if (check(SMODE_PAUSE)) {
-				msg.what = MSG_PLAY;
-				mode &= ~SMODE_PAUSE;
-				offMode(SMODE_PLAYING);
-				sendNotification(true, getString(R.string.pause));
+				msg = MSG_PLAY;
+				onMode(SMODE_PLAYING);
 			} else {
+				msg = MSG_PAUSE;
 				onMode(SMODE_PAUSE);
-				msg.what = MSG_PAUSE;
-				sendNotification(false, getString(R.string.play));
 			}
-			msg.obj = playingSong;
-			handler.sendMessage(msg);
+			buildSendMessage(playingSong, msg, 0, 0);
 		} else {
-			if (null != previousSong) {
-				helper(State.STOP, previousSong);
-				sendNotification(true, getString(R.string.pause));
-			}
 			play(playingSong.getClass() != MusicData.class);
 		}
 	}
@@ -443,7 +440,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					((RemoteSong) playingSong).setDownloadUrl(url);
 					mode &= ~SMODE_GET_URL;
 					buildSendMessage(url, MSG_START, 0, 0);
-					sendNotification(true, getString(R.string.pause));
 				}
 
 				@Override
@@ -454,7 +450,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			return;
 		}
 		buildSendMessage(playingSong.getPath(), MSG_START, 0, 0);
-		sendNotification(true, getString(R.string.pause));
 	}
 	
 	private void helper(final State state, final AbstractSong targetSong) {
