@@ -41,7 +41,7 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 
 	@Override
 	public int getDrawerTitle() {
-		return R.string.navigation_downloads;
+		return R.string.tab_downloads;
 	}
 
 	@Override

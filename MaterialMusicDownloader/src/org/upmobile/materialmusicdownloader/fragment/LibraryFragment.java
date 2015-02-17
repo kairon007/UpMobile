@@ -34,7 +34,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 
 	@Override
 	public int getDrawerTitle() {
-		return R.string.navigation_library;
+		return R.string.tab_library;
 	}
 
 	@Override

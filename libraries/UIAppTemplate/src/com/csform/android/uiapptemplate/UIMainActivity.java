@@ -138,7 +138,7 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		}
 	}
 
-	private void selectItem(int position, int drawerTag) {
+	protected void selectItem(int position, int drawerTag) {
 		Fragment fragment = getFragmentByDrawerTag(drawerTag);
 		commitFragment(fragment);
 		

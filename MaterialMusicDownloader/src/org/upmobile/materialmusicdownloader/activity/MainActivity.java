@@ -12,6 +12,7 @@ import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -19,6 +20,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
@@ -28,6 +31,7 @@ public class MainActivity extends UIMainActivity implements Constants {
 	private final String ARRAY_SAVE = "extras_array_save";
 	private final String folderPath = Environment.getExternalStorageDirectory() + DIRECTORY_PREFIX;
 	private PlaybackService service;
+	private int currentFragmentID;
 
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
 
@@ -102,6 +106,17 @@ public class MainActivity extends UIMainActivity implements Constants {
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (null != player && player.isVisible()) {
 			getFragmentManager().popBackStack();
+		} else if (currentFragmentID == 3){
+			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();
+			Fragment fragment;
+			if (current == MusicData.class) {
+				fragment = new LibraryFragment();
+				currentFragmentID = 2;
+			} else {
+				fragment = new SearchFragment();
+				currentFragmentID = 0;
+			}
+			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
 		} else {
 			if (null != service) {
 				service.reset();
@@ -124,10 +139,12 @@ public class MainActivity extends UIMainActivity implements Constants {
 	public void showPlayerElement(boolean flag) {
 		setAdapter(flag);
 	}
-//	
-//	public void setSelectedItem(int position) {
-//		if (null != navigationDrawerFragment) {
-//			navigationDrawerFragment.setSelectedItem(position);
-//		}
-//	}
+	
+	@Override	
+	protected void selectItem(int position, int drawerTag) {
+		currentFragmentID = position;
+		super.selectItem(position, drawerTag);
+		
+	}
+	
 }

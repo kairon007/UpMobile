@@ -53,7 +53,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 
 	@Override
 	public int getDrawerTitle() {
-		return R.string.navigation_search;
+		return R.string.tab_search;
 	}
 
 	@Override
