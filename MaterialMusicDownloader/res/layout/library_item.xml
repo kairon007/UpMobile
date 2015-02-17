@@ -1,106 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.csform.android.uiapptemplate.view.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/RippleStyle"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="4dp"
-    android:visibility="visible" >
+    android:layout_height="wrap_content" >
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
-
-        <ImageView
-            android:id="@+id/item_cover"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@drawable/selectable_item_bg"
-            android:clickable="true"
-            android:src="@drawable/no_cover_art_light_big_dark" />
-
-        <com.csform.android.uiapptemplate.font.MusicTextView
-            android:id="@+id/item_cover_text"
-            style="@style/TextViewAppearance.Title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="4dp"
-            android:text="@string/musics"
-            android:textColor="@color/main_color_grey_700"
-            android:textSize="40sp"
-            android:visibility="gone" />
-    </FrameLayout>
-
-    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-        style="@style/RippleStyle"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
+        android:orientation="horizontal"
+        android:padding="4dp" >
 
-        <LinearLayout
-            android:id="@+id/item_box_info"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/item_cover"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/selectable_item_bg"
+                android:clickable="true"
+                android:src="@drawable/no_cover_art_light_big_dark" />
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/item_cover_text"
+                style="@style/TextViewAppearance.Title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="4dp"
+                android:text="@string/musics"
+                android:textColor="@color/main_color_grey_700"
+                android:textSize="40sp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+            style="@style/RippleStyle"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:orientation="vertical" >
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" >
 
             <LinearLayout
+                android:id="@+id/item_box_info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal" >
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" >
+
+                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                        android:id="@+id/item_title"
+                        style="@style/TextViewAppearance.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="Title" />
+
+                    <TextView
+                        android:id="@+id/item_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="8dp"
+                        android:text="00:00"
+                        android:textAppearance="?android:textAppearanceMedium" />
+                </LinearLayout>
 
                 <com.csform.android.uiapptemplate.font.RobotoTextView
-                    android:id="@+id/item_title"
-                    style="@style/TextViewAppearance.Body"
-                    android:layout_width="0dp"
+                    android:id="@+id/item_artist"
+                    style="@style/CaptionLineGray"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="Title" />
-
-                <TextView
-                    android:id="@+id/item_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="8dp"
-                    android:text="00:00"
-                    android:textAppearance="?android:textAppearanceMedium" />
+                    android:text="Artist" />
             </LinearLayout>
+        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
-            <com.csform.android.uiapptemplate.font.RobotoTextView
-                android:id="@+id/item_artist"
-                style="@style/CaptionLineGray"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:text="Artist" />
-        </LinearLayout>
-    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
-
-    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-        style="@style/RippleStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" >
-
-        <com.csform.android.uiapptemplate.font.MusicTextView
-            android:id="@+id/item_play"
-            style="@style/TextViewAppearance.Title1"
+        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+            style="@style/RippleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minHeight="48dp"
-            android:padding="8dp"
-            android:text="@string/play"
-            android:textColor="@color/main_color_grey_700"
-            android:textSize="32sp" />
-    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+            android:layout_gravity="center_vertical" >
 
-</LinearLayout>
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/item_play"
+                style="@style/TextViewAppearance.Title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:text="@string/play"
+                android:textColor="@color/main_color_grey_700"
+                android:textSize="32sp" />
+        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+    </LinearLayout>
+
+</com.csform.android.uiapptemplate.view.MaterialRippleLayout>
