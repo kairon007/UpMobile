@@ -15,19 +15,21 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp" >
 
-        <ImageView
+        <!--
+             <ImageView
             android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="18dp" />
+        -->
 
-<!--         <com.csform.android.uiapptemplate.font.FontelloTextView -->
-<!--             android:id="@+id/icon" -->
-<!--             style="@style/TextViewAppearance.Title1" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:paddingLeft="18dp" -->
-<!--             android:textColor="@drawable/selector_text_empty" /> -->
+        <com.csform.android.uiapptemplate.font.MusicTextView
+            android:id="@+id/icon"
+            style="@style/TextViewAppearance.Title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="18dp"
+            android:textColor="@drawable/selector_text_empty" />
 
         <com.csform.android.uiapptemplate.font.RobotoTextView
             android:id="@+id/title"

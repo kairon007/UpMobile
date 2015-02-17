@@ -46,8 +46,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -73,18 +73,20 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private CircularProgressButton download;
 	private UndoBar undo;
 	private CheckBox cbUseCover;
+	private LinearLayout artistBox;
+	private LinearLayout titleBox;
 
 	// lyric sections
 	private LyricsFetcher lyricsFetcher;
 	private TextView playerLyricsView;
 
 	// playback sections
-	private ImageButton play;
-	private ImageButton previous;
-	private ImageButton forward;
-	private ImageButton shuffle;
-	private ImageButton repeat;
-	private ImageButton stop;
+	private TextView play;
+	private TextView previous;
+	private TextView forward;
+	private TextView shuffle;
+	private TextView repeat;
+	private TextView stop;
 
 	// info sections
 	private TextView tvTitle;
@@ -308,16 +310,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			break;
 		case R.id.repeat:
 			if (!player.offOnRepeat()) {
-				repeat.setImageResource(R.drawable.ic_media_repeat);
+				repeat.setAlpha((float) 0.5);
 			} else {
-				repeat.setImageResource(R.drawable.ic_media_repeat_on);
+				repeat.setAlpha(1);
 			}
 			break;
 		case R.id.shuffle:
 			if (player.offOnShuffle()) {
-				shuffle.setImageResource(R.drawable.ic_media_shuffle_on);
+				shuffle.setAlpha(1);
 			} else {
-				shuffle.setImageResource(R.drawable.ic_media_shuffle);
+				shuffle.setAlpha((float) 0.5);
 			}
 			break;
 		case R.id.stop:
@@ -328,11 +330,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			((CircularProgressButton)v).setProgress(50);
 			download();
 			break;
-		case R.id.artistName:
-			openArtistField();
-			break;
-		case R.id.songName:
+		case R.id.songNameBox:
 			openTitleField();
+			break;
+		case R.id.artistNameBox:
+			openArtistField();
 			break;
 		}
 	}
@@ -382,12 +384,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void init() {
-		play = (ImageButton) contentView.findViewById(R.id.playpause);
-		previous = (ImageButton) contentView.findViewById(R.id.prev);
-		forward = (ImageButton) contentView.findViewById(R.id.next);
-		shuffle = (ImageButton) contentView.findViewById(R.id.shuffle);
-		repeat = (ImageButton) contentView.findViewById(R.id.repeat);
-		stop = (ImageButton) contentView.findViewById(R.id.stop);
+		play = (TextView) contentView.findViewById(R.id.playpause);
+		previous = (TextView) contentView.findViewById(R.id.prev);
+		forward = (TextView) contentView.findViewById(R.id.next);
+		shuffle = (TextView) contentView.findViewById(R.id.shuffle);
+		repeat = (TextView) contentView.findViewById(R.id.repeat);
+		stop = (TextView) contentView.findViewById(R.id.stop);
 		download = (CircularProgressButton) contentView.findViewById(R.id.download);
 		playerProgress = (SeekBar) contentView.findViewById(R.id.progress_track);
 		tvTitle = (TextView) contentView.findViewById(R.id.songName);
@@ -398,6 +400,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerTotalTime = (TextView) contentView.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) contentView.findViewById(R.id.lyrics_text);
 		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
+		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
+		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (ProgressBar) contentView.findViewById(R.id.player_wait_song);
 		undo = new UndoBar(getActivity());
 	}
@@ -412,6 +416,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		tvTitle.setOnClickListener(this);
 		tvArtist.setOnClickListener(this);
 		download.setOnClickListener(this);
+		artistBox.setOnClickListener(this);
+		titleBox.setOnClickListener(this);
 		cbUseCover.setOnCheckedChangeListener(this);
 		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
@@ -502,14 +508,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void setImageButton() {
 		if (!player.enabledRepeat()) {
-			repeat.setImageResource(R.drawable.ic_media_repeat);
+			repeat.setAlpha((float) 0.5);
 		} else {
-			repeat.setImageResource(R.drawable.ic_media_repeat_on);
+			repeat.setAlpha(1);
 		}
 		if (player.enabledShuffle()) {
-			shuffle.setImageResource(R.drawable.ic_media_shuffle_on);
+			shuffle.setAlpha(1);
 		} else {
-			shuffle.setImageResource(R.drawable.ic_media_shuffle);
+			shuffle.setAlpha((float) 0.5);
 		}
 	}
 
@@ -528,9 +534,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
 		if (!player.isPlaying()) {
-			play.setImageResource(R.drawable.ic_media_play);
+			play.setText(getString(R.string.play));
 		} else {
-			play.setImageResource(R.drawable.ic_media_pause);
+			play.setText(getString(R.string.pause));
 		}
 	}
 
@@ -737,7 +743,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	@Override
 	public int getDrawerIcon() {
-		return R.drawable.ic_launcher_playing;
+		return R.string.play;
 	}
 
 	@Override

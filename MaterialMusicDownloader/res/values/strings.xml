@@ -32,5 +32,19 @@
     <string name="error_retrieving_the_url">An error occurred while retrieving the url of the song. Try to download another song</string>
     <string name="delete_item">Delete item</string>
     <string name="message_undo_bar">Cover has been removed</string>
+    
+        	<!-- Strings for fonts -->
+    <string name="previous">&#xe850;</string>
+	<string name="next">&#xe851;</string>
+	<string name="play">&#xe84b;</string>
+	<string name="edit">&#xe84a;</string>
+	<string name="icon_music">&#xe84d;</string>
+	<string name="download_pic">&#xe84c;</string>
+	<string name="musics">&#xe84e;</string>
+	<string name="search">&#xe84f;</string>
+	<string name="stop">&#xe82d;</string>
+	<string name="pause">&#xe848;</string>
+	<string name="repeat">&#xe846;</string>
+	<string name="random">&#xe845;</string>
 
 </resources>

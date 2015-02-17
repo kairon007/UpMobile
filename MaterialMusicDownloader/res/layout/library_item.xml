@@ -71,15 +71,20 @@
     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
         style="@style/RippleStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:layout_gravity="center_vertical">
 
-        <ImageButton
+        <com.csform.android.uiapptemplate.font.MusicTextView
             android:id="@+id/item_play"
+            style="@style/TextViewAppearance.Title1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@android:color/transparent"
-            android:src="@drawable/play" />
+            android:minHeight="48dp"
+            android:padding="8dp"
+            android:text="@string/play"
+            android:textColor="@color/main_color_grey_700"
+            android:textSize="32sp" />
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
 </LinearLayout>

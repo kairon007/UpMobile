@@ -29,7 +29,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 
 	@Override
 	public int getDrawerIcon() {
-		return R.drawable.ic_launcher_library;
+		return R.string.musics;
 	}
 
 	@Override

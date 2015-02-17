@@ -36,7 +36,7 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 
 	@Override
 	public int getDrawerIcon() {
-		return R.drawable.ic_launcher_donwload;
+		return R.string.download_pic;
 	}
 
 	@Override
