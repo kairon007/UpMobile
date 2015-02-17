@@ -10,7 +10,9 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -338,7 +340,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		handler.removeCallbacksAndMessages(null);
 		buildSendMessage(null, MSG_RESET, 0, 0);
 		play(playingSong.getClass() != MusicData.class);
-		sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
+		sendNotification(true, getString(R.string.pause));
 	}
 
 	public void play(AbstractSong song) {
@@ -363,18 +365,18 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				msg.what = MSG_PLAY;
 				mode &= ~SMODE_PAUSE;
 				offMode(SMODE_PLAYING);
-				sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
+				sendNotification(true, getString(R.string.pause));
 			} else {
 				onMode(SMODE_PAUSE);
 				msg.what = MSG_PAUSE;
-				sendNotification(android.R.drawable.ic_media_play, getString(R.string.play));
+				sendNotification(false, getString(R.string.play));
 			}
 			msg.obj = playingSong;
 			handler.sendMessage(msg);
 		} else {
 			if (null != previousSong) {
 				helper(State.STOP, previousSong);
-				sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
+				sendNotification(true, getString(R.string.pause));
 			}
 			play(playingSong.getClass() != MusicData.class);
 		}
@@ -436,7 +438,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					((RemoteSong) playingSong).setDownloadUrl(url);
 					mode &= ~SMODE_GET_URL;
 					buildSendMessage(url, MSG_START, 0, 0);
-					sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
+					sendNotification(true, getString(R.string.pause));
 				}
 
 				@Override
@@ -447,7 +449,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			return;
 		}
 		buildSendMessage(playingSong.getPath(), MSG_START, 0, 0);
-		sendNotification(android.R.drawable.ic_media_pause, getString(R.string.pause));
+		sendNotification(true, getString(R.string.pause));
 	}
 	
 	private void helper(final State state, final AbstractSong targetSong) {
@@ -654,14 +656,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		return null;
 	}
 	
-	private void sendNotification(int draweble, String state) {
-		if (!check(SMODE_NOTIFICATION))
-			return;
+	@SuppressLint("NewApi")
+	private void sendNotification(boolean playing, String state) {
+		if (!check(SMODE_NOTIFICATION)) return;
 		Bitmap cover = playingSong.getCover(this);
 		if (null == cover) {
 			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_launcher);
 		}
-
 		Intent notificationIntent = new Intent(this, ((Activity) activityContext).getClass());
 		notificationIntent.setAction(MAIN_ACTION);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -680,14 +681,15 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		PendingIntent pcloseIntent = PendingIntent.getService(this, 0, closeIntent, 0);
 
 		NotificationCompat.Builder builder = null;
-		
+		int drawable = 0;
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+			drawable = (playing) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play;
 			RemoteViews view = new RemoteViews(getPackageName(), R.layout.notification_player);
 			Calendar calendar = Calendar.getInstance();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 			view.setTextViewText(R.id.txt_music, playingSong.getArtist() + " - " + playingSong.getTitle());
 			view.setTextViewText(R.id.txt_time, simpleDateFormat.format(calendar.getTime()));
-			view.setImageViewResource(R.id.btn_play, draweble);
+			view.setImageViewResource(R.id.btn_play, drawable);
 			view.setOnClickPendingIntent(R.id.btn_play, pplayIntent);
 			view.setOnClickPendingIntent(R.id.btn_next, pnextIntent);
 			view.setOnClickPendingIntent(R.id.btn_close, pcloseIntent);
@@ -695,7 +697,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					.setSmallIcon(R.drawable.ic_launcher)
 					.setLargeIcon(cover)
 					.setContentIntent(pendingIntent).setContent(view);
-		} else {
+			startForeground(NOTIFICATION_ID, builder.build());
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+			drawable = (playing) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play;
 			builder = new NotificationCompat.Builder(this)
 					.setPriority(NotificationCompat.PRIORITY_MAX)
 					.setSmallIcon(R.drawable.ic_launcher)
@@ -703,12 +707,26 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					.setContentTitle(playingSong.getTitle())
 					.setContentText(playingSong.getArtist())
 					.setContentIntent(pendingIntent)
-					.setOngoing(true)
-					.addAction(draweble, state, pplayIntent)
+					.addAction(drawable, state, pplayIntent)
 					.addAction(android.R.drawable.ic_media_next, getString(R.string.next), pnextIntent)
 					.addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.close), pcloseIntent);
+			startForeground(NOTIFICATION_ID, builder.build());
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			drawable = (playing) ? R.drawable.ic_pause : R.drawable.ic_play;
+			Notification notification = new Notification.Builder(this)
+		    .setVisibility(Notification.VISIBILITY_PUBLIC)
+		    .setSmallIcon(R.drawable.ic_launcher)
+		    .addAction(drawable, state, pplayIntent)
+			.addAction(R.drawable.ic_next, getString(R.string.next), pnextIntent)
+			.addAction(R.drawable.ic_close, getString(R.string.close), pcloseIntent)
+		    .setStyle(new Notification.MediaStyle()
+		    .setShowActionsInCompactView(2))
+		    .setContentTitle(playingSong.getTitle())
+		    .setContentText(playingSong.getArtist())
+		    .setLargeIcon(cover)
+		    .build();
+			startForeground(NOTIFICATION_ID, notification);
 		}
-		startForeground(NOTIFICATION_ID, builder.build());
 	}
 	
 	private void removeNotification() {
