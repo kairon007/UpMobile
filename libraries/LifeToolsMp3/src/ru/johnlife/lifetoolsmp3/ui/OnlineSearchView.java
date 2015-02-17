@@ -9,7 +9,6 @@ import org.json.JSONArray;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
@@ -1043,13 +1042,6 @@ public abstract class OnlineSearchView extends View {
 				player.setTitle(song.getArtist() + " - " + song.getTitle());
 			}
 		}
-		downloadListener = new DownloadClickListener(getContext(), song, new RefreshListener() {
-
-			@Override
-			public void success() {
-				refreshLibrary();
-			}
-		},0);
 		if (getSettings().getIsCoversEnabled(getContext())) {
 			boolean hasCover = ((RemoteSong) song).getCover(downloadListener);
 			if (!hasCover) {

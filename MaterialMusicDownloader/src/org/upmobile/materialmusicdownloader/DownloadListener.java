@@ -18,7 +18,7 @@ public class DownloadListener extends DownloadClickListener {
 	private String songTitle;
 
 	public DownloadListener(Context context, RemoteSong song, int id) {
-		super(context, song, null, id);
+		super(context, song, id);
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
 		this.context = context;
@@ -76,5 +76,9 @@ public class DownloadListener extends DownloadClickListener {
 	@Override
 	protected boolean isFullAction() {
 		return false;
+	}
+	
+	public long getDownloadId() {
+		return currentDownloadId;
 	}
 }

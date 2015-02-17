@@ -27,7 +27,6 @@ import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
@@ -69,11 +68,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected RemoteSong song;
 	protected Bitmap cover;
 	protected Long currentDownloadId;
-	public Integer songId;
+	private Integer songId;
 	private int id;
 	private long progress = 0;
 	private boolean useAlbumCover = true;
-	private RefreshListener listener;
 	protected boolean interrupted = false;
 	
 	private CanceledCallback cancelDownload = new CanceledCallback() {
@@ -83,10 +81,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 	};
 
-	protected DownloadClickListener(Context context, RemoteSong song, RefreshListener listener, int id) {
+	protected DownloadClickListener(Context context, RemoteSong song, int id) {
 		this.context = context;
 		this.song = song;
-		this.listener = listener;
 		this.id = id;
 		initSong();
 	}

@@ -8,7 +8,6 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.widget.UndoBarController.AdvancedUndoListener;
 import org.upmobile.materialmusicdownloader.widget.UndoBarController.UndoBar;
-import org.upmobile.materialmusicdownloader.widget.UndoBarController.UndoListener;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -22,8 +21,10 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -59,7 +60,8 @@ import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener {
 
-	private static final int MESSAGE_DURATION = 5000;
+	private final int MESSAGE_DURATION = 5000;
+	private final int DEFAULT_SONG = 7340032; // 7 Mb
 	private AbstractSong song;
 	private RenameTask renameTask;
 	private PlaybackService player;
@@ -161,7 +163,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				return;
 			}
 			((MainActivity) getActivity()).showPlayerElement(true);
-			downloadButtonState(true);
+			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
 			changePlayPauseView(true);
 			setElementsView(0);
@@ -180,37 +182,59 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 		}
 	};
-
-	private class FalseProgress extends AsyncTask<Integer, Integer, Integer> {
-
-		private CircularProgressButton cpb;
-
-		public FalseProgress(CircularProgressButton cpb) {
-			this.cpb = cpb;
-		}
+	
+	private class ProgressUpdater extends AsyncTask<Long, Integer, Void> {
 
 		@Override
-		protected Integer doInBackground(Integer... params) {
-			for (int progress = 0; progress < 100; progress += 5) {
-				publishProgress(progress);
+		protected void onPreExecute() {
+			download.setClickable(false);
+			download.setOnClickListener(null);
+			download.setIndeterminateProgressMode(true);
+			download.setProgress(50);
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected Void doInBackground(Long... params) {
+			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+			int progress = 0;
+			do {			
+				if (params[0] != -1) {
+					Cursor c = manager.query(new DownloadManager.Query().setFilterById(params[0]));
+					if (c.moveToNext()) {
+						int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+						int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+						int size = c.getInt(sizeIndex);
+						int downloaded = c.getInt(downloadedIndex);
+						if (size != -1 && size != 0) {
+							progress = downloaded * 100 / size;
+						} else {
+							progress = downloaded * 100 / DEFAULT_SONG;
+						}
+						publishProgress(progress);
+					}
+					c.close();
+				}
 				try {
-					Thread.sleep(100);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
-			return params[0];
+			} while (progress < 100);
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Integer result) {
-			cpb.setProgress(result);
+		protected void onPostExecute(Void params) {
+			download.setProgress(100);
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			int progress = values[0];
-			cpb.setProgress(progress);
+			download.setIndeterminateProgressMode(false);
+			download.setProgress(progress > 0 ? progress : 1);
+			android.util.Log.d("logd", "onProgressUpdate()");
 		}
 	}
 
@@ -300,7 +324,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			player.stop();
 			break;
 		case R.id.download:
-			new FalseProgress((CircularProgressButton) v).execute(100);
+			((CircularProgressButton)v).setIndeterminateProgressMode(true);
+			((CircularProgressButton)v).setProgress(50);
 			download();
 			break;
 		case R.id.artistName:
@@ -435,7 +460,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setClickablePlayerElement(false);
 		setCheckBoxState(false);
 		player.shift(delta);
-		downloadButtonState(false);
+		setDownloadButtonState(false);
 	}
 
 	private void setElementsView(int progress) {
@@ -509,7 +534,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
-	private void downloadButtonState(boolean state) {
+	private void setDownloadButtonState(boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
 	}
@@ -694,14 +719,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
-				Runnable callbackRun = new Runnable() {
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 					@Override
 					public void run() {
 						downloadListener.onClick(contentView);
+						new ProgressUpdater().execute(downloadListener.getDownloadId());
 					}
-				};
-				new Handler(Looper.getMainLooper()).post(callbackRun);
+				});
 			}
 
 			@Override
