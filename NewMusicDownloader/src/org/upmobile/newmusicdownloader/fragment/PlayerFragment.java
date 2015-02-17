@@ -116,7 +116,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
-		downloadButtonState(prepared);
+		downloadButtonState(!player.isGettingURl());
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
 		} else {
@@ -592,11 +592,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (delta > 0) {
 			player.shift(1);
 			getCover(player.getPlayingSong());
-			downloadButtonState(false);
+			downloadButtonState(!player.isGettingURl());
 		} else if (delta < 0) {
 			player.shift(-1);
 			getCover(player.getPlayingSong());
-			downloadButtonState(false);
+			downloadButtonState(!player.isGettingURl());
 		}
 	}
 
