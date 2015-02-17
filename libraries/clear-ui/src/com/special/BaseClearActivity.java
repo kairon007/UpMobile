@@ -152,11 +152,22 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
 			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
-			tvTitle.setText(lastFragmentName.replace(FRAGMENT, ""));
+			String title = getNameCurrentFragment(lastFragmentName);
+			tvTitle.setText(title);
 		} else {
 			stopChildsServices();
 			finish();
 		}
+	}
+
+	private String getNameCurrentFragment(String lastFragmentName) {
+		for (int i = 0; i < getFragments().length; i++) {
+			String fragmentName =  getFragments()[i].getClass().getSimpleName();
+			if (lastFragmentName.equals(fragmentName)) {
+				return titles[i];
+			} 
+		}
+		return titles[0];
 	}
     
 //    @SuppressLint("NewApi") @Override

@@ -15,6 +15,7 @@
     <string name="tab_search">Căutare</string>
     <string name="tab_downloads">Descărcări</string>
     <string name="tab_library">Bibliotecă</string>
+    <string name="tab_now_plaing">Acum joc</string>
     <string name="message_please_wait">Vă rugăm să așteptați...</string>
     <string name="message_loading">Se încarcă...</string>
     <string name="message_searching_for">Caută</string>

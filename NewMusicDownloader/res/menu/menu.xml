@@ -6,7 +6,7 @@
         android:id="@+id/action_search"
         android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/ic_action_search"
-        android:showAsAction="ifRoom|collapseActionView"
+        android:showAsAction="ifRoom"
         android:title="@string/search_please_enter_query"/>
 
 </menu>

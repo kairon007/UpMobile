@@ -146,8 +146,7 @@ public class UndoBarController extends LinearLayout {
                 a.recycle();
             }
 
-            // check window flags
-            assert (getContext()) != null;
+            // check window flags            assert (getContext()) != null;
             WindowManager.LayoutParams winParams = ((Activity) getContext()).getWindow().getAttributes();
             int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
             if ((winParams.flags & bits) != 0) {
@@ -553,6 +552,7 @@ public class UndoBarController extends LinearLayout {
         private boolean colorDrawable = true;
         private boolean noIcon = false;
         public boolean immediate;
+        private boolean noQueueMessage = false; // special settings - view will showed only one time
 
 
         public UndoBar(@NonNull Activity activity) {
@@ -711,7 +711,7 @@ public class UndoBarController extends LinearLayout {
             }
         }
 
-        /**
+		/**
          * Hide all undo bar immediately
          */
         @SuppressWarnings("deprecation")

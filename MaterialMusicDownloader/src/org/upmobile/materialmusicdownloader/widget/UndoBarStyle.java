@@ -69,6 +69,11 @@ public class UndoBarStyle implements Parcelable {
 		dest.writeLong(this.duration);
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 	private UndoBarStyle(Parcel in) {
 		this.iconRes = in.readInt();
 		this.titleRes = in.readInt();

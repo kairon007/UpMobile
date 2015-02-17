@@ -99,10 +99,10 @@ public class MainActivity extends BaseClearActivity {
 	@Override
 	protected ResideMenuItem[] getMenuItems() {
 		items = new ResideMenuItem[4];
-		items[0] = new ResideMenuItem(this, R.drawable.ic_search, R.string.navigation_search);
-		items[1] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.navigation_downloads);
-		items[2] = new ResideMenuItem(this, R.drawable.ic_library, R.string.navigation_library);
-		items[3] = new ResideMenuItem(this, R.drawable.ic_player, R.string.navigation_player);
+		items[0] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_search);
+		items[1] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.tab_downloads);
+		items[2] = new ResideMenuItem(this, R.drawable.ic_library, R.string.tab_library);
+		items[3] = new ResideMenuItem(this, R.drawable.ic_player, R.string.tab_now_plaing);
 		return items;
 	}
 	

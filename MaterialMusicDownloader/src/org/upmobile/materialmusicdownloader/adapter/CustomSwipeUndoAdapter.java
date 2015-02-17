@@ -129,5 +129,10 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 				return o.equals(this.tag);
 			}
 		}
+
+		@Override
+		public int hashCode() {
+			return super.hashCode();
+		}
 	}
 }

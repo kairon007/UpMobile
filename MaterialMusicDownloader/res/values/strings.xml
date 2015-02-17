@@ -23,10 +23,10 @@
     <string name="retry">Retry</string>
 
     <string-array name="titles">
-        <item>Search</item>
-        <item>Downloads</item>
-        <item>Library</item>
-        <item>Now playing</item>
+        <item>@string/tab_search</item>
+        <item>@string/tab_downloads</item>
+        <item>@string/tab_library</item>
+        <item>@string/tab_now_plaing</item>
     </string-array>
 
     <string name="error_retrieving_the_url">An error occurred while retrieving the url of the song. Try to download another song</string>

@@ -7,6 +7,11 @@
 <string name="update_app_install_now">INSTALL NOW</string>
 <string name="update_app_update_now">UPDATE NOW</string>
 
+<string name="tab_search">Search</string>
+<string name="tab_downloads">Downloads</string>
+<string name="tab_library">Library</string>
+<string name="tab_now_plaing">Now playing</string>
+
 <string name="rate_title">Please rate our app 5 stars</string>
 <string name="rate_description">If you like our app, please help us by rating it 5 stars. Your support helps us make this app better. Thank you!</string>
 <string name="rate_yes">Rate 5 Stars</string>
@@ -45,6 +50,4 @@
 <string name="edit_mp3_ok">OK</string>
 <string name="edit_mp3_cancel">Cancel</string>
 
- <string name="downloads_empty">Downloads list is empty</string>
- <string name="library_empty">Librarys list is empty</string>
 </resources>

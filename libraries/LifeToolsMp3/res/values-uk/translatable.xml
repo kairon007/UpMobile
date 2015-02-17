@@ -15,10 +15,11 @@
     <string name="tab_search">Пошук</string>
     <string name="tab_downloads">Завантаження</string>
     <string name="tab_library">Бібліотека</string>
+    <string name="tab_now_plaing">Зараз грає</string>
     <string name="message_please_wait">Будь ласка, зачекайте...</string>
     <string name="message_loading">Звантаження...</string>
     <string name="message_searching_for">Пошук для</string>
-    <string name="hint_main_search">Нзва, альбом або артист</string>
+    <string name="hint_main_search">Назва, альбом або артист</string>
     <string name="hint_filter_artists">Відфільтруйте своїх виконавців</string>
     <string name="hint_filter_songs">Відфільтруйте свої пісні</string>
     <string name="hint_filter_playlists">Відфільтруйте свої списки відтворення</string>

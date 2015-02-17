@@ -79,11 +79,15 @@ public class NavigationDrawerFragment extends Fragment {
 	public void setAdapter(boolean isNowPlaying) {
 //		String[] items = isNowPlaying ? new String[]{"Search", "Downloads", "Library", "Now playing"} : new String[]{"Search", "Downloads", "Library"};
 //		int[] icons = isNowPlaying ? new int[]{R.drawable.ic_action_search, R.drawable.icon_download, R.drawable.ic_action_refresh, R.drawable.icon_music} : new int[]{R.drawable.ic_action_search, R.drawable.icon_download, R.drawable.ic_action_refresh};
+		String library = getActivity().getString(R.string.tab_library);
+		String download = getActivity().getString(R.string.tab_downloads);
+		String search = getActivity().getString(R.string.tab_search);
+		String NAME_NOW_PLAYING = getActivity().getString(R.string.tab_now_plaing);
 		ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
-		items.add(new DrawerItem(R.drawable.navigation_search, "Search"));
-		items.add(new DrawerItem(R.drawable.navigation_downloads, "Downloads"));
-		items.add(new DrawerItem(R.drawable.navigaion_library, "Library"));
-		if (isNowPlaying) items.add(new DrawerItem(R.drawable.navigation_player, "Now playing"));
+		items.add(new DrawerItem(R.drawable.navigation_search, search));
+		items.add(new DrawerItem(R.drawable.navigation_downloads, download));
+		items.add(new DrawerItem(R.drawable.navigaion_library, library));
+		if (isNowPlaying) items.add(new DrawerItem(R.drawable.navigation_player, NAME_NOW_PLAYING));
 		mDrawerListView.setAdapter(new NavigationAdapter(getActivity(), items));
 	}
 

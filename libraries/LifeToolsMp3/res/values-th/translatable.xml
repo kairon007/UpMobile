@@ -15,6 +15,7 @@
 <string name="tab_search">ค้นหา</string>
 <string name="tab_downloads">ดาวน์โหลด</string>
 <string name="tab_library">ไลบรารี</string>
+<string name="tab_now_plaing">ตอนนี้เล่น</string>
  
 <string name="message_please_wait">โปรดรอ...</string>
 <string name="message_loading">กำลังโหลด...</string>

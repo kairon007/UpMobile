@@ -10,5 +10,23 @@
     <string name="menu_equalizer">Equalizer</string>
     <string name="file_with_the_same_name_already_exists">File with the same name already exists</string>
     <string name="track_exist">The track has already been loaded.</string>
+    
+    
+    
+    <string name="download">Download</string>
+    <string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
+    <string name="fileName_unknown_mp3">unknown</string>
+    <string name="delete_song">Delete song</string>
+
+    <string-array name="tracks">
+        <item>tracks</item>
+        <item>track</item>
+        <item>tracks</item>
+    </string-array>
+    <string-array name="songs">
+        <item>songs</item>
+        <item>song</item>
+        <item>songs</item>
+    </string-array>
 
 </resources>

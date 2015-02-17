@@ -237,7 +237,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="3dp"
-                    android:text="@string/download" />
+                    android:text="@string/download_dialog_download" />
 
                 <TextView
                     android:id="@+id/lyrics_tv"
@@ -296,7 +296,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
-                    android:text="@string/warning_of_remove"
+                    android:text="@string/download_dialog_cancel"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/white" />
 
