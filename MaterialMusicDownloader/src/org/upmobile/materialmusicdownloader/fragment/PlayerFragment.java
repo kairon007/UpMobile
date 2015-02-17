@@ -27,6 +27,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -63,6 +64,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
 	private AbstractSong song;
+	private AsyncTask<Long, Integer, Void> progressUpdater;
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
@@ -169,6 +171,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setClickablePlayerElement(true);
 			changePlayPauseView(true);
 			setElementsView(0);
+			thatSongIsDownloaded();
 		}
 
 		@Override
@@ -236,7 +239,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			int progress = values[0];
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
-			android.util.Log.d("logd", "onProgressUpdate()");
 		}
 	}
 
@@ -259,6 +261,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		} else {
 			song = player.getPlayingSong();
 		}
+		thatSongIsDownloaded();
 		setCoverToZoomView(null);
 		getCover(song);
 		setImageButton();
@@ -466,7 +469,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setClickablePlayerElement(false);
 		setCheckBoxState(false);
 		player.shift(delta);
-		setDownloadButtonState(false);
+		setDownloadButtonState(!player.isGettingURl());
+		if (null != progressUpdater && (progressUpdater.getStatus() == Status.PENDING || progressUpdater.getStatus() == Status.RUNNING)) {
+			progressUpdater.cancel(true);
+		}
+		download.setProgress(0);
 	}
 
 	private void setElementsView(int progress) {
@@ -730,9 +737,37 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					@Override
 					public void run() {
 						downloadListener.onClick(contentView);
-						new ProgressUpdater().execute(downloadListener.getDownloadId());
+						progressUpdater = new ProgressUpdater().execute(downloadListener.getDownloadId());
 					}
 				});
+			}
+
+			@Override
+			public void error(String error) {
+			}
+		});
+	}
+	
+	private void thatSongIsDownloaded() {
+		player.getPlayingSong().getDownloadUrl(new DownloadUrlListener() {
+
+			@Override
+			public void success(String url) {
+				DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+				Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
+				if (running != null) {
+					while (running.moveToNext()) {
+						if (null != url && url.equals(running.getString(running.getColumnIndex(DownloadManager.COLUMN_URI)))) {
+							progressUpdater = new ProgressUpdater().execute(running.getLong(running.getColumnIndex(DownloadManager.COLUMN_ID)));
+						} else {
+							download.setProgress(0);
+							download.setOnClickListener(PlayerFragment.this);
+							setDownloadButtonState(true);
+						}
+					}
+				}
+				running.close();
+				
 			}
 
 			@Override
