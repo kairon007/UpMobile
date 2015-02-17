@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LibraryAdapter extends BaseLibraryAdapter {
+	
+	private TextView textcover;
 
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
@@ -48,6 +50,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_artist);
 			duration = (TextView) v.findViewById(R.id.item_duration);
+			textcover = (TextView) v.findViewById(R.id.item_cover_text);
 		}
 
 		@Override
@@ -63,7 +66,6 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 		}
 
 		private void setListener() {
-			cover.setOnClickListener(this);
 			info.setOnClickListener(this);
 			button.setOnClickListener(this);
 		}
@@ -103,6 +105,8 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 
 	@Override
 	protected int getDefaultCover() {
-		return R.drawable.no_cover_art_big;
+		textcover.setVisibility(View.VISIBLE);
+		textcover.setText(getContext().getString(R.string.musics));
+		return android.R.color.transparent;
 	}
 }
