@@ -271,7 +271,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				player.setDataSource(this, uri);
 				mode |= SMODE_START_PREPARE;
 				player.prepareAsync();
-				sendNotification(true, getString(R.string.pause));
+				sendNotification(true);
 			} catch (Exception e) {
 				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 			}
@@ -281,7 +281,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				helper(State.PLAY, (AbstractSong) msg.obj);
 				player.start();
 				mode |= SMODE_PLAYING;
-				sendNotification(true, getString(R.string.pause));
+				sendNotification(true);
 			}
 			break;
 		case MSG_PAUSE:
@@ -289,7 +289,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				helper(State.PAUSE, (AbstractSong) msg.obj);
 				player.pause();
 				mode |= SMODE_PAUSE;
-				sendNotification(false, getString(R.string.play));
+				sendNotification(false);
 			}
 			break;
 		case MSG_SEEK_TO:
@@ -329,7 +329,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				playingSong = arrayPlayback.get(msg.arg1);
 				helper(State.UPDATE, playingSong);
 				play(playingSong.getClass() != MusicData.class);
-				sendNotification(true, getString(R.string.pause));
+				sendNotification(true);
 			}
 			break;
 		default:
@@ -657,7 +657,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	@SuppressLint("NewApi")
-	private void sendNotification(boolean playing, String state) {
+	private void sendNotification(boolean playing) {
 		if (!check(SMODE_NOTIFICATION)) return;
 		Bitmap cover = playingSong.getCover(this);
 		if (null == cover) {
@@ -682,6 +682,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 
 		NotificationCompat.Builder builder = null;
 		int drawable = 0;
+		String state = (playing) ? getString(R.string.pause) : getString(R.string.play);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
 			drawable = (playing) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play;
 			RemoteViews view = new RemoteViews(getPackageName(), R.layout.notification_player);
