@@ -65,6 +65,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private static final int MSG_ERROR = 5;
 	private static final int MSG_RESET = 6;
 	private static final int MSG_STOP = 7;
+	private static final int MSG_SHIFT = 8;
 	
 	//multy-threading section
 	private static final Object LOCK = new Object();
@@ -313,6 +314,21 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				player.seekTo(0);
 			}
 			break;
+		case MSG_SHIFT:
+			helper(State.STOP, playingSong);
+			if (enabledRepeat()) {
+				buildSendMessage(playingSong, MSG_PLAY, 0, 0);
+				break;
+			}
+			if (check(SMODE_PREPARED)) {
+				previousSong = playingSong;
+				playingSong = arrayPlayback.get(msg.arg1);
+				helper(State.UPDATE, playingSong);
+				handler.removeCallbacksAndMessages(null);
+				play(playingSong.getClass() != MusicData.class);
+				sendNotification(true, getString(R.string.pause));
+			}
+			break;
 		default:
 			Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
 			break;
@@ -323,24 +339,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public void shift(int delta) {
 		if (null == arrayPlayback || arrayPlayback.isEmpty()) return;
 		int position = arrayPlayback.indexOf(playingSong);
-		helper(State.STOP, playingSong);
-		if (enabledRepeat()) {
-			buildSendMessage(playingSong, MSG_PLAY, 0, 0);
-			return;
-		}
 		position += delta;
 		if (position >= arrayPlayback.size()) {
 			position = 0;
 		} else if (position < 0) {
 			position = arrayPlayback.size() - 1;
 		}
-		previousSong = playingSong;
-		playingSong = arrayPlayback.get(position);
-		helper(State.UPDATE, playingSong);
-		handler.removeCallbacksAndMessages(null);
-		buildSendMessage(null, MSG_RESET, 0, 0);
-		play(playingSong.getClass() != MusicData.class);
-		sendNotification(true, getString(R.string.pause));
+		buildSendMessage(null, MSG_SHIFT, position, 0);
 	}
 
 	public void play(AbstractSong song) {
