@@ -82,7 +82,7 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			int position = 0;
 			selectItem(position, mDrawerItems.get(position).getTag());
-			mDrawerLayout.openDrawer(mDrawerList);
+			//mDrawerLayout.openDrawer(mDrawerList); // open drawer on first load
 		}
 	}
 	
