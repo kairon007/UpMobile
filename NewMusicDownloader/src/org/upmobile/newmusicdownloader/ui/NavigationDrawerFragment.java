@@ -1,7 +1,12 @@
 package org.upmobile.newmusicdownloader.ui;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.upmobile.newmusicdownloader.DrawerItem;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.adapter.NavigationAdapter;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -72,11 +77,14 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
 	public void setAdapter(boolean isNowPlaying) {
-		String[] items = isNowPlaying ? new String[]{"Search", "Downloads", "Library", "Now playing"} : new String[]{"Search", "Downloads", "Library"};
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1, items));
+//		String[] items = isNowPlaying ? new String[]{"Search", "Downloads", "Library", "Now playing"} : new String[]{"Search", "Downloads", "Library"};
+//		int[] icons = isNowPlaying ? new int[]{R.drawable.ic_action_search, R.drawable.icon_download, R.drawable.ic_action_refresh, R.drawable.icon_music} : new int[]{R.drawable.ic_action_search, R.drawable.icon_download, R.drawable.ic_action_refresh};
+		ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
+		items.add(new DrawerItem(R.drawable.navigation_search, "Search"));
+		items.add(new DrawerItem(R.drawable.navigation_downloads, "Downloads"));
+		items.add(new DrawerItem(R.drawable.navigaion_library, "Library"));
+		if (isNowPlaying) items.add(new DrawerItem(R.drawable.navigation_player, "Now playing"));
+		mDrawerListView.setAdapter(new NavigationAdapter(getActivity(), items));
 	}
 
     public boolean isDrawerOpen() {
