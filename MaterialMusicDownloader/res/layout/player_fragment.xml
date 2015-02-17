@@ -52,6 +52,8 @@
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/ic_action_edit"
                     android:gravity="bottom"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:lines="1" />
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -78,12 +80,14 @@
 
                 <com.csform.android.uiapptemplate.font.RobotoTextView
                     android:id="@+id/artistName"
-                    style="@style/TextViewAppearance.Title"
+                    style="@style/TitleLineGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/ic_action_edit"
                     android:gravity="bottom"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:lines="1" />
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 

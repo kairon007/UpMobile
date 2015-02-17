@@ -108,7 +108,7 @@
 
                 <com.csform.android.uiapptemplate.font.RobotoTextView
                     android:id="@+id/titleLine"
-                    style="@style/TextViewAppearance.Caption"
+                    style="@style/CaptionLineGray"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
