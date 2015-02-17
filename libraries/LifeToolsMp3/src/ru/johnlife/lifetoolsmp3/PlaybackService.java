@@ -280,7 +280,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			if (check(SMODE_PREPARED)) {
 				helper(State.PLAY, (AbstractSong) msg.obj);
 				player.start();
-				mode |= SMODE_PLAYING;
+				onMode(SMODE_PLAYING);
 				sendNotification(true);
 			}
 			break;
