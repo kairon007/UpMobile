@@ -92,6 +92,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		if (null != listView) {
 			adapter.add(srcList);
 			listView.setAdapter(adapter);
+			animateListView(listView, adapter);
 		}
 	}
 	
@@ -154,4 +155,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		return true;
 	}
 
+	protected void animateListView(ListView listView, BaseAbstractAdapter<MusicData> adapter) {
+		//Animate ListView in childs, if need
+	}
 }

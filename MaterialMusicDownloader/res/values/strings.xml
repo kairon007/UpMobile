@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Application name -->
-    <string name="app_name">NewMusicDownloader</string>
+    <string name="app_name">MaterialMusicDownloader</string>
 
     <!-- Navigation drawer items -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
