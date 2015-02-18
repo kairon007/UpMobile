@@ -5,9 +5,11 @@ import java.util.List;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,6 +29,8 @@ import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.model.DrawerItem;
 
 public abstract class UIMainActivity extends ActionBarActivity {
+	
+    private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
 	private ListView mDrawerList;
 	private List<BaseMaterialFragment> mFragments;
@@ -36,6 +40,7 @@ public abstract class UIMainActivity extends ActionBarActivity {
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
+    private boolean mUserLearnedDrawer;
 	
 	private Handler mHandler;
 	
@@ -53,6 +58,8 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_material_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.material_toolbar);
 		setSupportActionBar(toolbar);
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
 				R.string.drawer_open,
@@ -82,7 +89,11 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			int position = 0;
 			selectItem(position, mDrawerItems.get(position).getTag());
-			//mDrawerLayout.openDrawer(mDrawerList); // open drawer on first load
+			if (!mUserLearnedDrawer) {
+				mUserLearnedDrawer = true;
+                sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+				mDrawerLayout.openDrawer(mDrawerList); // open drawer on first load
+			}
 		}
 	}
 	
