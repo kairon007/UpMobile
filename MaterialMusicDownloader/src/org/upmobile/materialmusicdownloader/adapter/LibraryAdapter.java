@@ -70,6 +70,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 
 		private void setListener() {
 			info.setOnClickListener(this);
+			cover.setOnClickListener(this);
 			button.setOnClickListener(this);
 		}
 
