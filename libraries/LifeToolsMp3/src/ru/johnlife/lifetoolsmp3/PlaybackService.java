@@ -321,7 +321,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			}
 			break;
 		case MSG_SHIFT:
-			helper(State.STOP, playingSong);
+			helper(State.STOP, previousSong == null ? playingSong : previousSong);
 			if (enabledRepeat()) {
 				buildSendMessage(playingSong, MSG_PLAY, 0, 0);
 				break;
@@ -356,12 +356,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (arrayPlayback == null && arrayPlayback.indexOf(song) == -1) {
 			return;
 		}
-		if (null != previousSong) {
-			helper(State.STOP, previousSong);
-		}
 		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
 			previousSong = playingSong;
+			helper(State.STOP, previousSong);
 			if (!playingSong.equals(song)) {
 				if (playingSong.getClass() != MusicData.class) {
 					((RemoteSong) playingSong).cancelTasks();
@@ -390,7 +388,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (check(SMODE_PREPARED)) {
 			helper(State.START, playingSong);
 		} else {
-			helper(State.STOP, playingSong);
+			helper(State.STOP, previousSong == null ? playingSong : previousSong);
 			stopForeground(true);
 		}
 	}
@@ -404,7 +402,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				onMode(SMODE_PAUSE);
 			}
 		}
-		helper(State.STOP, playingSong);
+		helper(State.STOP, previousSong == null ? playingSong : previousSong);
 		removeNotification();
 	}
 	
