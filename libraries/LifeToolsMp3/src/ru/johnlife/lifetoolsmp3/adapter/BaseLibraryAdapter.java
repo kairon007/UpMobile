@@ -1,6 +1,5 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
@@ -20,7 +19,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected PlaybackService service;
 	
 	protected abstract int getDefaultCover();
-	protected void clearDefaultCover() { };
+	protected Bitmap getDefaultBitmap() { return null; }
 	protected void setListener(ViewGroup parent, View view, final int position){ }
 	
 	protected OnStatePlayerListener stateListener = new OnStatePlayerListener() {
@@ -115,15 +114,19 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-			WeakReference<Bitmap> bitmap = new WeakReference<Bitmap>(item.getCover(getContext()));
-			if (null != bitmap && null != bitmap.get()) {
-				clearDefaultCover();
-				cover.setImageBitmap(bitmap.get());
+			Bitmap bitmap = item.getCover(getContext());
+			if (null != bitmap) {
+				cover.setImageBitmap(bitmap);
 			} else {
-				cover.setImageResource(getDefaultCover());
+				if (getDefaultCover() > 0) {
+					cover.setImageResource(getDefaultCover());
+				} else {
+					cover.setImageBitmap(getDefaultBitmap());
+				}
 			}
+			bitmap = null;
 		}
-	}	
+	}
 	
 	protected void initService() {
 		service = PlaybackService.get(getContext());
