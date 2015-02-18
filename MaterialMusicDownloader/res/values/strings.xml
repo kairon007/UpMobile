@@ -40,5 +40,9 @@
 	<string name="pause">&#xe848;</string>
 	<string name="repeat">&#xe846;</string>
 	<string name="random">&#xe845;</string>
+	<string name="search_online">&#xe816;</string>
+	<string name="cancel">&#xe81f;</string>
+	
+	
 
 </resources>

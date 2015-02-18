@@ -90,30 +90,37 @@
 
                         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                             style="@style/RippleStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:layout_gravity="center_vertical|right" >
 
-                            <ImageButton
+                            <com.csform.android.uiapptemplate.font.MusicTextView
                                 android:id="@+id/clear"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@android:color/transparent"
-                                android:src="@drawable/close" />
+                                style="@style/TextViewAppearance.CustomMusicButtons"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:padding="4dp"
+                                android:text="@string/cancel"
+                                android:textSize="32sp" />
                         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
                     </FrameLayout>
 
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                         style="@style/RippleStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_vertical|right" >
 
-                        <ImageButton
+                        <com.csform.android.uiapptemplate.font.MusicTextView
                             android:id="@+id/search"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/ic_menu_search" />
+                            style="@style/TextViewAppearance.CustomMusicButtons"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:padding="4dp"
+                            android:text="@string/search_online"
+                            android:textSize="32sp" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
                     <ImageButton
