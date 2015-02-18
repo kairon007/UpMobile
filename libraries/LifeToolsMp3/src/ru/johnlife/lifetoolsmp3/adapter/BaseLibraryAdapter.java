@@ -20,6 +20,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected PlaybackService service;
 	
 	protected abstract int getDefaultCover();
+	protected void clearDefaultCover() { };
 	protected void setListener(ViewGroup parent, View view, final int position){ }
 	
 	protected OnStatePlayerListener stateListener = new OnStatePlayerListener() {
@@ -116,6 +117,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
 			WeakReference<Bitmap> bitmap = new WeakReference<Bitmap>(item.getCover(getContext()));
 			if (null != bitmap && null != bitmap.get()) {
+				clearDefaultCover();
 				cover.setImageBitmap(bitmap.get());
 			} else {
 				cover.setImageResource(getDefaultCover());

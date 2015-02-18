@@ -108,6 +108,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	}
 
 	@Override
+	protected void clearDefaultCover() {
+		textcover.setVisibility(View.GONE);
+		textcover.setText("");
+	}
+	
+	@Override
 	protected int getDefaultCover() {
 		textcover.setVisibility(View.VISIBLE);
 		textcover.setText(getContext().getString(R.string.musics));
