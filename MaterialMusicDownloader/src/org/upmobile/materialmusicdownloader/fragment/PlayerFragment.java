@@ -26,6 +26,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
@@ -154,10 +156,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 		@Override
 		public void error() {
-			if (isDestroy) {
-				return;
-			}
-			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -549,11 +547,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 *            "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
-		if (!player.isPlaying()) {
-			play.setText(getString(R.string.play));
-		} else {
-			play.setText(getString(R.string.pause));
-		}
+		play.setText(!player.isPlaying() ? getString(R.string.play) : getString(R.string.pause));
 	}
 
 	private void setDownloadButtonState(boolean state) {
@@ -682,6 +676,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 						((RemoteSong) song).setHasCover(true);
 						setCoverToZoomView(bmp);
 						setCheckBoxState(true);
+					} else {
+						setCoverToZoomView(null);
+						setCheckBoxState(false);
 					}
 				}
 			};
@@ -692,6 +689,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (bitmap != null) {
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
+			} else {
+				setCoverToZoomView(null);
+				setCheckBoxState(false);
 			}
 		}
 	}
@@ -702,11 +702,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		ImageView imageView = new ImageView(getActivity());
-		if (null == bitmap) {
-			imageView.setImageResource(R.drawable.default_cover_white);
-		} else {
-			imageView.setImageBitmap(bitmap);
-		}
+		Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.default_cover_white);
+		imageView.setImageBitmap(null == bitmap ? bmp : bitmap);
 		scrollView.setZoomView(imageView);
 	}
 

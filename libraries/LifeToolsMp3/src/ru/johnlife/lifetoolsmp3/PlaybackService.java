@@ -259,21 +259,23 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
 		case MSG_START:
-			if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
-				player.reset();
-				offMode(SMODE_PREPARED);
-			}	
-			if (check(SMODE_GET_URL)) {
-				mode &= ~SMODE_GET_URL;
-			}
-			try {
-				Uri uri = Uri.parse((String) msg.obj);
-				player.setDataSource(this, uri);
-				mode |= SMODE_START_PREPARE;
-				player.prepareAsync();
-				sendNotification(true);
-			} catch (Exception e) {
-				android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
+			synchronized (LOCK) {
+				if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
+					player.reset();
+					offMode(SMODE_PREPARED);
+				}
+				if (check(SMODE_GET_URL)) {
+					mode &= ~SMODE_GET_URL;
+				}
+				try {
+					Uri uri = Uri.parse((String) msg.obj);
+					player.setDataSource(this, uri);
+					mode |= SMODE_START_PREPARE;
+					player.prepareAsync();
+					sendNotification(true);
+				} catch (Exception e) {
+					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
+				}
 			}
 			break;
 		case MSG_PLAY:
@@ -324,13 +326,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				buildSendMessage(playingSong, MSG_PLAY, 0, 0);
 				break;
 			}
-			if (check(SMODE_PREPARED)) {
-				previousSong = playingSong;
-				playingSong = arrayPlayback.get(msg.arg1);
-				helper(State.UPDATE, playingSong);
-				play(playingSong.getClass() != MusicData.class);
-				sendNotification(true);
-			}
+			helper(State.UPDATE, playingSong);
+			play(playingSong.getClass() != MusicData.class);
+			sendNotification(true);
 			break;
 		default:
 			Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
@@ -348,6 +346,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		} else if (position < 0) {
 			position = arrayPlayback.size() - 1;
 		}
+		previousSong = playingSong;
+		playingSong = arrayPlayback.get(position);
+		handler.removeMessages(0);
 		buildSendMessage(null, MSG_SHIFT, position, 0);
 	}
 
@@ -395,11 +396,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void stop() {
-		if (check(SMODE_PREPARED)) {
-			player.pause();
-			player.seekTo(0);
-			offMode(SMODE_PLAYING);
-			onMode(SMODE_PAUSE);
+		synchronized (LOCK) {
+			if (check(SMODE_PREPARED)) {
+				player.pause();
+				player.seekTo(0);
+				offMode(SMODE_PLAYING);
+				onMode(SMODE_PAUSE);
+			}
 		}
 		helper(State.STOP, playingSong);
 		removeNotification();
@@ -513,7 +516,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		return (mode & flag) == flag;
 	}
 	
-	private synchronized void buildSendMessage(Object obj, int what, int arg1, int arg2) {
+	private void buildSendMessage(Object obj, int what, int arg1, int arg2) {
 		Message msg = new Message();
 		msg.obj = obj;
 		msg.what = what;
@@ -549,13 +552,18 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public int getCurrentPosition() {
-		if (!check(SMODE_PREPARED)) return 0;
-		return player.getCurrentPosition();
+		synchronized (LOCK) {
+			if (!check(SMODE_PREPARED))
+				return 0;
+			return player.getCurrentPosition();
+		}
 	}
 	
 	public int getDuration() {
 		if (!check(SMODE_PREPARED)) return 0;
-		return player.getDuration();
+		synchronized (LOCK) {
+			return player.getDuration();
+		}
 	}
 	
 	public AbstractSong getPlayingSong() {
