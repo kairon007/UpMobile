@@ -27,9 +27,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -177,6 +175,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (isDestroy) {
 				return;
 			}
+			cancelProgressTask();
 			song = current;
 			getCover(song);
 			showLyrics();
@@ -201,7 +200,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		protected Void doInBackground(Long... params) {
 			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 			int progress = 0;
-			do {			
+			do {		
+				if (isCancelled()) return null;
 				if (params[0] != -1) {
 					Cursor c = manager.query(new DownloadManager.Query().setFilterById(params[0]));
 					if (c.moveToNext()) {
@@ -229,11 +229,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 		@Override
 		protected void onPostExecute(Void params) {
-			download.setProgress(100);
+			download.setProgress(isCancelled() ? 0 : 100);
+		}
+		
+		@Override
+		protected void onCancelled() {
+			this.cancel(true);
+			super.onCancelled();
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
+			if (isCancelled()) return;
 			int progress = values[0];
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
@@ -284,10 +291,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onDestroyView() {
 		player.removeStatePlayerListener(stateListener);
-		if (null != progressUpdater && (progressUpdater.getStatus() == Status.PENDING || progressUpdater.getStatus() == Status.RUNNING)) {
+		cancelProgressTask();
+		super.onDestroyView();
+	}
+
+	private void cancelProgressTask() {
+		if (null != progressUpdater) {
 			progressUpdater.cancel(true);
 		}
-		super.onDestroyView();
 	}
 
 	@Override
@@ -476,9 +487,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setCheckBoxState(false);
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
-		if (null != progressUpdater && (progressUpdater.getStatus() == Status.PENDING || progressUpdater.getStatus() == Status.RUNNING)) {
-			progressUpdater.cancel(true);
-		}
+		cancelProgressTask();
 		download.setProgress(0);
 		download.setOnClickListener(this);
 	}
@@ -701,7 +710,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 *            - set to image view, if bitmap == null then use default cover
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
-		if (isDestroy) return;
 		ImageView imageView = new ImageView(getActivity());
 		Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.default_cover_white);
 		imageView.setImageBitmap(null == bitmap ? bmp : bitmap);

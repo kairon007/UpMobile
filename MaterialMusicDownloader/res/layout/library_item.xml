@@ -12,17 +12,23 @@
         android:clickable="true"
         android:src="@drawable/no_cover_art_light_big_dark" />
 
-    <com.csform.android.uiapptemplate.font.MusicTextView
-        android:id="@+id/item_cover_text"
-        style="@style/TextViewAppearance.CustomMusicButtons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:padding="4dp"
-        android:text="@string/musics"
-        android:textSize="40sp"
-        android:visibility="gone"/>
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp" >
+
+        <com.csform.android.uiapptemplate.font.MusicTextView
+            android:id="@+id/item_cover_text"
+            style="@style/TextViewAppearance.CustomMusicButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/musics"
+            android:textSize="40sp"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
         style="@style/RippleStyle"
