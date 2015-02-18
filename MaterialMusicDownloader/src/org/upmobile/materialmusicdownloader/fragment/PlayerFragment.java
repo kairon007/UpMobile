@@ -21,12 +21,13 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,6 +57,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.csform.android.uiapptemplate.font.MusicTextView;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
@@ -560,7 +563,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 *            "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
-		play.setText(!player.isPlaying() ? getString(R.string.play) : getString(R.string.pause));
+		play.setText(!player.isPlaying() ? getString(R.string.font_play) : getString(R.string.font_pause));
 	}
 
 	private void setDownloadButtonState(boolean state) {
@@ -716,9 +719,24 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
 		ImageView imageView = new ImageView(getActivity());
-		Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.default_cover_white);
-		imageView.setImageBitmap(null == bitmap ? bmp : bitmap);
+		imageView.setPadding(8, 8, 8, 8);
+		MusicTextView textCover = new MusicTextView(getActivity());
+		textCover.setText(getString(R.string.font_musics));
+		textCover.setPadding(8, 8, 8, 8);
+		textCover.setTextSize(200);
+		textCover.setGravity(Gravity.CENTER);
+		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
+		imageView.setImageBitmap(null == bitmap ? textviewToBitmap(textCover) : bitmap);
 		scrollView.setZoomView(imageView);
+	}
+	
+	private Bitmap textviewToBitmap(View v){
+		Bitmap bmp = null;
+		bmp = Bitmap.createBitmap(260, 260, Bitmap.Config.ARGB_8888);
+	    Canvas c = new Canvas(bmp);
+	    v.layout(0, 0, 260, 260);
+	    v.draw(c);
+		return bmp;
 	}
 
 	private void setCheckBoxState(boolean state) {
@@ -800,7 +818,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	@Override
 	public int getDrawerIcon() {
-		return R.string.play;
+		return R.string.font_play;
 	}
 
 	@Override

@@ -61,9 +61,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 			this.data = data;
 			super.hold(data, position);
 			if (data.check(MusicData.MODE_PLAYING)) {
-				button.setText(getContext().getString(R.string.pause));
+				button.setText(getContext().getString(R.string.font_pause));
 			} else {
-				button.setText(getContext().getString(R.string.play));
+				button.setText(getContext().getString(R.string.font_play));
 			}
 			setListener();
 		}
@@ -116,7 +116,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	@Override
 	protected int getDefaultCover() {
 		textcover.setVisibility(View.VISIBLE);
-		textcover.setText(getContext().getString(R.string.musics));
+		textcover.setText(getContext().getString(R.string.font_musics));
 		return android.R.color.transparent;
 	}
 	

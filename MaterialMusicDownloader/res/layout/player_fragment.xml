@@ -62,7 +62,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:padding="4dp"
-                        android:text="@string/edit"
+                        android:text="@string/font_edit"
                         android:textSize="16sp" />
                 </LinearLayout>
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -106,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:padding="4dp"
-                        android:text="@string/edit"
+                        android:text="@string/font_edit"
                         android:textSize="16sp" />
                 </LinearLayout>
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -201,7 +201,7 @@
                 android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
-                android:text="@string/random"
+                android:text="@string/font_random"
                 android:textSize="24sp" />
 
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -222,7 +222,7 @@
                 android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
-                android:text="@string/previous"
+                android:text="@string/font_previous"
                 android:textSize="24sp" />
 
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -243,7 +243,7 @@
                 android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
-                android:text="@string/play"
+                android:text="@string/font_play"
                 android:textSize="24sp" />
 
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -264,7 +264,7 @@
                 android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
-                android:text="@string/stop"
+                android:text="@string/font_stop"
                 android:textSize="24sp" />
 
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -285,7 +285,7 @@
                 android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
-                android:text="@string/next"
+                android:text="@string/font_next"
                 android:textSize="24sp" />
 
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -306,7 +306,7 @@
                 android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
-                android:text="@string/repeat"
+                android:text="@string/font_repeat"
                 android:textSize="24sp" />
 
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>

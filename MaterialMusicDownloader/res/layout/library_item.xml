@@ -24,7 +24,7 @@
             android:padding="4dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/musics"
+            android:text="@string/font_musics"
             android:textSize="40sp"
             android:visibility="gone" />
 
@@ -83,7 +83,7 @@
             android:layout_gravity="center"
             android:minHeight="48dp"
             android:padding="8dp"
-            android:text="@string/play"
+            android:text="@string/font_play"
             android:textSize="32sp" />
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 

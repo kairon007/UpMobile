@@ -101,7 +101,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:padding="4dp"
-                                android:text="@string/cancel"
+                                android:text="@string/font_cancel"
                                 android:textSize="32sp" />
                         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
                     </FrameLayout>
@@ -119,7 +119,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:padding="4dp"
-                            android:text="@string/search_online"
+                            android:text="@string/font_search_online"
                             android:textSize="32sp" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 

@@ -48,7 +48,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 
 	@Override
 	public int getDrawerIcon() {
-		return R.string.search;
+		return R.string.font_search;
 	}
 
 	@Override

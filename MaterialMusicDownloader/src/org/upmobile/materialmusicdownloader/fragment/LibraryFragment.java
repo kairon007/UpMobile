@@ -30,7 +30,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 
 	@Override
 	public int getDrawerIcon() {
-		return R.string.musics;
+		return R.string.font_musics;
 	}
 
 	@Override
