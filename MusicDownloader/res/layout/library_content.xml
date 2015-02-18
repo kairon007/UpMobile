@@ -42,8 +42,9 @@ THE SOFTWARE.
 
             <EditText
                 android:id="@+id/filter_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:hint="@string/hint_main_search"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
