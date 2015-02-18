@@ -244,7 +244,6 @@ public abstract class OnlineSearchView extends View {
 				for (Song song : songsList) {
 					resultAdapter.add(song);
 				}
-				animateListView();
 			}
 		}
 	};
@@ -327,6 +326,7 @@ public abstract class OnlineSearchView extends View {
 			listView.addHeaderView(emptyHeader);
 			listView.addFooterView(resultAdapter.getProgress());
 			listView.setAdapter(resultAdapter);
+			animateListView();
 		}
 		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
 			if (isWhiteTheme(getContext())) {
@@ -1140,6 +1140,7 @@ public abstract class OnlineSearchView extends View {
 		listView.addHeaderView(emptyHeader);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
+		animateListView();
 		listView.setSelection(position);
 		isRestored = true;
 	}
