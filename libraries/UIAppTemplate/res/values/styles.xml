@@ -3,7 +3,7 @@
     <!-- Default application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarStyle">@style/ActionBarStyle</item>
-        <item name="colorPrimary">@color/main_color_500</item>
+        <item name="colorPrimary">@color/material_blue_300</item>
         <item name="colorPrimaryDark">@color/main_color_700</item>
         <item name="searchViewStyle">@style/SearchView</item>
     </style>

@@ -25,7 +25,7 @@
 
         <com.csform.android.uiapptemplate.font.MusicTextView
             android:id="@+id/icon"
-            style="@style/TextViewAppearance.CustomMusicButtons"
+            style="@style/TextViewAppearance.CustomMusicButtons.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="18dp" />

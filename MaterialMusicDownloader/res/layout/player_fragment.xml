@@ -194,7 +194,7 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/shuffle"
-                style="@style/TextViewAppearance.CustomMusicButtons"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -215,7 +215,7 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/prev"
-                style="@style/TextViewAppearance.CustomMusicButtons"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -236,7 +236,7 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/playpause"
-                style="@style/TextViewAppearance.CustomMusicButtons"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -257,7 +257,7 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/stop"
-                style="@style/TextViewAppearance.CustomMusicButtons"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -278,7 +278,7 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/next"
-                style="@style/TextViewAppearance.CustomMusicButtons"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -299,7 +299,7 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/repeat"
-                style="@style/TextViewAppearance.CustomMusicButtons"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
