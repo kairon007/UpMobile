@@ -261,7 +261,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		} else {
 			song = player.getPlayingSong();
 		}
-		thatSongIsDownloaded();
 		setCoverToZoomView(null);
 		getCover(song);
 		setImageButton();
@@ -277,10 +276,19 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		scrollView.setContentContainerView(contentView);
 		return scrollView;
 	}
+	
+	@Override
+	public void onResume() {
+		thatSongIsDownloaded();
+		super.onResume();
+	}
 
 	@Override
 	public void onDestroyView() {
 		player.removeStatePlayerListener(stateListener);
+		if (null != progressUpdater && (progressUpdater.getStatus() == Status.PENDING || progressUpdater.getStatus() == Status.RUNNING)) {
+			progressUpdater.cancel(true);
+		}
 		super.onDestroyView();
 	}
 
@@ -474,6 +482,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			progressUpdater.cancel(true);
 		}
 		download.setProgress(0);
+		download.setOnClickListener(this);
 	}
 
 	private void setElementsView(int progress) {
@@ -737,7 +746,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					@Override
 					public void run() {
 						downloadListener.onClick(contentView);
-						progressUpdater = new ProgressUpdater().execute(downloadListener.getDownloadId());
+						progressUpdater = new ProgressUpdater();
+						progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
 					}
 				});
 			}
@@ -758,7 +768,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				if (running != null) {
 					while (running.moveToNext()) {
 						if (null != url && url.equals(running.getString(running.getColumnIndex(DownloadManager.COLUMN_URI)))) {
-							progressUpdater = new ProgressUpdater().execute(running.getLong(running.getColumnIndex(DownloadManager.COLUMN_ID)));
+							progressUpdater = new ProgressUpdater();
+							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
 						} else {
 							download.setProgress(0);
 							download.setOnClickListener(PlayerFragment.this);
