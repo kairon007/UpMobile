@@ -232,6 +232,7 @@ public abstract class BaseDownloadsView extends View{
 			checkCanceled();
 			checkFinished();
 			reDrawAdapter();
+			System.out.println("!!! Adapter Is_EMPTY="+adapter.isEmpty()+" COUNT="+adapter.getCount());
 			if (adapter.isEmpty()) {
 				Runnable runnable = new Runnable() {
 
@@ -243,6 +244,14 @@ public abstract class BaseDownloadsView extends View{
 					}
 				};
 				new Handler(Looper.getMainLooper()).post(runnable);
+			} else {
+				Runnable runnable = new Runnable() {
+
+					@Override
+					public void run() {
+						messageView.setVisibility(View.GONE);
+					}
+				};
 			}
 		}
 	}
