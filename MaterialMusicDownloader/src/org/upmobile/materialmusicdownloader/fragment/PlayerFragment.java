@@ -254,6 +254,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
 		setListeners();
+		((MainActivity)getActivity()).setTitle(R.string.tab_now_plaing);
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {

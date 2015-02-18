@@ -144,7 +144,6 @@ public class MainActivity extends UIMainActivity implements Constants {
 	protected void selectItem(int position, int drawerTag) {
 		currentFragmentID = position;
 		super.selectItem(position, drawerTag);
-		
 	}
 	
 }

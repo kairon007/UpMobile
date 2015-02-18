@@ -1,6 +1,7 @@
 package org.upmobile.materialmusicdownloader.fragment;
 
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.LibraryView;
 
 import android.app.Fragment;
@@ -17,7 +18,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		libraryView = new LibraryView(getActivity().getLayoutInflater());
+		libraryView = new LibraryView(inflater);
 		return libraryView.getView();
 	}
 	
