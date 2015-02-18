@@ -765,7 +765,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 				if (running != null) {
 					while (running.moveToNext()) {
-						if (null != url && url.equals(running.getString(running.getColumnIndex(DownloadManager.COLUMN_URI)))) {
+						if (null != url && null != downloadListener && url.equals(running.getString(running.getColumnIndex(DownloadManager.COLUMN_URI)))) {
 							progressUpdater = new ProgressUpdater();
 							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
 						} else {
