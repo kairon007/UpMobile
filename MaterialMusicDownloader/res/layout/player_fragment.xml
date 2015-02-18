@@ -198,10 +198,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/random"
                 android:textSize="24sp" />
+
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -217,10 +219,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/previous"
                 android:textSize="24sp" />
+
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -236,10 +240,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/play"
                 android:textSize="24sp" />
+
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -255,10 +261,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/stop"
                 android:textSize="24sp" />
+
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -274,10 +282,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/next"
                 android:textSize="24sp" />
+
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -293,10 +303,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/repeat"
                 android:textSize="24sp" />
+
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
     </LinearLayout>
 
