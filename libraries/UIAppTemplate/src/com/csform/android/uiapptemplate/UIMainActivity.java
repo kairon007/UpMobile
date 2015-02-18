@@ -41,6 +41,7 @@ public abstract class UIMainActivity extends ActionBarActivity {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
     private boolean mUserLearnedDrawer;
+    private Toolbar toolbar;
 	
 	private Handler mHandler;
 	
@@ -56,10 +57,10 @@ public abstract class UIMainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_material_main);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.material_toolbar);
-		setSupportActionBar(toolbar);
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
+		toolbar = (Toolbar) findViewById(R.id.material_toolbar);
+		setSupportActionBar(toolbar);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
 				R.string.drawer_open,
@@ -102,6 +103,7 @@ public abstract class UIMainActivity extends ActionBarActivity {
 	    getMenuInflater().inflate(R.menu.main, menu);
 	    MenuItem searchItem = menu.findItem(R.id.action_search);
 	    searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+	    searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
 	    searchView.setOnQueryTextListener(new OnQueryTextListener() {
 			
 			@Override
@@ -148,8 +150,26 @@ public abstract class UIMainActivity extends ActionBarActivity {
 			selectItem(position, mDrawerItems.get(position).getTag());
 		}
 	}
+	
+	public void setToolbarIcon(boolean b) {
+		//TODO
+		if (b) {// from player
+//			toolbar.setNavigationIcon(drawableId);
+//			getSupportActionBar().setDisplayShowTitleEnabled(false);
+//			getSupportActionBar().setDisplayShowHomeEnabled(true);
+			mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_close);
+//			mDrawerToggle.setDrawerIndicatorEnabled(false);
+		} else {
+//			toolbar = (Toolbar) findViewById(R.id.material_toolbar);
+//			mDrawerToggle.setDrawerIndicatorEnabled(true);
+			mDrawerToggle.setHomeAsUpIndicator(null);
+//			getSupportActionBar().setDisplayShowHomeEnabled(false);
+//			getSupportActionBar().setDisplayShowTitleEnabled(false);
+		}
+	}
 
 	protected void selectItem(int position, int drawerTag) {
+		
 		Fragment fragment = getFragmentByDrawerTag(drawerTag);
 		commitFragment(fragment);
 		
