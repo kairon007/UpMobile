@@ -184,7 +184,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				}
 			});
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover, cacheItem);
-			new Timer().schedule(progressUpdateTask, 1000, 1000);
+			new Timer().schedule(progressUpdateTask, 2000, 3000);
 		}
 	}
 
