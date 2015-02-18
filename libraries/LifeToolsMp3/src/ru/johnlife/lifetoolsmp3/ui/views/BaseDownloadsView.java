@@ -232,9 +232,9 @@ public abstract class BaseDownloadsView extends View{
 			checkCanceled();
 			checkFinished();
 			reDrawAdapter();
-			System.out.println("!!! Adapter Is_EMPTY="+adapter.isEmpty()+" COUNT="+adapter.getCount());
+			Runnable runnable = null;
 			if (adapter.isEmpty()) {
-				Runnable runnable = new Runnable() {
+				 runnable = new Runnable() {
 
 					@Override
 					public void run() {
@@ -243,16 +243,17 @@ public abstract class BaseDownloadsView extends View{
 						messageView.setText(getContext().getString(R.string.downloads_empty));
 					}
 				};
-				new Handler(Looper.getMainLooper()).post(runnable);
 			} else {
-				Runnable runnable = new Runnable() {
+				runnable = new Runnable() {
 
 					@Override
 					public void run() {
 						messageView.setVisibility(View.GONE);
+						messageView.setText("");
 					}
 				};
 			}
+			new Handler(Looper.getMainLooper()).post(runnable);
 		}
 	}
 }
