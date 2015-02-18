@@ -167,6 +167,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setClickablePlayerElement(true);
 			changePlayPauseView(true);
 			setElementsView(0);
+			cancelProgressTask();
 			thatSongIsDownloaded();
 		}
 
@@ -488,9 +489,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setCheckBoxState(false);
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
-		cancelProgressTask();
-		download.setProgress(0);
-		download.setOnClickListener(this);
+		if (!player.enabledRepeat()) {
+			cancelProgressTask();
+			download.setProgress(0);
+			download.setOnClickListener(this);
+		}
 	}
 
 	private void setElementsView(int progress) {
