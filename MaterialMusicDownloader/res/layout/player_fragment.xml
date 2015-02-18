@@ -57,13 +57,12 @@
                         android:lines="1" />
 
                     <com.csform.android.uiapptemplate.font.MusicTextView
-                        style="@style/TextViewAppearance.Title1"
+                        style="@style/TextViewAppearance.CustomMusicButtons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:padding="4dp"
                         android:text="@string/edit"
-                        android:textColor="@color/main_color_grey_700"
                         android:textSize="16sp" />
                 </LinearLayout>
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -102,13 +101,12 @@
                         android:lines="1" />
 
                     <com.csform.android.uiapptemplate.font.MusicTextView
-                        style="@style/TextViewAppearance.Title1"
+                        style="@style/TextViewAppearance.CustomMusicButtons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:padding="4dp"
                         android:text="@string/edit"
-                        android:textColor="@color/main_color_grey_700"
                         android:textSize="16sp" />
                 </LinearLayout>
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -196,14 +194,13 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/shuffle"
-                style="@style/TextViewAppearance.Title1"
+                style="@style/TextViewAppearance.CustomMusicButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/random"
-                android:textColor="@color/main_color_grey_700"
                 android:textSize="24sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -216,14 +213,13 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/prev"
-                style="@style/TextViewAppearance.Title1"
+                style="@style/TextViewAppearance.CustomMusicButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/previous"
-                android:textColor="@color/main_color_grey_700"
                 android:textSize="24sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -236,14 +232,13 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/playpause"
-                style="@style/TextViewAppearance.Title1"
+                style="@style/TextViewAppearance.CustomMusicButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/play"
-                android:textColor="@color/main_color_grey_700"
                 android:textSize="24sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -256,14 +251,13 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/stop"
-                style="@style/TextViewAppearance.Title1"
+                style="@style/TextViewAppearance.CustomMusicButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/stop"
-                android:textColor="@color/main_color_grey_700"
                 android:textSize="24sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -276,14 +270,13 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/next"
-                style="@style/TextViewAppearance.Title1"
+                style="@style/TextViewAppearance.CustomMusicButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/next"
-                android:textColor="@color/main_color_grey_700"
                 android:textSize="24sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -296,14 +289,13 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/repeat"
-                style="@style/TextViewAppearance.Title1"
+                style="@style/TextViewAppearance.CustomMusicButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/repeat"
-                android:textColor="@color/main_color_grey_700"
                 android:textSize="24sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
     </LinearLayout>

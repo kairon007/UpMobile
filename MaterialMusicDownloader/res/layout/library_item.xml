@@ -14,14 +14,13 @@
 
     <com.csform.android.uiapptemplate.font.MusicTextView
         android:id="@+id/item_cover_text"
-        style="@style/TextViewAppearance.Title1"
+        style="@style/TextViewAppearance.CustomMusicButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:padding="4dp"
         android:text="@string/musics"
-        android:textColor="@color/main_color_grey_700"
         android:textSize="40sp"
         android:visibility="gone"/>
 
@@ -72,14 +71,13 @@
 
         <com.csform.android.uiapptemplate.font.MusicTextView
             android:id="@+id/item_play"
-            style="@style/TextViewAppearance.Title1"
+            style="@style/TextViewAppearance.CustomMusicButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:minHeight="48dp"
             android:padding="8dp"
             android:text="@string/play"
-            android:textColor="@color/main_color_grey_700"
             android:textSize="32sp" />
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
