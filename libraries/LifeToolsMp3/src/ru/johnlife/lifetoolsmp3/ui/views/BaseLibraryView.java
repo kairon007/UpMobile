@@ -149,6 +149,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 				adapter = getAdapter();
 				listView.setAdapter(adapter);
 			} else {
+				adapter.clear();
 				adapter.add((ArrayList<MusicData>) msg.obj);
 			}
 		}
