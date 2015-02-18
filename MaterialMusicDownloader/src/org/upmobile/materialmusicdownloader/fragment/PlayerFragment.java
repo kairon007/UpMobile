@@ -335,7 +335,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				repeat.setAlpha(1);
 			}
 			break;
-		case R.id.shuffle:
+		case R.id.shuffle: 
 			if (player.offOnShuffle()) {
 				shuffle.setAlpha(1);
 			} else {
@@ -710,6 +710,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 *            - set to image view, if bitmap == null then use default cover
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
+		if (isDestroy) return;
 		ImageView imageView = new ImageView(getActivity());
 		Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.default_cover_white);
 		imageView.setImageBitmap(null == bitmap ? bmp : bitmap);
