@@ -286,8 +286,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 	
 	private void splashLogics() {
-		LanguageUtil.setLocale(new MySharedPreferences(this).getLanguage(),
-				this);
+//		LanguageUtil.setLocale(new MySharedPreferences(this).getLanguage(),
+//				this);
 
 		GlobalValue.constructor(this);
 		modelManager = new ModelManager(this);

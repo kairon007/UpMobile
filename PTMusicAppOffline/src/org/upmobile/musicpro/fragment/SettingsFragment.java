@@ -53,7 +53,7 @@ public class SettingsFragment extends BaseFragment {
 				builder.setTitle(R.string.language).setItems(R.array.arrayLanguage,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
-								LanguageUtil.setLocale(which, getActivity());
+//								LanguageUtil.setLocale(which, getActivity());
 								lblLanguage.setText(R.string.language);
 								lblLanguageSelect.setText(getResources().getStringArray(R.array.arrayLanguage)[which]);
 								showToast(R.string.msgRestartApp);
