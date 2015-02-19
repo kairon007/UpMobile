@@ -50,7 +50,7 @@
         <item name="android:layout_width">112sp</item>
         <item name="android:layout_height">36sp</item>
         <item name="android:layout_margin">8dp</item>
-        <item name="cpb_textIdle">@string/download</item>
+        <item name="cpb_textIdle">@string/download_dialog_download</item>
         <item name="cpb_textComplete">@string/done</item>
         <item name="cpb_textError">@string/error</item>
         <item name="android:textSize">14sp</item>

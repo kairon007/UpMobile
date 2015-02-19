@@ -1046,6 +1046,7 @@ public abstract class OnlineSearchView extends View {
 				player.setTitle(song.getArtist() + " - " + song.getTitle());
 			}
 		}
+		downloadListener = new DownloadClickListener(getContext(), song, 0);
 		if (getSettings().getIsCoversEnabled(getContext())) {
 			boolean hasCover = ((RemoteSong) song).getCover(downloadListener);
 			if (!hasCover) {

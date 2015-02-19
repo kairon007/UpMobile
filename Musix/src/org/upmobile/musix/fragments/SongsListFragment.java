@@ -34,18 +34,14 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MediaController;
-import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 
 public class SongsListFragment extends Fragment implements MediaController.MediaPlayerControl, OnStatePlayerListener, OnPlaybackServiceDestroyListener {
 
@@ -210,7 +206,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				stop();
 				song = ((AbstractSong) parent.getAdapter().getItem(position));
 				musicService.play(song);
 				btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
@@ -542,9 +537,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	}
 
 	@Override
-	public void stop(AbstractSong song) {
-		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
-	}
+	public void stop(AbstractSong song) { }
 
 	@Override
 	public void update(AbstractSong song) {
