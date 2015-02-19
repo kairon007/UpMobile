@@ -206,4 +206,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			navigationDrawerFragment.setSelectedItem(position);
 		}
 	}
+	
+	public void setDrawerEnabled(boolean isEnabled) {
+		navigationDrawerFragment.setEnabled(isEnabled);
+	}
 }

@@ -20,6 +20,7 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,6 +34,7 @@ import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -91,6 +93,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
+		setHasOptionsMenu(true);
 		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
 		playerProgress.setVisibility(View.INVISIBLE);
@@ -123,6 +126,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			changePlayPauseView(prepared);
 		}
 		return parentView;
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		((MainActivity)activity).setDrawerEnabled(false);
+		super.onAttach(activity);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		getActivity().onBackPressed();
+		((MainActivity)getActivity()).setDrawerEnabled(true);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override
