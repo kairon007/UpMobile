@@ -8,22 +8,23 @@ import org.upmobile.musicpro.activity.MainActivity;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter.ViewHolder;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.TextView;
 
-public class LibraryAdapter extends BaseAdapter<MusicData> {
+public class LibraryAdapter extends BaseAbstractAdapter<MusicData> {
 
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
@@ -77,9 +78,9 @@ public class LibraryAdapter extends BaseAdapter<MusicData> {
 	public MusicData get(AbstractSong data) {
 		if (data == null) return null;
 		for (int i = 0; i < getCount(); i++) {
-			MusicData buf = getItem(i);
+			MusicData buf = (MusicData) getItem(i);
 			if (buf.equals(data)) {
-				return getItem(i);
+				return (MusicData) getItem(i);
 			}
 		}
 		return null;

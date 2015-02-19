@@ -4,13 +4,13 @@ import org.upmobile.musicpro.Constants;
 import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.adapter.LibraryAdapter;
 
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAdapter;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
 
 public class LibraryView extends BaseLibraryView {
 
@@ -19,7 +19,7 @@ public class LibraryView extends BaseLibraryView {
 	}
 
 	@Override
-	protected BaseAdapter<MusicData> getAdapter() {
+	protected BaseAbstractAdapter<MusicData> getAdapter() {
 		return new LibraryAdapter(getContext(), R.layout.library_item);
 	}
 
