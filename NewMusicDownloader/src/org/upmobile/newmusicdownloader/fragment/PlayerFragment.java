@@ -137,6 +137,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		song = s;
 		downloadButtonState(true);
 		if (isDestroy) return;
+		System.out.println("!!! start");
 		((MainActivity) getActivity()).showPlayerElement(true);
 		setImageButton();
 		setClickablePlayerElement(true);
@@ -147,12 +148,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void pause(AbstractSong song) {
 		if (isDestroy) return;
+		System.out.println("!!! pause");
 		changePlayPauseView(true);
 	}
 
 	@Override
 	public void play(AbstractSong song) {
 		if (isDestroy) return;
+		System.out.println("!!! play");
 		changePlayPauseView(false);
 		wait.setVisibility(View.INVISIBLE);
 		playerProgress.setVisibility(View.VISIBLE);
@@ -161,6 +164,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void stop(AbstractSong s) {
 		if (isDestroy) return;
+		System.out.println("!!! stop");
 		setElementsView(0);
 		changePlayPauseView(true);
 		setClickablePlayerElement(player.isPrepared());
@@ -174,6 +178,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void update(AbstractSong current) {
+		System.out.println("!!! update");
 		if (isDestroy) return;
 		song = current;
 		setElementsView(0);
@@ -323,6 +328,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			download.setVisibility(View.VISIBLE);
 		}
+		playerCover.setImageBitmap(song.getCover(getActivity()));
 		playerProgress.removeCallbacks(progressAction);
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());

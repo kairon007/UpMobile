@@ -321,11 +321,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			}
 			break;
 		case MSG_SHIFT:
-			helper(State.STOP, previousSong == null ? playingSong : previousSong);
 			if (enabledRepeat()) {
-				buildSendMessage(playingSong, MSG_PLAY, 0, 0);
+				helper(State.UPDATE, playingSong);
+				//buildSendMessage(playingSong, MSG_PLAY, 0, 0);
+				buildSendMessage(playingSong.getPath(), MSG_START, 0, 0);
 				break;
 			}
+			helper(State.STOP, previousSong == null ? playingSong : previousSong);
 			helper(State.UPDATE, playingSong);
 			play(playingSong.getClass() != MusicData.class);
 			sendNotification(true);
@@ -534,7 +536,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 
 	@Override
 	public void onCompletion(MediaPlayer paramMediaPlayer) {
-		shift(1);
+		if (enabledRepeat()) {
+			shift(0);
+		} else {
+			shift(1);
+		}
 	}
 
 	@Override
