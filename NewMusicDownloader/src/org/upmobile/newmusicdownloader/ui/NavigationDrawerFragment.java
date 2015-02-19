@@ -2,12 +2,12 @@ package org.upmobile.newmusicdownloader.ui;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.upmobile.newmusicdownloader.DrawerItem;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.NavigationAdapter;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class NavigationDrawerFragment extends Fragment {
@@ -126,7 +125,6 @@ public class NavigationDrawerFragment extends Fragment {
                 if (!isAdded()) {
                     return;
                 }
-
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
@@ -242,5 +240,22 @@ public class NavigationDrawerFragment extends Fragment {
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
         }
+    }
+    
+	public void setDrawerImage(boolean defDrawer){
+    	mDrawerToggle = new ActionBarDrawerToggle(
+                 getActivity(),                    /* host Activity */
+                 mDrawerLayout,                    /* DrawerLayout object */
+                 defDrawer ? R.drawable.ic_drawer : R.drawable.ic_menu_back,             /* nav drawer image to replace 'Up' caret */
+                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+         );
+        mDrawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mDrawerToggle.syncState();
+            }
+        });
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 }

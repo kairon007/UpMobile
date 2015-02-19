@@ -128,6 +128,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onDestroyView() {
 		player.removeStatePlayerListener(this);
+		((MainActivity) getActivity()).setNavigateinDrawerHomeImage(true);
 		super.onDestroyView();
 	}
 	
@@ -185,6 +186,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onPause() {
 		if (null != lyricsFetcher) lyricsFetcher.cancel();
 		if (null != volumeReceiver) getActivity().unregisterReceiver(volumeReceiver);
+		((MainActivity) getActivity()).setNavigateinDrawerHomeImage(true);
 		super.onPause();
 	}
 
@@ -215,8 +217,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onResume() {
 		super.onResume();
+		
 		getActivity().registerReceiver(volumeReceiver, filter); 
 		((MainActivity) getActivity()).setSelectedItem(3);
+		((MainActivity) getActivity()).setNavigateinDrawerHomeImage(false);
 //		getView().setFocusableInTouchMode(true);
 //		getView().requestFocus();
 //		getView().setOnKeyListener(new View.OnKeyListener() {

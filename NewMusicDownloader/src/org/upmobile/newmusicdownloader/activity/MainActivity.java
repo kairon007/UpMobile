@@ -90,7 +90,6 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		});
@@ -99,6 +98,12 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+		String lastFragmentName = backEntry.getName();
+	    if (lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
+	    	getFragmentManager().popBackStack();
+	    	return true;
+	    }
 		View view  = findViewById(R.id.drawer_layout);
 		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -204,6 +209,12 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	public void setSelectedItem(int position) {
 		if (null != navigationDrawerFragment) {
 			navigationDrawerFragment.setSelectedItem(position);
+		}
+	}
+	
+	public void setNavigateinDrawerHomeImage(boolean defDrawer) {
+		if (null != navigationDrawerFragment) {
+			navigationDrawerFragment.setDrawerImage(defDrawer);
 		}
 	}
 }
