@@ -243,6 +243,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
     
 	public void setDrawerImage(boolean defDrawer){
+		if (null == getActivity()) return;
     	mDrawerToggle = new ActionBarDrawerToggle(
                  getActivity(),                    /* host Activity */
                  mDrawerLayout,                    /* DrawerLayout object */
