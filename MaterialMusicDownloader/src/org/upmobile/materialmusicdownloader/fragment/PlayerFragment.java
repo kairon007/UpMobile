@@ -487,10 +487,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		player.stop();
 		setClickablePlayerElement(false);
-		setCheckBoxState(false);
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
 		if (!player.enabledRepeat()) {
+			setCheckBoxState(false);
 			cancelProgressTask();
 			download.setProgress(0);
 			download.setOnClickListener(this);
