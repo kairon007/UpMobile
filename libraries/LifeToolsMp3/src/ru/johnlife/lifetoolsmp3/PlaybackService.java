@@ -359,7 +359,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
 			previousSong = playingSong;
-			helper(State.STOP, previousSong);
 			if (!playingSong.equals(song)) {
 				if (playingSong.getClass() != MusicData.class) {
 					((RemoteSong) playingSong).cancelTasks();
@@ -380,6 +379,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			buildSendMessage(playingSong, msg, 0, 0);
 		} else {
 			play(playingSong.getClass() != MusicData.class);
+			if (null != previousSong) {
+				helper(State.STOP, previousSong);
+			}
 		}
 	}
 	
