@@ -19,9 +19,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 
 public final class Util {
 	
@@ -180,5 +182,14 @@ public final class Util {
 	    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
 	    int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));       
 	    return px;
+	}
+	
+	public static Bitmap textViewToBitmap(View v, int width, int height){
+		Bitmap bmp = null;
+		bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+	    Canvas c = new Canvas(bmp);
+	    v.layout(0, 0, width, height);
+	    v.draw(c);
+		return bmp;
 	}
 }

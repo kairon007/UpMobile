@@ -21,7 +21,6 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
@@ -726,19 +725,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		textCover.setTextSize(200);
 		textCover.setGravity(Gravity.CENTER);
 		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
-		imageView.setImageBitmap(null == bitmap ? textviewToBitmap(textCover) : bitmap);
+		imageView.setImageBitmap(null == bitmap ? Util.textViewToBitmap(textCover, 260, 260) : bitmap);
 		scrollView.setZoomView(imageView);
 	}
 	
-	private Bitmap textviewToBitmap(View v){
-		Bitmap bmp = null;
-		bmp = Bitmap.createBitmap(260, 260, Bitmap.Config.ARGB_8888);
-	    Canvas c = new Canvas(bmp);
-	    v.layout(0, 0, 260, 260);
-	    v.draw(c);
-		return bmp;
-	}
-
 	private void setCheckBoxState(boolean state) {
 		cbUseCover.setOnCheckedChangeListener(null);
 		cbUseCover.setEnabled(state);

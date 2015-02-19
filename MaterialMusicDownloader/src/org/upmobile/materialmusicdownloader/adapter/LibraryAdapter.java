@@ -7,6 +7,7 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -25,7 +26,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAd
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	
-	private TextView textcover;
+	private TextView textCover;
 	private Bitmap defaultCover;
 
 	public LibraryAdapter(Context context, int resource) {
@@ -56,8 +57,8 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_artist);
 			duration = (TextView) v.findViewById(R.id.item_duration);
-			textcover = (TextView) v.findViewById(R.id.item_cover_text);
-			defaultCover = textViewToBitmap(textcover);
+			textCover = (TextView) v.findViewById(R.id.item_cover_text);
+			defaultCover = Util.textViewToBitmap(textCover, 64, 64);
 		}
 
 		@Override
@@ -70,15 +71,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 				button.setText(getContext().getString(R.string.font_play));
 			}
 			setListener();
-		}
-		
-		private Bitmap textViewToBitmap(View v){
-			Bitmap bmp = null;
-			bmp = Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888);
-		    Canvas c = new Canvas(bmp);
-		    v.layout(0, 0, 64, 64);
-		    v.draw(c);
-			return bmp;
 		}
 		
 		private void setListener() {

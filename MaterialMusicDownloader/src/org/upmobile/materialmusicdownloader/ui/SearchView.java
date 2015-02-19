@@ -11,15 +11,19 @@ import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.csform.android.uiapptemplate.font.MusicTextView;
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
@@ -103,7 +107,17 @@ public class SearchView extends OnlineSearchView implements Constants {
 	
 	@Override
 	public int defaultCover() {
-		return R.drawable.no_cover_art_light_big_dark;
+		return 0;
+	}
+	
+	@Override
+	public Bitmap getDeafultBitmapCover() {
+		MusicTextView textCover = new MusicTextView(getContext());
+		textCover.setText(getContext().getString(R.string.font_musics));
+		textCover.setTextSize(48);
+		textCover.setGravity(Gravity.CENTER);
+		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
+		return Util.textViewToBitmap(textCover, 64, 64);
 	}
 	
 	@Override

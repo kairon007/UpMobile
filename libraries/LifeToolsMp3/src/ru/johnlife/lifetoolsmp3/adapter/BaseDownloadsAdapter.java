@@ -4,6 +4,7 @@ import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -37,11 +38,15 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 		protected void hold(MusicData item, int position) {
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
-			image.setImageResource(getDefaultCover());
 			progress.setIndeterminate(item.getProgress() == 0);
 			progress.setProgress(item.getProgress());
 			if (duration != null) {
 				duration.setText(Util.getFormatedStrDuration(item.getDuration()));
+			}
+			if (getDefaultCover() > 0) {
+				image.setImageResource(getDefaultCover());
+			} else {
+				image.setImageBitmap(getDefaultBitmap());
 			}
 		}
 	}
@@ -52,4 +57,5 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 	}
 	
 	protected abstract int getDefaultCover();
+	protected Bitmap getDefaultBitmap() { return null; }
 }

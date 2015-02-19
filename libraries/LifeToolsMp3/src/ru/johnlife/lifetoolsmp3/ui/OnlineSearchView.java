@@ -681,6 +681,10 @@ public abstract class OnlineSearchView extends View {
 		return R.drawable.fallback_cover;
 	}
 	
+	public Bitmap getDeafultBitmapCover() {
+		return ((BitmapDrawable) getResources().getDrawable(defaultCover())).getBitmap();
+	}
+	
 	public class SongSearchAdapter extends BaseAbstractAdapter<Song> {
 
 		private LayoutInflater inflater;
@@ -716,7 +720,7 @@ public abstract class OnlineSearchView extends View {
 					.setExpandable(false)
 					.setLine2(artist)
 					.setId(position)
-					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover())
+					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
 					.setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong)song).isHasCoverFromSearch()) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
