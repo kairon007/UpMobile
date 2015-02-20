@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -182,10 +183,8 @@ public abstract class UIMainActivity extends ActionBarActivity {
 	}
 
 	protected void selectItem(int position, int drawerTag) {
-		
 		Fragment fragment = getFragmentByDrawerTag(drawerTag);
 		commitFragment(fragment);
-		
 		mDrawerList.setItemChecked(position, true);
 		setTitle(mDrawerItems.get(position).getTitle());
 		mDrawerLayout.closeDrawer(mDrawerList);
@@ -209,9 +208,10 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		@Override
 		public void run() {
 			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment)
-					.commit();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, fragment.getClass().getSimpleName())
+			.addToBackStack(fragment.getClass().getSimpleName())
+			.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+			.commit();
 		}
 	}
 	
