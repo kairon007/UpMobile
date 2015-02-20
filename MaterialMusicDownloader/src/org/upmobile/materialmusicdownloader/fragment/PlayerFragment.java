@@ -310,6 +310,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
 		}
+		if (!isUseAlbumCover && song.isHasCover()) {
+			undo.clear();
+			clearCover();
+		}
 		super.onPause();
 	}
 
