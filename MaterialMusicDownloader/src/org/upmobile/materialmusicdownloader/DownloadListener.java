@@ -9,7 +9,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.widget.Toast;
+
+import com.devspark.appmsg.AppMsg;
+import com.devspark.appmsg.AppMsg.Style;
 
 public class DownloadListener extends DownloadClickListener {
 
@@ -31,11 +33,21 @@ public class DownloadListener extends DownloadClickListener {
 		public void run() {
 			String chuck = context.getString(R.string.download_finished);
 			String message = chuck + " " + songArtist + " - " +songTitle;
-			Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+			AppMsg.makeText((Activity) context, message, new Style(5000, R.color.main_color_500)).show();
 			}
 		});
 	}
-
+	
+	@Override
+	public void showMessage(Context context, int message) {
+		showMessage(context, context.getString(message));
+	}
+	
+	@Override
+	public void showMessage(Context context, String message) {
+		AppMsg.makeText((Activity) context, message, new Style(5000, R.color.main_color_500)).show();
+	}
+	
 	@Override
 	protected String getDirectory() {
 		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
@@ -81,4 +93,5 @@ public class DownloadListener extends DownloadClickListener {
 	public long getDownloadId() {
 		return currentDownloadId;
 	}
+	
 }

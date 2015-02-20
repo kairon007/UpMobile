@@ -98,7 +98,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	public void downloadSong(boolean fromCallback) {
 		String url = song.getUrl();
 		if (url == null || url.isEmpty()) {
-			Toast.makeText(context, R.string.download_error, Toast.LENGTH_SHORT).show();
+			showMessage(context, R.string.download_error);
 			return;
 		}
 		String songArtist = song.getArtist().trim();
@@ -127,7 +127,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		setCanceledListener(id, cancelDownload);
 		if (isCached) {
-			Toast.makeText(context, context.getResources().getString(R.string.download_cached), Toast.LENGTH_SHORT).show();
+			showMessage(context, R.string.download_cached);
 			return;
 		}
 		String format = (url.indexOf(".m4a?") > -1) ? ".m4a" : ".mp3";
@@ -163,13 +163,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
 			} catch (Exception e) {
 				Log.e(getClass().getSimpleName(), e.getMessage());
-				Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+				showMessage(context, e.getMessage());
 				return;
 			}
 			try {
 				currentDownloadId = manager.enqueue(request);
 			} catch (IllegalArgumentException e) {
-				Toast.makeText(context, R.string.turn_on_dm, Toast.LENGTH_LONG).show();
+				showMessage(context, R.string.turn_on_dm);
 				return;
 			}
 			boolean isUpdated = continueDownload(id, currentDownloadId);
@@ -180,12 +180,20 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				
 				@Override
 				public void run() {
-					Toast.makeText(context, context.getString(R.string.download_started) +" "+sb, Toast.LENGTH_SHORT).show();
+					showMessage(context,  context.getString(R.string.download_started) + " "+sb);
 				}
 			});
 			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover, cacheItem);
 			new Timer().schedule(progressUpdateTask, 2000, 3000);
 		}
+	}
+
+	public void showMessage(Context context, String message) {
+		Toast.makeText(context, message ,Toast.LENGTH_SHORT).show();
+	}
+	
+	public void showMessage(Context context, int message) {
+		showMessage(context, context.getString(message));
 	}
 
 	@Override
@@ -237,7 +245,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			public void run() {
 				String failedSong = context.getResources().getString(R.string.download_failed);
 				String title = song.getArtist() + " - " + song.getTitle();
-				Toast.makeText(context, failedSong + " - " + title, Toast.LENGTH_SHORT).show();
+				showMessage(context, failedSong + " - " + title);
 			}
 		});
 	}

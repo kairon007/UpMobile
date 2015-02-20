@@ -36,7 +36,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,12 +53,12 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.csform.android.uiapptemplate.font.MusicTextView;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
+import com.devspark.appmsg.AppMsg;
+import com.devspark.appmsg.AppMsg.Style;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener {
 
@@ -662,8 +661,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void saveTags() {
 		File f = new File(song.getPath());
 		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
-			Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
-			toast.show();
+			AppMsg.makeText(PlayerFragment.this.getActivity(),R.string.file_already_exists, new Style(5000, R.color.main_color_500)).show();
 			return;
 		}
 		RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
@@ -747,7 +745,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
 		if (downloadListener.isBadInet()) {
-			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.search_message_no_internet, Toast.LENGTH_SHORT).show();
+			AppMsg.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.search_message_no_internet, new Style(5000, R.color.main_color_500)).show();
 			return;
 		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
@@ -756,8 +754,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			@Override
 			public void success(String url) {
 				if (!url.startsWith("http")) {
-					Toast toast = Toast.makeText(player, R.string.error_retrieving_the_url, Toast.LENGTH_SHORT);
-					toast.show();
+					AppMsg.makeText(PlayerFragment.this.getActivity(),R.string.error_retrieving_the_url, new Style(5000, R.color.main_color_500)).show();
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
