@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class SearchFragment extends Fragment implements BaseMaterialFragment {
@@ -43,6 +44,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 	@Override
 	public void onResume() {
 //		((MainActivity) getActivity()).setSelectedItem(0);
+		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		super.onResume();
 	}
 

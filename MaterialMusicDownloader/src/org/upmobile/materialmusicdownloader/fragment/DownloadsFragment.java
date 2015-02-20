@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class DownloadsFragment extends Fragment implements BaseMaterialFragment {
@@ -25,6 +26,7 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 	public void onPause() {
 		downloadsView.onPause();
 //		((MainActivity) getActivity()).setSelectedItem(1);
+		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		super.onPause();
 	}
 

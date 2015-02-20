@@ -54,6 +54,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
@@ -288,6 +289,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onResume() {
 		thatSongIsDownloaded();
+		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		super.onResume();
 	}
 
