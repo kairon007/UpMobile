@@ -193,7 +193,7 @@ public class ImageGalleryCategoryAdapter extends BaseAdapter implements OnClickL
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		int position = (int) v.getTag();
+		int position = (Integer) v.getTag();
 		if (id == R.id.list_item_image_1 || id == R.id.list_item_image_2) {
 			Intent intent = new Intent(mContext, ImageGallerySubcategoryActivity.class);
 			intent.putParcelableArrayListExtra(

@@ -788,7 +788,7 @@ public class DummyContent {
 	}
 	
 	public static ArrayList<DummyModel> getDummyModelList() {
-		ArrayList<DummyModel> list = new ArrayList<>();
+		ArrayList<DummyModel> list = new ArrayList<DummyModel>();
 
 		list.add(new DummyModel(0, "http://pengaja.com/uiapptemplate/avatars/0.jpg", "Isaac Reid", R.string.fontello_heart_empty));
 		list.add(new DummyModel(1, "http://pengaja.com/uiapptemplate/avatars/1.jpg", "Jason Graham", R.string.fontello_heart_empty));

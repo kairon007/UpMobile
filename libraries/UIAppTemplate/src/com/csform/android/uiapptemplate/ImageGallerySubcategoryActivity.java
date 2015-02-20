@@ -34,7 +34,7 @@ public class ImageGallerySubcategoryActivity extends ActionBarActivity {
 			if (extras.containsKey(IMAGE_GALLERY_SUBCATEGORY)) {
 				mSubcategories = extras.getParcelableArrayList(IMAGE_GALLERY_SUBCATEGORY);
 			} else {
-				mSubcategories = new ArrayList<>();
+				mSubcategories = new ArrayList();
 			}
 			if (extras.containsKey(IMAGE_GALLERY_LAYOUT_ON_TOP)) {
 				mIsLayoutOnTop = extras.getBoolean(IMAGE_GALLERY_LAYOUT_ON_TOP, false);

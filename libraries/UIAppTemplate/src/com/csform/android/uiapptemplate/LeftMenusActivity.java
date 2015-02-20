@@ -116,7 +116,7 @@ public class LeftMenusActivity extends ActionBarActivity {
 	}
 
 	private void prepareNavigationDrawerItems() {
-		mDrawerItems = new ArrayList<>();
+		mDrawerItems = new ArrayList();
 		mDrawerItems.add(
 				new DrawerItem(
 						R.string.drawer_icon_linked_in,
