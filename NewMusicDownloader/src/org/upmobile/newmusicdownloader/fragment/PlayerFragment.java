@@ -144,6 +144,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onDestroyView() {
 		player.removeStatePlayerListener(this);
+		((MainActivity)getActivity()).setDrawerEnabled(true);
 		super.onDestroyView();
 	}
 	
@@ -257,6 +258,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onDestroy() {
 		isDestroy = true;
+		((MainActivity)getActivity()).setDrawerEnabled(true);
 		super.onDestroy();
 	}
 
