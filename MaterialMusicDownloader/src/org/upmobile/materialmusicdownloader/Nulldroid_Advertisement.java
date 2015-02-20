@@ -77,6 +77,11 @@ import com.startapp.android.publish.nativead.StartAppNativeAd;
 
 
 public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
+	
+	
+	
+	
+	
 
 	
 	
@@ -91,6 +96,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	
 	public static void start(Activity activity, boolean switchShowDialog) {
+		System.out.println("!!! start");
 		start(activity, switchShowDialog, false);
 	}
 	
