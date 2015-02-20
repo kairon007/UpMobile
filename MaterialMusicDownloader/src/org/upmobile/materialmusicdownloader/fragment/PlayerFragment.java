@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
@@ -606,11 +607,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
 			hideKeyboard();
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
-				song.setTitle(etTitle.getText().toString());
-				tvTitle.setText(song.getTitle());
+				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
+				song.setTitle(title);
+				tvTitle.setText(title);
 			} else if (etArtist.getVisibility() == View.VISIBLE && !song.getArtist().equals(etArtist.getText().toString())) {
-				song.setArtist(etArtist.getText().toString());
-				tvArtist.setText(song.getArtist());
+				String artist = Util.removeSpecialCharacters(etArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etArtist.getText().toString());
+				song.setArtist(artist);
+				tvArtist.setText(artist);
 			}
 			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
