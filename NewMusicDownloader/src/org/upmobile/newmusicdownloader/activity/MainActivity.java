@@ -79,18 +79,18 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		 MenuItem searchItem = menu.findItem(R.id.action_search);
 		 searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 		 searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		 searchView.setIconified(true);
 		 searchView.setOnQueryTextListener(new OnQueryTextListener() {
 			
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				changeFragment(new SearchFragment(query));
+				searchView.setIconified(true);
+				searchView.setIconified(true);
 				return false;
 			}
 			
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		});
