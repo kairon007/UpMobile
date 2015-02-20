@@ -11,19 +11,25 @@ import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
+import android.util.TypedValue;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
+import com.csform.android.uiapptemplate.font.MusicTextView;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class MainActivity extends UIMainActivity implements Constants {
@@ -144,6 +150,24 @@ public class MainActivity extends UIMainActivity implements Constants {
 	protected void selectItem(int position, int drawerTag) {
 		currentFragmentID = position;
 		super.selectItem(position, drawerTag);
+	}
+	
+	public Bitmap getDeafultBitmapCover(int outWidth, int outHeight, int property) {
+		MusicTextView textCover = new MusicTextView(this);
+		textCover.setText(getString(R.string.font_musics));
+		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
+		Rect bounds = new Rect();
+		Paint textPaint = textCover.getPaint();
+		textPaint.getTextBounds(getString(R.string.font_musics), 0, getString(R.string.font_musics).length(), bounds);
+		int height = bounds.height();
+		while (height < property) {
+			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, height < property ?  Util.pixelsToSp(this, textCover.getTextSize()) + 1f : Util.pixelsToSp(this, textCover.getTextSize()) - 1f);
+			bounds = new Rect();
+			textPaint = textCover.getPaint();
+			textPaint.getTextBounds(getString(R.string.font_musics), 0, getString(R.string.font_musics).length(), bounds);
+			height = bounds.height();
+		}
+		return Util.textViewToBitmap(textCover, outWidth, outHeight);
 	}
 	
 }

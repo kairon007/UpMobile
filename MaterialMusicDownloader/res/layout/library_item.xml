@@ -8,6 +8,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:src="@drawable/no_cover_art_light_big_dark" />
@@ -25,7 +26,6 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/font_musics"
-            android:textSize="40sp"
             android:visibility="gone" />
 
     </FrameLayout>

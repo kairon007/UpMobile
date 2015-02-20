@@ -18,8 +18,10 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -112,12 +114,7 @@ public class SearchView extends OnlineSearchView implements Constants {
 	
 	@Override
 	public Bitmap getDeafultBitmapCover() {
-		MusicTextView textCover = new MusicTextView(getContext());
-		textCover.setText(getContext().getString(R.string.font_musics));
-		textCover.setTextSize(48);
-		textCover.setGravity(Gravity.CENTER);
-		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
-		return Util.textViewToBitmap(textCover, 64, 64);
+		return ((MainActivity) getContext()).getDeafultBitmapCover(64, 64, 55);
 	}
 	
 	@Override
@@ -126,4 +123,5 @@ public class SearchView extends OnlineSearchView implements Constants {
 		animAdapter.setAbsListView((DynamicListView)listView);
 		((DynamicListView)listView).setAdapter(animAdapter);
 	}
+	
 }

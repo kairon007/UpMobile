@@ -13,8 +13,10 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,13 +24,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.csform.android.uiapptemplate.font.MusicTextView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	
-	private TextView textCover;
-	private Bitmap defaultCover;
-
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
 		initService();
@@ -57,8 +57,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_artist);
 			duration = (TextView) v.findViewById(R.id.item_duration);
-			textCover = (TextView) v.findViewById(R.id.item_cover_text);
-			defaultCover = Util.textViewToBitmap(textCover, 64, 64);
 		}
 
 		@Override
@@ -114,7 +112,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	
 	@Override
 	protected Bitmap getDefaultBitmap() {
-		return defaultCover;
+		return ((MainActivity) getContext()).getDeafultBitmapCover(60, 60, 50);
 	}
 	
 	@Override

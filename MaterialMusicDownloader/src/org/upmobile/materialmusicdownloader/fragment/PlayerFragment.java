@@ -722,13 +722,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (isDestroy) return;
 		ImageView imageView = new ImageView(getActivity());
 		imageView.setPadding(8, 8, 8, 8);
-		MusicTextView textCover = new MusicTextView(getActivity());
-		textCover.setText(getString(R.string.font_musics));
-		textCover.setPadding(8, 8, 8, 8);
-		textCover.setTextSize(188);
-		textCover.setGravity(Gravity.CENTER);
-		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
-		imageView.setImageBitmap(null == bitmap ? Util.textViewToBitmap(textCover, 260, 260) : bitmap);
+		imageView.setImageBitmap(null == bitmap ? ((MainActivity) getActivity()).getDeafultBitmapCover(260, 260, 230) : bitmap);
 		scrollView.setZoomView(imageView);
 	}
 	

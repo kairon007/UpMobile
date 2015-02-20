@@ -1,14 +1,13 @@
 package org.upmobile.materialmusicdownloader.adapter;
 
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAd
 public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapter {
 
 	private boolean isCanNotify = true;
-	private TextView textCover;
 	
 	private class DownloadsViewHolder extends BaseDownloadsViewHolder {
 
@@ -32,7 +30,6 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 			duration = (TextView) v.findViewById(R.id.item_duration);
 			progress = (ProgressBar) v.findViewById(R.id.item_progress);
 			image = (ImageView) v.findViewById(R.id.item_image);
-			textCover = (TextView) v.findViewById(R.id.item_cover_text);
 		}
 	}
 
@@ -68,7 +65,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	}
 	@Override
 	protected Bitmap getDefaultBitmap() {
-		return Util.textViewToBitmap(textCover, 64, 64);
+		return ((MainActivity) getContext()).getDeafultBitmapCover(56, 56, 48);
 	}
 	
 	@Override
