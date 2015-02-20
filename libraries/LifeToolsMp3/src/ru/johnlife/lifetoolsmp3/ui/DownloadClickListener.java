@@ -67,7 +67,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private Context context;
 	protected RemoteSong song;
 	protected Bitmap cover;
-	protected Long currentDownloadId;
+	protected Long currentDownloadId = (long) 0;
 	private Integer songId;
 	private int id;
 	private long progress = 0;
