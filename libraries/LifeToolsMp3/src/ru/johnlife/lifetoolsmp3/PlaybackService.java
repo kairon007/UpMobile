@@ -312,6 +312,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		case MSG_RESET:
 			offMode(SMODE_PREPARED);
 			player.reset();
+			removeNotification();
 			break;
 		case MSG_STOP:
 			if (check(SMODE_PREPARED)) {

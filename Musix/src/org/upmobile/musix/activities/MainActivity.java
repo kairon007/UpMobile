@@ -36,6 +36,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,7 +57,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			lastFragmentName = backEntry.getName();
         }
         switch (position) {
-
             case 0:
             	if (lastFragmentName.equals(SearchFragment.class.getSimpleName())) return;
                 mFragment = new SearchFragment();
@@ -64,10 +64,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             case 1:
             	if (lastFragmentName.equals(SongsListFragment.class.getSimpleName())) return;
                 mFragment = new SongsListFragment();
-                break;
-
-            case 2:
-                closeApplication();
                 break;
         }
 
@@ -85,12 +81,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     	startService(new Intent(this, PlaybackService.class));
     	super.onStart();
     }
-
-    private void closeApplication() {
-    	if (PlaybackService.hasInstance()) {
-    		PlaybackService.get(this).stop();
-    	}
-        this.finish();
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
     }
 
     public String setSectionTitle(int number) {
@@ -98,7 +92,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             case 0:
                 setmTitle(getString(R.string.menu_search));
                 break;
-
             case 1:
                 setmTitle(getString(R.string.menu_songs));
                 break;
@@ -121,6 +114,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	@Override
 	public void onBackPressed() {
 		if (doubleBackToExitPressedOnce) {
+			PlaybackService service = PlaybackService.get(this);
+	    	service.reset();
 			finish();
 			return;
 		}
