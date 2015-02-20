@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -68,11 +70,14 @@ public abstract class UIMainActivity extends ActionBarActivity {
 			public void onDrawerClosed(View view) {
 				getSupportActionBar().setTitle(mTitle);
 				invalidateOptionsMenu();
+				hideKeyboard();
+				
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				getSupportActionBar().setTitle(mDrawerTitle);
 				invalidateOptionsMenu();
+				hideKeyboard();
 			}
 		};
 		mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -122,6 +127,11 @@ public abstract class UIMainActivity extends ActionBarActivity {
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    int itemId = item.getItemId();
@@ -149,6 +159,7 @@ public abstract class UIMainActivity extends ActionBarActivity {
 		
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			hideKeyboard();
 			selectItem(position, mDrawerItems.get(position).getTag());
 		}
 	}
