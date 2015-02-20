@@ -392,6 +392,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		previousSong = playingSong;
 		if (check(SMODE_PREPARED)) {
 			helper(State.START, playingSong);
+			buildSendMessage(playingSong, MSG_PLAY, 0, 0);
 		} else {
 			helper(State.STOP, previousSong == null ? playingSong : previousSong);
 			stopForeground(true);
@@ -400,10 +401,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public void stop() {
 		synchronized (LOCK) {
-			if (check(SMODE_PREPARED)) {
+			if (check(SMODE_PREPARED)) {	
 				player.pause();
 				player.seekTo(0);
-				offMode(SMODE_PLAYING);
 				onMode(SMODE_PAUSE);
 			}
 		}
