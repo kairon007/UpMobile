@@ -109,6 +109,8 @@ public abstract class UIMainActivity extends ActionBarActivity {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				clickOnSearchView(query);
+				searchView.setIconified(true);
+				searchView.setIconified(true);
 				return false;
 			}
 			
