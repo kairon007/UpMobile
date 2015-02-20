@@ -81,11 +81,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     	startService(new Intent(this, PlaybackService.class));
     	super.onStart();
     }
-    
-    @Override
-    protected void onResume() {
-    	super.onResume();
-    }
 
     public String setSectionTitle(int number) {
         switch (number) {
