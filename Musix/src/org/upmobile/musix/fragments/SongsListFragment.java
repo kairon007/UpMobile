@@ -528,12 +528,16 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	@Override
 	public void play(AbstractSong song) {
 		this.song = song;
-		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
+		if (isAdded()) {
+			btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
+		}
 	}
 
 	@Override
 	public void pause(AbstractSong song) {
-		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
+		if (isAdded()) {
+			btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_play));
+		}
 	}
 
 	@Override
@@ -542,7 +546,9 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	@Override
 	public void update(AbstractSong song) {
 		this.song = song;
-		btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
+		if (isAdded()) {
+			btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_pause));
+		}
 	}
 
 	@Override
