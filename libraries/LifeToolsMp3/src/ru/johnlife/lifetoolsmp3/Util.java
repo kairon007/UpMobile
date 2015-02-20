@@ -163,7 +163,11 @@ public final class Util {
 	
 	public static String removeSpecialCharacters(String str) {
 		str = str.trim();
-		return str.toString().replace("?", "").replaceAll("\\\\", "-").replaceAll("/", "-").replaceAll(ZAYCEV_TAG, "");
+		return str.toString()
+				.replaceAll("\\W", "")
+				.replaceAll("\\\\", "-")
+				.replaceAll("/", "-")
+				.replaceAll(ZAYCEV_TAG, "");
 	}
 	
 	public static String getSimpleThemeName(Context context) {
