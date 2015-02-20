@@ -365,6 +365,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		isUseAlbumCover = isChecked;
+		closeEditViews();
 		if (song.getClass() != MusicData.class) {
 			return;
 		}
