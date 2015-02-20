@@ -764,11 +764,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private void quitApp() {
 		if (doubleBackToExitPressedOnce) {
+			if (null == playbackService) {
+				playbackService = PlaybackService.get(this);
+			}
+			playbackService.reset();
 			finish();
 			stopService(intentService);
 			cancelNotification();
-			overridePendingTransition(R.anim.slide_in_right,
-					R.anim.slide_out_right);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
 			return;
 		}
 
