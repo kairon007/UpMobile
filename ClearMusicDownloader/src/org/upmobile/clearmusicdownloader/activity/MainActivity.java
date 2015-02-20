@@ -150,9 +150,6 @@ public class MainActivity extends BaseClearActivity {
 	
 	@Override
 	public void stopChildsServices() {
-		if (null == player) {
-			player = PlaybackService.get(this);
-		}
-		player.reset();
+		PlaybackService.get(this).reset();
 	}
 }
