@@ -155,10 +155,6 @@ public abstract class OnlineSearchView extends View {
 				return ru.johnlife.lifetoolsmp3.engines.SearchNothing.class;
 			} else if (searchEngineName.equals("SearchSoundCloud")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud.class;
-			} else if (searchEngineName.equals("SearchSoundCloudV2")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloudV2.class;
-			} else if (searchEngineName.equals("SearchSoundCloudV3")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloudV3.class;
 			} else if (searchEngineName.equals("SearchYouTube")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchYouTube.class;
 			} else if (searchEngineName.equals("SearchYouTubeMusic")) {

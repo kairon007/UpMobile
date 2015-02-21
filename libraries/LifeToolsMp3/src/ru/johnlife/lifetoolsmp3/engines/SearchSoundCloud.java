@@ -17,7 +17,7 @@ public class SearchSoundCloud extends SearchWithPages {
 	}
 	
 	public String getSoundcloudUrl(String clientId) {
-		return SOUNDCLOUD_BASE_URL + clientId + "&filter=downloadable&q=";		
+		return SOUNDCLOUD_BASE_URL + clientId + "&q=";		
 	}
 	
 	private int getPage() {
@@ -73,7 +73,7 @@ public class SearchSoundCloud extends SearchWithPages {
 	}
 
 	private String getDownloadUrl(String melodie2) {
-		int indexOfDownloadUrl = melodie2.indexOf("download_url");
+		int indexOfDownloadUrl = melodie2.indexOf("stream_url");
 		int indexOfDouaPuncte = melodie2.indexOf(":", indexOfDownloadUrl);
 		int indexOfApostrofOne = melodie2.indexOf("\"", indexOfDouaPuncte) + 1;
 		int indexOfApostrofDoi = melodie2.indexOf("\"", indexOfApostrofOne);
@@ -83,7 +83,7 @@ public class SearchSoundCloud extends SearchWithPages {
 	private String searchNext(String tot) {
 
 		int index = specialIndex;
-		int indexOfDownloadUrl = tot.indexOf("download_url", index);
+		int indexOfDownloadUrl = tot.indexOf("stream_url", index);
 		if (indexOfDownloadUrl == -1)
 			return null;
 		specialIndex = indexOfDownloadUrl + 12;

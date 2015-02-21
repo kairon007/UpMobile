@@ -310,12 +310,6 @@ public class Nulldroid_Settings implements BaseSettings {
 						} else 	 if (searchEngineName.equals("soundcloud")) {
 							searchEngineTuple[0] = "SearchSoundCloud";
 							searchEngineTuple[1] = "5";
-						} else if (searchEngineName.equals("soundcloudv2")) {
-							searchEngineTuple[0] = "SearchSoundCloudV2";
-							searchEngineTuple[1] = "1";
-						} else if (searchEngineName.equals("soundcloudv3")) {
-							searchEngineTuple[0] = "SearchSoundCloudV3"; 
-							searchEngineTuple[1] = "1";
 						} else if (searchEngineName.equals("youtube")) {
 							searchEngineTuple[0] = "SearchYouTube";
 							searchEngineTuple[1] = "10";
