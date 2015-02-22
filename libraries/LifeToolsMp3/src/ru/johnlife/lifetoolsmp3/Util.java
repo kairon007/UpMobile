@@ -164,7 +164,7 @@ public final class Util {
 	public static String removeSpecialCharacters(String str) {
 		str = str.trim();
 		return str.toString()
-				.replaceAll("\\W", "")
+				//.replaceAll("\\W", "")
 				.replaceAll("\\\\", "-")
 				.replaceAll("/", "-")
 				.replaceAll(ZAYCEV_TAG, "");
