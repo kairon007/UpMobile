@@ -1,6 +1,7 @@
 package org.upmobile.materialmusicdownloader.fragment;
 
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.DownloadsView;
 
 import android.app.Fragment;
@@ -33,6 +34,7 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 	@Override
 	public void onResume() {
 		downloadsView.onResume();
+		((UIMainActivity) getActivity()).setSelectedItem(1);
 		super.onResume();
 	}
 

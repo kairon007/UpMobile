@@ -22,6 +22,7 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
@@ -37,6 +38,7 @@ import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,14 +78,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private LinearLayout artistBox;
 	private LinearLayout titleBox;
 
+	// lyric sections
+	private LyricsFetcher lyricsFetcher;
+	private TextView playerLyricsView;
+	
 	//custom check box
 	private TextView cbUseCover;
 	private ViewGroup cbTouchInterceptor;
 	private boolean isUseAlbumCover = false;
-	
-	// lyric sections
-	private LyricsFetcher lyricsFetcher;
-	private TextView playerLyricsView;
 
 	// playback sections
 	private TextView play;
@@ -253,6 +255,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
+		setHasOptionsMenu(true);
 		scrollView = new PullToZoomScrollView(getActivity());
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
@@ -287,8 +290,22 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 	
 	@Override
+	public void onAttach(Activity activity) {
+		((MainActivity)activity).setDrawerEnabled(false);
+		super.onAttach(activity);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		getActivity().onBackPressed();
+		((MainActivity)getActivity()).setDrawerEnabled(true);
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
 	public void onResume() {
 		thatSongIsDownloaded();
+		((UIMainActivity) getActivity()).setSelectedItem(3);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		super.onResume();
 	}
@@ -321,6 +338,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onDestroy() {
 		isDestroy = true;
+		((MainActivity)getActivity()).setDrawerEnabled(true);
+		
 		super.onDestroy();
 	}
 

@@ -1,11 +1,8 @@
-package org.upmobile.newmusicdownloader.ui;
+package com.csform.android.uiapptemplate.fragment;
 
 
 import java.util.ArrayList;
-
-import org.upmobile.newmusicdownloader.DrawerItem;
-import org.upmobile.newmusicdownloader.R;
-import org.upmobile.newmusicdownloader.adapter.NavigationAdapter;
+import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -13,11 +10,12 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,12 +24,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.csform.android.uiapptemplate.R;
+import com.csform.android.uiapptemplate.UIMainActivity;
+import com.csform.android.uiapptemplate.adapter.DrawerAdapter;
+import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
+import com.csform.android.uiapptemplate.model.DrawerItem;
+
 public class NavigationDrawerFragment extends Fragment {
 
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private NavigationDrawerCallbacks mCallbacks;
     private ActionBarDrawerToggle mDrawerToggle;
+    private List<BaseMaterialFragment> mFragments;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
@@ -40,6 +45,7 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+	private ArrayList<DrawerItem> mDrawerItems;
 
     public NavigationDrawerFragment() {
     }
@@ -64,7 +70,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        mDrawerListView = (ListView) inflater.inflate(R.layout.list_view, container, false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,17 +85,18 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
 	public void setAdapter(boolean isNowPlaying) {
-		String library = getActivity().getString(R.string.tab_library);
-		String download = getActivity().getString(R.string.tab_downloads);
-		String search = getActivity().getString(R.string.tab_search);
-		String NAME_NOW_PLAYING = getActivity().getString(R.string.tab_now_plaing);
-		ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
-		items.add(new DrawerItem(R.drawable.navigation_search, search));
-		items.add(new DrawerItem(R.drawable.navigation_downloads, download));
-		items.add(new DrawerItem(R.drawable.navigaion_library, library));
-		if (isNowPlaying) items.add(new DrawerItem(R.drawable.navigation_player, NAME_NOW_PLAYING));
-		mDrawerListView.setAdapter(new NavigationAdapter(getActivity(), items));
+		mDrawerItems = new ArrayList<DrawerItem>();
+		mFragments = ((UIMainActivity) getActivity()).getItems();
+		int lenght = mFragments.size();
+		for(int i=0; i<lenght; i++) {
+			if (!isNowPlaying && (i == lenght - 1)) break;
+			BaseMaterialFragment fragment = mFragments.get(i);
+			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag()));
+		}
+		mDrawerListView.setAdapter(new DrawerAdapter(getActivity(), mDrawerItems, true));
 	}
+	
+	
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
@@ -106,49 +113,20 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout = drawerLayout;
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         ActionBar actionBar = getActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.main_color_500)));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        
         
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
+        
+        
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
-
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
-
-                if (!mUserLearnedDrawer) {
-                    // The user manually opened the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
-                    mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
-                }
-
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-            }
-        };
+                R.string.navigation_drawer_close);  /* "close drawer" description for accessibility */
         
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
@@ -242,5 +220,9 @@ public class NavigationDrawerFragment extends Fragment {
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
         }
+    }
+    
+    public void setTitle(CharSequence mTitle) {
+    	getActionBar().setTitle(mTitle);
     }
 }

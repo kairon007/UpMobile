@@ -26,12 +26,6 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		searchView = new SearchView(getActivity().getLayoutInflater());
-		if (null != query) {
-			searchView.setExtraSearch(query);
-			searchView.setSearchField(query);
-			searchView.trySearch();
-			query = null;
-		}
 		return searchView.getView();
 	}
 	
@@ -43,7 +37,14 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 	
 	@Override
 	public void onResume() {
-//		((MainActivity) getActivity()).setSelectedItem(0);
+		query = ((UIMainActivity) getActivity()).getQuery();
+		if (null != query) {
+			searchView.setExtraSearch(query);
+			searchView.setSearchField(query);
+			searchView.trySearch();
+			query = null;
+		}
+		((UIMainActivity) getActivity()).setSelectedItem(0);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		super.onResume();
 	}

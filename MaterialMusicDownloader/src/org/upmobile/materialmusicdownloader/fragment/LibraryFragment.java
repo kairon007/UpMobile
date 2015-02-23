@@ -24,7 +24,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 	
 	@Override
 	public void onResume() {
-//		((MainActivity) getActivity()).setSelectedItem(2);
+		((UIMainActivity) getActivity()).setSelectedItem(2);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		super.onResume();
 	}

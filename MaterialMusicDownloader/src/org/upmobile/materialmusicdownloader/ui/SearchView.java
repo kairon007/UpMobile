@@ -5,27 +5,21 @@ import java.util.ArrayList;
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
-import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.csform.android.uiapptemplate.font.MusicTextView;
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
@@ -63,7 +57,7 @@ public class SearchView extends OnlineSearchView implements Constants {
 		PlayerFragment playerFragment = new PlayerFragment();
 		playerFragment.setArguments(bundle);
 		((MainActivity) getContext()).showPlayerElement(true);
-		((MainActivity) view.getContext()).changeFragment(playerFragment);
+		((MainActivity) view.getContext()).changeFragment(playerFragment, null);
 		((MainActivity) getContext()).overridePendingTransition(0, 0);
 		super.click(view, position);
 	}

@@ -15,7 +15,6 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
@@ -24,8 +23,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.util.TypedValue;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
@@ -79,7 +76,7 @@ public class MainActivity extends UIMainActivity implements Constants {
 	
 	@Override
 	protected void clickOnSearchView(String message) {
-		changeFragment(new SearchFragment(message));
+		changeFragment(new SearchFragment(message), null);
 	}
 	
 	@Override
@@ -96,15 +93,6 @@ public class MainActivity extends UIMainActivity implements Constants {
 			service = PlaybackService.get(this);
 		}
 		super.onResume();
-	}
-	
-	public void changeFragment(Fragment targetFragment) {
-		getFragmentManager()
-		.beginTransaction()
-		.replace(R.id.content_frame, targetFragment, targetFragment.getClass().getSimpleName())
-		.addToBackStack(targetFragment.getClass().getSimpleName())
-		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-		.commit();
 	}
 	
 	@Override
@@ -143,13 +131,7 @@ public class MainActivity extends UIMainActivity implements Constants {
 	}
 	
 	public void showPlayerElement(boolean flag) {
-		setAdapter(flag);
-	}
-	
-	@Override	
-	protected void selectItem(int position, int drawerTag) {
-		currentFragmentID = position;
-		super.selectItem(position, drawerTag);
+		addPlayerElement(flag);
 	}
 	
 	public Bitmap getDeafultBitmapCover(int outWidth, int outHeight, int property) {
@@ -169,5 +151,4 @@ public class MainActivity extends UIMainActivity implements Constants {
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
 	}
-	
 }
