@@ -42,6 +42,10 @@
 	<string name="font_random">&#xe845;</string>
 	<string name="font_search_online">&#xe816;</string>
 	<string name="font_cancel">&#xe81f;</string>
+	<string name="font_cb_checked">&#xe800;</string>
+	<string name="font_cb_unchecked">&#xe820;</string>
+	
+	
 	
 	
 

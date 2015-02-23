@@ -43,9 +43,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,7 +58,7 @@ import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 import com.devspark.appmsg.AppMsg;
 import com.devspark.appmsg.AppMsg.Style;
 
-public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener {
+public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment{
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -76,10 +73,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private CircularProgressButton download;
 	private UndoBar undo;
-	private CheckBox cbUseCover;
 	private LinearLayout artistBox;
 	private LinearLayout titleBox;
 
+	//custom check box
+	private TextView cbUseCover;
+	private ViewGroup cbTouchInterceptor;
+	private boolean isUseAlbumCover = false;
+	
 	// lyric sections
 	private LyricsFetcher lyricsFetcher;
 	private TextView playerLyricsView;
@@ -106,7 +107,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private int checkIdLyrics;
 
 	private boolean isDestroy;
-	private boolean isUseAlbumCover = true;
 
 	private Runnable progressAction = new Runnable() {
 
@@ -362,15 +362,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		case R.id.songNameBox:
 			openTitleField();
 			break;
+		case R.id.cbTouchInterceptor:
+			onCheckedChanged(!isUseAlbumCover);
+			break;
 		case R.id.artistNameBox:
 			openArtistField();
 			break;
 		}
 	}
 
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+	private void onCheckedChanged(boolean isChecked) {
 		isUseAlbumCover = isChecked;
+		cbUseCover.setText(isChecked ? getString(R.string.font_cb_checked) : getString(R.string.font_cb_unchecked));
 		closeEditViews();
 		if (song.getClass() != MusicData.class) {
 			return;
@@ -383,8 +386,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				@Override
 				public void onUndo(@Nullable Parcelable token) {
 					setCoverToZoomView(song.getCover(getActivity()));
+					cbUseCover.setText(getString(R.string.font_cb_checked));
 					isUseAlbumCover = true;
-					cbUseCover.setChecked(true);
 				}
 
 				@Override
@@ -429,7 +432,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerCurrTime = (TextView) contentView.findViewById(R.id.trackTime);
 		playerTotalTime = (TextView) contentView.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) contentView.findViewById(R.id.lyrics_text);
-		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
+		cbUseCover = (TextView) contentView.findViewById(R.id.cbUseCover);
+		cbTouchInterceptor = (ViewGroup) contentView.findViewById(R.id.cbTouchInterceptor);
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (ProgressBar) contentView.findViewById(R.id.player_wait_song);
@@ -448,7 +452,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		download.setOnClickListener(this);
 		artistBox.setOnClickListener(this);
 		titleBox.setOnClickListener(this);
-		cbUseCover.setOnCheckedChangeListener(this);
+		cbTouchInterceptor.setOnClickListener(this);
 		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
@@ -476,7 +480,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				closeEditViews();
-				return false;
+				return v.performClick();
 			}
 
 		});
@@ -698,9 +702,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 						((RemoteSong) song).setHasCover(true);
 						setCoverToZoomView(bmp);
 						setCheckBoxState(true);
+						isUseAlbumCover = true;
 					} else {
 						setCoverToZoomView(null);
 						setCheckBoxState(false);
+						isUseAlbumCover = false;
 					}
 				}
 			};
@@ -711,9 +717,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (bitmap != null) {
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
+				isUseAlbumCover = true;
 			} else {
 				setCoverToZoomView(null);
 				setCheckBoxState(false);
+				isUseAlbumCover = false;
 			}
 		}
 	}
@@ -731,11 +739,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 	
 	private void setCheckBoxState(boolean state) {
-		cbUseCover.setOnCheckedChangeListener(null);
-		cbUseCover.setEnabled(state);
-		cbUseCover.setChecked(state);
-		cbUseCover.setClickable(state);
-		cbUseCover.setOnCheckedChangeListener(this);
+		cbUseCover.setText(state ? getString(R.string.font_cb_checked) : getString(R.string.font_cb_unchecked));
+		cbTouchInterceptor.setClickable(state);
+		cbTouchInterceptor.setEnabled(state);
 	}
 
 	private void hideKeyboard() {
