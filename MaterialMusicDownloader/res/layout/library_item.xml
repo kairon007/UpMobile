@@ -48,10 +48,11 @@
             <com.csform.android.uiapptemplate.font.RobotoTextView
                 android:id="@+id/item_title"
                 style="@style/TextViewAppearance.Body"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
+                android:ems="16"
                 android:singleLine="true"
                 android:text="Title" />
 
