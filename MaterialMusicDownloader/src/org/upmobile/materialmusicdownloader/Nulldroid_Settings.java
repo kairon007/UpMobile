@@ -33,6 +33,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
 //		{"SearchVmusice", "1"},
+		{"SearchZvukoff", "3"},
 		{"SearchPleer", "3"},
 		{"SearchSoArdIyyin", "3"},
 		{"SearchMyFreeMp3", "1"},
@@ -47,7 +48,6 @@ public class Nulldroid_Settings implements BaseSettings {
 		{"SearchTing", "1"}, 
 		{"SearchJamendo","1"},
 		{"SearchYouTube", "7"}
-		
 	};
 
 	private static final String [][] SEARCH_ENGINES_2 = new String [][]{
