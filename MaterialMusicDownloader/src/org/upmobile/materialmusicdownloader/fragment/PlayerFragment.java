@@ -757,9 +757,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 	
 	private void setCheckBoxState(boolean state) {
-		cbUseCover.setText(state ? getString(R.string.font_cb_checked) : getString(R.string.font_cb_unchecked));
-		cbTouchInterceptor.setClickable(state);
-		cbTouchInterceptor.setEnabled(state);
+		if (isAdded()) {
+			cbUseCover.setText(state ? getString(R.string.font_cb_checked) : getString(R.string.font_cb_unchecked));
+			cbTouchInterceptor.setClickable(state);
+			cbTouchInterceptor.setEnabled(state);
+		}
 	}
 
 	private void hideKeyboard() {
