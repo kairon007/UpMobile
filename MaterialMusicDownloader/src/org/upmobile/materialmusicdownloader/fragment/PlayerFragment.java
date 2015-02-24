@@ -339,7 +339,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	public void onDestroy() {
 		isDestroy = true;
 		((MainActivity)getActivity()).setDrawerEnabled(true);
-		
 		super.onDestroy();
 	}
 

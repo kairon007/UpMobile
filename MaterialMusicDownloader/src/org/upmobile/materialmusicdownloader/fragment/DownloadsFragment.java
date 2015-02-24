@@ -26,8 +26,6 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 	@Override
 	public void onPause() {
 		downloadsView.onPause();
-//		((MainActivity) getActivity()).setSelectedItem(1);
-		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		super.onPause();
 	}
 
@@ -35,6 +33,7 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 	public void onResume() {
 		downloadsView.onResume();
 		((UIMainActivity) getActivity()).setSelectedItem(1);
+		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		super.onResume();
 	}
 

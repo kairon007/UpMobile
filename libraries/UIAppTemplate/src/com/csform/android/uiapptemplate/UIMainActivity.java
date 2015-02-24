@@ -63,9 +63,8 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 			public boolean onQueryTextSubmit(String query) {
 				UIMainActivity.this.query = query;
 				searchView.setIconified(true);
-				searchView.setIconified(true);
 				hideKeyboard();
-				changeFragment(mFragments.get(0), null);
+				changeFragment(mFragments.get(0));
 				return false;
 			}
 			
@@ -127,20 +126,20 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 		hideKeyboard();
 		switch (position) {
 		case 0:
-	        changeFragment(mFragments.get(0), null);
+	        changeFragment(mFragments.get(0));
 			break;
 		case 1:
-	        changeFragment(mFragments.get(1), null);
+	        changeFragment(mFragments.get(1));
 			break;
 		case 2:
-	        changeFragment(mFragments.get(2), null);
+	        changeFragment(mFragments.get(2));
 			break;
 		case 3:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(3);
 		    if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
-		    	changeFragment(fragment, null);
+		    	changeFragment(fragment);
 		    }
 			break;
 		default:
@@ -148,9 +147,15 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 		}
 	}
 	
-	public void changeFragment(BaseMaterialFragment baseMaterialFragment, Bundle args) {
+	public void changeFragment(BaseMaterialFragment baseMaterialFragment) {
+		if (null != searchView) {
+			searchView.setIconified(true);
+			hideKeyboard();
+		}
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName())
+		fragmentManager.beginTransaction()
+		.remove((Fragment) baseMaterialFragment)
+		.replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName())
 		.addToBackStack(baseMaterialFragment.getClass().getSimpleName())
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 		.commit();

@@ -1,6 +1,7 @@
 package org.upmobile.materialmusicdownloader.fragment;
 
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.SearchView;
 
 import android.app.Fragment;
@@ -46,6 +47,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 		}
 		((UIMainActivity) getActivity()).setSelectedItem(0);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
+		((MainActivity)getActivity()).setDrawerEnabled(true);
 		super.onResume();
 	}
 

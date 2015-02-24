@@ -76,7 +76,7 @@ public class MainActivity extends UIMainActivity implements Constants {
 	
 	@Override
 	protected void clickOnSearchView(String message) {
-		changeFragment(new SearchFragment(message), null);
+		changeFragment(new SearchFragment(message));
 	}
 	
 	@Override
