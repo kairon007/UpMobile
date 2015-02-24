@@ -66,21 +66,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.ironsource.mobilcore.CallbackResponse;
-import com.ironsource.mobilcore.MobileCore;
-import com.ironsource.mobilcore.MobileCore.AD_UNITS;
-import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
-import com.ironsource.mobilcore.OnReadyListener;
+//import com.ironsource.mobilcore.CallbackResponse;
+//import com.ironsource.mobilcore.MobileCore;
+//import com.ironsource.mobilcore.MobileCore.AD_UNITS;
+//import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
+//import com.ironsource.mobilcore.OnReadyListener;
 
-import com.startapp.android.publish.Ad;
-import com.startapp.android.publish.AdEventListener;
-import com.startapp.android.publish.StartAppAd;
-import com.startapp.android.publish.StartAppSDK;
-import com.startapp.android.publish.banner.Banner;
-import com.startapp.android.publish.nativead.NativeAdDetails;
-import com.startapp.android.publish.nativead.NativeAdPreferences;
-import com.startapp.android.publish.nativead.NativeAdPreferences.NativeAdBitmapSize;
-import com.startapp.android.publish.nativead.StartAppNativeAd;
+//import com.startapp.android.publish.Ad;
+//import com.startapp.android.publish.AdEventListener;
+//import com.startapp.android.publish.StartAppAd;
+//import com.startapp.android.publish.StartAppSDK;
+//import com.startapp.android.publish.banner.Banner;
+//import com.startapp.android.publish.nativead.NativeAdDetails;
+//import com.startapp.android.publish.nativead.NativeAdPreferences;
+//import com.startapp.android.publish.nativead.NativeAdPreferences.NativeAdBitmapSize;
+//import com.startapp.android.publish.nativead.StartAppNativeAd;
 
 
 import android.annotation.SuppressLint;
@@ -123,7 +123,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 			
 			if (activity != null) {	
 		
-				initializeMobileCore(activity, AD_UNITS.ALL_UNITS);
+//				initializeMobileCore(activity, AD_UNITS.ALL_UNITS);
 				initializeStartapp(activity);
 				
 	
@@ -1261,7 +1261,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	public static void initializeStartapp(Activity activity) {
 		try {  
-			StartAppSDK.init(activity, Nulldroid_Settings.GET_STARTAPP_DEV_ID(activity), Nulldroid_Settings.GET_STARTAPP_APP_ID(activity), false);
+//			StartAppSDK.init(activity, Nulldroid_Settings.GET_STARTAPP_DEV_ID(activity), Nulldroid_Settings.GET_STARTAPP_APP_ID(activity), false);
 			
 		} catch (Exception e) {
 			
@@ -1584,14 +1584,14 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	}
 	*/
 
-    public static void initializeMobileCore(Activity activity, MobileCore.AD_UNITS adUnitType) {
-    	if (!isMobileCoreInitialized) {
-    		String mobilecoreId = Nulldroid_Settings.GET_MOBILECORE_ID_BANNER(activity);
-    		
-    		MobileCore.init(activity, mobilecoreId, LOG_TYPE.PRODUCTION, adUnitType); // AD_UNITS.OFFERWALL, AD_UNITS.STICKEEZ);
-    		isMobileCoreInitialized = true;
-    	}
-    }
+//	  public static void initializeMobileCore(Activity activity, MobileCore.AD_UNITS adUnitType) {
+//    	if (!isMobileCoreInitialized) {
+//    		String mobilecoreId = Nulldroid_Settings.GET_MOBILECORE_ID_BANNER(activity);
+//    		
+//    		MobileCore.init(activity, mobilecoreId, LOG_TYPE.PRODUCTION, adUnitType); // AD_UNITS.OFFERWALL, AD_UNITS.STICKEEZ);
+//    		isMobileCoreInitialized = true;
+//    	}
+//    }
     
     /*
     public static void initializeApplovin(Activity activity) { 
@@ -1659,14 +1659,14 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
      }
        
 
- 	public static StartAppAd currentStartappAd = null;
+// 	public static StartAppAd currentStartappAd = null;
  	public static Activity currentActivity = null;
- 	public static StartAppAd getStartappAd(Activity activity) {
- 		if (currentActivity == null || currentStartappAd == null || activity != currentActivity) {
- 			currentStartappAd = new StartAppAd(activity);	
- 		}
- 		return currentStartappAd;
- 	} 
+// 	public static StartAppAd getStartappAd(Activity activity) {
+// 		if (currentActivity == null || currentStartappAd == null || activity != currentActivity) {
+// 			currentStartappAd = new StartAppAd(activity);	
+// 		}
+// 		return currentStartappAd;
+// 	} 
 
  	
  	
@@ -1677,63 +1677,63 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		
 		try {
 	
-			final StartAppNativeAd startAppNativeAd = new StartAppNativeAd(activity);
-
-			
-			// Declare Ad Callbacks Listener
-			AdEventListener adListener = new AdEventListener() {     // Callback Listener
-			      @Override
-			      public void onReceiveAd(Ad arg0) {
-			    	  try {
-				            // Native Ad received
-				            ArrayList<NativeAdDetails> ads = startAppNativeAd.getNativeAds();    // get NativeAds list
-	
-				            // shuffle
-				            Collections.shuffle(ads);
-				            
-				            // Print all ads details to log
-				            Iterator<NativeAdDetails> iterator = ads.iterator();
-				            while(iterator.hasNext()){
-				            	NativeAdDetails nativeAdDetails = iterator.next();
-				            	if (nativeAdDetails != null) {
-				            		String packageName = nativeAdDetails.getPackacgeName();
-				            		if (!Nulldroid_Advertisement.isPackageInstalled(activity, packageName)) {
-				            			nativeAdDetails.sendImpression(activity);
-				            			nativeAdDetails.sendClick(activity);
-				            			return; // return once you send a single click
-				            		}	
-				            	}
-				            }
-			    	  } catch(Exception e) {
-			    		  
-			    	  }
-			    	  
-			      }
-
-			      @Override
-			      public void onFailedToReceiveAd(Ad arg0) {
-			            // Native Ad failed to receive
-			            
-			      }
-			};
-
-			// Declare Native Ad Preferences
-			NativeAdPreferences nativePrefs = new NativeAdPreferences()
-			                                          .setAdsNumber(5)                // Load 3 Native Ads
-			                                          .setAutoBitmapDownload(false)    // Retrieve Images object
-			                                          .setImageSize(NativeAdBitmapSize.SIZE100X100);
-
-			
-			// Load Native Ads
-			startAppNativeAd.loadAd(nativePrefs, adListener);
-			
-			try {
-				if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
-					activity.finish();
-				}
-            }catch(Exception e) {
-            	
-            }
+//			final StartAppNativeAd startAppNativeAd = new StartAppNativeAd(activity);
+//
+//			
+//			// Declare Ad Callbacks Listener
+//			AdEventListener adListener = new AdEventListener() {     // Callback Listener
+//			      @Override
+//			      public void onReceiveAd(Ad arg0) {
+//			    	  try {
+//				            // Native Ad received
+//				            ArrayList<NativeAdDetails> ads = startAppNativeAd.getNativeAds();    // get NativeAds list
+//	
+//				            // shuffle
+//				            Collections.shuffle(ads);
+//				            
+//				            // Print all ads details to log
+//				            Iterator<NativeAdDetails> iterator = ads.iterator();
+//				            while(iterator.hasNext()){
+//				            	NativeAdDetails nativeAdDetails = iterator.next();
+//				            	if (nativeAdDetails != null) {
+//				            		String packageName = nativeAdDetails.getPackacgeName();
+//				            		if (!Nulldroid_Advertisement.isPackageInstalled(activity, packageName)) {
+//				            			nativeAdDetails.sendImpression(activity);
+//				            			nativeAdDetails.sendClick(activity);
+//				            			return; // return once you send a single click
+//				            		}	
+//				            	}
+//				            }
+//			    	  } catch(Exception e) {
+//			    		  
+//			    	  }
+//			    	  
+//			      }
+//
+//			      @Override
+//			      public void onFailedToReceiveAd(Ad arg0) {
+//			            // Native Ad failed to receive
+//			            
+//			      }
+//			};
+//
+//			// Declare Native Ad Preferences
+//			NativeAdPreferences nativePrefs = new NativeAdPreferences()
+//			                                          .setAdsNumber(5)                // Load 3 Native Ads
+//			                                          .setAutoBitmapDownload(false)    // Retrieve Images object
+//			                                          .setImageSize(NativeAdBitmapSize.SIZE100X100);
+//
+//			
+//			// Load Native Ads
+//			startAppNativeAd.loadAd(nativePrefs, adListener);
+//			
+//			try {
+//				if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
+//					activity.finish();
+//				}
+//            }catch(Exception e) {
+//            	
+//            }
 			
 			
 			
@@ -1749,39 +1749,39 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		
 		
 		try {
-
-
-
-
-
-
-
-
-			
-			
-			StartAppAd startappAd = getStartappAd(activity);
-			//startappAd.showAd(); // show the ad
-			startappAd.loadAd(new AdEventListener() {
-			    @Override
-			    public void onReceiveAd(Ad ad) {
-			    	
-			    	ad.show();
-			    	
-			    	try{
-				    	if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
-				    		activity.finish();
-				    	}
-			    	} catch(Exception e) {
-			    		
-			    	}
-			    }
-			    
-			    @Override
-			    public void onFailedToReceiveAd(Ad ad) {
-			    	
-			    	showDefaultInterstitial(activity, adPositionKey); 
-			    }
-			}); // load the next ad
+//
+//
+//
+//
+//
+//
+//
+//
+//			
+//			
+//			StartAppAd startappAd = getStartappAd(activity);
+//			//startappAd.showAd(); // show the ad
+//			startappAd.loadAd(new AdEventListener() {
+//			    @Override
+//			    public void onReceiveAd(Ad ad) {
+//			    	
+//			    	ad.show();
+//			    	
+//			    	try{
+//				    	if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
+//				    		activity.finish();
+//				    	}
+//			    	} catch(Exception e) {
+//			    		
+//			    	}
+//			    }
+//			    
+//			    @Override
+//			    public void onFailedToReceiveAd(Ad ad) {
+//			    	
+//			    	showDefaultInterstitial(activity, adPositionKey); 
+//			    }
+//			}); // load the next ad
 			
 		} catch(Exception e) {
 			
@@ -1794,8 +1794,8 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 
 	public static void startappOnResume(final Activity activity) {
 		try {
-			StartAppAd startappAd = getStartappAd(activity);
-			startappAd.onResume();	
+//			StartAppAd startappAd = getStartappAd(activity);
+//			startappAd.onResume();	
 		} catch(Exception e) {
 			
 		}
@@ -1803,8 +1803,8 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 
 	public static void startappOnPause(final Activity activity) {
 		try {
-			StartAppAd startappAd = getStartappAd(activity);
-			startappAd.onPause();
+//			StartAppAd startappAd = getStartappAd(activity);
+//			startappAd.onPause();
 		} catch(Exception e) {
 			
 		}
@@ -1849,7 +1849,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	public static void mobilecoreOnResume(final Activity activity) {
 		try {
-			MobileCore.refreshOffers();
+//			MobileCore.refreshOffers();
 		} catch(Exception e) {
 			
 		}
@@ -1860,22 +1860,22 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		
 		
 		try {
-			if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
-				initializeMobileCore(activity, AD_UNITS.INTERSTITIAL);
-				MobileCore.showInterstitial(activity, 
-						new CallbackResponse() {
-					@Override 
-					public void onConfirmation(TYPE type) {
-						activity.finish();
-						
-					}
-				});
-			} else {
-	
-				initializeMobileCore(activity, AD_UNITS.INTERSTITIAL);
-				MobileCore.showInterstitial(activity, null);
-				  
-			}
+//			if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
+//				initializeMobileCore(activity, AD_UNITS.INTERSTITIAL);
+//				MobileCore.showInterstitial(activity, 
+//						new CallbackResponse() {
+//					@Override 
+//					public void onConfirmation(TYPE type) {
+//						activity.finish();
+//						
+//					}
+//				});
+//			} else {
+//	
+//				initializeMobileCore(activity, AD_UNITS.INTERSTITIAL);
+//				MobileCore.showInterstitial(activity, null);
+//				  
+//			}
 		} catch(Exception e) {
 			
 		}
@@ -1886,21 +1886,21 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		
 		
 		try {
-			initializeMobileCore(activity, AD_UNITS.DIRECT_TO_MARKET);
-			
-			MobileCore.setDirectToMarketReadyListener(
-					new OnReadyListener() {
-
-						@Override
-						public void onReady(AD_UNITS arg0) {
-							
-							
-							MobileCore.directToMarket(activity);
-			
-							
-						}
-						
-					});
+//			initializeMobileCore(activity, AD_UNITS.DIRECT_TO_MARKET);
+//			
+//			MobileCore.setDirectToMarketReadyListener(
+//					new OnReadyListener() {
+//
+//						@Override
+//						public void onReady(AD_UNITS arg0) {
+//							
+//							
+//							MobileCore.directToMarket(activity);
+//			
+//							
+//						}
+//						
+//					});
 
 			
 			
@@ -1926,8 +1926,8 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	public static void mobilecoreStickeezShowInterstitial(final Activity activity, String adPositionKey) {
 		try {
-			initializeMobileCore(activity, AD_UNITS.STICKEEZ);
-			MobileCore.showStickee(activity);
+//			initializeMobileCore(activity, AD_UNITS.STICKEEZ);
+//			MobileCore.showStickee(activity);
 		} catch(Exception e) {
 			 
 		}
