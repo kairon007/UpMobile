@@ -12,10 +12,6 @@
     <string name="delete">Delete</string>
     <string name="nothing_changed">Nothing changed</string>
     
-    <!-- undo bar -->
-    <string name="undo">Undo</string>
-    <string name="retry">Retry</string>
-
     <string-array name="titles">
         <item>@string/tab_search</item>
         <item>@string/tab_downloads</item>
@@ -25,7 +21,6 @@
 
     <string name="error_retrieving_the_url">An error occurred while retrieving the url of the song. Try to download another song</string>
     <string name="delete_item">Delete item</string>
-    <string name="message_undo_bar">Cover has been removed</string>
     
         	<!-- Strings for fonts -->
     <string name="font_previous">&#xe850;</string>

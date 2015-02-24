@@ -132,7 +132,13 @@
     <string name="file_is_bad">bad_file</string>
     
     <string name="downloads_empty">Downloads list is empty</string>
- <string name="library_empty">Librarys list is empty</string>
+ 	<string name="library_empty">Librarys list is empty</string>
     
-<string name="duration">Duration:</string>
+	<string name="duration">Duration:</string>
+	
+	<!-- undo bar -->
+    <string name="undo">Undo</string>
+    <string name="retry">Retry</string>
+    <string name="message_undo_bar">Cover has been removed</string>
+    
 </resources>

@@ -29,12 +29,23 @@
                 android:layout_height="256dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp" />
+            
+            <CheckBox
+                android:id="@+id/use_cover"
+                style="@style/CheckBoxAppTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cover_empty_view"
+                android:visibility="visible"
+                android:text="@string/edit_mp3_use_album_cover"
+                android:layout_alignRight="@id/cover_empty_view"
+                android:checked="true" />
 
             <LinearLayout
                 android:id="@+id/player_artist_frame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/cover_empty_view"
+                android:layout_below="@id/use_cover"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
@@ -112,8 +123,8 @@
                     android:background="@drawable/button_selector_inverse_light" >
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_gravity="center"
                         android:alpha="0.7"
                         android:src="@drawable/ic_player_edit" />
@@ -269,38 +280,6 @@
                     layout="@layout/lyrics_frame"
                     android:visibility="visible" />
             </LinearLayout>
-
-            <CheckBox
-                android:id="@+id/use_cover"
-                style="@style/CheckBoxAppTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/player_artist_frame"
-                android:visibility="gone"
-                android:layout_alignRight="@id/cover_empty_view"
-                android:checked="true" />
-
-            <FrameLayout
-                android:id="@+id/cancel_removing_cover"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_alignBottom="@+id/cover_empty_view"
-                android:background="@drawable/button_selector_inverse_light"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/cover_empty_view"
-                android:clickable="true"
-                android:visibility="gone" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:text="@string/download_dialog_cancel"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@android:color/white" />
-
-            </FrameLayout>
 
         </RelativeLayout>
     </com.special.utils.UIParallaxScroll>

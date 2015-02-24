@@ -4,9 +4,4 @@
     <dimen name="playerbutton_height">56dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     
-    <!-- undo bar -->
-    <dimen name="marginLeft">8dp</dimen>
-    <dimen name="marginRight">8dp</dimen>
-    <dimen name="marginBottom">16dp</dimen>
-
 </resources>

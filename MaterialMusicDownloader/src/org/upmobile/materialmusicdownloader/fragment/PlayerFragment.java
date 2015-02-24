@@ -6,8 +6,6 @@ import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.widget.UndoBarController.AdvancedUndoListener;
-import org.upmobile.materialmusicdownloader.widget.UndoBarController.UndoBar;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -22,6 +20,8 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;

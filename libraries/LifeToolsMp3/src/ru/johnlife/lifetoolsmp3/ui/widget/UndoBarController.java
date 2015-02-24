@@ -1,5 +1,9 @@
-package org.upmobile.materialmusicdownloader.widget;
+package ru.johnlife.lifetoolsmp3.ui.widget;
 
+import java.lang.reflect.Method;
+import java.util.LinkedList;
+
+import ru.johnlife.lifetoolsmp3.R;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -31,10 +35,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-
-import org.upmobile.materialmusicdownloader.R;
 
 public class UndoBarController extends LinearLayout {
 

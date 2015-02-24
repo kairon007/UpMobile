@@ -23,12 +23,17 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
@@ -69,6 +74,7 @@ import com.special.utils.UIParallaxScroll;
 
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener {
 
+	private final int MESSAGE_DURATION = 5000;
     public static final int DURATION = 500; // in ms
     private String PACKAGE = "IDENTIFY";
 	private AbstractSong song;
@@ -78,6 +84,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private LyricsFetcher lyricsFetcher;
 	private View parentView;
 	private SeekBar playerProgress;
+	
+	private UndoBar undo;
+	
 	private FrameLayout playerTitleBar;
 	private ImageButton play;
 	private ImageButton previous;
@@ -98,7 +107,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private TextView playerLyricsView;
 	private TextView playerTitleBarTitle;
 	private TextView playerTitleBarArtis;
-	private FrameLayout playerCancelRemoving;
 	private String title;
 	private String artist;
     private int delta_top;
@@ -111,7 +119,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private int deltaTopTitleBar;
 	private int currLyricsFetchedId;
 	private int checkIdCover;
-	private int checkIdRmvTask;
 	private float maxTranslationX;
 	private float maxTranslationY;
 	private float deltaScale = 0;
@@ -122,18 +129,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private float ratio;
     private boolean isDestroy;
     private boolean isUseAlbumCover = true;
-    private boolean removeCover = false;
     private boolean isNeedCalculateCover = true;
     
     private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
-		public void start(AbstractSong song) {
+		public void start(AbstractSong s) {
 			downloadButtonState(true);
-			if (song.getClass() != MusicData.class) {
-				PlayerFragment.this.song = ((RemoteSong) song).cloneSong();
+			if (s.getClass() != MusicData.class) {
+				song = ((RemoteSong) s).cloneSong();
 			} else {
-				PlayerFragment.this.song = song;
+				song = s;
 			}
 			if (isDestroy) return;
 			setClickablePlayerElement(true);
@@ -143,19 +149,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 
 		@Override
-		public void play(AbstractSong song) {
+		public void play(AbstractSong s) {
 			if (isDestroy) return;
 			changePlayPauseView(false);
 		}
 
 		@Override
-		public void pause(AbstractSong song) {
+		public void pause(AbstractSong s) {
 			if (isDestroy) return;
 			changePlayPauseView(true);
 		}
 
 		@Override
-		public void stop(AbstractSong song) {
+		public void stop(AbstractSong s) {
 			playerProgress.removeCallbacks(progressAction);
 			playerProgress.setProgress(0);
 			setClickablePlayerElement(player.isPrepared());
@@ -168,9 +174,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		
 		@Override
-		public void update(AbstractSong song) {
+		public void update(AbstractSong s) {
 			if (isDestroy) return;
-			PlayerFragment.this.song = song;
+			song = s;
 			showLyrics();
 			setElementsView(0);
 			setClickablePlayerElement(false);
@@ -275,6 +281,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
 		}
+		if (!isUseAlbumCover && song.isHasCover()) {
+			undo.clear();
+			clearCover();
+		}
 		super.onPause();
 	}
 
@@ -325,12 +335,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	    playerTitleBarTitle = (TextView) parentView.findViewById(R.id.titleBarTitle);
 		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
 		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
-		playerCancelRemoving = (FrameLayout) parentView.findViewById(R.id.cancel_removing_cover);
 		useCover = (CheckBox) parentView.findViewById(R.id.use_cover);
+		undo = new UndoBar(getActivity());
 	}
 
 	private void setListener() {
-		playerCancelRemoving.setOnClickListener(this);
 		playerProgress.setOnSeekBarChangeListener(this);
 		play.setOnClickListener(this);
 		previous.setOnClickListener(this);
@@ -384,36 +393,38 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		isUseAlbumCover = isChecked;
 		((MainActivity) getActivity()).setCoverHelper(isChecked);
-		if (!isChecked) {
-			removeCover = true;
-			if (song.getClass() == MusicData.class) {
-				playerCancelRemoving.setVisibility(View.VISIBLE);
-				playerCover.setImageResource(R.drawable.def_cover_circle_web);
-				Runnable run = new Runnable() {
-
-					@Override
-					public void run() {
-						if (!removeCover || this.hashCode() != checkIdRmvTask) {
-							playerCover.setImageBitmap(song.getCover(getActivity()));
-							return;
-						}
-						playerCancelRemoving.setVisibility(View.GONE);
-						useCover.setVisibility(View.GONE);
-						((MusicData) song).clearCover();
-						File file = new File(song.getPath());
-						RenameTask.deleteCoverFromFile(file);
-					}
-					
-				};
-				checkIdRmvTask = run.hashCode();
-				useCover.postDelayed(run, 3000);
-			}
+		isUseAlbumCover = isChecked;
+		closeEditViews();
+		if (song.getClass() != MusicData.class) {
+			return;
+		}
+		if (isChecked) {
+			undo.clear();
 		} else {
-			removeCover = false;
-			playerCover.setImageBitmap(song.getCover(getActivity()));
-			playerCancelRemoving.setVisibility(View.GONE);
+			AdvancedUndoListener listener = new AdvancedUndoListener() {
+
+				@Override
+				public void onUndo(@Nullable Parcelable token) {
+					playerCover.setImageBitmap(song.getCover(getActivity()));
+					isUseAlbumCover = true;
+					setCheckBoxState(true);
+				}
+
+				@Override
+				public void onHide(@Nullable Parcelable token) {
+					clearCover();
+				}
+
+				@Override
+				public void onClear(@NonNull Parcelable[] token) {
+				}
+
+			};
+			undo.message(R.string.message_undo_bar);
+			undo.duration(MESSAGE_DURATION);
+			undo.listener(listener);
+			undo.show();
 		}
 	}
 	
@@ -427,11 +438,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtArtist.setVisibility(View.GONE);
 			playerEtTitle.setVisibility(View.GONE);
 			return true;
-		} else {
-			return false;
+		} 
+		return false;
+	}
+	
+	private void clearCover() {
+		setCheckBoxState(false);
+		if (MusicData.class == song.getClass()) {
+			playerCover.setImageResource(R.drawable.def_cover_circle_web);
+			((MusicData) song).clearCover();
+			RenameTask.deleteCoverFromFile(new File(song.getPath()));
 		}
 	}
-
+	
 	private void hideKeyboard() {
 		View hideView = parentView.findViewById(R.id.scroller);
 		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -478,11 +497,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		editTag();
 		switch (v.getId()) {
-		case R.id.cancel_removing_cover:
-			playerCover.setImageBitmap(song.getCover(getActivity()));
-			prepareCover();
-			removeCover = false;
-			break;
 		case R.id.player_play:
 			play(0);
 			break;
@@ -577,9 +591,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private boolean checkUnique(String title, String artist) {
 		if (song.getClass() == MusicData.class) {
 			return new File(MessageFormat.format("{0}/{1} - {2}.mp3", new File(song.getPath()).getParentFile(), artist, title)).exists();
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	private void saveTag() {
@@ -633,12 +646,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	@Override
-	
 	public void onStartTrackingTouch(SeekBar seekBar) {
 	}
 
 	@Override
-	
 	public void onStopTrackingTouch(SeekBar seekBar) {
 	}
 	
@@ -684,12 +695,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 */
 	private void play(int delta) throws IllegalArgumentException {
 		if (delta > 0) {
-			resetCover();
 			player.shift(1);
 			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
 		} else if (delta < 0) {
-			resetCover();
 			player.shift(-1);
 			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
@@ -699,6 +708,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void getCover(final AbstractSong song) {
+		playerCover.setImageResource(R.drawable.def_cover_circle_web);
+		setCheckBoxState(false);
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener idBmpListener = new OnBitmapReadyListener() {
 				
@@ -708,49 +719,27 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						playerCover.setImageBitmap(bmp);
-						prepareCover();
-					} else {
-						playerCover.setImageResource(R.drawable.def_cover_circle_web);
-						useCover.setVisibility(View.GONE);
+						setCheckBoxState(true);
 					}
 				}
 			};
 			checkIdCover = idBmpListener.hashCode();
 			((RemoteSong) song).getCover(idBmpListener);
 		} else {
-			final Bitmap bitmap = ((MusicData) song).getCover(getActivity());
+			Bitmap bitmap = ((MusicData) song).getCover(getActivity());
 			if (bitmap != null) {
-				playerCover.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						playerCover.setImageBitmap(bitmap);
-						prepareCover();
-					}
-
-				});
-			} else {
-				resetCover();
+				playerCover.setImageBitmap(bitmap);
+				setCheckBoxState(true);
 			}
 		}
 	}
-
-	private void resetCover() {
-		isUseAlbumCover = true;
-		((MainActivity) getActivity()).setCoverHelper(isUseAlbumCover);
-		useCover.setVisibility(View.GONE);
-		playerCancelRemoving.setVisibility(View.GONE);
-		playerCover.setImageResource(R.drawable.def_cover_circle_web);
-		if (playerCancelRemoving.getVisibility() == View.VISIBLE) {
-			playerCancelRemoving.setVisibility(View.VISIBLE);
-		}
-	}
 	
-	private void prepareCover() {
-		useCover.setVisibility(View.VISIBLE);
-		playerCancelRemoving.setVisibility(View.GONE);
-		isUseAlbumCover = true;
-		useCover.setChecked(isUseAlbumCover);
+	private void setCheckBoxState(boolean state) {
+		useCover.setOnCheckedChangeListener(null);
+		useCover.setEnabled(state);
+		useCover.setChecked(state);
+		useCover.setClickable(state);
+		useCover.setOnCheckedChangeListener(this);
 	}
 
 	private void download() {

@@ -1,4 +1,4 @@
-package org.upmobile.materialmusicdownloader.widget;
+package ru.johnlife.lifetoolsmp3.ui.widget;
 
 import android.os.Parcel;
 import android.os.Parcelable;

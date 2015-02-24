@@ -82,7 +82,7 @@
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#fff</item>
-        <item name="android:text">"Undo"</item>
+        <item name="android:text">@string/undo</item>
     </style>
 
     <style name="UndoBarDividerClassic">

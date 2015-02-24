@@ -35,5 +35,10 @@
 	<dimen name="size_imageButton">64dp</dimen>
 	<dimen name="big_height">496dp</dimen>
 	<dimen name="size_very_small">1dp</dimen>
+	
+	<!-- undo bar -->
+    <dimen name="marginLeft">8dp</dimen>
+    <dimen name="marginRight">8dp</dimen>
+    <dimen name="marginBottom">16dp</dimen>
 		
 </resources>
