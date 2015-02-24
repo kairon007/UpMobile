@@ -269,12 +269,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				}
 				try {
 					Uri uri = Uri.parse((String) msg.obj);
-					System.out.println("!!! get uri");
 					player.setDataSource(this, uri);
-					System.out.println("!!! setDataSource");
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
-					System.out.println("!!! prepareAsync");
 					sendNotification(true);
 				} catch (Exception e) {
 					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
