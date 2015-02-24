@@ -248,6 +248,7 @@ public abstract class BaseDownloadsView extends View{
 
 					@Override
 					public void run() {
+						if (null == messageView) return;
 						messageView.setVisibility(View.GONE);
 						messageView.setText("");
 					}
