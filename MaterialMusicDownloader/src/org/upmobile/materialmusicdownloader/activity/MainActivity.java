@@ -136,8 +136,12 @@ public class MainActivity extends UIMainActivity implements Constants {
 		addPlayerElement(flag);
 	}
 	
-	public void showMessage(int msg) {
-		AppMsg.makeText(this, msg, new Style(5000, R.color.main_color_500)).show();
+	public void showMessage(String message) {
+		AppMsg.makeText(this, message, new Style(5000, R.color.main_color_500)).show();
+	}
+	
+	public void showMessage(int message) {
+		showMessage(getString(message));
 	}
 	
 	public Bitmap getDeafultBitmapCover(int outWidth, int outHeight, int property) {
