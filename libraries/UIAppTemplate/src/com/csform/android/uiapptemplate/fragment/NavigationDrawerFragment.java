@@ -131,6 +131,9 @@ public class NavigationDrawerFragment extends Fragment {
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
+            mUserLearnedDrawer = true;
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
             mDrawerLayout.openDrawer(mFragmentContainerView);
         }
 
