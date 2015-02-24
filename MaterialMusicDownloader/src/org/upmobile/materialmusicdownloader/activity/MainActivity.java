@@ -28,6 +28,8 @@ import android.util.TypedValue;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.font.MusicTextView;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
+import com.devspark.appmsg.AppMsg;
+import com.devspark.appmsg.AppMsg.Style;
 
 public class MainActivity extends UIMainActivity implements Constants {
 
@@ -132,6 +134,10 @@ public class MainActivity extends UIMainActivity implements Constants {
 	
 	public void showPlayerElement(boolean flag) {
 		addPlayerElement(flag);
+	}
+	
+	public void showMessage(int msg) {
+		AppMsg.makeText(this, msg, new Style(5000, R.color.main_color_500)).show();
 	}
 	
 	public Bitmap getDeafultBitmapCover(int outWidth, int outHeight, int property) {

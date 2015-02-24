@@ -685,7 +685,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void saveTags() {
 		File f = new File(song.getPath());
 		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
-			AppMsg.makeText(PlayerFragment.this.getActivity(),R.string.file_already_exists, new Style(5000, R.color.main_color_500)).show();
+			((MainActivity) getActivity()).showMessage(R.string.file_already_exists);
 			return;
 		}
 		RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
@@ -773,7 +773,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
 		if (downloadListener.isBadInet()) {
-			AppMsg.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.search_message_no_internet, new Style(5000, R.color.main_color_500)).show();
+			((MainActivity) getActivity()).showMessage(R.string.search_message_no_internet);
 			return;
 		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
@@ -782,7 +782,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			@Override
 			public void success(String url) {
 				if (!url.startsWith("http")) {
-					AppMsg.makeText(PlayerFragment.this.getActivity(),R.string.error_retrieving_the_url, new Style(5000, R.color.main_color_500)).show();
+					((MainActivity) getActivity()).showMessage(R.string.error_retrieving_the_url);
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
