@@ -57,8 +57,6 @@ import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
-import com.devspark.appmsg.AppMsg;
-import com.devspark.appmsg.AppMsg.Style;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment{
 
@@ -513,6 +511,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (delta == 0) {
 			player.play(song);
 			return;
+		}
+		if (!isUseAlbumCover) {
+			if (null != undo) {
+				undo.clear();
+			}
+			clearCover();
 		}
 		player.stop();
 		setClickablePlayerElement(false);
