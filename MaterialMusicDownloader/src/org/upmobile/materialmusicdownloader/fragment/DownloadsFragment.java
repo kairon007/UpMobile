@@ -34,6 +34,7 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 		downloadsView.onResume();
 		((UIMainActivity) getActivity()).setSelectedItem(1);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
+		((UIMainActivity)getActivity()).setDrawerEnabled(true);
 		super.onResume();
 	}
 

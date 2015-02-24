@@ -152,9 +152,11 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 			searchView.setIconified(true);
 			hideKeyboard();
 		}
+		if (((Fragment)baseMaterialFragment).isAdded()) {
+			((Fragment)baseMaterialFragment).onResume();
+		}
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction()
-		.remove((Fragment) baseMaterialFragment)
 		.replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName())
 		.addToBackStack(baseMaterialFragment.getClass().getSimpleName())
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
