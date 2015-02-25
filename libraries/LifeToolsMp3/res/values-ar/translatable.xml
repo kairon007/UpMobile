@@ -48,4 +48,6 @@
 <string name="edit_mp3_use_album_cover">استخدم غلاف الألبوم</string>
 <string name="edit_mp3_ok">موافق</string>
 <string name="edit_mp3_cancel">إلغاء</string>
+<string name="downloads_empty">قائمة التنزيلات فارغة</string>
+<string name="library_empty">قائمة المكتبات فارغة</string>
 </resources>

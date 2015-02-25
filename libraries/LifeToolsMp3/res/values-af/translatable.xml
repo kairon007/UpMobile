@@ -42,5 +42,7 @@
     <string name="edit_mp3_use_album_cover">Gebruik albumomslag</string>
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Kanselleer</string>
+    <string name="downloads_empty">Downloads lys is leeg</string>
+ 	<string name="library_empty">Biblioteke lys is leeg</string>
 
 </resources>
