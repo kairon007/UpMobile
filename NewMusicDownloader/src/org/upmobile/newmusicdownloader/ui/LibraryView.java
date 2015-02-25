@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class LibraryView extends BaseLibraryView implements Constants {
 
@@ -36,5 +37,10 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	@Override
 	protected int getLayoutId() {
 		return R.layout.fragment_list_transition;
+	}
+	
+	@Override
+	protected TextView getMessageView(View view) {
+		return (TextView) view.findViewById(R.id.message_listview);
 	}
 }

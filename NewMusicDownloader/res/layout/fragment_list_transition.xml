@@ -16,6 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:fontFamily="sans-serif-thin"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/library_empty"
         android:visibility="gone" />
 
