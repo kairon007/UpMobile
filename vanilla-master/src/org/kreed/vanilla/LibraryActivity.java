@@ -34,7 +34,6 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.kreed.vanilla.app.VanillaApp;
 
-import ru.johnlife.lifetoolsmp3.RefreshListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -98,7 +97,7 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * The library activity where songs to play can be selected from the library.
  */
-public class LibraryActivity extends PlaybackActivity implements TextWatcher, DialogInterface.OnClickListener, DialogInterface.OnDismissListener, RefreshListener {
+public class LibraryActivity extends PlaybackActivity implements TextWatcher, DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
 	
 	private static final String IS_FIRST_RUN = "is_first_run";
 	/**
@@ -1592,7 +1591,4 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		return info;
 	}
 
-	@Override
-	public void success() {
-	}
 }

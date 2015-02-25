@@ -57,7 +57,7 @@
             </intent-filter>
         </service>
         
-	<!-- MOBILECORE -->
+        <!-- MOBILECORE -->
 
         <service
             android:name="com.ironsource.mobilcore.MobileCoreReport"
@@ -70,18 +70,29 @@
             android:enabled="true"
             android:process=":installationTracker" />
 
-		<activity android:name="com.ironsource.mobilcore.InterstitialVideoActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:keepScreenOn="true"/>
-	
-        
-		
-		<!-- STARTAPP -->
-		
-		<activity android:name="com.startapp.android.publish.list3d.List3DActivity"
-          android:theme="@android:style/Theme" />
+        <activity
+            android:name="com.ironsource.mobilcore.InterstitialVideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:keepScreenOn="true" />
 
-<activity android:name="com.startapp.android.publish.AppWallActivity"
-          android:theme="@android:style/Theme.Translucent"
-          android:configChanges="orientation|keyboardHidden|screenSize" />
+        <!-- STARTAPP -->
+
+        <activity
+            android:name="com.startapp.android.publish.list3d.List3DActivity"
+            android:theme="@android:style/Theme" />
+        <activity
+            android:name="com.startapp.android.publish.AppWallActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent" />
+        
+        
+        <!-- REVMOB -->
+        
+		<meta-data android:name="com.revmob.app.id" android:value="_NULLDROID_REVMOB_ID_"/>
+		<activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+			android:configChanges="keyboardHidden|orientation|screenSize"
+			android:theme="@android:style/Theme.Translucent">
+		</activity>
     
         
     </application>

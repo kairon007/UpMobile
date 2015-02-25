@@ -28,8 +28,13 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-public class Nulldroid_Settings implements BaseSettings {
+import java.util.Locale;
+import java.util.Collections;
+import android.telephony.TelephonyManager;
 
+
+public class Nulldroid_Settings implements BaseSettings {
+	
 	private static final String[][] SEARCH_ENGINES = new String[][] { 
 //		{"SearchVmusice", "1"},
 		{"SearchZvukoff", "3"},
@@ -52,7 +57,7 @@ public class Nulldroid_Settings implements BaseSettings {
 
 	private static final String [][] SEARCH_ENGINES_2 = new String [][]{
 		{"SearchYouTube", "3"},
-		{"SearchYouTubeMusic", "3"}		
+		{"SearchYouTubeMusic", "3"}
 	};
 	
 	private static final String [][] SEARCH_ENGINES_3 = new String [][]{
@@ -158,15 +163,15 @@ public class Nulldroid_Settings implements BaseSettings {
 			return "true"; 
 		// mp3 search engine settings
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES)) {    
-			value = "[\"goear\", \"soundcloud\"]"; //value = "[\"xiami\"]";  
+			value = "[\"soundcloud\", \"goear\", \"pleer\"]"; //value = "[\"xiami\"]";  
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES_2)) {    
-			value = "[]"; //value = "[\"xiami\"]"; 
+			value = "[\"pleer\", \"soardiyyin\", \"goear\"]"; //value = "[\"xiami\"]"; 
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES_3)) {    
-			value = "[]"; //value = "[\"xiami\"]"; 
+			value = "[\"goear\"]"; //value = "[\"xiami\"]"; 
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES_4)) {    
-			value = "[]"; //value = "[\"xiami\"]"; 
+			value = "[\"soardiyyin\"]"; //value = "[\"xiami\"]"; 
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES_5)) {    
-			value = "[]"; //value = "[\"xiami\"]"; 
+			value = "[\"zvukoff\"]"; //value = "[\"xiami\"]"; 
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES_6)) {    
 			value = "[]"; //value = "[\"xiami\"]"; 
 		} else if (property.equals(KEY_REMOTE_SETTING_SEARCH_ENGINES_7)) {    
@@ -191,7 +196,7 @@ public class Nulldroid_Settings implements BaseSettings {
 			value = "[{mobilecore:0}]";
 			//value = "[{grabos:2}, {grabos_direct:2}, {mobilecore_stickeez:2}, {mobilecore:0}]";
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_START_OPTIONS)) {  
-			value = "{\"initial_delay\": 3, \"min_interval\": 10}";    
+			value = "{\"initial_delay\": 3, \"min_interval\": 5}";    
 			
 			
 		} else if (property.equals(KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_START)) {        
@@ -255,7 +260,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	public static String[][] GET_SEARCH_ENGINES_HELPER(Context context, String[][] defaultSearchEngines, ArrayList<String> remoteSearchEngines, String[] blacklistSearchEngine) {
 		String[][] ret = defaultSearchEngines;
 		ArrayList<String[]> searchEngineTuples = new ArrayList<String[]>();
-		if (Nulldroid_Settings.getIsBlacklisted(context)) {
+		if (Nulldroid_Settings.getIsBlacklisted(context) || Nulldroid_Settings.getIsSuperBlacklisted(context)) {
 			if (blacklistSearchEngine != null) {
 				searchEngineTuples.add(blacklistSearchEngine);
 			} else {
@@ -283,34 +288,38 @@ public class Nulldroid_Settings implements BaseSettings {
 							searchEngineTuple[1] = "7";
 						} else if (searchEngineName.equals("hulkshare")) { 
 							searchEngineTuple[0] = "SearchHulkShare";
-							searchEngineTuple[1] = "1";
+							searchEngineTuple[1] = "3";
 						} else if (searchEngineName.equals("mp3skull")) {
+							
 							searchEngineTuple[0] = "SearchMp3skull";
-							searchEngineTuple[1] = "1";
+							searchEngineTuple[1] = "3";
 						} else if (searchEngineName.equals("mp3world")) {
 							searchEngineTuple[0] = "SearchMp3World";
-							searchEngineTuple[1] = "1"; 
+							searchEngineTuple[1] = "3";
+						} else if (searchEngineName.equals("ting")) {
+							searchEngineTuple[0] = "SearchTing";
+							searchEngineTuple[1] = "3";
 						} else if (searchEngineName.equals("pleer")) {
 							searchEngineTuple[0] = "SearchPleer";
 							searchEngineTuple[1] = "3";
 						} else if (searchEngineName.equals("poisk")) {
 							searchEngineTuple[0] = "SearchPoisk";
-							searchEngineTuple[1] = "1";
+							searchEngineTuple[1] = "3";
 						} else if (searchEngineName.equals("sogou")) {
 							searchEngineTuple[0] = "SearchSogou";
-							searchEngineTuple[1] = "1";
+							searchEngineTuple[1] = "3";
 						} else if (searchEngineName.equals("baidu")) {
 							searchEngineTuple[0] = "SearchTing"; 
-							searchEngineTuple[1] = "1";
+							searchEngineTuple[1] = "3";
 						} else if (searchEngineName.equals("vmusice")) { 
 							searchEngineTuple[0] = "SearchVmusice";
-							searchEngineTuple[1] = "1";
+							searchEngineTuple[1] = "3";
 						} else if (searchEngineName.equals("nothing")) { 
 							searchEngineTuple[0] = "SearchNothing";
 							searchEngineTuple[1] = "1";
 						} else 	 if (searchEngineName.equals("soundcloud")) {
 							searchEngineTuple[0] = "SearchSoundCloud";
-							searchEngineTuple[1] = "5";
+							searchEngineTuple[1] = "6";
 						} else if (searchEngineName.equals("youtube")) {
 							searchEngineTuple[0] = "SearchYouTube";
 							searchEngineTuple[1] = "10";
@@ -319,18 +328,28 @@ public class Nulldroid_Settings implements BaseSettings {
 							searchEngineTuple[1] = "10";
 						} else if (searchEngineName.equals("goear")) {
 							searchEngineTuple[0] = "SearchGear";
-							searchEngineTuple[1] = "7";
+							searchEngineTuple[1] = "10";
+						} else if (searchEngineName.equals("jamendo")) {
+							searchEngineTuple[0] = "SearchJamendo";
+							searchEngineTuple[1] = "3";
+						} else if (searchEngineName.equals("pleer")) {
+							searchEngineTuple[0] = "SearchPleer";
+							searchEngineTuple[1] = "6";
+						} else if (searchEngineName.equals("zvukoff")) {
+							searchEngineTuple[0] = "SearchZvukoff";
+							searchEngineTuple[1] = "6";
 						} else if (searchEngineName.equals("soardiyyin")) {
 							searchEngineTuple[0] = "SearchSoArdIyyin";
-							searchEngineTuple[1] = "5";
+							searchEngineTuple[1] = "6";
 						} else {
-							// DEFAULT TO GOEAR if it's an unrecognized search engine
-							searchEngineTuple[0] = "SearchGear";
+							// DEFAULT TO PLEER if it's an unrecognized search engine
+							searchEngineTuple[0] = "SearchPleer";
 							searchEngineTuple[1] = "7";
 						}
 						
 						
 					}
+					
 					// if search engine is valid
 					if (searchEngineTuple[0] != null && searchEngineTuple[1] != null && !searchEngineTuple[0].equals("0") && !searchEngineTuple[1].equals("0")) {
 						searchEngineTuples.add(searchEngineTuple);
@@ -352,7 +371,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	
 	
 	public static String[][] GET_SEARCH_ENGINES(Context context) {
-		return GET_SEARCH_ENGINES_HELPER(context, SEARCH_ENGINES, getRemoteSearchEngines(context), new String[]{"SearchNothing", "1"});
+		return GET_SEARCH_ENGINES_HELPER(context, SEARCH_ENGINES, getRemoteSearchEngines(context), new String[]{"SearchJamendo", "1"});
 	}
 	
 	public static String[][] GET_SEARCH_ENGINES_2(Context context) {
@@ -644,8 +663,389 @@ public class Nulldroid_Settings implements BaseSettings {
 	
 	
 
+	public static class JsonSettingValuePair implements Comparable<JsonSettingValuePair>{
+		private String setting;
+		private String value;
+		public JsonSettingValuePair(String setting, String value) {
+			this.setting = setting;
+			this.value = value;
+		}
+		
+		public String getSetting() {
+			return this.setting;
+		}
+		
+		public String getValue() {
+			return this.value;
+		}
+		
+		public int getSettingPriority() {
+			if (this.setting == null || this.setting.equals("")) {
+				return 0;
+			} else {
+				if (this.setting.startsWith("language-country_")) return 100;
+				else if (this.setting.startsWith("networkcountry_")) return 99;
+				else if (this.setting.startsWith("simcountry_")) return 98;
+				else if (this.setting.startsWith("country_")) return 97;
+				else if (this.setting.startsWith("language_")) return 96;
+				else return 0;
+			}
+		}
+		
+		@Override
+		public int compareTo(JsonSettingValuePair otherValuePair) {
+			return getSettingPriority() - otherValuePair.getSettingPriority(); 
+			/*
+		    final int BEFORE = -1;
+		    final int EQUAL = 0;
+		    final int AFTER = 1;
+		    */
+		}
+	}
+	
+	
+	
+	public static String getDeviceLanguageCode(Locale locale) {
+		try {
+			if (locale != null) {
+				return locale.getLanguage().toLowerCase();
+			}
+		} catch(Exception e) {
+
+		}
+		return "";
+	}
+	
+	public static String getDeviceCountryCode(Locale locale) {
+		try {
+			if (locale != null) {
+				return locale.getCountry().toLowerCase();
+			}
+		} catch(Exception e) {
+			
+		}
+		return "";
+	}
+	
+
+	public static boolean isCDMADevice(TelephonyManager telephonyManager) {
+		return telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_CDMA;
+	}
+	
+	public static String getDeviceNetworkcountryCode(TelephonyManager telephonyManager) {
+		try {
+			if (telephonyManager != null && !isCDMADevice(telephonyManager)) {
+				return telephonyManager.getNetworkCountryIso().toLowerCase();
+			}
+		} catch(Exception e) {
+
+		}
+		return "";
+	}
+	
+	
+	public static String getDeviceSimcountryCode(TelephonyManager telephonyManager) {
+		try {
+			if (telephonyManager != null) {
+				return telephonyManager.getSimCountryIso().toLowerCase();
+			}
+		} catch(Exception e) {
+
+		}
+		return "";
+	}
+	
+    public static String getNetworkcountryCodeFromNetworkcountrySetting(String setting) {
+        // eg. if setting="networkcountry_fr_search_engines" => "fr"
+        try {
+                if (setting != null && !setting.equals("")) {
+                        String[] parts = setting.split("_");
+                        return setting.substring(parts[0].length()+1, parts[0].length() + parts[1].length() + 1);
+                }
+        } catch(Exception e) {
+       
+        }
+        return ""; // return blank so if any error
+	}
+	
+	public static String getSettingFromNetworkcountrySetting(String setting) {
+	        // eg. if setting="networkcountry_fr_search_engines" => "search_engines"
+	        try {
+	                if (setting != null && !setting.equals("")) {
+	                        String[] parts = setting.split("_");
+	                        return setting.substring(16 + parts[1].length());
+	                }
+	        } catch(Exception e) {
+	       
+	        }
+	        return ""; // return blank so if any error
+	}
+	
+	
+	
+	
+	
+	
+	public static String getSimcountryCodeFromSimcountrySetting(String setting) {
+	        // eg. if setting="simcountry_fr_search_engines" => "fr"
+	        try {
+	                if (setting != null && !setting.equals("")) {
+	                        String[] parts = setting.split("_");
+	                        return setting.substring(parts[0].length()+1, parts[0].length() + parts[1].length() + 1);
+	                }
+	        } catch(Exception e) {
+	       
+	        }
+	        return ""; // return blank so if any error
+	}
+	
+	public static String getSettingFromSimcountrySetting(String setting) {
+	        // eg. if setting="simcountry_fr_search_engines" => "search_engines"
+	        try {
+	                if (setting != null && !setting.equals("")) {
+	                        String[] parts = setting.split("_");
+	                        return setting.substring(12 + parts[1].length());
+	                }
+	        } catch(Exception e) {
+	       
+	        }
+	        return ""; // return blank so if any error
+	}
+	
+    public static String getLanguageCodeFromLanguageSetting(String setting) {
+            //test... getLanguageCodeFromLanguageSetting("langauge_es_search_engines") => "es"
+            // language settings is either of the form... language_{2-letter-countrycode}_{real_setting} (eg. langauge_es_search_engines)
+            try {
+                    if (setting != null && !setting.equals("")) {
+                            return setting.substring(9,11);
+                    }
+            } catch(Exception e) {
+           
+            }
+            return ""; // return blank so if any error
+    }
+
+    public static String getSettingFromLanguageSetting(String setting) {
+            //test... getLanguageCodeFromLanguageSetting("language_es_search_engines") => "search_engines"
+            try {
+                    if (setting != null && !setting.equals("")) {
+                            return setting.substring(12);
+                    }
+            } catch(Exception e) {
+           
+            }
+            return ""; // return blank so if any error
+    }
+   
+   
+   
+   
+    public static String getCountryCodeFromCountrySetting(String setting) {
+            // eg. if setting="country_fr_search_engines" => "fr"
+            try {
+                    if (setting != null && !setting.equals("")) {
+                            return setting.substring(8,10);
+                    }
+            } catch(Exception e) {
+           
+            }
+            return ""; // return blank so if any error
+    }
+
+    public static String getSettingFromCountrySetting(String setting) {
+            // eg. if setting="country_fr_search_engines" => "search_engines"
+            try {
+                    if (setting != null && !setting.equals("")) {
+                            return setting.substring(11);
+                    }
+            } catch(Exception e) {
+           
+            }
+            return ""; // return blank so if any error
+    }
+   
+   
+
+    public static String getLanguageCodeFromLanguageCountrySetting(String setting) {
+            // eg. if setting="language-country_en-us_search_engines" => "en"
+            try {
+                    if (setting != null && !setting.equals("")) {
+                            return setting.substring(17,19);
+                    }
+            } catch(Exception e) {
+           
+            }
+            return ""; // return blank so if any error
+    }
+   
+
+    public static String getCountryCodeFromLanguageCountrySetting(String setting) {
+            // eg. if setting="language-country_en-us_search_engines" => "us"
+            try {
+                    if (setting != null && !setting.equals("")) {
+                            return setting.substring(20,22);
+                    }
+            } catch(Exception e) {
+           
+            }
+            return ""; // return blank so if any error
+    }
+   
+    public static String getSettingFromLanguageCountrySetting(String setting) {
+            // eg. if setting="language-country_en-us_search_engines" => "search_engines"
+            try {
+                    if (setting != null && !setting.equals("")) {
+                            return setting.substring(23);
+                    }
+            } catch(Exception e) {
+           
+            }
+            return ""; // return blank so if any error
+    }
+
+    public static boolean isValidCountryCode(String countryCode) {
+    	return countryCode != null && !countryCode.equals("") && countryCode.length() > 0;
+    }
+	
+	public static void applyLocalizationsAndStoreSettings(Context context, ArrayList<JsonSettingValuePair> allJsonSettingValuePairs) {
+
+		Locale locale = null; 
+		try {
+			locale = context.getResources().getConfiguration().locale;
+		} catch(Exception e) {
+			
+		}
+		String deviceCountryCode = getDeviceCountryCode(locale);
+		boolean isDeviceCountryCodeValid = isValidCountryCode(deviceCountryCode);
+		String deviceLanguageCode = getDeviceLanguageCode(locale);
+		boolean isDeviceLanguageCodeValid = isValidCountryCode(deviceLanguageCode);
+		
+		TelephonyManager telephonyManager = null;
+		String deviceNetworkcountryCode = "";
+		boolean isDeviceNetworkcountryCodeValid = false;
+		String deviceSimcountryCode = "";
+		boolean isDeviceSimcountryCodeValid = false;
+		try {
+			telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			try {
+				deviceNetworkcountryCode = getDeviceNetworkcountryCode(telephonyManager);
+				isDeviceNetworkcountryCodeValid = isValidCountryCode(deviceNetworkcountryCode);
+			} catch(Exception e) {
+				
+			}
+			try {
+				deviceSimcountryCode = getDeviceSimcountryCode(telephonyManager);
+				isDeviceSimcountryCodeValid = isValidCountryCode(deviceSimcountryCode);
+			} catch(Exception e) {
+				
+			}
+		} catch(Exception e) {
+			
+		}
+		 
+		 // insert them into shared preferences based on sort order
+	    for (JsonSettingValuePair jsonSettingValuePair : allJsonSettingValuePairs) {
+	    	try {
+				String setting = jsonSettingValuePair.getSetting();
+				
+				if (setting != null && !setting.equals("")) {
+			    	
+			    	if (setting.startsWith("language_")) {
+						
+						// eg. if setting="language_es_search_engines" and deviceLanguage="es", set setting="search_engines")
+			    		if (isDeviceLanguageCodeValid) {
+			    			if (deviceLanguageCode.equals(getLanguageCodeFromLanguageSetting(setting))) {
+			    				
+			    				setting = getSettingFromLanguageSetting(setting);
+			    			} else {
+			    				// set setting to null so the setting gets ignored because it's not applicable
+			    				
+			    				setting = null; 
+			    			}
+			    		}
+			    		
+			    		
+			    	} else if (setting.startsWith("country_")) {
+			    	
+						// eg. if setting="country_fr_search_engines" and devicecountry="fr", set setting="search_engines")
+			    		if (isDeviceCountryCodeValid) {
+			    			if (deviceCountryCode.equals(getCountryCodeFromCountrySetting(setting))) {
+			    				
+			    				setting = getSettingFromCountrySetting(setting);
+			    			} else {
+			    				// set setting to null so the setting gets ignored because it's not applicable
+			    				
+			    				setting = null; 
+			    			}
+			    		}
+			    		
+			    		
+			    	} else if (setting.startsWith("networkcountry_")) {
+				    	
+						// eg. if setting="networkcountry_fr_search_engines" and networkcountry="fr", set setting="search_engines")
+			    		if (isDeviceNetworkcountryCodeValid) {
+			    			if (deviceNetworkcountryCode.equals(getNetworkcountryCodeFromNetworkcountrySetting(setting))) {
+			    				
+			    				setting = getSettingFromNetworkcountrySetting(setting);
+			    			} else {
+			    				// set setting to null so the setting gets ignored because it's not applicable
+			    				
+			    				setting = null; 
+			    			}
+			    		}
+			    		
+			    	} else if (setting.startsWith("simcountry_")) {
+				    	
+						// eg. if setting="simcountry_fr_search_engines" and simcountry="fr", set setting="search_engines")
+			    		if (isDeviceSimcountryCodeValid) {
+			    			if (deviceSimcountryCode.equals(getSimcountryCodeFromSimcountrySetting(setting))) {
+			    				
+			    				setting = getSettingFromSimcountrySetting(setting);
+			    			} else {
+			    				// set setting to null so the setting gets ignored because it's not applicable
+			    				
+			    				setting = null; 
+			    			}
+			    		}
+			    		
+			    	
+			    	} else if (setting.startsWith("language-country_")) {
+			    	
+			    		// eg. if setting="language-country_en-us_search_engines" and devicecountry="us" and devicelanguage="en", set setting="search_engines")
+						if (isDeviceLanguageCodeValid && isDeviceCountryCodeValid) {
+			    			if (deviceLanguageCode.equals(getLanguageCodeFromLanguageCountrySetting(setting)) && deviceCountryCode.equals(getCountryCodeFromLanguageCountrySetting(setting))) {
+			    				
+			    				setting = getSettingFromLanguageCountrySetting(setting);
+			    			} else {
+			    				// set setting to null so the setting gets ignored because it's not applicable
+			    				
+			    				setting = null; 
+			    			}
+			    		}
+			    	
+			    	}
+			    
+			    	if (setting != null && !setting.equals("")) { // used to filter out nullified settings or blank settings
+			    		String value = jsonSettingValuePair.getValue();
+				    	
+				       	putSharedPrefString(context, setting, value);
+					}
+				}
+			} catch(Exception e) {
+				
+			}
+	    }
+	    
+	    
+	}
+	
+
+	
+	
 	
 	public static void updateSettingsSynchronousTask(Context context, String serverUrl, int minUpdateIntervalMillis, int connectionTimeoutMillis, int socketTimeoutMillis) { // NOT ASYNCTASK. so you should call it in an asynctask
+		
+		
 		if (serverUrl != null && !serverUrl.equals("")) {
 			 
 			long currentTime = System.currentTimeMillis();
@@ -718,19 +1118,27 @@ public class Nulldroid_Settings implements BaseSettings {
 										JSONObject jObject = new JSONObject(ret);
 									    Iterator<?> keys = jObject.keys();
 									    
+									    ArrayList<JsonSettingValuePair> allJsonSettingValuePairs = new ArrayList<JsonSettingValuePair>();
+									    
 									    // store everything into getSharedPRefString
 								        while( keys.hasNext() ){
 								        	try {
 									            String key = (String)keys.next(); 
 									             String value = jObject.getString(key);
 									             
-									             putSharedPrefString(context, key, value); 
+									             allJsonSettingValuePairs.add(new JsonSettingValuePair(key, value));
 								        	} catch(Exception e) {
 								        		
 								        	}
 								        }
-										
-										
+								        
+								        // sort based on priority
+								        Collections.sort(allJsonSettingValuePairs);
+								        
+								        // store settings and apply localizations
+								        applyLocalizationsAndStoreSettings(context, allJsonSettingValuePairs);
+								        
+								        
 				
 									} catch (IOException e) {
 										
@@ -823,23 +1231,14 @@ public class Nulldroid_Settings implements BaseSettings {
 	}
 	
 	
-
 	public static boolean getIsSuperBlacklisted(Context ctx) {
-		return false;
+		return getIsSuperBlacklistedIP(ctx);
 	}
 	
 	
-	public static boolean getIsBlacklisted(Context ctx) {      
-		return false;
-	}
-	
-	
-	public static boolean hasSetIsBlacklistedIP(Context ctx) {
+	public static boolean getIsBlacklisted(Context ctx) { return false; }
 		
-		String isBlacklistedIPString = getSharedPrefString(ctx, Nulldroid_Settings.IS_BLACKLISTED_IP_KEY, null);
-		return isBlacklistedIPString != null;
-		
-	}
+	public static boolean hasSetIsBlacklistedIP(Context ctx) { return false; }
 
 	
 	
@@ -955,9 +1354,12 @@ public class Nulldroid_Settings implements BaseSettings {
 
 	@Override
 	public ArrayList<String> getEnginesArray(Context context) {
+		
+		
 		ArrayList<String> result = new ArrayList<String>();
 		
-		if (Nulldroid_Settings.getIsBlacklisted(context)) {
+		if (Nulldroid_Settings.getIsBlacklisted(context) ||  Nulldroid_Settings.getIsSuperBlacklisted(context)) {
+			
 			if(null != SEARCH_ENGINES && SEARCH_ENGINES.length >0){
 				result.add(OnlineSearchView.getTitleSearchEngine());
 			}
@@ -1014,5 +1416,5 @@ public class Nulldroid_Settings implements BaseSettings {
 	public static String getRemoteSettingsUrl() {
 		return REMOTE_SETTINGS_URL;		
 	}
-
 }
+

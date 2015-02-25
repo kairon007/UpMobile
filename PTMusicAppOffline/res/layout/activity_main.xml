@@ -16,7 +16,7 @@
                 android:id="@+id/cross_promo_box_icon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/icon" />
 
             <LinearLayout
                 android:layout_width="0dp"

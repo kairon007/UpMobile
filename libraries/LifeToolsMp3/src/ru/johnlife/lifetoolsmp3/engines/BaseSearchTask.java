@@ -57,6 +57,14 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 
 	
 
+	public String getJamendoClientId() {
+		String defaultJamendoClientId = "551aabd5";
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		String jamendoClientId = prefs.getString("jamendo_client_id", defaultJamendoClientId);
+		if (jamendoClientId == null || jamendoClientId.equals("")) jamendoClientId = defaultJamendoClientId;
+		return jamendoClientId;
+	}
+	
 	public String getSoundcloudClientId() {
 		String defaultSoundcloudClientId = "b28035537c669e1d5f232dcbf2b32dc4";
 		SharedPreferences prefs = MusicApp.getSharedPreferences();

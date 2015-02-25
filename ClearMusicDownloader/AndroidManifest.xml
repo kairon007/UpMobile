@@ -57,7 +57,9 @@
             </intent-filter>
         </service>
 
-        <!-- MOBILECORE -->
+
+        
+		<!-- MOBILECORE -->
 
         <service
             android:name="com.ironsource.mobilcore.MobileCoreReport"
@@ -84,6 +86,16 @@
             android:name="com.startapp.android.publish.AppWallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent" />
+        
+        
+        <!-- REVMOB -->
+        
+		<meta-data android:name="com.revmob.app.id" android:value="_NULLDROID_REVMOB_ID_"/>
+		<activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+			android:configChanges="keyboardHidden|orientation|screenSize"
+			android:theme="@android:style/Theme.Translucent">
+		</activity>
+        
     </application>
 
 </manifest>

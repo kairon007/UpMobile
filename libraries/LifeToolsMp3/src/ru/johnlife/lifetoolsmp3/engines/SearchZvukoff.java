@@ -11,8 +11,8 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
 public class SearchZvukoff extends SearchWithPages{
 	
-	private final String HTTP_ZVUKOFF_RU = "http://zvukoff.ru";
-	private final String URL = "http://zvukoff.ru/mp3/search?keywords=%s&page=%s";
+	private static String HTTP_ZVUKOFF_RU = "http://zvukoff.ru";
+	private static String URL = "http://zvukoff.ru/mp3/search?keywords=%s&page=%s";
 	
 
 	public SearchZvukoff(FinishedParsingSongs dInterface, String songName) {

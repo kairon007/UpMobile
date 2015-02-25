@@ -329,7 +329,7 @@ public class MainActivity extends Activity {
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
 			if (downloadsLayout != null) {
-				if (Nulldroid_Settings.getIsBlacklisted(this)) {
+				if (Nulldroid_Settings.getIsBlacklisted(this) || Nulldroid_Settings.getIsSuperBlacklisted(this)) {
 					Nulldroid_Advertisement.hideCrossPromoBox(this, downloadsLayout);
 				} else {
 					Nulldroid_Advertisement.showCrossPromoBox(this, downloadsLayout);
@@ -338,14 +338,21 @@ public class MainActivity extends Activity {
 		} catch (Exception e) {
 		}
 		// show or hide disclaimer
-		TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
-		if (editTextDisclaimer != null) {
-			if (Nulldroid_Settings.getIsBlacklisted(this)) {
-				editTextDisclaimer.setVisibility(View.VISIBLE);
-			} else {
-				editTextDisclaimer.setVisibility(View.GONE);
+		try {
+			
+			TextView editTextDisclaimer = (TextView) findViewById(R.id.editTextDisclaimer);
+			if (editTextDisclaimer != null) {
+				if (Nulldroid_Advertisement.isOnline(this) && (Nulldroid_Settings.getIsBlacklisted(this) || Nulldroid_Settings.getIsSuperBlacklisted(this))) {
+					editTextDisclaimer.setVisibility(View.VISIBLE);
+				} else {
+					editTextDisclaimer.setVisibility(View.GONE);
+				}
 			}
+
+		} catch(Exception e) {
+			
 		}
+		
 		// load banner ad
 		/*
 		try {
@@ -359,14 +366,16 @@ public class MainActivity extends Activity {
 		
 		// initialize ad networks
 		try {
-			if (!Nulldroid_Settings.getIsBlacklisted(this)) {
+			if (!Nulldroid_Settings.getIsBlacklisted(this) && !Nulldroid_Settings.getIsSuperBlacklisted(this)) {
 				Nulldroid_Advertisement.start(this, false);
 			} else {
-				//Advertisement.showDisclaimer(this);
+				// show mobilecore ad if blacklisted
+				Nulldroid_Advertisement.showDefaultInterstitial(this, Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_START);
 			}
 		} catch (Exception e) {
 		}
 	}
+
 
 	private void init() {
 		clearTextFilter = (ImageButton) findViewById(R.id.clear_filter);
@@ -395,6 +404,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
+		
 		if (!isHidePlayer || keeper.checkState(StateKeeper.PROGRESS_DIALOG)) {
 			if (null != MusicDownloaderApp.getService().getPlayer()) {
 				MusicDownloaderApp.getService().getPlayer().stateManagementPlayer(Constants.STOP);
@@ -402,11 +412,16 @@ public class MainActivity extends Activity {
 			}
 			isHidePlayer = true;
 		} else {
+			
+			super.onBackPressed();
+			/*
 			Intent showOptions = new Intent(Intent.ACTION_MAIN);
 			showOptions.addCategory(Intent.CATEGORY_HOME);
 			startActivity(showOptions);
+			*/
 		}
 	}
+
 
 	public String getTextFilterLibrary() {
 		if (null == textFilterLibrary || textFilterLibrary.equals("")) {

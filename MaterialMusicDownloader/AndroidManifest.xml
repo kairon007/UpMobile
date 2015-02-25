@@ -54,8 +54,10 @@
                 <action android:name="playbackservice.action.next" />
             </intent-filter>
         </service>
-<!-- 
-        MOBILECORE
+
+        
+        
+        <!-- MOBILECORE -->
 
         <service
             android:name="com.ironsource.mobilcore.MobileCoreReport"
@@ -73,7 +75,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:keepScreenOn="true" />
 
-        STARTAPP
+        <!-- STARTAPP -->
 
         <activity
             android:name="com.startapp.android.publish.list3d.List3DActivity"
@@ -81,7 +83,17 @@
         <activity
             android:name="com.startapp.android.publish.AppWallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Translucent" /> -->
+            android:theme="@android:style/Theme.Translucent" />
+        
+        
+        <!-- REVMOB -->
+        
+		<meta-data android:name="com.revmob.app.id" android:value="_NULLDROID_REVMOB_ID_"/>
+		<activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+			android:configChanges="keyboardHidden|orientation|screenSize"
+			android:theme="@android:style/Theme.Translucent">
+		</activity>
+		
     </application>
 
 </manifest>

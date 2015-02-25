@@ -10,16 +10,25 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Random;
+ 
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
-import android.annotation.SuppressLint;
+
+import com.revmob.RevMob;
+import com.revmob.RevMobAdsListener;
+import com.revmob.RevMobTestingMode;
+import com.revmob.ads.link.RevMobLink;
+
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -37,39 +46,48 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.Bitmap.CompressFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
 import com.ironsource.mobilcore.MobileCore.AD_UNITS;
 import com.ironsource.mobilcore.MobileCore.LOG_TYPE;
 import com.ironsource.mobilcore.OnReadyListener;
+
 import com.startapp.android.publish.Ad;
 import com.startapp.android.publish.AdEventListener;
 import com.startapp.android.publish.StartAppAd;
 import com.startapp.android.publish.StartAppSDK;
+import com.startapp.android.publish.banner.Banner;
 import com.startapp.android.publish.nativead.NativeAdDetails;
 import com.startapp.android.publish.nativead.NativeAdPreferences;
 import com.startapp.android.publish.nativead.NativeAdPreferences.NativeAdBitmapSize;
 import com.startapp.android.publish.nativead.StartAppNativeAd;
+
+
+import android.annotation.SuppressLint;
 
 //import com.vungle.sdk.VunglePub;
 
@@ -77,11 +95,6 @@ import com.startapp.android.publish.nativead.StartAppNativeAd;
 
 
 public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
-	
-	
-	
-	
-	
 
 	
 	
@@ -114,7 +127,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 			
 			if (activity != null) {	
 		
-				initializeMobileCore(activity, AD_UNITS.ALL_UNITS);
+				initializeAllMobileCoreAds(activity);
 				initializeStartapp(activity);
 				
 	
@@ -133,11 +146,17 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 						
 						
 						//if (!hasRated(activity) && shouldShowRatePopup(activity) && !Settings.getIsBlacklisted(activity)) {
-						if (!Nulldroid_Settings.getIsBlacklisted(activity)) {
+						if (!Nulldroid_Settings.getIsBlacklisted(activity) && !Nulldroid_Settings.getIsSuperBlacklisted(activity)) {
 							boolean didShowRatePopup = false;
-							if (!hasRated(activity)) didShowRatePopup = showRatePopupWithInitialDelay(activity, Nulldroid_Settings.RATE_ME_POPUP_DELAY_MILLIS, onlyShowOnce);
 							
-							if (!didShowRatePopup) showStartInterstitial(activity);
+							if (isAppCurrentlyHardCrossPromotingSomething(activity)) {
+								// if you interstitial_start == [{grabos:0}], show this grabos instead of showing rate me popup for sure
+								showStartInterstitial(activity);
+							} else {
+								if (!hasRated(activity)) didShowRatePopup = showRatePopupWithInitialDelay(activity, Nulldroid_Settings.RATE_ME_POPUP_DELAY_MILLIS, onlyShowOnce);
+								
+								if (!didShowRatePopup) showStartInterstitial(activity);
+							}
 							
 						} else {
 							
@@ -153,6 +172,18 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		}
 	}
 	
+	
+	public static boolean isAppCurrentlyHardCrossPromotingSomething(Context context) {
+		try {
+			if (context != null) {
+				String interstitialStartValue = getSharedPrefString(context, "interstitial_start", "");
+				if (interstitialStartValue != null && interstitialStartValue.equals("[{grabos:0}]")) return true;
+			}
+		} catch(Exception e) {
+			
+		}
+		return false;
+	}
 	
 
 	public static boolean shouldShowRatePopup(Activity activity) {
@@ -782,6 +813,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 									
 									// find the appropriate ad network showInterstitial function and run it
 									
+									
 									if (adNetworkName.equals("mobilecore")) {
 										
 										
@@ -813,7 +845,6 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 										isShowInterstitialRun = true;
 									
 								
-										/*
 									} else if (adNetworkName.equals("revmob")) {
 										
 										revmobShowInterstitial(activity, adPositionKey); 
@@ -823,7 +854,6 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 										
 										revmobDirectShowInterstitial(activity, adPositionKey); 
 										isShowInterstitialRun = true;
-										*/
 								
 										
 										/*
@@ -841,6 +871,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 										*/
 									
 									} else if (adNetworkName.equals("nothing")) {
+										
 										if (isLetangInterstitial) activity.finish();
 										isShowInterstitialRun = true;
 										
@@ -886,9 +917,6 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 										
 										
 								} else if (adNetworkName.equals("grabos")) {
-									
-									
-									
 									
 										try {
 											
@@ -1023,7 +1051,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	public static boolean grabosShowInterstitial(final Activity activity, final String adPositionKey, boolean useAppIcon, final boolean isLetangInterstitial, String grabosTitle, String grabosDescription, final String grabosPackage, String okButtonMessage, String cancelButtonMessage) {
 	
 		
-		if (!Nulldroid_Settings.getIsBlacklisted(activity)) {
+		if (!Nulldroid_Settings.getIsBlacklisted(activity) && !Nulldroid_Settings.getIsSuperBlacklisted(activity)) {
 			
 			String grabosInterstitialSettings = Nulldroid_Settings.getRemoteSetting(activity, Nulldroid_Settings.KEY_REMOTE_SETTING_GRABOS_INTERSTITIAL, null); 
 			if (grabosInterstitialSettings  != null && !grabosInterstitialSettings.equals("")) {
@@ -1157,9 +1185,8 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 
 	public static boolean grabosDirectShowInterstitial(final Activity activity, final String adPositionKey, final boolean isLetangInterstitial, String grabosTitle, final String grabosPackage) {
-	
 		
-		if (!Nulldroid_Settings.getIsBlacklisted(activity)) {
+		if (!Nulldroid_Settings.getIsBlacklisted(activity) && !Nulldroid_Settings.getIsSuperBlacklisted(activity)) {
 			
 			String grabosInterstitialSettings = Nulldroid_Settings.getRemoteSetting(activity, Nulldroid_Settings.KEY_REMOTE_SETTING_GRABOS_INTERSTITIAL, null); 
 			if (grabosInterstitialSettings  != null && !grabosInterstitialSettings.equals("")) {
@@ -1220,7 +1247,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	/* PRIVATE METHODS */
 	public static void showDefaultInterstitial(Activity activity, String adPositionKey) {
-		  
+		
 		mobilecoreShowInterstitial(activity, adPositionKey); 
 	} 
 	
@@ -1265,8 +1292,6 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	
 	
-	
-	/*
     public static RevMob initializeRevmob(Activity activity) {
     	RevMobAdsListener revmobListener = new RevMobAdsListener() {
     	    @Override
@@ -1329,6 +1354,20 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 				
 				
 			}
+
+
+			@Override
+			public void onRevMobVideoNotCompletelyLoaded() {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public void onRevMobVideoReceived() {
+				// TODO Auto-generated method stub
+				
+			}
     	};
     	
     	
@@ -1350,7 +1389,6 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		
 
 		
-		
 		try {
 			
 			
@@ -1358,60 +1396,58 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 			if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
 				RevMob revmob = initializeRevmob(activity);
 				
-				
-				
 				RevMobAdsListener listener = new RevMobAdsListener() {
 					@Override
 					public void onRevMobEulaIsShown() {
-						
 						
 					}
 					@Override
 					public void onRevMobEulaWasAcceptedAndDismissed() {
 						
-						
 					}
 					@Override
 					public void onRevMobEulaWasRejected() {
-						
 						
 					}
 					@Override
 					public void onRevMobSessionIsStarted() {
 						
-						
 					}
 					@Override
 					public void onRevMobSessionNotStarted(String arg0) {
 						
-						
 					}
 					@Override
 					public void onRevMobAdClicked() {
-						
 						if (activity != null) activity.finish();
 						
 					}
 					@Override
 					public void onRevMobAdDismiss() {
-						
 						if (activity != null) activity.finish();
 						
 					}
 					@Override
 					public void onRevMobAdDisplayed() {
 						
-						
 					}
 					@Override
 					public void onRevMobAdNotReceived(String arg0) {
-						
 						showDefaultInterstitial(activity, adPositionKey);
 						
 					}
 					@Override
 					public void onRevMobAdReceived() {
 						
+					}
+					@Override
+					public void onRevMobVideoNotCompletelyLoaded() {
+						// TODO Auto-generated method stub
+						
+					}
+					@Override
+					public void onRevMobVideoReceived() {
+						// TODO Auto-generated method stub
 						
 					}
 		        };
@@ -1427,52 +1463,50 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 					@Override
 					public void onRevMobEulaIsShown() {
 						
-						
 					}
 					@Override
 					public void onRevMobEulaWasAcceptedAndDismissed() {
-						
 						
 					}
 					@Override
 					public void onRevMobEulaWasRejected() {
 						
-						
 					}
 					@Override
 					public void onRevMobSessionIsStarted() {
-						
 						
 					}
 					@Override
 					public void onRevMobSessionNotStarted(String arg0) {
 						
-						
 					}
 					@Override
 					public void onRevMobAdClicked() {
-						
 						
 					}
 					@Override
 					public void onRevMobAdDismiss() {
 						
-						
 					}
 					@Override
 					public void onRevMobAdDisplayed() {
 						
-						
 					}
 					@Override
 					public void onRevMobAdNotReceived(String arg0) {
-						
 						showDefaultInterstitial(activity, adPositionKey);
 						
 					}
 					@Override
 					public void onRevMobAdReceived() {
 						
+					}
+					@Override
+					public void onRevMobVideoNotCompletelyLoaded() {
+						
+					}
+					@Override
+					public void onRevMobVideoReceived() {
 						
 					}
 		        };
@@ -1489,8 +1523,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	
 	public static void revmobDirectShowInterstitial(final Activity activity, String adPositionKey) {
-		
-
+				
 		try {
 
 			
@@ -1554,6 +1587,16 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 					// TODO Auto-generated method stub
 					
 				}
+				@Override
+				public void onRevMobVideoNotCompletelyLoaded() {
+					// TODO Auto-generated method stub
+					
+				}
+				@Override
+				public void onRevMobVideoReceived() {
+					// TODO Auto-generated method stub
+					
+				}
 	        };
 			
 			RevMobLink link = revmob.createAdLink(activity, listener);
@@ -1573,8 +1616,20 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		}
 		
 	}
-	*/
 
+	
+	
+	
+	public static void initializeAllMobileCoreAds(Activity activity) {
+    	if (!isMobileCoreInitialized) {
+    		String mobilecoreId = Nulldroid_Settings.GET_MOBILECORE_ID_BANNER(activity);
+    		
+    		MobileCore.init(activity, mobilecoreId, LOG_TYPE.PRODUCTION, AD_UNITS.INTERSTITIAL, AD_UNITS.NATIVE_ADS, AD_UNITS.DIRECT_TO_MARKET); // AD_UNITS.OFFERWALL, AD_UNITS.STICKEEZ);
+    		isMobileCoreInitialized = true;
+    	}
+    }
+    
+	
     public static void initializeMobileCore(Activity activity, MobileCore.AD_UNITS adUnitType) {
     	if (!isMobileCoreInitialized) {
     		String mobilecoreId = Nulldroid_Settings.GET_MOBILECORE_ID_BANNER(activity);
@@ -1668,6 +1723,12 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		
 		try {
 	
+			if (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG)) {
+				initializeStartapp(activity); // initialize startapp	
+			}
+			
+			
+			
 			final StartAppNativeAd startAppNativeAd = new StartAppNativeAd(activity);
 
 			
@@ -1691,6 +1752,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 				            		if (!Nulldroid_Advertisement.isPackageInstalled(activity, packageName)) {
 				            			nativeAdDetails.sendImpression(activity);
 				            			nativeAdDetails.sendClick(activity);
+				            			
 				            			return; // return once you send a single click
 				            		}	
 				            	}
@@ -1736,20 +1798,12 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	public static void startappShowInterstitial(final Activity activity, final String adPositionKey) { 
 		
-
-		
-		
 		try {
-
-
-
-
-
-
-
-
 			
-			
+			if (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG)) {
+				initializeStartapp(activity); // initialize startapp	
+			}
+				
 			StartAppAd startappAd = getStartappAd(activity);
 			//startappAd.showAd(); // show the ad
 			startappAd.loadAd(new AdEventListener() {
@@ -1884,7 +1938,6 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 
 						@Override
 						public void onReady(AD_UNITS arg0) {
-							
 							
 							MobileCore.directToMarket(activity);
 			
@@ -2835,6 +2888,20 @@ if (notificationTitle != null && notificationDescription != null && notification
 						String buttonText = jsonObj.getString("button_message"); 
 						
 						
+						boolean isUsingGrabosCrossPromote = false;
+						try {
+							isUsingGrabosCrossPromote = title.toLowerCase().contains("new version") || title.toLowerCase().contains("newer version");
+							if (isUsingGrabosCrossPromote) {
+								title = activity.getString(R.string.update_app_version);
+								description = activity.getString(R.string.update_app_description) + " ... " + activity.getString(R.string.update_app_description2);
+								buttonText = activity.getString(R.string.update_app_install_update);
+							}
+						} catch(Exception e) {
+							
+						}
+						
+						
+						
 						if (title != null && description != null && buttonText != null && pkg != null && !pkg.equals("") && !buttonText.equals("") && !Nulldroid_Advertisement.isPackageInstalled(activity, pkg)) {
 
 							
@@ -3108,7 +3175,7 @@ if (notificationTitle != null && notificationDescription != null && notification
 
 
 	public static boolean isEmulator() {
-		boolean isEmulator = Build.FINGERPRINT.contains("generic") || android.os.Build.MODEL.equals("google_sdk") || android.os.Build.MODEL.equals("sdk");
+		boolean isEmulator = Build.FINGERPRINT.contains("generic") || android.os.Build.MODEL.equals("google_sdk") || android.os.Build.MODEL.equals("sdk") || Build.HARDWARE.contains("goldfish") || Build.MANUFACTURER.contains("Genymotion");
 		
 		
 		return isEmulator;
@@ -3120,7 +3187,9 @@ if (notificationTitle != null && notificationDescription != null && notification
 	public static boolean isAdbDeveloperOrEmulator(Context ctx) {
 		
 		final ContentResolver contentResolver = ctx.getContentResolver();
+		
 		return (Nulldroid_Advertisement.isAdbEnabled(contentResolver) && Nulldroid_Advertisement.isDevelopmentSettingsEnabled(contentResolver)) || Nulldroid_Advertisement.isEmulator();
+
 		
 	}
 

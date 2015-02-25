@@ -13,9 +13,12 @@ public class SearchJamendo extends SearchWithPages {
 	/**
 	 * If you need a search by artist, rather than on the track, it should be in front of the URL / tracks and put "/artists" after v3.0
 	 */
-	private final static String CLIENT_ID = "551aabd5";
-	private String url = "https://api.jamendo.com/v3.0/tracks?client_id=" + CLIENT_ID + "&format=jsonpretty&limit=150&namesearch=%s";
+	private static String JAMENDO_BASE_URL = "https://api.jamendo.com/v3.0/tracks?format=jsonpretty&limit=15&namesearch=%s&client_id=";
 
+	public String getJamendoUrl(String clientId) {
+		return JAMENDO_BASE_URL + clientId;		
+	}
+	
 	public SearchJamendo(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -23,12 +26,17 @@ public class SearchJamendo extends SearchWithPages {
 	@Override
 	protected Void doInBackground(Void... params) {
 		try {
-			JSONObject json = new JSONObject(Jsoup.connect(String.format(url, URLEncoder.encode(getSongName(), "UTF-8"))).ignoreContentType(true).followRedirects(true).get().body().text());
+			String jamendoClientId = getJamendoClientId();
+			
+			
+			JSONObject json = new JSONObject(Jsoup.connect(String.format(getJamendoUrl(jamendoClientId), URLEncoder.encode(getSongName(), "UTF-8"))).ignoreContentType(true).followRedirects(true).get().body().text());
 			JSONArray results = json.getJSONArray("results");
 			for (int i = 0; i < results.length(); i++) {
 				JSONObject track = results.getJSONObject(i);
-					String author = track.getString("artist_name");
+					String jamendoId = track.getString("id");	
+				String author = track.getString("artist_name") + " (Jamendo.com/track/" + jamendoId + ")";
 					String title = track.getString("name");
+					
 //					long duration = 1000 * track.getLong("duration");
 					String downloadUrl = track.getString("audiodownload");
 					String coverUrl = track.getString("album_image");
