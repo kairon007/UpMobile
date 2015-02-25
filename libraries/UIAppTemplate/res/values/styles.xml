@@ -137,7 +137,7 @@
 
     <style name="SearchView">
         <item name="closeIcon">@drawable/close</item>
-        <item name="searchIcon">@drawable/ic_action_search</item>
+        <item name="searchIcon">@drawable/ic_search_ab</item>
     </style>
 
 </resources>

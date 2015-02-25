@@ -1,5 +1,6 @@
 package com.csform.android.uiapptemplate;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +8,20 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
@@ -54,35 +61,62 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 	}
 	
 	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        int color = getResources().getColor(R.color.main_color_for_text);
+        String str = Integer.toHexString(color);
+        String strColor =  "#"+str.substring(2);
+        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+        ImageView v = (ImageView) searchView.findViewById(searchImgId);
+        v.setImageResource(R.drawable.ic_search_ab);
+        int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
+        ImageView v1 = (ImageView) searchView.findViewById(searchCloseId);
+        v1.setImageResource(R.drawable.ic_close_ab);
+        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);  
+        View autoComplete = searchView.findViewById(queryTextViewId);
+        try {
+			Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
+			SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
+			stopHint.append(Html.fromHtml("<font color = " + strColor + ">" + getResources().getString(R.string.hint_main_search) + "</font>"));
+			Drawable searchIcon = getResources().getDrawable(R.drawable.ic_search_ab);
+			Method textSizeMethod = clazz.getMethod("getTextSize");
+			Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
+			int textSize = (int) (rawTextSize * 1.25);
+			searchIcon.setBounds(0, 0, textSize, textSize);
+			stopHint.setSpan(new ImageSpan(searchIcon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
+			setHintMethod.invoke(autoComplete, stopHint);
+		} catch (Exception e) {
+			android.util.Log.d("logks", getClass().getName() + "Appear problem: " + e);
+		}
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+            
+            @Override
+            public boolean onQueryTextSubmit(String q) {
+                query = q;
+                searchView.setIconified(true);
+                hideKeyboard();
+                changeFragment(mFragments.get(0));
+                return false;
+            }
+            
+            @Override
+            public boolean onQueryTextChange(String newText) {
+            	
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+	
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		MenuItem searchItem = menu.findItem(R.id.action_search);
-		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				UIMainActivity.this.query = query;
-				searchView.setIconified(true);
-				hideKeyboard();
-				changeFragment(mFragments.get(0));
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				return false;
-			}
-		});
-		return super.onCreateOptionsMenu(menu);
-	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
