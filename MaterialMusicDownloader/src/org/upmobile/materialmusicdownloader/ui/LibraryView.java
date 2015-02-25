@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
@@ -42,6 +43,11 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	@Override
 	protected int getLayoutId() {
 		return R.layout.fragment_list_transition;
+	}
+	
+	@Override
+	protected TextView getMessageView(View view) {
+		return (TextView) view.findViewById(R.id.message_listview);
 	}
 	
 	@Override
