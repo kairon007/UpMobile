@@ -83,7 +83,7 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 			Drawable searchIcon = getResources().getDrawable(R.drawable.ic_search_ab);
 			Method textSizeMethod = clazz.getMethod("getTextSize");
 			Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
-			int textSize = (int) (rawTextSize * 1.25);
+			int textSize = (int) (rawTextSize * 1.5);
 			searchIcon.setBounds(0, 0, textSize, textSize);
 			stopHint.setSpan(new ImageSpan(searchIcon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
