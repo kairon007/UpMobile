@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
+import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
@@ -62,6 +63,9 @@ public class MainActivity extends BaseClearActivity {
 			file.mkdirs();
 		}
 		fileObserver.startWatching();
+		
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		
 		super.onCreate(savedInstanceState);
 	}
 	

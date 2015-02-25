@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
+import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
@@ -64,6 +65,8 @@ public class MainActivity extends UIMainActivity implements Constants {
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
+		
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
 	@Override

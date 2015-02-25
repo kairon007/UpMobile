@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
@@ -71,6 +72,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
+		
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override
