@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/cover_empty_view"
                 android:visibility="visible"
-                android:text="@string/edit_mp3_use_album_cover"
                 android:layout_alignRight="@id/cover_empty_view"
                 android:checked="true" />
 

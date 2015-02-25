@@ -694,6 +694,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 * delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 	 */
 	private void play(int delta) throws IllegalArgumentException {
+		if (!isUseAlbumCover) {
+			if (null != undo) {
+				undo.clear();
+			}
+			clearCover();
+		}
 		if (delta > 0) {
 			player.shift(1);
 			getCover(player.getPlayingSong());
