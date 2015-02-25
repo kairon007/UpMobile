@@ -41,6 +41,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 	
 	@Override
 	public void onResume() {
+		((UIMainActivity) getActivity()).setVisibleSearchView(false);
 		query = ((UIMainActivity) getActivity()).getQuery();
 		if (null != query) {
 			searchView.setExtraSearch(query);
