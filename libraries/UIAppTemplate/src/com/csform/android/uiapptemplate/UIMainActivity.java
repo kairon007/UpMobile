@@ -190,5 +190,8 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 			navigationDrawerFragment.setSelectedItem(position);
 		}
 	}
-
+	
+	public void setVisibleSearchView(boolean flag) {
+		isVisibleSearchView = flag;
+	}
 }

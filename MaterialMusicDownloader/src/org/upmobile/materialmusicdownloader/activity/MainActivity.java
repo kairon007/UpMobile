@@ -104,6 +104,7 @@ public class MainActivity extends UIMainActivity implements Constants {
 	public void onBackPressed() {
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (null != player && player.isVisible()) {
+			setVisibleSearchView(false);
 			getFragmentManager().popBackStack();
 		} else if (currentFragmentID == 3){
 			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();
