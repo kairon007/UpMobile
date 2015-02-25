@@ -331,19 +331,18 @@
 
     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
         style="@style/RippleStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" >
 
         <com.csform.android.uiapptemplate.view.cpb.CircularProgressButton
             android:id="@+id/download"
             style="@style/CircularProgressBarStyle.Full"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
             android:minHeight="48dp"
-            android:minWidth="72dp"
             android:text="@string/download_dialog_download" />
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
