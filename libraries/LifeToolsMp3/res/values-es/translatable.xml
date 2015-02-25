@@ -42,5 +42,6 @@
     <string name="edit_mp3_use_album_cover">Usar portada de álbum</string>
     <string name="edit_mp3_ok">Aceptar</string>
     <string name="edit_mp3_cancel">Cancelar</string>
-
+    <string name="downloads_empty">Descargas lista está vacía</string>
+ 	<string name="library_empty">Lista de Bibliotecas está vacía</string>
 </resources>

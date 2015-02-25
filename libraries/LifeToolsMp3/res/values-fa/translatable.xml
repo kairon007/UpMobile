@@ -48,4 +48,6 @@
 <string name="edit_mp3_use_album_cover">    استفاده از جلد آلبوم</string>
 <string name="edit_mp3_ok">    قبول</string>
 <string name="edit_mp3_cancel">    لغو</string>
+<string name="downloads_empty">لیست دانلود خالی است</string>
+<string name="library_empty">لیست کتابخانه ها خالی است</string>
 </resources>

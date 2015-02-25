@@ -42,5 +42,7 @@
     <string name="edit_mp3_use_album_cover">Использовать обложку альбома</string>
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Отмена</string>
+    <string name="downloads_empty">Список загрузок пуст</string>
+ 	<string name="library_empty">Список библиотеки пуст</string>
 
 </resources>

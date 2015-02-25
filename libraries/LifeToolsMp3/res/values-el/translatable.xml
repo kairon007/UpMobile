@@ -48,4 +48,6 @@
 <string name="edit_mp3_use_album_cover">Χρήση Εξώφυλλου Άλμπουμ</string>
 <string name="edit_mp3_ok">OK</string>
 <string name="edit_mp3_cancel">Ακύρωση</string>
+<string name="downloads_empty">Λήψεις λίστα είναι κενή</string>
+<string name="library_empty">Λίστα Βιβλιοθήκες είναι άδειο</string>
 </resources>
