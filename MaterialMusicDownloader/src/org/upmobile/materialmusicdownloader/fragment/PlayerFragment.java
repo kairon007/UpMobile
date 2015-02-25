@@ -305,6 +305,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		thatSongIsDownloaded();
 		((UIMainActivity) getActivity()).setSelectedItem(3);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
+		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
 

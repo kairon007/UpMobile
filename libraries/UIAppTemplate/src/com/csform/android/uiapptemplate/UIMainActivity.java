@@ -35,6 +35,8 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 	private SearchView searchView;
 
 	private NavigationDrawerFragment navigationDrawerFragment;
+	
+	private boolean isVisibleSearchView = false;
 
 	protected abstract <T extends BaseMaterialFragment> ArrayList<T> getFragments();
 	
@@ -52,13 +54,19 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 	}
 	
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		 getMenuInflater().inflate(R.menu.main, menu);
-		 MenuItem searchItem = menu.findItem(R.id.action_search);
-		 searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-		 searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		 searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
+		getMenuInflater().inflate(R.menu.main, menu);
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				UIMainActivity.this.query = query;
@@ -67,7 +75,7 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 				changeFragment(mFragments.get(0));
 				return false;
 			}
-			
+
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				return false;
@@ -148,6 +156,7 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 	}
 	
 	public void changeFragment(BaseMaterialFragment baseMaterialFragment) {
+		isVisibleSearchView = mFragments.get(0).equals(baseMaterialFragment) ? false : true;
 		if (null != searchView) {
 			searchView.setIconified(true);
 			hideKeyboard();
