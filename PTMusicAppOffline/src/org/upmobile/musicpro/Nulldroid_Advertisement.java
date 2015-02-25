@@ -112,18 +112,23 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 		start(activity, switchShowDialog, false);
 	}
 	
+	public static void startIfNotBlacklisted(Activity activity, boolean switchShowDialog) {
+		try {
+			if (!Nulldroid_Settings.getIsBlacklisted(activity) && !Nulldroid_Settings.getIsSuperBlacklisted(activity)) {
+				Nulldroid_Advertisement.start(activity, switchShowDialog);
+			} else {
+				// show mobilecore ad if blacklisted
+				Nulldroid_Advertisement.showDefaultInterstitial(activity, Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_START);
+			}
+		} catch (Exception e) {
+		}
+	}
 	
 	
 	public static void start(Activity activity, boolean switchShowDialog, boolean onlyShowOnce) {
 		
-		
-		
-		
-		
 		if (Nulldroid_Settings.ENABLE_ADS) {  
 		
-			
-			
 			
 			if (activity != null) {	
 		
@@ -1278,11 +1283,10 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 
 	
 	public static void initializeStartapp(Activity activity) {
-		try {  
-			StartAppSDK.init(activity, Nulldroid_Settings.GET_STARTAPP_DEV_ID(activity), Nulldroid_Settings.GET_STARTAPP_APP_ID(activity), false);
-			
+		try {
+			StartAppSDK.init(activity, Nulldroid_Settings.GET_STARTAPP_DEV_ID(activity), Nulldroid_Settings.GET_STARTAPP_APP_ID(activity), false);			
 		} catch (Exception e) {
-			
+
 		}
 	}
 	
@@ -1697,7 +1701,7 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
    		
    	  	startappOnResume(activity);
        	
-       }
+     }
      
      public static void onPause(Activity activity) {
      	

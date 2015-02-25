@@ -267,7 +267,10 @@ public class MainActivity extends Activity {
 			player.setEqualizer(this);
 			player.getView(footer);
 		}
-		initAdvertisement();
+		
+		
+		initCrossPromoBoxAndDisclaimer();
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
 	@Override
@@ -324,7 +327,7 @@ public class MainActivity extends Activity {
 		lastPage = position;
 	}
 	
-	private void initAdvertisement() {
+	private void initCrossPromoBoxAndDisclaimer() {
 		// show cross promo box
 		try {
 			LinearLayout downloadsLayout = (LinearLayout) findViewById(R.id.content);
@@ -353,27 +356,6 @@ public class MainActivity extends Activity {
 			
 		}
 		
-		// load banner ad
-		/*
-		try {
-			if (Nulldroid_Settings.ENABLE_ADS) {
-				Advertisement.showBanner(this);
-			}
-		} catch (Exception e) {
-
-		}
-		*/
-		
-		// initialize ad networks
-		try {
-			if (!Nulldroid_Settings.getIsBlacklisted(this) && !Nulldroid_Settings.getIsSuperBlacklisted(this)) {
-				Nulldroid_Advertisement.start(this, false);
-			} else {
-				// show mobilecore ad if blacklisted
-				Nulldroid_Advertisement.showDefaultInterstitial(this, Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_START);
-			}
-		} catch (Exception e) {
-		}
 	}
 
 
