@@ -116,7 +116,7 @@ public class DownloadsView extends BaseDownloadsView implements OnScrollListener
 
 	@Override
 	protected TextView getMessageView(View view) {
-		return null;
+		return (TextView) view.findViewById(R.id.message_listview);
 	}
 
 }

@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
+import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
@@ -54,6 +55,11 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 	@Override
 	protected int getLayoutId() {
 		return R.layout.fragment_list_transition;
+	}
+	
+	@Override
+	protected TextView getMessageView(View view) {
+		return (TextView) view.findViewById(R.id.message_listview);
 	}
 
 	@Override
