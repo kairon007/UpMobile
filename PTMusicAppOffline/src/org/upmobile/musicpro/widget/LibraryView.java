@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class LibraryView extends BaseLibraryView {
 
@@ -37,6 +38,11 @@ public class LibraryView extends BaseLibraryView {
 	@Override
 	protected int getLayoutId() {
 		return R.layout.fragment_library;
+	}
+	
+	@Override
+	protected TextView getMessageView(View view) {
+		return (TextView) view.findViewById(R.id.message_listview);
 	}
 
 }

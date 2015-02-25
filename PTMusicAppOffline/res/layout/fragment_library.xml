@@ -13,5 +13,14 @@
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1px" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/message_listview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif-thin"
+        android:text="@string/library_empty"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
 
+</LinearLayout>
