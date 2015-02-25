@@ -88,11 +88,6 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return resideMenu.dispatchTouchEvent(ev);
-    }
-
-    @Override
     public void onClick(View view) {
 		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -101,7 +96,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         		if (lastOpenedFragment.getClass().getSimpleName().equals(fragments[i].getClass().getSimpleName())) {
         			resideMenu.closeMenu();
         			return;
-        		} else {
+        		}
         		if (fragments[i].getClass().getSimpleName().equals("PlayerFragment") && null != getArguments()) {
         			Fragment fragment = getPlayerFragment();
         			fragment.setArguments(getArguments());
@@ -110,7 +105,6 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         			changeFragment(fragments[i]);
         		}
         		tvTitle.setText(titles[i]);
-        		}
         	}
         }
         resideMenu.closeMenu();
