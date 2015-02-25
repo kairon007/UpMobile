@@ -388,6 +388,7 @@ public abstract class OnlineSearchView extends View {
 		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				hideKeyboard();
 				searchField.setText(null);
 				message.setText(R.string.search_your_results_appear_here);
 				resultAdapter.clear();
@@ -399,6 +400,7 @@ public abstract class OnlineSearchView extends View {
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				hideKeyboard();
 				ImageLoader.getInstance().stop();
 				trySearch();
 			}
