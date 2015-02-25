@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res/org.upmobile.materialmusicdownloader">
 
     <RelativeLayout
         android:id="@+id/touch_interceptor"
@@ -57,7 +57,7 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/background_material_light"
+                android:background="@color/main_color_500"
                 android:divider="@drawable/layout_divider"
                 android:orientation="vertical"
                 android:showDividers="end" >
@@ -80,18 +80,20 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/hint_main_search"
+                            android:textColorHint="@android:color/white"
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:lines="1"
                             android:paddingLeft="8dp"
                             android:paddingRight="50dp"
                             android:singleLine="true"
-                            android:textColor="@color/main_color_grey_600" />
+                            android:textColor="@android:color/white" />
 
                         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                             style="@style/RippleStyle"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
+                            app:rippleColor="@android:color/white"
                             android:layout_gravity="center_vertical|right" >
 
                             <com.csform.android.uiapptemplate.font.MusicTextView
@@ -101,6 +103,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:padding="4dp"
+                                android:textColor="@android:color/white"
                                 android:text="@string/font_cancel"
                                 android:textSize="32sp" />
                         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -110,6 +113,7 @@
                         style="@style/RippleStyle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        app:rippleColor="@android:color/white"
                         android:layout_gravity="center_vertical|right" >
 
                         <com.csform.android.uiapptemplate.font.MusicTextView
@@ -119,6 +123,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:padding="4dp"
+                            android:textColor="@android:color/white"
                             android:text="@string/font_search_online"
                             android:textSize="32sp" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -130,12 +135,21 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_download" />
                 </LinearLayout>
+                
+                <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                        style="@style/RippleStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        app:rippleColor="@android:color/white"
+                         >
 
                 <Spinner
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:popupBackground="@color/main_color_500"
                     android:spinnerMode="dropdown" />
+                </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
