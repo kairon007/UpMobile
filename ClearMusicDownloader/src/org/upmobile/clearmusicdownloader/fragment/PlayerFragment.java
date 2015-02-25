@@ -177,7 +177,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		public void update(AbstractSong s) {
 			if (isDestroy) return;
 			song = s;
-			showLyrics();
 			setElementsView(0);
 			setClickablePlayerElement(false);
 		}
