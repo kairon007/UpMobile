@@ -77,7 +77,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private Button download;
 	private Button playerSaveTags;
 	private Button playerCancelTags;
-	private Button playerCancelLyrics;
 	private TextView playerTitle;
 	private TextView playerArtist;
 	private TextView playerCurrTime;
@@ -310,14 +309,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
 		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
 		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
-		playerCancelLyrics = (Button) parentView.findViewById(R.id.player_cancel_lyrics);
 		playerTagsArtist = (EditText) parentView.findViewById(R.id.editTextArtist);
 		playerTagsTitle = (EditText) parentView.findViewById(R.id.editTextTitle);
 		playerTagsAlbum = (EditText) parentView.findViewById(R.id.editTextAlbum);
 		playerTagsCheckBox = (CheckBox) parentView.findViewById(R.id.isUseCover);
 		playerProgress.setOnSeekBarChangeListener(this);
 		volume.setOnSeekBarChangeListener(this);
-		playerCancelLyrics.setOnClickListener(this);
 		play.setOnClickListener(this);
 		stop.setOnClickListener(this);
 		shuffle.setOnClickListener(this);
@@ -410,9 +407,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
 			}
-			break;
-		case R.id.player_cancel_lyrics:
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 			break;
 		default:
 			break;

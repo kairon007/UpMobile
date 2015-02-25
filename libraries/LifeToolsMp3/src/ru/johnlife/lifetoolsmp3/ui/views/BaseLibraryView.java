@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 @SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View implements Handler.Callback {
@@ -27,6 +28,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private ViewGroup view;
 	private BaseAbstractAdapter<MusicData> adapter;
 	private ListView listView;
+	private TextView emptyMessage;
 	private Handler uiHandler;
 	private ContentObserver observer = new ContentObserver(null) {
 
@@ -64,6 +66,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	
 	protected abstract BaseAbstractAdapter<MusicData> getAdapter();
 	protected abstract ListView getListView(View view);
+	protected abstract TextView getMessageView(View view);
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
 	
@@ -88,6 +91,9 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 					((MusicData) srcList.get(pos)).turnOn(MusicData.MODE_PLAYING);
 				}
 			}
+			emptyMessage.setVisibility(View.GONE);
+		} else {
+			emptyMessage.setVisibility(View.VISIBLE);
 		}
 		if (null != listView) {
 			adapter.add(srcList);
@@ -116,6 +122,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		view = (ViewGroup) inflater.inflate(getLayoutId(), null);
 		listView = getListView(view);
 		adapter = getAdapter();
+		emptyMessage = getMessageView(view);
 	}
 	
 	protected ArrayList<MusicData> querySong() {
