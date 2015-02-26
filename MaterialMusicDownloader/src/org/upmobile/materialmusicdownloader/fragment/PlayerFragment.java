@@ -201,6 +201,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		
 		@Override
 		protected Void doInBackground(Long... params) {
+			if (isDestroy) return null;
 			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 			int progress = 0;
 			do {		
@@ -813,6 +814,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 			@Override
 			public void success(String url) {
+				if (isDestroy) return;
 				DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 				Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 				if (running != null) {

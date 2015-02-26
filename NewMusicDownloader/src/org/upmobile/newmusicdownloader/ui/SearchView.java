@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 public class SearchView extends OnlineSearchView {
 
@@ -86,6 +87,10 @@ public class SearchView extends OnlineSearchView {
 
 	}
 
+	public Object initRefreshProgress() {
+		return new ProgressBar(getContext());
+	}
+	
 	@Override
 	public boolean isWhiteTheme(Context context) {
 		return false;

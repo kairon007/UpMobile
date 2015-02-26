@@ -668,7 +668,7 @@ public abstract class OnlineSearchView extends View {
 	private View refreshSpinner;
 	
 	public Object initRefreshProgress() {
-		return null;
+		return new View(getContext());
 	}
 	
 	public void showRefreshProgress() {
