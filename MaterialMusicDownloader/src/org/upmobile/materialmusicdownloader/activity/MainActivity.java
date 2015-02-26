@@ -54,6 +54,9 @@ public class MainActivity extends UIMainActivity implements Constants {
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
+		
+		Nulldroid_Advertisement.initializeStartapp(this);
+		
 		super.onCreate(savedInstanceState);
 		File file = new File(folderPath);
 		if (!file.exists()) file.mkdirs();
