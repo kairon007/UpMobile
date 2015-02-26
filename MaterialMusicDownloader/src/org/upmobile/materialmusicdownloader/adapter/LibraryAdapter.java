@@ -46,12 +46,13 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 		private TextView button;
 
 		public LibraryViewHolder(View v) {
-			info = (ViewGroup) v.findViewById(R.id.item_box_info);
-			button = (TextView) v.findViewById(R.id.item_play);
-			cover = (ImageView) v.findViewById(R.id.item_cover);
-			title = (TextView) v.findViewById(R.id.item_title);
-			artist = (TextView) v.findViewById(R.id.item_artist);
-			duration = (TextView) v.findViewById(R.id.item_duration);
+			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
+			button = (TextView) v.findViewById(R.id.btnPlayPause);
+			cover = (ImageView) v.findViewById(R.id.cover);
+			title = (TextView) v.findViewById(R.id.titleLine);
+			artist = (TextView) v.findViewById(R.id.artistLine);
+			duration = (TextView) v.findViewById(R.id.chunkTime);
+			v.findViewById(R.id.boxButton).setVisibility(View.VISIBLE);
 		}
 
 		@Override
@@ -68,15 +69,14 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 		
 		private void setListener() {
 			info.setOnClickListener(this);
-			cover.setOnClickListener(this);
+//			cover.setOnClickListener(this);
 			button.setOnClickListener(this);
 		}
 
 		@Override
 		public void onClick(View view) {
 			switch (view.getId()) {
-			case R.id.item_cover:
-			case R.id.item_box_info:
+			case R.id.boxInfoItem:
 				if (!service.isCorrectlyState(MusicData.class, getCount())) {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);
@@ -88,7 +88,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 				((MainActivity) view.getContext()).changeFragment(playerFragment);
 				((MainActivity) getContext()).overridePendingTransition(0, 0);
 				break;
-			case R.id.item_play:
+			case R.id.btnPlayPause:
 				if (!service.isCorrectlyState(MusicData.class, getCount())) {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);

@@ -27,7 +27,6 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 		public DownloadsViewHolder(View v) {
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
-			duration = (TextView) v.findViewById(R.id.item_duration);
 			progress = (ProgressBar) v.findViewById(R.id.item_progress);
 			image = (ImageView) v.findViewById(R.id.item_image);
 		}
