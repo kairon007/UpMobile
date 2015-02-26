@@ -21,13 +21,14 @@ public class DownloadsFragment extends Fragment {
 	@Override
 	public void onPause() {
 		downloadsView.onPause();
-		((MainActivity) getActivity()).setSelectedItem(1);
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
 		downloadsView.onResume();
+		((MainActivity) getActivity()).invalidateOptionsMenu();
+		((MainActivity) getActivity()).setSelectedItem(1);
 		super.onResume();
 	}
 }

@@ -41,6 +41,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	private PlaybackService service;
 	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
+	private boolean isVisibleSearchView = false;
 
 	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
 
@@ -118,6 +119,12 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	}
 	
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
 	protected void onStart() {
 		startService(new Intent(this, PlaybackService.class));
 		super.onStart();
@@ -169,6 +176,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	}
 	
 	public void changeFragment(Fragment targetFragment) {
+		isVisibleSearchView = targetFragment.getClass().getSimpleName().equals(SearchFragment.class.getSimpleName()) ? false : true;
 		getFragmentManager()
 		.beginTransaction()
 		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
@@ -182,6 +190,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (null != player && player.isVisible()) {
 			getFragmentManager().popBackStack();
+			isVisibleSearchView = false;
+			invalidateOptionsMenu();
 		} else {
 			if (null != service) {
 				service.reset();
@@ -216,4 +226,5 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	public void setDrawerEnabled(boolean isEnabled) {
 		navigationDrawerFragment.setEnabled(isEnabled);
 	}
+	
 }
