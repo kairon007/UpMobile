@@ -113,7 +113,7 @@
         <item name="rimWidth">4dp</item>
         <item name="spinSpeed">16dp</item>
         <item name="isSpinning">true</item>
-=        <item name="rimColor">@color/main_color_accent</item>
+        <item name="rimColor">@color/main_color_accent</item>
     </style>
 
     <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">

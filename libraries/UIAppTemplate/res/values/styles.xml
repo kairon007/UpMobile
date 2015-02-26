@@ -5,17 +5,15 @@
         <item name="actionBarStyle">@style/ActionBarStyle</item>
         <item name="colorPrimary">@color/material_blue_300</item>
         <item name="colorPrimaryDark">@color/main_color_700</item>
-        <item name="searchViewStyle">@style/SearchView</item>
-                <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable_item_bg</item>
+        <item name="actionBarItemBackground">@drawable/selectable_item_bg</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarStyle">@style/ActionBarStyle</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/main_color_500</item>
         <item name="colorPrimaryDark">@color/main_color_700</item>
-        <item name="searchViewStyle">@style/SearchView</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
     <style name="AppTheme.Title" parent="Theme.AppCompat">
@@ -137,11 +135,6 @@
     </style>
     <!-- CheckBox related styles end here -->
 
-    <style name="SearchView">
-        <item name="closeIcon">@drawable/close</item>
-        <item name="searchIcon">@drawable/ic_search_ab</item>
-    </style>
-    
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@color/main_color_for_text</item>
