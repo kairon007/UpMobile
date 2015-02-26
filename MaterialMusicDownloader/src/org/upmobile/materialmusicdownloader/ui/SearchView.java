@@ -7,23 +7,20 @@ import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
-import org.xmlpull.v1.XmlPullParser;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 
 import com.csform.android.uiapptemplate.view.ProgressWheel;
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
@@ -128,10 +125,24 @@ public class SearchView extends OnlineSearchView implements Constants {
 	}
 	
 	@Override
-	protected void animateListView() {
-		AnimationAdapter animAdapter = new AlphaInAnimationAdapter(getResultAdapter());
+	protected void animateListView(boolean isRestored) {
+		final AnimationAdapter animAdapter = new AlphaInAnimationAdapter(getResultAdapter());
 		animAdapter.setAbsListView(listView);
+		if (isRestored) {
+			animAdapter.getViewAnimator().disableAnimations();
+			listView.setOnScrollListener(new OnScrollListener() {
+				
+				@Override
+				public void onScrollStateChanged(AbsListView view, int scrollState) {
+					animAdapter.getViewAnimator().enableAnimations();
+				}
+				
+				@Override
+				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+					animAdapter.getViewAnimator().enableAnimations();
+				}
+			});
+		}
 		listView.setAdapter(animAdapter);
 	}
-	
 }

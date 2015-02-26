@@ -325,7 +325,7 @@ public abstract class OnlineSearchView extends View {
 			listView.addHeaderView(emptyHeader);
 			listView.addFooterView(resultAdapter.getProgress());
 			listView.setAdapter(resultAdapter);
-			animateListView();
+			animateListView(false);
 		}
 		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
 			if (isWhiteTheme(getContext())) {
@@ -1139,7 +1139,7 @@ public abstract class OnlineSearchView extends View {
 		return clickPosition;
 	}
 	
-	protected void animateListView() {
+	protected void animateListView(boolean isRestored) {
 		// Animate list view in childs, if need
 	}
 	
@@ -1149,7 +1149,7 @@ public abstract class OnlineSearchView extends View {
 		listView.addHeaderView(emptyHeader);
 		listView.addFooterView(resultAdapter.getProgress());
 		listView.setAdapter(resultAdapter);
-		animateListView();
+		animateListView(true);
 		listView.setSelection(position);
 		isRestored = true;
 	}
