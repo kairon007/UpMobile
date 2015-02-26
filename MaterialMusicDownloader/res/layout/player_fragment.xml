@@ -144,7 +144,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal" >
 
@@ -171,6 +171,7 @@
 
                 <SeekBar
                     android:id="@+id/progress_track"
+                    style="@style/SeerkBar.Indeterminate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
@@ -350,15 +351,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp" >
-
-        <ProgressBar
-            android:id="@+id/lyrics_progress"
-            style="@style/ProgressBarStyle.Big"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/loader_black"
-            android:visibility="visible" />
+        
+        <com.csform.android.uiapptemplate.view.ProgressWheel
+                android:id="@+id/lyrics_progress"
+                style="@style/ProgressBarMaterial"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:visibility="visible" />
 
         <com.csform.android.uiapptemplate.font.RobotoTextView
             android:id="@+id/lyrics_text"

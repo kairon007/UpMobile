@@ -98,6 +98,15 @@
         <item name="android:paddingRight">0dp</item>
     </style>
     
+    <style name="ProgressBarMaterial" parent="@style/ProgressBarStyle">
+        <item name="barColor">@color/main_color_500</item>
+        <item name="circleColor">@android:color/transparent</item>
+        <item name="barWidth">4dp</item>
+        <item name="rimWidth">4dp</item>
+        <item name="spinSpeed">16dp</item>		<item name="isSpinning">true</item>=
+        <item name="rimColor">@color/main_color_accent</item>
+    </style>
+    
     <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">
        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
     </style>

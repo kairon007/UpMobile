@@ -7,22 +7,27 @@ import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
+import org.xmlpull.v1.XmlPullParser;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.csform.android.uiapptemplate.view.ProgressWheel;
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 
 public class SearchView extends OnlineSearchView implements Constants {
 
@@ -112,6 +117,12 @@ public class SearchView extends OnlineSearchView implements Constants {
 	}
 	
 	@Override
+	public Object initRefreshProgress() {
+		ProgressWheel progress = (ProgressWheel) LayoutInflater.from(getContext()).inflate(org.upmobile.materialmusicdownloader.R.layout.progress, null);
+		return progress;
+	}
+	
+	@Override
 	public Bitmap getDeafultBitmapCover() {
 		return ((MainActivity) getContext()).getDeafultBitmapCover(64, 64, 55);
 	}
@@ -119,8 +130,8 @@ public class SearchView extends OnlineSearchView implements Constants {
 	@Override
 	protected void animateListView() {
 		AnimationAdapter animAdapter = new AlphaInAnimationAdapter(getResultAdapter());
-		animAdapter.setAbsListView((DynamicListView)listView);
-		((DynamicListView)listView).setAdapter(animAdapter);
+		animAdapter.setAbsListView(listView);
+		listView.setAdapter(animAdapter);
 	}
 	
 }

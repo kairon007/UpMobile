@@ -33,6 +33,7 @@
         <attr name="barLength" format="dimension" />
         <attr name="contourColor" format="color" />
         <attr name="contourSize" format="dimension" />
+        <attr name="isSpinning" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="PullToZoomScrollView">
         <attr name="scrollHeadView" format="reference" />

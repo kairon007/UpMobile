@@ -665,12 +665,10 @@ public abstract class OnlineSearchView extends View {
 		edit.commit();
 	}
 	
-	private ProgressBar refreshSpinner;
+	private View refreshSpinner;
 	
 	public Object initRefreshProgress() {
-		refreshSpinner = new ProgressBar(getContext());
-		refreshSpinner.setIndeterminate(true);
-		return refreshSpinner;
+		return null;
 	}
 	
 	public void showRefreshProgress() {
@@ -679,7 +677,7 @@ public abstract class OnlineSearchView extends View {
 	
 	public void hideRefreshProgress() {
 		refreshSpinner.setVisibility(View.GONE);
-	}
+	} 
 	
 	public int defaultCover() {
 		return R.drawable.fallback_cover;
@@ -696,9 +694,10 @@ public abstract class OnlineSearchView extends View {
 
 		private SongSearchAdapter(Context context) {
 			super(context, -1, new ArrayList<Song>());
+			refreshSpinner = (View) initRefreshProgress();
 			this.inflater = LayoutInflater.from(getContext());
 			this.footer = new FrameLayout(context);
-			footer.addView((View) initRefreshProgress(), new FrameLayout.LayoutParams(80, 80, Gravity.CENTER));
+			footer.addView(refreshSpinner, new FrameLayout.LayoutParams(80, 80, Gravity.CENTER));
 			hideRefreshProgress();
 		}
 		

@@ -245,6 +245,9 @@ public class ProgressWheel extends View {
 	 *            the attributes to parse
 	 */
 	private void parseAttributes(TypedArray a) {
+		//TODO
+		isSpinning = a.getBoolean(R.styleable.ProgressWheel_isSpinning, false);
+		
 		barWidth = (int) a.getDimension(R.styleable.ProgressWheel_barWidth,
 				barWidth);
 
@@ -337,11 +340,7 @@ public class ProgressWheel extends View {
 	 */
 
 	public boolean isSpinning() {
-		if (isSpinning) {
-			return true;
-		} else {
-			return false;
-		}
+		return isSpinning;
 	}
 
 	/**

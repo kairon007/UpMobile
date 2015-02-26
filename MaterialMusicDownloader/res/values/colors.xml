@@ -3,6 +3,8 @@
 
     <!-- Theme colors -->
         <color name="main_color_500">@color/material_pink_500</color>
+        <color name="main_color_accent">#82EA1F</color>
+        <color name="main_color_for_text">#ffffff</color>
     <!-- End theme colors -->
     
     <color name="holo_button_highlight">#9933b5e5</color>
