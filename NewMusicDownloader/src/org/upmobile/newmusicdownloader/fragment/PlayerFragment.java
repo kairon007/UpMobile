@@ -20,7 +20,6 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -110,6 +109,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			} else {
 				player.play(song);
 			}
+			((MainActivity) getActivity()).setDrawerEnabled(false);
 		} else {
 			song = player.getPlayingSong();
 		}
@@ -127,12 +127,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		return parentView;
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		((MainActivity)activity).setDrawerEnabled(false);
-		super.onAttach(activity);
-	}
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		getActivity().onBackPressed();

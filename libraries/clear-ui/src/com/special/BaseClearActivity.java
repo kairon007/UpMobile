@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -82,7 +81,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
         findViewById(R.id.title_bar).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				resideMenu.openMenu();
+				openMenu();
 			}
 		});
     }
@@ -187,22 +186,26 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 //    	}
 //    }
     
-    public void showTopFrame() {
-    	topFrame.setVisibility(View.VISIBLE);
-    }
-    
-    public void hideTopFrame() {
+	public void showTopFrame() {
+		topFrame.setVisibility(View.VISIBLE);
+	}
+
+	public void hideTopFrame() {
 		topFrame.setVisibility(View.GONE);
 	}
-    
-    public void hidePlayerElement() {
-    	resideMenu.hideLastElement();
-    }
-    
-    public void showPlayerElement() {
-    	resideMenu.showLastElement();
-    }
-    
-   public void stopChildsServices(){
-   }
+
+	public void hidePlayerElement() {
+		resideMenu.hideLastElement();
+	}
+
+	public void showPlayerElement() {
+		resideMenu.showLastElement();
+	}
+
+	public void stopChildsServices() {
+	}
+
+	public void openMenu() {
+		resideMenu.openMenu();
+	}
 }

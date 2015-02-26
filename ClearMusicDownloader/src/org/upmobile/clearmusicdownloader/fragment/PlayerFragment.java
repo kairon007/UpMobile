@@ -183,6 +183,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		
 	};
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
@@ -216,6 +217,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		} else {
 			song = player.getPlayingSong();
+			parentView.findViewById(R.id.title_bar_left_menu).setBackgroundDrawable(getResources().getDrawable(R.drawable.titlebar_menu_selector));
 		}
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
@@ -490,7 +492,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onClick(View v) {
 		if (v.getId() == R.id.title_bar_left_menu) {
 			if (!closeEditViews()) {
-				onBackPress();
+				if (null != getArguments()) {
+					onBackPress();
+				} else {
+					((MainActivity) getActivity()).openMenu();
+				}
 			}
 			return;
 		}

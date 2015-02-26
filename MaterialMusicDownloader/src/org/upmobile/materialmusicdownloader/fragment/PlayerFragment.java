@@ -271,6 +271,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 		} else {
 			song = player.getPlayingSong();
+			((MainActivity) getActivity()).setDrawerEnabled(false);
 		}
 		setCoverToZoomView(null);
 		getCover(song);
@@ -286,12 +287,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		scrollView.setContentContainerView(contentView);
 		return scrollView;
-	}
-	
-	@Override
-	public void onAttach(Activity activity) {
-		((MainActivity)activity).setDrawerEnabled(false);
-		super.onAttach(activity);
 	}
 	
 	@Override
