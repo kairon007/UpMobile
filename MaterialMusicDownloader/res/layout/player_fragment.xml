@@ -9,11 +9,11 @@
     android:padding="4dp"
     tools:ignore="ContentDescription" >
 
-     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-            style="@style/RippleStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" >
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" >
 
         <LinearLayout
             android:id="@+id/cbTouchInterceptor"
@@ -23,7 +23,7 @@
 
             <com.csform.android.uiapptemplate.font.MusicTextView
                 android:id="@+id/cbUseCover"
-                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                style="@style/TextViewAppearance.Headline"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -32,16 +32,15 @@
                 android:padding="8dp"
                 android:text="@string/font_cb_checked"
                 android:textSize="24sp" />
-            
-            <TextView 
+
+            <TextView
+                style="@style/TextViewAppearance.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/edit_mp3_use_album_cover"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:text="@string/edit_mp3_use_album_cover" />
         </LinearLayout>
-
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
-    
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -221,7 +220,6 @@
                 android:padding="8dp"
                 android:text="@string/font_random"
                 android:textSize="24sp" />
-
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -242,7 +240,6 @@
                 android:padding="8dp"
                 android:text="@string/font_previous"
                 android:textSize="24sp" />
-
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -263,7 +260,6 @@
                 android:padding="8dp"
                 android:text="@string/font_play"
                 android:textSize="24sp" />
-
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -284,7 +280,6 @@
                 android:padding="8dp"
                 android:text="@string/font_stop"
                 android:textSize="24sp" />
-
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -305,7 +300,6 @@
                 android:padding="8dp"
                 android:text="@string/font_next"
                 android:textSize="24sp" />
-
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -326,7 +320,6 @@
                 android:padding="8dp"
                 android:text="@string/font_repeat"
                 android:textSize="24sp" />
-
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
     </LinearLayout>
 
@@ -351,18 +344,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp" >
-        
+
         <com.csform.android.uiapptemplate.view.ProgressWheel
-                android:id="@+id/lyrics_progress"
-                style="@style/ProgressBarMaterial"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:visibility="visible" />
+            android:id="@+id/lyrics_progress"
+            style="@style/ProgressBarMaterial"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:visibility="visible" />
 
         <com.csform.android.uiapptemplate.font.RobotoTextView
             android:id="@+id/lyrics_text"
-            style="@style/TextViewAppearance.Body1"
+            style="@style/TextViewAppearance.Body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
