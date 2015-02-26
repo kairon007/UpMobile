@@ -39,7 +39,7 @@ public class DownloadGrooveshark extends AsyncTask<Void, Void, Integer> {
 		builder
 			.setContentTitle("Download " + fileName)
 			.setContentText("Download in progress")
-			.setSmallIcon(R.drawable.ic_launcher)
+			.setSmallIcon(R.drawable.icon)
 			.build();
 
 	}

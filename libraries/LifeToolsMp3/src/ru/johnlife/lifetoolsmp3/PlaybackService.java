@@ -675,7 +675,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (!check(SMODE_NOTIFICATION)) return;
 		Bitmap cover = playingSong.getCover(this);
 		if (null == cover) {
-			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_launcher);
+			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.icon);
 		}
 		Intent notificationIntent = new Intent(this, ((Activity) activityContext).getClass());
 		notificationIntent.setAction(MAIN_ACTION);
@@ -709,7 +709,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			view.setOnClickPendingIntent(R.id.btn_next, pnextIntent);
 			view.setOnClickPendingIntent(R.id.btn_close, pcloseIntent);
 			builder = new NotificationCompat.Builder(this)
-					.setSmallIcon(R.drawable.ic_launcher)
+					.setSmallIcon(R.drawable.icon)
 					.setLargeIcon(cover)
 					.setContentIntent(pendingIntent).setContent(view);
 			startForeground(NOTIFICATION_ID, builder.build());
@@ -717,7 +717,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			drawable = (playing) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play;
 			builder = new NotificationCompat.Builder(this)
 					.setPriority(NotificationCompat.PRIORITY_MAX)
-					.setSmallIcon(R.drawable.ic_launcher)
+					.setSmallIcon(R.drawable.icon)
 					.setLargeIcon(cover)
 					.setContentTitle(playingSong.getTitle())
 					.setContentText(playingSong.getArtist())
@@ -730,7 +730,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			drawable = (playing) ? R.drawable.ic_pause : R.drawable.ic_play;
 			Notification notification = new Notification.Builder(this)
 		    .setVisibility(Notification.VISIBILITY_PUBLIC)
-		    .setSmallIcon(R.drawable.ic_launcher)
+		    .setSmallIcon(R.drawable.icon)
 		    .addAction(drawable, state, pplayIntent)
 			.addAction(R.drawable.ic_next, getString(R.string.next), pnextIntent)
 			.addAction(R.drawable.ic_close, getString(R.string.close), pcloseIntent)
