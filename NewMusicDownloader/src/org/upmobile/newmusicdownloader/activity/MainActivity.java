@@ -60,8 +60,6 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		
-		Nulldroid_Advertisement.initializeStartapp(this);
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
         navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);

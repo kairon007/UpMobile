@@ -207,8 +207,6 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle state) {
 		
-		Nulldroid_Advertisement.initializeStartapp(this);
-		
 		super.onCreate(state);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			requestWindowFeature(Window.FEATURE_NO_TITLE);

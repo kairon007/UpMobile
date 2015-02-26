@@ -51,8 +51,6 @@ public class MainActivity extends BaseClearActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		
-		Nulldroid_Advertisement.initializeStartapp(this);
-		
 		if (PlaybackService.hasInstance()) {
 			player = PlaybackService.get(MainActivity.this);
 			if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
