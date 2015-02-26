@@ -368,10 +368,14 @@ public abstract class OnlineSearchView extends View {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				if (position == resultAdapter.getCount()) return; // progress click
-				viewItem = view;
-				clickPosition = position;
-				getDownloadUrl(view, position);
+				try {
+					if (position == resultAdapter.getCount()) return; // progress click
+					viewItem = view;
+					clickPosition = position;
+					getDownloadUrl(view, position);
+				} catch(Exception e) {
+					Log.e(getClass().getSimpleName(), e.getMessage());	
+				}
 			}
 		});
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {

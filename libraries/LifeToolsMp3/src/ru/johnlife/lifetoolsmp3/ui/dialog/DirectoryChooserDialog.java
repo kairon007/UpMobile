@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -248,15 +249,19 @@ public class DirectoryChooserDialog {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				String directory = (String) lvContent.getAdapter().getItem(position);
-				if (directory.equals(""))
-					return;
-				m_dir += "/" + directory;
-				if (!m_dir.equals(STORAGE)) {
-					keeper.activateOptions(StateKeeper.BTN_ENABLED);
+				try {
+					String directory = (String) lvContent.getAdapter().getItem(position);
+					if (directory.equals(""))
+						return;
+					m_dir += "/" + directory;
+					if (!m_dir.equals(STORAGE)) {
+						keeper.activateOptions(StateKeeper.BTN_ENABLED);
+					}
+					enableButtons();
+					updateDirectory();
+				} catch(Exception e) {
+					Log.e(getClass().getSimpleName(), e.getMessage());
 				}
-				enableButtons();
-				updateDirectory();
 			}
 		});
 		dialogBuilder.setView(contentView);

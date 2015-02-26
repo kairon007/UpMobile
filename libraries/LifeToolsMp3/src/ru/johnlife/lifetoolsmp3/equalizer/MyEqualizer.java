@@ -624,12 +624,16 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Animation fadeInAnimation = AnimationUtils.loadAnimation(view.getContext(), 
-					android.R.anim.fade_in);
-	        fadeInAnimation.setDuration(10);
-	        view.startAnimation(fadeInAnimation);
-	        popup.dismiss();
-	        setPreset(view.getTag().toString());
+			try {
+				Animation fadeInAnimation = AnimationUtils.loadAnimation(view.getContext(), 
+						android.R.anim.fade_in);
+		        fadeInAnimation.setDuration(10);
+		        view.startAnimation(fadeInAnimation);
+		        popup.dismiss();
+		        setPreset(view.getTag().toString());
+			} catch(Exception e) {
+				Log.e(getClass().getSimpleName(), e.getMessage());
+			}
 		}
 		
 	}
