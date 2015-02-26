@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/main_color_500</item>
         <item name="colorPrimaryDark">@color/main_color_700</item>
         <item name="searchViewStyle">@style/SearchView</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
 </resources>

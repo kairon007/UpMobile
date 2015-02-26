@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -226,6 +227,9 @@ public class NavigationDrawerFragment extends Fragment {
     }
     
     public void setTitle(CharSequence mTitle) {
-    	getActionBar().setTitle(mTitle);
+    	int color = getResources().getColor(R.color.main_color_for_text);
+        String str = Integer.toHexString(color);
+        String strColor =  "#"+str.substring(2);
+    	getActionBar().setTitle(Html.fromHtml("<font color = " + strColor + ">" + mTitle+ "</font>"));
     }
 }
