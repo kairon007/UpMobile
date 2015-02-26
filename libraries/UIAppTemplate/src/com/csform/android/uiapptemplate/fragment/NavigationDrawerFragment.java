@@ -205,8 +205,8 @@ public class NavigationDrawerFragment extends Fragment {
     
     public void setEnabled(boolean enabled) {
     	mDrawerToggle.setDrawerIndicatorEnabled(enabled);
-    	mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED 
-    			: DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_menu_back));
+    	mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     	setHasOptionsMenu(enabled);
     }
     
