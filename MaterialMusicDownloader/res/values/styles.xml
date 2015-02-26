@@ -6,7 +6,9 @@
         <item name="android:textSize">25sp</item>
     </style>
 
-    <style name="AppTheme" parent="android:Theme.Holo.Light"></style>
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 
     <style name="AppThemeTrans" parent="@style/AppTheme">
         <item name="android:windowIsTranslucent">true</item>
