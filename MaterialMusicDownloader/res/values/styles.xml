@@ -29,22 +29,24 @@
         <item name="android:paddingBottom">4dp</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
-    
+
     <style name="TitleLineGray" parent="TextViewAppearance.Title">
-        <item name="android:textColor">@color/main_color_grey_600</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
-    
+
     <style name="EditTextAppearance.Title" parent="@android:style/Widget.EditText">
         <item name="android:textSize">20sp</item>
     </style>
-    
- 	<style name="TextViewApperance.Title.NoPadding" parent="TextViewAppearance.Title1">
- 	    <item name="android:paddingTop">0dp</item>
+
+    <style name="TextViewApperance.Title.NoPadding" parent="TextViewAppearance.Title1">
+        <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
- 	</style>   
+        <item name="android:textColor">@color/main_color_gray_text</item>
+    </style>
 
     <style name="TextViewAppearance.Body" parent="TextViewAppearance.Body1">
         <item name="android:paddingTop">4dp</item>
@@ -52,6 +54,7 @@
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
 
     <style name="TextViewAppearance.Caption" parent="TextViewAppearance.Caption1">
@@ -60,17 +63,19 @@
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
-    
+
     <style name="CaptionLineGray" parent="TextViewAppearance.Caption">
-        <item name="android:textColor">@color/main_color_grey_600</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
-    
+
     <style name="TextViewAppearance.Caption.NoPadding" parent="TextViewAppearance.Caption1">
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
 
     <style name="TextViewAppearance.Headline" parent="TextViewAppearance.Headline1">
@@ -78,8 +83,9 @@
         <item name="android:paddingBottom">4dp</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
-    
+
     <style name="EditTextAppearance.Headline" parent="@android:style/Widget.EditText">
         <item name="android:textSize">24sp</item>
     </style>
@@ -89,26 +95,29 @@
         <item name="android:paddingBottom">4dp</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
-    
+
     <style name="TextViewAppearence.Body" parent="TextViewAppearance.Body1">
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
+        <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
-    
+
     <style name="ProgressBarMaterial" parent="@style/ProgressBarStyle">
         <item name="barColor">@color/main_color_500</item>
         <item name="circleColor">@android:color/transparent</item>
         <item name="barWidth">4dp</item>
         <item name="rimWidth">4dp</item>
-        <item name="spinSpeed">16dp</item>		<item name="isSpinning">true</item>=
-        <item name="rimColor">@color/main_color_accent</item>
+        <item name="spinSpeed">16dp</item>
+        <item name="isSpinning">true</item>
+=        <item name="rimColor">@color/main_color_accent</item>
     </style>
-    
+
     <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">
-       <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
     </style>
 
 </resources>
