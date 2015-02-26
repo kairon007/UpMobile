@@ -269,9 +269,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			} else {
 				player.play(song);
 			}
+			((MainActivity) getActivity()).setDrawerEnabled(false);
 		} else {
 			song = player.getPlayingSong();
-			((MainActivity) getActivity()).setDrawerEnabled(false);
 		}
 		setCoverToZoomView(null);
 		getCover(song);
