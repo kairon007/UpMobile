@@ -24,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.TextView;
 
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
@@ -69,23 +70,26 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
         String str = Integer.toHexString(color);
         String strColor =  "#"+str.substring(2);
         int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
-        ImageView v = (ImageView) searchView.findViewById(searchImgId);
-        v.setImageResource(R.drawable.ic_search_ab);
+        ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
+        searchIcon.setImageResource(R.drawable.ic_search_ab);
+        searchIcon.setBackgroundResource(R.drawable.selectable_item_bg);
         int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
-        ImageView v1 = (ImageView) searchView.findViewById(searchCloseId);
-        v1.setImageResource(R.drawable.ic_close_ab);
-        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);  
-        View autoComplete = searchView.findViewById(queryTextViewId);
+        ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
+        closeIcon.setImageResource(R.drawable.ic_close_ab);
+        closeIcon.setBackgroundResource(R.drawable.selectable_item_bg);
+        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
+        autoComplete.setTextColor(color);
         try {
 			Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
 			SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
 			stopHint.append(Html.fromHtml("<font color = " + strColor + ">" + getResources().getString(R.string.hint_main_search) + "</font>"));
-			Drawable searchIcon = getResources().getDrawable(R.drawable.ic_search_ab);
+			Drawable search_icon = getResources().getDrawable(R.drawable.ic_search_ab);
 			Method textSizeMethod = clazz.getMethod("getTextSize");
 			Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
 			int textSize = (int) (rawTextSize * 1.5);
-			searchIcon.setBounds(0, 0, textSize, textSize);
-			stopHint.setSpan(new ImageSpan(searchIcon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			search_icon.setBounds(0, 0, textSize, textSize);
+			stopHint.setSpan(new ImageSpan(search_icon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
 			setHintMethod.invoke(autoComplete, stopHint);
 		} catch (Exception e) {

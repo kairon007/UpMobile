@@ -305,6 +305,7 @@ public abstract class OnlineSearchView extends View {
 			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
 		} else searchField.setHint(R.string.hint_main_search);
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) search(searchField.getText().toString());
+		setMessage(getResources().getString(R.string.search_your_results_appear_here));
 		initBoxEngines();
 	}
 
@@ -394,7 +395,7 @@ public abstract class OnlineSearchView extends View {
 			public void onClick(View v) {
 				hideKeyboard();
 				searchField.setText(null);
-				message.setText(R.string.search_your_results_appear_here);
+				setMessage(getResources().getString(R.string.search_your_results_appear_here));
 				resultAdapter.clear();
 				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 				keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
