@@ -11,11 +11,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,9 +36,10 @@ public class NavigationDrawerFragment extends Fragment {
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private NavigationDrawerCallbacks mCallbacks;
-    private ActionBarDrawerToggle mDrawerToggle;
+    private android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+    private android.support.v4.app.ActionBarDrawerToggle drawerToggle;
     private List<BaseMaterialFragment> mFragments;
-
+   
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private View mFragmentContainerView;
@@ -109,7 +110,8 @@ public class NavigationDrawerFragment extends Fragment {
      * @param fragmentId   The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+    @SuppressWarnings("deprecation")
+	public void setUp(int fragmentId, DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -122,12 +124,22 @@ public class NavigationDrawerFragment extends Fragment {
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
         
-        
-        mDrawerToggle = new ActionBarDrawerToggle(
-                getActivity(),                    /* host Activity */
-                mDrawerLayout,                    /* DrawerLayout object */
-                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-                R.string.navigation_drawer_close);  /* "close drawer" description for accessibility */
+        if (useOldToggle()) {
+	        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
+	                getActivity(),                    /* host Activity */
+	                mDrawerLayout,                    /* DrawerLayout object */
+	                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+	                R.string.navigation_drawer_close);  /* "close drawer" description for accessibility */
+        } else {
+        	android.util.Log.d("logd", "setUp: ");
+        	drawerToggle = new android.support.v4.app.ActionBarDrawerToggle(
+	                    getActivity(),                    /* host Activity */
+	                    mDrawerLayout,                    /* DrawerLayout object */
+	                    R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+	                    R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+	                    R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+	            );
+        }
         
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
@@ -142,11 +154,15 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {
-                mDrawerToggle.syncState();
+            	if (useOldToggle()) {
+            		mDrawerToggle.syncState();
+            	} else {
+            		drawerToggle.syncState();
+            	}
             }
         });
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerListener(useOldToggle() ? mDrawerToggle : drawerToggle);
     }
 
     private void selectItem(int position) {
@@ -184,29 +200,43 @@ public class NavigationDrawerFragment extends Fragment {
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Forward the new configuration the drawer toggle component.
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		// Forward the new configuration the drawer toggle component.
+		if (useOldToggle()) {
+			mDrawerToggle.onConfigurationChanged(newConfig);
+		} else {
+			drawerToggle.onConfigurationChanged(newConfig);
+		}
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (useOldToggle() && mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		} else {
+			if (drawerToggle.onOptionsItemSelected(item)) {
+				return true;
+			}
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
     private ActionBar getActionBar() {
         return getActivity().getActionBar();
     }
     
     public void setEnabled(boolean enabled) {
-    	mDrawerToggle.setDrawerIndicatorEnabled(enabled);
-    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_menu_back));
-    	mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    	if (isDetached()) return;
+		if (useOldToggle()) {
+	    	mDrawerToggle.setDrawerIndicatorEnabled(enabled);
+	    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_menu_back));
+		} else {
+			drawerToggle.setDrawerIndicatorEnabled(enabled);
+	    	drawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_menu_back));
+		}
+		mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     	setHasOptionsMenu(enabled);
     }
     
@@ -231,5 +261,9 @@ public class NavigationDrawerFragment extends Fragment {
         String str = Integer.toHexString(color);
         String strColor =  "#"+str.substring(2);
     	getActionBar().setTitle(Html.fromHtml("<font color = " + strColor + ">" + mTitle+ "</font>"));
+    }
+    
+    private boolean useOldToggle() {
+		return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
     }
 }
