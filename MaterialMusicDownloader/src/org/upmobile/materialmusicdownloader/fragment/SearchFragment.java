@@ -51,7 +51,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 		}
 		((UIMainActivity) getActivity()).setSelectedItem(0);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
-		((MainActivity)getActivity()).setDrawerEnabled(true);
+		((MainActivity) getActivity()).setDrawerEnabled(true);
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}

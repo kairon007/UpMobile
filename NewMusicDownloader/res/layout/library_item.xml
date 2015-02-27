@@ -63,6 +63,16 @@
             android:text="Artist" />
     </LinearLayout>
     <FrameLayout android:layout_width="wrap_content" android:layout_height="match_parent"></FrameLayout>
+    
+     <ImageView
+            android:id="@+id/threeDot"
+            android:layout_width="24dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:background="@drawable/selectable_item_bg"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/threedot"
+            android:visibility="visible" />
 
     <ImageButton
         android:id="@+id/item_play"

@@ -174,6 +174,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 			duration = (TextView) v.findViewById(R.id.item_duration);
 			hidenView = (LinearLayout) v.findViewById(R.id.hidden_view);
 			cancel = (FrameLayout) v.findViewById(R.id.cancel);
+			threeDot = v.findViewById(R.id.threeDot);
 		}
 
 		@Override

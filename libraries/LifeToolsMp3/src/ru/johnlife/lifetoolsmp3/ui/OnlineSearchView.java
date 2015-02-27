@@ -60,6 +60,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,8 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -252,11 +255,15 @@ public abstract class OnlineSearchView extends View {
 	protected abstract void stopSystemPlayer(Context context);
 	
 	public abstract void refreshLibrary();
-
+	
 	public abstract boolean isWhiteTheme(Context context);
 
 	protected boolean showFullElement() {
 		return true;
+	}
+	
+	protected boolean showPopupMenu() {
+		return false;
 	}
 	
 	protected boolean showDownloadButton() {
@@ -285,6 +292,10 @@ public abstract class OnlineSearchView extends View {
 	
 	protected int  getIdCustomView() {
 		return 0;
+	}
+	
+	protected String getDirectory() {
+		return null;
 	}
 	
 	public OnlineSearchView(LayoutInflater inflater) {
@@ -456,6 +467,42 @@ public abstract class OnlineSearchView extends View {
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		searchField.setFocusable(false);
 		searchField.setFocusable(true);
+	}
+	
+	@SuppressLint("NewApi")
+	public void showMenu(final View v) {
+		PopupMenu menu = new PopupMenu(getContext(), v);
+		menu.getMenuInflater().inflate(R.menu.search_menu, menu.getMenu());
+		
+		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem paramMenuItem) {
+				if (paramMenuItem.getItemId() == R.id.search_menu_play) {
+					//TODO: Send song to mini player in child's projects
+				}
+				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
+					((RemoteSong) getResultAdapter().getItem((int) v.getTag())).getDownloadUrl(new DownloadUrlListener() {
+						
+						@Override
+						public void success(String url) {
+							((RemoteSong) getResultAdapter().getItem((int) v.getTag())).setDownloadUrl(url);
+							downloadListener = new DownloadClickListener(getContext(), (RemoteSong) getResultAdapter().getItem((int) v.getTag()), 0);
+							downloadListener.setDownloadPath(getDirectory());
+							downloadListener.setUseAlbumCover(true);
+							downloadListener.downloadSong(false);
+						}
+						
+						@Override
+						public void error(String error) {
+						}
+					});
+					
+				}
+				return false;
+			}
+		});
+		menu.show();
 	}
 
 	public void initSearchEngines(Context context, String valueEngines) {
@@ -755,6 +802,14 @@ public abstract class OnlineSearchView extends View {
 						listView.performItemClick(v, position, v.getId());
 					}
 				});
+				v.findViewById(R.id.threeDot).setTag(position);
+				v.findViewById(R.id.threeDot).setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View paramView) {
+						showMenu(paramView);
+					}
+				});
 			}
 			if (getAdapterBackground() > 0) {
 				if (position % 2 == 0) {
@@ -790,7 +845,7 @@ public abstract class OnlineSearchView extends View {
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo == null;
 	}
-
+	
 	public void trySearch() {
 		hideKeyboard();
 		String searchString = searchField.getText().toString();
@@ -830,7 +885,7 @@ public abstract class OnlineSearchView extends View {
 
 		return searchEngines;
 	}
-
+	
 	public boolean isBlacklistedQuery(String songName) {
 
 		ArrayList<String> dmcaSearchQueryBlacklist = getDMCABlacklistedItems("dmca_searchquery_blacklist");

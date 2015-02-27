@@ -140,5 +140,6 @@
     <string name="undo">Undo</string>
     <string name="retry">Retry</string>
     <string name="message_undo_bar">Cover has been removed</string>
+    <string name="add_to_playlist">Add to Playlist</string>
     
 </resources>

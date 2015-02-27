@@ -39,9 +39,8 @@
 	<string name="font_cancel">&#xe81f;</string>
 	<string name="font_cb_checked">&#xe800;</string>
 	<string name="font_cb_unchecked">&#xe820;</string>
+	<string name="font_cb_checked_empty">&#xe831;</string>
+	<string name="three_dot">&#xe83e;</string>
 	
 	
-	
-	
-
 </resources>

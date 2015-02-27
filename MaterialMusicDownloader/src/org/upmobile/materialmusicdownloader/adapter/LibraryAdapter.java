@@ -52,6 +52,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 			title = (TextView) v.findViewById(R.id.titleLine);
 			artist = (TextView) v.findViewById(R.id.artistLine);
 			duration = (TextView) v.findViewById(R.id.chunkTime);
+			threeDot = v.findViewById(R.id.threeDot);
 			v.findViewById(R.id.boxButton).setVisibility(View.VISIBLE);
 		}
 

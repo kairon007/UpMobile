@@ -17,6 +17,7 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -113,5 +114,10 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	public int defaultCover() {
 		return R.drawable.no_cover_art_light_big_dark;
+	}
+	
+	@Override
+	protected String getDirectory() {
+		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	}
 }

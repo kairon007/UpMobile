@@ -1,17 +1,22 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
-
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
 public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
@@ -108,12 +113,21 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		protected TextView title;
 		protected TextView artist;
 		protected TextView duration;
+		protected View threeDot;
 		
 		@Override
 		protected void hold(MusicData item, int position) {
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
+			threeDot.setTag(item);
+			threeDot.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					showMenu(v);
+				}
+			});
 			Bitmap bitmap = item.getCover(getContext());
 			if (null != bitmap) {
 				cover.setImageBitmap(bitmap);
@@ -131,5 +145,31 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected void initService() {
 		service = PlaybackService.get(getContext());
 		service.addStatePlayerListener(stateListener);
+	}
+	
+	@SuppressLint("NewApi")
+	public void showMenu(final View v) {
+		PopupMenu menu = new PopupMenu(getContext(), v);
+		menu.getMenuInflater().inflate(R.menu.library_menu, menu.getMenu());
+		
+		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem paramMenuItem) {
+				if (paramMenuItem.getItemId() == R.id.library_menu_play) {
+					android.util.Log.d("logd", "onMenuItemClick: " + ((AbstractSong) v.getTag()).getArtist());
+					if (!service.isCorrectlyState(MusicData.class, getCount())) {
+						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+						service.setArrayPlayback(list);
+					} 
+					service.play((AbstractSong) v.getTag());
+				}
+				if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
+					//TODO: 
+				}
+				return false;
+			}
+		});
+		menu.show();
 	}
 }

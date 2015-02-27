@@ -15,6 +15,7 @@
         android:layout_weight="1"
         android:background="@drawable/selectable_item_bg"
         android:clickable="true"
+        android:orientation="horizontal"
         android:paddingLeft="8dp"
         android:paddingStart="8dp" >
 
@@ -78,7 +79,7 @@
 
                 <TextView
                     android:id="@+id/artistLine"
-                   	android:layout_width="match_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
@@ -96,7 +97,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/font_size_title"
                     android:visibility="visible" />
-
             </LinearLayout>
             <!-- android:textColor="#ffff" -->
 
@@ -107,11 +107,19 @@
                 android:id="@+id/titleLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:layout_weight="1"
                 android:textSize="@dimen/font_size_normal" />
         </LinearLayout>
+
+        <View
+            android:id="@+id/threeDot"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:src="@drawable/threedot"
+            android:visibility="gone" />
     </LinearLayout>
 
     <ImageView
@@ -123,6 +131,6 @@
         android:contentDescription="@string/expand"
         android:longClickable="true"
         android:scaleType="center"
-        android:src="@drawable/icon_download"/>
+        android:src="@drawable/icon_download" />
 
 </LinearLayout>

@@ -77,9 +77,9 @@
                     style="@style/Text.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:layout_weight="1"
                     android:text="@string/app_name"
                     android:textColor="@color/gray_dark" />
 
@@ -93,7 +93,6 @@
                     android:gravity="right"
                     android:text="@string/app_name"
                     android:textColor="@color/gray_dark" />
-
             </LinearLayout>
 
             <TextView
@@ -105,8 +104,15 @@
                 android:lines="1"
                 android:text="@string/app_name"
                 android:textColor="@color/gray_dark" />
-
         </LinearLayout>
+
+        <View
+            android:id="@+id/threeDot"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:src="@drawable/threedot"
+            android:visibility="gone" />
     </LinearLayout>
 
     <ImageView

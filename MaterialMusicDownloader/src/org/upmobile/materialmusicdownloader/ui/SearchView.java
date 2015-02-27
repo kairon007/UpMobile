@@ -17,6 +17,7 @@ import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -145,4 +146,10 @@ public class SearchView extends OnlineSearchView implements Constants {
 		}
 		listView.setAdapter(animAdapter);
 	}
+	
+	@Override
+	protected String getDirectory() {
+		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+	}
+	
 }

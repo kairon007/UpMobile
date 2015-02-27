@@ -53,6 +53,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_artist);
 			duration = (TextView) v.findViewById(R.id.item_duration);
+			threeDot = v.findViewById(R.id.threeDot);
 		}
 
 		@Override
@@ -109,7 +110,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 				menu.getMenuInflater().inflate(R.menu.deletemenu, menu.getMenu());
 				menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-					@Override
+					@Override	
 					public boolean onMenuItemClick(MenuItem item) {
 						remove(data);
 						service.remove(data);

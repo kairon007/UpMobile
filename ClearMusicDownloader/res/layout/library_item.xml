@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/parent"
     android:descendantFocusability="blocksDescendants" >
 
     <LinearLayout
@@ -12,8 +12,8 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center_horizontal"
         android:background="@color/red"
-        android:visibility="gone"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -33,11 +33,11 @@
         </FrameLayout>
 
         <FrameLayout
-             android:id="@+id/cancel"
+            android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/button_selector_inverse_light"
-            android:layout_weight="2" >
+            android:layout_weight="2"
+            android:background="@drawable/button_selector_inverse_light" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,8 +45,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="Cancel"
-                android:textColor="@android:color/white"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
         </FrameLayout>
     </LinearLayout>
 
@@ -86,10 +86,11 @@
             android:id="@+id/item_box_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:background="@drawable/button_selector_inverse"
+            android:orientation="vertical"
             android:paddingLeft="8dp" >
- 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -103,20 +104,20 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:textColor="@color/primary_text_color"
                     android:singleLine="true"
                     android:text="@string/list_title_placeholder"
-                    android:textAppearance="?android:textAppearanceMedium" />
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/primary_text_color" />
 
                 <TextView
                     android:id="@+id/item_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/primary_text_color"
                     android:paddingLeft="8dp"
                     android:text="00:00"
-                    android:textAppearance="?android:textAppearanceMedium" />
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/primary_text_color" />
             </LinearLayout>
 
             <FrameLayout
@@ -129,14 +130,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/second_text_color"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-light"
                     android:paddingRight="8dp"
-                    android:text="@string/list_description_placeholder" />
+                    android:text="@string/list_description_placeholder"
+                    android:textColor="@color/second_text_color" />
             </FrameLayout>
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/threeDot"
+            android:layout_width="24dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selectable_item_bg"
+            android:clickable="true"
+            android:src="@drawable/threedot"
+            android:visibility="visible" />
     </LinearLayout>
 
 </FrameLayout>

@@ -30,7 +30,6 @@ import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
@@ -69,6 +68,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected Bitmap cover;
 	protected Long currentDownloadId = (long) 0;
 	private Integer songId;
+	private String downloadPath = null;
 	private int id;
 	private long progress = 0;
 	private boolean useAlbumCover = true;
@@ -103,7 +103,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		String songArtist = song.getArtist().trim();
 		String songTitle = song.getTitle().trim();
-		File musicDir = new File(getDirectory());
+		File musicDir = new File(downloadPath == null ? getDirectory() : downloadPath);
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
 		}
@@ -134,9 +134,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(format);
 		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
 		if (songId != -1) {
-			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
-			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context);
-			manager.execute();
+//			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
+//			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context);
+//			manager.execute();
 		} else {
 			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()){
 				//new download task for device with below 11 
@@ -255,7 +255,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	protected String getDirectory() {
-		String downloadPath = BaseConstants.DOWNLOAD_DIR;
+		downloadPath = BaseConstants.DOWNLOAD_DIR;
 		if (context != null) {
 			SharedPreferences downloadDetails = context.getSharedPreferences(OnlineSearchView.getDOWNLOAD_DETAIL(), Context.MODE_PRIVATE);
 			String sharedDownloadPath = downloadDetails.getString(OnlineSearchView.getDOWNLOAD_DIR(), "");
@@ -639,6 +639,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			return;
 		}
 		
+	}
+
+	public void setDownloadPath(String path) {
+		downloadPath = path;
 	}
 
 }

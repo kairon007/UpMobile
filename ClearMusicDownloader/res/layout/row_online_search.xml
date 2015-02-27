@@ -13,6 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:orientation="horizontal"
         android:background="@drawable/list_selector_white"
         android:clickable="true"
         android:padding="4dp" >
@@ -71,6 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
+            android:layout_weight="1"
             android:orientation="vertical"
             android:padding="8dp" >
 
@@ -117,6 +119,15 @@
                 android:singleLine="true"
                 android:textSize="@dimen/font_size_normal" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/threeDot"
+            android:layout_width="24dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:background="@drawable/selectable_item_bg"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/threedot"
+            android:visibility="visible" />
     </LinearLayout>
 
     <ImageView

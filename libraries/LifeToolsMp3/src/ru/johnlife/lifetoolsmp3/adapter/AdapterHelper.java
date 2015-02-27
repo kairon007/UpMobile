@@ -37,7 +37,7 @@ public class AdapterHelper {
 		private TextView chunkTime;
 		private ImageView btnDownload;
 		private ImageView cover;
-		private View view;
+		private View view, threeDot;
 		private View left;
 		private TextView caption;
 		private boolean fullAction = true;
@@ -66,6 +66,7 @@ public class AdapterHelper {
 			btnDownload = (ImageView)view.findViewById(R.id.btnDownload);
 			cover = (ImageView)view.findViewById(R.id.cover);
 			left = (View) number.getParent();
+			threeDot = view.findViewById(R.id.threeDot);
 		}
 		
 		public ViewBuilder setExpandable(boolean value) {

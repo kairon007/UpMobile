@@ -118,6 +118,15 @@
                 android:textColor="@color/wet_asphalt"
                 android:textSize="15sp" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/threeDot"
+            android:layout_width="24dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:background="@drawable/selectable_item_bg"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/threedot"
+            android:visibility="gone" />
     </LinearLayout>
 
     <ImageView
