@@ -4,7 +4,7 @@
     android:layout_height="48dp"
     android:background="?android:attr/activatedBackgroundIndicator"
     android:orientation="horizontal"
-    android:padding="4dp" >
+    android:paddingLeft="4dp" >
 
     <ImageView
         android:id="@+id/navigation_image"

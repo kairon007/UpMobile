@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
@@ -16,13 +17,16 @@ import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDra
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.FileObserver;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
@@ -34,16 +38,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
-public class MainActivity extends Activity implements NavigationDrawerCallbacks {
+public class MainActivity extends Activity implements NavigationDrawerCallbacks, Constants {
 
 	private final String ARRAY_SAVE = "extras_array_save";
-	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+	private final String folderPath = NewMusicDownloaderApp.getDirectory();
 	private PlaybackService service;
 	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private boolean isVisibleSearchView = false;
 
-	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
+	private FileObserver fileObserver = new FileObserver(folderPath) {
 
 		@Override
 		public void onEvent(int event, String path) {
@@ -167,6 +171,28 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		    	fragment.setArguments(args);
 		    	changeFragment(fragment);
 		    }
+			break;
+		case 4:
+		case 5:
+	        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+	    	if (null == service) {
+	    		service = PlaybackService.get(this);
+	    	}
+			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
+				
+				@Override
+				public void onChosenDir(String chDir) {
+					File file = new File(chDir);
+					Editor editor = sp.edit();
+					editor.putString(PREF_DIRECTORY, chDir);
+					editor.putString(PREF_DIRECTORY_PREFIX, file.getAbsoluteFile().getName());
+					editor.commit();
+					if (null != navigationDrawerFragment && null != service) {
+						navigationDrawerFragment.setAdapter(service.isPlaying());
+					}
+				}
+			});
+			directoryChooserDialog.chooseDirectory();
 			break;
 		default:
 			break;

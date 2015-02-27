@@ -3,9 +3,11 @@ package org.upmobile.newmusicdownloader.ui;
 
 import java.util.ArrayList;
 
+import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DrawerItem;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.NavigationAdapter;
+import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -26,7 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements Constants {
 
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
@@ -35,6 +37,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
+    private NavigationAdapter mAdapter;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -70,7 +73,10 @@ public class NavigationDrawerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             	imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                selectItem(position);
+            	DrawerItem item = (DrawerItem) mAdapter.getItem(position);
+            	if (item.getType() != DrawerItem.Types.TYPE_SECTION) {
+            		selectItem(position);
+            	}
             }
         });
         setAdapter(false);
@@ -82,13 +88,17 @@ public class NavigationDrawerFragment extends Fragment {
 		String library = getActivity().getString(R.string.tab_library);
 		String download = getActivity().getString(R.string.tab_downloads);
 		String search = getActivity().getString(R.string.tab_search);
-		String NAME_NOW_PLAYING = getActivity().getString(R.string.tab_now_plaing);
+		String now_playing = getActivity().getString(R.string.tab_now_plaing);
+		String settings = getActivity().getString(R.string.tab_settings);
 		ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
-		items.add(new DrawerItem(R.drawable.navigation_search, search));
-		items.add(new DrawerItem(R.drawable.navigation_downloads, download));
-		items.add(new DrawerItem(R.drawable.navigaion_library, library));
-		if (isNowPlaying) items.add(new DrawerItem(R.drawable.navigation_player, NAME_NOW_PLAYING));
-		mDrawerListView.setAdapter(new NavigationAdapter(getActivity(), items));
+		items.add(new DrawerItem(R.drawable.navigation_search, search, DrawerItem.Types.TYPE_MENU));
+		items.add(new DrawerItem(R.drawable.navigation_downloads, download, DrawerItem.Types.TYPE_MENU));
+		items.add(new DrawerItem(R.drawable.navigaion_library, library, DrawerItem.Types.TYPE_MENU));
+		if (isNowPlaying) items.add(new DrawerItem(R.drawable.navigation_player, now_playing, DrawerItem.Types.TYPE_MENU));
+		items.add(new DrawerItem("Section", DrawerItem.Types.TYPE_SECTION));
+		items.add(new DrawerItem(R.drawable.navigation_settings, NewMusicDownloaderApp.getDirectory(), DrawerItem.Types.TYPE_SETTING));
+		mAdapter = new NavigationAdapter(getActivity(), items);
+		mDrawerListView.setAdapter(mAdapter);
 	}
 
     public boolean isDrawerOpen() {
@@ -141,8 +151,7 @@ public class NavigationDrawerFragment extends Fragment {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
                     // the navigation drawer automatically in the future.
                     mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
 

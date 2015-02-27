@@ -1,8 +1,8 @@
 package org.upmobile.newmusicdownloader.ui;
 
-import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.DownloadsAdapter;
+import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -26,7 +26,7 @@ public class DownloadsView extends BaseDownloadsView{
 
 	@Override
 	protected String getDirectory() {
-		return Constants.DIRECTORY_PREFIX;
+		return NewMusicDownloaderApp.getDirectoryPrefix();
 	}
 
 	@Override

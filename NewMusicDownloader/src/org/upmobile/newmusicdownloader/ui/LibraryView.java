@@ -3,11 +3,11 @@ package org.upmobile.newmusicdownloader.ui;
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.LibraryAdapter;
+import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -31,7 +31,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 
 	@Override
 	protected String getFolderPath() {
-		return Environment.getExternalStorageDirectory() + DIRECTORY_PREFIX;
+		return NewMusicDownloaderApp.getDirectory();
 	}
 
 	@Override

@@ -36,18 +36,33 @@ public class NavigationAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final ViewHolder holder;
+		DrawerItem menuItem = (DrawerItem) getItem(position);
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.navigation_item, parent, false);
 			holder = new ViewHolder();
-			holder.icon = (ImageView) convertView.findViewById(R.id.navigation_image);
-			holder.title = (TextView) convertView.findViewById(R.id.navigation_name);
+			switch (menuItem.getType()) {
+			case TYPE_MENU:
+				convertView = inflater.inflate(R.layout.navigation_item, parent, false);
+				holder.icon = (ImageView) convertView.findViewById(R.id.navigation_image);
+				holder.title = (TextView) convertView.findViewById(R.id.navigation_name);
+				break;
+			case TYPE_SECTION:
+				convertView = inflater.inflate(R.layout.navigation_section, parent, false);
+				holder.title = (TextView) convertView.findViewById(R.id.section);
+				break;
+			case TYPE_SETTING:
+				convertView = inflater.inflate(R.layout.navigation_settings, parent, false);
+				holder.icon = (ImageView) convertView.findViewById(R.id.navigation_image);
+				holder.title = (TextView) convertView.findViewById(R.id.navmenusection_path);
+				break;
+			}
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		DrawerItem item = drawerItems.get(position);
-		holder.title.setText(item.getTitle());
-		holder.icon.setImageResource(item.getIcon());
+		holder.title.setText(menuItem.getTitle());
+		if (menuItem.getIcon() != 0) {
+			holder.icon.setImageResource(menuItem.getIcon());
+		}
 		return convertView;
 	}
 
