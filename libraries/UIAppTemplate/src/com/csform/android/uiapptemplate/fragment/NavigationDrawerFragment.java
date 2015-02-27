@@ -228,7 +228,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
     
     public void setEnabled(boolean enabled) {
-    	if (isDetached()) return;
+    	if (!isAdded()) return;
 		if (useOldToggle()) {
 	    	mDrawerToggle.setDrawerIndicatorEnabled(enabled);
 	    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_menu_back));
