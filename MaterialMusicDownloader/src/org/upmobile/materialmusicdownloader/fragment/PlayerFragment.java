@@ -22,7 +22,6 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
@@ -57,6 +56,7 @@ import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
+import com.csform.android.uiapptemplate.view.spb.SmoothProgressBar;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment{
 
@@ -101,7 +101,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
 	private SeekBar playerProgress;
-	private ProgressBar wait;
+	private SmoothProgressBar wait;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
@@ -449,7 +449,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		cbTouchInterceptor = (ViewGroup) contentView.findViewById(R.id.cbTouchInterceptor);
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
-		wait = (ProgressBar) contentView.findViewById(R.id.player_wait_song);
+		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
 		undo = new UndoBar(getActivity());
 	}
 

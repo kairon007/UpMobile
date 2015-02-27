@@ -15,8 +15,8 @@
         <attr name="rippleBackground" format="color" localization="suggested" />
         <attr name="rippleDelayClick" format="boolean" localization="suggested" />
         <attr name="ripplePersistent" format="boolean" localization="suggested" />
-		<attr name="rippleInAdapter" format="boolean" localization="suggested" />
-		<attr name="rippleRoundedCorners" format="dimension" localization="suggested" />
+        <attr name="rippleInAdapter" format="boolean" localization="suggested" />
+        <attr name="rippleRoundedCorners" format="dimension" localization="suggested" />
     </declare-styleable>
     <declare-styleable name="ProgressWheel">
         <attr name="text" format="string" />
@@ -33,7 +33,30 @@
         <attr name="barLength" format="dimension" />
         <attr name="contourColor" format="color" />
         <attr name="contourSize" format="dimension" />
-        <attr name="isSpinning" format="boolean"/>
+        <attr name="isSpinning" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="SmoothProgressBar">
+        <attr name="spbStyle" format="reference" />
+        <attr name="spb_color" format="color" />
+        <attr name="spb_stroke_width" format="dimension" />
+        <attr name="spb_stroke_separator_length" format="dimension" />
+        <attr name="spb_sections_count" format="integer" />
+        <attr name="spb_speed" format="float" />
+        <attr name="spb_progressiveStart_speed" format="float" />
+        <attr name="spb_progressiveStop_speed" format="float" />
+        <attr name="spb_interpolator" format="enum">
+            <enum name="spb_interpolator_accelerate" value="0" />
+            <enum name="spb_interpolator_linear" value="1" />
+            <enum name="spb_interpolator_acceleratedecelerate" value="2" />
+            <enum name="spb_interpolator_decelerate" value="3" />
+        </attr>
+        <attr name="spb_reversed" format="boolean" />
+        <attr name="spb_mirror_mode" format="boolean" />
+        <attr name="spb_colors" format="reference" />
+        <attr name="spb_progressiveStart_activated" format="boolean" />
+        <attr name="spb_background" format="reference" />
+        <attr name="spb_generate_background_with_colors" format="boolean" />
+        <attr name="spb_gradients" format="boolean" />
     </declare-styleable>
     <declare-styleable name="PullToZoomScrollView">
         <attr name="scrollHeadView" format="reference" />
@@ -71,13 +94,13 @@
         <!--
 Supply a value for
 {@link android.view.inputmethod.EditorInfo#actionLabel EditorInfo.actionLabel}
-used when an input method is connected to the text view.
+used when an input method is connected to the text view.
         -->
         <attr name="fletImeActionLabel" format="string" />
         <!--
 Supply a value for
 {@link android.view.inputmethod.EditorInfo#actionId EditorInfo.actionId}
-used when an input method is connected to the text view.
+used when an input method is connected to the text view.
         -->
         <attr name="fletImeActionId" format="integer" />
         <!-- This is taken straight out of AOSP to help propogate down -->
@@ -88,193 +111,193 @@ used when an input method is connected to the text view.
             <!--
 Just plain old text. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_NORMAL}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_NORMAL}.
             -->
             <flag name="text" value="0x00000001" />
             <!--
 Can be combined with <var>text</var> and its variations to
 request capitalization of all characters. Corresponds to
-{@link android.text.InputType#TYPE_TEXT_FLAG_CAP_CHARACTERS}.
+{@link android.text.InputType#TYPE_TEXT_FLAG_CAP_CHARACTERS}.
             -->
             <flag name="textCapCharacters" value="0x00001001" />
             <!--
 Can be combined with <var>text</var> and its variations to
 request capitalization of the first character of every word. Corresponds to
-{@link android.text.InputType#TYPE_TEXT_FLAG_CAP_WORDS}.
+{@link android.text.InputType#TYPE_TEXT_FLAG_CAP_WORDS}.
             -->
             <flag name="textCapWords" value="0x00002001" />
             <!--
 Can be combined with <var>text</var> and its variations to
 request capitalization of the first character of every sentence. Corresponds to
-{@link android.text.InputType#TYPE_TEXT_FLAG_CAP_SENTENCES}.
+{@link android.text.InputType#TYPE_TEXT_FLAG_CAP_SENTENCES}.
             -->
             <flag name="textCapSentences" value="0x00004001" />
             <!--
 Can be combined with <var>text</var> and its variations to
 request auto-correction of text being input. Corresponds to
-{@link android.text.InputType#TYPE_TEXT_FLAG_AUTO_CORRECT}.
+{@link android.text.InputType#TYPE_TEXT_FLAG_AUTO_CORRECT}.
             -->
             <flag name="textAutoCorrect" value="0x00008001" />
             <!--
 Can be combined with <var>text</var> and its variations to
 specify that this field will be doing its own auto-completion and
 talking with the input method appropriately. Corresponds to
-{@link android.text.InputType#TYPE_TEXT_FLAG_AUTO_COMPLETE}.
+{@link android.text.InputType#TYPE_TEXT_FLAG_AUTO_COMPLETE}.
             -->
             <flag name="textAutoComplete" value="0x00010001" />
             <!--
 Can be combined with <var>text</var> and its variations to
 allow multiple lines of text in the field. If this flag is not set,
 the text field will be constrained to a single line. Corresponds to
-{@link android.text.InputType#TYPE_TEXT_FLAG_MULTI_LINE}.
+{@link android.text.InputType#TYPE_TEXT_FLAG_MULTI_LINE}.
             -->
             <flag name="textMultiLine" value="0x00020001" />
             <!--
 Can be combined with <var>text</var> and its variations to
 indicate that though the regular text view should not be multiple
 lines, the IME should provide multiple lines if it can. Corresponds to
-{@link android.text.InputType#TYPE_TEXT_FLAG_IME_MULTI_LINE}.
+{@link android.text.InputType#TYPE_TEXT_FLAG_IME_MULTI_LINE}.
             -->
             <flag name="textImeMultiLine" value="0x00040001" />
             <!--
 Can be combined with <var>text</var> and its variations to
 indicate that the IME should not show any
 dictionary-based word suggestions. Corresponds to
-{@link android.text.InputType#TYPE_TEXT_FLAG_NO_SUGGESTIONS}.
+{@link android.text.InputType#TYPE_TEXT_FLAG_NO_SUGGESTIONS}.
             -->
             <flag name="textNoSuggestions" value="0x00080001" />
             <!--
 Text that will be used as a URI. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_URI}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_URI}.
             -->
             <flag name="textUri" value="0x00000011" />
             <!--
 Text that will be used as an e-mail address. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_EMAIL_ADDRESS}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_EMAIL_ADDRESS}.
             -->
             <flag name="textEmailAddress" value="0x00000021" />
             <!--
 Text that is being supplied as the subject of an e-mail. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_EMAIL_SUBJECT}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_EMAIL_SUBJECT}.
             -->
             <flag name="textEmailSubject" value="0x00000031" />
             <!--
 Text that is the content of a short message. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_SHORT_MESSAGE}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_SHORT_MESSAGE}.
             -->
             <flag name="textShortMessage" value="0x00000041" />
             <!--
 Text that is the content of a long message. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_LONG_MESSAGE}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_LONG_MESSAGE}.
             -->
             <flag name="textLongMessage" value="0x00000051" />
             <!--
 Text that is the name of a person. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_PERSON_NAME}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_PERSON_NAME}.
             -->
             <flag name="textPersonName" value="0x00000061" />
             <!--
 Text that is being supplied as a postal mailing address. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_POSTAL_ADDRESS}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_POSTAL_ADDRESS}.
             -->
             <flag name="textPostalAddress" value="0x00000071" />
             <!--
 Text that is a password. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_PASSWORD}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_PASSWORD}.
             -->
             <flag name="textPassword" value="0x00000081" />
             <!--
 Text that is a password that should be visible. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_VISIBLE_PASSWORD}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_VISIBLE_PASSWORD}.
             -->
             <flag name="textVisiblePassword" value="0x00000091" />
             <!--
 Text that is being supplied as text in a web form. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_WEB_EDIT_TEXT}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_WEB_EDIT_TEXT}.
             -->
             <flag name="textWebEditText" value="0x000000a1" />
             <!--
 Text that is filtering some other data. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_FILTER}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_FILTER}.
             -->
             <flag name="textFilter" value="0x000000b1" />
             <!--
 Text that is for phonetic pronunciation, such as a phonetic name
 field in a contact entry. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_PHONETIC}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_PHONETIC}.
             -->
             <flag name="textPhonetic" value="0x000000c1" />
             <!--
 Text that will be used as an e-mail address on a web form. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS}.
             -->
             <flag name="textWebEmailAddress" value="0x000000d1" />
             <!--
 Text that will be used as a password on a web form. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_TEXT} |
-{@link android.text.InputType#TYPE_TEXT_VARIATION_WEB_PASSWORD}.
+{@link android.text.InputType#TYPE_TEXT_VARIATION_WEB_PASSWORD}.
             -->
             <flag name="textWebPassword" value="0x000000e1" />
             <!--
 A numeric only field. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_NUMBER} |
-{@link android.text.InputType#TYPE_NUMBER_VARIATION_NORMAL}.
+{@link android.text.InputType#TYPE_NUMBER_VARIATION_NORMAL}.
             -->
             <flag name="number" value="0x00000002" />
             <!--
 Can be combined with <var>number</var> and its other options to
 allow a signed number. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_NUMBER} |
-{@link android.text.InputType#TYPE_NUMBER_FLAG_SIGNED}.
+{@link android.text.InputType#TYPE_NUMBER_FLAG_SIGNED}.
             -->
             <flag name="numberSigned" value="0x00001002" />
             <!--
 Can be combined with <var>number</var> and its other options to
 allow a decimal (fractional) number. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_NUMBER} |
-{@link android.text.InputType#TYPE_NUMBER_FLAG_DECIMAL}.
+{@link android.text.InputType#TYPE_NUMBER_FLAG_DECIMAL}.
             -->
             <flag name="numberDecimal" value="0x00002002" />
             <!--
 A numeric password field. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_NUMBER} |
-{@link android.text.InputType#TYPE_NUMBER_VARIATION_PASSWORD}.
+{@link android.text.InputType#TYPE_NUMBER_VARIATION_PASSWORD}.
             -->
             <flag name="numberPassword" value="0x00000012" />
             <!--
 For entering a phone number. Corresponds to
-{@link android.text.InputType#TYPE_CLASS_PHONE}.
+{@link android.text.InputType#TYPE_CLASS_PHONE}.
             -->
             <flag name="phone" value="0x00000003" />
             <!--
 For entering a date and time. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_DATETIME} |
-{@link android.text.InputType#TYPE_DATETIME_VARIATION_NORMAL}.
+{@link android.text.InputType#TYPE_DATETIME_VARIATION_NORMAL}.
             -->
             <flag name="datetime" value="0x00000004" />
             <!--
 For entering a date. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_DATETIME} |
-{@link android.text.InputType#TYPE_DATETIME_VARIATION_DATE}.
+{@link android.text.InputType#TYPE_DATETIME_VARIATION_DATE}.
             -->
             <flag name="date" value="0x00000014" />
             <!--
 For entering a time. Corresponds to
 {@link android.text.InputType#TYPE_CLASS_DATETIME} |
-{@link android.text.InputType#TYPE_DATETIME_VARIATION_TIME}.
+{@link android.text.InputType#TYPE_DATETIME_VARIATION_TIME}.
             -->
             <flag name="time" value="0x00000024" />
         </attr>
@@ -282,7 +305,7 @@ For entering a time. Corresponds to
 Additional features you can enable in an IME associated with an editor
 to improve the integration with your application. The constants
 here correspond to those defined by
-{@link android.view.inputmethod.EditorInfo#imeOptions}.
+{@link android.view.inputmethod.EditorInfo#imeOptions}.
         -->
         <attr name="fletImeOptions">
 
@@ -292,13 +315,13 @@ here correspond to those defined by
 There is no specific action associated with this editor, let the
 editor come up with its own if it can.
 Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_NULL}.
+{@link android.view.inputmethod.EditorInfo#IME_NULL}.
             -->
             <flag name="actionUnspecified" value="0x00000000" />
             <!--
 This editor has no action associated with it.
 Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_ACTION_NONE}.
+{@link android.view.inputmethod.EditorInfo#IME_ACTION_NONE}.
             -->
             <flag name="actionNone" value="0x00000001" />
             <!--
@@ -306,7 +329,7 @@ The action key performs a "go"
 operation to take the user to the target of the text they typed.
 Typically used, for example, when entering a URL.
 Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_ACTION_GO}.
+{@link android.view.inputmethod.EditorInfo#IME_ACTION_GO}.
             -->
             <flag name="actionGo" value="0x00000002" />
             <!--
@@ -314,7 +337,7 @@ The action key performs a "search"
 operation, taking the user to the results of searching for the text
 the have typed (in whatever context is appropriate).
 Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_ACTION_SEARCH}.
+{@link android.view.inputmethod.EditorInfo#IME_ACTION_SEARCH}.
             -->
             <flag name="actionSearch" value="0x00000003" />
             <!--
@@ -322,28 +345,28 @@ The action key performs a "send"
 operation, delivering the text to its target. This is typically used
 when composing a message.
 Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_ACTION_SEND}.
+{@link android.view.inputmethod.EditorInfo#IME_ACTION_SEND}.
             -->
             <flag name="actionSend" value="0x00000004" />
             <!--
 The action key performs a "next"
 operation, taking the user to the next field that will accept text.
 Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_ACTION_NEXT}.
+{@link android.view.inputmethod.EditorInfo#IME_ACTION_NEXT}.
             -->
             <flag name="actionNext" value="0x00000005" />
             <!--
 The action key performs a "done"
 operation, closing the soft input method.
 Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_ACTION_DONE}.
+{@link android.view.inputmethod.EditorInfo#IME_ACTION_DONE}.
             -->
             <flag name="actionDone" value="0x00000006" />
             <!--
 The action key performs a "previous"
 operation, taking the user to the previous field that will accept text.
 Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_ACTION_PREVIOUS}.
+{@link android.view.inputmethod.EditorInfo#IME_ACTION_PREVIOUS}.
             -->
             <flag name="actionPrevious" value="0x00000007" />
             <!--
@@ -351,7 +374,7 @@ Used to request that the IME never go
 into fullscreen mode. Applications need to be aware that the flag is not
 a guarantee, and not all IMEs will respect it.
 <p>Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_FULLSCREEN}.
+{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_FULLSCREEN}.
             -->
             <flag name="flagNoFullscreen" value="0x2000000" />
             <!--
@@ -362,7 +385,7 @@ navigate, this will show up in the application as an actionPrevious
 at {@link android.view.inputmethod.InputConnection#performEditorAction(int)
 InputConnection.performEditorAction(int)}.
 <p>Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_FULLSCREEN}.
+{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_FULLSCREEN}.
             -->
             <flag name="flagNavigatePrevious" value="0x4000000" />
             <!--
@@ -378,7 +401,7 @@ in the application at
 {@link android.view.inputmethod.InputConnection#performEditorAction(int)
 InputConnection.performEditorAction(int)}.
 <p>Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_FLAG_NAVIGATE_NEXT}.
+{@link android.view.inputmethod.EditorInfo#IME_FLAG_NAVIGATE_NEXT}.
             -->
             <flag name="flagNavigateNext" value="0x8000000" />
             <!--
@@ -392,7 +415,7 @@ this flag is specified the IME may <em>not</em> be set up to be able
 to display text, so it should only be used in situations where this is
 not needed.
 <p>Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_EXTRACT_UI}.
+{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_EXTRACT_UI}.
             -->
             <flag name="flagNoExtractUi" value="0x10000000" />
             <!--
@@ -404,7 +427,7 @@ is simply never available to the user. Setting this generally means
 that you think showing text being edited is more important than the
 action you have supplied.
 <p>Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_ACCESSORY_ACTION}.
+{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_ACCESSORY_ACTION}.
             -->
             <flag name="flagNoAccessoryAction" value="0x20000000" />
             <!--
@@ -416,7 +439,7 @@ enough that accidentally hitting it should be avoided, such as sending
 a message. Note that {@link android.widget.TextView} will
 automatically set this flag for you on multi-line text views.
 <p>Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_ENTER_ACTION}.
+{@link android.view.inputmethod.EditorInfo#IME_FLAG_NO_ENTER_ACTION}.
             -->
             <flag name="flagNoEnterAction" value="0x40000000" />
             <!--
@@ -433,7 +456,7 @@ However, it is strongly recommended for IME authors to respect this flag
 especially when their IME could end up with a state that has only non-ASCII
 input languages enabled.
 <p>Corresponds to
-{@link android.view.inputmethod.EditorInfo#IME_FLAG_FORCE_ASCII}.
+{@link android.view.inputmethod.EditorInfo#IME_FLAG_FORCE_ASCII}.
             -->
             <flag name="flagForceAscii" value="0x80000000" />
         </attr>
@@ -474,7 +497,7 @@ input languages enabled.
             <enum name="robotoThinItalic" value="15" />
         </attr>
     </declare-styleable>
-    
+
     <!-- Shape image view -->
     <attr name="siArrowPosition">
         <enum name="left" value="0" />
@@ -494,6 +517,7 @@ input languages enabled.
         <enum name="miter" value="1" />
         <enum name="round" value="2" />
     </attr>
+
     <declare-styleable name="ShaderImageView">
         <attr name="siSquare" format="boolean" />
         <attr name="siBorderColor" format="color" />
@@ -502,15 +526,15 @@ input languages enabled.
         <attr name="siForeground" format="integer|reference" />
         <!-- Rounded Image View -->
         <attr name="siRadius" format="dimension" />
-        <!--BubbleImageView-->
-        <attr name="siArrowPosition"/>
-        <attr name="siTriangleHeight" format="dimension"/>
-        <!--PorterImageView-->
+        <!-- BubbleImageView -->
+        <attr name="siArrowPosition" />
+        <attr name="siTriangleHeight" format="dimension" />
+        <!-- PorterImageView -->
         <attr name="siShape" format="integer|reference" />
-        <!--ShaderImageView-->
-        <attr name="siBorderType"/>
-        <attr name="siStrokeCap"/>
-        <attr name="siStrokeJoin"/>
+        <!-- ShaderImageView -->
+        <attr name="siBorderType" />
+        <attr name="siStrokeCap" />
+        <attr name="siStrokeJoin" />
         <attr name="siStrokeMiter" format="dimension" />
     </declare-styleable>
 
