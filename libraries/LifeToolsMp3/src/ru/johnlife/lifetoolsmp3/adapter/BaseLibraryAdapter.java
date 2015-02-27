@@ -24,7 +24,9 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected PlaybackService service;
 	
 	protected abstract int getDefaultCover();
+	protected abstract boolean showDeleteItemMenu();
 	protected Bitmap getDefaultBitmap() { return null; }
+	protected void remove() {};
 	protected void setListener(ViewGroup parent, View view, final int position){ }
 	
 	protected OnStatePlayerListener stateListener = new OnStatePlayerListener() {
@@ -151,13 +153,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	public void showMenu(final View v) {
 		PopupMenu menu = new PopupMenu(getContext(), v);
 		menu.getMenuInflater().inflate(R.menu.library_menu, menu.getMenu());
-		
+		menu.getMenu().getItem(2).setVisible(showDeleteItemMenu());
 		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.library_menu_play) {
-					android.util.Log.d("logd", "onMenuItemClick: " + ((AbstractSong) v.getTag()).getArtist());
 					if (!service.isCorrectlyState(MusicData.class, getCount())) {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
@@ -166,6 +167,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 				}
 				if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
 					//TODO: 
+				}
+				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
+					remove((MusicData) v.getTag());
+					service.remove((AbstractSong) v.getTag());
+					((MusicData) v.getTag()).reset(getContext());
+					remove();
 				}
 				return false;
 			}

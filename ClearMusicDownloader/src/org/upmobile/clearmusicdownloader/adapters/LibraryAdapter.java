@@ -311,4 +311,9 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 					}
 				});
 	}
+
+	@Override
+	protected boolean showDeleteItemMenu() {
+		return false;
+	}
 }

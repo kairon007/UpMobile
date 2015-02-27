@@ -141,4 +141,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	public View getUndoClickView(View paramView) {
 		return paramView.findViewById(R.id.undo_button);
 	}
+
+	@Override
+	protected boolean showDeleteItemMenu() {
+		return false;
+	}
 }

@@ -12,15 +12,11 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
 public class LibraryAdapter extends BaseLibraryAdapter {
@@ -40,7 +36,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener, OnLongClickListener {
+	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener {
 
 		private MusicData data;
 		private ViewGroup info;
@@ -70,9 +66,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 
 		private void setListener() {
 			cover.setOnClickListener(this);
-			cover.setOnLongClickListener(this);
 			info.setOnClickListener(this);
-			info.setOnLongClickListener(this);
 			button.setOnClickListener(this);
 		}
 
@@ -102,32 +96,6 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 				break;
 			}
 		}
-
-		@Override
-		public boolean onLongClick(View view) {
-			if (view.getId() == cover.getId() || view.getId() == info.getId()) {
-				PopupMenu menu = new PopupMenu(getContext(), view);
-				menu.getMenuInflater().inflate(R.menu.deletemenu, menu.getMenu());
-				menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-					@Override	
-					public boolean onMenuItemClick(MenuItem item) {
-						remove(data);
-						service.remove(data);
-						data.reset(getContext());
-						if (isEmpty()) {
-							((MainActivity) getContext()).showPlayerElement(false);
-							TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
-							emptyMsg.setVisibility(View.VISIBLE);
-							emptyMsg.setText(R.string.library_empty);
-						}
-						return false;
-					}
-				});
-				menu.show();
-			}
-			return true;
-		}
 	}
 
 	@Override
@@ -138,5 +106,20 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 	@Override
 	protected int getDefaultCover() {
 		return R.drawable.no_cover_art_big;
+	}
+
+	@Override
+	protected boolean showDeleteItemMenu() {
+		return true;
+	}
+	
+	@Override
+	protected void remove() {
+		if (isEmpty()) {
+			((MainActivity) getContext()).showPlayerElement(false);
+			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
+			emptyMsg.setVisibility(View.VISIBLE);
+			emptyMsg.setText(R.string.library_empty);
+		}
 	}
 }
