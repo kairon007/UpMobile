@@ -64,5 +64,7 @@
     <color name="cpb_green">#ff99cc00</color>
     <color name="cpb_green_dark">#ff6d9b00</color>
     <color name="cpb_white">@android:color/white</color>
+    
+    <color name="spb_default_color">#33b5e5</color>
 
 </resources>
