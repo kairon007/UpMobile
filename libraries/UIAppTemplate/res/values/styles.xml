@@ -8,6 +8,10 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_item_bg</item>
         <item name="actionBarItemBackground">@drawable/selectable_item_bg</item>
+        <item name="android:actionBarSize">@dimen/height_action_bar</item>
+        <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_drawer_compat</item>
+        <item name="android:icon">@drawable/actionbar_icon_placeholder_compat</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -21,7 +25,6 @@
     </style>
 
     <!-- Default application theme ends here -->
-
 
     <!-- ActionBar related themes -->
     <style name="ActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar">

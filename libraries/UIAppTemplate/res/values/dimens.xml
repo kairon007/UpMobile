@@ -4,6 +4,12 @@
     <dimen name="drawer_width">300dp</dimen>
     <dimen name="ken_burns_header">250dp</dimen>
     <dimen name="cpb_stroke_width">4dp</dimen>
+    
+    <dimen name="height_action_bar">56dp</dimen>
+    <dimen name="margin_element">16dp</dimen>
+    <dimen name="margin_left_text">72dp</dimen>
+    <dimen name="item_height">72dp</dimen>
+    <dimen name="message_height">48dp</dimen>
 
     <color name="spb_default_color">#33b5e5</color>
 

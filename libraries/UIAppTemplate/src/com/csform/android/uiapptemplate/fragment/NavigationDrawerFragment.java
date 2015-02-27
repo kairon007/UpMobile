@@ -135,7 +135,7 @@ public class NavigationDrawerFragment extends Fragment {
         	drawerToggle = new android.support.v4.app.ActionBarDrawerToggle(
 	                    getActivity(),                    /* host Activity */
 	                    mDrawerLayout,                    /* DrawerLayout object */
-	                    R.drawable.ic_drawer_white,             /* nav drawer image to replace 'Up' caret */
+	                    R.drawable.ic_drawer_compat,             /* nav drawer image to replace 'Up' caret */
 	                    R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
 	                    R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
 	            );
@@ -231,10 +231,10 @@ public class NavigationDrawerFragment extends Fragment {
     	if (!isAdded()) return;
 		if (useOldToggle()) {
 	    	mDrawerToggle.setDrawerIndicatorEnabled(enabled);
-	    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_menu_back));
+	    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_ab_up_compat));
 		} else {
 			drawerToggle.setDrawerIndicatorEnabled(enabled);
-	    	drawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_menu_back));
+	    	drawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_ab_up_compat));
 		}
 		mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     	setHasOptionsMenu(enabled);

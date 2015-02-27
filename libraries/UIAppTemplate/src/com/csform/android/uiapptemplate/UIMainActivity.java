@@ -151,7 +151,8 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag()));
 		}
 	}
-
+	
+	
 	@Override
 	public void setTitle(int titleId) {
 		setTitle(getString(titleId));
@@ -202,8 +203,7 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 		if (((Fragment)baseMaterialFragment).isAdded()) {
 			((Fragment)baseMaterialFragment).onResume();
 		}
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
+		getFragmentManager().beginTransaction()
 		.replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName())
 		.addToBackStack(baseMaterialFragment.getClass().getSimpleName())
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
