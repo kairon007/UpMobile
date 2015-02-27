@@ -119,7 +119,10 @@
     </style>
 
     <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">
-        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
+        <item name="android:thumb">@drawable/seekbar_selector</item>
+        <item name="android:progressDrawable">@drawable/seekbar</item>
+        <item name="android:indeterminateDrawable">@drawable/seekbar</item>
+        <item name="android:focusable">true</item>
     </style>
 
 </resources>
