@@ -178,15 +178,13 @@
                     android:progress="0" />
 
                 <com.csform.android.uiapptemplate.view.spb.SmoothProgressBar
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/player_wait_song"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
                     app:spb_color="@color/main_color_500"
                     app:spb_mirror_mode="false"
-                    app:spb_progressiveStart_activated="true"
+                    app:spb_progressiveStart_activated="false"
                     app:spb_progressiveStart_speed="1.5"
                     app:spb_progressiveStop_speed="3.4"
                     app:spb_reversed="false"
