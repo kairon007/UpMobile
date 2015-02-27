@@ -16,6 +16,7 @@
     <string name="tab_downloads">İndirmeler</string>
     <string name="tab_library">Kitaplık</string>
     <string name="tab_now_plaing">Şimdi çalan</string>
+    <string name="tab_settings">Ayarlar</string>
     <string name="message_please_wait">Lütfen Bekleyin...</string>
     <string name="message_loading">Yükleniyor...</string>
     <string name="message_searching_for">Şunu ara:</string>

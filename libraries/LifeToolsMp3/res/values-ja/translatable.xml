@@ -16,6 +16,7 @@
     <string name="tab_downloads">ダウンロード</string>
     <string name="tab_library">ライブラリ</string>
     <string name="tab_now_plaing">プレイ中</string>
+    <string name="tab_settings">設定</string>
     <string name="message_please_wait">お待ちください…</string>
     <string name="message_loading">ロード中…</string>
     <string name="message_searching_for">以下を検索中：</string>

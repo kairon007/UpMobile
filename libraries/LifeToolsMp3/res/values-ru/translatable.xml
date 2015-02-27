@@ -16,6 +16,7 @@
     <string name="tab_downloads">Загрузки</string>
     <string name="tab_library">Библиотека</string>
     <string name="tab_now_plaing">Сейчас играет</string>
+    <string name="tab_settings">Настройки</string>
     <string name="message_please_wait">Подождите...</string>
     <string name="message_loading">Загрузка...</string>
     <string name="message_searching_for">Поиск</string>

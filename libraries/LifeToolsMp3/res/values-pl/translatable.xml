@@ -16,6 +16,7 @@
     <string name="tab_downloads">Pobrane</string>
     <string name="tab_library">Biblioteka</string>
     <string name="tab_now_plaing">Teraz gra</string>
+    <string name="tab_settings">Ustawienia</string>
     <string name="message_please_wait">Proszę czekać...</string>
     <string name="message_loading">Wczytywanie...</string>
     <string name="message_searching_for">Wyszukiwanie po</string>

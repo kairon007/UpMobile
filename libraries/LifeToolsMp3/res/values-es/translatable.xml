@@ -16,6 +16,7 @@
     <string name="tab_downloads">Descargas</string>
     <string name="tab_library">Biblioteca</string>
     <string name="tab_now_plaing">Reproduciendo ahora</string>
+    <string name="tab_settings">Ajustes</string>
     <string name="message_please_wait">Aguarda por favor...</string>
     <string name="message_loading">Cargando…</string>
     <string name="message_searching_for">Buscando</string>
