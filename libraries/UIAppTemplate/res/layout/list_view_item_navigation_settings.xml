@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.csform.android.uiapptemplate.view.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/RippleStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_background_empty" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp" >
+
+        <com.csform.android.uiapptemplate.font.MusicTextView
+            android:id="@+id/icon"
+            style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.csform.android.uiapptemplate.font.RobotoTextView
+                android:id="@+id/title"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_settings"
+                android:textColor="@drawable/selector_text_empty"
+                android:textSize="18sp"
+                app:typeface="robotoBold" />
+
+            <com.csform.android.uiapptemplate.font.RobotoTextView
+                android:id="@+id/path"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="start"
+                android:gravity="right"
+                android:singleLine="true"
+                android:text="Path"
+                android:textColor="@drawable/selector_text_empty"
+                android:textSize="18sp"
+                app:typeface="robotoBold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</com.csform.android.uiapptemplate.view.MaterialRippleLayout>

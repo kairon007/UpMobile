@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
@@ -17,12 +18,14 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.FileObserver;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.TypedValue;
 
@@ -35,11 +38,11 @@ import com.devspark.appmsg.AppMsg.Style;
 public class MainActivity extends UIMainActivity implements Constants {
 
 	private final String ARRAY_SAVE = "extras_array_save";
-	private final String folderPath = Environment.getExternalStorageDirectory() + DIRECTORY_PREFIX;
+	private final String folderPath = MaterialMusicDownloaderApp.getDirectory();
 	private PlaybackService service;
 	private int currentFragmentID;
 
-	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
+	private FileObserver fileObserver = new FileObserver(folderPath) {
 
 		@Override
 		public void onEvent(int event, String path) {
@@ -166,4 +169,24 @@ public class MainActivity extends UIMainActivity implements Constants {
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
 	}
+
+	@Override
+	public String getDirectory() {
+		return MaterialMusicDownloaderApp.getDirectory();
+	}
+
+	@Override
+	public void savePaths(String prefix, String directory) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		Editor editor = sp.edit();
+		editor.putString(PREF_DIRECTORY, directory);
+		editor.putString(PREF_DIRECTORY_PREFIX, prefix);
+		editor.commit();
+	}
+
+	@Override
+	public boolean isPlayingService() {
+		return PlaybackService.get(this).isPlaying();
+	}
+	
 }

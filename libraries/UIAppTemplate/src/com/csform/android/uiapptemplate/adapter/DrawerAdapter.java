@@ -41,28 +41,37 @@ public class DrawerAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final ViewHolder holder;
+		ViewHolder holder = new ViewHolder();
+		DrawerItem itemMenu = mDrawerItems.get(position);
 		if (convertView == null) {
-			if (mIsFirstType) {
-				convertView = mInflater.inflate(R.layout.list_view_item_navigation_drawer_1, parent, false);
-			} else {
-				convertView = mInflater.inflate(R.layout.list_view_item_navigation_drawer_2, parent, false);
+			switch (itemMenu.getType()) {
+			case TYPE_MENU:
+				convertView = mIsFirstType ? mInflater.inflate(R.layout.list_view_item_navigation_drawer_1, parent, false) : mInflater.inflate(R.layout.list_view_item_navigation_drawer_2, parent, false);
+				holder.icon = (TextView) convertView.findViewById(R.id.icon);
+				holder.title = (TextView) convertView.findViewById(R.id.title);
+				break;
+			case TYPE_SECTION:
+				convertView = mInflater.inflate(R.layout.list_view_item_navigation_section, parent, false);
+				holder.title = (TextView) convertView.findViewById(R.id.section);
+				break;
+			case TYPE_SETTING:
+				convertView = mInflater.inflate(R.layout.list_view_item_navigation_settings, parent, false);
+				holder.icon = (TextView) convertView.findViewById(R.id.icon);
+				holder.title = (TextView) convertView.findViewById(R.id.path);
+				break;
 			}
-			holder = new ViewHolder();
-			holder.icon = (TextView) convertView.findViewById(R.id.icon); // holder.icon object is null if mIsFirstType is set to false
-			holder.title = (TextView) convertView.findViewById(R.id.title);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
-		DrawerItem item = mDrawerItems.get(position);
-		
-		if (mIsFirstType) {	//We chose to set icon that exists in list_view_item_navigation_drawer_1.xml
-			holder.icon.setText(item.getIcon());
+		if (mIsFirstType && itemMenu.getIcon() != 0) {	//We chose to set icon that exists in list_view_item_navigation_drawer_1.xml
+			holder.icon.setText(itemMenu.getIcon());
 		}
-		holder.title.setText(item.getTitle());
-		
+		if (itemMenu.getTitle() != 0) {
+			holder.title.setText(itemMenu.getTitle());
+		} else {
+			holder.title.setText(itemMenu.getTitleString());
+		}
 		return convertView;
 	}
 	

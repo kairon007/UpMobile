@@ -2,13 +2,14 @@ package org.upmobile.materialmusicdownloader;
 
 import java.io.File;
 
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Environment;
 
 import com.devspark.appmsg.AppMsg;
 import com.devspark.appmsg.AppMsg.Style;
@@ -50,7 +51,7 @@ public class DownloadListener extends DownloadClickListener {
 	
 	@Override
 	protected String getDirectory() {
-		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+		return MaterialMusicDownloaderApp.getDirectory();
 	}
 	
 	@Override

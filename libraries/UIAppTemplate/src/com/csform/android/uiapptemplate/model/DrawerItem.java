@@ -1,5 +1,6 @@
 package com.csform.android.uiapptemplate.model;
 
+
 public class DrawerItem {
 	/* Commented tags are expected in future updates.
 	 */
@@ -25,15 +26,42 @@ public class DrawerItem {
 	public static final int DRAWER_ITEM_TAG_GIT_HUB = 28;
 	public static final int DRAWER_ITEM_TAG_INSTAGRAM = 29;
 	
-	public DrawerItem(int icon, int title, int tag) {
+	public enum Types {TYPE_MENU, TYPE_SECTION, TYPE_SETTING};
+	
+	private int icon = 0;
+	private int title = 0;
+	private String titleString;
+	private int tag = 0;
+	private Types type;
+	
+	public DrawerItem(int icon, int title, int tag, Types type) {
 		this.icon = icon;
 		this.title = title;
 		this.tag = tag;
+		this.type = type;
+	}
+	
+	public DrawerItem(int icon, int title, Types type) {
+		this.icon = icon;
+		this.title = title;
+		this.type = type;		
 	}
 
-	private int icon;
-	private int title;
-	private int tag;
+	public DrawerItem(int icon, String title, Types type) {
+		this.icon = icon;
+		this.titleString = title;
+		this.type = type;		
+	}
+	
+	public DrawerItem(int title, Types type) {
+		this.title = title;
+		this.type = type;
+	}
+
+	public DrawerItem(String title, Types type) {
+		this.titleString = title;
+		this.type = type;
+	}
 
 	public int getIcon() {
 		return icon;
@@ -50,6 +78,14 @@ public class DrawerItem {
 	public void setTitle(int title) {
 		this.title = title;
 	}
+	
+	public String getTitleString() {
+		return titleString;
+	}
+	
+	public void setTitleString(String title) {
+		this.titleString = title;
+	}
 
 	public int getTag() {
 		return tag;
@@ -57,5 +93,13 @@ public class DrawerItem {
 
 	public void setTag(int tag) {
 		this.tag = tag;
+	}
+	
+	public Types getType() {
+		return type;
+	}
+	
+	public void setType(Types type) {
+		this.type = type;
 	}
 }

@@ -5,6 +5,7 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.adapter.CustomSwipeUndoAdapter;
 import org.upmobile.materialmusicdownloader.adapter.CustomSwipeUndoAdapter.CanNotifyListener;
 import org.upmobile.materialmusicdownloader.adapter.DownloadsAdapter;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -27,7 +28,7 @@ public class DownloadsView extends BaseDownloadsView implements Constants {
 
 	@Override
 	protected String getDirectory() {
-		return DIRECTORY_PREFIX;
+		return MaterialMusicDownloaderApp.getDirectoryPrefix();
 	}
 
 	@Override

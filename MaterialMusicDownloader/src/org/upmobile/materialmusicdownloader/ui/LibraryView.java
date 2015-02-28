@@ -4,11 +4,11 @@ import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.adapter.CustomSwipeUndoAdapter;
 import org.upmobile.materialmusicdownloader.adapter.LibraryAdapter;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +37,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 
 	@Override
 	protected String getFolderPath() {
-		return Environment.getExternalStorageDirectory() + DIRECTORY_PREFIX;
+		return MaterialMusicDownloaderApp.getDirectory();
 	}
 
 	@Override

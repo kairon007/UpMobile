@@ -1,12 +1,13 @@
 package com.csform.android.uiapptemplate;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -47,6 +48,12 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 	private boolean isVisibleSearchView = false;
 
 	protected abstract <T extends BaseMaterialFragment> ArrayList<T> getFragments();
+	
+	public abstract String getDirectory();
+	
+	public abstract void savePaths(String prefix, String directory);
+	
+	public abstract boolean isPlayingService();
 	
 	protected void clickOnSearchView(String message) {
 		
@@ -140,19 +147,6 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 		if (null != searchView) imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 	}
 	
-	
-	public void setAdapter(boolean isNowPlaying) {
-		mDrawerItems = new ArrayList<DrawerItem>();
-		mFragments = getFragments();
-		int lenght = mFragments.size();
-		for(int i=0; i<lenght; i++) {
-			if (!isNowPlaying && (i == lenght-1)) break;
-			BaseMaterialFragment fragment = mFragments.get(i);
-			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag()));
-		}
-	}
-	
-	
 	@Override
 	public void setTitle(int titleId) {
 		setTitle(getString(titleId));
@@ -188,6 +182,19 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 		    if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
 		    	changeFragment(fragment);
 		    }
+		case 4:
+		case 5:
+			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
+				
+				@Override
+				public void onChosenDir(String chDir) {
+					File file = new File(chDir);
+					String prefix = file.getAbsoluteFile().getName();
+					savePaths(prefix, chDir);
+					navigationDrawerFragment.setAdapter(isPlayingService());
+				}
+			});
+			directoryChooserDialog.chooseDirectory();
 			break;
 		default:
 			break;

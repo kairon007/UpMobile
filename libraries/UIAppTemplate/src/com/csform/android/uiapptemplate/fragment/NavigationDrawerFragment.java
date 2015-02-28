@@ -42,6 +42,7 @@ public class NavigationDrawerFragment extends Fragment {
    
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
+    private DrawerAdapter mAdapter;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -78,7 +79,10 @@ public class NavigationDrawerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             	imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                selectItem(position);
+            	DrawerItem item = (DrawerItem) mAdapter.getItem(position);
+                if (item.getType() != DrawerItem.Types.TYPE_SECTION) {
+                	selectItem(position);
+                }
             }
         });
         setAdapter(false);
@@ -93,9 +97,12 @@ public class NavigationDrawerFragment extends Fragment {
 		for(int i=0; i<lenght; i++) {
 			if (!isNowPlaying && (i == lenght - 1)) break;
 			BaseMaterialFragment fragment = mFragments.get(i);
-			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag()));
+			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag(), DrawerItem.Types.TYPE_MENU));
 		}
-		mDrawerListView.setAdapter(new DrawerAdapter(getActivity(), mDrawerItems, true));
+		mDrawerItems.add(new DrawerItem("Section", DrawerItem.Types.TYPE_SECTION));
+		mDrawerItems.add(new DrawerItem(R.string.drawer_icon_image_gallery, ((UIMainActivity) getActivity()).getDirectory(), DrawerItem.Types.TYPE_SETTING ));
+		mAdapter = new DrawerAdapter(getActivity(), mDrawerItems, true);
+		mDrawerListView.setAdapter(mAdapter);
 	}
 	
 	

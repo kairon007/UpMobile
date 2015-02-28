@@ -1,11 +1,28 @@
 package org.upmobile.materialmusicdownloader.app;
 
+import org.upmobile.materialmusicdownloader.Constants;
+
+import android.content.SharedPreferences.Editor;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 
-public class MaterialMusicDownloaderApp extends MusicApp {
+public class MaterialMusicDownloaderApp extends MusicApp implements Constants {
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		if (getSharedPreferences().getString(PREF_DIRECTORY, "").isEmpty() && getSharedPreferences().getString(PREF_DIRECTORY_PREFIX, "").isEmpty()) {
+			Editor editor = getSharedPreferences().edit();
+			editor.putString(PREF_DIRECTORY, DIRECTORY);
+			editor.putString(PREF_DIRECTORY_PREFIX, DIRECTORY_PREFIX);
+			editor.commit();
+		}
+	}
+	
+	public static String getDirectory() {
+        return getSharedPreferences().getString(PREF_DIRECTORY, "");
+	}
+	
+	public static String getDirectoryPrefix() {
+        return getSharedPreferences().getString(PREF_DIRECTORY_PREFIX, "");
 	}
 }
