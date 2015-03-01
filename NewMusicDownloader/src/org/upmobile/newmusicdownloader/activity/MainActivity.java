@@ -46,6 +46,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private boolean isVisibleSearchView = false;
+	protected boolean isEnabledFilter = false;
 
 	private FileObserver fileObserver = new FileObserver(folderPath) {
 
@@ -92,16 +93,38 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 			
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				changeFragment(new SearchFragment(query));
-				searchView.setIconified(true);
-				searchView.setIconified(true);
+				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
+    			String lastFragmentName = backEntry.getName();
+				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
+					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+					if (fragment.isVisible()) {
+						if ("".equals(query)) {
+							fragment.clearFilter();
+							isEnabledFilter = false;
+						} else {
+							isEnabledFilter = true;
+							fragment.setFilter(query);
+						}
+					}
+				} else {
+					isEnabledFilter = false;
+					changeFragment(new SearchFragment(query));
+					searchView.setIconified(true);
+					searchView.setIconified(true);
+				}
 				return false;
 			}
 			
 			@Override
 			public boolean onQueryTextChange(String newText) {
+				if (isEnabledFilter && "".equals(newText)) {
+					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+					fragment.clearFilter();
+            		isEnabledFilter = false;
+            	}
 				return false;
 			}
+			
 		});
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -144,6 +167,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
+		isEnabledFilter = false;
 		switch (position) {
 		case 0:
 	        changeFragment(new SearchFragment());
@@ -194,8 +218,6 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 			});
 			directoryChooserDialog.chooseDirectory();
 			break;
-		default:
-			break;
 		}
 	}
 	
@@ -211,6 +233,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	
 	@Override
 	public void onBackPressed() {
+		isEnabledFilter = false;
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (null != player && player.isVisible()) {
 			getFragmentManager().popBackStack();

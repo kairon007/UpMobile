@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class LibraryFragment extends Fragment{
+public class LibraryFragment extends Fragment {
 
 	private LibraryView libraryView;
 
@@ -18,12 +18,20 @@ public class LibraryFragment extends Fragment{
 		libraryView = new LibraryView(getActivity().getLayoutInflater());
 		return libraryView.getView();
 	}
-	
+
 	@Override
 	public void onResume() {
 		((MainActivity) getActivity()).setSelectedItem(2);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
-	
+
+	public void setFilter(String filter) {
+		libraryView.applyFilter(filter);
+	}
+
+	public void clearFilter() {
+		libraryView.clearFilter();
+	}
+
 }
