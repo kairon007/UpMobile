@@ -1,6 +1,7 @@
 package org.upmobile.materialmusicdownloader.fragment;
 
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.LibraryView;
 
 import android.app.Fragment;
@@ -30,10 +31,24 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
+	
+	@Override
+	public void onPause() {
+		clearFilter();
+		super.onPause();
+	}
 
 	@Override
 	public int getDrawerIcon() {
 		return R.string.font_musics;
+	}
+	
+	public void setFilter(String filter) {
+		libraryView.applyFilter(filter);
+	}
+	
+	public void clearFilter() {
+		libraryView.clearFilter();
 	}
 
 	@Override

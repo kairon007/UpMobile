@@ -77,9 +77,8 @@ public class LibraryTab extends ArrayAdapter<MusicData> implements TextWatcher {
         synchronized (lock) {
             if (mOriginalValues != null) {
                 mOriginalValues.addAll(collection);
-            } else {
-                mObjects.addAll(collection);
-            }
+            } 
+            mObjects.addAll(collection);
         }
         activity.runOnUiThread(reDraw);
 	}
@@ -89,9 +88,8 @@ public class LibraryTab extends ArrayAdapter<MusicData> implements TextWatcher {
         synchronized (lock) {
             if (mOriginalValues != null) {
                 Collections.addAll(mOriginalValues, items);
-            } else {
-                Collections.addAll(mObjects, items);
-            }
+            } 
+            Collections.addAll(mObjects, items);
         }
         activity.runOnUiThread(reDraw);
 	}
@@ -176,9 +174,8 @@ public class LibraryTab extends ArrayAdapter<MusicData> implements TextWatcher {
         synchronized (lock) {
             if (mOriginalValues != null) {
                 mOriginalValues.add(index, object);
-            } else {
-                mObjects.add(index, object);
-            }
+            } 
+            mObjects.add(index, object);
         }
         activity.runOnUiThread(reDraw);
 	}

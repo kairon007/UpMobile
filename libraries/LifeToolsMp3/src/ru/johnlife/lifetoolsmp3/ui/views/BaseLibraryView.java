@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
@@ -23,13 +24,14 @@ import android.widget.TextView;
 @SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View implements Handler.Callback {
 
-	protected static final int MSG_FILL_ADAPTER = 1;
+	public static final int MSG_FILL_ADAPTER = 1;
 	
 	private ViewGroup view;
 	private BaseAbstractAdapter<MusicData> adapter;
 	private ListView listView;
 	private TextView emptyMessage;
 	private Handler uiHandler;
+	private String filterQuery = "";
 	private ContentObserver observer = new ContentObserver(null) {
 
 		@Override
@@ -73,9 +75,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private PlaybackService getService() {
 		if (PlaybackService.hasInstance()) {
 			return PlaybackService.get(getContext());
-		} else {
-			return null;
 		}
+		return null;
 	}
 	
 	public BaseLibraryView(LayoutInflater inflater) {
@@ -104,6 +105,16 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	
 	public View getView() {
 		return view;
+	}
+	
+	public void applyFilter(String srcFilter) {
+		adapter.getFilter().filter(srcFilter);
+		filterQuery = srcFilter;
+	}
+	
+	public void clearFilter() {
+		adapter.clearFilter();
+		filterQuery = "";
 	}
 	
 	protected void adapterCancelTimer() {
@@ -144,7 +155,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	}
 	
 	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
-		String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%'";
+		String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + filterQuery + "%'";
 		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		return cursor;
 	}
@@ -156,10 +167,12 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 				adapter = getAdapter();
 				listView.setAdapter(adapter);
 			} else {
+				adapter.setDoNotifyData(false);
 				adapter.clear();
 				adapter.add((ArrayList<MusicData>) msg.obj);
+				adapter.notifyDataSetChanged();
 			}
-		}
+		} 
 		return true;
 	}
 

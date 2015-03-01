@@ -482,12 +482,11 @@ public abstract class OnlineSearchView extends View {
 					//TODO: Send song to mini player in child's projects
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
-					((RemoteSong) getResultAdapter().getItem((int) v.getTag())).getDownloadUrl(new DownloadUrlListener() {
+					((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getDownloadUrl(new DownloadUrlListener() {
 						
 						@Override
 						public void success(String url) {
-							((RemoteSong) getResultAdapter().getItem((int) v.getTag())).setDownloadUrl(url);
-							downloadListener = new DownloadClickListener(getContext(), (RemoteSong) getResultAdapter().getItem((int) v.getTag()), 0);
+							((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).setDownloadUrl(url);
 							downloadListener.setDownloadPath(getDirectory());
 							downloadListener.setUseAlbumCover(true);
 							downloadListener.downloadSong(false);

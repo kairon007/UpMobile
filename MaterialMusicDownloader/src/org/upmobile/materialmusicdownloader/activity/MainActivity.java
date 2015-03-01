@@ -105,8 +105,21 @@ public class MainActivity extends UIMainActivity implements Constants {
 	}
 	
 	@Override
+	protected void setFilter(String filter) {
+		LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+		if (fragment.isVisible()) {
+			if ("".equals(filter)) {
+				fragment.clearFilter();
+			} else {
+				fragment.setFilter(filter);
+			}
+		}
+	}
+	
+	@Override
 	public void onBackPressed() {
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
+		isEnabledFilter = false;
 		if (null != player && player.isVisible()) {
 			getFragmentManager().popBackStack();
 		} else if (currentFragmentID == 3){
@@ -120,7 +133,7 @@ public class MainActivity extends UIMainActivity implements Constants {
 				fragment = new SearchFragment();
 				currentFragmentID = 0;
 			}
-			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, fragment.getClass().getSimpleName()).commit();
 		} else {
 			if (null != service) {
 				service.reset();

@@ -226,6 +226,7 @@ public abstract class BaseDownloadsView extends View{
 				
 				@Override
 				public void run() {
+					adapter.setDoNotifyData(false);
 					adapter.changeData(list);
 				}
 			});

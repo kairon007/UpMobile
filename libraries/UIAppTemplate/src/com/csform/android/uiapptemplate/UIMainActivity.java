@@ -46,6 +46,7 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 	private NavigationDrawerFragment navigationDrawerFragment;
 	
 	private boolean isVisibleSearchView = false;
+	protected boolean isEnabledFilter = false;
 
 	protected abstract <T extends BaseMaterialFragment> ArrayList<T> getFragments();
 	
@@ -107,15 +108,27 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
             @Override
             public boolean onQueryTextSubmit(String q) {
                 query = q;
-                searchView.setIconified(true);
                 hideKeyboard();
-                changeFragment(mFragments.get(0));
+                android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
+    			String lastFragmentName = backEntry.getName();
+    			if (lastFragmentName.equals(getFragments().get(2).getClass().getSimpleName())) {
+    				searchView.clearFocus();
+    				isEnabledFilter = true;
+    				setFilter(q);
+    			} else {
+    				isEnabledFilter = false;
+    				changeFragment(mFragments.get(0));
+    				searchView.setIconified(true);
+    			}
                 return false;
             }
             
             @Override
             public boolean onQueryTextChange(String newText) {
-            	
+            	if (isEnabledFilter && "".equals(newText)) {
+            		setFilter("");
+            		isEnabledFilter = false;
+            	}
                 return false;
             }
         });
@@ -142,6 +155,10 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 		return false;
 	}
 	
+	protected void setFilter(String filter) {
+		
+	}
+	
 	private void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (null != searchView) imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
@@ -164,7 +181,6 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		hideKeyboard();
 		switch (position) {
 		case 0:
 	        changeFragment(mFragments.get(0));
@@ -203,10 +219,12 @@ public abstract class UIMainActivity extends Activity implements NavigationDrawe
 	
 	public void changeFragment(BaseMaterialFragment baseMaterialFragment) {
 		isVisibleSearchView = mFragments.get(0).equals(baseMaterialFragment) ? false : true;
+		hideKeyboard();
+		isEnabledFilter = false;
 		if (null != searchView) {
 			searchView.setIconified(true);
-			hideKeyboard();
-		}
+			searchView.setIconified(true);
+		} 
 		if (((Fragment)baseMaterialFragment).isAdded()) {
 			((Fragment)baseMaterialFragment).onResume();
 		}
