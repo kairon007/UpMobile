@@ -222,7 +222,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	}
 	
 	public void changeFragment(Fragment targetFragment) {
-		isVisibleSearchView = targetFragment.getClass().getSimpleName().equals(SearchFragment.class.getSimpleName()) ? false : true;
+		isVisibleSearchView = targetFragment.getClass() != SearchFragment.class;
 		getFragmentManager()
 		.beginTransaction()
 		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
@@ -236,8 +236,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 		isEnabledFilter = false;
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (null != player && player.isVisible()) {
+			isVisibleSearchView = player.getClass() != SearchFragment.class;
 			getFragmentManager().popBackStack();
-			isVisibleSearchView = false;
 			invalidateOptionsMenu();
 		} else {
 			if (null != service) {
