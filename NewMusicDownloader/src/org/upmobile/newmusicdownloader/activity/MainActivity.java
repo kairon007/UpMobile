@@ -45,6 +45,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	private PlaybackService service;
 	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
+	private String currentTag;
 	private boolean isVisibleSearchView = false;
 	protected boolean isEnabledFilter = false;
 
@@ -96,7 +97,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
     			String lastFragmentName = backEntry.getName();
 				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(currentTag);
 					if (fragment.isVisible()) {
 						if ("".equals(query)) {
 							fragment.clearFilter();
@@ -118,7 +119,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				if (isEnabledFilter && "".equals(newText)) {
-					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(currentTag);
 					fragment.clearFilter();
             		isEnabledFilter = false;
             	}
@@ -223,9 +224,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	
 	public void changeFragment(Fragment targetFragment) {
 		isVisibleSearchView = targetFragment.getClass() != SearchFragment.class;
+		currentTag = targetFragment.getClass().getSimpleName();
 		getFragmentManager()
 		.beginTransaction()
-		.replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
+		.replace(R.id.main_fragment, targetFragment, currentTag)
 		.addToBackStack(targetFragment.getClass().getSimpleName())
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 		.commit();
@@ -234,9 +236,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	@Override
 	public void onBackPressed() {
 		isEnabledFilter = false;
-		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
+		Fragment player = getFragmentManager().findFragmentByTag(currentTag);
 		if (null != player && player.isVisible()) {
-			isVisibleSearchView = player.getClass() != SearchFragment.class;
+			isVisibleSearchView = PlaybackService.get(this).getPlayingSong().getClass() == MusicData.class;
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
 		} else {
