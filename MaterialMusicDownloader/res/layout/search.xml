@@ -29,14 +29,14 @@
                 android:text="@string/search_your_results_appear_here"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <com.csform.android.uiapptemplate.view.ProgressWheel
+            <com.csform.android.uiapptemplate.view.pb.ProgressBarCircularIndeterminate
                 android:id="@+id/progress"
-                style="@style/ProgressBarMaterial"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+               	android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:layout_gravity="center"
-                android:visibility="gone" />
-
+                android:visibility="gone"
+                android:background="@color/main_color_accent" />
+            
             <ImageView
                 android:id="@+id/loader_image"
                 android:layout_width="72dp"
