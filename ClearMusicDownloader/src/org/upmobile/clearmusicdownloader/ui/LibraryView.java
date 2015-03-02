@@ -4,20 +4,20 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
-import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.special.menu.ResideMenu.OnMenuListener;
 import com.special.utils.UISwipableList;
@@ -49,7 +49,7 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 
 	@Override
 	protected String getFolderPath() {
-		return Environment.getExternalStorageDirectory() + DIRECTORY_PREFIX;
+		return ClearMusicDownloaderApp.getDirectory();
 	}
 
 	@Override

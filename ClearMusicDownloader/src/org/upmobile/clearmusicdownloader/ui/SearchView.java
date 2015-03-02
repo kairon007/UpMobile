@@ -7,6 +7,7 @@ import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
@@ -17,7 +18,6 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -171,6 +171,6 @@ public class SearchView extends OnlineSearchView {
 	
 	@Override
 	protected String getDirectory() {
-		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+		return ClearMusicDownloaderApp.getDirectory();
 	}
 }

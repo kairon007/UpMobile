@@ -71,8 +71,7 @@ public class ResideMenu extends FrameLayout{
     }
 
     private void initViews(Context context){
-        LayoutInflater inflater = (LayoutInflater)
-                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_menu, this);
         scrollViewMenu = (ScrollView) findViewById(R.id.sv_left_menu); //change to sv_right_menu for right
         imageViewShadow = (ImageView) findViewById(R.id.iv_shadow);
@@ -576,11 +575,11 @@ public class ResideMenu extends FrameLayout{
     }
     
     public void hideLastElement () {
-    	layoutLeftMenu.getChildAt(layoutLeftMenu.getChildCount() - 1).setVisibility(View.GONE);
+    	layoutLeftMenu.getChildAt(layoutLeftMenu.getChildCount() - 2).setVisibility(View.GONE);
     }
     
     public void showLastElement () {
-    	layoutLeftMenu.getChildAt(layoutLeftMenu.getChildCount() - 1).setVisibility(View.VISIBLE);
+    	layoutLeftMenu.getChildAt(layoutLeftMenu.getChildCount() - 2).setVisibility(View.VISIBLE);
     }
 
 }

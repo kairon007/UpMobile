@@ -13,6 +13,7 @@
         <item>@string/tab_downloads</item>
         <item>@string/tab_library</item>
         <item>@string/tab_now_plaing</item>
+        <item>@string/tab_settings</item>
     </string-array>
 
     <string name="error_retrieving_the_url">An error occurred while retrieving the url of the song. Try to download another song</string>

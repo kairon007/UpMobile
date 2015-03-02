@@ -1,9 +1,9 @@
 package org.upmobile.clearmusicdownloader.ui;
 
-import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.DownloadsAdapter;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -90,7 +90,7 @@ public class DownloadsView extends BaseDownloadsView implements OnScrollListener
 
 	@Override
 	protected String getDirectory() {
-		return Constants.DIRECTORY_PREFIX;
+		return ClearMusicDownloaderApp.getDirectoryPrefix();
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
@@ -14,10 +15,13 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.FileObserver;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.Window;
@@ -26,7 +30,7 @@ import com.special.BaseClearActivity;
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
-public class MainActivity extends BaseClearActivity {
+public class MainActivity extends BaseClearActivity implements Constants {
 
 	private final String ARRAY_SAVE = "extras_array_save";
 	private Fragment[] fragments;
@@ -34,12 +38,12 @@ public class MainActivity extends BaseClearActivity {
 	private String[] titles;
 	private PlaybackService player;
 	private boolean useCoverHelper = true;
-	private FileObserver fileObserver = new FileObserver(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX) {
+	private String folder_path = ClearMusicDownloaderApp.getDirectory();
+	private FileObserver fileObserver = new FileObserver(folder_path) {
 		
 		@Override
 		public void onEvent(int event, String path) {
 			if(event == FileObserver.DELETE_SELF) {
-				String folder_path = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 				File file = new File(folder_path);
 				file.mkdirs();
 				getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.MediaColumns.DATA + " LIKE '" + folder_path + "%'", null);
@@ -59,7 +63,7 @@ public class MainActivity extends BaseClearActivity {
 			}
 		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		File file = new File(Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX);
+		File file = new File(folder_path);
 		if (!file.exists()){
 			file.mkdirs();
 		}
@@ -72,11 +76,12 @@ public class MainActivity extends BaseClearActivity {
 	
 	@Override
 	protected Fragment[] getFragments() {
-		fragments = new Fragment[4];
+		fragments = new Fragment[5];
 		fragments[0] = new SearchFragment();
 		fragments[1] = new DownloadsFragment();
 		fragments[2] = new LibraryFragment();
 		fragments[3] = new PlayerFragment();
+		fragments[4] = new Fragment();
 		return fragments;
 	}
 	
@@ -103,11 +108,12 @@ public class MainActivity extends BaseClearActivity {
 
 	@Override
 	protected ResideMenuItem[] getMenuItems() {
-		items = new ResideMenuItem[4];
-		items[0] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_search);
-		items[1] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.tab_downloads);
-		items[2] = new ResideMenuItem(this, R.drawable.ic_library, R.string.tab_library);
-		items[3] = new ResideMenuItem(this, R.drawable.ic_player, R.string.tab_now_plaing);
+		items = new ResideMenuItem[5];
+		items[0] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_search, ResideMenuItem.Types.TYPE_MENU);
+		items[1] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.tab_downloads, ResideMenuItem.Types.TYPE_MENU);
+		items[2] = new ResideMenuItem(this, R.drawable.ic_library, R.string.tab_library, ResideMenuItem.Types.TYPE_MENU);
+		items[3] = new ResideMenuItem(this, R.drawable.ic_player, R.string.tab_now_plaing, ResideMenuItem.Types.TYPE_MENU);
+		items[4] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_settings, ClearMusicDownloaderApp.getDirectory(), ResideMenuItem.Types.TYPE_SETTINGS);
 		return items;
 	}
 	
@@ -157,4 +163,23 @@ public class MainActivity extends BaseClearActivity {
 	public void stopChildsServices() {
 		PlaybackService.get(this).reset();
 	}
+	
+	@Override
+	protected void showDialog() {
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
+			
+			@Override
+			public void onChosenDir(String chDir) {
+				File file = new File(chDir);
+				Editor editor = sp.edit();
+				editor.putString(PREF_DIRECTORY, chDir);
+				editor.putString(PREF_DIRECTORY_PREFIX, file.getAbsoluteFile().getName());
+				editor.commit();
+				reDrawMenu();
+			}
+		});
+		directoryChooserDialog.chooseDirectory();
+	}
+	
 }

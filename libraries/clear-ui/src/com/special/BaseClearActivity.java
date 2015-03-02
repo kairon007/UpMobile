@@ -1,5 +1,8 @@
 package com.special;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +21,6 @@ import com.special.menu.ResideMenuItem;
 
 public abstract class BaseClearActivity extends FragmentActivity implements View.OnClickListener{
 
-    private static final String FRAGMENT = "Fragment";
 	private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
     private Fragment[] fragments;
@@ -36,6 +38,8 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     protected abstract Bundle getArguments();
     
     protected abstract Fragment getPlayerFragment();
+    
+    protected abstract void showDialog();
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,10 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         for (int i = 0; i < menuItems.length; i++) {
         	if (view == menuItems[i]) {
+        		if (menuItems[i].getType() == ResideMenuItem.Types.TYPE_SETTINGS) {
+        			showDialog(); 
+        			break;
+        		}
         		if (lastOpenedFragment.getClass().getSimpleName().equals(fragments[i].getClass().getSimpleName())) {
         			resideMenu.closeMenu();
         			return;
@@ -208,4 +216,9 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 	public void openMenu() {
 		resideMenu.openMenu();
 	}
+	
+	public void reDrawMenu(){
+        resideMenu.setMenuItems(new ArrayList<ResideMenuItem>(Arrays.asList(getMenuItems())));
+	}
+	
 }
