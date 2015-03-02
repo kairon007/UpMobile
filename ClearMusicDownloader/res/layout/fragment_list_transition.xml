@@ -1,25 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.special.MenuActivity$CalendarFragment" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
-    <com.special.utils.UISwipableList
-        android:id="@+id/listView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbarStyle="insideOverlay" />
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/message_listview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/library_empty"
-        android:fontFamily="sans-serif-thin"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:visibility="gone" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-</FrameLayout>
+            <com.special.utils.UISwipableList
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarStyle="insideOverlay" >
+            </com.special.utils.UISwipableList>
+
+            <TextView
+                android:id="@+id/message_listview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-thin"
+                android:text="@string/library_empty"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/flt_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/empty_header_library"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/empty_header_library"
+                android:background="@color/white_transparent"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/flt_filter_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_main_search"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text|textNoSuggestions"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black" >
+                    <requestFocus />
+                </EditText>
+
+                <ImageButton
+                    android:id="@+id/flt_clear_filter"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/selectable_item_bg"
+                    android:src="@drawable/close" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

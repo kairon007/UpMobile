@@ -9,13 +9,19 @@ import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
+import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +30,12 @@ import com.special.utils.UISwipableList;
 
 public class LibraryView extends BaseLibraryView implements OnScrollListener, OnMenuListener, Constants {
 	
+	private CustomTextWatcher textWatcher; 
 	private UISwipableList listView;
+	private View emptyView;
+	private EditText etFilter;
+	private ImageButton ibClearFilter;
+	private ViewGroup scrollBox;
 	private Animation anim;
 
 	public LibraryView(LayoutInflater inflater) {
@@ -32,6 +43,23 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 		((MainActivity) getContext()).setResideMenuListener(this);
 	}
 
+	@Override
+	protected void specialInit(View view) {
+		scrollBox = (ViewGroup) view.findViewById(R.id.flt_scroll);
+		textWatcher = new CustomTextWatcher();
+		etFilter = (EditText) view.findViewById(R.id.flt_filter_text);
+		etFilter.addTextChangedListener(textWatcher);
+		ibClearFilter = (ImageButton) view.findViewById(R.id.flt_clear_filter);
+		ibClearFilter.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				etFilter.setText("");
+				clearFilter();
+			}
+		});
+	}
+	
 	@Override
 	protected BaseAbstractAdapter<MusicData> getAdapter() {
 		return new LibraryAdapter(getContext(), R.layout.library_item);
@@ -44,9 +72,11 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 		listView.setItemLayout(R.id.front_layout);
 		listView.setIgnoredViewHandler(((MainActivity) getContext()).getResideMenu());
 		listView.setOnScrollListener(this);
+		emptyView = inflate(getContext(), R.layout.empty_header_library, null);
+		listView.addHeaderView(emptyView);
 		return listView;
 	}
-
+	
 	@Override
 	protected String getFolderPath() {
 		return ClearMusicDownloaderApp.getDirectory();
@@ -75,7 +105,15 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 
 	@Override
 	public void closeMenu() { }
-
+	
+	public int getScrollListView() {
+	    View c = listView.getChildAt(1);
+	    if (c == null) return 0;
+	    int firstVisiblePosition = listView.getFirstVisiblePosition();
+	    int top = c.getTop();
+	    return -top + firstVisiblePosition * c.getHeight();
+	}
+	
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		for (final MusicData item : getAdapter().getAll()) {
@@ -109,8 +147,41 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 		}
 	}
 
+	private int lastScroll = getScrollListView();
+	private int maxScroll = scrollBox.getLayoutParams().height;
+	
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		int scrollBy = getScrollListView() - lastScroll;
+		if (null == scrollBox) return;
+		lastScroll = getScrollListView();
+		int resultScroll = scrollBox.getScrollY() + scrollBy;
+		if (resultScroll < 0) {
+			scrollBox.scrollTo(0, 0);
+		} else if (resultScroll > maxScroll) {
+			scrollBox.scrollTo(0, maxScroll);
+		} else {
+			scrollBox.scrollBy(0, scrollBy);
+		}
+	}
+	
+	public class CustomTextWatcher implements TextWatcher {
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			String query =  s.toString().toLowerCase();
+			applyFilter(query);
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+
+		}
 	}
 
 }

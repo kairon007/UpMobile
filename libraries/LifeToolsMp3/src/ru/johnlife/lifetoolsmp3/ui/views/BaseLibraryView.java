@@ -134,6 +134,11 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		listView = getListView(view);
 		adapter = getAdapter();
 		emptyMessage = getMessageView(view);
+		specialInit(view);
+	}
+	
+	protected void specialInit(View view) {
+		
 	}
 	
 	protected ArrayList<MusicData> querySong() {
