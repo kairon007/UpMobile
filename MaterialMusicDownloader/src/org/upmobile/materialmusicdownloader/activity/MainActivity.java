@@ -189,6 +189,11 @@ public class MainActivity extends UIMainActivity implements Constants {
 	}
 
 	@Override
+	public boolean isPlayingService() {
+		return PlaybackService.get(this).isPlaying();
+	}
+	
+	@Override
 	public void savePaths(String prefix, String directory) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor editor = sp.edit();
@@ -196,10 +201,10 @@ public class MainActivity extends UIMainActivity implements Constants {
 		editor.putString(PREF_DIRECTORY_PREFIX, prefix);
 		editor.commit();
 	}
-
-	@Override
-	public boolean isPlayingService() {
-		return PlaybackService.get(this).isPlaying();
-	}
 	
+	@Override
+	protected int getMiniPlayerID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

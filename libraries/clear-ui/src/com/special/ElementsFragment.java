@@ -1,14 +1,12 @@
 package com.special;
 
-import com.special.R;
-import com.special.menu.ResideMenu;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +17,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+
+import com.special.menu.ResideMenu;
 
 public class ElementsFragment extends Fragment {
 	

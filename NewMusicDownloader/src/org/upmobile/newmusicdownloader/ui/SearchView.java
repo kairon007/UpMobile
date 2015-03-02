@@ -7,7 +7,6 @@ import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
-import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -60,12 +59,17 @@ public class SearchView extends OnlineSearchView {
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		PlayerFragment playerFragment = new PlayerFragment();
-		playerFragment.setArguments(bundle);
-		((MainActivity) getContext()).showPlayerElement(true);
-		((MainActivity) view.getContext()).changeFragment(playerFragment);
-		((MainActivity) getContext()).overridePendingTransition(0, 0);
-		super.click(view, position);
+//		PlayerFragment playerFragment = new PlayerFragment();
+//		playerFragment.setArguments(bundle);
+//		((MainActivity) getContext()).showPlayerElement(true);
+//		((MainActivity) view.getContext()).changeFragment(playerFragment);
+//		((MainActivity) getContext()).overridePendingTransition(0, 0);
+		((MainActivity) getContext()).showMiniPlayer(true);
+		try {
+			((MainActivity) getContext()).startSong(((Song) getResultAdapter().getItem(position)).cloneSong());
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
-import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
@@ -15,16 +14,16 @@ import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -38,11 +37,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
-public class MainActivity extends Activity implements NavigationDrawerCallbacks, Constants {
+public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
 
-	private final String ARRAY_SAVE = "extras_array_save";
-	private final String folderPath = NewMusicDownloaderApp.getDirectory();
-	private PlaybackService service;
+	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private String currentTag;
@@ -61,7 +58,6 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 			}
 		}
 	};
-	
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -91,7 +87,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 		 searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 		 searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
 		 searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
+		
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
@@ -125,7 +121,6 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
             	}
 				return false;
 			}
-			
 		});
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -148,12 +143,6 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
 		return super.onPrepareOptionsMenu(menu);
-	}
-	
-	@Override
-	protected void onStart() {
-		startService(new Intent(this, PlaybackService.class));
-		super.onStart();
 	}
 	
 	@Override
@@ -275,5 +264,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks,
 	public void setDrawerEnabled(boolean isEnabled) {
 		navigationDrawerFragment.setEnabled(isEnabled);
 	}
-	
+
+	@Override
+	protected int getMiniPlayerID() {
+		return R.id.mini_player;
+	}
 }

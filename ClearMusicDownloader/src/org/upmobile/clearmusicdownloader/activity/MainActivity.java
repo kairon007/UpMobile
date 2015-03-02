@@ -16,14 +16,13 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
-import android.content.Intent;
+import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.view.Window;
 
 import com.special.BaseClearActivity;
@@ -36,7 +35,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
 	private String[] titles;
-	private PlaybackService player;
 	private boolean useCoverHelper = true;
 	private String folder_path = ClearMusicDownloaderApp.getDirectory();
 	private FileObserver fileObserver = new FileObserver(folder_path) {
@@ -56,10 +54,10 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	public void onCreate(final Bundle savedInstanceState) {
 		
 		if (PlaybackService.hasInstance()) {
-			player = PlaybackService.get(MainActivity.this);
+			service = PlaybackService.get(MainActivity.this);
 			if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
 				ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
-				player.setArrayPlayback(list);
+				service.setArrayPlayback(list);
 			}
 		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -86,15 +84,9 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	}
 	
 	@Override
-	protected void onStart() {
-		startService(new Intent(this, PlaybackService.class));
-		super.onStart();
-	}
-	
-	@Override
 	protected void onResume() {
 		checkService();
-		if (null != player && player.isPlaying()) {
+		if (null != service && service.isPlaying()) {
 			showPlayerElement();
 		}
 		super.onResume();
@@ -102,7 +94,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	private void checkService() {
 		if (PlaybackService.hasInstance()) {
-			player = PlaybackService.get(this);
+			service = PlaybackService.get(this);
 		}
 	}
 
@@ -127,16 +119,16 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
 		checkService();
-		if (player.hasArray()) {
-			out.putParcelableArrayList(ARRAY_SAVE, player.getArrayPlayback());
+		if (service.hasArray()) {
+			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
 		}
 	}
 	
 	@Override
 	protected Bundle getArguments() {
-		if (null != player && player.getPlayingSong().getClass() == MusicData.class) {
+		if (null != service && service.getPlayingSong().getClass() == MusicData.class) {
 			Bundle args = new Bundle();
-			args.putParcelable(Constants.KEY_SELECTED_SONG, (MusicData) player.getPlayingSong());
+			args.putParcelable(Constants.KEY_SELECTED_SONG, (MusicData) service.getPlayingSong());
 			return args;
 		} else
 			return null;
@@ -163,7 +155,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	public void stopChildsServices() {
 		PlaybackService.get(this).reset();
 	}
-	
+
 	@Override
 	protected void showDialog() {
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -182,4 +174,9 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		directoryChooserDialog.chooseDirectory();
 	}
 	
+	@Override
+	protected int getMiniPlayerID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

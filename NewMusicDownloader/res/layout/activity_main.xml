@@ -78,6 +78,11 @@
             android:layout_weight="1" />
 
         <include 
+            android:id="@+id/mini_player"
+            android:visibility="gone"
+            layout="@layout/mini_player"/>
+        
+        <include 
             android:layout_width="match_parent"
             android:layout_height="50dp"
             layout="@layout/banner" />

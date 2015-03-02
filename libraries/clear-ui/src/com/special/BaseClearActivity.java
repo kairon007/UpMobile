@@ -3,13 +3,13 @@ package com.special;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentManager.BackStackEntry;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.BackStackEntry;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
-public abstract class BaseClearActivity extends FragmentActivity implements View.OnClickListener{
+public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements View.OnClickListener{
 
 	private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
@@ -129,7 +129,7 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
     public void changeFragment(Fragment targetFragment){
         this.lastOpenedFragment = targetFragment;
 		resideMenu.clearIgnoredViewList();
-		getSupportFragmentManager()
+		getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
                 .addToBackStack(targetFragment.getClass().getSimpleName()) 
@@ -149,10 +149,10 @@ public abstract class BaseClearActivity extends FragmentActivity implements View
 	@Override
 	public void onBackPressed() {
 		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[3].getClass().getSimpleName())){
-			getSupportFragmentManager().popBackStack();
-			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
+			getFragmentManager().popBackStack();
+			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
-			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
+			lastOpenedFragment = getFragmentManager().findFragmentByTag(lastFragmentName);
 			String title = getNameCurrentFragment(lastFragmentName);
 			tvTitle.setText(title);
 		} else {

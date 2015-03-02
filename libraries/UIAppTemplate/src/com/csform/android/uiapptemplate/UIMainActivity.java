@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -30,12 +30,10 @@ import android.widget.TextView;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
-import com.csform.android.uiapptemplate.model.DrawerItem;
 
-public abstract class UIMainActivity extends Activity implements NavigationDrawerCallbacks {
+public abstract class UIMainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks {
 	
 	private List<BaseMaterialFragment> mFragments;
-	private List<DrawerItem> mDrawerItems;
 
 	private CharSequence mTitle;
 	
