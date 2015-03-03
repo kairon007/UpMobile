@@ -42,5 +42,7 @@
     <string name="edit_mp3_use_album_cover">Albüm Kapağını Kullan</string>
     <string name="edit_mp3_ok">Tamam</string>
     <string name="edit_mp3_cancel">İptal</string>
+    <string name="add_new_folder">Yeni klasör ekle</string>
+    <string name="add_folder">klasör ekle</string>
 
 </resources>

@@ -44,6 +44,8 @@
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Kanselleer</string>
     <string name="downloads_empty">Downloads lys is leeg</string>
- 	<string name="library_empty">Biblioteke lys is leeg</string>
+    <string name="library_empty">Biblioteke lys is leeg</string>
+    <string name="add_new_folder">Voeg nuwe gids</string>
+    <string name="add_folder">Voeg gids</string>
 
 </resources>

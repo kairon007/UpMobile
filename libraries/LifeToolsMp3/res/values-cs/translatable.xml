@@ -44,5 +44,8 @@
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Zrušit</string>
     <string name="downloads_empty">Seznam ke stažení je prázdný</string>
- 	<string name="library_empty">Seznam knihovny je prázdný</string>
+    <string name="library_empty">Seznam knihovny je prázdný</string>
+    <string name="add_new_folder">Přidat novou složku</string>
+    <string name="add_folder">Přidat složku</string>
+
 </resources>

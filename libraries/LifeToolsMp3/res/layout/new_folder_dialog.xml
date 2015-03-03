@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="8dp"
-            android:text="@string/new_folder_dialog_title"
+            android:text="@string/add_new_folder"
             android:textSize="@dimen/text_title_size" />
     </FrameLayout>
 

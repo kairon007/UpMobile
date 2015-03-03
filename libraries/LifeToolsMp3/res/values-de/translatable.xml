@@ -45,4 +45,6 @@
     <string name="edit_mp3_cancel">Abbrechen</string>
     <string name="downloads_empty">Downloads Liste ist leer</string>
  	<string name="library_empty">Bibliotheken Liste ist leer</string>
+ 	<string name="add_new_folder">Hinzufügen neuer Ordner</string>
+    <string name="add_folder">Ordner hinzufügen</string>
 </resources>

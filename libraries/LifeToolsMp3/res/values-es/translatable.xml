@@ -44,5 +44,8 @@
     <string name="edit_mp3_ok">Aceptar</string>
     <string name="edit_mp3_cancel">Cancelar</string>
     <string name="downloads_empty">Descargas lista está vacía</string>
- 	<string name="library_empty">Lista de Bibliotecas está vacía</string>
+    <string name="library_empty">Lista de Bibliotecas está vacía</string>
+    <string name="add_new_folder">Añadir nueva carpeta</string>
+    <string name="add_folder">Añadir carpeta</string>
+
 </resources>

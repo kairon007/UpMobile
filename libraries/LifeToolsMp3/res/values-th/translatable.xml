@@ -1,52 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="update_app_version">เวอร์ชันใหม่</string>
-<string name="update_app_description">เราได้ปล่อยแอปเวอร์ชันใหม่ที่เร็วขึ้นและดีขึ้นกว่าเดิม กรุณาติดตั้งเวอร์ชันใหม่ตอนนี้</string>
-<string name="update_app_description2">ไฟล์ทั้งหมดของคุณจะได้รับการถ่ายโอนไปยังเวอร์ชันใหม่</string>
-<string name="update_app_install_update">ติดตั้งอัปเดต</string>
-<string name="update_app_install_now">ติดตั้งตอนนี้</string>
-<string name="update_app_update_now">อัปเดตตอนนี้</string>
-<string name="rate_title">โปรดให้คะแนนแอปเรา 5 ดาว</string>
-<string name="rate_description">หากคุณชอบแอปของเรา โปรดช่วยเหลือเราโดยการให้คะแนน 5 ดาว การสนับสนุนของคุณช่วยให้เราสามารถทำให้แอปนี้ดียิ่งขึ้นได้ ขอบคุณ!</string>
-<string name="rate_yes">ให้คะแนน 5 ดาว</string>
-<string name="rate_no">ไม่</string>
-<string name="rate_thanks">ขอบคุณ!</string>
- 
-<string name="tab_search">ค้นหา</string>
-<string name="tab_downloads">ดาวน์โหลด</string>
-<string name="tab_library">ไลบรารี</string>
-<string name="tab_now_plaing">ตอนนี้เล่น</string>
-<string name="tab_settings">การตั้งค่า</string>
 
-<string name="message_please_wait">โปรดรอ...</string>
-<string name="message_loading">กำลังโหลด...</string>
-<string name="message_searching_for">กำลังค้นหา</string>
- 
-<string name="hint_main_search">ชื่อเรื่อง อัลบั้ม หรือ ศิลปิน</string>
-<string name="hint_filter_artists">กรองศิลปินของคุณ</string>
-<string name="hint_filter_songs">กรองเพลงของคุณ</string>
-<string name="hint_filter_playlists">กรองรายการเล่นของคุณ</string>
-<string name="hint_filter_genres">กรองประเภทของคุณ</string>
-<string name="hint_filter_files">กรองไฟล์ของคุณ</string>
- 
-<string name="search_your_results_appear_here">ผลลัพธ์การค้นหาของคุณจะปรากฏที่นี่</string>
-<string name="search_no_results_for">ไม่พบผลลัพธ์สำหรับ</string>
-<string name="search_try_different_query">ลองตั้งคำถามอื่น ๆ</string>
-<string name="search_please_enter_query">โปรดใส่คำถาม</string>
- 
-<string name="download_dialog_download_location">ดาวน์โหลดสถานที่ตั้ง</string>
-<string name="download_dialog_download">ดาวน์โหลด</string>
-<string name="download_dialog_cancel">ยกเลิก</string>
-<string name="download_dialog_show_lyrics">แสดงเนื้อเพลง</string>
-<string name="download_dialog_no_lyrics">ไม่พบเนื้อเพลงสำหรับ</string>
- 
-<string name="lyrics">เนื้อเพลง</string>
- 
-<string name="edit_mp3">แก้ไขแท็กสำหรับ MP3</string>
-<string name="edit_mp3_title">ชื่อเรื่อง</string>
-<string name="edit_mp3_artist">ศิลปิน</string>
-<string name="edit_mp3_album">อัลบั้ม</string>
-<string name="edit_mp3_use_album_cover">ใช้ปกอัลบั้ม</string>
-<string name="edit_mp3_ok">ตกลง</string>
-<string name="edit_mp3_cancel">ยกเลิก</string>
+    <string name="update_app_version">เวอร์ชันใหม่</string>
+    <string name="update_app_description">เราได้ปล่อยแอปเวอร์ชันใหม่ที่เร็วขึ้นและดีขึ้นกว่าเดิม กรุณาติดตั้งเวอร์ชันใหม่ตอนนี้</string>
+    <string name="update_app_description2">ไฟล์ทั้งหมดของคุณจะได้รับการถ่ายโอนไปยังเวอร์ชันใหม่</string>
+    <string name="update_app_install_update">ติดตั้งอัปเดต</string>
+    <string name="update_app_install_now">ติดตั้งตอนนี้</string>
+    <string name="update_app_update_now">อัปเดตตอนนี้</string>
+    <string name="rate_title">โปรดให้คะแนนแอปเรา 5 ดาว</string>
+    <string name="rate_description">หากคุณชอบแอปของเรา โปรดช่วยเหลือเราโดยการให้คะแนน 5 ดาว การสนับสนุนของคุณช่วยให้เราสามารถทำให้แอปนี้ดียิ่งขึ้นได้ ขอบคุณ!</string>
+    <string name="rate_yes">ให้คะแนน 5 ดาว</string>
+    <string name="rate_no">ไม่</string>
+    <string name="rate_thanks">ขอบคุณ!</string>
+    <string name="tab_search">ค้นหา</string>
+    <string name="tab_downloads">ดาวน์โหลด</string>
+    <string name="tab_library">ไลบรารี</string>
+    <string name="tab_now_plaing">ตอนนี้เล่น</string>
+    <string name="tab_settings">การตั้งค่า</string>
+    <string name="message_please_wait">โปรดรอ...</string>
+    <string name="message_loading">กำลังโหลด...</string>
+    <string name="message_searching_for">กำลังค้นหา</string>
+    <string name="hint_main_search">ชื่อเรื่อง อัลบั้ม หรือ ศิลปิน</string>
+    <string name="hint_filter_artists">กรองศิลปินของคุณ</string>
+    <string name="hint_filter_songs">กรองเพลงของคุณ</string>
+    <string name="hint_filter_playlists">กรองรายการเล่นของคุณ</string>
+    <string name="hint_filter_genres">กรองประเภทของคุณ</string>
+    <string name="hint_filter_files">กรองไฟล์ของคุณ</string>
+    <string name="search_your_results_appear_here">ผลลัพธ์การค้นหาของคุณจะปรากฏที่นี่</string>
+    <string name="search_no_results_for">ไม่พบผลลัพธ์สำหรับ</string>
+    <string name="search_try_different_query">ลองตั้งคำถามอื่น ๆ</string>
+    <string name="search_please_enter_query">โปรดใส่คำถาม</string>
+    <string name="download_dialog_download_location">ดาวน์โหลดสถานที่ตั้ง</string>
+    <string name="download_dialog_download">ดาวน์โหลด</string>
+    <string name="download_dialog_cancel">ยกเลิก</string>
+    <string name="download_dialog_show_lyrics">แสดงเนื้อเพลง</string>
+    <string name="download_dialog_no_lyrics">ไม่พบเนื้อเพลงสำหรับ</string>
+    <string name="lyrics">เนื้อเพลง</string>
+    <string name="edit_mp3">แก้ไขแท็กสำหรับ MP3</string>
+    <string name="edit_mp3_title">ชื่อเรื่อง</string>
+    <string name="edit_mp3_artist">ศิลปิน</string>
+    <string name="edit_mp3_album">อัลบั้ม</string>
+    <string name="edit_mp3_use_album_cover">ใช้ปกอัลบั้ม</string>
+    <string name="edit_mp3_ok">ตกลง</string>
+    <string name="edit_mp3_cancel">ยกเลิก</string>
+    <string name="add_new_folder">เพิ่มโฟลเดอร์ใหม่</string>
+    <string name="add_folder">เพิ่มโฟลเดอร์</string>
+
 </resources>

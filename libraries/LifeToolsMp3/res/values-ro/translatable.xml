@@ -43,5 +43,7 @@
     <string name="edit_mp3_use_album_cover">Utilizare copertă album</string>
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Anulare</string>
+    <string name="add_new_folder">Adăugați dosar nou</string>
+    <string name="add_folder">Adăugați dosar</string>
 
 </resources>

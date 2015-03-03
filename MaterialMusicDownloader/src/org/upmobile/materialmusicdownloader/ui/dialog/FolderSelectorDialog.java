@@ -38,7 +38,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		@Override
 		public void onNeutral(MaterialDialog dialog) {
 			MaterialDialog dlg = new MaterialDialog.Builder(getActivity())
-			.title("Add new folder") //TODO
+			.title(R.string.add_new_folder)
 			.customView(R.layout.md_input_dialog, false)
 			.titleColorRes(R.color.main_color_500)
 			.positiveColorRes(R.color.main_color_500)
@@ -124,7 +124,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				.itemsCallback(this)
 				.callback(mButtonCallback)
 				.autoDismiss(false)
-				.neutralText("Add folder") //TODO
+				.neutralText(R.string.add_folder)
 				.positiveText(android.R.string.ok)
 				.negativeText(android.R.string.cancel)
 				.build();

@@ -43,5 +43,7 @@
     <string name="edit_mp3_use_album_cover">Використати обкладинку альбому</string>
     <string name="edit_mp3_ok">ОК</string>
     <string name="edit_mp3_cancel">Відміна</string>
+    <string name="add_new_folder">Додати нову папку</string>
+    <string name="add_folder">Додати папку</string>
 
 </resources>

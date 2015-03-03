@@ -43,5 +43,7 @@
     <string name="edit_mp3_use_album_cover">Gebruik albumcover</string>
     <string name="edit_mp3_ok">Ok</string>
     <string name="edit_mp3_cancel">Annuleren</string>
+    <string name="add_new_folder">Voeg een nieuwe map</string>
+    <string name="add_folder">Map toevoegen</string>
 
 </resources>

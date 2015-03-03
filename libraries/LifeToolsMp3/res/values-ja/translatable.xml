@@ -43,5 +43,7 @@
     <string name="edit_mp3_use_album_cover">アルバムカバーを使う</string>
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">キャンセル</string>
+    <string name="add_new_folder">新しいフォルダを追加します。</string>
+    <string name="add_folder">フォルダの追加</string>
 
 </resources>

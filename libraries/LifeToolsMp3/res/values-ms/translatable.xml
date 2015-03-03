@@ -43,5 +43,7 @@
     <string name="edit_mp3_use_album_cover">Gunakan Kulit Album</string>
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Batal</string>
+    <string name="add_new_folder">Tambah folder baru</string>
+    <string name="add_folder">Tambah folder</string>
 
 </resources>

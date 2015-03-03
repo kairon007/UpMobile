@@ -43,5 +43,7 @@
     <string name="edit_mp3_use_album_cover">Gamitin ang Album Cover</string>
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Kanselahin</string>
+    <string name="add_new_folder">Magdagdag ng bagong folder</string>
+    <string name="add_folder">Magdagdag ng folder</string>
 
 </resources>

@@ -43,5 +43,7 @@
     <string name="edit_mp3_use_album_cover">앨범 표지 사용</string>
     <string name="edit_mp3_ok">확인</string>
     <string name="edit_mp3_cancel">취소</string>
+    <string name="add_new_folder">새 폴더를 추가</string>
+    <string name="add_folder">폴더 추가</string>
 
 </resources>

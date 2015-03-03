@@ -42,5 +42,7 @@
     <string name="edit_mp3_use_album_cover">使用专辑封面</string>
     <string name="edit_mp3_ok">确定</string>
     <string name="edit_mp3_cancel">取消</string>
+    <string name="add_new_folder">添加新的文件夾</string>
+    <string name="add_folder">添加文件夾</string>
 
 </resources>

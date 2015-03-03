@@ -44,6 +44,8 @@
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Отмена</string>
     <string name="downloads_empty">Список загрузок пуст</string>
- 	<string name="library_empty">Список библиотеки пуст</string>
+    <string name="library_empty">Список библиотеки пуст</string>
+    <string name="add_new_folder">Добавить новую папку</string>
+    <string name="add_folder">Добавить папку</string>
 
 </resources>

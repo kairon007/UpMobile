@@ -44,5 +44,8 @@
     <string name="edit_mp3_ok">OK</string>
     <string name="edit_mp3_cancel">Annuler</string>
     <string name="downloads_empty">Téléchargements liste est vide</string>
- 	<string name="library_empty">Liste des Bibliothèques est vide</string>
+    <string name="library_empty">Liste des Bibliothèques est vide</string>
+    <string name="add_new_folder">Ajouter nouveau dossier</string>
+    <string name="add_folder">Ajouter dossier</string>
+
 </resources>
