@@ -76,7 +76,7 @@
                         style="@style/TextViewAppearance.CustomMusicButtons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
+                        android:gravity="top"
                         android:padding="4dp"
                         android:text="@string/font_edit"
                         android:textSize="16sp" />
@@ -88,7 +88,9 @@
                 style="@style/EditTextAppearance.Headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
+                android:paddingRight="4dp"
+                android:paddingLeft="4dp"
+                android:paddingBottom="2dp"
                 android:visibility="gone" />
         </FrameLayout>
 
@@ -120,7 +122,7 @@
                         style="@style/TextViewAppearance.CustomMusicButtons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
+                        android:gravity="top"
                         android:padding="4dp"
                         android:text="@string/font_edit"
                         android:textSize="16sp" />
@@ -129,10 +131,12 @@
 
             <EditText
                 android:id="@+id/artistNameEdit"
-                style="@style/EditTextAppearance.Title"
+                style="@style/EditTextAppearance.Headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
+                android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
                 android:visibility="gone" />
         </FrameLayout>
 

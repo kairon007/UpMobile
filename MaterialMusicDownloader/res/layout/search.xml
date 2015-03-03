@@ -79,17 +79,16 @@
 
                         <EditText
                             android:id="@+id/text"
+                            style="@style/EditTextAppearance.Line"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/hint_main_search"
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:lines="1"
-                            android:paddingLeft="8dp"
-                            android:paddingRight="50dp"
-                            android:singleLine="true"
-                            android:textColor="@android:color/white"
-                            android:textColorHint="@android:color/white" />
+                            android:paddingLeft="16dp"
+                            android:paddingRight="56dp"
+                            android:singleLine="true" />
 
                         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                             style="@style/RippleStyle"

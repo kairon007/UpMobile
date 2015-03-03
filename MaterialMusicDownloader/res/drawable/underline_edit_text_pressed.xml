@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:bottom="3dp"
+        android:drawable="@drawable/underline_edit_text_default_line"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="40dp"/>
+    <item
+        android:bottom="5dp"
+        android:drawable="@drawable/underline_edit_text_default_line_cover"
+        android:left="10dp"
+        android:right="10dp"/>
+
+</layer-list>
