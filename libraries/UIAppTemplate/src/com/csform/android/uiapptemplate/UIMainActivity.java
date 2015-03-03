@@ -1,12 +1,10 @@
 package com.csform.android.uiapptemplate;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -50,9 +48,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	
 	public abstract String getDirectory();
 	
-	public abstract void savePaths(String prefix, String directory);
-	
-	public abstract boolean isPlayingService();
+	public abstract void showDialog();
 	
 	protected void clickOnSearchView(String message) {
 		
@@ -198,17 +194,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		    }
 		case 4:
 		case 5:
-			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
-				
-				@Override
-				public void onChosenDir(String chDir) {
-					File file = new File(chDir);
-					String prefix = file.getAbsoluteFile().getName();
-					savePaths(prefix, chDir);
-					navigationDrawerFragment.setAdapter(isPlayingService());
-				}
-			});
-			directoryChooserDialog.chooseDirectory();
+			showDialog();
 			break;
 		default:
 			break;
