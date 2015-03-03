@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="update_app_version">НОВАЯ ВЕРСІЯ</string>
+    <string name="update_app_description">Мы выпусцілі новую, ПАЛЕПШАНУЮ версію прыкладання. Калі ласка, ўсталюйце новую версію цяпер.</string>
+    <string name="update_app_description2">Усе вашыя файлы будуць аўтаматычна перанесеныя на новую версію.</string>
+    <string name="update_app_install_update">УСТАЛЯВАЦЬ АДНАЎЛЕННЕ</string>
+    <string name="update_app_install_now">УСТАЛЯВАЦЬ</string>
+    <string name="update_app_update_now">АДНАВІЦЬ</string>
+    <string name="rate_title">Калі ласка, пастаўце нашаму прыкладанню 5 зорак</string>
+    <string name="rate_description">Калі вам падабаецца наша прыкладанне, падтрымайце нас, паставіўшы яму 5 зорак. Ваша падтрымка дапамагае нам рабіць гэта прыкладанне лепш. Дзякуй!</string>
+    <string name="rate_yes">Паставіць 5 зорак</string>
+    <string name="rate_no">Не</string>
+    <string name="rate_thanks">Дзякуй!</string>
+    <string name="tab_search">Пошук</string>
+    <string name="tab_downloads">Загрузкі</string>
+    <string name="tab_library">Бібліятэка</string>
+    <string name="tab_now_plaing">Зараз грае</string>
+    <string name="tab_settings">Налады</string>
+    <string name="message_please_wait">Чакайце...</string>
+    <string name="message_loading">Загрузка...</string>
+    <string name="message_searching_for">Пошук</string>
+    <string name="hint_main_search">Назва, альбом альбо выканаўца</string>
+    <string name="hint_filter_artists">Адфільтраваць выканаўцаў</string>
+    <string name="hint_filter_songs">Адфільтраваць песні</string>
+    <string name="hint_filter_playlists">Адфільтраваць плэйлісты</string>
+    <string name="hint_filter_genres">Адфільтраваць жанры</string>
+    <string name="hint_filter_files">Адфільтраваць файлы</string>
+    <string name="search_your_results_appear_here">Тут з'явяцца вынікі вашага пошука</string>
+    <string name="search_no_results_for">Няма вынікаў для </string>
+    <string name="search_try_different_query">Паспрабуйце іншы запыт</string>
+    <string name="search_please_enter_query">Увядзіце запыт</string>
+    <string name="download_dialog_download_location">Тэчка для скачвання</string>
+    <string name="download_dialog_download">Скачаць</string>
+    <string name="download_dialog_cancel">Адмена</string>
+    <string name="download_dialog_show_lyrics">Паказаць словы песні</string>
+    <string name="download_dialog_no_lyrics">Не знойдзены словы песні для %s</string>
+    <string name="lyrics">Словы песні</string>
+    <string name="edit_mp3">Рэдагаваць тэгі MP3</string>
+    <string name="edit_mp3_title">Назва</string>
+    <string name="edit_mp3_artist">Выканаўца</string>
+    <string name="edit_mp3_album">Альбом</string>
+    <string name="edit_mp3_use_album_cover">Выкарыстоўваць вокладку альбома</string>
+    <string name="edit_mp3_ok">Так</string>
+    <string name="edit_mp3_cancel">Адмена</string>
+    <string name="downloads_empty">Спіс загрузак пусты</string>
+    <string name="library_empty">У бібліятэцы няма песен</string>
+    <string name="add_new_folder">Дадаць новую тэчку</string>
+    <string name="add_folder">Дадаць тэчку</string>
+
+</resources>
