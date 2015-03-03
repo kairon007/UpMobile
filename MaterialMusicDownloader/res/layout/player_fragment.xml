@@ -9,38 +9,27 @@
     android:padding="4dp"
     tools:ignore="ContentDescription" >
 
-    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-        style="@style/RippleStyle"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|left" >
+        android:layout_gravity="center|start"
+        android:orientation="horizontal"
+        android:minHeight="48dp" >
 
-        <LinearLayout
-            android:id="@+id/cbTouchInterceptor"
-            android:layout_width="match_parent"
+        <com.csform.android.uiapptemplate.view.cb.CheckBox
+            android:id="@+id/cbUseCover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"/>
+
+        <TextView
+            style="@style/TextViewAppearance.Title"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal" >
-
-            <com.csform.android.uiapptemplate.font.MusicTextView
-                android:id="@+id/cbUseCover"
-                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:minHeight="48dp"
-                android:padding="8dp"
-                android:text="@string/font_cb_checked"
-                android:textSize="24sp" />
-
-            <TextView
-                style="@style/TextViewAppearance.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/edit_mp3_use_album_cover" />
-        </LinearLayout>
-    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+            android:gravity="center_vertical"
+            android:text="@string/edit_mp3_use_album_cover" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:paddingRight="4dp"
                 android:paddingLeft="4dp"
-                android:paddingBottom="2dp"
+                android:paddingBottom="4dp"
                 android:visibility="gone" />
         </FrameLayout>
 

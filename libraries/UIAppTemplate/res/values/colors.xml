@@ -53,6 +53,7 @@
     <color name="main_color_500_50_percent">#80ef4437</color>
     -->
 
+	<color name="checkbox_mark_color">#eeeeee</color>
     <color name="cpb_grey">#ffdedede</color>
     <color name="cpb_blue">#ff0099cc</color>
     <color name="cpb_blue_dark">#ff00719b</color>

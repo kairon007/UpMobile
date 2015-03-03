@@ -4,6 +4,11 @@
     <declare-styleable name="ScaledLinearLayout">
         <attr name="linear_layout_ratio" format="float" />
     </declare-styleable>
+    <declare-styleable name="CheckBox">
+        <attr name="checkbox_color" format="color"/>
+        <attr name="checkbox_checked_color" format="color"/>
+    </declare-styleable>
+    
     <declare-styleable name="MaterialRippleLayout">
         <attr name="rippleColor" format="color" localization="suggested" />
         <attr name="rippleDimension" format="dimension" localization="suggested" />
