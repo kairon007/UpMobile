@@ -1,6 +1,5 @@
 package com.csform.android.uiapptemplate.view.dlg.base;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

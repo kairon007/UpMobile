@@ -6,18 +6,24 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.EditText;
 
 import com.csform.android.uiapptemplate.R;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
+import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ButtonCallback;
 import com.csform.android.uiapptemplate.view.dlg.Theme;
 
-public class FolderSelectorDialog extends DialogFragment implements MaterialDialog.ListCallback {
+public class FolderSelectorDialog extends DialogFragment implements	MaterialDialog.ListCallback {
+
+	private static final String TAG = "FOLDER_SELECTOR";
 	private File parentFolder;
 	private File[] parentContents;
 	private boolean canGoUp = true;
@@ -29,6 +35,47 @@ public class FolderSelectorDialog extends DialogFragment implements MaterialDial
 			mCallback.onFolderSelection(parentFolder);
 		}
 
+		@Override
+		public void onNeutral(MaterialDialog dialog) {
+			MaterialDialog dlg = new MaterialDialog.Builder(getActivity())
+			.title("Add new folder") //TODO
+			.customView(R.layout.md_input_dialog, false)
+			.titleColorRes(R.color.main_color_500)
+			.positiveColorRes(R.color.main_color_500)
+			.negativeColorRes(R.color.main_color_500)
+			.callback(new ButtonCallback() {
+				
+				@Override
+				public void onNegative(MaterialDialog dialog) {
+					dialog.dismiss();
+				};
+				
+				@Override
+				public void onPositive(MaterialDialog dialog) {
+					EditText input = (EditText) dialog.findViewById(android.R.id.edit);
+					String newDirName = input.getText().toString();
+					if (createSubDir(parentFolder.getAbsolutePath() + "/" + newDirName)) {
+						parentFolder = new File(parentFolder.getAbsolutePath() + "/" + newDirName);
+						updateList();
+					} else {
+						((MainActivity) getActivity()).showMessage("Failed to create '" + newDirName + "' folder");
+					}
+				};
+				
+				private boolean createSubDir(String newDir) {
+					File newDirFile = new File(newDir);
+					if (!newDirFile.exists()) {
+						return newDirFile.mkdir();
+					}
+					return false;
+				};
+			})
+			.positiveText(android.R.string.ok)
+			.negativeText(android.R.string.cancel)
+			.build();
+			dlg.show();
+		}
+		
 		@Override
 		public void onNegative(MaterialDialog materialDialog) {
 			materialDialog.dismiss();
@@ -71,11 +118,13 @@ public class FolderSelectorDialog extends DialogFragment implements MaterialDial
 				.items(getContentsArray())
 				.theme(Theme.LIGHT)
 				.titleColorRes(R.color.main_color_500)
+				.neutralColorRes(R.color.main_color_500)
 				.positiveColorRes(R.color.main_color_500)
 				.negativeColorRes(R.color.main_color_500)
 				.itemsCallback(this)
 				.callback(mButtonCallback)
 				.autoDismiss(false)
+				.neutralText("Add folder") //TODO
 				.positiveText(android.R.string.ok)
 				.negativeText(android.R.string.cancel)
 				.build();
@@ -90,12 +139,15 @@ public class FolderSelectorDialog extends DialogFragment implements MaterialDial
 			parentFolder = parentContents[canGoUp ? i - 1 : i];
 			canGoUp = true;
 		}
+		updateList();
+	}
+	
+	private void updateList(){
 		parentContents = listFiles();
 		MaterialDialog dialog = (MaterialDialog) getDialog();
 		dialog.setTitle(parentFolder.getAbsolutePath());
 		dialog.setItems(getContentsArray());
 	}
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -103,7 +155,7 @@ public class FolderSelectorDialog extends DialogFragment implements MaterialDial
 	}
 
 	public void show(Activity context) {
-		show(context.getFragmentManager(), "FOLDER_SELECTOR");
+		show(context.getFragmentManager(), TAG);
 	}
 
 	private static class FolderSorter implements Comparator<File> {

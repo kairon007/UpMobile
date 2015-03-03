@@ -20,11 +20,14 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.TypedValue;
 
@@ -194,17 +197,16 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	
 	@Override
 	protected int getMiniPlayerID() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void onFolderSelection(File folder) {
-		//TODO
-//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-//		Editor editor = sp.edit();
-//		editor.putString(PREF_DIRECTORY, "");
-//		editor.putString(PREF_DIRECTORY_PREFIX, "");
-//		editor.commit();
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		Editor editor = sp.edit();
+		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
+		editor.putString(PREF_DIRECTORY_PREFIX, folder.getAbsoluteFile().getName());
+		editor.commit();
+		showPlayerElement(PlaybackService.get(this).isPlaying());
 	}
 }
