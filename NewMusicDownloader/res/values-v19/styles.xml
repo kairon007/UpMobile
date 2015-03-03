@@ -5,8 +5,8 @@
         <item name="android:textSize">25sp</item>
     </style>
     
-	<style name="AppTheme" parent="android:Theme.Holo.Light">
+<!-- 	<style name="AppTheme" parent="android:Theme.Holo.Light">
     	<item name="android:windowTranslucentStatus">true</item>
-	</style>
+	</style> -->
     
 </resources>

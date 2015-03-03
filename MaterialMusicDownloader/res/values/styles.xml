@@ -8,6 +8,17 @@
 
     <style name="AppTheme" parent="android:Theme.Holo.Light">
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
+        <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
+    </style>
+
+    <style name="myPopupMenuStyle" parent="@android:style/Widget.Holo.Light.PopupMenu">
+        <item name="android:popupBackground">@color/main_color_background</item>
+    </style>
+
+    <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/main_color_grey_800</item>
     </style>
 
     <style name="AppThemeTrans" parent="@style/AppTheme">

@@ -11,5 +11,6 @@
     <color name="holo_button_highlight">#9933b5e5</color>
     <color name="holo_button_highlight_low">#5533b5e5</color>
     <color name="nowplaying_secondary_text">#ff868686</color>
+    <color name="main_color_background">#ffe6e6e6</color>
 
 </resources>

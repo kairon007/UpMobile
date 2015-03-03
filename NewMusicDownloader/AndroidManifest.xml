@@ -44,7 +44,7 @@
         android:name="org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp"
         android:allowBackup="true"
         android:backupAgent="PreferencesBackupAgent"
-        android:theme="@android:style/Theme.Holo">
+        android:theme="@style/AppTheme">
         <activity
             android:name="org.upmobile.newmusicdownloader.activity.MainActivity"
             android:configChanges="screenSize|orientation"
