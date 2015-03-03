@@ -162,7 +162,7 @@ public class ResideMenu extends FrameLayout{
     private void rebuildMenu(){
         layoutLeftMenu.removeAllViews();
         for(int i = 0; i < menuItems.size() ; i ++)
-            layoutLeftMenu.addView(menuItems.get(i), i);
+            layoutLeftMenu.addView(menuItems.get(i));
     }
 
     /**

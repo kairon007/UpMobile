@@ -219,6 +219,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 	
 	public void reDrawMenu(){
         resideMenu.setMenuItems(new ArrayList<ResideMenuItem>(Arrays.asList(getMenuItems())));
+		resideMenu.hideLastElement();
 	}
 	
 }

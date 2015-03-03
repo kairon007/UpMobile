@@ -31,6 +31,15 @@ import com.special.menu.ResideMenuItem;
 
 public class MainActivity extends BaseClearActivity implements Constants {
 
+	private static final int COUNT_FRAGMENT = 5;
+	
+	private static final int SEARCH_FRAGMENT = 0;
+	private static final int DOWNLOADS_FRAGMENT = 1;
+	private static final int LIBRARY_FRAGMENT = 2;
+	private static final int PLAYER_FRAMGNET = 3;
+	private static final int SETTINGS_FRAGMENT = 4;
+	
+	
 	private final String ARRAY_SAVE = "extras_array_save";
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
@@ -74,12 +83,12 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	@Override
 	protected Fragment[] getFragments() {
-		fragments = new Fragment[5];
-		fragments[0] = new SearchFragment();
-		fragments[1] = new DownloadsFragment();
-		fragments[2] = new LibraryFragment();
-		fragments[3] = new PlayerFragment();
-		fragments[4] = new Fragment();
+		fragments = new Fragment[COUNT_FRAGMENT];
+		fragments[SEARCH_FRAGMENT] = new SearchFragment();
+		fragments[DOWNLOADS_FRAGMENT] = new DownloadsFragment();
+		fragments[LIBRARY_FRAGMENT] = new LibraryFragment();
+		fragments[PLAYER_FRAMGNET] = new PlayerFragment();
+		fragments[SETTINGS_FRAGMENT] = new Fragment();
 		return fragments;
 	}
 	
@@ -100,12 +109,12 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	protected ResideMenuItem[] getMenuItems() {
-		items = new ResideMenuItem[5];
-		items[0] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_search, ResideMenuItem.Types.TYPE_MENU);
-		items[1] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.tab_downloads, ResideMenuItem.Types.TYPE_MENU);
-		items[2] = new ResideMenuItem(this, R.drawable.ic_library, R.string.tab_library, ResideMenuItem.Types.TYPE_MENU);
-		items[3] = new ResideMenuItem(this, R.drawable.ic_player, R.string.tab_now_plaing, ResideMenuItem.Types.TYPE_MENU);
-		items[4] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_settings, ClearMusicDownloaderApp.getDirectory(), ResideMenuItem.Types.TYPE_SETTINGS);
+		items = new ResideMenuItem[COUNT_FRAGMENT];
+		items[SEARCH_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_search, ResideMenuItem.Types.TYPE_MENU);
+		items[DOWNLOADS_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.tab_downloads, ResideMenuItem.Types.TYPE_MENU);
+		items[LIBRARY_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_library, R.string.tab_library, ResideMenuItem.Types.TYPE_MENU);
+		items[PLAYER_FRAMGNET] = new ResideMenuItem(this, R.drawable.ic_player, R.string.tab_now_plaing, ResideMenuItem.Types.TYPE_MENU);
+		items[SETTINGS_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_settings, R.string.tab_settings, ClearMusicDownloaderApp.getDirectory(), ResideMenuItem.Types.TYPE_SETTINGS);
 		return items;
 	}
 	
@@ -176,7 +185,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	@Override
 	protected int getMiniPlayerID() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }
