@@ -117,6 +117,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				.title(parentFolder.getAbsolutePath())
 				.items(getContentsArray())
 				.theme(Theme.LIGHT)
+				.dividerColorRes(R.color.md_divider_white)
 				.titleColorRes(R.color.main_color_500)
 				.neutralColorRes(R.color.main_color_500)
 				.positiveColorRes(R.color.main_color_500)
