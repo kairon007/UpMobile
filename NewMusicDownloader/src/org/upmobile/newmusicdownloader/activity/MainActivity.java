@@ -227,7 +227,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		isEnabledFilter = false;
 		Fragment player = getFragmentManager().findFragmentByTag(currentTag);
 		if (null != player && player.isVisible()) {
-			isVisibleSearchView = PlaybackService.get(this).getPlayingSong().getClass() == MusicData.class;
+			AbstractSong plaingSong = PlaybackService.get(this).getPlayingSong();
+			if (null != plaingSong) {
+				isVisibleSearchView = plaingSong.getClass() == MusicData.class;
+			}
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
 		} else {
