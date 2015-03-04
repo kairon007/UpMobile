@@ -39,7 +39,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	private static final int PLAYER_FRAMGNET = 3;
 	private static final int SETTINGS_FRAGMENT = 4;
 	
-	
 	private final String ARRAY_SAVE = "extras_array_save";
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
@@ -187,4 +186,10 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	protected int getMiniPlayerID() {
 		return 0;
 	}
+
+	@Override
+	protected boolean isPlaying() {
+		return PlaybackService.get(this).isPlaying();
+	}
+	
 }

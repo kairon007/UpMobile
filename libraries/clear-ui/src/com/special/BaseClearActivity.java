@@ -1,7 +1,7 @@
 package com.special;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
@@ -30,16 +30,13 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 	private TextView tvTitle;
   
     protected abstract Fragment[] getFragments();
-    
     protected abstract ResideMenuItem[] getMenuItems();
-    
     protected abstract String[] getTitlePage();
-    
     protected abstract Bundle getArguments();
-    
     protected abstract Fragment getPlayerFragment();
-    
     protected abstract void showDialog();
+    protected abstract boolean isPlaying();
+    
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -218,8 +215,17 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 	}
 	
 	public void reDrawMenu(){
-        resideMenu.setMenuItems(new ArrayList<ResideMenuItem>(Arrays.asList(getMenuItems())));
-		resideMenu.hideLastElement();
+		List<ResideMenuItem> list = new ArrayList<ResideMenuItem>();
+		menuItems = getMenuItems();
+		for (ResideMenuItem item : menuItems) {
+			item.setOnClickListener(this);
+        	item.setBackgroundResource(R.drawable.button_selector_inverse_light);
+        	list.add(item);
+		}
+        resideMenu.setMenuItems(list);
+		if (!isPlaying()) {
+			resideMenu.hideLastElement();
+		}
 	}
 	
 }
