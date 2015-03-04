@@ -43,5 +43,7 @@
 	<string name="three_dot">&#xe83e;</string>
 	<string name="font_play_mini">&#xe80a;</string>
 	<string name="font_pause_mini">&#xe80b;</string>
+	<string name="font_play_settings">&#xe802;</string>
+	<string name="font_pause_arrow_down">&#xe803;</string>
 	
 </resources>
