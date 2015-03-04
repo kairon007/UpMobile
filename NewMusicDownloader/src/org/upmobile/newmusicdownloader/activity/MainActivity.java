@@ -159,16 +159,16 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void onNavigationDrawerItemSelected(int position) {
 		isEnabledFilter = false;
 		switch (position) {
-		case 0:
+		case SEARCH_FRAGMENT:
 	        changeFragment(new SearchFragment());
 			break;
-		case 1:
+		case DOWNLOADS_FRAGMENT:
 	        changeFragment(new DownloadsFragment());
 			break;
-		case 2:
+		case LIBRARY_FRAGMENT:
 	        changeFragment(new LibraryFragment());
 			break;
-		case 3:
+		case PLAYER_FRAMGNET:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
@@ -186,7 +186,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		    	changeFragment(fragment);
 		    }
 			break;
-		case 4:
+		case SETTINGS_FRAGMENT:
 		case 5:
 	        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 	    	if (null == service) {

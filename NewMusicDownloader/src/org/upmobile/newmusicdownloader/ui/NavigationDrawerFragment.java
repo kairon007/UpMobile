@@ -179,7 +179,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
+            mDrawerListView.setItemChecked(position, position != SETTINGS_FRAGMENT);
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
@@ -249,7 +249,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     
     public void setSelectedItem(int position){
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
+            mDrawerListView.setItemChecked(position, position != SETTINGS_FRAGMENT);
         }
     }
 }
