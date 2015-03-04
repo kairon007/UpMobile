@@ -99,7 +99,7 @@ public class NavigationDrawerFragment extends Fragment {
 			BaseMaterialFragment fragment = mFragments.get(i);
 			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag(), DrawerItem.Types.TYPE_MENU));
 		}
-		mDrawerItems.add(new DrawerItem("Section", DrawerItem.Types.TYPE_SECTION));
+		mDrawerItems.add(new DrawerItem(R.string.tab_settings, DrawerItem.Types.TYPE_SECTION));
 		mDrawerItems.add(new DrawerItem(R.string.drawer_icon_image_gallery, ((UIMainActivity) getActivity()).getDirectory(), DrawerItem.Types.TYPE_SETTING ));
 		mAdapter = new DrawerAdapter(getActivity(), mDrawerItems, true);
 		mDrawerListView.setAdapter(mAdapter);

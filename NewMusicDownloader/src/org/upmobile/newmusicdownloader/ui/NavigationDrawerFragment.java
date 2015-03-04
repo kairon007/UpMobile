@@ -95,7 +95,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		items.add(new DrawerItem(R.drawable.navigation_downloads, download, DrawerItem.Types.TYPE_MENU));
 		items.add(new DrawerItem(R.drawable.navigaion_library, library, DrawerItem.Types.TYPE_MENU));
 		if (isNowPlaying) items.add(new DrawerItem(R.drawable.navigation_player, now_playing, DrawerItem.Types.TYPE_MENU));
-		items.add(new DrawerItem("Section", DrawerItem.Types.TYPE_SECTION));
+		items.add(new DrawerItem(settings, DrawerItem.Types.TYPE_SECTION));
 		items.add(new DrawerItem(R.drawable.navigation_settings, NewMusicDownloaderApp.getDirectory(), DrawerItem.Types.TYPE_SETTING));
 		mAdapter = new NavigationAdapter(getActivity(), items);
 		mDrawerListView.setAdapter(mAdapter);

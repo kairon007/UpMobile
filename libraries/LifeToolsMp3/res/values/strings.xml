@@ -143,4 +143,6 @@
     <string name="add_to_playlist">Add to Playlist</string>
     <string name="delete_item">Delete item</string>
     
+    <string name="ellipsis">\u2026</string>
+    
 </resources>
