@@ -197,6 +197,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
 			download.setProgress(50);
+			android.util.Log.d("logd", "onPreExecute: ");
 			super.onPreExecute();
 		}
 		
@@ -369,8 +370,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			player.stop();
 			break;
 		case R.id.download:
-			((CircularProgressButton)v).setIndeterminateProgressMode(true);
-			((CircularProgressButton)v).setProgress(50);
 			download();
 			break;
 		case R.id.songNameBox:
@@ -777,6 +776,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			((MainActivity) getActivity()).showMessage(R.string.search_message_no_internet);
 			return;
 		}
+		if (downloadListener.getSongID() == -1) {
+			download.setIndeterminateProgressMode(true);
+			download.setProgress(50);
+		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
@@ -792,8 +795,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					@Override
 					public void run() {
 						downloadListener.onClick(contentView);
-						progressUpdater = new ProgressUpdater();
-						progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
+						if (downloadListener.getSongID() == -1) {
+							progressUpdater = new ProgressUpdater();
+							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
+						}
 					}
 				});
 			}

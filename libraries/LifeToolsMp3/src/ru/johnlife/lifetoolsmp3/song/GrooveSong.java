@@ -1,36 +1,57 @@
 package ru.johnlife.lifetoolsmp3.song;
 
 import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
+import android.os.AsyncTask;
 
 
-public class GrooveSong extends SongWithCover {
+public class GrooveSong extends RemoteSong {
 
-	private static String coverUrl = "http://images.gs-cdn.net/static/albums/%d_%d.jpg";
+	private final String ERROR_RETRIEVING_URL = "ERROR_RETRIEVING_URL";
 	private int songId;
-	private int albumId;
 
-	public GrooveSong(long id, int songId, int albumId) {
+	public GrooveSong(long id, int songId) {
 		super(id);
 		this.songId = songId;
-		this.albumId = albumId;
 	}
 
 	@Override
 	public boolean getDownloadUrl(DownloadUrlListener listener) {
-		super.getDownloadUrl(listener);
-		if (downloadUrl == null) {
-			downloadUrl = SearchGrooveshark.getDownloadUrl(songId);
-			return true;
-		} else return false;
-	}
-
-	@Override
-	public String getLargeCoverUrl() {
-		return String.format(coverUrl, 500, albumId);
+		if (super.getDownloadUrl(listener)) return true;
+		getDownloadUrl(songId);
+		return false;
 	}
 
 	public Integer getSongId() {
 		return songId;
+	}
+	
+	public Void getDownloadUrl(final int songId) {
+		new AsyncTask<Void, Void, String>() {
+
+			@Override
+			protected String doInBackground(Void... params) {
+				try {
+					return SearchGrooveshark.getClient().GetStreamKey(songId).result.DirectURL();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			protected void onPostExecute(String result) {
+				if (null != result) {
+					for (DownloadUrlListener listener : downloadUrlListeners) {
+						listener.success(result);
+					}
+				} else {
+					for (DownloadUrlListener listener : downloadUrlListeners) {
+						listener.error(ERROR_RETRIEVING_URL);
+					}
+				}
+				downloadUrlListeners.clear();
+			};
+		}.execute();
+		return null;
 	}
 
 }

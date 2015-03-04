@@ -30,6 +30,7 @@ import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
@@ -103,7 +104,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		String songArtist = song.getArtist().trim();
 		String songTitle = song.getTitle().trim();
-		File musicDir = new File(downloadPath == null ? getDirectory() : downloadPath);
+		final File musicDir = new File(downloadPath == null ? getDirectory() : downloadPath);
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
 		}
@@ -134,9 +135,21 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		StringBuilder stringBuilder = new StringBuilder(songArtist).append(" - ").append(songTitle).append(format);
 		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
 		if (songId != -1) {
-//			Log.d("GroovesharkClient", "Its GrooveSharkDownloader. SongID: " + songId);
-//			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context);
-//			manager.execute();
+			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context, new InfoListener() {
+				
+				@Override
+				public void success() {
+					setMetadataToFile(musicDir.getAbsolutePath()  + "/" + sb, new File(musicDir.getAbsolutePath()  + "/" + sb), useAlbumCover);
+					insertToMediaStore(song, musicDir.getAbsolutePath()  + "/" + sb);
+					showMessage(context, R.string.download_finished);
+				}
+				
+				@Override
+				public void erorr() {
+				}
+			});
+			manager.execute();
+			return;
 		} else {
 			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()){
 				//new download task for device with below 11 
@@ -643,6 +656,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	public void setDownloadPath(String path) {
 		downloadPath = path;
+	}
+	
+	public interface InfoListener {
+		public void success();
+		
+		public void erorr();
+	}
+	
+	public Integer getSongID() {
+		return songId;
 	}
 
 }
