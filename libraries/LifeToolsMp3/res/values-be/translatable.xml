@@ -26,7 +26,7 @@
     <string name="hint_filter_playlists">Адфільтраваць плэйлісты</string>
     <string name="hint_filter_genres">Адфільтраваць жанры</string>
     <string name="hint_filter_files">Адфільтраваць файлы</string>
-    <string name="search_your_results_appear_here">Тут з'явяцца вынікі вашага пошука</string>
+    <string name="search_your_results_appear_here">Тут з\'явяцца вынікі вашага пошука</string>
     <string name="search_no_results_for">Няма вынікаў для </string>
     <string name="search_try_different_query">Паспрабуйце іншы запыт</string>
     <string name="search_please_enter_query">Увядзіце запыт</string>
