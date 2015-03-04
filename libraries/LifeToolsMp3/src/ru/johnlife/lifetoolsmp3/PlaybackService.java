@@ -147,11 +147,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 	};
 	
-	public static PlaybackService get(Context context) {
+	public static PlaybackService get(final Context context) {
+		android.util.Log.d("logd", "get()");
 		if (instance == null) {
-			context.startService(new Intent(context, PlaybackService.class));
+			context.startService(new Intent(context, PlaybackService.class));					
 			try {
 				synchronized (WAIT) {
+					android.util.Log.d("logd", "get() == null");
 					WAIT.wait();
 				}
 			} catch (InterruptedException ignored) {
@@ -190,6 +192,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		synchronized (WAIT) {
 			WAIT.notifyAll();
 		}
+		android.util.Log.d("logd", "service onCreate()");
 	}
 	
 	@Override
@@ -456,6 +459,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			return;
 		}
 		buildSendMessage(playingSong.getPath(), MSG_START, 0, 0);
+	}
+	
+	public void pause() {
+		if (!isPlaying()) return;
+		play(playingSong);
 	}
 	
 	private void helper(final State state, final AbstractSong targetSong) {

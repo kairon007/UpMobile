@@ -77,7 +77,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		}
 		fileObserver.startWatching();
 		
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override
@@ -130,12 +130,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		View view  = findViewById(R.id.drawer_layout);
 		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-	    switch(item.getItemId()){
+	    switch(item.getItemId()) {
 
         case R.id.action_search:
             searchView.setIconified(false);// to Expand the SearchView when clicked
             return true;
-    }    
+	    }
 		return false;
 	}
 	
