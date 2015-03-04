@@ -53,6 +53,11 @@
             android:maxLines="2"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@drawable/selector_text_empty" />
+        
+            <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/main_color_grey_500" />
     </LinearLayout>
 
 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>

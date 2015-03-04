@@ -25,14 +25,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.csform.android.uiapptemplate.Constants;
 import com.csform.android.uiapptemplate.R;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.adapter.DrawerAdapter;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.model.DrawerItem;
 
-public class NavigationDrawerFragment extends Fragment {
-
+public class NavigationDrawerFragment extends Fragment implements Constants {
+	
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private NavigationDrawerCallbacks mCallbacks;
@@ -174,13 +175,13 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
+    	if (null != mDrawerListView) {
+        	mDrawerListView.setItemChecked(position, position != SETTINGS_FRAGMENT);
         }
-        if (mDrawerLayout != null) {
+        if (null != mDrawerLayout) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
-        if (mCallbacks != null) {
+        if (null != mCallbacks) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
     }
@@ -259,7 +260,7 @@ public class NavigationDrawerFragment extends Fragment {
     
     public void setSelectedItem(int position){
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
+        	mDrawerListView.setItemChecked(position, position != SETTINGS_FRAGMENT);
         }
     }
     

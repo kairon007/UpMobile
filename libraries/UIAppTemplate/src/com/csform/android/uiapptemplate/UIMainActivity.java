@@ -29,7 +29,7 @@ import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
-public abstract class UIMainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks {
+public abstract class UIMainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
 	
 	private List<BaseMaterialFragment> mFragments;
 
@@ -176,16 +176,16 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		switch (position) {
-		case 0:
+		case SEARCH_FRAGMENT:
 	        changeFragment(mFragments.get(0));
 			break;
-		case 1:
+		case DOWNLOADS_FRAGMENT:
 	        changeFragment(mFragments.get(1));
 			break;
-		case 2:
+		case LIBRARY_FRAGMENT:
 	        changeFragment(mFragments.get(2));
 			break;
-		case 3:
+		case PLAYER_FRAMGNET:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(3);
@@ -193,7 +193,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		    	changeFragment(fragment);
 		    }
 		    break;
-		case 4:
+		case SETTINGS_FRAGMENT:
 		case 5:
 			showDialog();
 			break;
