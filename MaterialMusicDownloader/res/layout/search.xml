@@ -114,7 +114,7 @@
                         style="@style/RippleStyle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:layout_gravity="center_vertical|right"
+                        android:layout_gravity="center_vertical|end"
                         app:rippleColor="@android:color/white" >
 
                         <com.csform.android.uiapptemplate.font.MusicTextView
@@ -137,19 +137,30 @@
                         android:src="@drawable/ic_download" />
                 </LinearLayout>
 
-                <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                    style="@style/RippleStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    app:rippleColor="@android:color/white" >
+				<FrameLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="48dp"
+				    android:paddingLeft="16dp"
+				    android:paddingRight="16dp" >
 
-                    <Spinner
-                        android:id="@+id/choise_engines"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:popupBackground="@color/main_color_500"
-                        android:spinnerMode="dropdown" />
-                </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+				    <Spinner
+				        android:id="@+id/choise_engines"
+				        style="@style/Spinner.Material"
+				        android:layout_width="match_parent"
+				        android:layout_height="match_parent" />
+				    
+				    <com.csform.android.uiapptemplate.font.MusicTextView
+                            style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:gravity="center_vertical|end"
+                            android:text="@string/font_drop_down"
+                            android:textColor="@color/main_color_accent"
+                            android:textSize="16sp" />
+				    
+				</FrameLayout>
+
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

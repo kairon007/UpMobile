@@ -223,10 +223,8 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (useOldToggle() && mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
-		} else {
-			if (drawerToggle.onOptionsItemSelected(item)) {
-				return true;
-			}
+		} else if (drawerToggle.onOptionsItemSelected(item)) {
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

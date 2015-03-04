@@ -19,7 +19,15 @@
         <item name="colorPrimary">@color/main_color_500</item>
         <item name="colorPrimaryDark">@color/main_color_700</item>
     </style>
-
+    
+    <style name="Spinner.Material" parent="@android:Widget.Material.Spinner">
+        <item name="android:background">@drawable/spinner_selector</item>
+        <item name="android:clickable">true</item>
+        <item name="android:popupBackground">@color/main_color_500</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:gravity">start|center_vertical</item>
+    </style>
+    
     <style name="AppTheme.Title" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>

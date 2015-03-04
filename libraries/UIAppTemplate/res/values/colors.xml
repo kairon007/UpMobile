@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
+    <color name="main_selector_background">#b2ffffff</color>
     <color name="main_color_background_first">#ffeeeeee</color>
     <color name="main_color_background">#ffe6e6e6</color>
 

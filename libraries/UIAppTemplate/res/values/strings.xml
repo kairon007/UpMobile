@@ -100,5 +100,7 @@
     <string name="skip">SKIP</string>
     <string name="raised">RAISED</string>
     <string name="flat">FLAT</string>
+    
+    <string name="font_drop_down">&#xe803;</string>
 
 </resources>
