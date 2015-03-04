@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:minHeight="48dp" >
 
-        <com.csform.android.uiapptemplate.view.cpb.CheckBox
+        <com.csform.android.uiapptemplate.view.cb.CheckBox
             android:id="@+id/cbUseCover"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -347,7 +347,7 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp" >
         
-        <com.csform.android.uiapptemplate.view.pb.ProgressBarCircularIndeterminate
+        <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
             android:id="@+id/lyrics_progress"
             android:layout_width="56dp"
             android:layout_height="56dp"

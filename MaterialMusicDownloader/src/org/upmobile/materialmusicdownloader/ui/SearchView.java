@@ -23,8 +23,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
-import com.csform.android.uiapptemplate.view.ProgressWheel;
-import com.csform.android.uiapptemplate.view.pb.ProgressBarCircularIndeterminate;
+import com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate;
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 

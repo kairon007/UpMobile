@@ -29,7 +29,7 @@
                 android:text="@string/search_your_results_appear_here"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <com.csform.android.uiapptemplate.view.pb.ProgressBarCircularIndeterminate
+            <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
                 android:id="@+id/progress"
                	android:layout_width="56dp"
                 android:layout_height="56dp"

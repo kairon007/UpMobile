@@ -1,4 +1,4 @@
-package com.csform.android.uiapptemplate.view.cpb;
+package com.csform.android.uiapptemplate.view.cb;
 
 import android.content.Context;
 import android.content.res.TypedArray;

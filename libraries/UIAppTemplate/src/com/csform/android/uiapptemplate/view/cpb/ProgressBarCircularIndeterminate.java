@@ -1,4 +1,4 @@
-package com.csform.android.uiapptemplate.view.pb;
+package com.csform.android.uiapptemplate.view.cpb;
 
 import com.csform.android.uiapptemplate.view.CustomView;
 
