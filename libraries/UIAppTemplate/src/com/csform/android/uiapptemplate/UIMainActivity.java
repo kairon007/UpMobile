@@ -192,6 +192,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		    if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
 		    	changeFragment(fragment);
 		    }
+		    break;
 		case 4:
 		case 5:
 			showDialog();
