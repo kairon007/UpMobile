@@ -20,10 +20,11 @@
 
     <EditText
         android:id="@android:id/edit"
+        style="@style/EditTextAppearance.Headline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:singleLine="true"
-        tools:hint="Input area" />
+        android:layout_height="match_parent"
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp" />
 
 </LinearLayout>
