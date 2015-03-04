@@ -64,7 +64,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	}
 	@Override
 	protected Bitmap getDefaultBitmap() {
-		return ((MainActivity) getContext()).getDeafultBitmapCover(56, 56, 48);
+		return ((MainActivity) getContext()).getDeafultBitmapCover(64, 62, 60);
 	}
 	
 	@Override

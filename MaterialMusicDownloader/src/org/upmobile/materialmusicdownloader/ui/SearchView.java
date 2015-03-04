@@ -122,7 +122,7 @@ public class SearchView extends OnlineSearchView implements Constants {
 	
 	@Override
 	public Bitmap getDeafultBitmapCover() {
-		return ((MainActivity) getContext()).getDeafultBitmapCover(64, 64, 55);
+		return ((MainActivity) getContext()).getDeafultBitmapCover(64, 62, 60);
 	}
 	
 	@Override
