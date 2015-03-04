@@ -72,6 +72,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
 	
+	protected void specialInit(View view) { }
+	
 	private PlaybackService getService() {
 		if (PlaybackService.hasInstance()) {
 			return PlaybackService.get(getContext());
@@ -135,10 +137,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		adapter = getAdapter();
 		emptyMessage = getMessageView(view);
 		specialInit(view);
-	}
-	
-	protected void specialInit(View view) {
-		
 	}
 	
 	protected ArrayList<MusicData> querySong() {

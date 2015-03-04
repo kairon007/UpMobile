@@ -110,7 +110,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	protected void setFilter(String filter) {
 		LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
 		if (fragment.isVisible()) {
-			if ("".equals(filter)) {
+			if (filter.isEmpty()) {
 				fragment.clearFilter();
 			} else {
 				fragment.setFilter(filter);

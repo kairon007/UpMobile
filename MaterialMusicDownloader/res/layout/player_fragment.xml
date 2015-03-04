@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:minHeight="48dp" >
 
-        <com.csform.android.uiapptemplate.view.cb.CheckBox
+        <com.csform.android.uiapptemplate.view.cpb.CheckBox
             android:id="@+id/cbUseCover"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

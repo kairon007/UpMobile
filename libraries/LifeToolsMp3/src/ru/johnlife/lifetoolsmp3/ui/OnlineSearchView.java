@@ -487,7 +487,7 @@ public abstract class OnlineSearchView extends View {
 						@Override
 						public void success(String url) {
 							((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).setDownloadUrl(url);
-							downloadListener = new DownloadClickListener(getContext(), (RemoteSong) getResultAdapter().getItem((int) v.getTag()), 0);
+							downloadListener = new DownloadClickListener(getContext(), (RemoteSong) getResultAdapter().getItem((Integer) v.getTag()), 0);
 							downloadListener.setDownloadPath(getDirectory());
 							downloadListener.setUseAlbumCover(true);
 							downloadListener.downloadSong(false);

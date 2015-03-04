@@ -46,7 +46,7 @@ public class SearchGrooveshark extends BaseSearchTask {
 			SearchArtistResult[] results = client.SearchArtist(getSongName()).result.result;
 			communicationToken = client.CommunicationToken();
 			sessionID = client.SessionID();
-			ArrayList<String[]> headers = new ArrayList<>();
+			ArrayList<String[]> headers = new ArrayList<String[]>();
 			headers.add(new String[] { "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" });
 			headers.add(new String[] { "Content-Type", "text/html; charset=UTF-8" });
 			headers.add(new String[] { "Accept-Language", "de-de,de;q=0.8,en-us;q=0.5,en;q=0.3" });
