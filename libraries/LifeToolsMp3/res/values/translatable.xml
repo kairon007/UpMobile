@@ -9,6 +9,7 @@
     <string name="update_app_update_now">UPDATE NOW</string>
     <string name="tab_search">Search</string>
     <string name="tab_downloads">Downloads</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_library">Library</string>
     <string name="tab_now_plaing">Now playing</string>
     <string name="tab_settings">Settings</string>

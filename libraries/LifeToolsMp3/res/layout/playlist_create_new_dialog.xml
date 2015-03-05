@@ -15,7 +15,7 @@
             android:layout_gravity="center"
             android:padding="4dp"
             android:text="@string/create_new_playlist"
-            android:textSize="32sp" />
+            android:textAppearance="?android:attr/textAppearanceMedium"  />
     </FrameLayout>
 
     <View

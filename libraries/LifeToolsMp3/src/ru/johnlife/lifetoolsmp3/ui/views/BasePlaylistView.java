@@ -293,7 +293,9 @@ public abstract class BasePlaylistView extends View {
 		ArrayList<PlaylistData> playlistDatas = new ArrayList<>();
 		Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
 		PlaylistData playlistData = new PlaylistData();
-		playlistCursor.moveToFirst();
+		if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
+			return playlistDatas;
+		}
 		if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
 			playlistData.populate(playlistCursor);
 			playlistDatas.add(playlistData);
