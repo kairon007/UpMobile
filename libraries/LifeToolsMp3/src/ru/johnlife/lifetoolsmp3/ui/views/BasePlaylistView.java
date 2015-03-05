@@ -2,9 +2,11 @@ package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.util.ArrayList;
 
+import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.adapter.ExpandableAdapter;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
@@ -32,6 +34,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
@@ -42,7 +45,7 @@ public abstract class BasePlaylistView extends View {
 	private ViewGroup view;
 	private ListView listView;
 	private ExpandableAdapter expandableAdapter;
-	private TextView playLastPlaylist;
+	private LinearLayout playLastPlaylist;
 	private LinearLayout createNewPlayList;
 	private AlertDialog.Builder newPlaylistDialog;
 
@@ -86,7 +89,7 @@ public abstract class BasePlaylistView extends View {
 		}).start();
 		view = (ViewGroup) inflater.inflate(getLayoutId() > 0 ? getLayoutId() : ru.johnlife.lifetoolsmp3.R.layout.playlist_view, null);
 		listView = getListView(view) != null ? getListView(view) : (AnimatedExpandableListView) view.findViewById(R.id.expandableListView);
-		playLastPlaylist = (TextView) view.findViewById(R.id.lastPlayedPlaylist);
+		playLastPlaylist = (LinearLayout) view.findViewById(R.id.lastPlayedPlaylist);
 		createNewPlayList = (LinearLayout) view.findViewById(R.id.createNewPlaylist);
 		initListeners();
 		expandableAdapter = new ExpandableAdapter(view.getContext());
@@ -108,6 +111,7 @@ public abstract class BasePlaylistView extends View {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 				if (null != playbackService) {
+					MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, playlists.get(groupPosition).getId()).commit();
 					playbackService.setArrayPlayback(new ArrayList<AbstractSong>(playlists.get(groupPosition).getSongs()));
 					playbackService.play(playlists.get(groupPosition).getSongs().get(childPosition));
 					showPlayerFragment();
@@ -141,7 +145,28 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public void onClick(View paramView) {
-
+				long id = MusicApp.getSharedPreferences().getLong(Constants.PREF_LAST_PLAYLIST_ID, -1);
+				if (id == -1) {
+					showMessage(getContext(), R.string.no_previous_playlists);
+				} else {
+					boolean isPlaylistExists = false;
+					for (PlaylistData data : playlists) {
+						if (data.getId() == id) {
+							isPlaylistExists = true;
+							if (data.getSongs().size() == 0) {
+								showMessage(getContext(), R.string.no_songs_in_the_last_playlist);
+							} else {
+								playbackService.setArrayPlayback(new ArrayList<AbstractSong>(data.getSongs()));
+								playbackService.play(data.getSongs().get(0));
+								showPlayerFragment();
+								return;
+							}
+						}
+					}
+					if (!isPlaylistExists) {
+						showMessage(getContext(), R.string.the_playlist_was_deleted);
+					}
+				}
 			}
 		});
 
@@ -311,5 +336,13 @@ public abstract class BasePlaylistView extends View {
 		} catch (UnsupportedOperationException ex) {
 			return null;
 		}
+	}
+	
+	public void showMessage(Context context, String message) {
+		Toast.makeText(context, message ,Toast.LENGTH_SHORT).show();
+	}
+	
+	public void showMessage(Context context, int message) {
+		showMessage(context, context.getString(message));
 	}
 }

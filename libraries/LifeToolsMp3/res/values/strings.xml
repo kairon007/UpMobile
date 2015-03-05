@@ -151,5 +151,8 @@
     <string name="create">Create</string>
     <string name="playlist_is_empty">Playlist is empty</string>
     <string name="select_playlist">Select Playlist</string>
+    <string name="no_previous_playlists">No previous Playlists</string>
+    <string name="no_songs_in_the_last_playlist">There are no songs in the last played Playlist</string>
+    <string name="the_playlist_was_deleted">The last played Playlist was deleted</string>
     
 </resources>

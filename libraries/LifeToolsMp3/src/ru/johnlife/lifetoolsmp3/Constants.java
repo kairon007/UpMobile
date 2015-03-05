@@ -9,4 +9,6 @@ public interface Constants {
 	public static String NEXT_ACTION = "playbackservice.action.next";
 	public static String CLOSE_ACTION = "playbackservice.action.close";
 	
+	public static final String PREF_LAST_PLAYLIST_ID = "pref.last.played.playlist.id";
+	
 }
