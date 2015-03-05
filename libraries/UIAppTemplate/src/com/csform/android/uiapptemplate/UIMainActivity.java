@@ -6,10 +6,10 @@ import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
@@ -103,7 +103,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
     				setFilter(q);
     			} else {
     				isEnabledFilter = false;
-    				changeFragment(mFragments.get(0));
+    				changeFragment(mFragments.get(0), false);
     				searchView.setIconified(true);
     			}
                 return false;
@@ -170,15 +170,15 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		switch (position) {
 		case SEARCH_FRAGMENT:
 			showMiniPlayer(true);
-	        changeFragment(mFragments.get(0));
+	        changeFragment(mFragments.get(0), false);
 			break;
 		case DOWNLOADS_FRAGMENT:
 			showMiniPlayer(true);
-	        changeFragment(mFragments.get(1));
+	        changeFragment(mFragments.get(1), false);
 			break;
 		case LIBRARY_FRAGMENT:
 			showMiniPlayer(true);
-	        changeFragment(mFragments.get(2));
+	        changeFragment(mFragments.get(2), false);
 			break;
 		case PLAYER_FRAMGNET:
 			showMiniPlayer(false);
@@ -186,7 +186,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 			String lastFragmentName = backEntry.getName();
 	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(3);
 		    if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
-		    	changeFragment(fragment);
+		    	changeFragment(fragment, true);
 		    }
 		    break;
 		case SETTINGS_FRAGMENT:
@@ -198,7 +198,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		}
 	}
 	
-	public void changeFragment(BaseMaterialFragment baseMaterialFragment) {
+	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate) {
 		isVisibleSearchView = mFragments.get(0).equals(baseMaterialFragment) ? false : true;
 		hideKeyboard();
 		isEnabledFilter = false;
@@ -209,10 +209,12 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		if (((Fragment)baseMaterialFragment).isAdded()) {
 			((Fragment)baseMaterialFragment).onResume();
 		}
-		getFragmentManager().beginTransaction()
-		.replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName())
+		FragmentTransaction tr = getFragmentManager().beginTransaction();
+		if (isAnimate) {
+			tr.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_down, R.anim.slide_out_down);
+		}
+		tr.replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName())
 		.addToBackStack(baseMaterialFragment.getClass().getSimpleName())
-		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 		.commit();
 	}
 	
