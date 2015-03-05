@@ -1,7 +1,6 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.Context;
@@ -173,11 +172,12 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	}
 	
 	public void clearFilter() {
-		if (null == filter) {
+		if (null == filter || null == originalItems) {
 			return;
 		}
 		changeData(originalItems);
 		notifyDataSetChanged();
+		originalItems = null;
 	}
 	
 	public void setDoNotifyData(boolean doNotifyData) {
@@ -230,8 +230,10 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		@Override
 		protected void publishResults(CharSequence constraint, final FilterResults results) {
 			items = (ArrayList<T>) results.values;
-			if (results.count > 0) {
-                notifyDataSetChanged();
+			if (results.count == 0) {
+            	notifyDataSetInvalidated();
+            } else {
+            	notifyDataSetChanged();
             }
 		}
 	}
