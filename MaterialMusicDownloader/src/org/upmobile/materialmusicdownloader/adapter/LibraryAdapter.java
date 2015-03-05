@@ -70,6 +70,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);
 				}
+				if (service.isPlaying() && service.getPlayingSong().equals(data)) return;
 				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
 				break;
