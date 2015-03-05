@@ -209,4 +209,9 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		editor.commit();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
 	}
+	
+	@Override
+	public int getSettingsIcon() {
+		return R.string.font_play_settings;
+	}
 }

@@ -32,27 +32,19 @@ import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 public abstract class UIMainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
 	
 	private List<BaseMaterialFragment> mFragments;
-
 	private CharSequence mTitle;
-	
 	private String query = null;
-	
 	private SearchView searchView;
-
 	private NavigationDrawerFragment navigationDrawerFragment;
-	
 	private boolean isVisibleSearchView = false;
 	protected boolean isEnabledFilter = false;
-
+	
 	protected abstract <T extends BaseMaterialFragment> ArrayList<T> getFragments();
-	
+	protected void clickOnSearchView(String message) {}
+	public int getSettingsIcon() { return 0; }
 	public abstract String getDirectory();
-	
 	public abstract void showDialog();
 	
-	protected void clickOnSearchView(String message) {
-		
-	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
