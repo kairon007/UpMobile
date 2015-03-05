@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
-import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
@@ -196,4 +195,15 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		return PlaybackService.get(this).isPlaying();
 	}
 	
+	@Override
+	protected void showPlayerFragment() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	protected int getMiniPlayerClickableID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
