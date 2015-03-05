@@ -6,11 +6,16 @@ import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -100,8 +105,44 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		});
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	public void showMiniPlayer(boolean isShow) {
-		findViewById(getMiniPlayerID()).setVisibility(isShow ? View.VISIBLE : View.GONE);
+		final View view = (View) findViewById(getMiniPlayerID());
+		if (isShow) {
+			Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+			slideUp.setAnimationListener(new AnimationListener() {
+				
+				@Override
+				public void onAnimationStart(Animation animation) {
+					view.setVisibility(View.VISIBLE);
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) { }
+				
+				@Override
+				public void onAnimationEnd(Animation animation) { }
+			});
+			view.setAnimation(slideUp);
+			view.startAnimation(slideUp);
+		} else {
+			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+			slideDown.setAnimationListener(new AnimationListener() {
+				
+				@Override
+				public void onAnimationStart(Animation animation) { }
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) { }
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					view.setVisibility(View.GONE);
+				}
+			});
+			view.setAnimation(slideDown);
+			view.startAnimation(slideDown);
+		}
 	}
 	
 	public void startSong(final AbstractSong song) {
