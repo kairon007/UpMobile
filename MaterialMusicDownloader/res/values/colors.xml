@@ -8,6 +8,7 @@
         <color name="main_color_for_text">#ffffff</color>
     <!-- End theme colors -->
     
+    <color name="mini_player_color">#ddd</color>
     <color name="holo_button_highlight">#9933b5e5</color>
     <color name="holo_button_highlight_low">#5533b5e5</color>
     <color name="nowplaying_secondary_text">#ff868686</color>
