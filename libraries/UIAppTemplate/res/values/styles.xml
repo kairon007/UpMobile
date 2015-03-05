@@ -12,6 +12,11 @@
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_drawer_compat</item>
         <item name="android:icon">@drawable/actionbar_icon_placeholder_compat</item>
+        <item name="android:dropDownListViewStyle">@style/ListView.DropDown</item>
+    </style>
+    
+    <style name="ListView.DropDown" parent="@android:style/Widget.Holo.Light.ListView">
+        <item name="android:listSelector">@drawable/light_spinner_selector</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
