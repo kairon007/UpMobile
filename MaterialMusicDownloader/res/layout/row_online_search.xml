@@ -86,26 +86,6 @@
         </LinearLayout>
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
-    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-        android:id="@+id/boxButton"
-        style="@style/RippleStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone" >
-
-        <com.csform.android.uiapptemplate.font.MusicTextView
-            android:id="@+id/btnPlayPause"
-            style="@style/TextViewAppearance.CustomMusicButtons.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minHeight="48dp"
-            android:padding="8dp"
-            android:text="@string/font_play"
-            android:textSize="32sp" />
-    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
-
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

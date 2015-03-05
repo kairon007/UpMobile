@@ -46,7 +46,8 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			
 			@Override
 			public void run() {
-				setListeners();				
+				setListeners();
+				checkOnStart();
 			}
 		}).start();
 		super.onStart();
@@ -115,6 +116,20 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		});
 	}
 	
+	private void checkOnStart() {
+		if (service.isPlaying()) {
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					setData(service.getPlayingSong());
+					progress.setVisibility(View.GONE);
+					button.setVisibility(View.VISIBLE);
+				}
+			});
+		}
+	}
+	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	public void showMiniPlayer(boolean isShow) {
 		final View view = findViewById(getMiniPlayerID());
@@ -164,13 +179,21 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		showMiniPlayer(true);
 	}
 	
-	public void startSong(final AbstractSong song) {
+	public void startSong(AbstractSong song) {
 		if (isMiniPlayerPrepared) {
 			restartMiniplayer();
 		} else {
 			isMiniPlayerPrepared = true;
 			showMiniPlayer(true);
 		}
+		setData(song);
+		if (null == service) {
+			service = PlaybackService.get(this);
+		}
+		service.play(song);
+	}
+	
+	private void setData(final AbstractSong song) {
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
 		setCover(null);
@@ -195,10 +218,6 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		} else {
 			setCover(song.getCover(this));
 		}
-		if (null == service) {
-			service = PlaybackService.get(this);
-		}
-		service.play(song);
 	}
 	
 	/**

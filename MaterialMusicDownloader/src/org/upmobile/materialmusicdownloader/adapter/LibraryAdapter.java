@@ -41,35 +41,25 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 
 		private MusicData data;
 		private ViewGroup info;
-		private TextView button;
 
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
-			button = (TextView) v.findViewById(R.id.btnPlayPause);
 			cover = (ImageView) v.findViewById(R.id.cover);
 			title = (TextView) v.findViewById(R.id.titleLine);
 			artist = (TextView) v.findViewById(R.id.artistLine);
 			duration = (TextView) v.findViewById(R.id.chunkTime);
 			threeDot = v.findViewById(R.id.threeDot);
-			v.findViewById(R.id.boxButton).setVisibility(View.VISIBLE);
 		}
 
 		@Override
 		protected void hold(MusicData data, int position) {
 			this.data = data;
 			super.hold(data, position);
-			if (data.check(MusicData.MODE_PLAYING)) {
-				button.setText(getContext().getString(R.string.font_pause));
-			} else {
-				button.setText(getContext().getString(R.string.font_play));
-			}
 			setListener();
 		}
 		
 		private void setListener() {
 			info.setOnClickListener(this);
-//			cover.setOnClickListener(this);
-			button.setOnClickListener(this);
 		}
 
 		@Override
@@ -80,15 +70,8 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);
 				}
-				((MainActivity) getContext()).startSong(data);
-				break;
-			case R.id.btnPlayPause:
-				if (!service.isCorrectlyState(MusicData.class, getCount())) {
-					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-					service.setArrayPlayback(list);
-				} 
-				service.play(data);
 				((MainActivity) getContext()).showPlayerElement(true);
+				((MainActivity) getContext()).startSong(data);
 				break;
 			}
 		}
