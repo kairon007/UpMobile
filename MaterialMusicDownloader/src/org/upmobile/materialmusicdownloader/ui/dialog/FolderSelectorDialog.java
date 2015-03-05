@@ -41,8 +41,8 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 			.title(R.string.add_new_folder)
 			.customView(R.layout.md_input_dialog, false)
 			.titleColorRes(R.color.main_color_500)
-			.positiveColorRes(R.color.main_color_500)
-			.negativeColorRes(R.color.main_color_500)
+			.positiveColorRes(R.color.material_indigo_500)
+			.negativeColorRes(R.color.material_red_500)
 			.callback(new ButtonCallback() {
 				
 				@Override
@@ -119,9 +119,9 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				.theme(Theme.LIGHT)
 				.dividerColorRes(R.color.md_divider_white)
 				.titleColorRes(R.color.main_color_500)
-				.neutralColorRes(R.color.main_color_500)
-				.positiveColorRes(R.color.main_color_500)
-				.negativeColorRes(R.color.main_color_500)
+				.neutralColorRes(R.color.material_indigo_500)
+				.positiveColorRes(R.color.material_indigo_500)
+				.negativeColorRes(R.color.material_red_500)
 				.itemsCallback(this)
 				.callback(mButtonCallback)
 				.autoDismiss(false)
@@ -130,7 +130,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				.negativeText(android.R.string.cancel)
 				.build();
 	}
-
+	
 	@Override
 	public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence s) {
 		if (canGoUp && i == 0) {

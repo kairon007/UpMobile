@@ -227,7 +227,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	}
 	
 	private ArrayList<PlaylistData> getPlaylists() {
-		ArrayList<PlaylistData> playlistDatas = new ArrayList<>();
+		ArrayList<PlaylistData> playlistDatas = new ArrayList<PlaylistData>();
 		Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
 		PlaylistData playlistData = new PlaylistData();
 		playlistCursor.moveToFirst();

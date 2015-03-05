@@ -290,7 +290,7 @@ public abstract class BasePlaylistView extends View {
 	}
 
 	private ArrayList<PlaylistData> getPlaylists() {
-		ArrayList<PlaylistData> playlistDatas = new ArrayList<>();
+		ArrayList<PlaylistData> playlistDatas = new ArrayList<PlaylistData>();
 		Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
 		PlaylistData playlistData = new PlaylistData();
 		if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
