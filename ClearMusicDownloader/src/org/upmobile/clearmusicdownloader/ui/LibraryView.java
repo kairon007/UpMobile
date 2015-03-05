@@ -153,7 +153,7 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 		int scrollBy = getScrollListView() - lastScroll;
-		if (null == scrollBox) return;
+		if (null == scrollBox || visibleItemCount < 5) return;
 		lastScroll = getScrollListView();
 		int resultScroll = scrollBox.getScrollY() + scrollBy;
 		if (resultScroll < 0) {
