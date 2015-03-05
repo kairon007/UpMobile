@@ -2,18 +2,15 @@ package org.upmobile.materialmusicdownloader.adapter;
 
 import java.util.ArrayList;
 
-import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
-import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -83,12 +80,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);
 				}
-				Bundle bundle = new Bundle();
-				bundle.putParcelable(Constants.KEY_SELECTED_SONG, data);
-				PlayerFragment playerFragment = new PlayerFragment();
-				playerFragment.setArguments(bundle);
-				((MainActivity) view.getContext()).changeFragment(playerFragment);
-				((MainActivity) getContext()).overridePendingTransition(0, 0);
+				((MainActivity) getContext()).startSong(data);
 				break;
 			case R.id.btnPlayPause:
 				if (!service.isCorrectlyState(MusicData.class, getCount())) {
