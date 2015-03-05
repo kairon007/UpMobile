@@ -6,7 +6,6 @@ import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -16,7 +15,6 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,17 +49,12 @@ public class SearchView extends OnlineSearchView implements Constants {
 			}
 			service.setArrayPlayback(list);
 		} 
-		Bundle bundle = new Bundle();
+		((MainActivity) getContext()).showPlayerElement(true);
 		try {
-			bundle.putParcelable(KEY_SELECTED_SONG, ((Song)getResultAdapter().getItem(position)).cloneSong());
+			((MainActivity) getContext()).startSong(((Song)getResultAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		PlayerFragment playerFragment = new PlayerFragment();
-		playerFragment.setArguments(bundle);
-		((MainActivity) getContext()).showPlayerElement(true);
-		((MainActivity) view.getContext()).changeFragment(playerFragment);
-		((MainActivity) getContext()).overridePendingTransition(0, 0);
 		super.click(view, position);
 	}
 

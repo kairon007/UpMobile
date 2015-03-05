@@ -197,7 +197,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
 			download.setProgress(50);
-			android.util.Log.d("logd", "onPreExecute: ");
 			super.onPreExecute();
 		}
 		

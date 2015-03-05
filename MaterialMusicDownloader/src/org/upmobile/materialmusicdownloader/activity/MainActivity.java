@@ -72,7 +72,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		}
 		fileObserver.startWatching();
 		
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
 	@Override
@@ -197,7 +197,12 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	
 	@Override
 	protected int getMiniPlayerID() {
-		return 0;
+		return R.id.mini_player;
+	}
+	
+	@Override
+	protected int getMiniPlayerClickableID() {
+		return R.id.mini_player_main;
 	}
 
 	@Override
@@ -210,6 +215,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		showPlayerElement(PlaybackService.get(this).isPlaying());
 	}
 	
+	@Override
+	protected void showPlayerFragment() {
+		onNavigationDrawerItemSelected(PLAYER_FRAMGNET);
+	}
+
 	@Override
 	public int getSettingsIcon() {
 		return R.string.font_play_settings;
