@@ -45,5 +45,6 @@
     <string name="edit_mp3_cancel">Cancel</string>
     <string name="add_new_folder">Add new folder</string>
     <string name="add_folder">Add folder</string>
-
+	<string name="playlist">Playlist</string>
+	
 </resources>

@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -316,4 +318,10 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 	protected boolean showDeleteItemMenu() {
 		return false;
 	}
+
+	@Override
+	protected String getDirectory() {
+		return ClearMusicDownloaderApp.getDirectory();
+	}
+
 }

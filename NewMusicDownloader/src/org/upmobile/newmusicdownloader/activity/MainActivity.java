@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
-import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
+import org.upmobile.newmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment;
 import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDrawerCallbacks;
@@ -168,6 +168,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		case LIBRARY_FRAGMENT:
 	        changeFragment(new LibraryFragment());
 			break;
+		case PLAYLIST_FRAGMENT:
+			changeFragment(new PlaylistFragment());
+			break;
 		case PLAYER_FRAMGNET:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
@@ -187,7 +190,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		    }
 			break;
 		case SETTINGS_FRAGMENT:
-		case 5:
+		case 6:
 	        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 	    	if (null == service) {
 	    		service = PlaybackService.get(this);

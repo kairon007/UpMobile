@@ -9,8 +9,9 @@ public interface Constants {
 	public static final int SEARCH_FRAGMENT = 0;
 	public static final int DOWNLOADS_FRAGMENT = 1;
 	public static final int LIBRARY_FRAGMENT = 2;
-	public static final int PLAYER_FRAMGNET = 3;
-	public static final int SETTINGS_FRAGMENT = 4;
+	public static final int PLAYLIST_FRAGMENT = 3;
+	public static final int PLAYER_FRAMGNET = 4;
+	public static final int SETTINGS_FRAGMENT = 5;
 	
 	public static final String KEY_SELECTED_SONG = "key.selected.song";
 	public static final String KEY_SELECTED_POSITION = "key.selected.position";

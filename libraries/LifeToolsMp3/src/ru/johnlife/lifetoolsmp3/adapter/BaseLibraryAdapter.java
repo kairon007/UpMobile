@@ -1,28 +1,50 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
 public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
+	
+	private final String PROJECT_PRIFICS = getDirectory().replace(Environment.getExternalStorageDirectory().toString(), "");
+	private final static String EXTERNAL = "external";
+	public final String[] PROJECTION_PLAYLIST = { 
+			MediaStore.Audio.Playlists._ID, 
+			MediaStore.Audio.Playlists.NAME, };
+	
+	private AlertDialog dialog;
 
 	protected PlaybackService service;
 	
+	protected abstract String getDirectory();
 	protected abstract int getDefaultCover();
 	protected abstract boolean showDeleteItemMenu();
 	protected Bitmap getDefaultBitmap() { return null; }
@@ -123,7 +145,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			artist.setText(item.getArtist());
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
 			threeDot.setTag(item);
-			threeDot.setOnClickListener(new OnClickListener() {
+			threeDot.setOnClickListener(new android.view.View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
@@ -166,7 +188,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 					service.play((AbstractSong) v.getTag());
 				}
 				if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
-					//TODO: 
+					showPlaylistsDialog(v);
 				}
 				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
 					remove((MusicData) v.getTag());
@@ -178,5 +200,77 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			}
 		});
 		menu.show();
+	}
+	
+	private void showPlaylistsDialog(final View v) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		final View dialoglayout = LayoutInflater.from(getContext()).inflate(R.layout.playlist_select_dialog, null);
+		ListView listView = (ListView) dialoglayout.findViewById(R.id.listView);
+		final ArrayList<PlaylistData> playlistDatas = getPlaylists();
+		String[] data = new String[playlistDatas.size()];
+		for (int i = 0; i < playlistDatas.size(); i++) {
+			data[i] = playlistDatas.get(i).getName().replace(PROJECT_PRIFICS, "");
+		}
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.playlist_select_dialog_item, data);
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong) {
+				addToPlaylist(paramView.getContext().getContentResolver(), ((MusicData) v.getTag()).getId(), playlistDatas.get(paramInt).getId());
+				dialog.dismiss();
+			}
+		});
+		builder.setView(dialoglayout);
+		dialog = builder.create();
+		dialog.show();
+	}
+	
+	private ArrayList<PlaylistData> getPlaylists() {
+		ArrayList<PlaylistData> playlistDatas = new ArrayList<>();
+		Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
+		PlaylistData playlistData = new PlaylistData();
+		playlistCursor.moveToFirst();
+		if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
+			playlistData.populate(playlistCursor);
+			playlistDatas.add(playlistData);
+		}
+		while (playlistCursor.moveToNext()) {
+			if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
+				PlaylistData playlist = new PlaylistData();
+				playlist.populate(playlistCursor);
+				playlistDatas.add(playlist);
+			}
+		}
+		return playlistDatas;
+	}
+	
+	public Cursor myQuery(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+		try {
+			ContentResolver resolver = context.getContentResolver();
+			if (resolver == null) {
+				return null;
+			}
+			return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
+		} catch (UnsupportedOperationException ex) {
+			return null;
+		}
+	}
+	
+	public void addToPlaylist(ContentResolver resolver, long audioId, long playlistId) {
+		try {
+			String[] cols = new String[] { "count(*)" };
+			Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(EXTERNAL, playlistId);
+			Cursor cur = resolver.query(uri, cols, null, null, null);
+			cur.moveToFirst();
+			final int base = cur.getInt(0);
+			cur.close();
+			ContentValues values = new ContentValues();
+			values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Long.valueOf(base + audioId));
+			values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioId);
+			resolver.insert(uri, values);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

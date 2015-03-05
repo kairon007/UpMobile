@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
@@ -145,5 +146,10 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	@Override
 	protected boolean showDeleteItemMenu() {
 		return false;
+	}
+
+	@Override
+	protected String getDirectory() {
+		return MaterialMusicDownloaderApp.getDirectory();
 	}
 }

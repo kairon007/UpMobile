@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
+import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
@@ -121,5 +122,10 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 			emptyMsg.setVisibility(View.VISIBLE);
 			emptyMsg.setText(R.string.library_empty);
 		}
+	}
+
+	@Override
+	protected String getDirectory() {
+		return NewMusicDownloaderApp.getDirectory();
 	}
 }
