@@ -70,7 +70,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
         int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
         ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
         closeIcon.setImageResource(R.drawable.ic_close_ab);
-        closeIcon.setBackgroundResource(R.drawable.selectable_item_bg);
+        closeIcon.setBackgroundResource(R.drawable.spinner_selector);
         int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
         TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
         autoComplete.setTextColor(color);
