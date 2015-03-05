@@ -205,7 +205,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor editor = sp.edit();
 		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
-		editor.putString(PREF_DIRECTORY_PREFIX, folder.getAbsoluteFile().getName());
+		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
 		editor.commit();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
 	}

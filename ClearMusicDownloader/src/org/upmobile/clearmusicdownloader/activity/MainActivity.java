@@ -174,7 +174,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 				File file = new File(chDir);
 				Editor editor = sp.edit();
 				editor.putString(PREF_DIRECTORY, chDir);
-				editor.putString(PREF_DIRECTORY_PREFIX, file.getAbsoluteFile().getName());
+				editor.putString(PREF_DIRECTORY_PREFIX, File.separator + file.getAbsoluteFile().getName() + File.separator);
 				editor.commit();
 				reDrawMenu();
 			}
