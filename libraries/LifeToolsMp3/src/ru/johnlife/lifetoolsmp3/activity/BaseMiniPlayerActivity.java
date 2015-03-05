@@ -170,7 +170,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		}
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
-		cover.setImageResource(R.drawable.no_cover_art_big);
+		setCover(null);
 		button.setVisibility(View.GONE);
 		progress.setVisibility(View.VISIBLE);
 		if (song.getClass() == RemoteSong.class) {
@@ -181,21 +181,29 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 					if (this.hashCode() != checkIdCover)return;
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
-						cover.setImageResource(0);
-						cover.setImageBitmap(bmp);
+						setCover(bmp);
 					} else {
-						cover.setImageResource(R.drawable.no_cover_art_big);
+						setCover(null);
 					}
 				}
 			};
 			checkIdCover  = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);		
 		} else {
-			cover.setImageBitmap(song.getCover(this));
+			setCover(song.getCover(this));
 		}
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
 		service.play(song);
 	}
+	
+	protected void setCover(Bitmap bmp) {
+		if (null == bmp) {
+			cover.setImageResource(R.drawable.no_cover_art_big);
+		} else {
+			cover.setImageBitmap(bmp);
+		}
+	}
+	
 }

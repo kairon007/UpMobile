@@ -31,11 +31,12 @@
 
             <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
                 android:id="@+id/progress"
-               	android:layout_width="56dp"
+                android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center"
-                android:visibility="gone"
-                android:background="@color/main_color_accent" />
+                android:layout_margin="2dp"
+                android:background="@color/main_color_accent"
+                android:visibility="gone" />
             
             <ImageView
                 android:id="@+id/loader_image"
@@ -151,14 +152,15 @@
 				        android:layout_height="match_parent" />
 				    
 				    <com.csform.android.uiapptemplate.font.MusicTextView
-                            style="@style/TextViewAppearance.CustomMusicButtons.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="end"
-                            android:gravity="center_vertical|end"
-                            android:text="@string/font_drop_down"
-                            android:textColor="@color/main_color_accent"
-                            android:textSize="16sp" />
+				        style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+				        android:layout_width="wrap_content"
+				        android:layout_height="match_parent"
+				        android:layout_gravity="end"
+				        android:gravity="center_vertical|end"
+				        android:paddingRight="8dp"
+				        android:text="@string/font_drop_down"
+				        android:textColor="@color/main_color_accent"
+				        android:textSize="16sp" />
 				    
 				</FrameLayout>
 
