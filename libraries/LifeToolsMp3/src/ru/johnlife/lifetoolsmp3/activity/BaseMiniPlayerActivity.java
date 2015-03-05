@@ -125,15 +125,15 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			slideUp.setAnimationListener(new AnimationListener() {
 				
 				@Override
-				public void onAnimationStart(Animation animation) {
-					view.setVisibility(View.VISIBLE);
-				}
+				public void onAnimationStart(Animation animation) {	}
 				
 				@Override
 				public void onAnimationRepeat(Animation animation) { }
 				
 				@Override
-				public void onAnimationEnd(Animation animation) { }
+				public void onAnimationEnd(Animation animation) {
+					view.setVisibility(View.VISIBLE);
+				}
 			});
 			view.setAnimation(slideUp);
 			view.startAnimation(slideUp);

@@ -63,9 +63,9 @@
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:visibility="gone"
                 android:background="@drawable/selectable_item_bg"
-                android:src="@drawable/mini_player_pause" />
+                android:src="@drawable/mini_player_pause"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
