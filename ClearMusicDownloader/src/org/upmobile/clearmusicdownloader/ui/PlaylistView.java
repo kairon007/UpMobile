@@ -1,10 +1,12 @@
 package org.upmobile.clearmusicdownloader.ui;
 
-import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -18,7 +20,7 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected String getDirectory() {
-		return Constants.DIRECTORY;
+		return ClearMusicDownloaderApp.getDirectoryPrefix();
 	}
 
 	@Override
@@ -39,5 +41,10 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected void showPlayerFragment() {
 		((MainActivity) getContext()).changeFragment(new PlayerFragment());
+	}
+
+	@Override
+	protected Bitmap getDeafultCover() {
+		return BitmapFactory.decodeResource(getResources(), org.upmobile.clearmusicdownloader.R.drawable.no_cover_art_big);
 	}
 }

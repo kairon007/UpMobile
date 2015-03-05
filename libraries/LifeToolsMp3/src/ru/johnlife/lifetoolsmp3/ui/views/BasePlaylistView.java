@@ -19,8 +19,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,14 +34,13 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public abstract class BasePlaylistView extends View {
 
 	private final static String EXTERNAL = "external";
-	private final String PROJECT_PRIFICS = getDirectory().replace(Environment.getExternalStorageDirectory().toString(), "");
 	private ViewGroup view;
 	private ListView listView;
 	private ExpandableAdapter expandableAdapter;
@@ -49,6 +48,8 @@ public abstract class BasePlaylistView extends View {
 	private LinearLayout createNewPlayList;
 	private AlertDialog.Builder newPlaylistDialog;
 
+	protected abstract Bitmap getDeafultCover();
+	
 	protected abstract String getDirectory();
 
 	protected abstract int getLayoutId();
@@ -93,7 +94,8 @@ public abstract class BasePlaylistView extends View {
 		createNewPlayList = (LinearLayout) view.findViewById(R.id.createNewPlaylist);
 		initListeners();
 		expandableAdapter = new ExpandableAdapter(view.getContext());
-		expandableAdapter.setProjectPrefics(PROJECT_PRIFICS);
+		expandableAdapter.setProjectPrefics(getDirectory());
+		expandableAdapter.setDeafultBmp(getDeafultCover());
 		updatePlaylist();
 		((AnimatedExpandableListView) listView).setAdapter(expandableAdapter);
 		((AnimatedExpandableListView) listView).setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -107,6 +109,7 @@ public abstract class BasePlaylistView extends View {
 			}
 		});
 		((AnimatedExpandableListView) listView).setOnChildClickListener(new OnChildClickListener() {
+			
 
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -266,7 +269,7 @@ public abstract class BasePlaylistView extends View {
 	 }
 
 	private void createPlaylist(ContentResolver resolver, String pName) {
-		pName = PROJECT_PRIFICS + pName; 
+		pName = getDirectory() + pName; 
 		try {
 			Uri uri = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
 			ContentValues values = new ContentValues();
@@ -296,12 +299,12 @@ public abstract class BasePlaylistView extends View {
 		if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
 			return playlistDatas;
 		}
-		if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
+		if (playlistCursor.getString(1).contains(getDirectory())) {
 			playlistData.populate(playlistCursor);
 			playlistDatas.add(playlistData);
 		}
 		while (playlistCursor.moveToNext()) {
-			if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
+			if (playlistCursor.getString(1).contains(getDirectory())) {
 				PlaylistData playlist = new PlaylistData();
 				playlist.populate(playlistCursor);
 				playlistDatas.add(playlist);

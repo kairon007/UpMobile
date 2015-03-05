@@ -3,13 +3,16 @@ package ru.johnlife.lifetoolsmp3.adapter;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView.AnimatedExpandableListAdapter;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ExpandableAdapter extends AnimatedExpandableListAdapter {
@@ -20,6 +23,7 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 
 	private String projectPrefics;
 
+	private Bitmap defaultBmp;
 
 	public ExpandableAdapter(Context context) {
 		inflater = LayoutInflater.from(context);
@@ -47,15 +51,32 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 			holder = new ChildHolder();
 			convertView = inflater.inflate(R.layout.playlist_list_item, parent, false);
 			holder.title = (TextView) convertView.findViewById(R.id.textTitle);
-			holder.hint = (TextView) convertView.findViewById(R.id.textHint);
+			holder.artist = (TextView) convertView.findViewById(R.id.textHint);
+			holder.cover = (View) convertView.findViewById(R.id.item_cover);
+			holder.duaration = (TextView) convertView.findViewById(R.id.textDuration);
 			convertView.setTag(holder);
 		} else {
 			holder = (ChildHolder) convertView.getTag();
 		}
 		holder.title.setText(item.getTitle());
-		holder.hint.setText(item.getArtist());
-
+		holder.artist.setText(item.getArtist());
+		holder.duaration.setText(Util.getFormatedStrDuration(item.getDuration()));
+		Bitmap bitmap = item.getCover(inflater.getContext());
+		if (null != bitmap) {
+			((ImageView) holder.cover).setImageBitmap(bitmap);
+		} else {
+			((ImageView) holder.cover).setImageBitmap(getDefaultCover());
+		}
+		bitmap = null;
 		return convertView;
+	}
+
+	private Bitmap getDefaultCover() {
+		return defaultBmp;
+	}
+
+	public void setDeafultBmp(Bitmap bmp) {
+		defaultBmp = bmp;
 	}
 
 	@Override
@@ -106,7 +127,9 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 
 	private static class ChildHolder {
 		public TextView title;
-		public TextView hint;
+		public TextView artist;
+		public TextView duaration;
+		public View cover;
 	}
 
 	private static class GroupHolder {
@@ -115,6 +138,6 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 
 	public void setProjectPrefics(String projectPrefics) {
 		this.projectPrefics = projectPrefics;
-		
+
 	}
 }
