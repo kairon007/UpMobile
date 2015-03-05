@@ -240,6 +240,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	
 	@Override
 	protected void showPlayerFragment() {
+		setDrawerEnabled(false);
 		onNavigationDrawerItemSelected(PLAYER_FRAMGNET);
 	}
 	

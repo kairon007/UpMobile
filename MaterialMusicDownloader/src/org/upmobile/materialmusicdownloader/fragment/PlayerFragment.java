@@ -292,6 +292,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		android.util.Log.d("logks", "PlayerFragment, onOptionsItemSelected:");
 		getActivity().onBackPressed();
 		((MainActivity)getActivity()).setDrawerEnabled(true);
 		return super.onOptionsItemSelected(item);
@@ -382,6 +383,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (!buttonView.isEnabled()) {
+			return;
+		}
 		isUseAlbumCover = isChecked;
 		cbUseCover.setChecked(isChecked);
 		closeEditViews();
