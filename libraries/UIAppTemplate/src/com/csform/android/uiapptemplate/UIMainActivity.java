@@ -66,7 +66,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
         int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
         ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
         searchIcon.setImageResource(R.drawable.ic_search_ab);
-        searchIcon.setBackgroundResource(R.drawable.selectable_item_bg);
+        searchIcon.setBackgroundResource(R.drawable.spinner_selector);
         int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
         ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
         closeIcon.setImageResource(R.drawable.ic_close_ab);
