@@ -76,21 +76,24 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			public void start(AbstractSong song) {
 				progress.setVisibility(View.GONE);
 				button.setVisibility(View.VISIBLE);
-				button.setImageResource(R.drawable.mini_player_pause);
+				setPlayPauseMini(false);
 			}
-			
+
 			@Override
 			public void play(AbstractSong song) {
 				button.setImageResource(R.drawable.mini_player_pause);
+				setPlayPauseMini(false);
 			}
 			
 			@Override
 			public void pause(AbstractSong song) {
 				button.setImageResource(R.drawable.mini_player_play);
+				setPlayPauseMini(true);
 			}
 			
 			@Override
 			public void error() {}
+			
 		});
 		button.setOnClickListener(new OnClickListener() {
 			
@@ -114,7 +117,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	public void showMiniPlayer(boolean isShow) {
-		final View view = (View) findViewById(getMiniPlayerID());
+		final View view = findViewById(getMiniPlayerID());
 		if (null == view) return;
 		if (isShow && isMiniPlayerPrepared) {
 			if (view.getVisibility() == View.VISIBLE) return;
@@ -196,6 +199,19 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			service = PlaybackService.get(this);
 		}
 		service.play(song);
+	}
+	
+	/**
+	 * Change background of button play/pause in mini player
+	 * 
+	 * @param playPayse true - image play, false - image pause
+	 */
+	protected void setPlayPauseMini(boolean playPayse) {
+		if (playPayse) {
+			button.setImageResource(R.drawable.mini_player_play);
+		} else {
+			button.setImageResource(R.drawable.mini_player_pause);
+		}
 	}
 	
 	protected void setCover(Bitmap bmp) {

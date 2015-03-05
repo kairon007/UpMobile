@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@color/transparent_grey"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/mini_player_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/selectable_item_bg"
+        android:clickable="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="@dimen/margin_element" >
+
+        <ImageView
+            android:id="@+id/mini_player_cover"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/fallback_cover" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="8dp" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingTop="4dp" >
+
+                <TextView
+                    android:id="@+id/mini_player_artist"
+                    style="@style/TextViewAppearance.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:lines="1"
+                    android:paddingBottom="0dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="0dp"
+                    android:text="Artist" />
+
+                <TextView
+                    android:id="@+id/mini_player_title"
+                    style="@style/TextViewAppearance.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:lines="1"
+                    android:paddingBottom="0dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="0dp"
+                    android:text="Title"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/mini_player_progress"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0" />
+
+            <ImageButton
+                android:id="@+id/mini_player_play_pause"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:background="@drawable/selectable_item_bg"
+                android:src="@drawable/mini_player_pause" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

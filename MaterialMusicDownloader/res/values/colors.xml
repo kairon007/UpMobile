@@ -3,8 +3,8 @@
 
     <!-- Theme colors -->
     	<color name="main_color_100">@color/material_pink_100</color>
-        <color name="main_color_500">@color/material_pink_500</color>
-        <color name="main_color_accent">#43a047</color>
+        <color name="main_color_500">@color/material_indigo_500</color>
+        <color name="main_color_accent">#ff7b00</color>
         <color name="main_color_for_text">#ffffff</color>
     <!-- End theme colors -->
     

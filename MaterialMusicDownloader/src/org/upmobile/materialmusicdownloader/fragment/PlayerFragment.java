@@ -749,7 +749,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (isDestroy) return;
 		ImageView imageView = new ImageView(getActivity());
 		imageView.setPadding(8, 8, 8, 8);
-		imageView.setImageBitmap(null == bitmap ? ((MainActivity) getActivity()).getDeafultBitmapCover(260, 260, 230) : bitmap);
+		String cover =  getResources().getString(R.string.font_musics);
+		imageView.setImageBitmap(null == bitmap ? ((MainActivity) getActivity()).getDefaultBitmapCover(260, 260, 230, cover) : bitmap);
 		scrollView.setZoomView(imageView);
 	}
 	

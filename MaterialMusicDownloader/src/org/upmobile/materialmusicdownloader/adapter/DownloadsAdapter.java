@@ -62,9 +62,11 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	protected int getDefaultCover() {
 		return 0;
 	}
+	
 	@Override
 	protected Bitmap getDefaultBitmap() {
-		return ((MainActivity) getContext()).getDeafultBitmapCover(64, 62, 60);
+		String cover =  getContext().getResources().getString(R.string.font_musics);
+		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60, cover);
 	}
 	
 	@Override

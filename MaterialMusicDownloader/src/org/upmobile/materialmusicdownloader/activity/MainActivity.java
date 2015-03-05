@@ -30,6 +30,7 @@ import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.TypedValue;
+import android.widget.ImageView;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.font.MusicTextView;
@@ -167,19 +168,19 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		showMessage(getString(message));
 	}
 	
-	public Bitmap getDeafultBitmapCover(int outWidth, int outHeight, int property) {
+	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image) {
 		MusicTextView textCover = new MusicTextView(this);
-		textCover.setText(getString(R.string.font_musics));
+		textCover.setText(image);
 		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
 		Rect bounds = new Rect();
 		Paint textPaint = textCover.getPaint();
-		textPaint.getTextBounds(getString(R.string.font_musics), 0, getString(R.string.font_musics).length(), bounds);
+		textPaint.getTextBounds(image, 0, getString(R.string.font_musics).length(), bounds);
 		int height = bounds.height();
 		while (height < property) {
 			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, height < property ?  Util.pixelsToSp(this, textCover.getTextSize()) + 1f : Util.pixelsToSp(this, textCover.getTextSize()) - 1f);
 			bounds = new Rect();
 			textPaint = textCover.getPaint();
-			textPaint.getTextBounds(getString(R.string.font_musics), 0, getString(R.string.font_musics).length(), bounds);
+			textPaint.getTextBounds(image, 0, getString(R.string.font_musics).length(), bounds);
 			height = bounds.height();
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
@@ -204,7 +205,29 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	protected int getMiniPlayerClickableID() {
 		return R.id.mini_player_main;
 	}
-
+	
+	@Override
+	protected void setCover(Bitmap bmp) {
+		if (null == bmp) {
+			String cover = getString(R.string.font_musics);
+			bmp = getDefaultBitmapCover(64, 62, 60, cover);
+		}
+		((ImageView)findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
+	}
+	
+	@Override
+	protected void setPlayPauseMini(boolean playPayse) {
+		if (playPayse) {
+			String play = getString(R.string.font_play_mini);
+			Bitmap bmp = getDefaultBitmapCover(64, 62, 60, play);
+			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
+		} else {
+			String pause = getString(R.string.font_pause_mini);
+			Bitmap bmp = getDefaultBitmapCover(64, 62, 60, pause);
+			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
+		}
+	}
+	
 	@Override
 	public void onFolderSelection(File folder) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -219,9 +242,10 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	protected void showPlayerFragment() {
 		onNavigationDrawerItemSelected(PLAYER_FRAMGNET);
 	}
-
+	
 	@Override
 	public int getSettingsIcon() {
 		return R.string.font_play_settings;
 	}
+	
 }

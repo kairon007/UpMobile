@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
+import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
@@ -115,7 +116,8 @@ public class SearchView extends OnlineSearchView implements Constants {
 	
 	@Override
 	public Bitmap getDeafultBitmapCover() {
-		return ((MainActivity) getContext()).getDeafultBitmapCover(64, 62, 60);
+		String cover =  getResources().getString(R.string.font_musics);
+		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60, cover);
 	}
 	
 	@Override
