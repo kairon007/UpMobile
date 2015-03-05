@@ -218,12 +218,12 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	@Override
 	protected void setPlayPauseMini(boolean playPayse) {
 		if (playPayse) {
-			String play = getString(R.string.font_play_mini);
-			Bitmap bmp = getDefaultBitmapCover(64, 62, 60, play);
-			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
-		} else {
 			String pause = getString(R.string.font_pause_mini);
 			Bitmap bmp = getDefaultBitmapCover(64, 62, 60, pause);
+			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
+		} else {
+			String play = getString(R.string.font_play_mini);
+			Bitmap bmp = getDefaultBitmapCover(64, 62, 60, play);
 			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 		}
 	}

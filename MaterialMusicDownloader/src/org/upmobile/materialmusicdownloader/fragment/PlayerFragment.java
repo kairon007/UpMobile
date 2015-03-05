@@ -717,11 +717,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 						((RemoteSong) song).setHasCover(true);
 						setCoverToZoomView(bmp);
 						setCheckBoxState(true);
-						isUseAlbumCover = true;
 					} else {
 						setCoverToZoomView(null);
-						setCheckBoxState(false);
-						isUseAlbumCover = false;
 					}
 				}
 			};
@@ -732,11 +729,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (bitmap != null) {
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
-				isUseAlbumCover = true;
 			} else {
 				setCoverToZoomView(null);
-				setCheckBoxState(false);
-				isUseAlbumCover = false;
 			}
 		}
 	}
@@ -756,6 +750,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	private void setCheckBoxState(boolean state) {
 		if (isAdded()) {
+			isUseAlbumCover = state;
 			cbUseCover.setOnCheckedChangeListener(null);
 			cbUseCover.setChecked(state);
 			cbUseCover.setClickable(state);

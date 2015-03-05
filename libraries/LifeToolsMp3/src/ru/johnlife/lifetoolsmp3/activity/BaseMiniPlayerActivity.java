@@ -208,9 +208,9 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
 		if (playPayse) {
-			button.setImageResource(R.drawable.mini_player_play);
-		} else {
 			button.setImageResource(R.drawable.mini_player_pause);
+		} else {
+			button.setImageResource(R.drawable.mini_player_play);
 		}
 	}
 	

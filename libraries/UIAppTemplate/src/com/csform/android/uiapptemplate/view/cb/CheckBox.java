@@ -40,7 +40,7 @@ public class CheckBox extends CompoundButton {
 	private int mMarkBottomPadding;
 	private Rect mFingerRect;
 	private boolean mMoveOutside;
-
+	
 	private Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private Paint thumbPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private Paint markPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -173,8 +173,7 @@ public class CheckBox extends CompoundButton {
 		super.setChecked(checked);
 		invalidate();
 	}
-	
-	@Override
+
 	protected void onDraw(@NonNull Canvas canvas) {
 		super.onDraw(canvas);
 		int rippleRadius = 0;
@@ -205,7 +204,7 @@ public class CheckBox extends CompoundButton {
 			break;
 		}
 
-		if (isChecked()) {
+		if (isChecked() && isEnabled()) {
 			ripplePaint.setColor(rippleColor(mCheckedColor));
 			canvas.drawCircle(getWidth() / 2, getHeight() / 2, rippleRadius, ripplePaint);
 
@@ -224,9 +223,10 @@ public class CheckBox extends CompoundButton {
 			markPaint.setStrokeJoin(Paint.Join.ROUND);
 			canvas.drawPath(getMarkPath(), markPaint);
 		} else {
-			ripplePaint.setColor(rippleColor(mColor));
-			canvas.drawCircle(getWidth() / 2, getHeight() / 2, rippleRadius, ripplePaint);
-
+			if (isEnabled()) {
+				ripplePaint.setColor(rippleColor(mColor));
+				canvas.drawCircle(getWidth() / 2, getHeight() / 2, rippleRadius, ripplePaint);
+			}
 			borderPaint.setColor(mColor);
 			borderPaint.setStyle(Paint.Style.STROKE);
 			borderPaint.setStrokeWidth(mBorderWidth);
