@@ -148,12 +148,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	};
 	
 	public static PlaybackService get(final Context context) {
-		android.util.Log.d("logd", "get()");
 		if (instance == null) {
 			context.startService(new Intent(context, PlaybackService.class));					
 			try {
 				synchronized (WAIT) {
-					android.util.Log.d("logd", "get() == null");
 					WAIT.wait();
 				}
 			} catch (InterruptedException ignored) {
@@ -192,7 +190,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		synchronized (WAIT) {
 			WAIT.notifyAll();
 		}
-		android.util.Log.d("logd", "service onCreate()");
 	}
 	
 	@Override

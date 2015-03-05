@@ -15,7 +15,6 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,18 +52,7 @@ public class SearchView extends OnlineSearchView {
 			}
 			service.setArrayPlayback(list);
 		} 
-		Bundle bundle = new Bundle();
-		try {
-			bundle.putParcelable(Constants.KEY_SELECTED_SONG, ((Song) getResultAdapter().getItem(position)).cloneSong());
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-//		PlayerFragment playerFragment = new PlayerFragment();
-//		playerFragment.setArguments(bundle);
-//		((MainActivity) getContext()).showPlayerElement(true);
-//		((MainActivity) view.getContext()).changeFragment(playerFragment);
-//		((MainActivity) getContext()).overridePendingTransition(0, 0);
-		((MainActivity) getContext()).showMiniPlayer(true);
+		((MainActivity) getContext()).showPlayerElement(true);
 		try {
 			((MainActivity) getContext()).startSong(((Song) getResultAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {

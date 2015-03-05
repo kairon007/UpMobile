@@ -6,6 +6,7 @@
     android:orientation="horizontal" >
 
     <LinearLayout
+        android:id="@+id/mini_player_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/selectable_item_bg"
@@ -23,7 +24,7 @@
             android:orientation="horizontal" >
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical"
@@ -51,11 +52,18 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/mini_player_progress"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0" />
+
             <ImageButton
                 android:id="@+id/mini_player_play_pause"
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:visibility="gone"
                 android:background="@drawable/selectable_item_bg"
                 android:src="@drawable/mini_player_pause" />
         </LinearLayout>

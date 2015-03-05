@@ -2,17 +2,14 @@ package org.upmobile.newmusicdownloader.adapter;
 
 import java.util.ArrayList;
 
-import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
-import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -76,26 +73,20 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 			switch (view.getId()) {
 			case R.id.item_cover:
 			case R.id.item_box_info:
-				if (!service.isCorrectlyState(MusicData.class, getCount())) {
-					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-					service.setArrayPlayback(list);
-				}
-				Bundle bundle = new Bundle();
-				bundle.putParcelable(Constants.KEY_SELECTED_SONG, data);
-				PlayerFragment playerFragment = new PlayerFragment();
-				playerFragment.setArguments(bundle);
-				((MainActivity) view.getContext()).changeFragment(playerFragment);
-				((MainActivity) getContext()).overridePendingTransition(0, 0);
+				startSong();
 				break;
 			case R.id.item_play:
-				if (!service.isCorrectlyState(MusicData.class, getCount())) {
-					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-					service.setArrayPlayback(list);
-				} 
-				service.play(data);
-				((MainActivity) getContext()).showPlayerElement(true);
+				startSong();
 				break;
 			}
+		}
+
+		private void startSong() {
+			if (!service.isCorrectlyState(MusicData.class, getCount())) {
+				ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+				service.setArrayPlayback(list);
+			}
+			((MainActivity)getContext()).startSong(data);
 		}
 	}
 

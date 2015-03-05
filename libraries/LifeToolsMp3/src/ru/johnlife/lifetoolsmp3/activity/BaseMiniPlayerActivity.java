@@ -18,6 +18,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public abstract class BaseMiniPlayerActivity extends Activity {
@@ -29,13 +30,16 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private TextView artist;
 	private ImageView cover;
 	private ImageButton button;
+	private ProgressBar progress;
+	private boolean isMiniPlayerPrepared = false;
 	private int checkIdCover;
 
 	protected abstract int getMiniPlayerID();
+	protected abstract int getMiniPlayerClickableID();
+	protected abstract void showPlayerFragment();
 	
 	@Override
 	protected void onStart() {
-		android.util.Log.d("logd", "onStart()");
 		startService(new Intent(this, PlaybackService.class));
 		initMiniPlayer();
 		new Thread(new Runnable() {
@@ -53,6 +57,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		artist = (TextView)findViewById(R.id.mini_player_artist);
 		cover = (ImageView)findViewById(R.id.mini_player_cover);
 		button = (ImageButton)findViewById(R.id.mini_player_play_pause);
+		progress = (ProgressBar)findViewById(R.id.mini_player_progress);
 	}
 	
 	private void setListeners() {
@@ -62,40 +67,35 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		service.addStatePlayerListener(new OnStatePlayerListener() {
 			
 			@Override
-			public void update(AbstractSong song) {
-				android.util.Log.d("logd", "update()");
-			}
+			public void update(AbstractSong song) {}
 			
 			@Override
-			public void stop(AbstractSong song) {
-				android.util.Log.d("logd", "stop()");
-			}
+			public void stop(AbstractSong song) {}
 			
 			@Override
 			public void start(AbstractSong song) {
-				android.util.Log.d("logd", "start()");
+				progress.setVisibility(View.GONE);
+				button.setVisibility(View.VISIBLE);
+				button.setImageResource(R.drawable.mini_player_pause);
 			}
 			
 			@Override
 			public void play(AbstractSong song) {
-				android.util.Log.d("logd", "play()");
+				button.setImageResource(R.drawable.mini_player_pause);
 			}
 			
 			@Override
 			public void pause(AbstractSong song) {
-				android.util.Log.d("logd", "pause()");
+				button.setImageResource(R.drawable.mini_player_play);
 			}
 			
 			@Override
-			public void error() {
-				android.util.Log.d("logd", "error()");
-			}
+			public void error() {}
 		});
 		button.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				android.util.Log.d("logd", "onClick()");
 				if (service.isPlaying()) {
 					service.pause();
 				} else {
@@ -103,12 +103,21 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				}
 			}
 		});
+		findViewById(getMiniPlayerClickableID()).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showPlayerFragment();
+			}
+		});
 	}
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	public void showMiniPlayer(boolean isShow) {
 		final View view = (View) findViewById(getMiniPlayerID());
-		if (isShow) {
+		if (null == view) return;
+		if (isShow && isMiniPlayerPrepared) {
+			if (view.getVisibility() == View.VISIBLE) return;
 			Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 			slideUp.setAnimationListener(new AnimationListener() {
 				
@@ -126,6 +135,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			view.setAnimation(slideUp);
 			view.startAnimation(slideUp);
 		} else {
+			if (view.getVisibility() == View.GONE) return;
 			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
 			slideDown.setAnimationListener(new AnimationListener() {
 				
@@ -145,26 +155,44 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		}
 	}
 	
+	private void restartMiniplayer() {
+		isMiniPlayerPrepared = true;
+		findViewById(getMiniPlayerID()).setVisibility(View.GONE);
+		showMiniPlayer(true);
+	}
+	
 	public void startSong(final AbstractSong song) {
+		if (isMiniPlayerPrepared) {
+			restartMiniplayer();
+		} else {
+			isMiniPlayerPrepared = true;
+			showMiniPlayer(true);
+		}
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
 		cover.setImageResource(R.drawable.no_cover_art_big);
-		OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
-			
-			@Override
-			public void onBitmapReady(Bitmap bmp) {
-				if (this.hashCode() != checkIdCover)return;
-				if (null != bmp) {
-					((RemoteSong) song).setHasCover(true);
-					cover.setImageResource(0);
-					cover.setImageBitmap(bmp);
-				} else {
-					cover.setImageResource(R.drawable.no_cover_art_big);
+		button.setVisibility(View.GONE);
+		progress.setVisibility(View.VISIBLE);
+		if (song.getClass() == RemoteSong.class) {
+			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
+				
+				@Override
+				public void onBitmapReady(Bitmap bmp) {
+					if (this.hashCode() != checkIdCover)return;
+					if (null != bmp) {
+						((RemoteSong) song).setHasCover(true);
+						cover.setImageResource(0);
+						cover.setImageBitmap(bmp);
+					} else {
+						cover.setImageResource(R.drawable.no_cover_art_big);
+					}
 				}
-			}
-		};
-		checkIdCover  = readyListener.hashCode();
-		((RemoteSong) song).getCover(readyListener);		
+			};
+			checkIdCover  = readyListener.hashCode();
+			((RemoteSong) song).getCover(readyListener);		
+		} else {
+			cover.setImageBitmap(song.getCover(this));
+		}
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
