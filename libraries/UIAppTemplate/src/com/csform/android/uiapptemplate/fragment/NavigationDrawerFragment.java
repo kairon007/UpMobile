@@ -237,7 +237,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     	if (!isAdded()) return;
 		if (useOldToggle()) {
 	    	mDrawerToggle.setDrawerIndicatorEnabled(enabled);
-	    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_ab_up_compat));
+	    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_ab_up_compat_trim));
 		} else {
 			drawerToggle.setDrawerIndicatorEnabled(enabled);
 	    	drawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_ab_up_compat));
