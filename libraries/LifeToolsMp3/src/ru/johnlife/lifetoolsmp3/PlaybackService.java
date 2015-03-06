@@ -580,9 +580,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public AbstractSong getPlayingSong() {
 		if (null != playingSong) {
 			return playingSong;
-		} else {
-			return null;
 		}
+		return null;
 	}
 	
 	public int getPlayingPosition() {

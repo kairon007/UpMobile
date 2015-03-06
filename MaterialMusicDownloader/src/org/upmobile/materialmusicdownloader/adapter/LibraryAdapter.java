@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.csform.android.uiapptemplate.Constants;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ListCallback;
 import com.csform.android.uiapptemplate.view.dlg.Theme;
@@ -77,6 +78,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 				if (service.isPlaying() && service.getPlayingSong().equals(data)) return;
 				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
+				((MainActivity)getContext()).setSelectedItem(Constants.LIBRARY_FRAGMENT);
 				break;
 			}
 		}

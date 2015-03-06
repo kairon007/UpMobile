@@ -32,7 +32,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private TextView artist;
 	private ImageView cover;
 	private ImageButton button;
-	private ProgressBar progress;
+	private View progress;
 	private boolean isMiniPlayerPrepared = false;
 	private int checkIdCover;
 
@@ -60,7 +60,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		artist = (TextView)findViewById(R.id.mini_player_artist);
 		cover = (ImageView)findViewById(R.id.mini_player_cover);
 		button = (ImageButton)findViewById(R.id.mini_player_play_pause);
-		progress = (ProgressBar)findViewById(R.id.mini_player_progress);
+		progress = findViewById(R.id.mini_player_progress);
 	}
 	
 	private void setListeners() {
@@ -239,7 +239,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	 * @param playPayse true - image play, false - image pause
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
-		button.setImageResource(playPayse ? R.drawable.mini_player_pause : R.drawable.mini_player_play);
+		button.setImageResource(playPayse ? R.drawable.mini_player_play : R.drawable.mini_player_pause);
 	}
 	
 	protected void setCover(Bitmap bmp) {

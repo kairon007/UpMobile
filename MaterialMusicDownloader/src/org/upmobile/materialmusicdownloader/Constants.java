@@ -4,7 +4,7 @@ import java.io.File;
 
 import android.os.Environment;
 
-public interface Constants {
+public interface Constants extends com.csform.android.uiapptemplate.Constants{
 	
 	public static final String KEY_SELECTED_SONG = "key.selected.song";
 	public static final String KEY_SELECTED_POSITION = "key.selected.position";

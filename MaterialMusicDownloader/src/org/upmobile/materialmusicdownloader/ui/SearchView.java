@@ -56,6 +56,7 @@ public class SearchView extends OnlineSearchView implements Constants {
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
+		((MainActivity)getContext()).setSelectedItem(Constants.SEARCH_FRAGMENT);
 		super.click(view, position);
 	}
 

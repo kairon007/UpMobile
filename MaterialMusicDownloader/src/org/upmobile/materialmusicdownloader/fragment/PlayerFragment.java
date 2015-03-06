@@ -513,6 +513,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 			clearCover();
 		}
+		getCover(song);
 		player.stop();
 		setClickablePlayerElement(false);
 		player.shift(delta);
@@ -707,6 +708,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void getCover(final AbstractSong song) {
 		setCheckBoxState(false);
+		setCoverToZoomView(null);
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
@@ -720,7 +722,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 						setCoverToZoomView(bmp);
 						setCheckBoxState(true);
 					} else {
-						setCoverToZoomView(null);
 					}
 				}
 			};
@@ -732,7 +733,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
 			} else {
-				setCoverToZoomView(null);
 			}
 		}
 	}
