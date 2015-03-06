@@ -5,6 +5,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -215,7 +216,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		setCover(null);
 		button.setVisibility(service.isPlaying() ? View.VISIBLE : View.GONE);
 		progress.setVisibility(service.isPlaying() ? View.GONE : View.VISIBLE);
-		if (song instanceof RemoteSong) {
+		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 				
 				@Override

@@ -2,7 +2,6 @@ package org.upmobile.clearmusicdownloader.ui;
 
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
-import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
@@ -46,6 +45,6 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected Bitmap getDeafultCover() {
-		return BitmapFactory.decodeResource(getResources(), org.upmobile.clearmusicdownloader.R.drawable.no_cover_art_big);
+		return BitmapFactory.decodeResource(getResources(), org.upmobile.clearmusicdownloader.R.drawable.def_cover_circle);
 	}
 }

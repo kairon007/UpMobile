@@ -89,6 +89,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:text="ArtistLine"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/font_size_title" />
 
@@ -100,6 +101,7 @@
                     android:textColor="@color/primary_text_color"
                     android:gravity="right"
                     android:singleLine="true"
+                    android:text="ChunkTime"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/font_size_title"
                     android:visibility="visible" />
@@ -117,6 +119,7 @@
                 android:ellipsize="end"
                 android:textColor="@color/primary_text_color"
                 android:singleLine="true"
+                android:text="TitleLIne"
                 android:textSize="@dimen/font_size_normal" />
         </LinearLayout>
         <ImageView
