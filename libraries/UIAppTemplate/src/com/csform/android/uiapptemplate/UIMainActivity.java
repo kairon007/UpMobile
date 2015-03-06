@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -55,8 +56,18 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 	}
 	
+    private boolean useOldToggle() {
+		return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
+    }
+	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        View v = (View) findViewById(android.R.id.home);
+        if (null != v) {
+			if (useOldToggle()) {
+				((View) v.getParent().getParent()).setPadding(48, 0, 0, 0);
+			}
+        }
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
