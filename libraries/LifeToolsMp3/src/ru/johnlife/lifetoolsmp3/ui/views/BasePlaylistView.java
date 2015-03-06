@@ -31,6 +31,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -98,6 +99,22 @@ public abstract class BasePlaylistView extends View {
 		expandableAdapter.setDeafultBmp(getDeafultCover());
 		updatePlaylist();
 		((AnimatedExpandableListView) listView).setAdapter(expandableAdapter);
+		((AnimatedExpandableListView) listView).setOnGroupClickListener(new OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                if (((AnimatedExpandableListView) listView).isGroupExpanded(groupPosition)) {
+                	((AnimatedExpandableListView) listView).collapseGroupWithAnimation(groupPosition);
+                } else {
+                	if (playlists.get(groupPosition).getSongs().size() == 0) {
+                		return false;
+                	}
+                	((AnimatedExpandableListView) listView).expandGroupWithAnimation(groupPosition);
+                }
+                return true;
+            }
+            
+        });
 		((AnimatedExpandableListView) listView).setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
