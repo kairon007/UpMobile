@@ -280,6 +280,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	@Override
 	protected int getMiniPlayerID() {
+		showPlayerElement(true);
 		return R.id.mini_player;
 	}
 

@@ -197,6 +197,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	@Override
 	protected int getMiniPlayerID() {
+		showPlayerElement();
 		return R.id.mini_player;
 	}
 

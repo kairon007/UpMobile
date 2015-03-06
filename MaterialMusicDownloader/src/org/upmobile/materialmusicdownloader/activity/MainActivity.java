@@ -212,6 +212,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	
 	@Override
 	protected int getMiniPlayerID() {
+		showPlayerElement(true);
 		return R.id.mini_player;
 	}
 	
