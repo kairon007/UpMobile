@@ -83,14 +83,23 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 
 			@Override
 			public void play(AbstractSong song) {
+				refreshButton();
 				button.setImageResource(R.drawable.mini_player_pause);
 				setPlayPauseMini(false);
 			}
 			
 			@Override
 			public void pause(AbstractSong song) {
+				refreshButton();
 				button.setImageResource(R.drawable.mini_player_play);
 				setPlayPauseMini(true);
+			}
+
+			private void refreshButton() {
+				if (progress.getVisibility() == View.VISIBLE) {
+					progress.setVisibility(View.GONE);
+					button.setVisibility(View.VISIBLE);
+				}
 			}
 			
 			@Override
