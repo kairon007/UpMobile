@@ -23,7 +23,6 @@ import com.csform.android.uiapptemplate.view.dlg.Theme;
 public class PlaylistView extends BasePlaylistView{
 	
 	private MaterialDialog.ButtonCallback buttonCallback;
-	private EditText editText;
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
@@ -31,7 +30,8 @@ public class PlaylistView extends BasePlaylistView{
 			@Override
 			public void onPositive(MaterialDialog dialog) {
 				super.onPositive(dialog);
-				PlaylistView.this.createPlaylist(getContext().getContentResolver(), editText.getText().toString());
+				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
+				PlaylistView.this.createPlaylist(getContext().getContentResolver(), input.getText().toString());
 				dialog.cancel();
 			}
 			@Override
@@ -75,7 +75,6 @@ public class PlaylistView extends BasePlaylistView{
 	@SuppressLint("NewApi")
 	@Override
 	protected void showDialog() {
-		editText = new EditText(getContext());
 		new MaterialDialog.Builder(getContext())
 		.theme(Theme.LIGHT)
 		.title(R.string.create_new_playlist)
