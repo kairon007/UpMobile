@@ -184,11 +184,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		});
 		directoryChooserDialog.chooseDirectory();
 	}
-	
-	@Override
-	protected int getMiniPlayerID() {
-		return 0;
-	}
 
 	@Override
 	protected boolean isPlaying() {
@@ -197,13 +192,17 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	@Override
 	protected void showPlayerFragment() {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	protected int getMiniPlayerClickableID() {
-		// TODO Auto-generated method stub
-		return 0;
+	protected int getMiniPlayerID() {
+		return R.id.mini_player;
 	}
+
+	@Override
+	protected int getMiniPlayerClickableID() {
+		return R.id.mini_player_main;
+	}
+
 }
