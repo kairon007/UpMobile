@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        android:id="@+id/lastPlayedPlaylist"
+        style="@style/RippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="8dp" >
+
+        <com.csform.android.uiapptemplate.font.RobotoTextView
+            style="@style/TextViewAppearance.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/last_played_playlist"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="8dp" >
+
+        <LinearLayout
+            android:id="@+id/createNewPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="48dp" >
+
+            <com.csform.android.uiapptemplate.font.RobotoTextView
+                style="@style/TextViewAppearance.Body"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/create_new_playlist"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/font_button_add"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/main_color_accent" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:padding="4dp" >
+
+        <com.csform.android.uiapptemplate.font.RobotoTextView
+            style="@style/TextViewAppearance.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/all_playlists"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </FrameLayout>
+
+    <ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView
+        android:id="@+id/expandableListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="8dp" >
+    </ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView>
+
+    <FrameLayout
+        android:id="@+id/miniPlayerPlace"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_weight="1"
+        android:visibility="visible" >
+    </FrameLayout>
+
+</LinearLayout>

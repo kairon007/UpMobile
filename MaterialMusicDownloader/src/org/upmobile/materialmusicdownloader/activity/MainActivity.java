@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
-import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
+import org.upmobile.materialmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
 import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog;
 import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
@@ -81,6 +81,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		ArrayList<BaseMaterialFragment> fragments = new ArrayList<BaseMaterialFragment>();
 		fragments.add(new SearchFragment());
 		fragments.add(new DownloadsFragment());
+		fragments.add(new PlaylistFragment());
 		fragments.add(new LibraryFragment());
 		fragments.add(new PlayerFragment());
 		return fragments;

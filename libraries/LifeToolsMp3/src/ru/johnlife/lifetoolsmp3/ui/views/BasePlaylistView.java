@@ -44,8 +44,8 @@ public abstract class BasePlaylistView extends View {
 	private ViewGroup view;
 	private ListView listView;
 	private ExpandableAdapter expandableAdapter;
-	private LinearLayout playLastPlaylist;
-	private LinearLayout createNewPlayList;
+	private View playLastPlaylist;
+	private View createNewPlayList;
 	private AlertDialog.Builder newPlaylistDialog;
 
 	protected abstract Bitmap getDeafultCover();
@@ -54,7 +54,7 @@ public abstract class BasePlaylistView extends View {
 
 	protected abstract int getLayoutId();
 
-	protected abstract void showPlayerFragment();
+	protected abstract void showPlayerFragment(MusicData musicData);
 
 	protected abstract ListView getListView(View view);
 
@@ -90,8 +90,8 @@ public abstract class BasePlaylistView extends View {
 		}).start();
 		view = (ViewGroup) inflater.inflate(getLayoutId() > 0 ? getLayoutId() : ru.johnlife.lifetoolsmp3.R.layout.playlist_view, null);
 		listView = getListView(view) != null ? getListView(view) : (AnimatedExpandableListView) view.findViewById(R.id.expandableListView);
-		playLastPlaylist = (LinearLayout) view.findViewById(R.id.lastPlayedPlaylist);
-		createNewPlayList = (LinearLayout) view.findViewById(R.id.createNewPlaylist);
+		playLastPlaylist = (View) view.findViewById(R.id.lastPlayedPlaylist);
+		createNewPlayList = (View) view.findViewById(R.id.createNewPlaylist);
 		initListeners();
 		expandableAdapter = new ExpandableAdapter(view.getContext());
 		expandableAdapter.setProjectPrefics(getDirectory());
@@ -117,7 +117,7 @@ public abstract class BasePlaylistView extends View {
 					MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, playlists.get(groupPosition).getId()).commit();
 					playbackService.setArrayPlayback(new ArrayList<AbstractSong>(playlists.get(groupPosition).getSongs()));
 					playbackService.play(playlists.get(groupPosition).getSongs().get(childPosition));
-					showPlayerFragment();
+					showPlayerFragment(playlists.get(groupPosition).getSongs().get(childPosition));
 					return true;
 				}
 				return false;
@@ -161,7 +161,7 @@ public abstract class BasePlaylistView extends View {
 							} else {
 								playbackService.setArrayPlayback(new ArrayList<AbstractSong>(data.getSongs()));
 								playbackService.play(data.getSongs().get(0));
-								showPlayerFragment();
+								showPlayerFragment(data.getSongs().get(0));
 								return;
 							}
 						}
@@ -251,6 +251,7 @@ public abstract class BasePlaylistView extends View {
 			values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Integer.valueOf(base + audioId));
 			values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioId);
 			resolver.insert(uri, values);
+			cur.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -268,7 +269,7 @@ public abstract class BasePlaylistView extends View {
 	    }
 	 }
 
-	private void createPlaylist(ContentResolver resolver, String pName) {
+	public void createPlaylist(ContentResolver resolver, String pName) {
 		pName = getDirectory() + pName; 
 		try {
 			Uri uri = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
@@ -310,6 +311,7 @@ public abstract class BasePlaylistView extends View {
 				playlistDatas.add(playlist);
 			}
 		}
+		playlistCursor.close();
 		return playlistDatas;
 	}
 

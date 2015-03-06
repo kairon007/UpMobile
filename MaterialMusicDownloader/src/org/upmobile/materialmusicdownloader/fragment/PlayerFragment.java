@@ -260,7 +260,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
 		setListeners();
-		((MainActivity)getActivity()).setTitle(R.string.tab_now_plaing);
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
@@ -292,7 +291,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		android.util.Log.d("logks", "PlayerFragment, onOptionsItemSelected:");
 		getActivity().onBackPressed();
 		((MainActivity)getActivity()).setDrawerEnabled(true);
 		return super.onOptionsItemSelected(item);
@@ -301,7 +299,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onResume() {
 		thatSongIsDownloaded();
-		((UIMainActivity) getActivity()).setSelectedItem(3);
+		((UIMainActivity) getActivity()).setSelectedItem(4);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();

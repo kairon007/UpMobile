@@ -9,6 +9,7 @@ import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -18,6 +19,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
+import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ListCallback;
+import com.csform.android.uiapptemplate.view.dlg.Theme;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
@@ -128,5 +132,41 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	@Override
 	protected String getDirectory() {
 		return MaterialMusicDownloaderApp.getDirectory();
+	}
+	
+	@Override
+	protected void showPlaylistsDialog(final ArrayList<PlaylistData> playlistDatas, final View v, String[] data) {
+		new MaterialDialog.Builder(getContext())
+		.theme(Theme.LIGHT)
+		.title(R.string.select_playlist)
+		.backgroundColor(getContext().getResources().getColor(R.color.main_color_grey_100))
+		.dividerColorRes(R.color.md_divider_white)
+		.titleColorRes(R.color.main_color_500)
+		.neutralColorRes(R.color.material_indigo_500)
+		.positiveColorRes(R.color.material_indigo_500)
+		.negativeColorRes(R.color.material_red_500)
+		.itemColor(getContext().getResources().getColor(R.color.main_color_500))
+		.items(data)
+		.itemsCallback(new ListCallback() {
+			
+			@Override
+			public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+				addToPlaylist(getContext().getContentResolver(), ((MusicData) v.getTag()).getId(), playlistDatas.get(which).getId());
+				dialog.cancel();
+			}
+		})
+		.autoDismiss(false)
+		.build()
+		.show();
+	}
+	
+	@Override
+	public void showMessage(Context context, int message) {
+		showMessage(getContext(), getContext().getResources().getString(message));
+	}
+	
+	@Override
+	public void showMessage(Context context, String message) {
+		((MainActivity) getContext()).showMessage(message);
 	}
 }

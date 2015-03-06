@@ -15,6 +15,7 @@
     <string-array name="titles">
         <item>@string/tab_search</item>
         <item>@string/tab_downloads</item>
+         <item>@string/tab_playlist</item>
         <item>@string/tab_library</item>
         <item>@string/tab_now_plaing</item>
     </string-array>
@@ -45,5 +46,7 @@
 	<string name="font_pause_mini">&#xe80b;</string>
 	<string name="font_play_settings">&#xe802;</string>
 	<string name="font_drop_down">&#xe803;</string>
+	<string name="font_playlist">&#xe801;</string>
+	<string name="font_button_add">&#xe80e;</string>
 	
 </resources>

@@ -4,6 +4,7 @@ import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,8 +40,8 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected void showPlayerFragment() {
-		((MainActivity) getContext()).changeFragment(new PlayerFragment());
+	protected void showPlayerFragment(MusicData data) {
+		((MainActivity) getContext()).startSong(data);;
 	}
 
 	@Override

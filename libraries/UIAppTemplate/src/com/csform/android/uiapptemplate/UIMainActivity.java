@@ -176,21 +176,25 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 			showMiniPlayer(true);
 	        changeFragment(mFragments.get(1), false);
 			break;
-		case LIBRARY_FRAGMENT:
+		case PLYLIST_FRAGMENT:
 			showMiniPlayer(true);
 	        changeFragment(mFragments.get(2), false);
+			break;
+		case LIBRARY_FRAGMENT:
+			showMiniPlayer(true);
+	        changeFragment(mFragments.get(3), false);
 			break;
 		case PLAYER_FRAMGNET:
 			showMiniPlayer(false);
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
-	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(3);
+	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(4);
 		    if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
 		    	changeFragment(fragment, true);
 		    }
 		    break;
 		case SETTINGS_FRAGMENT:
-		case 5:
+		case 6:
 			showDialog();
 			break;
 		default:

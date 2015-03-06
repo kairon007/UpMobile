@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
@@ -188,7 +189,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 					service.play((AbstractSong) v.getTag());
 				}
 				if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
-					showPlaylistsDialog(v);
+					preparePlaylists(v);
 				}
 				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
 					remove((MusicData) v.getTag());
@@ -202,15 +203,23 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		menu.show();
 	}
 	
-	private void showPlaylistsDialog(final View v) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		final View dialoglayout = LayoutInflater.from(getContext()).inflate(R.layout.playlist_select_dialog, null);
-		ListView listView = (ListView) dialoglayout.findViewById(R.id.listView);
-		final ArrayList<PlaylistData> playlistDatas = getPlaylists();
+	private void preparePlaylists(View v) {
+		ArrayList<PlaylistData> playlistDatas = getPlaylists();
 		String[] data = new String[playlistDatas.size()];
 		for (int i = 0; i < playlistDatas.size(); i++) {
 			data[i] = playlistDatas.get(i).getName().replace(PROJECT_PRIFICS, "");
 		}
+		if (playlistDatas.size() == 0) {
+			showMessage(getContext(), R.string.playlists_are_missing);
+		} else {
+			showPlaylistsDialog(playlistDatas, v, data);
+		}
+	}
+	
+	protected void showPlaylistsDialog(final ArrayList<PlaylistData> playlistDatas, final View v, String[] data) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		final View dialoglayout = LayoutInflater.from(getContext()).inflate(R.layout.playlist_select_dialog, null);
+		ListView listView = (ListView) dialoglayout.findViewById(R.id.listView);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.playlist_select_dialog_item, data);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -242,6 +251,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 				playlistDatas.add(playlist);
 			}
 		}
+		playlistCursor.close();
 		return playlistDatas;
 	}
 	
@@ -269,8 +279,17 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Long.valueOf(base + audioId));
 			values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioId);
 			resolver.insert(uri, values);
+			cur.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void showMessage(Context context, String message) {
+		Toast.makeText(context, message ,Toast.LENGTH_SHORT).show();
+	}
+	
+	public void showMessage(Context context, int message) {
+		showMessage(context, context.getString(message));
 	}
 }
