@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -33,7 +34,6 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private ProgressBar progress;
 	private boolean isMiniPlayerPrepared = false;
 	private int checkIdCover;
-	private boolean isShow;
 
 	protected abstract int getMiniPlayerID();
 	protected abstract int getMiniPlayerClickableID();
@@ -97,24 +97,24 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			public void error() {}
 			
 		});
-//		button.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				if (service.isPlaying()) {
-//					service.pause();
-//				} else {
-//					service.play();
-//				}
-//			}
-//		});
-//		findViewById(getMiniPlayerClickableID()).setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				showPlayerFragment();
-//			}
-//		});
+		button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (service.isPlaying()) {
+					service.pause();
+				} else {
+					service.play();
+				}
+			}
+		});
+		findViewById(getMiniPlayerClickableID()).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showPlayerFragment();
+			}
+		});
 	}
 	
 	private void checkOnStart() {
@@ -132,7 +132,6 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	}
 	
 	public void showMiniPlayer(boolean isShow) {
-		this.isShow = isShow;
 		showMiniPlayer(isShow, false);
 	}
 	
@@ -247,9 +246,5 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		} else {
 			cover.setImageBitmap(bmp);
 		}
-	}
-	
-	public boolean isMiniPlayerVisible() {
-		return isShow;
 	}
 }
