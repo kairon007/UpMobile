@@ -125,7 +125,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		isEnabledFilter = false;
 		if (null != player && player.isVisible()) {
-			showMiniPlayer(true);
+			showMiniPlayer(true, false);
 			getFragmentManager().popBackStack();
 		} else if (currentFragmentID == 3){
 			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();
@@ -221,11 +221,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	protected void setPlayPauseMini(boolean playPayse) {
 		if (playPayse) {
 			String pause = getString(R.string.font_pause_mini);
-			Bitmap bmp = getDefaultBitmapCover(64, 62, 60, pause);
+			Bitmap bmp = getDefaultBitmapCover(40, 40, 39, pause);
 			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 		} else {
 			String play = getString(R.string.font_play_mini);
-			Bitmap bmp = getDefaultBitmapCover(64, 62, 60, play);
+			Bitmap bmp = getDefaultBitmapCover(40, 40, 39, play);
 			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 		}
 	}
@@ -243,7 +243,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	@Override
 	protected void showPlayerFragment() {
 		setDrawerEnabled(false);
-		onNavigationDrawerItemSelected(PLAYER_FRAMGNET);
+		onNavigationDrawerItemSelected(PLAYER_FRAGMENT);
 	}
 	
 	@Override

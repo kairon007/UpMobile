@@ -167,25 +167,25 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
+		if (position == PLAYER_FRAGMENT) {
+			showMiniPlayer(false, false);
+		} else if (position <= LIBRARY_FRAGMENT){
+			showMiniPlayer(true, false);
+		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
-			showMiniPlayer(true);
 	        changeFragment(mFragments.get(0), false);
 			break;
 		case DOWNLOADS_FRAGMENT:
-			showMiniPlayer(true);
 	        changeFragment(mFragments.get(1), false);
 			break;
 		case PLYLIST_FRAGMENT:
-			showMiniPlayer(true);
 	        changeFragment(mFragments.get(2), false);
 			break;
 		case LIBRARY_FRAGMENT:
-			showMiniPlayer(true);
 	        changeFragment(mFragments.get(3), false);
 			break;
-		case PLAYER_FRAMGNET:
-			showMiniPlayer(false);
+		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(4);
