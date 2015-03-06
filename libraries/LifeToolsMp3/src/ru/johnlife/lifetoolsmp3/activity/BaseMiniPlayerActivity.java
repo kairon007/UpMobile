@@ -206,12 +206,12 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		setCover(null);
 		button.setVisibility(service.isPlaying() ? View.VISIBLE : View.GONE);
 		progress.setVisibility(service.isPlaying() ? View.GONE : View.VISIBLE);
-		if (song.getClass() == RemoteSong.class) {
+		if (song instanceof RemoteSong) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover)return;
+					if (this.hashCode() != checkIdCover) return;
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						setCover(bmp);
@@ -233,11 +233,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	 * @param playPayse true - image play, false - image pause
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
-		if (playPayse) {
-			button.setImageResource(R.drawable.mini_player_pause);
-		} else {
-			button.setImageResource(R.drawable.mini_player_play);
-		}
+		button.setImageResource(playPayse ? R.drawable.mini_player_pause : R.drawable.mini_player_play);
 	}
 	
 	protected void setCover(Bitmap bmp) {
