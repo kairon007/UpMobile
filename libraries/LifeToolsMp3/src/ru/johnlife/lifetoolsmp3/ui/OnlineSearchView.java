@@ -448,6 +448,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) {
 			showBaseProgress();
+			message.setVisibility(View.GONE);
 		} else {
 			hideBaseProgress();
 		}
