@@ -25,6 +25,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 
 	protected final String ARRAY_SAVE = "extras_array_save";
 	protected PlaybackService service;
+	private AbstractSong song;
 	
 	private TextView title;
 	private TextView artist;
@@ -130,25 +131,36 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		}
 	}
 	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	public void showMiniPlayer(boolean isShow) {
+		showMiniPlayer(isShow, false);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+	public void showMiniPlayer(boolean isShow, final boolean isShift) {
 		final View view = findViewById(getMiniPlayerID());
 		if (null == view) return;
 		if (isShow && isMiniPlayerPrepared) {
-			if (view.getVisibility() == View.VISIBLE) return;
-			Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+			if ((view.getVisibility() == View.VISIBLE) && !isShift) return;
+			Animation slideUp = AnimationUtils.loadAnimation(this, isShift ? R.anim.slide_down : R.anim.slide_up);
 			slideUp.setAnimationListener(new AnimationListener() {
 				
 				@Override
 				public void onAnimationStart(Animation animation) {
+					if (isShift) return;
 					view.setVisibility(View.VISIBLE);
+					setData(song);
 				}
 				
 				@Override
 				public void onAnimationRepeat(Animation animation) {}
 				
 				@Override
-				public void onAnimationEnd(Animation animation) {}
+				public void onAnimationEnd(Animation animation) {
+					if (isShift) {
+						view.setVisibility(View.GONE);
+						showMiniPlayer(true);
+					}
+				}
 			});
 			view.setAnimation(slideUp);
 			view.startAnimation(slideUp);
@@ -173,20 +185,15 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		}
 	}
 	
-	private void restartMiniplayer() {
-		isMiniPlayerPrepared = true;
-		findViewById(getMiniPlayerID()).setVisibility(View.GONE);
-		showMiniPlayer(true);
-	}
-	
 	public void startSong(AbstractSong song) {
+		this.song = song;
 		if (isMiniPlayerPrepared) {
-			restartMiniplayer();
+			isMiniPlayerPrepared = true;
+			showMiniPlayer(true, true);
 		} else {
 			isMiniPlayerPrepared = true;
 			showMiniPlayer(true);
 		}
-		setData(song);
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
@@ -197,8 +204,8 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
 		setCover(null);
-		button.setVisibility(View.GONE);
-		progress.setVisibility(View.VISIBLE);
+		button.setVisibility(service.isPlaying() ? View.VISIBLE : View.GONE);
+		progress.setVisibility(service.isPlaying() ? View.GONE : View.VISIBLE);
 		if (song.getClass() == RemoteSong.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 				
