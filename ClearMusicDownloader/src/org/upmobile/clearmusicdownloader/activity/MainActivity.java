@@ -192,7 +192,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	@Override
 	protected void showPlayerFragment() {
-		
+		changeFragment(fragments[PLAYER_FRAMGNET]);
 	}
 	
 	@Override

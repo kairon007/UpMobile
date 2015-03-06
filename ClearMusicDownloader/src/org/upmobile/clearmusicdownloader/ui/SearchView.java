@@ -63,23 +63,12 @@ public class SearchView extends OnlineSearchView {
 			}
 			service.setArrayPlayback(list);
 		} 
-		Bundle bundle = new Bundle();
+		((MainActivity) getContext()).showPlayerElement();
 		try {
-			bundle.putParcelable(Constants.KEY_SELECTED_SONG, ((Song)getResultAdapter().getItem(position)).cloneSong());
+			((MainActivity) getContext()).startSong(((Song)getResultAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-        int[] screen_location = new int[2];
-        View v = view.findViewById(R.id.cover);
-        v.getLocationOnScreen(screen_location);
-        bundle.putInt(PACKAGE + ".left", screen_location[0]);
-        bundle.putInt(PACKAGE + ".top", screen_location[1]);
-        bundle.putInt(PACKAGE + ".width", v.getWidth());
-        bundle.putInt(PACKAGE + ".height", v.getHeight());
-		PlayerFragment playerFragment = new PlayerFragment();
-		playerFragment.setArguments(bundle);
-		((MainActivity) view.getContext()).changeFragment(playerFragment);
-		((MainActivity) getContext()).overridePendingTransition(0, 0);
 		super.click(view, position);
 	}
 

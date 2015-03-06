@@ -250,6 +250,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onResume() {
 		super.onResume();
+		((MainActivity) getActivity()).showMiniPlayer(false);
 		setKeyListener();
 	}
 
