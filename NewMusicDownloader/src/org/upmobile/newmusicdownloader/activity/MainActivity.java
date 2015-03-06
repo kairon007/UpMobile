@@ -160,9 +160,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void onNavigationDrawerItemSelected(int position) {
 		isEnabledFilter = false;
 		if (position == PLAYER_FRAGMENT) {
-			showMiniPlayer(false, false);
+			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT){
-			showMiniPlayer(true, false);
+			showMiniPlayer(true);
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
@@ -242,7 +242,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			}
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
-			showMiniPlayer(true, false);
+			showMiniPlayer(true);
 		} else {
 			if (null != service) {
 				service.reset();

@@ -125,7 +125,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		isEnabledFilter = false;
 		if (null != player && player.isVisible()) {
-			showMiniPlayer(true, false);
+			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
 		} else if (currentFragmentID == 3){
 			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();

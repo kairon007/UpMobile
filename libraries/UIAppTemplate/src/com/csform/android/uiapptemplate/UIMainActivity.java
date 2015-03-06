@@ -168,9 +168,9 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		if (position == PLAYER_FRAGMENT) {
-			showMiniPlayer(false, false);
+			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT){
-			showMiniPlayer(true, false);
+			showMiniPlayer(true);
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:

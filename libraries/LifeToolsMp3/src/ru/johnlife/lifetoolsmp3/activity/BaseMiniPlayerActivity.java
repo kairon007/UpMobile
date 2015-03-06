@@ -138,8 +138,12 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		}
 	}
 	
+	public void showMiniPlayer(boolean isShow) {
+		showMiniPlayer(isShow, false);
+	}
+	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-	public void showMiniPlayer(boolean isShow, final boolean isShift) {
+	private void showMiniPlayer(boolean isShow, final boolean isShift) {
 		View view = findViewById(getMiniPlayerID());
 		if (null == view) return;
 		if (isShow && isMiniPlayerPrepared) {
