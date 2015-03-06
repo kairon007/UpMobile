@@ -2,21 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:background="@color/transparent_grey"
+    android:gravity="center_vertical"
     android:orientation="horizontal" >
 
     <LinearLayout
         android:id="@+id/mini_player_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/selectable_item_bg"
+        android:layout_below="@+id/lineHeader"
+        android:background="@color/theme_color_20"
         android:clickable="true" >
 
-        <ImageView
+        <com.special.utils.UICircularImage
             android:id="@+id/mini_player_cover"
             android:layout_width="64dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/fallback_cover" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="Artist" />
+                    android:textColor="@color/primary_text_color" />
 
                 <TextView
                     android:id="@+id/mini_player_title"
@@ -48,7 +48,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="Title"
+                    android:textColor="@color/second_text_color"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -62,6 +62,7 @@
                 android:id="@+id/mini_player_play_pause"
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="0"
                 android:background="@drawable/selectable_item_bg"
                 android:src="@drawable/mini_player_pause"
