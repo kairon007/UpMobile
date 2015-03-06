@@ -237,23 +237,31 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	}
 	
 	private ArrayList<PlaylistData> getPlaylists() {
-		ArrayList<PlaylistData> playlistDatas = new ArrayList<PlaylistData>();
-		Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
-		PlaylistData playlistData = new PlaylistData();
-		playlistCursor.moveToFirst();
-		if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
-			playlistData.populate(playlistCursor);
-			playlistDatas.add(playlistData);
-		}
-		while (playlistCursor.moveToNext()) {
-			if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
-				PlaylistData playlist = new PlaylistData();
-				playlist.populate(playlistCursor);
-				playlistDatas.add(playlist);
+		ArrayList<PlaylistData> playlistDatas = null;
+		try {
+			playlistDatas = new ArrayList<PlaylistData>();
+			Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
+			PlaylistData playlistData = new PlaylistData();
+			if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
+				return playlistDatas;
 			}
+			if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
+				playlistData.populate(playlistCursor);
+				playlistDatas.add(playlistData);
+			}
+			while (playlistCursor.moveToNext()) {
+				if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
+					PlaylistData playlist = new PlaylistData();
+					playlist.populate(playlistCursor);
+					playlistDatas.add(playlist);
+				}
+			}
+			playlistCursor.close();
+			return playlistDatas;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return playlistDatas;
 		}
-		playlistCursor.close();
-		return playlistDatas;
 	}
 	
 	public Cursor myQuery(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
