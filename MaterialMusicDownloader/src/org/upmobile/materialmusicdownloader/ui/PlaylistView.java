@@ -8,6 +8,7 @@ import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -75,12 +76,11 @@ public class PlaylistView extends BasePlaylistView{
 	@Override
 	protected void showDialog() {
 		editText = new EditText(getContext());
-		editText.setBackground(getResources().getDrawable(R.drawable.inverse_underline_edit_text));
 		new MaterialDialog.Builder(getContext())
 		.theme(Theme.LIGHT)
 		.title(R.string.create_new_playlist)
 		.backgroundColor(getResources().getColor(R.color.main_color_grey_100))
-		.customView(editText, false)
+		.customView(R.layout.md_input_dialog, false)
 		.dividerColorRes(R.color.md_divider_white)
 		.titleColorRes(R.color.main_color_500)
 		.neutralColorRes(R.color.material_indigo_500)
