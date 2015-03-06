@@ -51,6 +51,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected Bitmap getDefaultBitmap() { return null; }
 	protected void remove() {};
 	protected void setListener(ViewGroup parent, View view, final int position){ }
+	protected abstract void startSong(AbstractSong abstractSong);
 	
 	protected OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 		
@@ -186,7 +187,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
 					} 
-					service.play((AbstractSong) v.getTag());
+					startSong((AbstractSong) v.getTag());
 				}
 				if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
 					preparePlaylists(v);
@@ -292,4 +293,5 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	public void showMessage(Context context, int message) {
 		showMessage(context, context.getString(message));
 	}
+	
 }

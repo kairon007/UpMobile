@@ -169,4 +169,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 	public void showMessage(Context context, String message) {
 		((MainActivity) getContext()).showMessage(message);
 	}
+
+	@Override
+	protected void startSong(AbstractSong abstractSong) {
+		((MainActivity) getContext()).startSong(abstractSong);
+	}
 }

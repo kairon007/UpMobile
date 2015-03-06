@@ -324,4 +324,9 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 		return ClearMusicDownloaderApp.getDirectory();
 	}
 
+	@Override
+	protected void startSong(AbstractSong abstractSong) {
+		((MainActivity) getContext()).startSong(abstractSong);
+	}
+
 }
