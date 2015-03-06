@@ -77,7 +77,7 @@
             <ImageButton
                 android:id="@+id/mini_player_play_pause"
                 android:layout_width="48dp"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_weight="0"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"

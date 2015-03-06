@@ -159,25 +159,25 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		isEnabledFilter = false;
+		if (position == PLAYER_FRAGMENT) {
+			showMiniPlayer(false, false);
+		} else if (position <= LIBRARY_FRAGMENT){
+			showMiniPlayer(true, false);
+		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
 	        changeFragment(new SearchFragment());
-	        showMiniPlayer(true);
 			break;
 		case DOWNLOADS_FRAGMENT:
-    		showMiniPlayer(true);
 	        changeFragment(new DownloadsFragment());
 			break;
 		case LIBRARY_FRAGMENT:
-    		showMiniPlayer(true);
 	        changeFragment(new LibraryFragment());
 			break;
 		case PLAYLIST_FRAGMENT:
-    		showMiniPlayer(true);
 			changeFragment(new PlaylistFragment());
 			break;
-		case PLAYER_FRAMGNET:
-			showMiniPlayer(false);
+		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
@@ -242,7 +242,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			}
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
-			showMiniPlayer(true);
+			showMiniPlayer(true, false);
 		} else {
 			if (null != service) {
 				service.reset();
@@ -290,6 +290,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	@Override
 	protected void showPlayerFragment() {
-		onNavigationDrawerItemSelected(PLAYER_FRAMGNET);
+		onNavigationDrawerItemSelected(PLAYER_FRAGMENT);
 	}
 }
