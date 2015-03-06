@@ -108,7 +108,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
                 hideKeyboard();
                 android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
     			String lastFragmentName = backEntry.getName();
-    			if (lastFragmentName.equals(getFragments().get(2).getClass().getSimpleName())) {
+    			if (lastFragmentName.equals(getFragments().get(LIBRARY_FRAGMENT).getClass().getSimpleName())) {
     				searchView.clearFocus();
     				isEnabledFilter = true;
     				setFilter(q);
