@@ -188,13 +188,13 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
 		Rect bounds = new Rect();
 		Paint textPaint = textCover.getPaint();
-		textPaint.getTextBounds(image, 0, getString(R.string.font_musics).length(), bounds);
+		textPaint.getTextBounds(image, 0, image.length(), bounds);
 		int height = bounds.height();
 		while (height < property) {
 			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, height < property ?  Util.pixelsToSp(this, textCover.getTextSize()) + 1f : Util.pixelsToSp(this, textCover.getTextSize()) - 1f);
 			bounds = new Rect();
 			textPaint = textCover.getPaint();
-			textPaint.getTextBounds(image, 0, getString(R.string.font_musics).length(), bounds);
+			textPaint.getTextBounds(image, 0, image.length(), bounds);
 			height = bounds.height();
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
@@ -234,11 +234,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	protected void setPlayPauseMini(boolean playPayse) {
 		if (playPayse) {
 			String pause = getString(R.string.font_pause_mini);
-			Bitmap bmp = getDefaultBitmapCover(40, 40, 47, pause);
+			Bitmap bmp = getDefaultBitmapCover(128, 128, 120, pause);
 			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 		} else {
 			String play = getString(R.string.font_play_mini);
-			Bitmap bmp = getDefaultBitmapCover(40, 40, 47, play);
+			Bitmap bmp = getDefaultBitmapCover(128, 128, 120, play);
 			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 		}
 	}
