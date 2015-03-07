@@ -114,7 +114,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
     				setFilter(q);
     			} else {
     				isEnabledFilter = false;
-    				changeFragment(mFragments.get(0), false);
+    				changeFragment(mFragments.get(SEARCH_FRAGMENT), false);
     				searchView.setIconified(true);
     			}
                 return false;

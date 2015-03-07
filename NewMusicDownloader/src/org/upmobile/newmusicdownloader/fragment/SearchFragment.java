@@ -1,5 +1,6 @@
 package org.upmobile.newmusicdownloader.fragment;
 
+import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.ui.SearchView;
 
@@ -40,7 +41,7 @@ public class SearchFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setSelectedItem(0);
+		((MainActivity) getActivity()).setSelectedItem(Constants.SEARCH_FRAGMENT);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}

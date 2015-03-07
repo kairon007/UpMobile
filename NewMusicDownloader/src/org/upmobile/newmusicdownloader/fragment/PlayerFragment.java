@@ -109,8 +109,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			} else {
 				player.play(song);
 			}
+			android.util.Log.d("logks", "1");
 			((MainActivity) getActivity()).setDrawerEnabled(false);
 		} else {
+			android.util.Log.d("logks", "2");
 			song = player.getPlayingSong();
 		}
 		setImageButton();

@@ -1,5 +1,6 @@
 package org.upmobile.newmusicdownloader.fragment;
 
+import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.ui.LibraryView;
 
@@ -15,14 +16,14 @@ public class LibraryFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		libraryView = new LibraryView(getActivity().getLayoutInflater());
+		libraryView = new LibraryView(inflater);
 		return libraryView.getView();
 	}
 
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setSelectedItem(3);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
+		((MainActivity) getActivity()).setSelectedItem(Constants.LIBRARY_FRAGMENT);
 		super.onResume();
 	}
 

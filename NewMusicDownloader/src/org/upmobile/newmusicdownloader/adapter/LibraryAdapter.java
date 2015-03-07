@@ -2,6 +2,7 @@ package org.upmobile.newmusicdownloader.adapter;
 
 import java.util.ArrayList;
 
+import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
@@ -73,8 +74,6 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 			switch (view.getId()) {
 			case R.id.item_cover:
 			case R.id.item_box_info:
-				startSong();
-				break;
 			case R.id.item_play:
 				startSong();
 				break;
