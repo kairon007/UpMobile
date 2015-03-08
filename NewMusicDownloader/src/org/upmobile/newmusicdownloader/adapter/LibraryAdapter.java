@@ -35,15 +35,12 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener {
+	private class LibraryViewHolder extends BaseLibraryViewHolder{
 
-		private MusicData data;
 		private ViewGroup info;
-		private ImageButton button;
 
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.item_box_info);
-			button = (ImageButton) v.findViewById(R.id.item_play);
 			cover = (ImageView) v.findViewById(R.id.item_cover);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_artist);
@@ -52,41 +49,21 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 		}
 
 		@Override
-		protected void hold(MusicData data, int position) {
-			this.data = data;
+		protected void hold(final MusicData data, int position) {
 			super.hold(data, position);
-			if (data.check(MusicData.MODE_PLAYING)) {
-				button.setImageResource(R.drawable.pause_white);
-			} else {
-				button.setImageResource(R.drawable.play_white);
-			}
-			setListener();
+			info.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if (!service.isCorrectlyState(MusicData.class, getCount())) {
+						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+						service.setArrayPlayback(list);
+					}
+					((MainActivity)getContext()).startSong(data);
+				}
+			});
 		}
 
-		private void setListener() {
-			cover.setOnClickListener(this);
-			info.setOnClickListener(this);
-			button.setOnClickListener(this);
-		}
-
-		@Override
-		public void onClick(View view) {
-			switch (view.getId()) {
-			case R.id.item_cover:
-			case R.id.item_box_info:
-			case R.id.item_play:
-				startSong();
-				break;
-			}
-		}
-
-		private void startSong() {
-			if (!service.isCorrectlyState(MusicData.class, getCount())) {
-				ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-				service.setArrayPlayback(list);
-			}
-			((MainActivity)getContext()).startSong(data);
-		}
 	}
 
 	@Override
