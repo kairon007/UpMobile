@@ -215,6 +215,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 					case MotionEvent.ACTION_SCROLL:
 						break;
 					case MotionEvent.ACTION_UP:
+						frontView.setBackgroundColor(getContext().getResources().getColor(R.color.white_transparent));
 						if (service == null) {
 							initService();
 						}
@@ -228,7 +229,6 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 						if (service.isPlaying() && service.getPlayingSong().equals(item)) return true;
 						((MainActivity) getContext()).showPlayerElement();
 						((MainActivity) getContext()).startSong(item);
-						frontView.setBackgroundColor(getContext().getResources().getColor(R.color.white_transparent));
 						break;
 					case MotionEvent.ACTION_CANCEL:
 						frontView.setBackgroundColor(getContext().getResources().getColor(R.color.white_transparent));
