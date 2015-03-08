@@ -178,6 +178,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	@Override
+	public void stopPressed() {}
+	
+	@Override
 	public void error() {
 		if (isDestroy) return;
 		Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.file_is_bad, Toast.LENGTH_SHORT).show();

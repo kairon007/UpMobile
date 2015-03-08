@@ -154,6 +154,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			changePlayPauseView(true);
 			setElementsView(0);
 		}
+		
+		@Override
+		public void stopPressed(){}
 
 		@Override
 		public void error() {
@@ -365,7 +368,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 			break;
 		case R.id.stop:
-			player.stop();
+			player.stopPressed();
 			break;
 		case R.id.download:
 			download();

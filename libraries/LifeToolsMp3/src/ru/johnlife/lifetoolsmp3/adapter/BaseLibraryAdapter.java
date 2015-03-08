@@ -94,16 +94,15 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			}
 			notifyDataSetChanged();
 		}
+		
+		@Override
+		public void stopPressed() {};
 
 		@Override
-		public void error() {
-			
-		}
+		public void error() {}
 
 		@Override
-		public void update(AbstractSong song) {
-			
-		}
+		public void update(AbstractSong song) {}
 		
 	};
 	

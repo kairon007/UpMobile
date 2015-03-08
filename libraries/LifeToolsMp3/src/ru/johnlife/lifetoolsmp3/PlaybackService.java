@@ -97,6 +97,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		public void play(AbstractSong song);
 		public void	pause(AbstractSong song);
 		public void stop (AbstractSong song);
+		public void stopPressed();
 		public void update (AbstractSong song);
 		public void	error ();
 			
@@ -411,6 +412,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		removeNotification();
 	}
 	
+	public void stopPressed() {
+		for (OnStatePlayerListener listener : stateListeners) {
+			listener.stopPressed();
+		}
+		stop();
+	}
+	
 	public boolean offOnShuffle() {
 		mode ^= SMODE_SHUFFLE;
 		boolean result = enabledShuffle();
@@ -659,7 +667,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (null != intent && null != intent.getAction() && !intent.getAction().isEmpty()) {
 			if (intent.getAction().equals(CLOSE_ACTION)) {
-				stop();
+				stopPressed();
 			} else if (intent.getAction().equals(PLAY_ACTION)) {
 				play(playingSong);
 			} else if (intent.getAction().equals(NEXT_ACTION)) {

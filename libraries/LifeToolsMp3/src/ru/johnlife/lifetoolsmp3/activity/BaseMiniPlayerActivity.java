@@ -75,6 +75,13 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			public void stop(AbstractSong song) {}
 			
 			@Override
+			public void stopPressed() {
+				setPlayPauseMini(false);
+				isMiniPlayerPrepared = false;
+				showMiniPlayer(false);
+			}
+			
+			@Override
 			public void start(AbstractSong song) {
 				refreshButton();
 				setPlayPauseMini(false);
@@ -83,14 +90,12 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			@Override
 			public void play(AbstractSong song) {
 				refreshButton();
-				button.setImageResource(R.drawable.mini_player_pause);
 				setPlayPauseMini(false);
 			}
 			
 			@Override
 			public void pause(AbstractSong song) {
 				refreshButton();
-				button.setImageResource(R.drawable.mini_player_play);
 				setPlayPauseMini(true);
 			}
 
@@ -195,10 +200,10 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		service.play(song);
-		if (null != service.getPlayingSong() && song.equals(this.song)){
+		if (null != service.getPlayingSong() && song.equals(this.song) && service.isPlaying()){
 			return;
 		}
+		service.play(song);
 		this.song = song;
 		boolean oldIsPrepared = isMiniPlayerPrepared;
 		isMiniPlayerPrepared = true;
