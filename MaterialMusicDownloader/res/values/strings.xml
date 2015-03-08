@@ -48,5 +48,7 @@
 	<string name="font_drop_down">&#xe803;</string>
 	<string name="font_playlist">&#xe801;</string>
 	<string name="font_button_add">&#xe80e;</string>
+	<string name="font_arrow_up">&#xe824;</string>
+	<string name="font_arrow_down">&#xe82f;</string>
 	
 </resources>

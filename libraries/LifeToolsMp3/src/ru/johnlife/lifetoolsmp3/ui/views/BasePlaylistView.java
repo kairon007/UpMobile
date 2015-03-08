@@ -32,7 +32,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
@@ -48,6 +48,8 @@ public abstract class BasePlaylistView extends View {
 	private View playLastPlaylist;
 	private View createNewPlayList;
 	private AlertDialog.Builder newPlaylistDialog;
+	
+	protected abstract Object[] groupItems();
 
 	protected abstract Bitmap getDeafultCover();
 	
@@ -98,22 +100,31 @@ public abstract class BasePlaylistView extends View {
 		expandableAdapter.setProjectPrefics(getDirectory());
 		expandableAdapter.setDeafultBmp(getDeafultCover());
 		updatePlaylist();
+		if (null !=  groupItems() && groupItems().length > 1) {
+			((AnimatedExpandableListView) listView).setGroupIndicator(null);
+		}
 		((AnimatedExpandableListView) listView).setAdapter(expandableAdapter);
 		((AnimatedExpandableListView) listView).setOnGroupClickListener(new OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+            	if (playlists.get(groupPosition).getSongs().size() == 0) {
+            		showMessage(getContext(), R.string.playlist_is_empty);
+            		return false;
+            	}
                 if (((AnimatedExpandableListView) listView).isGroupExpanded(groupPosition)) {
                 	((AnimatedExpandableListView) listView).collapseGroupWithAnimation(groupPosition);
-                } else {
-                	if (playlists.get(groupPosition).getSongs().size() == 0) {
-                		return false;
+                	if (null !=groupItems() && groupItems().length > 1) {
+                		setGroupIndicator(v, 0);
                 	}
+                } else {
                 	((AnimatedExpandableListView) listView).expandGroupWithAnimation(groupPosition);
+                	if (null !=groupItems() && groupItems().length > 1) {
+                		setGroupIndicator(v, 1);
+                	}
                 }
                 return true;
             }
-            
         });
 		((AnimatedExpandableListView) listView).setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -140,6 +151,14 @@ public abstract class BasePlaylistView extends View {
 				return false;
 			}
 		});
+	}
+	
+	private void setGroupIndicator(View v, int i) {
+		if (groupItems()[0].getClass() == String.class) {
+			((TextView) v.findViewById(R.id.customGroupIndicator)).setText(groupItems()[i].toString());
+		} else {
+			((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageBitmap((Bitmap) groupItems()[i]);
+		}
 	}
 
 	private void updatePlaylist() {
@@ -375,4 +394,5 @@ public abstract class BasePlaylistView extends View {
 	public void showMessage(Context context, int message) {
 		showMessage(context, context.getString(message));
 	}
+	
 }

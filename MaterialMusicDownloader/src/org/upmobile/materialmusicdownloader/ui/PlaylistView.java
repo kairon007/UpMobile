@@ -8,7 +8,6 @@ import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -44,7 +43,8 @@ public class PlaylistView extends BasePlaylistView{
 
 	@Override
 	protected Bitmap getDeafultCover() {
-		return null;
+		String cover =  getContext().getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_musics);
+		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60,cover);
 	}
 
 	@Override
@@ -101,5 +101,10 @@ public class PlaylistView extends BasePlaylistView{
 	@Override
 	public void showMessage(Context context, String message) {
 		((MainActivity) getContext()).showMessage(message);
+	}
+
+	@Override
+	protected Object[] groupItems() {
+		return new Object[]{getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_arrow_down),getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_arrow_up)};
 	}
 }

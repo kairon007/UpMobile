@@ -1,9 +1,12 @@
 package org.upmobile.newmusicdownloader.ui;
 
+import java.util.ArrayList;
+
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 
+import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.graphics.Bitmap;
@@ -47,5 +50,10 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected Bitmap getDeafultCover() {
 		return BitmapFactory.decodeResource(getResources(), org.upmobile.newmusicdownloader.R.drawable.no_cover_art_light_big_dark);
+	}
+
+	@Override
+	protected Object[] groupItems() {
+		return new Object[]{BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_down_white_18dp),BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_up_white_18dp)};
 	}
 }

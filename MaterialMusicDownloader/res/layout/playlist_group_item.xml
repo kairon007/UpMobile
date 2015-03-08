@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.csform.android.uiapptemplate.view.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   	style="@style/RippleStyle"
+    style="@style/RippleStyle"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minHeight="48dp"
-    android:orientation="horizontal"
-    android:paddingLeft="40dp"
-    android:paddingRight="10dp" >
+    android:layout_height="48dp"
+    android:gravity="center_vertical"
+    android:paddingRight="8dp" >
 
-    <com.csform.android.uiapptemplate.font.RobotoTextView
-        android:id="@+id/textTitle"
-        style="@style/TextViewAppearance.Body"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" 
-        android:ellipsize="end"	
-        android:lines="1"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp" />
+        android:paddingTop="8dp" >
+
+        <com.csform.android.uiapptemplate.font.MusicTextView
+            android:id="@+id/customGroupIndicator"
+            style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="@string/font_arrow_down"
+            android:textSize="16sp" />
+
+        <com.csform.android.uiapptemplate.font.RobotoTextView
+            android:id="@+id/textTitle"
+            style="@style/TextViewAppearance.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1" />
+    </LinearLayout>
 
 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>

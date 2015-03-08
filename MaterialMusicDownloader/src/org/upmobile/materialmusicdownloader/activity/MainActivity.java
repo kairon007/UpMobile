@@ -190,12 +190,27 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		Paint textPaint = textCover.getPaint();
 		textPaint.getTextBounds(image, 0, image.length(), bounds);
 		int height = bounds.height();
-		while (height < property) {
-			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, height < property ?  Util.pixelsToSp(this, textCover.getTextSize()) + 1f : Util.pixelsToSp(this, textCover.getTextSize()) - 1f);
+		int width = bounds.width();
+		boolean defaultIsLarger = true;
+		while (height < property && width < property) {
+			defaultIsLarger = false;
+			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, textCover.getTextSize()) + 1f);
 			bounds = new Rect();
 			textPaint = textCover.getPaint();
 			textPaint.getTextBounds(image, 0, image.length(), bounds);
 			height = bounds.height();
+			width = bounds.width();
+		}
+		if (defaultIsLarger) {
+			while (height > property && width > property) {
+				defaultIsLarger = false;
+				textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, textCover.getTextSize()) - 1f);
+				bounds = new Rect();
+				textPaint = textCover.getPaint();
+				textPaint.getTextBounds(image, 0, image.length(), bounds);
+				height = bounds.height();
+				width = bounds.width();
+			}
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
 	}
@@ -234,11 +249,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	protected void setPlayPauseMini(boolean playPayse) {
 		if (playPayse) {
 			String pause = getString(R.string.font_pause_mini);
-			Bitmap bmp = getDefaultBitmapCover(128, 128, 120, pause);
+			Bitmap bmp = getDefaultBitmapCover(96, 96, 90, pause);
 			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 		} else {
 			String play = getString(R.string.font_play_mini);
-			Bitmap bmp = getDefaultBitmapCover(128, 128, 120, play);
+			Bitmap bmp = getDefaultBitmapCover(96, 96, 90, play);
 			((ImageView)findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 		}
 	}
