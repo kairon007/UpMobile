@@ -73,7 +73,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton repeat;
 	private ImageButton stop;
 	private ImageView playerCover;
-	private Button download;
+	private Button btnDownload;
 	private Button playerSaveTags;
 	private Button playerCancelTags;
 	private TextView playerTitle;
@@ -174,9 +174,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		changePlayPauseView(true);
 		setClickablePlayerElement(player.isPrepared());
 	}
-	
-	@Override
-	public void stopPressed() {}
 	
 	@Override
 	public void error() {
@@ -286,6 +283,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 	}
 	
+	
 	private void init() {
 		play = (ImageButton) parentView.findViewById(R.id.playpause);
 		wait = parentView.findViewById(R.id.player_wait_song);
@@ -294,7 +292,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
 		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
 		stop = (ImageButton) parentView.findViewById(R.id.stop);
-		download = (Button) parentView.findViewById(R.id.download);
+		btnDownload = (Button) parentView.findViewById(R.id.btn_download);
 		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
 		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
 		volume = (SeekBar) parentView.findViewById(R.id.progress_volume);
@@ -314,6 +312,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerProgress.setOnSeekBarChangeListener(this);
 		volume.setOnSeekBarChangeListener(this);
 		play.setOnClickListener(this);
+		btnDownload.setOnClickListener(this);
 		stop.setOnClickListener(this);
 		shuffle.setOnClickListener(this);
 		repeat.setOnClickListener(this);
@@ -321,16 +320,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		forward.setOnClickListener(this);
 		editTag.setOnClickListener(this);
 		showLyrics.setOnClickListener(this);
-		download.setOnClickListener(this);
 		playerCancelTags.setOnClickListener(this);
 		playerSaveTags.setOnClickListener(this);
 	}
 	
 	private void setElementsView(int progress) {
 		if (song.getClass() == MusicData.class) {
-			download.setVisibility(View.GONE);
+			btnDownload.setVisibility(View.GONE);
 		} else {
-			download.setVisibility(View.VISIBLE);
+			btnDownload.setVisibility(View.VISIBLE);
 		}
 		playerCover.setImageBitmap(song.getCover(getActivity()));
 		playerProgress.removeCallbacks(progressAction);
@@ -360,6 +358,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.btn_download:
+			download();
+			break;
 		case R.id.playpause:
 			play(0);
 			break;
@@ -386,10 +387,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 			break;
 		case R.id.stop:
-			player.stopPressed();
-			break;
-		case R.id.download:
-			download();
+			player.stop();
 			break;
 		case R.id.player_lyrics:
 			showLyrics();
@@ -527,9 +525,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		isUseAlbumCover = playerTagsCheckBox.isChecked();
 		if (!manipulate && playerTagsCheckBox.isChecked()) {
 			return;
-		} else {
-			updateObject();
 		}
+		updateObject();
 		if (song.getClass() != MusicData.class) return;
 		File f = new File(song.getPath());
 		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists() && playerTagsCheckBox.isChecked()) {
@@ -658,8 +655,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void downloadButtonState(boolean state) {
-		download.setClickable(state);
-		download.setEnabled(state);
+		btnDownload.setClickable(state);
+		btnDownload.setEnabled(state);
 	}
 	
 	private void download() {
@@ -694,5 +691,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void error(String error) {
 			}
 		});
+	}
+
+	@Override
+	public void stopPressed() {
+		// TODO Auto-generated method stub
+		
 	}
 }

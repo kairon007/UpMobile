@@ -228,13 +228,18 @@
                         android:layout_marginLeft="16dp"
                         android:src="@drawable/ic_action_volume" />
                 </RelativeLayout>
-
+                
                 <Button
-                    android:id="@+id/download"
+                    android:id="@+id/btn_download"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/download_dialog_download" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:visibility="invisible" />
 
                 <include
                     android:id="@+id/player_edit_tag_dialog"
