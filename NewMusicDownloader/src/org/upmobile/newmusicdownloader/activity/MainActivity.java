@@ -132,7 +132,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	    switch(item.getItemId()) {
-
         case R.id.action_search:
             searchView.setIconified(false);// to Expand the SearchView when clicked
             return true;
@@ -280,7 +279,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	@Override
 	protected int getMiniPlayerID() {
-		showPlayerElement(true);
 		return R.id.mini_player;
 	}
 

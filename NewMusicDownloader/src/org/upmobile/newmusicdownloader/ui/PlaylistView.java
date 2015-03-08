@@ -1,10 +1,7 @@
 package org.upmobile.newmusicdownloader.ui;
 
-import java.util.ArrayList;
-
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
-import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -44,6 +41,7 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected void showPlayerFragment(MusicData data) {
+		((MainActivity) getContext()).showPlayerElement(true);
 		((MainActivity) getContext()).startSong(data);;
 	}
 
