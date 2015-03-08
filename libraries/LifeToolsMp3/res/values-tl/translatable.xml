@@ -15,6 +15,7 @@
     <string name="tab_search">Maghanap</string>
     <string name="tab_downloads">Mga Download</string>
     <string name="tab_library">Library</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Nagpe-play ngayon</string>
     <string name="tab_settings">Mga Setting</string>
     <string name="message_please_wait">Pakihintay...</string>
@@ -45,5 +46,15 @@
     <string name="edit_mp3_cancel">Kanselahin</string>
     <string name="add_new_folder">Magdagdag ng bagong folder</string>
     <string name="add_folder">Magdagdag ng folder</string>
+    <string name="play">Maglaro</string>
+    <string name="pause">Tumigil na sandali</string>
+    <string name="next">Ang susunod na</string>
+    <string name="close">Malapit</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Idagdag sa Playlist</string>
+    <string name="last_played_playlist">Kamakailang na-play playlist</string>
+    <string name="create_new_playlist">Lumikha ng playlist</string>
+    <string name="all_playlists">Lahat ng playlist</string>
+    <string name="create">Lumikha</string>
 
 </resources>

@@ -15,6 +15,7 @@
     <string name="tab_search">Zoeken</string>
     <string name="tab_downloads">Downloads</string>
     <string name="tab_library">Bibliotheek</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Nu afgespeeld</string>
     <string name="tab_settings">Instellingen</string>
     <string name="message_please_wait">Even geduld a.j.b...</string>
@@ -45,5 +46,15 @@
     <string name="edit_mp3_cancel">Annuleren</string>
     <string name="add_new_folder">Voeg een nieuwe map</string>
     <string name="add_folder">Map toevoegen</string>
+    <string name="play">Spelen</string>
+    <string name="pause">Pauze</string>
+    <string name="next">De volgende</string>
+    <string name="close">Dicht</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Toevoegen aan playlist</string>
+    <string name="last_played_playlist">Onlangs gespeeld afspeellijst</string>
+    <string name="create_new_playlist">Maak een afspeellijst</string>
+    <string name="all_playlists">Alle afspeellijsten</string>
+    <string name="create">Creëren</string>
 
 </resources>

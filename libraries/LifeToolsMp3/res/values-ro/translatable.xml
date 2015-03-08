@@ -15,6 +15,7 @@
     <string name="tab_search">Căutare</string>
     <string name="tab_downloads">Descărcări</string>
     <string name="tab_library">Bibliotecă</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Acum joc</string>
     <string name="tab_settings">Setări</string>
     <string name="message_please_wait">Vă rugăm să așteptați...</string>
@@ -45,5 +46,15 @@
     <string name="edit_mp3_cancel">Anulare</string>
     <string name="add_new_folder">Adăugați dosar nou</string>
     <string name="add_folder">Adăugați dosar</string>
+    <string name="play">Joacă</string>
+    <string name="pause">Pauză</string>
+    <string name="next">Următor</string>
+    <string name="close">închidere</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Adauga la Playlist</string>
+    <string name="last_played_playlist">Lista de redare a jucat recent</string>
+    <string name="create_new_playlist">Crearea unei liste de redare</string>
+    <string name="all_playlists">Toate liste de redare</string>
+    <string name="create">Crea</string>
 
 </resources>

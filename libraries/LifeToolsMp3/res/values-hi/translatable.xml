@@ -15,6 +15,7 @@
     <string name="tab_search">खोज</string>
     <string name="tab_downloads">डाउनलोड</string>
     <string name="tab_library">लाइब्रेरी</string>
+    <string name="tab_playlist">प्लेलिस्ट</string>
     <string name="tab_now_plaing">अब खेल रहे हैं</string>
     <string name="tab_settings">सेटिंग्स</string>
     <string name="message_please_wait">कृपया प्रतीक्षा करें...</string>
@@ -45,5 +46,15 @@
     <string name="edit_mp3_cancel">रद्द करें</string>
     <string name="add_new_folder">नया फ़ोल्डर जोड़ें</string>
     <string name="add_folder">फ़ोल्डर जोड़ें</string>
+    <string name="play">प्ले</string>
+    <string name="pause">ठहराव</string>
+    <string name="next">अगली</string>
+    <string name="close">बंद</string>
+    <string name="playlist">प्लेलिस्ट</string>
+    <string name="add_to_playlist">प्लेलिस्ट में जोड़ें</string>
+    <string name="last_played_playlist">हाल ही में खेला प्लेलिस्ट</string>
+    <string name="create_new_playlist">प्लेलिस्ट बनाएं</string>
+    <string name="all_playlists">सभी प्लेलिस्ट</string>
+    <string name="create">बनाएँ</string>
 
 </resources>

@@ -15,6 +15,7 @@
     <string name="tab_search">Поиск</string>
     <string name="tab_downloads">Загрузки</string>
     <string name="tab_library">Библиотека</string>
+    <string name="tab_playlist">Плейлист</string>
     <string name="tab_now_plaing">Сейчас играет</string>
     <string name="tab_settings">Настройки</string>
     <string name="message_please_wait">Подождите...</string>
@@ -47,5 +48,15 @@
     <string name="library_empty">Список библиотеки пуст</string>
     <string name="add_new_folder">Добавить новую папку</string>
     <string name="add_folder">Добавить папку</string>
+    <string name="play">Воспроизвести</string>
+    <string name="pause">Пауза</string>
+    <string name="next">Следующая</string>
+    <string name="close">Закрыть</string>
+    <string name="playlist">Плейлист</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="last_played_playlist">Последний проигранный плейлист</string>
+    <string name="create_new_playlist">Создать плейлист</string>
+    <string name="all_playlists">Все плэйлисты</string>
+    <string name="create">Создать</string>
 
 </resources>

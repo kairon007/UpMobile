@@ -15,6 +15,7 @@
     <string name="tab_search">Αναζήτηση</string>
     <string name="tab_downloads">Λήψεις</string>
     <string name="tab_library">Βιβλιοθήκη</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Παίζει τώρα</string>
     <string name="tab_settings">Ρυθμίσεις</string>
     <string name="message_please_wait">Παρακαλούμε περιμένετε...</string>
@@ -47,5 +48,15 @@
     <string name="library_empty">Λίστα Βιβλιοθήκες είναι άδειο</string>
     <string name="add_new_folder">Προσθήκη νέου φακέλου</string>
     <string name="add_folder">Προσθήκη φακέλου</string>
+    <string name="play">Παίξτε</string>
+    <string name="pause">Παύση</string>
+    <string name="next">Η επόμενη</string>
+    <string name="close">Kοντά</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Προσθήκη στη λίστα αναπαραγωγής</string>
+    <string name="last_played_playlist">Πρόσφατα έπαιξε playlist</string>
+    <string name="create_new_playlist">Δημιουργήστε μια λίστα αναπαραγωγής</string>
+    <string name="all_playlists">Όλες οι λίστες αναπαραγωγής</string>
+    <string name="create">Δημιουργήστε</string>
 
 </resources>

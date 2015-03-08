@@ -15,6 +15,7 @@
     <string name="tab_search">검색</string>
     <string name="tab_downloads">다운로드</string>
     <string name="tab_library">라이브러리</string>
+    <string name="tab_playlist">재생 목록</string>
     <string name="tab_now_plaing">지금 재생 중</string>
     <string name="tab_settings">설정</string>
     <string name="message_please_wait">기다리세요...</string>
@@ -45,5 +46,15 @@
     <string name="edit_mp3_cancel">취소</string>
     <string name="add_new_folder">새 폴더를 추가</string>
     <string name="add_folder">폴더 추가</string>
+    <string name="play">놀이</string>
+    <string name="pause">중지</string>
+    <string name="next">다음</string>
+    <string name="close">가까운</string>
+    <string name="playlist">재생 목록</string>
+    <string name="add_to_playlist">재생 목록에 추가</string>
+    <string name="last_played_playlist">최근 재생 재생 목록</string>
+    <string name="create_new_playlist">재생 목록 만들기</string>
+    <string name="all_playlists">모든 재생 목록</string>
+    <string name="create">만들기</string>
 
 </resources>

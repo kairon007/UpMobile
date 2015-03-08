@@ -15,6 +15,7 @@
     <string name="tab_search">Wyszukaj</string>
     <string name="tab_downloads">Pobrane</string>
     <string name="tab_library">Biblioteka</string>
+    <string name="tab_playlist">Lista odtwarzania</string>
     <string name="tab_now_plaing">Teraz gra</string>
     <string name="tab_settings">Ustawienia</string>
     <string name="message_please_wait">Proszę czekać...</string>
@@ -45,5 +46,15 @@
     <string name="edit_mp3_cancel">Anuluj</string>
     <string name="add_new_folder">Dodaj nowy folder</string>
     <string name="add_folder">Dodaj folder</string>
+    <string name="play">Grać</string>
+    <string name="pause">Pauza</string>
+    <string name="next">Następna</string>
+    <string name="close">Blisko</string>
+    <string name="playlist">Lista odtwarzania</string>
+    <string name="add_to_playlist">Dodaj do listy odtwarzania</string>
+    <string name="last_played_playlist">Ostatnio grał listy odtwarzania</string>
+    <string name="create_new_playlist">Tworzenie listy odtwarzania</string>
+    <string name="all_playlists">Wszystkie listy odtwarzania</string>
+    <string name="create">Utworzyć</string>
 
 </resources>
