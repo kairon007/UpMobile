@@ -15,6 +15,7 @@
     <string name="tab_search">    جستجو</string>
     <string name="tab_downloads">    دانلودها</string>
     <string name="tab_library">    فهرست</string>
+    <string name="tab_playlist">لیست پخش</string>
     <string name="tab_now_plaing">  در حال حاضر بازی</string>
     <string name="tab_settings">تنظیمات</string>
     <string name="message_please_wait">    لطفا صبر کنید...</string>
@@ -47,5 +48,15 @@
     <string name="library_empty">لیست کتابخانه ها خالی است</string>
     <string name="add_new_folder">اضافه کردن پوشه جدید</string>
     <string name="add_folder">اضافه کردن پوشه</string>
+    <string name="play">بازی</string>
+    <string name="pause">توقف</string>
+    <string name="next">بعدی</string>
+    <string name="close">نزدیک</string>
+    <string name="playlist">لیست پخش</string>
+    <string name="add_to_playlist">اضافه کردن به لیست پخش</string>
+    <string name="last_played_playlist">لیست پخش به تازگی بازی</string>
+    <string name="create_new_playlist">ایجاد یک لیست پخش</string>
+    <string name="all_playlists">همه لیست پخش</string>
+    <string name="create">ساختن</string>
 
 </resources>

@@ -15,6 +15,7 @@
     <string name="tab_search">البحث</string>
     <string name="tab_downloads">التحميلات</string>
     <string name="tab_library">المكتبة</string>
+    <string name="tab_playlist">قائمة التشغيل</string>
     <string name="tab_now_plaing">اللعب الآن</string>
     <string name="tab_settings">الإعدادات</string>
     <string name="message_please_wait">يرجى الانتظار…</string>
@@ -47,5 +48,15 @@
     <string name="library_empty">قائمة المكتبات فارغة</string>
     <string name="add_new_folder">إضافة مجلد جديد</string>
     <string name="add_folder">إضافة مجلد</string>
+    <string name="play">لعب</string>
+    <string name="pause">وقفة</string>
+    <string name="next">في اليوم التالي</string>
+    <string name="close">قريب</string>
+    <string name="playlist">قائمة التشغيل</string>
+    <string name="add_to_playlist">إضافة إلى قائمة التشغيل</string>
+    <string name="last_played_playlist">قائمة التشغيل عبت مؤخرا</string>
+    <string name="create_new_playlist">إنشاء قائمة تشغيل</string>
+    <string name="all_playlists">جميع قوائم التشغيل</string>
+    <string name="create">خلق</string>
 
 </resources>

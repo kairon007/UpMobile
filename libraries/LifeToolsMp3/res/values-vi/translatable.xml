@@ -1,51 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="update_app_version">PHIÊN BẢN MỚI</string>
-<string name="update_app_description">Chúng tôi đã phát hành một phiên bản mới NHANH và TỐT HƠN của ứng dụng. Vui lòng cài phiên bản mới ngay.</string>
-<string name="update_app_description2">Tất cả các tập tin của bạn sẽ tự động chuyển sang phiên bản mới</string>
-<string name="update_app_install_update">CÀI BẢN CẬP NHẬT</string>
-<string name="update_app_install_now">CÀI NGAY</string>
-<string name="update_app_update_now">CẬP NHẬT NGAY</string>
-<string name="rate_title">Vui lòng đánh giá 5 sao cho cho ứng dụng của chúng tôi</string>
-<string name="rate_description">Nếu bạn thích ứng dụng của chúng tôi, vui lòng giúp chúng tôi bằng cách đánh giá 5 sao cho ứng dụng này. Sự ủng hộ của bạn sẽ giúp chúng tôi cải tiến ứng dụng này tốt hơn. Xin cảm ơn!</string>
-<string name="rate_yes">Đánh giá 5 Sao</string>
-<string name="rate_no">Không</string>
-<string name="rate_thanks">Xin cảm ơn!</string>
- 
-<string name="tab_search">Tìm kiếm</string>
-<string name="tab_downloads">Mục Tải xuống</string>
-<string name="tab_library">Thư viện</string>
-<string name="tab_now_plaing">Bây giờ chơi</string>
- 
-<string name="message_please_wait">Vui lòng Chờ ...</string>
-<string name="message_loading">Đang Nạp...</string>
-<string name="message_searching_for">Đang tìm kiếm</string>
- 
-<string name="hint_main_search">Tựa bài hát, Album hoặc Nghệ sĩ</string>
-<string name="hint_filter_artists">Lọc các nghệ sĩ của bạn</string>
-<string name="hint_filter_songs">Lọc các bài hát của bạn</string>
-<string name="hint_filter_playlists">Lọc các danh sách phát của bạn</string>
-<string name="hint_filter_genres">Lọc các thể loại nhạc của bạn</string>
-<string name="hint_filter_files">Lọc các tập tin của bạn</string>
- 
-<string name="search_your_results_appear_here">Kết quả tìm kiếm của bạn sẽ xuất hiện ở đây</string>
-<string name="search_no_results_for">Không tìm thấy kết quả cho</string>
-<string name="search_try_different_query">Thử truy vấn khác</string>
-<string name="search_please_enter_query">Vui lòng nhập truy vấn</string>
- 
-<string name="download_dialog_download_location">Vị trí Tải xuống</string>
-<string name="download_dialog_download">Tải xuống</string>
-<string name="download_dialog_cancel">Hủy</string>
-<string name="download_dialog_show_lyrics">Hiện Lời bài hát</string>
-<string name="download_dialog_no_lyrics">Không Tìm thấy Lời bài hát cho</string>
- 
-<string name="lyrics">Lời bài hát</string>
- 
-<string name="edit_mp3">Sửa Thẻ Tập tin MP3</string>
-<string name="edit_mp3_title">Tựa bài hát</string>
-<string name="edit_mp3_artist">Nghệ sĩ</string>
-<string name="edit_mp3_album">Album</string>
-<string name="edit_mp3_use_album_cover">Dùng Bìa Album</string>
-<string name="edit_mp3_ok">OK</string>
-<string name="edit_mp3_cancel">Hủy</string>
+    <string name="update_app_description">Chúng tôi đã phát hành một phiên bản mới NHANH và TỐT HƠN của ứng dụng. Vui lòng cài phiên bản mới ngay.</string>
+    <string name="update_app_description2">Tất cả các tập tin của bạn sẽ tự động chuyển sang phiên bản mới</string>
+    <string name="update_app_install_update">CÀI BẢN CẬP NHẬT</string>
+    <string name="update_app_install_now">CÀI NGAY</string>
+    <string name="update_app_update_now">CẬP NHẬT NGAY</string>
+    <string name="rate_title">Vui lòng đánh giá 5 sao cho cho ứng dụng của chúng tôi</string>
+    <string name="rate_description">Nếu bạn thích ứng dụng của chúng tôi, vui lòng giúp chúng tôi bằng cách đánh giá 5 sao cho ứng dụng này. Sự ủng hộ của bạn sẽ giúp chúng tôi cải tiến ứng dụng này tốt hơn. Xin cảm ơn!</string>
+    <string name="rate_yes">Đánh giá 5 Sao</string>
+    <string name="rate_no">Không</string>
+    <string name="rate_thanks">Xin cảm ơn!</string>
+    <string name="tab_search">Tìm kiếm</string>
+    <string name="tab_downloads">Mục Tải xuống</string>
+    <string name="tab_library">Thư viện</string>
+    <string name="tab_playlist">Danh sách phát</string>
+    <string name="tab_now_plaing">Bây giờ chơi</string>
+    <string name="message_please_wait">Vui lòng Chờ ...</string>
+    <string name="message_loading">Đang Nạp...</string>
+    <string name="message_searching_for">Đang tìm kiếm</string>
+    <string name="hint_main_search">Tựa bài hát, Album hoặc Nghệ sĩ</string>
+    <string name="hint_filter_artists">Lọc các nghệ sĩ của bạn</string>
+    <string name="hint_filter_songs">Lọc các bài hát của bạn</string>
+    <string name="hint_filter_playlists">Lọc các danh sách phát của bạn</string>
+    <string name="hint_filter_genres">Lọc các thể loại nhạc của bạn</string>
+    <string name="hint_filter_files">Lọc các tập tin của bạn</string>
+    <string name="search_your_results_appear_here">Kết quả tìm kiếm của bạn sẽ xuất hiện ở đây</string>
+    <string name="search_no_results_for">Không tìm thấy kết quả cho</string>
+    <string name="search_try_different_query">Thử truy vấn khác</string>
+    <string name="search_please_enter_query">Vui lòng nhập truy vấn</string>
+    <string name="download_dialog_download_location">Vị trí Tải xuống</string>
+    <string name="download_dialog_download">Tải xuống</string>
+    <string name="download_dialog_cancel">Hủy</string>
+    <string name="download_dialog_show_lyrics">Hiện Lời bài hát</string>
+    <string name="download_dialog_no_lyrics">Không Tìm thấy Lời bài hát cho</string>
+    <string name="lyrics">Lời bài hát</string>
+    <string name="edit_mp3">Sửa Thẻ Tập tin MP3</string>
+    <string name="edit_mp3_title">Tựa bài hát</string>
+    <string name="edit_mp3_artist">Nghệ sĩ</string>
+    <string name="edit_mp3_album">Album</string>
+    <string name="edit_mp3_use_album_cover">Dùng Bìa Album</string>
+    <string name="edit_mp3_ok">OK</string>
+    <string name="edit_mp3_cancel">Hủy</string>
+    <string name="play">Chơi</string>
+    <string name="pause">Tạm ngừng</string>
+    <string name="next">Tiếp theo</string>
+    <string name="close">Gần</string>
+    <string name="playlist">Danh sách phát</string>
+    <string name="add_to_playlist">Thêm vào Playlist</string>
+    <string name="last_played_playlist">Danh sách phát gần đây</string>
+    <string name="create_new_playlist">Tạo một playlist</string>
+    <string name="all_playlists">Tất cả danh sách</string>
+    <string name="create">Sáng tạo</string>
+
 </resources>

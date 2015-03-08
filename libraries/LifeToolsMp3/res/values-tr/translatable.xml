@@ -15,6 +15,7 @@
     <string name="tab_search">Ara</string>
     <string name="tab_downloads">İndirmeler</string>
     <string name="tab_library">Kitaplık</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Şimdi çalan</string>
     <string name="tab_settings">Ayarlar</string>
     <string name="message_please_wait">Lütfen Bekleyin...</string>
@@ -44,5 +45,15 @@
     <string name="edit_mp3_cancel">İptal</string>
     <string name="add_new_folder">Yeni klasör ekle</string>
     <string name="add_folder">klasör ekle</string>
+    <string name="play">Oyun</string>
+    <string name="pause">Durma</string>
+    <string name="next">Sonraki</string>
+    <string name="close">Yakın</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Çalma Listesine Ekle</string>
+    <string name="last_played_playlist">Son oynanan çalma</string>
+    <string name="create_new_playlist">Çalma listesi oluşturma</string>
+    <string name="all_playlists">Tüm çalma listeleri</string>
+    <string name="create">Oluşturmak</string>
 
 </resources>

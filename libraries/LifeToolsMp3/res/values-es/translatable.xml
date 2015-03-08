@@ -15,6 +15,7 @@
     <string name="tab_search">Buscar</string>
     <string name="tab_downloads">Descargas</string>
     <string name="tab_library">Biblioteca</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Reproduciendo ahora</string>
     <string name="tab_settings">Ajustes</string>
     <string name="message_please_wait">Aguarda por favor...</string>
@@ -47,5 +48,15 @@
     <string name="library_empty">Lista de Bibliotecas está vacía</string>
     <string name="add_new_folder">Añadir nueva carpeta</string>
     <string name="add_folder">Añadir carpeta</string>
+    <string name="play">Jugar</string>
+    <string name="pause">Pausa</string>
+    <string name="next">El próximo</string>
+    <string name="close">Cerca</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Añadir a lista de reproducción</string>
+    <string name="last_played_playlist">Lista de reproducción Reprod</string>
+    <string name="create_new_playlist">Crear una lista de reproducción</string>
+    <string name="all_playlists">Todas las listas de reproducción</string>
+    <string name="create">Crear</string>
 
 </resources>

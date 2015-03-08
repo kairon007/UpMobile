@@ -15,6 +15,7 @@
     <string name="tab_search">Soek</string>
     <string name="tab_downloads">Aflaaie</string>
     <string name="tab_library">Biblioteek</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Nou speel</string>
     <string name="tab_settings">Instellings</string>
     <string name="message_please_wait">Wag asseblief...</string>
@@ -47,5 +48,15 @@
     <string name="library_empty">Biblioteke lys is leeg</string>
     <string name="add_new_folder">Voeg nuwe gids</string>
     <string name="add_folder">Voeg gids</string>
+    <string name="play">Speel</string>
+    <string name="pause">Stop</string>
+    <string name="next">Die volgende</string>
+    <string name="close">Close</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Voeg by snitlys</string>
+    <string name="last_played_playlist">Onlangs gespeel playlist</string>
+    <string name="create_new_playlist">Skep \'n playlist</string>
+    <string name="all_playlists">Alle afspeel</string>
+    <string name="create">Skep</string>
 
 </resources>

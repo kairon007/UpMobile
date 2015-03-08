@@ -15,6 +15,7 @@
     <string name="tab_search">検索</string>
     <string name="tab_downloads">ダウンロード</string>
     <string name="tab_library">ライブラリ</string>
+    <string name="tab_playlist">プレイリスト</string>
     <string name="tab_now_plaing">プレイ中</string>
     <string name="tab_settings">設定</string>
     <string name="message_please_wait">お待ちください…</string>
@@ -45,5 +46,15 @@
     <string name="edit_mp3_cancel">キャンセル</string>
     <string name="add_new_folder">新しいフォルダを追加します。</string>
     <string name="add_folder">フォルダの追加</string>
+    <string name="play">遊ぶ</string>
+    <string name="pause">一時停止</string>
+    <string name="next">次</string>
+    <string name="close">クローズ</string>
+    <string name="playlist">プレイリスト</string>
+    <string name="add_to_playlist">プレイリストに追加</string>
+    <string name="last_played_playlist">最近再生したプレイリスト</string>
+    <string name="create_new_playlist">プレイリストを作成する</string>
+    <string name="all_playlists">すべてのプレイリスト</string>
+    <string name="create">作る</string>
 
 </resources>

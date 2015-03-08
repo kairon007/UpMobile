@@ -15,6 +15,7 @@
     <string name="tab_search">搜索</string>
     <string name="tab_downloads">下载</string>
     <string name="tab_library">音乐库</string>
+    <string name="tab_playlist">播放列表</string>
     <string name="tab_now_plaing">现在玩</string>
     <string name="message_please_wait">请等待...</string>
     <string name="message_loading">下载中...</string>
@@ -44,5 +45,15 @@
     <string name="edit_mp3_cancel">取消</string>
     <string name="add_new_folder">添加新的文件夾</string>
     <string name="add_folder">添加文件夾</string>
+    <string name="play">玩</string>
+    <string name="pause">暂停</string>
+    <string name="next">接下来的</string>
+    <string name="close">近</string>
+    <string name="playlist">播放列表</string>
+    <string name="add_to_playlist">添加到播放列表</string>
+    <string name="last_played_playlist">最近播放的播放列表</string>
+    <string name="create_new_playlist">创建播放列表</string>
+    <string name="all_playlists">所有播放列表</string>
+    <string name="create">创建</string>
 
 </resources>

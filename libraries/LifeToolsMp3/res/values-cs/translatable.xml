@@ -13,6 +13,7 @@
     <string name="rate_no">Ne</string>
     <string name="rate_thanks">Děkujeme Vám!</string>
     <string name="tab_search">Vyhledávání</string>
+    <string name="tab_playlist">Playlist</string>
     <string name="tab_downloads">Stahování</string>
     <string name="tab_library">Knihovna</string>
     <string name="tab_now_plaing">Právě hraje</string>
@@ -47,5 +48,15 @@
     <string name="library_empty">Seznam knihovny je prázdný</string>
     <string name="add_new_folder">Přidat novou složku</string>
     <string name="add_folder">Přidat složku</string>
+    <string name="play">Hrát</string>
+    <string name="pause">Pauza</string>
+    <string name="next">Další</string>
+    <string name="close">Zavřít</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Přidat do playlistu</string>
+    <string name="last_played_playlist">Nedávno hrál playlist</string>
+    <string name="create_new_playlist">vytvoření seznamu skladeb</string>
+    <string name="all_playlists">Všechny seznamy skladeb</string>
+    <string name="create">Vytvořit</string>
 
 </resources>

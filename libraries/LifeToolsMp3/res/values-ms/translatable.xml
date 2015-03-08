@@ -15,6 +15,7 @@
     <string name="tab_search">Cari</string>
     <string name="tab_downloads">Muat Turun</string>
     <string name="tab_library">Pustaka</string>
+    <string name="tab_playlist">Senarai Main</string>
     <string name="tab_now_plaing">Sekarang bermain</string>
     <string name="tab_settings">Tetapan</string>
     <string name="message_please_wait">Sila Tunggu...</string>
@@ -45,5 +46,15 @@
     <string name="edit_mp3_cancel">Batal</string>
     <string name="add_new_folder">Tambah folder baru</string>
     <string name="add_folder">Tambah folder</string>
+    <string name="play">Main</string>
+    <string name="pause">Jeda</string>
+    <string name="next">Seterusnya</string>
+    <string name="close">Tutup</string>
+    <string name="playlist">Senarai Main</string>
+    <string name="add_to_playlist">Tambah ke Senarai Main</string>
+    <string name="last_played_playlist">Baru-baru ini memainkan senarai main</string>
+    <string name="create_new_playlist">Buat senarai main</string>
+    <string name="all_playlists">Semua senarai main</string>
+    <string name="create">Buat</string>
 
 </resources>
