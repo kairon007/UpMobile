@@ -225,15 +225,10 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 				        int[] screen_location = new int[2];
 				        View view = v.findViewById(R.id.item_image);
 				        view.getLocationOnScreen(screen_location);
-				        Bundle bundle = new Bundle();
-				        bundle.putParcelable(Constants.KEY_SELECTED_SONG, item);
-				        bundle.putInt(PACKAGE + ".left", screen_location[0]);
-				        bundle.putInt(PACKAGE + ".top", screen_location[1]);
-				        bundle.putInt(PACKAGE + ".width", view.getWidth());
-				        bundle.putInt(PACKAGE + ".height", view.getHeight());
-						PlayerFragment playerFragment = new PlayerFragment();
-						playerFragment.setArguments(bundle);
-						((MainActivity) v.getContext()).changeFragment(playerFragment);
+						if (service.isPlaying() && service.getPlayingSong().equals(item)) return true;
+						((MainActivity) getContext()).showPlayerElement();
+						((MainActivity) getContext()).startSong(item);
+						frontView.setBackgroundColor(getContext().getResources().getColor(R.color.white_transparent));
 						break;
 					case MotionEvent.ACTION_CANCEL:
 						frontView.setBackgroundColor(getContext().getResources().getColor(R.color.white_transparent));
