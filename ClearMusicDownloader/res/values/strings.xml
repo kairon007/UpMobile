@@ -11,6 +11,7 @@
     <string-array name="titles">
         <item>@string/tab_search</item>
         <item>@string/tab_downloads</item>
+        <item>@string/tab_playlist</item>
         <item>@string/tab_library</item>
         <item>@string/tab_now_plaing</item>
         <item>@string/tab_settings</item>

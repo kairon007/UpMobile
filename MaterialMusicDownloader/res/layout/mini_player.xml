@@ -75,12 +75,13 @@
                         android:visibility="gone" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
-                <ProgressBar
+                <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
                     android:id="@+id/mini_player_progress"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
-                    />
+                    android:background="@color/main_color_accent" />
+
             </FrameLayout>
         </LinearLayout>
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>

@@ -20,6 +20,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -28,7 +29,6 @@ import android.os.Environment;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -106,7 +106,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 					}
 				} else {
 					isEnabledFilter = false;
-					changeFragment(new SearchFragment(query));
+					changeFragment(new SearchFragment(query), false);
 					searchView.setIconified(true);
 					searchView.setIconified(true);
 				}
@@ -132,7 +132,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	    switch(item.getItemId()) {
-
         case R.id.action_search:
             searchView.setIconified(false);// to Expand the SearchView when clicked
             return true;
@@ -166,16 +165,16 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
-	        changeFragment(new SearchFragment());
+	        changeFragment(new SearchFragment(), false);
 			break;
 		case DOWNLOADS_FRAGMENT:
-	        changeFragment(new DownloadsFragment());
+	        changeFragment(new DownloadsFragment(), false);
 			break;
 		case LIBRARY_FRAGMENT:
-	        changeFragment(new LibraryFragment());
+	        changeFragment(new LibraryFragment(), false);
 			break;
 		case PLAYLIST_FRAGMENT:
-			changeFragment(new PlaylistFragment());
+			changeFragment(new PlaylistFragment(), false);
 			break;
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
@@ -192,7 +191,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 					args = null;
 				}
 		    	fragment.setArguments(args);
-		    	changeFragment(fragment);
+		    	changeFragment(fragment, true);
 		    }
 			break;
 		case SETTINGS_FRAGMENT:
@@ -220,12 +219,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		}
 	}
 	
-	public void changeFragment(Fragment targetFragment) {
+	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
 		isVisibleSearchView = targetFragment.getClass() != SearchFragment.class;
 		currentTag = targetFragment.getClass().getSimpleName();
-		getFragmentManager()
-		.beginTransaction()
-		.replace(R.id.main_fragment, targetFragment, currentTag)
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		if (isAnimate) {
+			transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_down, R.anim.slide_out_down);
+		}
+		transaction.replace(R.id.main_fragment, targetFragment, currentTag)
 		.addToBackStack(targetFragment.getClass().getSimpleName())
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 		.commit();
@@ -280,7 +281,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	@Override
 	protected int getMiniPlayerID() {
-		showPlayerElement(true);
 		return R.id.mini_player;
 	}
 
