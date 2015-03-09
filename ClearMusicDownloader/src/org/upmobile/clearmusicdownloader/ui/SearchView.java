@@ -2,13 +2,11 @@ package org.upmobile.clearmusicdownloader.ui;
 
 import java.util.ArrayList;
 
-import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
-import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -17,7 +15,6 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
