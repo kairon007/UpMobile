@@ -214,11 +214,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private int getResIdFromAttribute(final Activity activity, final int attr) {
-		android.util.Log.d("logd", "getResIdFromAttribute: " + attr);
 		if (attr == 0) return 0;
 		final TypedValue typedvalueattr = new TypedValue();
 		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
-		android.util.Log.d("logd", "getResIdFromAttribute: " + typedvalueattr.resourceId + " - " +R.drawable.ic_media_repeat_on_light + " - " + R.drawable.ic_media_repeat_on);
 		return typedvalueattr.resourceId;
 	}
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
@@ -83,7 +84,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		}
 		fileObserver.startWatching();
 		
-//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override
@@ -99,7 +100,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
     			String lastFragmentName = backEntry.getName();
 				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-					android.util.Log.d("logks", "curr tad = " + currentTag);
 					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(currentTag);
 					if (fragment.isVisible()) {
 						if ("".equals(query)) {
