@@ -150,6 +150,9 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private void showMiniPlayer(boolean isShow, final boolean isShift) {
 		View view = findViewById(getMiniPlayerID());
 		if (null == view) return;
+		if (!isMiniPlayerPrepared && service.isPlaying()) {
+			isMiniPlayerPrepared = !isMiniPlayerPrepared;
+		}
 		if (isShow && isMiniPlayerPrepared) {
 			if ((view.getVisibility() == View.VISIBLE) && !isShift) return;
 			Animation slideUp = AnimationUtils.loadAnimation(this, isShift ? R.anim.slide_down : R.anim.slide_up);
