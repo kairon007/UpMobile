@@ -28,15 +28,17 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity)getActivity()).setDrawerEnabled(true);
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
+		libraryView.onResume();
 		super.onResume();
 	}
 	
 	@Override
 	public void onPause() {
 		clearFilter();
+		libraryView.onPause();
 		super.onPause();
 	}
-
+	
 	@Override
 	public int getDrawerIcon() {
 		return R.string.font_musics;

@@ -24,7 +24,14 @@ public class LibraryFragment extends Fragment {
 	public void onResume() {
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setSelectedItem(Constants.LIBRARY_FRAGMENT);
+		libraryView.onResume();
 		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		libraryView.onPause();
+		super.onPause();
 	}
 
 	public void setFilter(String filter) {

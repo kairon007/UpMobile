@@ -1,7 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
@@ -11,6 +11,9 @@ import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -32,17 +35,14 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private TextView emptyMessage;
 	private Handler uiHandler;
 	private String filterQuery = "";
+	private CheckRemovedFiles checkRemovedFiles;
 	private ContentObserver observer = new ContentObserver(null) {
 
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
 			ArrayList<MusicData> list = querySong();
-			customList(list);
-			Message msg = new Message();
-			msg.what = MSG_FILL_ADAPTER;
-			msg.obj = list;
-			uiHandler.sendMessage(msg);
+			fillAdapter(list);
 		}
 
 		@Override
@@ -50,27 +50,39 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			super.onChange(selfChange, uri);
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
 				ArrayList<MusicData> list = querySong();
-				customList(list);
-				Message msg = new Message();
-				msg.what = MSG_FILL_ADAPTER;
-				msg.obj = list;
-				uiHandler.sendMessage(msg);
+				fillAdapter(list);
 			}
-		};
-
-		private void customList(ArrayList<MusicData> list) {
-			if (getService().getPlayingPosition() >= 0 && getService().isPlaying() && getService().getPlayingSong().getClass() == MusicData.class) {
-				int i = getService().getPlayingPosition();
-				list.get(i).turnOn(MusicData.MODE_PLAYING);
-			}
-		};
+		}
 	};
 	
+	private void fillAdapter(ArrayList<MusicData> list) {
+		Message msg = new Message();
+		msg.what = MSG_FILL_ADAPTER;
+		msg.obj = list;
+		uiHandler.sendMessage(msg);
+	};
+
 	protected abstract BaseAbstractAdapter<MusicData> getAdapter();
 	protected abstract ListView getListView(View view);
 	protected abstract TextView getMessageView(View view);
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
+	
+	protected void onPause() {
+		if (null != checkRemovedFiles) {
+			checkRemovedFiles.cancel(true);
+		}
+	}
+	
+	protected void onResume() {
+		if (checkRemovedFiles.getStatus() != Status.PENDING || checkRemovedFiles.getStatus() != Status.RUNNING) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				checkRemovedFiles.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				checkRemovedFiles.execute();
+			}
+		}
+	}
 	
 	protected void specialInit(View view) { }
 	
@@ -103,8 +115,9 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			listView.setAdapter(adapter);
 			animateListView(listView, adapter);
 		}
+		checkRemovedFiles = new CheckRemovedFiles(srcList);
 	}
-	
+
 	public View getView() {
 		return view;
 	}
@@ -181,5 +194,40 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 
 	protected void animateListView(ListView listView, BaseAbstractAdapter<MusicData> adapter) {
 		//Animate ListView in childs, if need
+	}
+	
+	private class CheckRemovedFiles extends AsyncTask<Void, Void, ArrayList<MusicData>> {
+		
+
+		private ArrayList<MusicData> srcList;
+
+		public CheckRemovedFiles(ArrayList<MusicData> srcList) {
+			this.srcList = srcList;
+		}
+
+		@Override
+		protected ArrayList<MusicData> doInBackground(Void... params) {
+			ArrayList<MusicData> badFiles = new ArrayList<MusicData>();
+			for (MusicData data : srcList) {
+				if (!new File(data.getPath()).exists()) {
+					badFiles.add(data);
+				}
+			}
+			for (MusicData musicData : badFiles) {
+				if (isCancelled()) return null;
+				srcList.remove(musicData);
+				musicData.reset(getContext());
+			}
+			return srcList;
+		}
+		
+		@Override
+		protected void onPostExecute(ArrayList<MusicData> result) {
+			if (null != result) {
+				fillAdapter(result);
+			}
+			super.onPostExecute(result);
+		}
+		
 	}
 }
