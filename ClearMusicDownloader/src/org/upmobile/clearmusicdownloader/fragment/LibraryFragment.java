@@ -19,5 +19,17 @@ public class LibraryFragment extends Fragment {
 		((MainActivity) getActivity()).showTopFrame();
 		return libraryView.getView();
 	}
+	
+	@Override
+	public void onResume() {
+		libraryView.onResume();
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		libraryView.onPause();
+		super.onPause();
+	}
 
 }

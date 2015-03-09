@@ -9,7 +9,6 @@ import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -183,5 +182,14 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 
 		}
 	}
-
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
 }

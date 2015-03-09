@@ -42,7 +42,7 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected void showPlayerFragment(MusicData data) {
 		((MainActivity) getContext()).showPlayerElement(true);
-		((MainActivity) getContext()).startSong(data);;
+		((MainActivity) getContext()).startSong(data);
 	}
 
 	@Override

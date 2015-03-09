@@ -43,4 +43,14 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	protected TextView getMessageView(View view) {
 		return (TextView) view.findViewById(R.id.message_listview);
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
 }
