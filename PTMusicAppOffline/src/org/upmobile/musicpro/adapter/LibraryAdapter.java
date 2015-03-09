@@ -68,6 +68,11 @@ public class LibraryAdapter extends BaseAbstractAdapter<MusicData> {
 		public void update(AbstractSong song) {
 			
 		}
+
+		@Override
+		public void stopPressed() {
+			
+		}
 		
 	};
 
