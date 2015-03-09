@@ -189,6 +189,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					findViewById(getMiniPlayerID()).setVisibility(View.GONE);
+					isMiniPlayerPrepared = false;
 				}
 			});
 			view.setAnimation(slideDown);
