@@ -146,7 +146,6 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 	@Override
 	public void onBackPressed() {
 		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[4].getClass().getSimpleName())){
-			System.out.println("!!! IF");
 			getFragmentManager().popBackStack();
 			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
@@ -154,7 +153,6 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			String title = getNameCurrentFragment(lastFragmentName);
 			tvTitle.setText(title);
 		} else {
-			System.out.println("!!! ELSE");
 			stopChildsServices();
 			finish();
 		}
