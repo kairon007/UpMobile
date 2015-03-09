@@ -104,9 +104,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player.addStatePlayerListener(this);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
+			if (song.equals(player.getPlayingSong()) && player.isPlaying()) {
 				player.play();
-			} else {
+			} else if (!song.equals(player.getPlayingSong())){
 				player.play(song);
 			}
 			((MainActivity) getActivity()).setDrawerEnabled(false);
