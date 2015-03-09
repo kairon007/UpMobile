@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingTop="10dp"
-        android:src="@drawable/ic_keyboard_arrow_down_white_18dp"
+        android:src="?attr/groupIndicator"
         android:visibility="visible" />
 
     <TextView

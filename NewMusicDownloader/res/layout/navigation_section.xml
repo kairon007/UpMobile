@@ -2,13 +2,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@android:color/black" >
+    android:background="?attr/sectionBackground" >
 
     <TextView
         android:id="@+id/section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Section"
-        android:textColor="@android:color/white" />
+        android:textColor="?attr/textViewColor" />
 
 </LinearLayout>

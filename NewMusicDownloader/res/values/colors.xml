@@ -5,5 +5,8 @@
     <color name="holo_button_highlight_low">#5533b5e5</color>
     <color name="nowplaying_secondary_text">#ff868686</color>
     <color name="background_holo_dark">#ff000000</color>
+    <color name="background_driver_dark"> #303030</color>
+    <color name="background_driver_light"> #ffffff</color>
+    <color name="light_grey">#ebebeb</color>
 
 </resources>

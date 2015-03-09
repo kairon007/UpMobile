@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="fragment_text">
         <item name="android:textColor">#ffacacac</item>
@@ -8,12 +8,89 @@
 
     <style name="AppTheme" parent="android:Theme.Holo">
         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
+        <item name="lyricsIndicator">@drawable/ic_player_lyrics</item>
+        <item name="editIndicator">@drawable/ic_player_edit</item>
+        <item name="textViewColor">@android:color/white</item>
+        <item name="driverBackgroundColor">@color/background_driver_dark</item>
+        <item name="searchBackgroundColor">@drawable/search_background</item>
+        <item name="mainBackground">@android:color/transparent</item>
+        <item name="sectionBackground">@android:color/black</item>
+        <item name="blackWhite">@android:color/white</item>
+        <item name="groupIndicator">@drawable/ic_keyboard_arrow_down_white_18dp</item>
+        <item name="mediaPlay">@drawable/ic_media_play</item>
+        <item name="mediaPause">@drawable/ic_media_pause</item>
+        <item name="mediaNext">@drawable/ic_media_next</item>
+        <item name="mediaPrevious">@drawable/ic_media_previous</item>
+        <item name="mediaShuffle">@drawable/ic_media_shuffle</item>
+        <item name="mediaRepeat">@drawable/ic_media_repeat</item>
+        <item name="mediaShuffleOn">@drawable/ic_media_shuffle_on</item>
+        <item name="mediaRepeatOn">@drawable/ic_media_repeat_on</item>
+        <item name="mediaStop">@drawable/ic_media_stop</item>
+        <item name="actionVolume">@drawable/ic_action_volume</item>
     </style>
-    
+
+    <style name="AppThemeWhite" parent="android:Theme.Holo.Light">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
+        <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
+        <item name="editIndicator">@drawable/ic_player_edit_black</item>
+        <item name="textViewColor">@android:color/black</item>
+        <item name="driverBackgroundColor">@color/background_driver_light</item>
+        <item name="searchBackgroundColor">@drawable/search_background_white</item>
+        <item name="mainBackground">@android:color/white</item>
+        <item name="sectionBackground">@color/light_grey</item>
+        <item name="blackWhite">@android:color/black</item>
+        <item name="groupIndicator">@drawable/ic_keyboard_arrow_down_black_18dp</item>
+        <item name="mediaPlay">@drawable/ic_media_play_light</item>
+        <item name="mediaPause">@drawable/ic_media_pause_light</item>
+        <item name="mediaNext">@drawable/ic_media_next_light</item>
+        <item name="mediaPrevious">@drawable/ic_media_previous_light</item>
+        <item name="mediaShuffle">@drawable/ic_media_shuffle_light</item>
+        <item name="mediaRepeat">@drawable/ic_media_repeat_light</item>
+        <item name="mediaShuffleOn">@drawable/ic_media_shuffle_on_light</item>
+        <item name="mediaRepeatOn">@drawable/ic_media_repeat_on_light</item>
+        <item name="mediaStop">@drawable/ic_media_stop_light</item>
+        <item name="actionVolume">@drawable/ic_action_volume_light</item>
+    </style>
+
+    <style name="AppThemeWhite.BlackActionBar" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
+        <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
+        <item name="editIndicator">@drawable/ic_player_edit_black</item>
+        <item name="textViewColor">@android:color/black</item>
+        <item name="driverBackgroundColor">@color/background_driver_light</item>
+        <item name="searchBackgroundColor">@drawable/search_background_white</item>
+        <item name="mainBackground">@android:color/white</item>
+        <item name="sectionBackground">@color/light_grey</item>
+        <item name="blackWhite">@android:color/black</item>
+        <item name="groupIndicator">@drawable/ic_keyboard_arrow_down_black_18dp</item>
+        <item name="mediaPlay">@drawable/ic_media_play_light</item>
+        <item name="mediaPause">@drawable/ic_media_pause_light</item>
+        <item name="mediaNext">@drawable/ic_media_next_light</item>
+        <item name="mediaPrevious">@drawable/ic_media_previous_light</item>
+        <item name="mediaShuffle">@drawable/ic_media_shuffle_light</item>
+        <item name="mediaRepeat">@drawable/ic_media_repeat_light</item>
+        <item name="mediaShuffleOn">@drawable/ic_media_shuffle_on_light</item>
+        <item name="mediaRepeatOn">@drawable/ic_media_repeat_on_light</item>
+        <item name="mediaStop">@drawable/ic_media_stop_light</item>
+        <item name="actionVolume">@drawable/ic_action_volume_light</item>
+    </style>
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/TitleBarTextColor</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="TitleBarTextColor" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
     <style name="myPopupMenuStyle" parent="@android:style/Widget.Holo.PopupMenu">
-         <item name="android:textColor">@android:color/white</item>
-         <item name="android:background">@android:color/black</item>
-         <item name="android:popupBackground">@drawable/background_holo_dark</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@android:color/black</item>
+        <item name="android:popupBackground">@android:color/white</item>
     </style>
 
     <style name="AppThemeTrans" parent="@style/AppTheme">

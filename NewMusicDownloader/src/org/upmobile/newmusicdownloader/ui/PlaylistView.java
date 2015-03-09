@@ -52,6 +52,12 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected Object[] groupItems() {
-		return new Object[]{BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_down_white_18dp),BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_up_white_18dp)};
+		if (!((MainActivity) getContext()).isWhiteTheme(getContext())) {
+			return new Object[] { BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_down_white_18dp),
+								  BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_up_white_18dp) };
+		} else {
+			return new Object[] { BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_down_black_18dp),
+								  BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_up_black_18dp) };
+		}
 	}
 }

@@ -20,6 +20,7 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,6 +33,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -200,15 +202,24 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void setImageButton() {
 		if(!player.enabledRepeat()) {
-			repeat.setImageResource(R.drawable.ic_media_repeat);
+			repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
 		} else {
-			repeat.setImageResource(R.drawable.ic_media_repeat_on);
+			repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeatOn));
 		}
 		if (player.enabledShuffle()) {
-			shuffle.setImageResource(R.drawable.ic_media_shuffle_on);
+			shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffle));
 		} else {
-			shuffle.setImageResource(R.drawable.ic_media_shuffle);
+			shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffle));
 		}
+	}
+	
+	private int getResIdFromAttribute(final Activity activity, final int attr) {
+		android.util.Log.d("logd", "getResIdFromAttribute: " + attr);
+		if (attr == 0) return 0;
+		final TypedValue typedvalueattr = new TypedValue();
+		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
+		android.util.Log.d("logd", "getResIdFromAttribute: " + typedvalueattr.resourceId + " - " +R.drawable.ic_media_repeat_on_light + " - " + R.drawable.ic_media_repeat_on);
+		return typedvalueattr.resourceId;
 	}
 
 	private final BroadcastReceiver volumeReceiver = new BroadcastReceiver() {
@@ -277,12 +288,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
 		if (isPlaying) {
-			play.setImageResource(R.drawable.ic_media_play);
+			play.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaPlay));
 		} else {
-			play.setImageResource(R.drawable.ic_media_pause);
+			play.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaPause));
 		}
 	}
-	
 	
 	private void init() {
 		play = (ImageButton) parentView.findViewById(R.id.playpause);
@@ -374,16 +384,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			break;
 		case R.id.repeat:
 			if (!player.offOnRepeat()){
-				repeat.setImageResource(R.drawable.ic_media_repeat);
+				repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
 			} else {
-				repeat.setImageResource(R.drawable.ic_media_repeat_on);
+				repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeatOn));
 			}
 			break;
 		case R.id.shuffle:
 			if (player.offOnShuffle()) {
-				shuffle.setImageResource(R.drawable.ic_media_shuffle_on);
+				shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffleOn));
 			} else {
-				shuffle.setImageResource(R.drawable.ic_media_shuffle);
+				shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffle));
 			}
 			break;
 		case R.id.stop:

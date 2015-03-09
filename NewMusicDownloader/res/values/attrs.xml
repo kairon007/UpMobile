@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="customAttrs">
+        <attr name="lyricsIndicator" format="reference" />
+        <attr name="editIndicator" format="reference" />
+        <attr name="textViewColor" format="reference" />
+        <attr name="driverBackgroundColor" format="reference" />
+        <attr name="searchBackgroundColor" format="reference" />
+        <attr name="mainBackground" format="reference" />
+        <attr name="sectionBackground" format="reference" />
+        <attr name="blackWhite" format="reference" />
+        <attr name="groupIndicator" format="reference" />
+        <attr name="mediaPlay" format="reference" />
+        <attr name="mediaPause" format="reference" />
+        <attr name="mediaNext" format="reference" />
+        <attr name="mediaPrevious" format="reference" />
+        <attr name="mediaShuffle" format="reference" />
+        <attr name="mediaRepeatOn" format="reference" />
+        <attr name="mediaShuffleOn" format="reference" />
+        <attr name="mediaRepeat" format="reference" />
+        <attr name="mediaStop" format="reference" />
+        <attr name="actionVolume" format="reference" />
+    </declare-styleable>
+
+</resources>

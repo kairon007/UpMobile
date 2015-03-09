@@ -58,7 +58,7 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
-                android:background="@drawable/search_background"
+                android:background="?attr/searchBackgroundColor"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -85,7 +85,7 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="50dp"
                             android:singleLine="true"
-                            android:textColor="@android:color/white" />
+                            android:textColor="?attr/textViewColor" />
 
                         <ImageButton
                             android:id="@+id/clear"
@@ -119,7 +119,7 @@
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:popupBackground="@android:color/black"
+                    android:popupBackground="?attr/searchBackgroundColor"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
         </LinearLayout>

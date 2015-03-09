@@ -4,17 +4,17 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
-import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmusicdownloader.fragment.NavigationDrawerFragment;
+import org.upmobile.newmusicdownloader.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.newmusicdownloader.fragment.SearchFragment;
-import org.upmobile.newmusicdownloader.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -24,6 +24,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -31,6 +33,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +43,8 @@ import android.widget.SearchView.OnQueryTextListener;
 
 public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
 
+	private final String APP_THEME_WHITE_BLACK_ACTION_BAR = "AppThemeWhite.BlackActionBar";
+	private final String APP_THEME_WHITE = "AppThemeWhite";
 	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
@@ -78,7 +83,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		}
 		fileObserver.startWatching();
 		
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override
@@ -300,4 +305,17 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
     	fragment.setArguments(args);
     	changeFragment(fragment, true);
 	}
+	
+	public boolean isWhiteTheme(Context context) {
+		    PackageInfo packageInfo;
+		    try {
+		        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+		        int themeResId = packageInfo.applicationInfo.theme;
+		        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE) || context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR);
+		    } catch (Exception e) {
+		    	Log.e(Util.class.getSimpleName(), e.getMessage());
+		        return false;
+		    }
+	}
+
 }
