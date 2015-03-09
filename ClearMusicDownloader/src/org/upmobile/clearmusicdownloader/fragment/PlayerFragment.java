@@ -213,9 +213,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
-			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
+			if (song.equals(player.getPlayingSong()) && player.isPlaying()) {
 				player.play();
-			} else {
+			} else if (!song.equals(player.getPlayingSong())){
 				play(0);
 			}
 		} else {
@@ -718,6 +718,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
 		} else {
+			android.util.Log.d("logks", "!!!!!!!!!!!!!!!");
 			player.play(song);
 		}
 	}

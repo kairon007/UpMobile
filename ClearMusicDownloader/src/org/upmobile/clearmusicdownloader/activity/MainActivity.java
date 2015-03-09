@@ -40,7 +40,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	private static final int PLAYER_FRAMGNET = 4;
 	private static final int SETTINGS_FRAGMENT = 5;
 	
-	private final String ARRAY_SAVE = "extras_array_save";
 	private Fragment[] fragments;
 	private ResideMenuItem[] items;
 	private String[] titles;
@@ -141,8 +140,8 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			Bundle args = new Bundle();
 			args.putParcelable(Constants.KEY_SELECTED_SONG, (MusicData) service.getPlayingSong());
 			return args;
-		} else
-			return null;
+		}
+		return null;
 	}
 	
 	public void setCoverHelper(boolean val) {
