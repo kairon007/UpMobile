@@ -71,16 +71,17 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	protected void onPause() {
 		if (null != checkRemovedFiles) {
 			checkRemovedFiles.cancel(true);
+			checkRemovedFiles = null;
 		}
 	}
 	
 	protected void onResume() {
-		if (checkRemovedFiles.getStatus() != Status.PENDING || checkRemovedFiles.getStatus() != Status.RUNNING) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				checkRemovedFiles.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			} else {
-				checkRemovedFiles.execute();
-			}
+		checkRemovedFiles = new CheckRemovedFiles(adapter.getAll());
+		if (checkRemovedFiles.getStatus() == Status.RUNNING) return;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			checkRemovedFiles.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		} else {
+			checkRemovedFiles.execute();
 		}
 	}
 	
@@ -109,7 +110,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			listView.setAdapter(adapter);
 			animateListView(listView, adapter);
 		}
-		checkRemovedFiles = new CheckRemovedFiles(srcList);
 	}
 
 	public View getView() {
