@@ -561,4 +561,9 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		((MainActivity) mContext).finish();
 	}
 
+	@Override
+	public void stopPressed() {
+		
+	}
+
 }

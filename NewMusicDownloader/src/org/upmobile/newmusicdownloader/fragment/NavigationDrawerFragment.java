@@ -1,4 +1,4 @@
-package org.upmobile.newmusicdownloader.ui;
+package org.upmobile.newmusicdownloader.fragment;
 
 
 import java.util.ArrayList;
@@ -147,7 +147,8 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
                 if (!isAdded()) {
                     return;
                 }
-                mDrawerListView.setItemChecked(mCurrentSelectedPosition, mCurrentSelectedPosition != SETTINGS_FRAGMENT);
+                boolean settingIsVisile = isVisibleSettings();
+                mDrawerListView.setItemChecked(mCurrentSelectedPosition, !isVisibleSettings());
                 if (!mUserLearnedDrawer) {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
                     // the navigation drawer automatically in the future.
@@ -157,6 +158,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
                 }
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
+
         };
         
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
@@ -179,7 +181,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, position != SETTINGS_FRAGMENT);
+            mDrawerListView.setItemChecked(position, !isVisibleSettings());
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
@@ -248,8 +250,13 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     }
     
     public void setSelectedItem(int position){
+    	mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, position != SETTINGS_FRAGMENT);
+            mDrawerListView.setItemChecked(position, !isVisibleSettings());
         }
     }
+    
+    private boolean isVisibleSettings() {
+		return mCurrentSelectedPosition == SETTINGS_FRAGMENT || mCurrentSelectedPosition == 6;
+	}
 }

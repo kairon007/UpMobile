@@ -8,11 +8,11 @@ import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.newmusicdownloader.fragment.NavigationDrawerFragment;
 import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.newmusicdownloader.fragment.SearchFragment;
-import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment;
-import org.upmobile.newmusicdownloader.ui.NavigationDrawerFragment.NavigationDrawerCallbacks;
+import org.upmobile.newmusicdownloader.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
@@ -181,16 +181,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			String lastFragmentName = backEntry.getName();
 		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
 		    	Fragment fragment = new PlayerFragment();
-		    	Bundle args = new Bundle();
 		    	if (null == service) {
 		    		service = PlaybackService.get(this);
 		    	}
-		    	if (null != service.getPlayingSong()) {
-					args.putParcelable(Constants.KEY_SELECTED_SONG, service.getPlayingSong());
-				} else {
-					args = null;
-				}
-		    	fragment.setArguments(args);
 		    	changeFragment(fragment, true);
 		    }
 			break;
@@ -291,6 +284,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	@Override
 	protected void showPlayerFragment() {
-		onNavigationDrawerItemSelected(PLAYER_FRAGMENT);
+		showMiniPlayer(false);
+		Fragment fragment = new PlayerFragment();
+    	Bundle args = new Bundle();
+    	if (null != service.getPlayingSong()) {
+			args.putParcelable(Constants.KEY_SELECTED_SONG, service.getPlayingSong());
+		} else {
+			args = null;
+		}
+    	fragment.setArguments(args);
+    	changeFragment(fragment, true);
 	}
 }

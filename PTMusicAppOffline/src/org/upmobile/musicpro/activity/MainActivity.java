@@ -215,6 +215,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		public void error() {
 			
 		}
+
+		@Override
+		public void stopPressed() {
+			
+		}
 		
 	};
 

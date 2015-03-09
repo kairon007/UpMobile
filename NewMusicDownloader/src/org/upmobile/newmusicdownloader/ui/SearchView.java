@@ -53,7 +53,7 @@ public class SearchView extends OnlineSearchView {
 			service.setArrayPlayback(list);
 		} 
 		((MainActivity) getContext()).showPlayerElement(true);
-		((MainActivity)getContext()).setSelectedItem(Constants.SEARCH_FRAGMENT);
+//		((MainActivity)getContext()).setSelectedItem(Constants.SEARCH_FRAGMENT);
 		try {
 			((MainActivity) getContext()).startSong(((Song) getResultAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
