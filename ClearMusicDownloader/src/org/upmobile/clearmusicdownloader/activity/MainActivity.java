@@ -155,7 +155,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	protected Fragment getPlayerFragment() {
-		return new PlayerFragment();
+		return fragments[PLAYER_FRAMGNET];
 	}
 	
 	public void setResideMenuListener(ResideMenu.OnMenuListener listener) {
@@ -192,7 +192,9 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	@Override
 	protected void showPlayerFragment() {
-		changeFragment(fragments[PLAYER_FRAMGNET]);
+		Fragment fragment = getPlayerFragment();
+		fragment.setArguments(getArguments());
+		changeFragment(fragment);
 	}
 	
 	@Override

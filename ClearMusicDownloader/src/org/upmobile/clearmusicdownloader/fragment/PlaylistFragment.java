@@ -1,5 +1,6 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.ui.PlaylistView;
 
 import android.app.Fragment;
@@ -15,6 +16,7 @@ public class PlaylistFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		playlistView = new PlaylistView(getActivity().getLayoutInflater());
+		((MainActivity) getActivity()).showTopFrame();
 		return playlistView.getView();
 	}
 
