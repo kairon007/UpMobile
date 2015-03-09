@@ -102,9 +102,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         			return;
         		}
         		if (fragments[i].getClass().getSimpleName().equals("PlayerFragment") && null != getArguments()) {
-        			Fragment fragment = getPlayerFragment();
-        			fragment.setArguments(getArguments());
-        			changeFragment(fragment);
+        			changeFragment(getPlayerFragment());
         		} else {
         			changeFragment(fragments[i]);
         		}
