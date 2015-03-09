@@ -94,6 +94,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
     			String lastFragmentName = backEntry.getName();
 				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
+					android.util.Log.d("logks", "curr tad = " + currentTag);
 					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(currentTag);
 					if (fragment.isVisible()) {
 						if ("".equals(query)) {
@@ -270,6 +271,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	
 	public void setDrawerEnabled(boolean isEnabled) {
 		navigationDrawerFragment.setEnabled(isEnabled);
+	}
+	
+	public void setCurrentTag(String currentTag) {
+		this.currentTag = currentTag;
 	}
 
 	@Override

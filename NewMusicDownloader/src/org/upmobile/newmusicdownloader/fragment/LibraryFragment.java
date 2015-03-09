@@ -24,6 +24,7 @@ public class LibraryFragment extends Fragment {
 	public void onResume() {
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setSelectedItem(Constants.LIBRARY_FRAGMENT);
+		((MainActivity)	getActivity()).setCurrentTag(getClass().getSimpleName());
 		libraryView.onResume();
 		super.onResume();
 	}
