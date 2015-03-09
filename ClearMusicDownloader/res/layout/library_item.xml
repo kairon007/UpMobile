@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:enabled="false"
                 android:paddingLeft="8dp"
-                android:text="Removed"
+                android:text="@string/removed"
                 android:textColor="@android:color/white" >
             </TextView>
         </FrameLayout>
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="Cancel"
+                android:text="@string/download_dialog_cancel"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/white" />
         </FrameLayout>
@@ -59,28 +59,16 @@
         android:padding="4dp"
         android:visibility="visible" >
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <com.special.utils.UICircularImage
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/item_image"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_margin="8dp"
-                app:line_color="@color/theme_color"
-                app:line_color_press="@color/green"
-                app:line_width="1dp"
-                app:padding="0dp" />
-
-            <ImageButton
-                android:id="@+id/item_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/button_selector_inverse_light" />
-        </FrameLayout>
+        <com.special.utils.UICircularImage
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/item_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            app:line_color="@color/theme_color"
+            app:line_color_press="@color/green"
+            app:line_width="1dp"
+            app:padding="0dp" />
 
         <LinearLayout
             android:id="@+id/item_box_info"
@@ -140,13 +128,15 @@
 
         <ImageView
             android:id="@+id/threeDot"
-            android:layout_width="24dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/selectable_item_bg"
             android:clickable="true"
+            android:scaleType="centerInside"
             android:src="@drawable/threedot"
             android:visibility="visible" />
+
     </LinearLayout>
 
 </FrameLayout>

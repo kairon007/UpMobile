@@ -52,60 +52,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected void remove() {};
 	protected void setListener(ViewGroup parent, View view, final int position){ }
 	protected abstract void startSong(AbstractSong abstractSong);
-	
-	protected OnStatePlayerListener stateListener = new OnStatePlayerListener() {
-		
-		@Override
-		public void start(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			if (data != null) {
-				data.turnOn(MusicData.MODE_PLAYING);
-			}
-			notifyDataSetChanged();
-		}
 
-		@Override
-		public void play(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			if (data != null) {
-				data.turnOn(MusicData.MODE_PLAYING);
-			}
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void pause(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			if (data != null) {
-				data.turnOff(MusicData.MODE_PLAYING);
-			}
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void stop(AbstractSong song) {
-			if (song.getClass() != MusicData.class) return;
-			MusicData data = get(song);
-			if (data != null) {
-				data.turnOff(MusicData.MODE_PLAYING);
-			}
-			notifyDataSetChanged();
-		}
-		
-		@Override
-		public void stopPressed() {};
-
-		@Override
-		public void error() {}
-
-		@Override
-		public void update(AbstractSong song) {}
-		
-	};
-	
 	public BaseLibraryAdapter(Context context, int resource) {
 		super(context, resource);
 	}
@@ -169,7 +116,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	
 	protected void initService() {
 		service = PlaybackService.get(getContext());
-		service.addStatePlayerListener(stateListener);
 	}
 	
 	@SuppressLint("NewApi")

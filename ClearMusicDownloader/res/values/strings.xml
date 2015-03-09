@@ -19,4 +19,6 @@
 
     <string name="error_retrieving_the_url">An error occurred while retrieving the url of the song. Try to download another song</string>
 
+    <string name="removed">Removed</string>
+
 </resources>

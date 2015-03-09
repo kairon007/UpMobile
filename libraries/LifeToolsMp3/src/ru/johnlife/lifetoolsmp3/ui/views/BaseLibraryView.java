@@ -100,12 +100,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		ArrayList<MusicData> srcList = querySong();
 		init(inflater);
 		if (!srcList.isEmpty()) {
-			if (null != getService() && getService().isPlaying() && getService().getPlayingSong().getClass() == MusicData.class) {
-				int pos = getService().getPlayingPosition();
-				if (pos >= 0 && pos < srcList.size()) {
-					((MusicData) srcList.get(pos)).turnOn(MusicData.MODE_PLAYING);
-				}
-			}
 			emptyMessage.setVisibility(View.GONE);
 		} else {
 			emptyMessage.setVisibility(View.VISIBLE);

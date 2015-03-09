@@ -22,7 +22,6 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,10 +32,6 @@ import com.special.utils.UISwipableList.OnSwipableListener;
 public class LibraryAdapter extends BaseLibraryAdapter {
 	
 	private static final int DELAY = 5000;
-	private final int BTN_PLAY = R.drawable.play_white;
-	private final int BTN_PAUSE= R.drawable.pause_white;
-	private MusicData currentPlayData; 
-    private String PACKAGE = "IDENTIFY";
     private Timer timer;
 	private Animation anim;
 	private MusicData previous;
@@ -84,17 +79,6 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 		((MusicData) selected).turnOff(MusicData.MODE_VISIBLITY);
 	}
 	
-	public MusicData get(AbstractSong data) {
-		if (data == null) return null;
-		for (int i = 0; i < getCount(); i++) {
-			MusicData buf = (MusicData) getItem(i);
-			if (buf.equals(data)) {
-				return (MusicData) getItem(i);
-			}
-		}
-		return null;
-	}
-
 	public void cancelTimer() {
 		if (null != timer) {
 			timer.cancel();
@@ -159,13 +143,11 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 	private class LibraryViewHolder extends BaseLibraryViewHolder {
 		
 		private ViewGroup frontView;
-		private View button;
 		private LinearLayout hidenView;
 		private FrameLayout cancel;
 
 		public LibraryViewHolder(View v) {
 			frontView = (ViewGroup) v.findViewById(R.id.front_layout);
-			button = v.findViewById(R.id.item_play);
 			title = (TextView) v.findViewById(R.id.item_title);
 			artist = (TextView) v.findViewById(R.id.item_description);
 			cover = (UICircularImage) v.findViewById(R.id.item_image);
@@ -186,17 +168,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 				frontView.setX(startPosition);
 				hidenView.setVisibility(View.VISIBLE);
 			}
-			if (item.check(MusicData.MODE_PLAYING)) {
-				setButtonBackground(BTN_PAUSE);
-				currentPlayData = item;
-			} else {
-				setButtonBackground(BTN_PLAY);
-			}
 			setListener(item);
-		}
-
-		private void setButtonBackground(int resid) {
-			((ImageButton) button).setImageResource(resid);
 		}
 
 		private void setListener(final MusicData item) {
@@ -233,35 +205,6 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 						break;
 					}
 	  				return true;
-				}
-			});
-			button.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					if (service == null) {
-						initService();
-					}
-					if (!service.isCorrectlyState(MusicData.class, getCount())) {
-						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-						service.setArrayPlayback(list);
-					}
-					((MainActivity) getContext()).showPlayerElement();
-					service.play(item);
-					if (item.check(MusicData.MODE_PLAYING)) {
-						item.turnOff(MusicData.MODE_PLAYING);
-						setButtonBackground(BTN_PLAY);
-					} else {
-						if (!item.equals(currentPlayData)) {
-							if (null != currentPlayData) {
-								currentPlayData.turnOff(MusicData.MODE_PLAYING);
-							}
-							notifyDataSetChanged();
-						}
-						item.turnOn(MusicData.MODE_PLAYING);
-						currentPlayData = item;
-						setButtonBackground(BTN_PAUSE);
-					}
 				}
 			});
 			cancel.setOnClickListener(new OnClickListener() {
