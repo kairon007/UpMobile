@@ -13,6 +13,7 @@
         android:gravity="center"
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:text="@string/undo_deletion"
+        android:textSize="18dp"
         android:textColor="@color/main_color_grey_600" />
 
 </LinearLayout>
