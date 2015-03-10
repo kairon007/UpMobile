@@ -147,7 +147,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	}
 	
 	private void checkOnStart() {
-		if (service.isPlaying()) {
+		if (service.isPrepared()) {
 			runOnUiThread(new Runnable() {
 				
 				@Override
@@ -155,6 +155,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 					isMiniPlayerPrepared = true;
 					BaseMiniPlayerActivity.this.song = service.getPlayingSong();
 					showMiniPlayer(true);
+					setPlayPauseMini(!service.isPlaying());
 				}
 			});
 		}
