@@ -278,4 +278,8 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			cover.setImageBitmap(bmp);
 		}
 	}
+	
+	public boolean isMiniPlayerPrepared() {
+		return isMiniPlayerPrepared;
+	}
 }
