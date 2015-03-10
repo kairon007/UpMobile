@@ -70,7 +70,8 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			
 			@Override
 			public void update(AbstractSong song) {
-				setData(song);
+				BaseMiniPlayerActivity.this.song = song;
+				showMiniPlayer(true, true);
 			}
 			
 			@Override
@@ -152,9 +153,6 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private void showMiniPlayer(boolean isShow, final boolean isShift) {
 		View view = findViewById(getMiniPlayerID());
 		if (null == view) return;
-		if (!isMiniPlayerPrepared && service.isPrepared()) {
-			isMiniPlayerPrepared = !isMiniPlayerPrepared;
-		}
 		if (isShow && isMiniPlayerPrepared) {
 			if ((view.getVisibility() == View.VISIBLE) && !isShift) return;
 			Animation slideUp = AnimationUtils.loadAnimation(this, isShift ? R.anim.slide_down : R.anim.slide_up);
@@ -194,7 +192,6 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					findViewById(getMiniPlayerID()).setVisibility(View.GONE);
-					isMiniPlayerPrepared = false;
 				}
 			});
 			view.setAnimation(slideDown);
