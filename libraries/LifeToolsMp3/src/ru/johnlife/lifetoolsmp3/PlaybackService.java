@@ -137,7 +137,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			case TelephonyManager.CALL_STATE_IDLE:
 				boolean isAfterCall = (mode & SMODE_CALL_RINGING) == SMODE_CALL_RINGING;
 				boolean disabledDuringCall = (mode & SMODE_DISABLED_DURING_CALL) == SMODE_DISABLED_DURING_CALL;
-				if (isAfterCall && !disabledDuringCall) {
+				boolean unplugin = (mode & SMODE_UNPLUG_HEADPHONES) == SMODE_UNPLUG_HEADPHONES;
+				if (isAfterCall && !disabledDuringCall && !unplugin) {
 					buildSendMessage(playingSong, MSG_PLAY, 0, 0);
 					mode &= ~SMODE_CALL_RINGING;
 					mode &= ~SMODE_DISABLED_DURING_CALL;
