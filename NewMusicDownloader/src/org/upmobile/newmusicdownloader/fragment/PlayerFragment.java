@@ -338,7 +338,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			btnDownload.setVisibility(View.VISIBLE);
 		}
-		playerCover.setImageBitmap(song.getCover(getActivity()));
 		playerProgress.removeCallbacks(progressAction);
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());
