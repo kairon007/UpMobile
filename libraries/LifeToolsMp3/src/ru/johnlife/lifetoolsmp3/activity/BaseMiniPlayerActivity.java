@@ -137,9 +137,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				
 				@Override
 				public void run() {
-					setData(service.getPlayingSong());
-					progress.setVisibility(View.GONE);
-					button.setVisibility(View.VISIBLE);
+					showMiniPlayer(true);
 				}
 			});
 		}
@@ -151,7 +149,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	private void showMiniPlayer(boolean isShow, final boolean isShift) {
-		View view = findViewById(getMiniPlayerID());
+		final View view = findViewById(getMiniPlayerID());
 		if (null == view) return;
 		if (isShow && isMiniPlayerPrepared) {
 			if ((view.getVisibility() == View.VISIBLE) && !isShift) return;
@@ -161,7 +159,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				@Override
 				public void onAnimationStart(Animation animation) {
 					if (isShift) return;
-					findViewById(getMiniPlayerID()).setVisibility(View.VISIBLE);
+					view.setVisibility(View.VISIBLE);
 					setData(song);
 				}
 				
@@ -171,9 +169,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					if (isShift) {
-						View v = findViewById(getMiniPlayerID());
-						v.clearAnimation();
-						v.setVisibility(View.GONE);
+						view.setVisibility(View.GONE);
 						showMiniPlayer(true, false);
 					}
 				}
@@ -193,10 +189,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				
 				@Override
 				public void onAnimationEnd(Animation animation) {
-					View v = findViewById(getMiniPlayerID());
-					v.clearAnimation();
-					v.setVisibility(View.GONE);
-					isMiniPlayerPrepared = false;
+					view.setVisibility(View.GONE);
 				}
 			});
 			view.setAnimation(slideDown);
