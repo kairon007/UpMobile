@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent" >
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -25,11 +25,10 @@
                 android:id="@+id/message_listview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center_vertical|center_horizontal"
                 android:fontFamily="sans-serif-thin"
                 android:text="@string/library_empty"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:visibility="gone" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </FrameLayout>
 
         <LinearLayout
@@ -56,6 +55,7 @@
                     android:lines="1"
                     android:maxLines="1"
                     android:textColor="@android:color/black" >
+
                     <requestFocus />
                 </EditText>
 

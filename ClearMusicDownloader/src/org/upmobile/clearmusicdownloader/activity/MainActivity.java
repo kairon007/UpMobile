@@ -14,16 +14,18 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.Window;
+import android.widget.ImageView;
 
 import com.special.BaseClearActivity;
 import com.special.menu.ResideMenu;
@@ -205,6 +207,14 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	@Override
 	protected int getMiniPlayerClickableID() {
 		return R.id.mini_player_main;
+	}
+	
+	@Override
+	protected void setCover(Bitmap bmp) {
+		if (null == bmp) {
+			bmp = BitmapFactory.decodeResource(getResources(), R.drawable.def_cover_circle);
+		}
+		((ImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
 	}
 
 }
