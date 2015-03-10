@@ -284,4 +284,8 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		((ImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
 	}
 
+	@Override
+	protected int getFakeViewID() {
+		return R.id.fake_view;
+	}
 }
