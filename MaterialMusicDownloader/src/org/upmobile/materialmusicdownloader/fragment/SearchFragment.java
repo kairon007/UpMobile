@@ -1,5 +1,6 @@
 package org.upmobile.materialmusicdownloader.fragment;
 
+import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.SearchView;
@@ -10,11 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.csform.android.uiapptemplate.Constants;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
-public class SearchFragment extends Fragment implements BaseMaterialFragment {
+public class SearchFragment extends Fragment implements BaseMaterialFragment, Constants {
 
 	private SearchView searchView;
 	private String query;
@@ -47,7 +47,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 			searchView.trySearch();
 			query = null;
 		}
-		((UIMainActivity) getActivity()).setSelectedItem(Constants.SEARCH_FRAGMENT);
+		((UIMainActivity) getActivity()).setSelectedItem(SEARCH_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((MainActivity) getActivity()).setDrawerEnabled(true);
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();

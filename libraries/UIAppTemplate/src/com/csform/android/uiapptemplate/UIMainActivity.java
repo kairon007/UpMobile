@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -195,16 +196,16 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
-	        changeFragment(mFragments.get(Constants.SEARCH_FRAGMENT), false);
+	        changeFragment(mFragments.get(SEARCH_FRAGMENT), false);
 			break;
 		case DOWNLOADS_FRAGMENT:
-	        changeFragment(mFragments.get(Constants.DOWNLOADS_FRAGMENT), false);
+	        changeFragment(mFragments.get(DOWNLOADS_FRAGMENT), false);
 			break;
-		case PLYLIST_FRAGMENT:
-	        changeFragment(mFragments.get(Constants.PLYLIST_FRAGMENT), false);
+		case PLAYLIST_FRAGMENT:
+	        changeFragment(mFragments.get(PLAYLIST_FRAGMENT), false);
 			break;
 		case LIBRARY_FRAGMENT:
-	        changeFragment(mFragments.get(Constants.LIBRARY_FRAGMENT), false);
+	        changeFragment(mFragments.get(LIBRARY_FRAGMENT), false);
 			break;
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);

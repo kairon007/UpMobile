@@ -4,7 +4,9 @@ import java.io.File;
 
 import android.os.Environment;
 
-public interface Constants {
+public interface Constants extends ru.johnlife.lifetoolsmp3.Constants {
+	
+	
 	
 	public static final String KEY_SELECTED_SONG = "key.selected.song";
 	

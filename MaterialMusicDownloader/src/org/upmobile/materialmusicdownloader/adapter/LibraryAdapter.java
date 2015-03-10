@@ -2,6 +2,7 @@ package org.upmobile.materialmusicdownloader.adapter;
 
 import java.util.ArrayList;
 
+import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
@@ -19,13 +20,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.csform.android.uiapptemplate.Constants;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ListCallback;
 import com.csform.android.uiapptemplate.view.dlg.Theme;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
-public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
+public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, Constants {
 	
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
@@ -78,7 +78,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter {
 				if (service.isPlaying() && service.getPlayingSong().equals(data)) return;
 				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
-				((MainActivity)getContext()).setSelectedItem(Constants.LIBRARY_FRAGMENT);
+				((MainActivity)getContext()).setSelectedItem(LIBRARY_FRAGMENT);
 				break;
 			}
 		}

@@ -1,5 +1,6 @@
 package org.upmobile.materialmusicdownloader.fragment;
 
+import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.ui.LibraryView;
 
@@ -9,11 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.csform.android.uiapptemplate.Constants;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
-public class LibraryFragment extends Fragment implements BaseMaterialFragment {
+public class LibraryFragment extends Fragment implements BaseMaterialFragment, Constants {
 
 	private LibraryView libraryView;
 
@@ -25,7 +25,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment {
 	
 	@Override
 	public void onResume() {
-		((UIMainActivity) getActivity()).setSelectedItem(Constants.LIBRARY_FRAGMENT);
+		((UIMainActivity) getActivity()).setSelectedItem(LIBRARY_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity)getActivity()).setDrawerEnabled(true);
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();

@@ -2,7 +2,16 @@ package ru.johnlife.lifetoolsmp3;
 
 public interface Constants {
 	
-	public static int NOTIFICATION_ID = 2101;
+	public static final int NOTIFICATION_ID = 2101;
+	
+	
+	public static final int COUNT_FRAGMENT = 6;
+	public static final int SEARCH_FRAGMENT = 0;
+	public static final int DOWNLOADS_FRAGMENT = 1;
+	public static final int PLAYLIST_FRAGMENT = 2;
+	public static final int LIBRARY_FRAGMENT = 3;
+	public static final int PLAYER_FRAGMENT = 4;
+	public static final int SETTINGS_FRAGMENT = 5;
 
 	public static String MAIN_ACTION = "playbackservice.action.main";
 	public static String PLAY_ACTION = "playbackservice.action.play";
