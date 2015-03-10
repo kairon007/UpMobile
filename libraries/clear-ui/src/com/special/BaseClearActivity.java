@@ -48,8 +48,8 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         fragments = getFragments();
         titles = getTitlePage();
         setUpMenu();
-        changeFragment(getFragments()[0], false);
-        tvTitle.setText(titles[0]);
+        changeFragment(getFragments()[Constants.SEARCH_FRAGMENT], false);
+        tvTitle.setText(titles[Constants.SEARCH_FRAGMENT]);
         hidePlayerElement();
     }
 
@@ -124,6 +124,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
     };
 
 	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
+		manageSearchView(targetFragment.getClass().getSimpleName());
 		this.lastOpenedFragment = targetFragment;
 		resideMenu.clearIgnoredViewList();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -138,7 +139,11 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 				.commit();
 	}
 
-    //return the residemenu to fragments
+    protected void manageSearchView(String string) {
+		
+	}
+    
+	//return the residemenu to fragments
     public ResideMenu getResideMenu(){
         return resideMenu;
     }

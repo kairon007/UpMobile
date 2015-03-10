@@ -10,7 +10,6 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseDownloadsView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -35,8 +34,6 @@ public class DownloadsView extends BaseDownloadsView implements OnScrollListener
 	@Override
 	public View getView() {
 		View v = super.getView();
-		ViewGroup scrollBox = (ViewGroup) v.findViewById(R.id.flt_scroll);
-		scrollBox.setVisibility(View.GONE);
 		listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
 		return v;
 	}

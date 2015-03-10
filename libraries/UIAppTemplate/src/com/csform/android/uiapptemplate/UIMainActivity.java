@@ -111,36 +111,36 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 				}
 			}
 		});
-	searchView.setOnQueryTextListener(new OnQueryTextListener() {
-            
-            @Override
-            public boolean onQueryTextSubmit(String q) {
-                query = q;
-                hideKeyboard();
-                android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
-    			String lastFragmentName = backEntry.getName();
-    			if (lastFragmentName.equals(getFragments().get(LIBRARY_FRAGMENT).getClass().getSimpleName())) {
-    				searchView.clearFocus();
-    				isEnabledFilter = true;
-    				setFilter(q);
-    			} else {
-    				isEnabledFilter = false;
-    				changeFragment(mFragments.get(SEARCH_FRAGMENT), false);
-    				searchView.setIconified(true);
-    			}
-                return false;
-            }
-            
-            @Override
-            public boolean onQueryTextChange(String newText) {
-            	if (isEnabledFilter && "".equals(newText)) {
-            		setFilter("");
-            		isEnabledFilter = false;
-            	}
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+			@Override
+			public boolean onQueryTextSubmit(String q) {
+				query = q;
+				hideKeyboard();
+				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+				String lastFragmentName = backEntry.getName();
+				if (lastFragmentName.equals(getFragments().get(LIBRARY_FRAGMENT).getClass().getSimpleName())) {
+					searchView.clearFocus();
+					isEnabledFilter = true;
+					setFilter(q);
+				} else {
+					isEnabledFilter = false;
+					changeFragment(mFragments.get(SEARCH_FRAGMENT), false);
+					searchView.setIconified(true);
+				}
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				if (isEnabledFilter && "".equals(newText)) {
+					setFilter("");
+					isEnabledFilter = false;
+				}
+				return false;
+			}
+		});
+		return super.onCreateOptionsMenu(menu);
     }
 	
 	@Override

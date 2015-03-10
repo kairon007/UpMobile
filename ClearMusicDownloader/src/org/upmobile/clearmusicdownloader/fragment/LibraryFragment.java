@@ -15,9 +15,17 @@ public class LibraryFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		libraryView = new LibraryView(getActivity().getLayoutInflater());
+		libraryView = new LibraryView(inflater);
 		((MainActivity) getActivity()).showTopFrame();
 		return libraryView.getView();
+	}
+	
+	public void setFilter(String filter) {
+		libraryView.applyFilter(filter);
+	}
+	
+	public void clearFilter() {
+		libraryView.clearFilter();
 	}
 	
 	@Override
