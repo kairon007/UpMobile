@@ -106,10 +106,12 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		mDrawerListView.setAdapter(mAdapter);
 	}
 	
-	
-
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+    }
+    
+    public void closeDrawer() {
+    	mDrawerLayout.closeDrawers();
     }
 
     /**

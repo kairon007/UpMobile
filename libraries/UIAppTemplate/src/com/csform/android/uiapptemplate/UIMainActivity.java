@@ -20,6 +20,7 @@ import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -65,7 +66,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
         View v = (View) findViewById(android.R.id.home);
         if (null != v) {
 			if (useOldToggle()) {
-				((View) v.getParent().getParent()).setPadding(48, 0, 0, 0);
+				((View) v.getParent().getParent()).setPadding(32, 0, 0, 0);
 			}
         }
         getMenuInflater().inflate(R.menu.main, menu);
@@ -100,7 +101,16 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		} catch (Exception e) {
 			android.util.Log.d("logks", getClass().getName() + "Appear problem: " + e);
 		}
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+        searchView.setOnSearchClickListener(new OnClickListener() {
+			
+        	@Override
+			public void onClick(View v) {
+				if (navigationDrawerFragment.isDrawerOpen()) {
+					navigationDrawerFragment.closeDrawer();
+				}
+			}
+		});
+	searchView.setOnQueryTextListener(new OnQueryTextListener() {
             
             @Override
             public boolean onQueryTextSubmit(String q) {
