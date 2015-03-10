@@ -191,9 +191,6 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 							service.setArrayPlayback(list);
 						}
-				        int[] screen_location = new int[2];
-				        View view = v.findViewById(R.id.item_image);
-				        view.getLocationOnScreen(screen_location);
 						if (service.isPlaying() && service.getPlayingSong().equals(item)) return true;
 						((MainActivity) getContext()).showPlayerElement();
 						((MainActivity) getContext()).startSong(item);
