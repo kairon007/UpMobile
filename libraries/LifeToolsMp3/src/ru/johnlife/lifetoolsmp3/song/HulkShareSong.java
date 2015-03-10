@@ -1,34 +1,41 @@
 package ru.johnlife.lifetoolsmp3.song;
 
-import android.os.AsyncTask;
-import ru.johnlife.lifetoolsmp3.engines.SearchTing;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import org.jsoup.Jsoup;
 
-public class TingSong extends RemoteSong {
-	
-	private int songId;
+import android.os.AsyncTask;
+
+public class HulkShareSong extends RemoteSong {
+
 	private final String ERROR_RETRIEVING_URL = "ERROR_RETRIEVING_URL";
-	
-	public TingSong(Integer id, int songId) {
-		super(id.hashCode());
-		this.songId = songId;
+	private static String hulkshareBaseUrl = "https://www.hulkshare.com/dl/";
+	private static String USER_AGENT = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.12 (KHTML, like Gecko) Maxthon/3.0 Chrome/26.0.1410.43 Safari/535.12";
+	private String songURL;
+
+	public HulkShareSong(String songURL) {
+		super(songURL);
+		this.songURL = songURL;
 	}
-	
+
 	@Override
 	public boolean getDownloadUrl(DownloadUrlListener listener) {
 		if (super.getDownloadUrl(listener)) return true;
-		getDownloadUrl(songId);
+		getDownloadUrl(songURL);
 		return false;
 	}
 
-	private void getDownloadUrl(final int songId2) {
+	public Void getDownloadUrl(final String songId) {
 		new AsyncTask<Void, Void, String>() {
 
 			@Override
 			protected String doInBackground(Void... params) {
-				return SearchTing.getDownloadUrl(songId2);
+				try {
+					return Jsoup.connect(hulkshareBaseUrl + songId).followRedirects(true).ignoreHttpErrors(true).ignoreContentType(true).userAgent(USER_AGENT).execute().url().toString();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
 			}
-			
+
 			protected void onPostExecute(String result) {
 				if (null != result) {
 					for (DownloadUrlListener listener : downloadUrlListeners) {
@@ -41,8 +48,8 @@ public class TingSong extends RemoteSong {
 				}
 				downloadUrlListeners.clear();
 			};
-			
 		}.execute();
+		return null;
 	}
-	
+
 }

@@ -7,6 +7,10 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
+
+import ru.johnlife.lifetoolsmp3.song.HulkShareSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
 
@@ -40,14 +44,14 @@ public class SearchHulkShare extends SearchWithPages {
 					songURL = songURL.substring(0, songURL.indexOf("\"><b>"));
 					songURL = songURL.replace("<a href=\"/", "");
 					//songURL = "http://www.hulkshare.com/ap-" + songURL+ "/&ref=.mp3"; 
-					songURL = hulkshareBaseUrl + songURL + hulkshareSuffix;
-					 
+//					songURL = hulkshareBaseUrl + songURL;
+//					songURL = hulkshareBaseUrl + songURL + hulkshareSuffix;
 					Matcher m = SONG_TITLE_PATTERN.matcher(songData);
 					if (m.find()) {
 						String songTitle = m.group(1);
 						String songArtist = m.group(2);
 						if (songURL != "" && songTitle != "") {
-							RemoteSong song = new RemoteSong(songURL);
+							HulkShareSong song = new HulkShareSong(songURL);
 							song.setSongTitle(songTitle);
 							song.setArtistName(songArtist);
 							song.setDuration(formatTime(duration));

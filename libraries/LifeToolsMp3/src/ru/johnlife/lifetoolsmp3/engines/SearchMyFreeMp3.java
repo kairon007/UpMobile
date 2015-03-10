@@ -12,7 +12,8 @@ import android.util.Log;
 public class SearchMyFreeMp3 extends SearchWithPages {
 
 	private static String URL_PATTERN = "http://www.myfreemp3.cc/mp3/%s?page=%s";
-	private static String partServer = "http://89.248.172.6/dvv.php?q=";
+//	private static String partServer = "http://89.248.172.6/dvv.php?q=";
+	private static String partServer = "http://s.myfreemp3.biz/biz.php?q=";
 
 	public SearchMyFreeMp3(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -47,13 +48,13 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 					title = src[1];
 				}
 				String srcDuration = info.attr("data-duration");
-				long duration = Long.valueOf(srcDuration) * 1000;
+				long duration = Long.valueOf(srcDuration) * 1000;	
 				String idSong = info.attr("data-aid");
 				String link = partServer + idSong + "/";
 				addSong(new RemoteSong(link).setSongTitle(title).setArtistName(artist).setDuration(duration));
 			}
 		} catch (Exception e) {
-			Log.d("log", "parsing error, couse:" + e.getMessage());
+			Log.d(getClass().getSimpleName(), e.getMessage());
 		}
 		return null;
 	}
