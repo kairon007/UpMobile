@@ -4,6 +4,7 @@ package com.csform.android.uiapptemplate.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.Constants;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -25,7 +26,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.csform.android.uiapptemplate.Constants;
 import com.csform.android.uiapptemplate.R;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.adapter.DrawerAdapter;

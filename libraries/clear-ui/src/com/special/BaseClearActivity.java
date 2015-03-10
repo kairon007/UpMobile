@@ -3,6 +3,7 @@ package com.special;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -19,7 +20,7 @@ import android.widget.TextView;
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
-public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements View.OnClickListener {
+public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements View.OnClickListener, Constants {
 
 	private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
@@ -101,7 +102,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         			resideMenu.closeMenu();
         			return;
         		}
-        		if (fragments[i].getClass().getSimpleName().equals("PlayerFragment") && null != getArguments()) {
+        		if (i == PLAYER_FRAGMENT && null != getArguments()) {
         			changeFragment(getPlayerFragment(), true);
         		} else {
         			showMiniPlayer(true);
@@ -148,7 +149,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
     
 	@Override
 	public void onBackPressed() {
-		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[4].getClass().getSimpleName())){
+		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[PLAYER_FRAGMENT].getClass().getSimpleName())){
 			getFragmentManager().popBackStack();
 			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
