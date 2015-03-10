@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="?attr/sectionBackground" >
+    android:background="?attr/sectionBackground"
+    android:paddingLeft="8dp" >
 
     <TextView
         android:id="@+id/section"

@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -68,7 +70,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
         navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -89,20 +90,30 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		 getMenuInflater().inflate(R.menu.menu, menu);
-		 MenuItem searchItem = menu.findItem(R.id.action_search);
-		 searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-		 searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		 searchView.setOnQueryTextListener(new OnQueryTextListener() {
+		getMenuInflater().inflate(R.menu.menu, menu);
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
+		searchView.setOnSearchClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (navigationDrawerFragment.isDrawerOpen()) {
+					navigationDrawerFragment.closeDrawer();
+					searchView.onActionViewExpanded();
+				}
+			}
+		});
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 		
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
+				FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
     			String lastFragmentName = backEntry.getName();
 				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
 					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(currentTag);
 					if (fragment.isVisible()) {
-						if ("".equals(query)) {
+						if (query.isEmpty()) {
 							fragment.clearFilter();
 							isEnabledFilter = false;
 						} else {
@@ -114,14 +125,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 					isEnabledFilter = false;
 					changeFragment(new SearchFragment(query), false);
 					searchView.setIconified(true);
-					searchView.setIconified(true);
 				}
 				return false;
 			}
 			
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				if (isEnabledFilter && "".equals(newText)) {
+				if (isEnabledFilter && newText.isEmpty()) {
 					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(currentTag);
 					fragment.clearFilter();
             		isEnabledFilter = false;
