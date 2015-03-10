@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
-public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements View.OnClickListener{
+public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements View.OnClickListener {
 
 	private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
@@ -47,7 +47,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         fragments = getFragments();
         titles = getTitlePage();
         setUpMenu();
-        changeFragment(getFragments()[0]);
+        changeFragment(getFragments()[0], false);
         tvTitle.setText(titles[0]);
         hidePlayerElement();
     }
@@ -102,9 +102,10 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         			return;
         		}
         		if (fragments[i].getClass().getSimpleName().equals("PlayerFragment") && null != getArguments()) {
-        			changeFragment(getPlayerFragment());
+        			changeFragment(getPlayerFragment(), true);
         		} else {
-        			changeFragment(fragments[i]);
+        			showMiniPlayer(true);
+        			changeFragment(fragments[i], false);
         		}
         		tvTitle.setText(titles[i]);
         	}
@@ -121,16 +122,20 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         public void closeMenu() { }
     };
 
-    public void changeFragment(Fragment targetFragment){
-        this.lastOpenedFragment = targetFragment;
+	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
+		this.lastOpenedFragment = targetFragment;
 		resideMenu.clearIgnoredViewList();
-		getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_fragment, targetFragment, targetFragment.getClass().getSimpleName())
-                .addToBackStack(targetFragment.getClass().getSimpleName()) 
-                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
-    }
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		if (isAnimate) {
+			transaction.setCustomAnimations(R.anim.slide_in_up,
+					R.anim.slide_out_up, R.anim.slide_in_down,
+					R.anim.slide_out_down);
+		}
+		transaction.replace(R.id.main_fragment, targetFragment,targetFragment.getClass().getSimpleName())
+				.addToBackStack(targetFragment.getClass().getSimpleName())
+				.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+				.commit();
+	}
 
     //return the residemenu to fragments
     public ResideMenu getResideMenu(){
@@ -150,6 +155,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			lastOpenedFragment = getFragmentManager().findFragmentByTag(lastFragmentName);
 			String title = getNameCurrentFragment(lastFragmentName);
 			tvTitle.setText(title);
+			showMiniPlayer(true);
 		} else {
 			stopChildsServices();
 			finish();
