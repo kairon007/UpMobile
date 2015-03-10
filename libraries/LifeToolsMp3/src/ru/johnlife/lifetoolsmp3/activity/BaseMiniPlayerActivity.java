@@ -32,13 +32,17 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private TextView artist;
 	private ImageView cover;
 	private ImageButton button;
+	private View miniPlayer;
+	private View fakeView;
 	private View progress;
 	private boolean isMiniPlayerPrepared = false;
 	private int checkIdCover;
 
 	protected abstract int getMiniPlayerID();
 	protected abstract int getMiniPlayerClickableID();
+	protected abstract int getFakeViewID();
 	protected abstract void showPlayerFragment();
+	protected void lockListViewAnimation() {}
 	
 	@Override
 	protected void onStart() {
@@ -61,6 +65,8 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		cover = (ImageView)findViewById(R.id.mini_player_cover);
 		button = (ImageButton)findViewById(R.id.mini_player_play_pause);
 		progress = findViewById(R.id.mini_player_progress);
+		miniPlayer = findViewById(getMiniPlayerID());
+		fakeView = findViewById(getFakeViewID());
 	}
 	
 	private void setListeners() {
@@ -70,9 +76,13 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		service.addStatePlayerListener(new OnStatePlayerListener() {
 			
 			@Override
-			public void update(AbstractSong s) {
-				song = s;
-				showMiniPlayer(true, true);
+			public void update(AbstractSong song) {
+				BaseMiniPlayerActivity.this.song = song;
+				if (miniPlayer.getVisibility() == View.GONE) {
+					setData(song);
+				} else {
+					showMiniPlayer(true, true);
+				}
 			}
 			
 			@Override
@@ -132,7 +142,6 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 					return;
 				}
 				showPlayerFragment();
-				
 			}
 		});
 	}
@@ -143,6 +152,8 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				
 				@Override
 				public void run() {
+					isMiniPlayerPrepared = true;
+					BaseMiniPlayerActivity.this.song = service.getPlayingSong();
 					showMiniPlayer(true);
 				}
 			});
@@ -155,18 +166,20 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	private void showMiniPlayer(boolean isShow, final boolean isShift) {
-		final View view = findViewById(getMiniPlayerID());
-		if (null == view) return;
+		if (null == miniPlayer) return;
 		if (isShow && isMiniPlayerPrepared) {
-			if ((view.getVisibility() == View.VISIBLE) && !isShift) return;
+			if ((miniPlayer.getVisibility() == View.VISIBLE) && !isShift) return;
 			Animation slideUp = AnimationUtils.loadAnimation(this, isShift ? R.anim.slide_down : R.anim.slide_up);
 			slideUp.setAnimationListener(new AnimationListener() {
 				
 				@Override
 				public void onAnimationStart(Animation animation) {
-					if (isShift) return;
-					view.setVisibility(View.VISIBLE);
-					setData(song);
+					if (isShift) {
+						fakeView.setVisibility(View.GONE);
+					} else {
+						miniPlayer.setVisibility(View.VISIBLE);
+						setData(song);
+					}
 				}
 				
 				@Override
@@ -175,31 +188,35 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					if (isShift) {
-						view.setVisibility(View.GONE);
-						showMiniPlayer(true, false);
+						miniPlayer.setVisibility(View.GONE);
+						showMiniPlayer(true);
+					} else {
+						fakeView.setVisibility(View.VISIBLE);
 					}
 				}
 			});
-			view.setAnimation(slideUp);
-			view.startAnimation(slideUp);
+			miniPlayer.setAnimation(slideUp);
+			miniPlayer.startAnimation(slideUp);
 		} else {
-			if (view.getVisibility() == View.GONE) return;
+			if (miniPlayer.getVisibility() == View.GONE) return;
 			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
 			slideDown.setAnimationListener(new AnimationListener() {
 				
 				@Override
-				public void onAnimationStart(Animation animation) {}
+				public void onAnimationStart(Animation animation) {
+					fakeView.setVisibility(View.GONE);
+				}
 				
 				@Override
 				public void onAnimationRepeat(Animation animation) {}
 				
 				@Override
 				public void onAnimationEnd(Animation animation) {
-					view.setVisibility(View.GONE);
+					miniPlayer.setVisibility(View.GONE);
 				}
 			});
-			view.setAnimation(slideDown);
-			view.startAnimation(slideDown);
+			miniPlayer.setAnimation(slideDown);
+			miniPlayer.startAnimation(slideDown);
 		}
 	}
 	

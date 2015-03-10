@@ -30,8 +30,6 @@ import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.TypedValue;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
@@ -71,18 +69,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-		setListener();
 //		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
-	}
-
-	private void setListener() {
-		findViewById(R.id.mini_player_main).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				showPlayerFragment();
-			}
-		});
 	}
 
 	@Override
@@ -275,4 +262,8 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		return R.string.font_play_settings;
 	}
 	
+	@Override
+	protected int getFakeViewID() {
+		return R.id.fake_view;
+	}
 }

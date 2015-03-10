@@ -26,10 +26,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
+            <View
+                android:id="@+id/fake_view"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:visibility="gone"
+                android:layout_alignParentBottom="true" />
+            
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_above="@id/fake_view" />
 
             <include
                 android:id="@+id/mini_player"

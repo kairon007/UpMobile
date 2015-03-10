@@ -235,7 +235,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		if (isAnimate) {
 			transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_down, R.anim.slide_out_down);
 		}
-		transaction.replace(R.id.main_fragment, targetFragment, currentTag)
+		transaction.replace(R.id.content_frame, targetFragment, currentTag)
 		.addToBackStack(targetFragment.getClass().getSimpleName())
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 		.commit();
@@ -328,4 +328,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		    }
 	}
 
+	@Override
+	protected int getFakeViewID() {
+		return R.id.fake_view;
+	}
 }

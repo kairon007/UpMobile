@@ -19,8 +19,6 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 
 import com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate;
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
@@ -127,25 +125,23 @@ public class SearchView extends OnlineSearchView implements Constants {
 		animAdapter.setAbsListView(listView);
 		if (isRestored) {
 			animAdapter.getViewAnimator().disableAnimations();
-			listView.setOnScrollListener(new OnScrollListener() {
+			listView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 				
 				@Override
-				public void onScrollStateChanged(AbsListView view, int scrollState) {
+				public void onLayoutChange(View paramView, int paramInt1, int paramInt2,
+						int paramInt3, int paramInt4, int paramInt5, int paramInt6,
+						int paramInt7, int paramInt8) {
 					animAdapter.getViewAnimator().enableAnimations();
-				}
-				
-				@Override
-				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-					animAdapter.getViewAnimator().enableAnimations();
+					listView.removeOnLayoutChangeListener(this);
 				}
 			});
+		} else {
+			listView.setAdapter(animAdapter);
 		}
-		listView.setAdapter(animAdapter);
 	}
 	
 	@Override
 	protected String getDirectory() {
 		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	}
-	
 }
