@@ -57,10 +57,10 @@ public final class Util {
 			int sec = duration % 60;
 			int h = min / 60;
 			min = min % 60;
-			if (h>0)
+			if (h>0) {
 				return String.format("%d:%02d:%02d", h, min, sec);
-			else 
-				return String.format("%d:%02d", min, sec);
+			}
+			return String.format("%d:%02d", min, sec);
 	}
 	public static Bitmap resizeToSmall(Bitmap original) {
 		int originalSize = Math.max(original.getWidth(), original.getHeight());

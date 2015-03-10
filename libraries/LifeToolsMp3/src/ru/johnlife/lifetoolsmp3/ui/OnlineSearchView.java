@@ -480,7 +480,8 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.search_menu_play) {
-					//TODO: Send song to mini player in child's projects
+					int position = (Integer) v.getTag();
+					click(null, position);
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
 					((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getDownloadUrl(new DownloadUrlListener() {

@@ -27,7 +27,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment, Co
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		searchView = new SearchView(getActivity().getLayoutInflater());
+		searchView = new SearchView(inflater);
 		return searchView.getView();
 	}
 	
