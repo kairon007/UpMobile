@@ -69,7 +69,9 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		service.addStatePlayerListener(new OnStatePlayerListener() {
 			
 			@Override
-			public void update(AbstractSong song) {}
+			public void update(AbstractSong song) {
+				setData(song);
+			}
 			
 			@Override
 			public void stop(AbstractSong song) {}

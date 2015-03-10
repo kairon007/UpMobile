@@ -61,7 +61,6 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.startService(new Intent(this, PlaybackService.class));
 		File file = new File(folderPath);
 		if (!file.exists()) file.mkdirs();
 		if (null != service) {
