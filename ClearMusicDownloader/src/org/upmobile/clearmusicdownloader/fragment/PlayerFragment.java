@@ -709,17 +709,26 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 			clearCover();
 		}
-		if (delta > 0) {
+		switch (delta) {
+		case 0:
+			if (player.isPlaying()) {
+				player.pause();
+			} else {
+				player.play(song);
+			}
+			break;
+		case 1:
 			player.shift(1);
 			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
-		} else if (delta < 0) {
+			break;
+		case -1:
 			player.shift(-1);
 			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
-		} else {
-			android.util.Log.d("logks", "!!!!!!!!!!!!!!!");
-			player.play(song);
+			break;
+		default:
+			throw new IllegalArgumentException("Delta must be -1 < delta < 1");
 		}
 	}
 	
