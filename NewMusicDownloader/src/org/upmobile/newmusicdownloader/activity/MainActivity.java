@@ -85,7 +85,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		}
 		fileObserver.startWatching();
 		
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override

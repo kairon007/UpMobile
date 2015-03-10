@@ -394,7 +394,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 			break;
 		case R.id.stop:
-			player.stop();
+			player.stopPressed();
 			break;
 		case R.id.player_lyrics:
 			showLyrics();
