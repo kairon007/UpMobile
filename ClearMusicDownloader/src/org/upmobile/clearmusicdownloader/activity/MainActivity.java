@@ -1,6 +1,7 @@
 package org.upmobile.clearmusicdownloader.activity;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
@@ -21,10 +22,15 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -83,6 +89,35 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	private void initSearchView() {
 		searchView = (SearchView) findViewById(R.id.ab_search);
+		 int color = getResources().getColor(android.R.color.white);
+	        String str = Integer.toHexString(color);
+	        String strColor =  "#"+str.substring(2);
+	        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+	        ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
+	        searchIcon.setImageResource(R.drawable.ic_search_ab);
+	        searchIcon.setBackgroundResource(R.drawable.selectable_item_bg);
+	        int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
+	        ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
+	        closeIcon.setImageResource(R.drawable.ic_close_ab);
+	        closeIcon.setBackgroundResource(R.drawable.selectable_item_bg);
+	        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
+	        TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
+	        autoComplete.setTextColor(color);
+	        try {
+				Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
+				SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
+				stopHint.append(Html.fromHtml("<font color = " + strColor + ">" + getResources().getString(R.string.hint_main_search) + "</font>"));
+				Drawable search_icon = getResources().getDrawable(R.drawable.ic_search_ab);
+				Method textSizeMethod = clazz.getMethod("getTextSize");
+				Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
+				int textSize = (int) (rawTextSize * 1.5);
+				search_icon.setBounds(0, 0, textSize, textSize);
+				stopHint.setSpan(new ImageSpan(search_icon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
+				setHintMethod.invoke(autoComplete, stopHint);
+			} catch (Exception e) {
+				android.util.Log.d("logks", getClass().getName() + "Appear problem: " + e);
+			}
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
