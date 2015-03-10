@@ -199,7 +199,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	    	if (null == service) {
 	    		service = PlaybackService.get(this);
 	    	}
-			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
+			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, isWhiteTheme(this), new DirectoryChooserDialog.ChosenDirectoryListener() {
 				
 				@Override
 				public void onChosenDir(String chDir) {
