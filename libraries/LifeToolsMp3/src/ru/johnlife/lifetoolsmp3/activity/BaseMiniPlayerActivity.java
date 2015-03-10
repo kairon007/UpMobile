@@ -69,8 +69,8 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		service.addStatePlayerListener(new OnStatePlayerListener() {
 			
 			@Override
-			public void update(AbstractSong song) {
-				BaseMiniPlayerActivity.this.song = song;
+			public void update(AbstractSong s) {
+				song = s;
 				showMiniPlayer(true, true);
 			}
 			
@@ -171,7 +171,9 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					if (isShift) {
-						findViewById(getMiniPlayerID()).setVisibility(View.GONE);
+						View v = findViewById(getMiniPlayerID());
+						v.clearAnimation();
+						v.setVisibility(View.GONE);
 						showMiniPlayer(true, false);
 					}
 				}
@@ -191,7 +193,10 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 				
 				@Override
 				public void onAnimationEnd(Animation animation) {
-					findViewById(getMiniPlayerID()).setVisibility(View.GONE);
+					View v = findViewById(getMiniPlayerID());
+					v.clearAnimation();
+					v.setVisibility(View.GONE);
+					isMiniPlayerPrepared = false;
 				}
 			});
 			view.setAnimation(slideDown);
