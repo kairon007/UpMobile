@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.csform.android.uiapptemplate.Constants;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
@@ -46,7 +47,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment {
 			searchView.trySearch();
 			query = null;
 		}
-		((UIMainActivity) getActivity()).setSelectedItem(0);
+		((UIMainActivity) getActivity()).setSelectedItem(Constants.SEARCH_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((MainActivity) getActivity()).setDrawerEnabled(true);
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();

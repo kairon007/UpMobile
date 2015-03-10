@@ -302,7 +302,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onResume() {
 		thatSongIsDownloaded();
-		((UIMainActivity) getActivity()).setSelectedItem(4);
+		((UIMainActivity) getActivity()).setSelectedItem(Constants.PLAYER_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();

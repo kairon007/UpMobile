@@ -150,7 +150,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private void showMiniPlayer(boolean isShow, final boolean isShift) {
 		View view = findViewById(getMiniPlayerID());
 		if (null == view) return;
-		if (!isMiniPlayerPrepared && service.isPlaying()) {
+		if (!isMiniPlayerPrepared && service.isPrepared()) {
 			isMiniPlayerPrepared = !isMiniPlayerPrepared;
 		}
 		if (isShow && isMiniPlayerPrepared) {

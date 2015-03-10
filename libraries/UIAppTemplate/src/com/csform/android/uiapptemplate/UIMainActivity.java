@@ -185,21 +185,21 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
-	        changeFragment(mFragments.get(0), false);
+	        changeFragment(mFragments.get(Constants.SEARCH_FRAGMENT), false);
 			break;
 		case DOWNLOADS_FRAGMENT:
-	        changeFragment(mFragments.get(1), false);
+	        changeFragment(mFragments.get(Constants.DOWNLOADS_FRAGMENT), false);
 			break;
 		case PLYLIST_FRAGMENT:
-	        changeFragment(mFragments.get(2), false);
+	        changeFragment(mFragments.get(Constants.PLYLIST_FRAGMENT), false);
 			break;
 		case LIBRARY_FRAGMENT:
-	        changeFragment(mFragments.get(3), false);
+	        changeFragment(mFragments.get(Constants.LIBRARY_FRAGMENT), false);
 			break;
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
-	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(4);
+	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(Constants.PLAYER_FRAGMENT);
 		    if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
 		    	changeFragment(fragment, true);
 		    }

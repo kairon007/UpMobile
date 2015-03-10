@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.csform.android.uiapptemplate.Constants;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
@@ -24,7 +25,7 @@ public class PlaylistFragment extends Fragment implements BaseMaterialFragment{
 	
 	@Override
 	public void onResume() {
-		((UIMainActivity) getActivity()).setSelectedItem(2);
+		((UIMainActivity) getActivity()).setSelectedItem(Constants.PLYLIST_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity)getActivity()).setDrawerEnabled(true);
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();

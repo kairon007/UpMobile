@@ -42,9 +42,7 @@ import com.devspark.appmsg.AppMsg.Style;
 
 public class MainActivity extends UIMainActivity implements Constants, FolderSelectCallback {
 
-	private final String ARRAY_SAVE = "extras_array_save";
 	private final String folderPath = MaterialMusicDownloaderApp.getDirectory();
-	private PlaybackService service;
 	private int currentFragmentID;
 
 	private FileObserver fileObserver = new FileObserver(folderPath) {
@@ -62,8 +60,8 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
+		this.startService(new Intent(this, PlaybackService.class));
 		File file = new File(folderPath);
 		if (!file.exists()) file.mkdirs();
 		if (null != service) {
