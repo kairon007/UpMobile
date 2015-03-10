@@ -163,8 +163,11 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			tvTitle.setText(title);
 			showMiniPlayer(true);
 		} else {
-			stopChildsServices();
-			finish();
+			if (isMiniPlayerPrepared()) {
+				stopChildsServices();
+			} else {
+				finish();
+			}
 		}
 	}
 

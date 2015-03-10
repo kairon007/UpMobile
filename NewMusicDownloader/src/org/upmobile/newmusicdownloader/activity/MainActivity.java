@@ -84,8 +84,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-		
-//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override
@@ -254,10 +253,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			invalidateOptionsMenu();
 			showMiniPlayer(true);
 		} else {
-			if (null != service) {
-				service.reset();
+			if (null != service && isMiniPlayerPrepared()) {
+				service.stopPressed();
+			} else {
+				finish();
 			}
-			finish();
 		}
 	}
 	

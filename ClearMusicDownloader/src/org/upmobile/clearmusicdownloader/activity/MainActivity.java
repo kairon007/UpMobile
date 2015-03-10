@@ -80,7 +80,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		// Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 
 	}
-
+	
 	private void initSearchView() {
 		searchView = (SearchView) findViewById(R.id.ab_search);
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
@@ -230,7 +230,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	public void stopChildsServices() {
-		PlaybackService.get(this).reset();
+		PlaybackService.get(this).stopPressed();
 	}
 
 	@Override
@@ -264,7 +264,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			changeFragment(fragment, true);
 		}
 	}
-
+	
 	@Override
 	protected int getMiniPlayerID() {
 		return R.id.mini_player;
@@ -287,4 +287,5 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	protected int getFakeViewID() {
 		return R.id.fake_view;
 	}
+	
 }
