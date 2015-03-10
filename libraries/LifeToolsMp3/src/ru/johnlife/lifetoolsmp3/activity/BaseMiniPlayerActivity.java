@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -126,7 +127,12 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				ViewGroup parent = (ViewGroup) v.getParent();
+				if (parent.getAnimation() != null && parent.getAnimation().hasStarted()) {
+					return;
+				}
 				showPlayerFragment();
+				
 			}
 		});
 	}
