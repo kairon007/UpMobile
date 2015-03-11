@@ -3,12 +3,14 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="AppTheme" parent="android:Theme.Holo">
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_dark</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_dark</item>
+        <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
+    </style>
 
-    <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_dark</item>
-
-    <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_dark</item>
-
-  </style>
+    <style name="myPopupMenuStyleWhite" parent="@android:style/Widget.Holo.Light.PopupMenu">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 
 </resources>
