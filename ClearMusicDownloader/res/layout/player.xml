@@ -212,11 +212,12 @@
                         android:background="@drawable/button_selector_inverse"
                         android:src="@drawable/play" />
 
-                    <ProgressBar
+                    <ImageView
                         android:id="@+id/player_play_progress"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_gravity="center"
+                        android:src="@drawable/loader_black"
                         android:visibility="gone" />
                 </FrameLayout>
 
