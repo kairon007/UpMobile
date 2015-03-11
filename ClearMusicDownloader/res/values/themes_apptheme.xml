@@ -3,12 +3,11 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="AppTheme" parent="android:Theme.Black">
-
-    <item name="android:editTextStyle">@style/EditTextAppTheme</item>
-
-    <item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>
-
-  </style>
+    <style name="AppTheme" parent="android:Theme.Black">
+        <item name="android:editTextStyle">@style/EditTextAppTheme</item>
+        <item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>
+        <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
+        <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
+    </style>
 
 </resources>

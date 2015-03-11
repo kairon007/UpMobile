@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -272,7 +273,14 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	 * @param playPayse true - image play, false - image pause
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
-		button.setImageResource(playPayse ? R.drawable.mini_player_play : R.drawable.mini_player_pause);
+		button.setImageResource(playPayse ? getResIdFromAttribute(this, R.attr.miniPlayerPlay) : getResIdFromAttribute(this, R.attr.miniPlayerPause));
+	}
+	
+	private int getResIdFromAttribute(final Activity activity, final int attr) {
+		if (attr == 0) return 0;
+		final TypedValue typedvalueattr = new TypedValue();
+		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
+		return typedvalueattr.resourceId;
 	}
 	
 	protected void setCover(Bitmap bmp) {

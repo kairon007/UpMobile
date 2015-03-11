@@ -74,7 +74,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 
 	@Override
 	protected int getDefaultCover() {
-		return R.drawable.no_cover_art_big;
+		return R.drawable.no_cover_art_light_big_dark;
 	}
 
 	@Override

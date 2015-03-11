@@ -7,6 +7,8 @@
         <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_dark</item>
         <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_dark</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
+                <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
+        <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
     </style>
 
     <style name="myPopupMenuStyleWhite" parent="@android:style/Widget.Holo.Light.PopupMenu">
