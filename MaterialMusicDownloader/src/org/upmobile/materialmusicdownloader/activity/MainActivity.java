@@ -139,6 +139,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
+				showPlayerElement(false);
 			} else {
 				finish();
 			}

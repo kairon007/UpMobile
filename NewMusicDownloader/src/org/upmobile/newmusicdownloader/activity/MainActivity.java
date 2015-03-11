@@ -255,6 +255,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
+				showPlayerElement(false);
 			} else {
 				finish();
 			}

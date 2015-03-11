@@ -266,6 +266,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	@Override
 	public void stopChildsServices() {
 		PlaybackService.get(this).stopPressed();
+		hidePlayerElement();
 	}
 
 	@Override
