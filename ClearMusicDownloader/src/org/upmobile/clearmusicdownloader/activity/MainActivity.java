@@ -311,8 +311,12 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	@Override
 	protected void showPlayerFragment() {
 		Fragment fragment = getPlayerFragment();
-		if (!fragment.isAdded()) {
-			fragment.setArguments(getArguments());
+		try {
+			if (!fragment.isAdded()) {
+				fragment.setArguments(getArguments());
+				changeFragment(fragment, true);
+			}
+		} catch (Exception e) {
 			changeFragment(fragment, true);
 		}
 	}
