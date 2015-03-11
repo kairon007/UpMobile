@@ -228,14 +228,12 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			service = PlaybackService.get(this);
 		}
 		if (null != service.getPlayingSong() && song.equals(this.song) && service.isPlaying()){
-			android.util.Log.d("logks", "1");
 			return;
 		}
 		service.play(song);
 		this.song = song;
 		boolean oldIsPrepared = isMiniPlayerPrepared;
 		isMiniPlayerPrepared = true;
-		android.util.Log.d("logks", "2");
 		showMiniPlayer(true, oldIsPrepared);
 	}
 	
