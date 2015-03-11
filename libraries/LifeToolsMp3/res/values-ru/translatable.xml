@@ -56,7 +56,7 @@
     <string name="add_to_playlist">Добавить в плейлист</string>
     <string name="last_played_playlist">Последний проигранный плейлист</string>
     <string name="create_new_playlist">Создать плейлист</string>
-    <string name="all_playlists">Все плэйлисты</string>
+    <string name="all_playlists">Все плейлисты</string>
     <string name="create">Создать</string>
 
 </resources>
