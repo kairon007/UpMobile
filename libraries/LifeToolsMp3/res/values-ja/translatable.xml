@@ -31,6 +31,7 @@
     <string name="search_no_results_for">以下の結果無し：</string>
     <string name="search_try_different_query">違うクエリを試してください</string>
     <string name="search_please_enter_query">クエリを入力してください</string>
+    <string name="search_message_no_internet">いいえ、インターネット接続が。\n後で再試行できます。</string>
     <string name="download_dialog_download_location">ダウンロードロケーション</string>
     <string name="download_dialog_download">ダウンロード</string>
     <string name="download_dialog_cancel">キャンセル</string>

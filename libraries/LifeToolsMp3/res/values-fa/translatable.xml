@@ -31,6 +31,7 @@
     <string name="search_no_results_for">    فاقد نتیجه برای</string>
     <string name="search_try_different_query">    درخواست دیگری را امتحان کنید</string>
     <string name="search_please_enter_query">    لطفا درخواست دیگری را وارد کنید</string>
+    <string name="search_message_no_internet">بدون اتصال به اینترنت.\nشما می توانید بعدا دوباره امتحان کنید.</string>
     <string name="download_dialog_download_location">    مکان دانلود</string>
     <string name="download_dialog_download">    دانلود</string>
     <string name="download_dialog_cancel">    لغو</string>

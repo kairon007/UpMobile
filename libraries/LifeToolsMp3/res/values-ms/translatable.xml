@@ -31,6 +31,7 @@
     <string name="search_no_results_for">Tiada keputusan untuk</string>
     <string name="search_try_different_query">Cuba permintaan berbeza</string>
     <string name="search_please_enter_query">Sila masukkan permintaan</string>
+    <string name="search_message_no_internet">Tiada sambungan internet.\nAnda boleh cuba lagi kemudian.</string>
     <string name="download_dialog_download_location">Muat Turun Lokasi</string>
     <string name="download_dialog_download">Muat Turun</string>
     <string name="download_dialog_cancel">Batal</string>

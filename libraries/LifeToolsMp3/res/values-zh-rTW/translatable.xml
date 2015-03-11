@@ -30,6 +30,7 @@
     <string name="search_no_results_for">沒有…的結果</string>
     <string name="search_try_different_query">嘗試不同的查詢</string>
     <string name="search_please_enter_query">請輸入一個查詢</string>
+    <string name="search_message_no_internet">沒有互聯網連接。\n您可以稍後重試。</string>
     <string name="download_dialog_download_location">下載位置</string>
     <string name="download_dialog_download">下載</string>
     <string name="download_dialog_cancel">取消</string>

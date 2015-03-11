@@ -31,6 +31,7 @@
     <string name="search_no_results_for">ไม่พบผลลัพธ์สำหรับ</string>
     <string name="search_try_different_query">ลองตั้งคำถามอื่น ๆ</string>
     <string name="search_please_enter_query">โปรดใส่คำถาม</string>
+    <string name="search_message_no_internet">การเชื่อมต่ออินเทอร์เน็ต\nคุณสามารถลองใหม่อีกครั้งในภายหลัง</string>
     <string name="download_dialog_download_location">ดาวน์โหลดสถานที่ตั้ง</string>
     <string name="download_dialog_download">ดาวน์โหลด</string>
     <string name="download_dialog_cancel">ยกเลิก</string>

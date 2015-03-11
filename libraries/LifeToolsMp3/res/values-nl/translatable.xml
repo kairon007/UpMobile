@@ -31,6 +31,7 @@
     <string name="search_no_results_for">Er zijn geen resultaten voor</string>
     <string name="search_try_different_query">Probeer een andere zoekopdracht</string>
     <string name="search_please_enter_query">Voer een zoekopdracht in</string>
+    <string name="search_message_no_internet">Geen internet verbinding.\nU kunt later opnieuw proberen.</string>
     <string name="download_dialog_download_location">Downloadlocatie</string>
     <string name="download_dialog_download">Download</string>
     <string name="download_dialog_cancel">Annuleren</string>

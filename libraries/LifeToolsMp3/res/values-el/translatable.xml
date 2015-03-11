@@ -31,6 +31,7 @@
     <string name="search_no_results_for">Δεν βρέθηκαν αποτελέσματα για</string>
     <string name="search_try_different_query">Δοκιμάστε ένα διαφορετικό ερώτημα</string>
     <string name="search_please_enter_query">Παρακαλούμε εισάγετε ένα ερώτημα</string>
+    <string name="search_message_no_internet">Καμία σύνδεση στο Διαδίκτυο.\nΜπορείτε να προσπαθήσετε ξανά αργότερα.</string>
     <string name="download_dialog_download_location">Τοποθεσία Λήψης</string>
     <string name="download_dialog_download">Λήψη</string>
     <string name="download_dialog_cancel">Ακύρωση</string>

@@ -31,6 +31,7 @@
     <string name="search_no_results_for">검색 결과가 없습니다</string>
     <string name="search_try_different_query">다른 검색어를 사용해 보세요</string>
     <string name="search_please_enter_query">검색어를 입력하세요</string>
+    <string name="search_message_no_internet">인터넷에 연결되지 않습니다.\n나중에 다시 시도 할 수 있습니다.</string>
     <string name="download_dialog_download_location">다운로드 위치</string>
     <string name="download_dialog_download">다운로드</string>
     <string name="download_dialog_cancel">취소</string>
