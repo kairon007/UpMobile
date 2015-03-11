@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
+import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
@@ -84,7 +85,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		super.onCreate(savedInstanceState);
 		initSearchView();
 		
-		// Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 
 	}
 	

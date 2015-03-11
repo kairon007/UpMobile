@@ -414,6 +414,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void stopPressed() {
+		stop();
 		try {
 			for (OnStatePlayerListener listener : stateListeners) {
 				listener.stopPressed();
@@ -421,7 +422,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		} catch (Exception e) {
 			Log.i(getClass().getSimpleName(), "Application is finished, service stoped force");
 		}
-		stop();
+		offMode(SMODE_PAUSE);
 	}
 	
 	public boolean offOnShuffle() {

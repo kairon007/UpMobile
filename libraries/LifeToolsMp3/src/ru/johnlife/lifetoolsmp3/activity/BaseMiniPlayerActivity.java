@@ -150,7 +150,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	}
 	
 	private void checkOnStart() {
-		if (service.isPrepared()) {
+		if (service.isPlaying() || service.isPaused()) {
 			runOnUiThread(new Runnable() {
 				
 				@Override
