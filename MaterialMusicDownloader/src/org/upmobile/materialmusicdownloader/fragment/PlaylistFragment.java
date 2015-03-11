@@ -46,5 +46,13 @@ public class PlaylistFragment extends Fragment implements BaseMaterialFragment, 
 	public int getDrawerTag() {
 		return getClass().getSimpleName().hashCode();
 	}
+	
+	public void setFilter(String filter) {
+		playlistView.applyFilter(filter);
+	}
+	
+	public void clearFilter() {
+		playlistView.clearFilter();
+	}
 
 }

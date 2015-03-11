@@ -23,7 +23,7 @@ public class SearchFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		searchView = new SearchView(getActivity().getLayoutInflater());
+		searchView = new SearchView(inflater);
 		if (null != query) {
 			searchView.setExtraSearch(query);
 			searchView.setSearchField(query);

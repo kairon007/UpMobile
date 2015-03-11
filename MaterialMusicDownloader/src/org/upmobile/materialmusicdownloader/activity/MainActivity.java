@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
-import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
@@ -106,34 +105,23 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	@Override
-	protected void setFilter(String filter) {
-		LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-		if (fragment.isVisible()) {
-			if (filter.isEmpty()) {
-				fragment.clearFilter();
-			} else {
-				fragment.setFilter(filter);
-			}
-		}
-	}
-	
-	@Override
 	public void onBackPressed() {
+		super.onBackPressed();
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		isEnabledFilter = false;
 		if (null != player && player.isVisible()) {
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
-		} else if (currentFragmentID == 3){
+		} else if (currentFragmentID == LIBRARY_FRAGMENT){
 			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();
 			Fragment fragment;
 			if (current == MusicData.class) {
 				fragment = new LibraryFragment();
-				currentFragmentID = 2;
+				currentFragmentID = LIBRARY_FRAGMENT;
 			} else {
 				setVisibleSearchView(false);
 				fragment = new SearchFragment();
-				currentFragmentID = 0;
+				currentFragmentID = SEARCH_FRAGMENT;
 			}
 			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, fragment.getClass().getSimpleName()).commit();
 		} else {
@@ -249,6 +237,47 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
 		editor.commit();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
+	}
+	
+	@Override
+	public void onQueryTextSubmitAct(String query) {
+		String lastFragmentName = getPreviousFragmentName(1);
+		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
+			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+			if (fragment.isVisible()) {
+				if (query.isEmpty()) {
+					fragment.clearFilter();
+				} else {
+					fragment.setFilter(query);
+				}
+			}
+		} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
+			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+			if (fragment.isVisible()) {
+				if (query.isEmpty()) {
+					fragment.clearFilter();
+				} else {
+					fragment.setFilter(query);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onQueryTextChangeAct(String newText) {
+		if ("".equals(newText)) {
+			String fragmentName =  getPreviousFragmentName(1);
+			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
+			if (LibraryFragment.class == fragment.getClass()) {
+				if (fragment.isVisible()) {
+					((LibraryFragment) fragment).clearFilter();
+				}
+			} else if (PlaylistFragment.class == fragment.getClass()) {
+				if (fragment.isVisible()) {
+					((PlaylistFragment) fragment).clearFilter();
+				}
+			}
+		}
 	}
 	
 	@Override

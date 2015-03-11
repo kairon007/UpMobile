@@ -19,7 +19,7 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		downloadsView = new DownloadsView(getActivity().getLayoutInflater());
+		downloadsView = new DownloadsView(inflater);
 		return downloadsView.getView();
 	}
 

@@ -118,33 +118,30 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 
 			@Override
 			public boolean onQueryTextSubmit(String q) {
-				query = q;
+				searchView.clearFocus();
 				hideKeyboard();
-				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
-				String lastFragmentName = backEntry.getName();
-				if (lastFragmentName.equals(getFragments().get(LIBRARY_FRAGMENT).getClass().getSimpleName())) {
-					searchView.clearFocus();
-					isEnabledFilter = true;
-					setFilter(q);
-				} else {
-					isEnabledFilter = false;
-					changeFragment(mFragments.get(SEARCH_FRAGMENT), false);
-					searchView.setIconified(true);
-				}
+				onQueryTextSubmitAct(q);
 				return false;
 			}
 
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				if (isEnabledFilter && "".equals(newText)) {
-					setFilter("");
-					isEnabledFilter = false;
-				}
+				onQueryTextChangeAct(newText);
 				return false;
 			}
 		});
 		return super.onCreateOptionsMenu(menu);
     }
+	
+	
+	protected void onQueryTextSubmitAct(String query) {
+		
+	}
+	
+	protected void onQueryTextChangeAct(String query) {
+		
+	}
+	
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -164,10 +161,6 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 			return true; 
 		}    
 		return false;
-	}
-	
-	protected void setFilter(String filter) {
-		
 	}
 	
 	private void hideKeyboard() {
@@ -227,8 +220,13 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		}
 	}
 	
+	protected void setSearchViewVisibility(String fragmentName) {
+		isVisibleSearchView = (fragmentName.equals((mFragments.get(LIBRARY_FRAGMENT)).getClass().getSimpleName())) || (fragmentName.equals((mFragments.get(PLAYLIST_FRAGMENT)).getClass().getSimpleName()));
+	}
+	
 	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate) {
-		isVisibleSearchView = mFragments.get(0).equals(baseMaterialFragment) || mFragments.get(1).equals(baseMaterialFragment) ? false : true;
+		String fragmentName =  ((Fragment) baseMaterialFragment).getClass().getSimpleName();
+		setSearchViewVisibility(fragmentName);
 		hideKeyboard();
 		isEnabledFilter = false;
 		if (null != searchView) {
@@ -245,6 +243,17 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		tr.replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName())
 		.addToBackStack(baseMaterialFragment.getClass().getSimpleName())
 		.commit();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		setSearchViewVisibility(getPreviousFragmentName(2));
+	}
+	
+	protected String getPreviousFragmentName(int position) {
+		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
+		String previousFragmentName = backEntry.getName();
+		return previousFragmentName;
 	}
 	
 	public void addPlayerElement(boolean flag) {
