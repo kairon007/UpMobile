@@ -42,6 +42,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
+    private int previousSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
@@ -54,6 +55,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
         if (savedInstanceState != null) {
+            previousSelectedPosition = mCurrentSelectedPosition;
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
@@ -151,8 +153,9 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
                 if (!isAdded()) {
                     return;
                 }
-                boolean settingIsVisile = isVisibleSettings();
-                mDrawerListView.setItemChecked(mCurrentSelectedPosition, !isVisibleSettings());
+            	if (!isVisibleSettings()) {
+            		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true); //	
+            	}
                 if (!mUserLearnedDrawer) {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
                     // the navigation drawer automatically in the future.
@@ -183,9 +186,14 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     }
 
     private void selectItem(int position) {
+        previousSelectedPosition = mCurrentSelectedPosition;
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, !isVisibleSettings());
+        	if (!isVisibleSettings()) {
+        		mDrawerListView.setItemChecked(position, true); //	
+        	} else {
+        		setSelectedItem(previousSelectedPosition);
+        	}
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
@@ -238,8 +246,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     
     public void setEnabled(boolean enabled) {
     	mDrawerToggle.setDrawerIndicatorEnabled(enabled);
-    	mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED 
-    			: DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    	mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     	setHasOptionsMenu(enabled);
     }
     
@@ -254,9 +261,10 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     }
     
     public void setSelectedItem(int position){
+    	previousSelectedPosition = mCurrentSelectedPosition;
     	mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, !isVisibleSettings());
+        	mDrawerListView.setItemChecked(position, true);
         }
     }
     
