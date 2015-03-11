@@ -161,6 +161,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			lastOpenedFragment = getFragmentManager().findFragmentByTag(lastFragmentName);
 			String title = getNameCurrentFragment(lastFragmentName);
 			tvTitle.setText(title);
+			manageSearchView(lastFragmentName);
 			showMiniPlayer(true);
 		} else {
 			if (isMiniPlayerPrepared()) {

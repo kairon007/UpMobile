@@ -188,9 +188,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	protected void manageSearchView(String targetFragment) {
-		if (null == searchView) {
-			return;
-		}
+		if (null == searchView) return;
 		if (targetFragment.equals(LibraryFragment.class.getSimpleName())) {
 			searchView.setVisibility(View.VISIBLE);
 		} else if (targetFragment.equals(PlaylistFragment.class.getSimpleName())) {
