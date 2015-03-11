@@ -19,5 +19,14 @@ public class PlaylistFragment extends Fragment {
 		((MainActivity) getActivity()).showTopFrame();
 		return playlistView.getView();
 	}
+	
+
+	public void setFilter(String filter) {
+		playlistView.applyFilter(filter);
+	}
+	
+	public void clearFilter() {
+		playlistView.clearFilter();
+	}
 
 }

@@ -301,20 +301,19 @@ public class AnimatedExpandableListView extends ExpandableListView {
         /**
          * Override {@link #getRealChildType(int, int)} instead.
          */
-        @Override
-        public final int getChildType(int groupPosition, int childPosition) {
-            GroupInfo info = getGroupInfo(groupPosition);
-            if (info.animating) {
-                // If we are animating this group, then all of it's children
-                // are going to be dummy views which we will say is type 0.
-                return 0;
-            } else {
-                // If we are not animating this group, then we will add 1 to
-                // the type it has so that no type id conflicts will occur
-                // unless getRealChildType() returns MAX_INT
-                return getRealChildType(groupPosition, childPosition) + 1;
-            }
-        }
+		@Override
+		public final int getChildType(int groupPosition, int childPosition) {
+			GroupInfo info = getGroupInfo(groupPosition);
+			if (info.animating) {
+				// If we are animating this group, then all of it's children
+				// are going to be dummy views which we will say is type 0.
+				return 0;
+			}
+			// If we are not animating this group, then we will add 1 to
+			// the type it has so that no type id conflicts will occur
+			// unless getRealChildType() returns MAX_INT
+			return getRealChildType(groupPosition, childPosition) + 1;
+		}
 
         /**
          * Override {@link #getRealChildTypeCount()} instead.
@@ -476,9 +475,8 @@ public class AnimatedExpandableListView extends ExpandableListView {
                 }
 
                 return convertView;
-            } else {
-                return getRealChildView(groupPosition, childPosition, isLastChild, convertView, parent);
             }
+            return getRealChildView(groupPosition, childPosition, isLastChild, convertView, parent);
         }
 
         @Override
@@ -486,9 +484,8 @@ public class AnimatedExpandableListView extends ExpandableListView {
             GroupInfo info = getGroupInfo(groupPosition);
             if (info.animating) {
                 return info.firstChildPosition + 1;
-            } else {
-                return getRealChildrenCount(groupPosition);
             }
+            return getRealChildrenCount(groupPosition);
         }
 
     }

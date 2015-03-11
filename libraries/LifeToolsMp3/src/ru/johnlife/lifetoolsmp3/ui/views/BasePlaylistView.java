@@ -94,12 +94,12 @@ public abstract class BasePlaylistView extends View {
 		}).start();
 		view = (ViewGroup) inflater.inflate(getLayoutId() > 0 ? getLayoutId() : ru.johnlife.lifetoolsmp3.R.layout.playlist_view, null);
 		listView = getListView(view) != null ? getListView(view) : (AnimatedExpandableListView) view.findViewById(R.id.expandableListView);
-		playLastPlaylist = (View) view.findViewById(R.id.lastPlayedPlaylist);
-		createNewPlayList = (View) view.findViewById(R.id.createNewPlaylist);
+		playLastPlaylist = view.findViewById(R.id.lastPlayedPlaylist);
+		createNewPlayList = view.findViewById(R.id.createNewPlaylist);
 		initListeners();
 		expandableAdapter = new ExpandableAdapter(view.getContext());
 		expandableAdapter.setProjectPrefics(getDirectory());
-		expandableAdapter.setDeafultBmp(getDeafultCover());
+		expandableAdapter.setDefaultBmp(getDeafultCover());
 		updatePlaylist();
 		if (null !=  groupItems() && groupItems().length > 1) {
 			((AnimatedExpandableListView) listView).setGroupIndicator(null);
@@ -388,6 +388,14 @@ public abstract class BasePlaylistView extends View {
 		} catch (UnsupportedOperationException ex) {
 			return null;
 		}
+	}
+	
+	public void applyFilter(String srcFilter) {
+		expandableAdapter.getFilter().filter(srcFilter);
+	}
+	
+	public void clearFilter() {
+		expandableAdapter.clearFilter();
 	}
 	
 	public void showMessage(Context context, String message) {

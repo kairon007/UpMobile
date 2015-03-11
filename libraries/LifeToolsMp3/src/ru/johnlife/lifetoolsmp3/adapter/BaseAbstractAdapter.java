@@ -194,8 +194,6 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		protected abstract void hold(T item, int position);
 	}
 	
-	
-	
 	private class ResultFilter extends Filter {
 
 		@Override

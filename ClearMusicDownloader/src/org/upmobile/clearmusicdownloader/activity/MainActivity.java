@@ -124,8 +124,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			public boolean onQueryTextSubmit(String q) {
 				query = q;
 				hideKeyboard();
-				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
-				String lastFragmentName = backEntry.getName();
+				String lastFragmentName = getLastFragmentName();
 				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
 					searchView.clearFocus();
 					LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
@@ -136,11 +135,16 @@ public class MainActivity extends BaseClearActivity implements Constants {
 							fragment.setFilter(query);
 						}
 					}
-				} else {
-					((TextView) findViewById(R.id.page_title)).setText(titles[SEARCH_FRAGMENT]);
-					changeFragment(new SearchFragment(), false);
-					searchView.setIconified(true);
-					searchView.setIconified(true);
+				} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
+					searchView.clearFocus();
+					PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+					if (fragment.isVisible()) {
+						if (query.isEmpty()) {
+							fragment.clearFilter();
+						} else {
+							fragment.setFilter(query);
+						}
+					}
 				}
 				return false;
 			}
@@ -148,14 +152,28 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				if ("".equals(newText)) {
-					LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-					if (fragment.isVisible()) {
-						fragment.clearFilter();
+					String fragmentName =  getLastFragmentName();
+					Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
+					if (LibraryFragment.class == fragment.getClass()) {
+						if (fragment.isVisible()) {
+							((LibraryFragment) fragment).clearFilter();
+						}
+					} else if (PlaylistFragment.class == fragment.getClass()) {
+						if (fragment.isVisible()) {
+							((PlaylistFragment) fragment).clearFilter();
+						}
 					}
 				}
 				return false;
 			}
+			
 		});
+	}
+	
+	private String getLastFragmentName() {
+		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+		String lastFragmentName = backEntry.getName();
+		return lastFragmentName;
 	}
 
 	private void hideKeyboard() {
@@ -175,7 +193,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		}
 		if (targetFragment.equals(LibraryFragment.class.getSimpleName())) {
 			searchView.setVisibility(View.VISIBLE);
-		} else if (targetFragment.equals(DownloadsFragment.class.getSimpleName()) || targetFragment.equals(PlaylistFragment.class.getSimpleName())) {
+		} else if (targetFragment.equals(PlaylistFragment.class.getSimpleName())) {
 			searchView.setVisibility(View.VISIBLE);
 		} else {
 			searchView.setVisibility(View.GONE);
