@@ -87,15 +87,14 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			}
 			
 			@Override
-			public void stop(AbstractSong song) {
-				showPlayerElement(false);
-			}
+			public void stop(AbstractSong song) { }
 			
 			@Override
 			public void stopPressed() {
 				setPlayPauseMini(false);
 				isMiniPlayerPrepared = false;
 				showMiniPlayer(false);
+				showPlayerElement(false);
 			}
 			
 			@Override
