@@ -95,18 +95,18 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_gravity="center_vertical|right"
-                            android:paddingRight="16dp"
                             app:rippleColor="@color/main_color_for_search_fragment_text" >
 
                             <com.csform.android.uiapptemplate.font.MusicTextView
                                 android:id="@+id/clear"
                                 style="@style/TextViewAppearance.CustomMusicButtons.Colored.Search"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
                                 android:padding="4dp"
                                 android:text="@string/font_cancel"
                                 android:textSize="16sp" />
+
                         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
                     </FrameLayout>
 
