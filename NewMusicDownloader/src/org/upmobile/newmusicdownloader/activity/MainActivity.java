@@ -18,10 +18,8 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -83,7 +81,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override
