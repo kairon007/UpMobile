@@ -35,7 +35,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private ImageButton button;
 	private View miniPlayer;
 	private View fakeView;
-	private View progress;
+	protected View progress;
 	private boolean isMiniPlayerPrepared = false;
 	private int checkIdCover;
 
@@ -117,7 +117,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			}
 
 			private void refreshButton() {
-				progress.setVisibility(View.GONE);
+				showProgress(false);
 				button.setVisibility(View.VISIBLE);
 			}
 
@@ -245,7 +245,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		artist.setText(song.getArtist());
 		setCover(null);
 		button.setVisibility(service.isPrepared() ? View.VISIBLE : View.GONE);
-		progress.setVisibility(service.isPrepared() ? View.GONE : View.VISIBLE);
+		showProgress(!service.isPrepared());
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 				
@@ -294,4 +294,10 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	public boolean isMiniPlayerPrepared() {
 		return isMiniPlayerPrepared;
 	}
+
+	protected void showProgress(boolean flag) {
+		progress.setVisibility(flag ? View.VISIBLE : View.GONE);
+	}
+	
+	
 }

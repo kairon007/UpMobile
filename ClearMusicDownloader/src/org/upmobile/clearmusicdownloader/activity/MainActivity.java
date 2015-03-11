@@ -33,6 +33,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -95,7 +96,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
 	        ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
 	        searchIcon.setImageResource(R.drawable.ic_search_ab);
-	        searchIcon.setBackgroundResource(R.drawable.selectable_item_bg);
+	        searchIcon.setBackgroundResource(R.drawable.actionbar_selector);
 	        int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
 	        ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
 	        closeIcon.setImageResource(R.drawable.ic_close_ab);
@@ -347,6 +348,20 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	@Override
 	protected void showPlayerElement(boolean flag) {
 		hidePlayerElement();
+	}
+	
+	
+	@Override
+	protected void showProgress(boolean flag) {
+		progress = ((ImageView) findViewById(R.id.mini_player_progress));
+		if (flag) {
+			progress.setVisibility(View.VISIBLE);
+			progress.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
+
+		} else {
+			progress.setVisibility(View.GONE);
+			progress.clearAnimation();
+		}
 	}
 	
 }

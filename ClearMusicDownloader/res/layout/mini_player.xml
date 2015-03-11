@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:gravity="center_vertical"
     android:orientation="vertical" >
 
-    <View android:layout_width="match_parent"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/theme_color"/>
-    
+        android:background="@color/theme_color" />
+
     <LinearLayout
         android:id="@+id/mini_player_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/lineHeader"
-        android:background="@color/theme_color_90"
+        android:background="@drawable/miniplayer_selector"
         android:clickable="true" >
 
         <com.special.utils.UICircularImage
             android:id="@+id/mini_player_cover"
-            android:layout_width="64dp"
-            android:layout_height="match_parent" />
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            app:line_color="@color/theme_color"
+            app:line_color_press="@color/green"
+            app:line_width="1dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,11 +62,12 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <ProgressBar
+            <ImageView
                 android:id="@+id/mini_player_progress"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0" />
+                android:layout_weight="0"
+                android:src="@drawable/loader_black" />
 
             <ImageButton
                 android:id="@+id/mini_player_play_pause"
