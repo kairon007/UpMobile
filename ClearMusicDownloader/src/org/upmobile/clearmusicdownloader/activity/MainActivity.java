@@ -323,5 +323,10 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	protected int getFakeViewID() {
 		return R.id.fake_view;
 	}
+
+	@Override
+	protected void showPlayerElement(boolean flag) {
+		hidePlayerElement();
+	}
 	
 }

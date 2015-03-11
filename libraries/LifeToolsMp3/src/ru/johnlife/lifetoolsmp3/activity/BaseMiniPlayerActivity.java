@@ -42,6 +42,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	protected abstract int getMiniPlayerClickableID();
 	protected abstract int getFakeViewID();
 	protected abstract void showPlayerFragment();
+	protected abstract void showPlayerElement(boolean flag);
 	protected void lockListViewAnimation() {}
 	
 	@Override
@@ -86,7 +87,9 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			}
 			
 			@Override
-			public void stop(AbstractSong song) {}
+			public void stop(AbstractSong song) {
+				showPlayerElement(false);
+			}
 			
 			@Override
 			public void stopPressed() {
