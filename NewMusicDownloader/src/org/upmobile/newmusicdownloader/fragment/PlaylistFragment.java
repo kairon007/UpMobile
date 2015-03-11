@@ -26,5 +26,14 @@ public class PlaylistFragment extends Fragment {
 		((MainActivity) getActivity()).setSelectedItem(Constants.PLAYLIST_FRAGMENT);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 	}
+	
+	public void setFilter(String filter) {
+		playlistView.applyFilter(filter);
+	}
+	
+	public void clearFilter() {
+		playlistView.clearFilter();
+	}
+
 
 }
