@@ -17,7 +17,7 @@
             android:layout_gravity="center_vertical"
             android:text="@string/last_played_playlist"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/primary_text_color" />
     </LinearLayout>
 
     <LinearLayout
@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:text="@string/create_new_playlist"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/primary_text_color" />
 
         <ImageView
             android:id="@+id/imageView1"
@@ -62,7 +62,7 @@
             android:layout_gravity="center"
             android:text="@string/all_playlists"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/primary_text_color" />
     </FrameLayout>
 
     <ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView
