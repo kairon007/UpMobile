@@ -418,6 +418,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			listener.stopPressed();
 		}
 		stop();
+		reset();
 	}
 	
 	public boolean offOnShuffle() {
