@@ -178,7 +178,6 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 					if (isShift) {
 						fakeView.setVisibility(View.GONE);
 					} else {
-						miniPlayer.setVisibility(View.VISIBLE);
 						setData(song);
 					}
 				}
@@ -196,6 +195,9 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 					}
 				}
 			});
+			if (!isShift) {
+				miniPlayer.setVisibility(View.VISIBLE);
+			}
 			miniPlayer.setAnimation(slideUp);
 			miniPlayer.startAnimation(slideUp);
 		} else {
@@ -226,12 +228,14 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			service = PlaybackService.get(this);
 		}
 		if (null != service.getPlayingSong() && song.equals(this.song) && service.isPlaying()){
+			android.util.Log.d("logks", "1");
 			return;
 		}
 		service.play(song);
 		this.song = song;
 		boolean oldIsPrepared = isMiniPlayerPrepared;
 		isMiniPlayerPrepared = true;
+		android.util.Log.d("logks", "2");
 		showMiniPlayer(true, oldIsPrepared);
 	}
 	

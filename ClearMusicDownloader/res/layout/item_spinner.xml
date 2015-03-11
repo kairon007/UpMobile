@@ -3,10 +3,10 @@
     android:id="@+id/spinnerItem"
     android:layout_width="fill_parent"  
     android:layout_height="wrap_content"  
-    android:gravity="left"  
+    android:gravity="start"  
     android:ellipsize="start"
     android:singleLine="true"
     android:textSize="16sp"
-    android:textColor="@android:color/black"
+    android:textColor="@color/second_text_color"
     android:paddingBottom="2dp"  
     android:paddingLeft="6dp"   /> 
