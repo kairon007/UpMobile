@@ -24,6 +24,7 @@ import android.graphics.Matrix;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public final class Util {
 	
@@ -202,5 +203,10 @@ public final class Util {
 	public static float pixelsToSp(Context context, float px) {
 	    float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
 	    return px/scaledDensity;
+	}
+	
+	public static void hideKeyboard(Context context, View view) {
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 }

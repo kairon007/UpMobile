@@ -3,6 +3,7 @@ package org.upmobile.materialmusicdownloader.ui;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.annotation.SuppressLint;
@@ -31,11 +32,13 @@ public class PlaylistView extends BasePlaylistView{
 				super.onPositive(dialog);
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 				PlaylistView.this.createPlaylist(getContext().getContentResolver(), input.getText().toString());
+				Util.hideKeyboard(getContext(), input);
 				dialog.cancel();
 			}
 			@Override
 			public void onNegative(MaterialDialog dialog) {
 				super.onNegative(dialog);
+				Util.hideKeyboard(getContext(), dialog.getCustomView());
 				dialog.cancel();
 			}
 		};

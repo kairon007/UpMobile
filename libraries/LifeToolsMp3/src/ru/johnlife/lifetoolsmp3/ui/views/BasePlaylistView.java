@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.ExpandableAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -26,8 +27,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
@@ -221,6 +220,7 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				Util.hideKeyboard(getContext(), dialoglayout);
 				dialog.cancel();
 			}
 
@@ -230,8 +230,7 @@ public abstract class BasePlaylistView extends View {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				createPlaylist(getContext().getContentResolver(), ((EditText) dialoglayout.findViewById(R.id.newPlaylistET)).getText().toString());
-				InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(dialoglayout.getWindowToken(), 0);
+				Util.hideKeyboard(getContext(), dialoglayout);
 				dialog.cancel();
 			}
 		});
