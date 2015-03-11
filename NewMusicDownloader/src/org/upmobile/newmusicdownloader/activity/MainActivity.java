@@ -53,7 +53,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private String currentTag;
 	private boolean isVisibleSearchView = false;
-	protected boolean isEnabledFilter = false;
 
 	private FileObserver fileObserver = new FileObserver(folderPath) {
 
@@ -104,39 +103,53 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			}
 		});
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-		
+			
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() -1);
-    			String lastFragmentName = backEntry.getName();
+				hideKeyboard();
+				String lastFragmentName = getPreviousFragmentName(1);
 				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(currentTag);
+					searchView.clearFocus();
+					LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
 					if (fragment.isVisible()) {
 						if (query.isEmpty()) {
 							fragment.clearFilter();
-							isEnabledFilter = false;
 						} else {
-							isEnabledFilter = true;
 							fragment.setFilter(query);
 						}
 					}
-				} else {
-					isEnabledFilter = false;
-					changeFragment(new SearchFragment(query), false);
-					searchView.setIconified(true);
+				} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
+					searchView.clearFocus();
+					PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+					if (fragment.isVisible()) {
+						if (query.isEmpty()) {
+							fragment.clearFilter();
+						} else {
+							fragment.setFilter(query);
+						}
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				if ("".equals(newText)) {
+					String fragmentName =  getPreviousFragmentName(1);
+					Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
+					if (LibraryFragment.class == fragment.getClass()) {
+						if (fragment.isVisible()) {
+							((LibraryFragment) fragment).clearFilter();
+						}
+					} else if (PlaylistFragment.class == fragment.getClass()) {
+						if (fragment.isVisible()) {
+							((PlaylistFragment) fragment).clearFilter();
+						}
+					}
 				}
 				return false;
 			}
 			
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				if (isEnabledFilter && newText.isEmpty()) {
-					LibraryFragment fragment = (LibraryFragment)getFragmentManager().findFragmentByTag(currentTag);
-					fragment.clearFilter();
-            		isEnabledFilter = false;
-            	}
-				return false;
-			}
 		});
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -170,9 +183,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		super.onResume();
 	}
 	
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (null != searchView)
+			imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+	}
+	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		isEnabledFilter = false;
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT){
@@ -228,7 +246,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	}
 	
 	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
-		isVisibleSearchView = targetFragment.getClass() != SearchFragment.class;
+		setSearchViewVisibility(targetFragment.getClass().getSimpleName());
 		currentTag = targetFragment.getClass().getSimpleName();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate) {
@@ -239,16 +257,22 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 		.commit();
 	}
+
+	private void setSearchViewVisibility(String fragmentName) {
+		isVisibleSearchView = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
+	}
+	
+	private String getPreviousFragmentName(int position) {
+		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
+		String previousFragmentName = backEntry.getName();
+		return previousFragmentName;
+	}
 	
 	@Override
 	public void onBackPressed() {
-		isEnabledFilter = false;
-		Fragment player = getFragmentManager().findFragmentByTag(currentTag);
-		if (null != player && player.isVisible() && player.getClass() == PlayerFragment.class) {
-			AbstractSong plaingSong = PlaybackService.get(this).getPlayingSong();
-			if (null != plaingSong) {
-				isVisibleSearchView = plaingSong.getClass() == MusicData.class;
-			}
+		Fragment currentFragment = getFragmentManager().findFragmentByTag(currentTag);
+		setSearchViewVisibility(getPreviousFragmentName(2));
+		if (null != currentFragment && currentFragment.isVisible() && currentFragment.getClass() == PlayerFragment.class) {
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
 			showMiniPlayer(true);
