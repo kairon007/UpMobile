@@ -70,7 +70,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
 	@Override
@@ -170,9 +170,13 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image) {
+		return getDefaultBitmapCover(outWidth, outHeight, property, image, 0);
+	}
+	
+	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image, int customColor) {
 		MusicTextView textCover = new MusicTextView(this);
 		textCover.setText(image);
-		textCover.setTextColor(getResources().getColor(R.color.main_color_500));
+		textCover.setTextColor(getResources().getColor(customColor == 0 ? R.color.main_color_500 : customColor));
 		Rect bounds = new Rect();
 		Paint textPaint = textCover.getPaint();
 		textPaint.getTextBounds(image, 0, image.length(), bounds);
@@ -262,5 +266,15 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	protected int getFakeViewID() {
 		return R.id.fake_view;
 	}
+
+	@Override
+	protected Bitmap getSearchActinBarIcon() {
+		return getDefaultBitmapCover(Util.dpToPx(this, 24), Util.dpToPx(this, 24), Util.dpToPx(this, 22), getResources().getString(R.string.font_search_online), R.color.main_color_for_search_fragment_text);
+	}
 	
+	@Override
+	protected Bitmap getCloseActinBarIcon() {
+		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel),  R.color.main_color_for_search_fragment_text);
+	}
+
 }

@@ -9,6 +9,8 @@ import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,7 +49,8 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	public int getSettingsIcon() { return 0; }
 	public abstract String getDirectory();
 	public abstract void showDialog();
-	
+	protected abstract Bitmap getSearchActinBarIcon();
+	protected abstract Bitmap getCloseActinBarIcon();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +76,16 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        int color = getResources().getColor(R.color.main_color_for_text);
+        int color = getResources().getColor(R.color.main_color_for_search_fragment_text);
         String str = Integer.toHexString(color);
         String strColor =  "#"+str.substring(2);
         int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
         ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
-        searchIcon.setImageResource(R.drawable.ic_search_ab);
+        searchIcon.setImageBitmap(getSearchActinBarIcon());
         searchIcon.setBackgroundResource(R.drawable.spinner_selector);
         int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
         ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
-        closeIcon.setImageResource(R.drawable.ic_close_ab);
+        closeIcon.setImageBitmap(getCloseActinBarIcon());
         closeIcon.setBackgroundResource(R.drawable.spinner_selector);
         int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
         TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
@@ -91,7 +94,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 			Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
 			SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
 			stopHint.append(Html.fromHtml("<font color = " + strColor + ">" + getResources().getString(R.string.hint_main_search) + "</font>"));
-			Drawable search_icon = getResources().getDrawable(R.drawable.ic_search_ab);
+			Drawable search_icon = new BitmapDrawable(getResources(),getSearchActinBarIcon());
 			Method textSizeMethod = clazz.getMethod("getTextSize");
 			Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
 			int textSize = (int) (rawTextSize * 1.5);
@@ -100,7 +103,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 			Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
 			setHintMethod.invoke(autoComplete, stopHint);
 		} catch (Exception e) {
-			android.util.Log.d("logks", getClass().getName() + "Appear problem: " + e);
+			android.util.Log.d(getClass().getName() , "Appear problem: " + e);
 		}
         searchView.setOnSearchClickListener(new OnClickListener() {
 			
@@ -225,7 +228,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	}
 	
 	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate) {
-		isVisibleSearchView = mFragments.get(0).equals(baseMaterialFragment) ? false : true;
+		isVisibleSearchView = mFragments.get(0).equals(baseMaterialFragment) || mFragments.get(1).equals(baseMaterialFragment) ? false : true;
 		hideKeyboard();
 		isEnabledFilter = false;
 		if (null != searchView) {

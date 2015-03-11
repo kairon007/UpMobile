@@ -38,6 +38,10 @@
     <style name="TextViewAppearance.CustomMusicButtons.Colored" parent="TextViewAppearance.CustomMusicButtons">
         <item name="android:textColor">@color/main_color_500</item>
     </style>
+    
+    <style name="TextViewAppearance.CustomMusicButtons.Colored.Search" parent="TextViewAppearance.CustomMusicButtons">
+        <item name="android:textColor">@color/main_color_for_search_fragment_text</item>
+    </style>
 
     <style name="TextViewAppearance.CustomMusicButtons" parent="@style/TextViewAppearance">
         <item name="typeface">robotoMedium</item>

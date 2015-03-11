@@ -6,6 +6,7 @@
         <color name="main_color_500">@color/material_indigo_500</color>
         <color name="main_color_accent">#ff7b00</color>
         <color name="main_color_for_text">#ffffff</color>
+         <color name="main_color_for_search_fragment_text">#ffffff</color>
     <!-- End theme colors -->
     
     <color name="mini_player_color">#ddd</color>

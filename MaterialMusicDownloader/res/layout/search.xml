@@ -96,17 +96,16 @@
                             android:layout_height="48dp"
                             android:layout_gravity="center_vertical|right"
                             android:paddingRight="16dp"
-                            app:rippleColor="@android:color/white" >
+                            app:rippleColor="@color/main_color_for_search_fragment_text" >
 
                             <com.csform.android.uiapptemplate.font.MusicTextView
                                 android:id="@+id/clear"
-                                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                                style="@style/TextViewAppearance.CustomMusicButtons.Colored.Search"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:padding="4dp"
                                 android:text="@string/font_cancel"
-                                android:textColor="@android:color/white"
                                 android:textSize="16sp" />
                         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
                     </FrameLayout>
@@ -116,17 +115,16 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center_vertical|end"
-                        app:rippleColor="@android:color/white" >
+                        app:rippleColor="@color/main_color_for_search_fragment_text" >
 
                         <com.csform.android.uiapptemplate.font.MusicTextView
                             android:id="@+id/search"
-                            style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                            style="@style/TextViewAppearance.CustomMusicButtons.Colored.Search"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:padding="4dp"
                             android:text="@string/font_search_online"
-                            android:textColor="@android:color/white"
                             android:textSize="32sp" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 

@@ -265,7 +265,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     }
     
     public void setTitle(CharSequence mTitle) {
-    	int color = getResources().getColor(R.color.main_color_for_text);
+    	int color = getResources().getColor(R.color.main_color_for_search_fragment_text);
         String str = Integer.toHexString(color);
         String strColor =  "#"+str.substring(2);
     	getActionBar().setTitle(Html.fromHtml("<font color = " + strColor + ">" + mTitle+ "</font>"));
