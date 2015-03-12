@@ -100,6 +100,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			
 			@Override
 			public void start(AbstractSong song) {
+				isMiniPlayerPrepared = true;
 				refreshButton();
 				setPlayPauseMini(false);
 			}
