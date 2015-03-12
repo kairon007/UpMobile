@@ -7,6 +7,7 @@ import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -32,13 +33,16 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	private TextView title;
 	private TextView artist;
 	private ImageView cover;
-	private ImageButton button;
+	private ImageButton playPause;
+	private View download;
 	private View miniPlayer;
 	private View fakeView;
 	protected View progress;
 	private boolean isMiniPlayerPrepared = false;
 	private int checkIdCover;
+	private DownloadClickListener downloadListener;
 
+	protected abstract String getDirectory();
 	protected abstract int getMiniPlayerID();
 	protected abstract int getMiniPlayerClickableID();
 	protected abstract int getFakeViewID();
@@ -65,8 +69,9 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		title = (TextView)findViewById(R.id.mini_player_title);
 		artist = (TextView)findViewById(R.id.mini_player_artist);
 		cover = (ImageView)findViewById(R.id.mini_player_cover);
-		button = (ImageButton)findViewById(R.id.mini_player_play_pause);
+		playPause = (ImageButton)findViewById(R.id.mini_player_play_pause);
 		progress = findViewById(R.id.mini_player_progress);
+		download = findViewById(R.id.mini_player_download);
 		miniPlayer = findViewById(getMiniPlayerID());
 		fakeView = findViewById(getFakeViewID());
 	}
@@ -119,14 +124,14 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 
 			private void refreshButton() {
 				showProgress(false);
-				button.setVisibility(View.VISIBLE);
+				playPause.setVisibility(View.VISIBLE);
 			}
 
 			@Override
 			public void error() {}
 			
 		});
-		button.setOnClickListener(new OnClickListener() {
+		playPause.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -136,6 +141,14 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 					service.play();
 				}
 			}
+		});
+		download.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View paramView) {
+				downloadSong();
+			}
+
 		});
 		findViewById(getMiniPlayerClickableID()).setOnClickListener(new OnClickListener() {
 			
@@ -225,6 +238,11 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			miniPlayer.setAnimation(slideDown);
 			miniPlayer.startAnimation(slideDown);
 		}
+		if (null != song && song.getClass() == MusicData.class) {
+			download.setVisibility(View.GONE);
+		} else {
+			download.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	public void startSong(AbstractSong song) {
@@ -245,7 +263,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
 		setCover(null);
-		button.setVisibility(service.isPrepared() ? View.VISIBLE : View.GONE);
+		playPause.setVisibility(service.isPrepared() ? View.VISIBLE : View.GONE);
 		showProgress(!service.isPrepared());
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
@@ -274,7 +292,14 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	 * @param playPayse true - image play, false - image pause
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
-		button.setImageResource(playPayse ? getResIdFromAttribute(this, R.attr.miniPlayerPlay) : getResIdFromAttribute(this, R.attr.miniPlayerPause));
+		playPause.setImageResource(playPayse ? getResIdFromAttribute(this, R.attr.miniPlayerPlay) : getResIdFromAttribute(this, R.attr.miniPlayerPause));
+	}
+	
+	private void downloadSong() {
+		downloadListener = new DownloadClickListener(this, (RemoteSong) song, 0);
+		downloadListener.setDownloadPath(getDirectory());
+		downloadListener.setUseAlbumCover(true);
+		downloadListener.downloadSong(false);
 	}
 	
 	private int getResIdFromAttribute(final Activity activity, final int attr) {

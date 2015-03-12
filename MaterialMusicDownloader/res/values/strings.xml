@@ -50,5 +50,6 @@
 	<string name="font_button_add">&#xe80e;</string>
 	<string name="font_arrow_up">&#xe824;</string>
 	<string name="font_arrow_down">&#xe82f;</string>
+	<string name="font_download_button">&#xe82c;</string>
 	
 </resources>

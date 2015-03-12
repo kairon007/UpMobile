@@ -29,6 +29,7 @@
         <item name="actionVolume">@drawable/ic_action_volume</item>
         <item name="miniPlayerPlay">@drawable/mini_player_play</item>
         <item name="miniPlayerPause">@drawable/mini_player_pause</item>
+        <item name="miniPlayerDownload">@drawable/mini_player_download</item>
     </style>
 
     <style name="AppThemeWhite" parent="android:Theme.Holo.Light">
@@ -56,6 +57,7 @@
         <item name="actionVolume">@drawable/ic_action_volume_light</item>
         <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
+        <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
     </style>
 
     <style name="AppThemeWhite.BlackActionBar" parent="android:Theme.Holo.Light.DarkActionBar">
@@ -82,6 +84,7 @@
         <item name="actionVolume">@drawable/ic_action_volume_light</item>
         <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
+        <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
     </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">

@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
-import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmusicdownloader.fragment.NavigationDrawerFragment;
@@ -376,5 +376,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	@Override
 	protected int getFakeViewID() {
 		return R.id.fake_view;
+	}
+	
+	@Override
+	protected String getDirectory() {
+		return NewMusicDownloaderApp.getDirectory();
 	}
 }

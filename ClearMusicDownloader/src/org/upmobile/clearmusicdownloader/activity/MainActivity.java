@@ -85,7 +85,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		super.onCreate(savedInstanceState);
 		initSearchView();
 		
-		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 
 	}
 	
@@ -363,6 +363,11 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			progress.setVisibility(View.GONE);
 			progress.clearAnimation();
 		}
+	}
+
+	@Override
+	protected String getDirectory() {
+		return ClearMusicDownloaderApp.getDirectory();
 	}
 	
 }

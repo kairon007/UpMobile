@@ -82,7 +82,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 	};
 
-	protected DownloadClickListener(Context context, RemoteSong song, int id) {
+	public DownloadClickListener(Context context, RemoteSong song, int id) {
 		this.context = context;
 		this.song = song;
 		this.id = id;

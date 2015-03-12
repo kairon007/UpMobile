@@ -4,6 +4,7 @@
     <declare-styleable name="customAttrs">
         <attr name="miniPlayerPlay" format="reference" />
         <attr name="miniPlayerPause" format="reference" />
+        <attr name="miniPlayerDownload" format="reference" />
     </declare-styleable>
 
 </resources>
