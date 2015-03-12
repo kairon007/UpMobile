@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
+
+    <ImageView
+        android:id="@+id/actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bar_color_transparent"
+        android:contentDescription="@string/image_description" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/title_bar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:addStatesFromChildren="true"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="4dp" >
+
+                <Button
+                    android:id="@+id/title_bar_left_menu"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@drawable/titlebar_menu_selector"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/page_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:ellipsize="middle"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center_vertical|start"
+                    android:paddingLeft="16dp"
+                    android:singleLine="true"
+                    android:text="@string/app_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/textsize_large" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" 
+                    android:layout_gravity="end"
+                    android:layout_weight="1">
+
+                    <SearchView
+                        android:id="@+id/ab_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:gravity="end"
+                        android:visibility="gone" >
+                    </SearchView>
+
+                </FrameLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/bar_separator_color"
+                android:contentDescription="@string/image_description" />
+
+            <LinearLayout
+                android:id="@+id/cross_promo_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#eeeeee"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp" >
+
+                    <TextView
+                        android:id="@+id/cross_promo_box_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#000000"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/cross_promo_box_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#000000"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/cross_promo_box_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/main_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include
+            android:id="@+id/mini_player"
+            layout="@layout/mini_player"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            layout="@layout/banner" />
+    </LinearLayout>
+
+</FrameLayout>
