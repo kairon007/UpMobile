@@ -151,6 +151,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (isDestroy) {
 				return;
 			}
+			android.util.Log.d("logks", "song =" + s.toString());
 			changePlayPauseView(true);
 			setElementsView(0);
 		}
@@ -557,7 +558,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void secondSetting(boolean b) {
 		playerProgress.setEnabled(b);
 		playerProgress.setClickable(b);
-		if (b) {
+		if (b || player.isStoped()) {
 			playerProgress.setVisibility(View.VISIBLE);
 			wait.setVisibility(View.GONE);
 		} else {

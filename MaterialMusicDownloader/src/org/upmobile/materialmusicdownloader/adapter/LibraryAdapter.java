@@ -57,9 +57,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		}
 
 		@Override
-		protected void hold(MusicData data, int position) {
-			this.data = data;
-			super.hold(data, position);
+		protected void hold(MusicData md, int position) {
+			data = md;
+			super.hold(md, position);
 			setListener();
 		}
 		
@@ -75,7 +75,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);
 				}
-				if (service.isPlaying() && service.getPlayingSong().equals(data)) return;
+				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
 				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
 				((MainActivity)getContext()).setSelectedItem(LIBRARY_FRAGMENT);
@@ -164,12 +164,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	
 	@Override
 	public void showMessage(Context context, int message) {
-		showMessage(getContext(), getContext().getResources().getString(message));
+		showMessage(context, context.getResources().getString(message));
 	}
 	
 	@Override
 	public void showMessage(Context context, String message) {
-		((MainActivity) getContext()).showMessage(message);
+		((MainActivity) context).showMessage(message);
 	}
 
 	@Override

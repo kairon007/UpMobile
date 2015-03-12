@@ -174,7 +174,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (isDestroy) return;
 		setElementsView(0);
 		changePlayPauseView(true);
-		setClickablePlayerElement(player.isPrepared());
+		setClickablePlayerElement(true);
+		playerProgress.setEnabled(false);
+		playerProgress.setClickable(false);
+		
 	}
 	
 	@Override

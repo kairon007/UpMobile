@@ -59,6 +59,9 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
 					}
+					if (service.isPrepared() && service.getPlayingSong().equals(data)) {
+						return;
+					}
 					((MainActivity) getContext()).showPlayerElement(true);
 					((MainActivity)getContext()).startSong(data);
 				}

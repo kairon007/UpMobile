@@ -58,6 +58,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private static final int SMODE_UNPLUG_HEADPHONES = 0x00000100;
 	private static final int SMODE_CALL_RINGING = 0x00000200;
 	private static final int SMODE_NOTIFICATION = 0x00000400;
+	private static final int SMODE_STOP = 0x00000800;
 	private static final int MSG_START = 1;
 	private static final int MSG_PLAY = 2;
 	private static final int MSG_PAUSE = 3;
@@ -213,7 +214,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public void reset() {
 		handler.removeCallbacksAndMessages(null);
-		mode &= ~SMODE_PREPARED;
 		buildSendMessage(null, MSG_RESET, 0, 0);
 	}
 	
@@ -403,11 +403,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public void stop() {
 		synchronized (LOCK) {
-			if (check(SMODE_PREPARED)) {	
-				player.pause();
-				player.seekTo(0);
-				onMode(SMODE_PAUSE);
-			}
+			reset();
+			onMode(SMODE_STOP);
 		}
 		helper(State.STOP, previousSong == null ? playingSong : previousSong);
 		removeNotification();
@@ -525,6 +522,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		mode |= flag;
 		if (flag == SMODE_PREPARED) {
 			offMode(SMODE_START_PREPARE);
+			offMode(SMODE_STOP);
 		} else if (flag == SMODE_PLAYING) {
 			mode &= ~SMODE_PAUSE;
 		} else if (flag == SMODE_PAUSE){
@@ -622,6 +620,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public boolean isGettingURl() {
 		return check(SMODE_GET_URL);
+	}
+	
+	public boolean isStoped() {
+		return check(SMODE_STOP);
 	}
 	
 	public boolean isPlaying() {
@@ -805,6 +807,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}	
 		if (check(SMODE_NOTIFICATION)) {
 			builder.append("| SMODE_NOTIFICATION");
+		}
+		if (check(SMODE_STOP)) {
+			builder.append("| SMODE_STOP");
 		}
 		android.util.Log.d("logks", builder.toString());
 	}
