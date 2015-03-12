@@ -2,59 +2,37 @@ package org.upmobile.clearmusicdownloader.ui;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.special.menu.ResideMenu.OnMenuListener;
-import com.special.utils.UISwipableList;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
-public class LibraryView extends BaseLibraryView implements OnScrollListener, OnMenuListener, Constants {
-	
-	private UISwipableList listView;
-	private Animation anim;
+public class LibraryView extends BaseLibraryView implements Constants {
 
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
-		((MainActivity) getContext()).setResideMenuListener(this);
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-	
-	@Override
-	public void onPause() {
-		super.onPause();
 	}
 
 	@Override
 	protected BaseAbstractAdapter<MusicData> getAdapter() {
-		return new LibraryAdapter(getContext(), R.layout.library_item);
+		return new LibraryAdapter(getContext(), R.layout.row_online_search);
 	}
 
 	@Override
 	protected ListView getListView(View view) {
-		listView = (UISwipableList) view.findViewById(R.id.listView);
-		listView.setActionLayout(R.id.hidden_view);
-		listView.setItemLayout(R.id.front_layout);
-		listView.setIgnoredViewHandler(((MainActivity) getContext()).getResideMenu());
-		listView.setOnScrollListener(this);
-		return listView;
+		return (ListView) view.findViewById(R.id.list);
 	}
 
 	@Override
@@ -71,56 +49,29 @@ public class LibraryView extends BaseLibraryView implements OnScrollListener, On
 	protected TextView getMessageView(View view) {
 		return (TextView) view.findViewById(R.id.message_listview);
 	}
-
+	
 	@Override
-	public void openMenu() {
-		for (final MusicData item : getAdapter().getAll()) {
-			if (item.check(MusicData.MODE_VISIBLITY)) {
-				item.reset(getContext());
-				deleteAdapterItem(item);
-				deleteServiceItem(item);
-			}
-		}
+	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
+		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+	        @Override
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	            for (int position : reverseSortedPositions) {
+	            	((LibraryAdapter)adapter).deleteSong((MusicData)adapter.getItem(position)); 
+	            }
+	        }
+	    });
+		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
+		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
+		((DynamicListView)listView).enableSimpleSwipeUndo();
 	}
-
+	
 	@Override
-	public void closeMenu() { }
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		for (final MusicData item : getAdapter().getAll()) {
-			if (item.check(MusicData.MODE_VISIBLITY)) {
-				int wantedPosition = getAdapter().getPosition(item);
-				int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
-				int wantedChild = wantedPosition - firstPosition;
-				if (wantedChild < 0 || wantedChild >= listView.getChildCount()) return;
-				anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
-				anim.setDuration(200);
-				anim.setAnimationListener(new AnimationListener() {
-
-					@Override
-					public void onAnimationStart(Animation paramAnimation) {
-						adapterCancelTimer();
-					}
-
-					@Override
-					public void onAnimationRepeat(Animation paramAnimation) {
-					}
-
-					@Override
-					public void onAnimationEnd(Animation paramAnimation) {
-						item.reset(getContext());
-						deleteAdapterItem(item);
-						deleteServiceItem(item);
-					}
-				});
-				listView.getChildAt(wantedChild).startAnimation(anim);
-			}
-		}
+	public void onResume() {
+		super.onResume();
 	}
-
+	
 	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+	public void onPause() {
+		super.onPause();
 	}
-
 }

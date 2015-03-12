@@ -38,10 +38,6 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 
 	protected abstract ViewHolder<T> createViewHolder(final View v);
 
-	protected void onItemSwipeVisible(Object selected, View v) {}
-
-	protected void onItemSwipeGone(Object selected, View v) {}
-	
 	public void cancelTimer() {}
 	
 	protected abstract boolean isSetListener();
@@ -152,7 +148,12 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	
 	@Override
 	public Object getItem(int paramInt) {
-		return items.get(paramInt);
+		try {
+			return items.get(paramInt);
+		} catch (IndexOutOfBoundsException e) {
+			notifyDataSetChanged();
+			return null;
+		}
 	}
 	
 	@Override

@@ -2,11 +2,11 @@ package org.upmobile.materialmusicdownloader.ui;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.adapter.CustomSwipeUndoAdapter;
 import org.upmobile.materialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
 import android.support.annotation.NonNull;

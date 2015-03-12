@@ -2,12 +2,12 @@ package org.upmobile.materialmusicdownloader.ui;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.adapter.CustomSwipeUndoAdapter;
-import org.upmobile.materialmusicdownloader.adapter.CustomSwipeUndoAdapter.CanNotifyListener;
 import org.upmobile.materialmusicdownloader.adapter.DownloadsAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter.CanNotifyListener;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseDownloadsView;
 import android.support.annotation.NonNull;
@@ -72,5 +72,4 @@ public class DownloadsView extends BaseDownloadsView implements Constants {
 	protected TextView getMessageView(View view) {
 		return (TextView) view.findViewById(R.id.message_listview);
 	}
-	
 }

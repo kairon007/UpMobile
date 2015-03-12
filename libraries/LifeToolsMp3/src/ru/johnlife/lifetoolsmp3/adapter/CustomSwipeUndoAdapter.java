@@ -1,4 +1,4 @@
-package org.upmobile.materialmusicdownloader.adapter;
+package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -72,12 +72,17 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	}
 
 	private void startTimer(int position) {
+		if (null == getItem(position)) return;
 		timers.add(new DissmissTimer(getItem(position)).startTimer());
 	}
 	
 	private void stopTimer(int position) {
 		Object tag = getItem(position);
 		for (DissmissTimer timer : timers) {
+			if (null == tag) {
+				notifyDataSetChanged();
+				return;
+			}
 			if (timer.equals(tag)) {
 				timer.cancel();
 				timers.remove(timer);

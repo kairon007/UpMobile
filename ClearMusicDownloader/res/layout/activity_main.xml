@@ -27,40 +27,49 @@
                 android:id="@+id/title_bar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:addStatesFromChildren="true"
-                android:background="@drawable/actionbar_selector"
-                android:paddingLeft="24dp"
                 android:paddingRight="4dp" >
 
-                <Button
-                    android:id="@+id/title_bar_left_menu"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/titlebar_menu_selector" />
-
-                <TextView
-                    android:id="@+id/page_title"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:ellipsize="middle"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center_vertical|start"
-                    android:paddingLeft="24dp"
-                    android:singleLine="true"
-                    android:text="@string/app_title"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/textsize_large" />
-
-                <SearchView
-                    android:id="@+id/ab_search"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
-                    android:gravity="center_vertical" >
-                </SearchView>
+                    android:addStatesFromChildren="true"
+                    android:background="@drawable/actionbar_selector"
+                    android:orientation="horizontal"
+                    android:paddingLeft="24dp" >
+
+                    <Button
+                        android:id="@+id/title_bar_left_menu"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/titlebar_menu_selector" />
+
+                    <TextView
+                        android:id="@+id/page_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:ellipsize="middle"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center_vertical|start"
+                        android:paddingLeft="24dp"
+                        android:singleLine="true"
+                        android:text="Search"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize_large" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right" >
+
+                    <SearchView
+                        android:id="@+id/ab_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:visibility="gone" >
+                    </SearchView>
+                </LinearLayout>
             </LinearLayout>
 
             <ImageView
@@ -123,9 +132,9 @@
                 android:id="@+id/fake_view"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:visibility="gone"
-                android:layout_alignParentBottom="true" />
-            
+                android:layout_alignParentBottom="true"
+                android:visibility="gone" />
+
             <FrameLayout
                 android:id="@+id/main_fragment"
                 android:layout_width="match_parent"
@@ -137,8 +146,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_alignParentBottom="true"
-                android:visibility="gone"
-                layout="@layout/mini_player" />
+                layout="@layout/mini_player"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <include
@@ -146,7 +155,6 @@
             android:layout_height="50dp"
             android:layout_weight="0"
             layout="@layout/banner" />
-
     </LinearLayout>
 
 </FrameLayout>

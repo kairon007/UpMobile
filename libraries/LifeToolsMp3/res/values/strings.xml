@@ -155,5 +155,6 @@
     <string name="no_songs_in_the_last_playlist">There are no songs in the last played Playlist</string>
     <string name="the_playlist_was_deleted">The last played Playlist was deleted</string>
     <string name="playlists_are_missing">Playlists are missing</string>
+    <string name="undo_deletion">UNDO DELETION</string>
     
 </resources>

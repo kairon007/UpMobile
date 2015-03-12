@@ -3,7 +3,6 @@ package ru.johnlife.lifetoolsmp3.adapter;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -29,9 +28,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
 	
@@ -48,10 +47,13 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected abstract String getDirectory();
 	protected abstract int getDefaultCover();
 	protected abstract boolean showDeleteItemMenu();
-	protected Bitmap getDefaultBitmap() { return null; }
-	protected void remove() {};
-	protected void setListener(ViewGroup parent, View view, final int position){ }
 	protected abstract void startSong(AbstractSong abstractSong);
+	
+	protected void remove() {};
+	protected void setListener(ViewGroup parent, View view, final int position){}
+	protected Bitmap getDefaultBitmap() {
+		return null; 
+	}
 
 	public BaseLibraryAdapter(Context context, int resource) {
 		super(context, resource);
