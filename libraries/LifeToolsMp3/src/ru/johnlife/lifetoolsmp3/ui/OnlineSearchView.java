@@ -64,6 +64,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -746,7 +747,8 @@ public abstract class OnlineSearchView extends View {
 			refreshSpinner = (View) initRefreshProgress();
 			this.inflater = LayoutInflater.from(getContext());
 			this.footer = new FrameLayout(context);
-			footer.addView(refreshSpinner, new FrameLayout.LayoutParams(80, 80, Gravity.CENTER));
+			footer.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, 72));
+			footer.addView(refreshSpinner, new FrameLayout.LayoutParams(48, 48, Gravity.CENTER));
 			hideRefreshProgress();
 		}
 		
