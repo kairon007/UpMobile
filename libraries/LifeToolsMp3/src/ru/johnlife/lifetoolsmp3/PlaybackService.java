@@ -214,6 +214,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public void reset() {
 		handler.removeCallbacksAndMessages(null);
+		mode &= ~SMODE_PREPARED;
 		buildSendMessage(null, MSG_RESET, 0, 0);
 	}
 	
@@ -369,6 +370,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			}
 		}
 		playingSong = arrayPlayback.get(position);
+		printStateDebug();
 		if (check(SMODE_PREPARED)) {
 			int msg;
 			if (check(SMODE_PAUSE)) {
@@ -646,12 +648,14 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public <T> boolean isCorrectlyState(Class<T> calledClass, int transferSize) {
-		if (arrayPlayback == null) return false;
-		if (transferSize != arrayPlayback.size()) return false;
-		if (playingSong != null) {
-			if (playingSong.getClass() != calledClass) return false;
-		};
-		return true;
+		boolean result = true;
+		if (arrayPlayback == null || transferSize != arrayPlayback.size()) {
+			result = false;
+		}
+		if (playingSong != null && playingSong.getClass() != calledClass) {
+			result = false;
+		}
+		return result;
 	}
 	
 	public void setArrayPlayback(ArrayList<AbstractSong> arrayPlayback) {
