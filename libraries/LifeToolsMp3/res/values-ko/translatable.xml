@@ -57,5 +57,14 @@
     <string name="create_new_playlist">재생 목록 만들기</string>
     <string name="all_playlists">모든 재생 목록</string>
     <string name="create">만들기</string>
+    <string name="retry">반복</string>
+    <string name="message_undo_bar">커버를 제거</string>
+    <string name="delete_item">항목을 제거</string>    
+    <string name="no_songs_in_the_last_playlist">마지막으로 재생 재생 목록의 어떤 노래가 없습니다</string>
+    <string name="the_playlist_was_deleted">마지막으로 재생 가능한 재생 목록이 삭제되었습니다</string>
+    <string name="playlists_are_missing">재생 목록 오프라인</string>
+    <string name="undo_deletion">삭제 취소</string>
+	<string name="playlist_cannot_be_empty">재생 목록 이름은 비워 둘 수 없습니다</string>
+	<string name="playlist_is_empty">재생 목록이 비어 있습니다</string>
 
 </resources>

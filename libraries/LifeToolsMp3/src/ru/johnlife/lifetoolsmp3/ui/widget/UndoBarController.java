@@ -44,10 +44,8 @@ public class UndoBarController extends LinearLayout {
     private static final String NAV_BAR_HEIGHT_LANDSCAPE_RES_NAME = "navigation_bar_height_landscape";
     private static final String SHOW_NAV_BAR_RES_NAME = "config_showNavigationBar";
 
-    public static final UndoBarStyle UNDOSTYLE = new UndoBarStyle(
-            R.drawable.ic_undobar_undo, R.string.undo);
-    public static final UndoBarStyle RETRYSTYLE = new UndoBarStyle(R.drawable.ic_retry,
-    	R.string.retry, -1);
+    public static final UndoBarStyle UNDOSTYLE = new UndoBarStyle(R.drawable.ic_undobar_undo, android.R.string.cancel);
+    public static final UndoBarStyle RETRYSTYLE = new UndoBarStyle(R.drawable.ic_retry, R.string.retry, -1);
     public static final UndoBarStyle MESSAGESTYLE = new UndoBarStyle(-1, -1, 5000);
 
 

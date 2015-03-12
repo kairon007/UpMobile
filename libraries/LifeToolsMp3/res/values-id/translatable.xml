@@ -57,5 +57,14 @@
     <string name="create_new_playlist">Buat daftar putar</string>
     <string name="all_playlists">Semua playlist</string>
     <string name="create">Membuat</string>
-
+    <string name="retry">Mengulang Kembali</string>
+    <string name="message_undo_bar">Penutup telah dihapus</string>
+    <string name="delete_item">Menghapus item</string>    
+    <string name="no_songs_in_the_last_playlist">Tidak ada lagu dalam bermain playlist terakhir</string>
+    <string name="the_playlist_was_deleted">Terakhir playlist dimainkan telah dihapus</string>
+    <string name="playlists_are_missing">Playlist secara offline</string>
+    <string name="undo_deletion">Urungkan menghapus</string>
+	<string name="playlist_cannot_be_empty">Nama Playlist tidak boleh kosong</string>
+	<string name="playlist_is_empty">Playlist kosong</string>
+	
 </resources>

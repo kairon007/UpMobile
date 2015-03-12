@@ -57,5 +57,14 @@
     <string name="create_new_playlist">สร้างรายการ</string>
     <string name="all_playlists">รายการเพลงทั้งหมด</string>
     <string name="create">สร้าง</string>
+    <string name="retry">ทำซ้ำ</string>
+    <string name="message_undo_bar">ฝาครอบถูกลบออก</string>
+    <string name="delete_item">ลบรายการ</string>    
+    <string name="no_songs_in_the_last_playlist">ไม่มีเพลงในรายการเพลงเล่นล่าสุด</string>
+    <string name="the_playlist_was_deleted">ครั้งสุดท้ายที่เขาเล่นถูกลบเพลย์ลิส</string>
+    <string name="playlists_are_missing">รายการเพลงออฟไลน์</string>
+    <string name="undo_deletion">ยกเลิกการลบ</string>
+	<string name="playlist_cannot_be_empty">ชื่อเพลย์ลิสต้องไม่ว่างเปล่า</string>
+	<string name="playlist_is_empty">เพลย์ลิสเป็นที่ว่างเปล่า</string>
 
 </resources>

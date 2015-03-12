@@ -57,5 +57,14 @@
     <string name="create_new_playlist">प्लेलिस्ट बनाएं</string>
     <string name="all_playlists">सभी प्लेलिस्ट</string>
     <string name="create">बनाएँ</string>
+    <string name="retry">दोहराना</string>
+    <string name="message_undo_bar">कवर हटा दिया गया था</string>
+    <string name="delete_item">वस्तु निकालें</string>    
+    <string name="no_songs_in_the_last_playlist">पिछले खेला प्लेलिस्ट में कोई गीत नहीं</string>
+    <string name="the_playlist_was_deleted">अंतिम बजाने प्लेलिस्ट हटा दिया गया है</string>
+    <string name="playlists_are_missing">प्लेलिस्ट ऑफ़लाइन</string>
+    <string name="undo_deletion">हटाना पूर्ववत करें</string>
+	<string name="playlist_cannot_be_empty">प्लेलिस्ट का नाम रिक्त नहीं हो सकता</string>
+	<string name="playlist_is_empty">प्लेलिस्ट खाली है</string>
 
 </resources>

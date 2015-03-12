@@ -57,5 +57,14 @@
     <string name="create_new_playlist">プレイリストを作成する</string>
     <string name="all_playlists">すべてのプレイリスト</string>
     <string name="create">作る</string>
+    <string name="retry">リピート</string>
+    <string name="message_undo_bar">カバーを除去した</string>
+    <string name="delete_item">アイテムの削除</string>    
+    <string name="no_songs_in_the_last_playlist">最後に再生したプレイリスト内の曲ません</string>
+    <string name="the_playlist_was_deleted">最後の再生可能なプレイリストは削除されました</string>
+    <string name="playlists_are_missing">プレイリストをオフライン</string>
+    <string name="undo_deletion">削除する元に戻す</string>
+	<string name="playlist_cannot_be_empty">プレイリストの名前を空にすることはできません</string>
+	<string name="playlist_is_empty">プレイリストは空です</string>
 
 </resources>

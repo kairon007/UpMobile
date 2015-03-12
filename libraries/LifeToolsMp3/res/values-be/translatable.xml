@@ -59,5 +59,14 @@
     <string name="create_new_playlist">Стварыць плэйліст</string>
     <string name="all_playlists">Усе плэйлісты</string>
     <string name="create">Стварыць</string>
+    <string name="retry">Паўтарыць</string>
+    <string name="message_undo_bar">Вокладка была выдаленая</string>
+    <string name="delete_item">Выдаліць элемент</string>    
+    <string name="no_songs_in_the_last_playlist">Няма песень у апошні прайграе плэйлісце</string>
+    <string name="the_playlist_was_deleted">Апошні прайграе плэйліст, выдалены</string>
+    <string name="playlists_are_missing">Спісы прайгравання адсутнічае</string>
+    <string name="undo_deletion">Адмяніць выдаленне</string>
+	<string name="playlist_cannot_be_empty">Імя спісу прайгравання не можа быць пустым</string>
+	<string name="playlist_is_empty">Плэйліст пусты</string>
 
 </resources>

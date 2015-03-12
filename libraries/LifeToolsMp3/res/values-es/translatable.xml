@@ -59,5 +59,14 @@
     <string name="create_new_playlist">Crear una lista de reproducción</string>
     <string name="all_playlists">Todas las listas de reproducción</string>
     <string name="create">Crear</string>
-
+    <string name="retry">Repetición</string>
+    <string name="message_undo_bar">Se retiró la cubierta</string>
+    <string name="delete_item">Quitar elemento</string>    
+    <string name="no_songs_in_the_last_playlist">No hay canciones en la última lista de reproducción jugado</string>
+    <string name="the_playlist_was_deleted">Última lista de reproducción jugable ha sido borrado</string>
+    <string name="playlists_are_missing">Las listas offline</string>
+    <string name="undo_deletion">Deshacer eliminar</string>
+	<string name="playlist_cannot_be_empty">Nombre de la lista no puede estar vacío</string>
+	<string name="playlist_is_empty">Lista está vacía</string>
+	
 </resources>

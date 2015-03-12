@@ -57,5 +57,14 @@
     <string name="create_new_playlist">Buat senarai main</string>
     <string name="all_playlists">Semua senarai main</string>
     <string name="create">Buat</string>
+    <string name="retry">Ulang</string>
+    <string name="message_undo_bar">Penutup telah dibuang</string>
+    <string name="delete_item">Buang item</string>    
+    <string name="no_songs_in_the_last_playlist">Tiada lagu dalam senarai main lepas lepas</string>
+    <string name="the_playlist_was_deleted">Senarai main dimainkan lepas telah dipadam</string>
+    <string name="playlists_are_missing">Senarai main luar talian</string>
+    <string name="undo_deletion">Buat asal memadam</string>
+	<string name="playlist_cannot_be_empty">Nama senarai main tidak boleh kosong</string>
+	<string name="playlist_is_empty">Senarai main kosong</string>
 
 </resources>

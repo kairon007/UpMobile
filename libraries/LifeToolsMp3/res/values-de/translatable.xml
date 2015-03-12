@@ -59,5 +59,14 @@
     <string name="create_new_playlist">Playlist erstellen</string>
     <string name="all_playlists">Alle Wiedergabelisten</string>
     <string name="create">Schaffen</string>
-
+    <string name="retry">Wiederholung</string>
+    <string name="message_undo_bar">Die Abdeckung wurde entfernt</string>
+    <string name="delete_item">Artikel entfernen</string>    
+    <string name="no_songs_in_the_last_playlist">Keine Titel in der zuletzt abgespielten Playlist</string>
+    <string name="the_playlist_was_deleted">Letzte spielbar Playlist gelöscht wurde</string>
+    <string name="playlists_are_missing">Playlists offline</string>
+    <string name="undo_deletion">Rückgängig löschen</string>
+	<string name="playlist_cannot_be_empty">Playlist Name darf nicht leer sein</string>
+    <string name="playlist_is_empty">Playlist ist leer</string>
+	
 </resources>

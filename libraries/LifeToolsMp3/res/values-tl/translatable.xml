@@ -57,5 +57,14 @@
     <string name="create_new_playlist">Lumikha ng playlist</string>
     <string name="all_playlists">Lahat ng playlist</string>
     <string name="create">Lumikha</string>
+    <string name="retry">Umulit</string>
+    <string name="message_undo_bar">Takip ang tinanggal</string>
+    <string name="delete_item">Alisin ang item</string>    
+    <string name="no_songs_in_the_last_playlist">Walang mga kanta sa huling na-play playlist</string>
+    <string name="the_playlist_was_deleted">Ang huling pagkakataong siya ang naglaro ay tinanggal Playlist</string>
+    <string name="playlists_are_missing">Playlist offline</string>
+    <string name="undo_deletion">I-undo tanggalin</string>
+	<string name="playlist_cannot_be_empty">Ang pangalan ng playlist hindi maaaring walang laman</string>
+	<string name="playlist_is_empty">Playlist ay walang laman</string>
 
 </resources>

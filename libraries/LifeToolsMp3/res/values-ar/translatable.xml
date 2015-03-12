@@ -59,5 +59,14 @@
     <string name="create_new_playlist">إنشاء قائمة تشغيل</string>
     <string name="all_playlists">جميع قوائم التشغيل</string>
     <string name="create">خلق</string>
+    <string name="retry">كرر</string>
+    <string name="message_undo_bar">تم إزالة الغطاء</string>
+    <string name="delete_item">إزالة البند</string>    
+    <string name="no_songs_in_the_last_playlist">لا أغنيات في قائمة التشغيل عبت مشاركة</string>
+    <string name="the_playlist_was_deleted">لقد تم حذف الماضية لعب قائمة التشغيل</string>
+    <string name="playlists_are_missing">العازفين متواجد حاليا</string>
+    <string name="undo_deletion">التراجع عن حذف</string>
+	<string name="playlist_cannot_be_empty">اسم قائمة التشغيل لا يمكن أن يكون فارغا</string>
+	<string name="playlist_is_empty">قائمة التشغيل فارغ</string>
 
 </resources>

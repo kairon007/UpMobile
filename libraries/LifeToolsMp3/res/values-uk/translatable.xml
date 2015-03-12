@@ -57,5 +57,14 @@
     <string name="create_new_playlist">Створити плейлист</string>
     <string name="all_playlists">Всі плейліста</string>
     <string name="create">Створити</string>
+    <string name="retry">Повторити</string>
+    <string name="message_undo_bar">Обкладинка була видалена</string>
+    <string name="delete_item">Видалити елемент</string>    
+    <string name="no_songs_in_the_last_playlist">Ні пісень в останньому програється плейлист</string>
+    <string name="the_playlist_was_deleted">В останній раз грав Плейлист був видалений</string>
+    <string name="playlists_are_missing">Списки відтворення відсутній</string>
+    <string name="undo_deletion">Відмінити видалення</string>
+	<string name="playlist_cannot_be_empty">Назву списку відтворення не може бути порожнім</string>
+	<string name="playlist_is_empty">Плейлист порожній</string>
 
 </resources>

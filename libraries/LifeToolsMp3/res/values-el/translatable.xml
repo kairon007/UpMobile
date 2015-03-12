@@ -59,5 +59,14 @@
     <string name="create_new_playlist">Δημιουργήστε μια λίστα αναπαραγωγής</string>
     <string name="all_playlists">Όλες οι λίστες αναπαραγωγής</string>
     <string name="create">Δημιουργήστε</string>
+    <string name="retry">επαναλαμβάνω</string>
+    <string name="message_undo_bar">Το κάλυμμα αφαιρείται</string>
+    <string name="delete_item">Αφαιρέστε το στοιχείο</string>    
+    <string name="no_songs_in_the_last_playlist">Δεν υπάρχουν τραγούδια στην τελευταία έπαιξε λίστα αναπαραγωγής</string>
+    <string name="the_playlist_was_deleted">Τελευταία παίζονται λίστα αναπαραγωγής έχει διαγραφεί</string>
+    <string name="playlists_are_missing">Λίστες offline</string>
+    <string name="undo_deletion">Αναίρεση διαγραφής</string>
+	<string name="playlist_cannot_be_empty">Το όνομα λίστας αναπαραγωγής δεν μπορεί να είναι κενό</string>
+	<string name="playlist_is_empty">Playlist είναι άδειο</string>
 
 </resources>

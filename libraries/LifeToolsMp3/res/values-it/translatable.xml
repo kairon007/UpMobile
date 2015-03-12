@@ -57,5 +57,14 @@
     <string name="create_new_playlist">Creare una playlist</string>
     <string name="all_playlists">Tutte le playlist</string>
     <string name="create">Creare</string>
+    <string name="retry">Ripetizione</string>
+    <string name="message_undo_bar">Il coperchio è stato rimosso</string>
+    <string name="delete_item">Rimuovere articolo</string>    
+    <string name="no_songs_in_the_last_playlist">Nessun brano nell\'ultimo playlist giocato</string>
+    <string name="the_playlist_was_deleted">Ultimo playlist giocabile è stato eliminato</string>
+    <string name="playlists_are_missing">Playlist offline</string>
+    <string name="undo_deletion">Annulla eliminare</string>
+	<string name="playlist_cannot_be_empty">Nome playlist non può essere vuoto</string>
+	<string name="playlist_is_empty">Playlist è vuota</string>
 
 </resources>

@@ -57,5 +57,14 @@
     <string name="create_new_playlist">Maak een afspeellijst</string>
     <string name="all_playlists">Alle afspeellijsten</string>
     <string name="create">Creëren</string>
+    <string name="retry">Herhaling</string>
+    <string name="message_undo_bar">Het deksel werd verwijderd</string>
+    <string name="delete_item">Item verwijderen</string>    
+    <string name="no_songs_in_the_last_playlist">Geen nummers in de laatst gespeelde afspeellijst</string>
+    <string name="the_playlist_was_deleted">Laatste speelbare afspeellijst is verwijderd</string>
+    <string name="playlists_are_missing">Afspeellijsten offline</string>
+    <string name="undo_deletion">Ongedaan verwijderen</string>
+	<string name="playlist_cannot_be_empty">Playlist naam mag niet leeg zijn</string>
+	<string name="playlist_is_empty">Afspeellijst is leeg</string>
 
 </resources>

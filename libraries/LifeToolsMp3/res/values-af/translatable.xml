@@ -59,5 +59,14 @@
     <string name="create_new_playlist">Skep \'n playlist</string>
     <string name="all_playlists">Alle afspeel</string>
     <string name="create">Skep</string>
+    <string name="retry">Herhaal</string>
+    <string name="message_undo_bar">Die dekking is verwyder</string>
+    <string name="delete_item">Verwyder item</string>    
+    <string name="no_songs_in_the_last_playlist">Geen liedjies in die laaste gespeel playlist</string>
+    <string name="the_playlist_was_deleted">Laaste speelbaar playlist is geskrap</string>
+    <string name="playlists_are_missing">Afspeel op die regte pad</string>
+    <string name="undo_deletion">Ongedaan te verwyder</string>
+	<string name="playlist_cannot_be_empty">Playlist kan nie leeg wees</string>
+	<string name="playlist_is_empty">Playlist is leeg</string>
 
 </resources>

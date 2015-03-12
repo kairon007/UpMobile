@@ -56,5 +56,14 @@
     <string name="create_new_playlist">创建播放列表</string>
     <string name="all_playlists">所有播放列表</string>
     <string name="create">创建</string>
+    <string name="retry">重复</string>
+    <string name="message_undo_bar">除去封面</string>
+    <string name="delete_item">删除项目</string>    
+    <string name="no_songs_in_the_last_playlist">在上次播放的播放列表中没有歌曲</string>
+    <string name="the_playlist_was_deleted">他打了最后一次被删除播放列表</string>
+    <string name="playlists_are_missing">离线播放列表</string>
+    <string name="undo_deletion">撤消删除</string>
+	<string name="playlist_cannot_be_empty">播放列表名称不能为空</string>
+	<string name="playlist_is_empty">播放列表是空的</string>
 
 </resources>

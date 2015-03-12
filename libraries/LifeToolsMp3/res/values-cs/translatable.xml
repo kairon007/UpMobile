@@ -59,5 +59,14 @@
     <string name="create_new_playlist">vytvoření seznamu skladeb</string>
     <string name="all_playlists">Všechny seznamy skladeb</string>
     <string name="create">Vytvořit</string>
-
+    <string name="retry">Opakovat</string>
+    <string name="message_undo_bar">Kryt byl odstraněn</string>
+    <string name="delete_item">Odebrat</string>    
+    <string name="no_songs_in_the_last_playlist">Žádné skladby v posledním přehrávaného seznamu skladeb</string>
+    <string name="the_playlist_was_deleted">Poslední přehrát playlist byl smazán</string>
+    <string name="playlists_are_missing">Playlisty online</string>
+    <string name="undo_deletion">Zpět Odstranit</string>
+	<string name="playlist_cannot_be_empty">Playlist Název nemůže být prázdný</string>
+    <string name="playlist_is_empty">Playlist je prázdný</string>
+    
 </resources>

@@ -59,5 +59,14 @@
     <string name="create_new_playlist">ایجاد یک لیست پخش</string>
     <string name="all_playlists">همه لیست پخش</string>
     <string name="create">ساختن</string>
-
+    <string name="retry">تکرار</string>
+    <string name="message_undo_bar">پوشش برداشته شد</string>
+    <string name="delete_item">حذف آیتم</string>    
+    <string name="no_songs_in_the_last_playlist">بدون آهنگ در آخرین لیست پخش بازی</string>
+    <string name="the_playlist_was_deleted">تاریخ و زمان آخرین لیست پخش قابل پخش حذف شده است</string>
+    <string name="playlists_are_missing">لیست های پخش آنلاین</string>
+    <string name="undo_deletion">لغو حذف</string>
+	<string name="playlist_cannot_be_empty">نام لیست پخش نمی تواند خالی باشد</string>
+	<string name="playlist_is_empty">لیست پخش خالی است</string>
+	
 </resources>

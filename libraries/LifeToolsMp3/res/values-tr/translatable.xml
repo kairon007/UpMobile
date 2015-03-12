@@ -56,5 +56,14 @@
     <string name="create_new_playlist">Çalma listesi oluşturma</string>
     <string name="all_playlists">Tüm çalma listeleri</string>
     <string name="create">Oluşturmak</string>
+    <string name="retry">Tekrar</string>
+    <string name="message_undo_bar">Kapak çıkarıldı</string>
+    <string name="delete_item">öğeyi çıkar</string>    
+    <string name="no_songs_in_the_last_playlist">Son oynanan çalma yok şarkılar</string>
+    <string name="the_playlist_was_deleted">Oynadığı son kez Playlist silindi</string>
+    <string name="playlists_are_missing">Çalma listeleri çevrimdışı</string>
+    <string name="undo_deletion">Silme geri al</string>
+	<string name="playlist_cannot_be_empty">Playlist adı boş olamaz</string>
+	<string name="playlist_is_empty">Playlist boş</string>
 
 </resources>

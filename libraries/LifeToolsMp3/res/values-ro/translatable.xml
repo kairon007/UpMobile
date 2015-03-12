@@ -57,5 +57,14 @@
     <string name="create_new_playlist">Crearea unei liste de redare</string>
     <string name="all_playlists">Toate liste de redare</string>
     <string name="create">Crea</string>
+    <string name="retry">Repeta</string>
+    <string name="message_undo_bar">Capacul a fost îndepărtat</string>
+    <string name="delete_item">Eliminați element</string>    
+    <string name="no_songs_in_the_last_playlist">Nu melodiile din lista de redare ultimul jucat</string>
+    <string name="the_playlist_was_deleted">Ultima lista de redare pot fi redate a fost șters</string>
+    <string name="playlists_are_missing">Liste de redare conectat</string>
+    <string name="undo_deletion">Anulați șterge</string>
+	<string name="playlist_cannot_be_empty">Numele Playlist nu poate fi gol</string>
+	<string name="playlist_is_empty">Playlist este gol</string>
 
 </resources>
