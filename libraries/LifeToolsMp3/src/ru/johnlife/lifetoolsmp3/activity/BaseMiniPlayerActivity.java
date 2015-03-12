@@ -210,6 +210,11 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 					} else {
 						fakeView.setVisibility(View.VISIBLE);
 					}
+					if (null != song && song.getClass() == MusicData.class) {
+						download.setVisibility(View.GONE);
+					} else {
+						download.setVisibility(View.VISIBLE);
+					}
 				}
 			});
 			if (!isShift) {
@@ -237,11 +242,6 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 			});
 			miniPlayer.setAnimation(slideDown);
 			miniPlayer.startAnimation(slideDown);
-		}
-		if (null != song && song.getClass() == MusicData.class) {
-			download.setVisibility(View.GONE);
-		} else {
-			download.setVisibility(View.VISIBLE);
 		}
 	}
 	

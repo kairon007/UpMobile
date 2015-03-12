@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
@@ -83,17 +84,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		int resId = getResources().getIdentifier("action_bar_title", "id", "android");
-		View v1 = findViewById(resId);
-		if (null != v1) {
-			v1.setPadding(Util.dpToPx(this, 52), 0, 0, 0);
-			getActionBar().setDisplayShowTitleEnabled(true);
-		}
 		getMenuInflater().inflate(R.menu.menu, menu);
 		MenuItem searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);

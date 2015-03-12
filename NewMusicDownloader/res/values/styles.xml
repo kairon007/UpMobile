@@ -7,6 +7,7 @@
     </style>
 
     <style name="AppTheme" parent="android:Theme.Holo">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
         <item name="lyricsIndicator">@drawable/ic_player_lyrics</item>
         <item name="editIndicator">@drawable/ic_player_edit</item>
@@ -34,7 +35,7 @@
 
     <style name="AppThemeWhite" parent="android:Theme.Holo.Light">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:actionBarStyle">@style/MyActionBar.White</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
         <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
         <item name="editIndicator">@drawable/ic_player_edit_black</item>
@@ -85,11 +86,17 @@
         <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
         <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
+        <item name="android:logo">@drawable/actionbar_space_between_icon_and_title</item>
     </style>
 
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:logo">@drawable/actionbar_space_between_icon_and_title</item>
+    </style>
+
+    <style name="MyActionBar.White" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:titleTextStyle">@style/TitleBarTextColor</item>
         <item name="android:background">@android:color/white</item>
+        <item name="android:logo">@drawable/actionbar_space_between_icon_and_title</item>
     </style>
 
     <style name="TitleBarTextColor" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">

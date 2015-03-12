@@ -87,7 +87,7 @@
                 android:layout_weight="0"
                 android:background="@drawable/selectable_item_bg"
                 android:src="@drawable/mini_player_download_dark"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 

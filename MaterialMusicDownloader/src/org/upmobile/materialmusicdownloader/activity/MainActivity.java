@@ -70,7 +70,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
 	@Override
@@ -176,7 +176,6 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		while (height < property && width < property) {
 			defaultIsLarger = false;
 			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, textCover.getTextSize()) + 1f);
-			android.util.Log.d("logd", "getDefaultBitmapCover: " + textCover.getTextSize());
 			bounds = new Rect();
 			textPaint = textCover.getPaint();
 			textPaint.getTextBounds(image, 0, image.length(), bounds);
