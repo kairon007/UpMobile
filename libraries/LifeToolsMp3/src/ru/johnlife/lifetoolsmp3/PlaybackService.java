@@ -642,9 +642,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public ArrayList<AbstractSong> getArrayPlayback() {
 		if (check(SMODE_SHUFFLE)) {
 			return arrayPlaybackOriginal;
-		} else {
-			return arrayPlayback;
 		}
+		return arrayPlayback;
 	}
 	
 	public <T> boolean isCorrectlyState(Class<T> calledClass, int transferSize) {
