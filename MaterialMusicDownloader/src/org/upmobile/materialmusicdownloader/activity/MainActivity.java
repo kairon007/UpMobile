@@ -151,7 +151,8 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	public void showMessage(String message) {
-		AppMsg.makeText(this, message, new Style(5000, R.color.main_color_500)).show();
+		AppMsg.cancelAll(this);
+		AppMsg.makeText(this, message, new Style(3000, R.color.main_color_500)).show();
 	}
 	
 	public void showMessage(int message) {
