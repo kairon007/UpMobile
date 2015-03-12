@@ -23,6 +23,8 @@ import com.csform.android.uiapptemplate.view.dlg.Theme;
 public class PlaylistView extends BasePlaylistView{
 	
 	private MaterialDialog.ButtonCallback buttonCallback;
+	private MaterialDialog.Builder builder;
+	private MaterialDialog dialog;
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
@@ -31,6 +33,11 @@ public class PlaylistView extends BasePlaylistView{
 			public void onPositive(MaterialDialog dialog) {
 				super.onPositive(dialog);
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
+				if (input.getText().toString().isEmpty()) {
+					dialog.cancel();
+					showMessage(getContext(), R.string.playlist_cannot_be_empty);
+					return;
+				}
 				PlaylistView.this.createPlaylist(getContext().getContentResolver(), input.getText().toString());
 				Util.hideKeyboard(getContext(), input);
 				dialog.cancel();
@@ -79,8 +86,8 @@ public class PlaylistView extends BasePlaylistView{
 	@SuppressLint("NewApi")
 	@Override
 	protected void showDialog() {
-		new MaterialDialog.Builder(getContext())
-		.theme(Theme.LIGHT)
+		builder = new MaterialDialog.Builder(getContext());
+		builder.theme(Theme.LIGHT)
 		.title(R.string.create_new_playlist)
 		.backgroundColor(getResources().getColor(R.color.main_color_grey_100))
 		.customView(R.layout.md_input_dialog, false)
@@ -92,9 +99,16 @@ public class PlaylistView extends BasePlaylistView{
 		.callback(buttonCallback)
 		.autoDismiss(false)
 		.positiveText(R.string.create)
-		.negativeText(android.R.string.cancel)
-		.build()
-		.show();
+		.negativeText(android.R.string.cancel);
+		dialog = builder.build();
+		dialog.show();
+	}
+	
+	@Override
+	public void closeDialog() {
+		if (null != dialog && dialog.isShowing()) {
+			dialog.cancel();
+		}
 	}
 	
 	@Override

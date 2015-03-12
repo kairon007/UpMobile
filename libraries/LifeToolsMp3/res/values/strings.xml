@@ -156,5 +156,6 @@
     <string name="the_playlist_was_deleted">The last played Playlist was deleted</string>
     <string name="playlists_are_missing">Playlists are missing</string>
     <string name="undo_deletion">UNDO DELETION</string>
+    <string name="playlist_cannot_be_empty">The name of the Playlist cannot be empty</string>
     
 </resources>

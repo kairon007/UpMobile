@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -49,6 +50,7 @@ public abstract class BasePlaylistView extends View {
 	private View playLastPlaylist;
 	private View createNewPlayList;
 	private AlertDialog.Builder newPlaylistDialog;
+	private PopupMenu menu;
 	
 	protected abstract Object[] groupItems();
 
@@ -78,6 +80,7 @@ public abstract class BasePlaylistView extends View {
 	
 	private ArrayList<PlaylistData> playlists;
 	private PlaybackService playbackService;
+	private AlertDialog dialog;
 
 	public BasePlaylistView(LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -178,6 +181,7 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public void onClick(View paramView) {
+				closeDialog();
 				showDialog();
 			}
 		});
@@ -229,12 +233,18 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				if (((EditText) dialoglayout.findViewById(R.id.newPlaylistET)).getText().toString().isEmpty()) {
+					dialog.cancel();
+					showMessage(getContext(), R.string.playlist_cannot_be_empty);
+					return;
+				}
 				createPlaylist(getContext().getContentResolver(), ((EditText) dialoglayout.findViewById(R.id.newPlaylistET)).getText().toString());
 				Util.hideKeyboard(getContext(), dialoglayout);
 				dialog.cancel();
 			}
 		});
-		newPlaylistDialog.create().show();
+		dialog = newPlaylistDialog.create();
+		dialog.show();
 	}
 
 	public View getView() {
@@ -243,7 +253,7 @@ public abstract class BasePlaylistView extends View {
 
 	@SuppressLint("NewApi")
 	public void showMenu(final View v, final PlaylistData data, final MusicData musicData) {
-		final PopupMenu menu = new PopupMenu(getContext(), v);
+		menu = new PopupMenu(getContext(), v);
 		menu.getMenuInflater().inflate(R.menu.library_menu, menu.getMenu());
 		menu.getMenu().getItem(0).setVisible(false);
 		menu.getMenu().getItem(1).setVisible(false);
@@ -265,6 +275,14 @@ public abstract class BasePlaylistView extends View {
 			}
 		});
 		menu.show();
+	}
+	
+	@SuppressLint("NewApi")
+	public void closeDialog() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) return;
+		if (null != dialog && dialog.isShowing()) {
+			dialog.cancel();
+		}
 	}
 
 	private void deletePlaylist(ContentResolver resolver, long playlistId) {
@@ -335,25 +353,25 @@ public abstract class BasePlaylistView extends View {
 	private ArrayList<PlaylistData> getPlaylists() {
 		ArrayList<PlaylistData> playlistDatas = null;
 		try {
-		playlistDatas = new ArrayList<PlaylistData>();
-		Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
-		PlaylistData playlistData = new PlaylistData();
-		if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
-			return playlistDatas;
-		}
-		if (playlistCursor.getString(1).contains(getDirectory())) {
-			playlistData.populate(playlistCursor);
-			playlistDatas.add(playlistData);
-		}
-		while (playlistCursor.moveToNext()) {
-			if (playlistCursor.getString(1).contains(getDirectory())) {
-				PlaylistData playlist = new PlaylistData();
-				playlist.populate(playlistCursor);
-				playlistDatas.add(playlist);
+			playlistDatas = new ArrayList<PlaylistData>();
+			Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
+			PlaylistData playlistData = new PlaylistData();
+			if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
+				return playlistDatas;
 			}
-		}
-		playlistCursor.close();
-		return playlistDatas;
+			if (playlistCursor.getString(1).contains(getDirectory())) {
+				playlistData.populate(playlistCursor);
+				playlistDatas.add(playlistData);
+			}
+			while (playlistCursor.moveToNext()) {
+				if (playlistCursor.getString(1).contains(getDirectory())) {
+					PlaylistData playlist = new PlaylistData();
+					playlist.populate(playlistCursor);
+					playlistDatas.add(playlist);
+				}
+			}
+			playlistCursor.close();
+			return playlistDatas;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return playlistDatas;
