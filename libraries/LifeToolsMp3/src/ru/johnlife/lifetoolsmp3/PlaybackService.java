@@ -324,14 +324,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			}
 			break;
 		case MSG_SHIFT:
+			helper(State.UPDATE, playingSong);
 			if (enabledRepeat()) {
-				helper(State.UPDATE, playingSong);
-				//buildSendMessage(playingSong, MSG_PLAY, 0, 0);
 				buildSendMessage(playingSong.getPath(), MSG_START, 0, 0);
 				break;
 			}
-			helper(State.STOP, previousSong == null ? playingSong : previousSong);
-			helper(State.UPDATE, playingSong);
 			play(playingSong.getClass() != MusicData.class);
 			sendNotification(true);
 			break;
@@ -419,7 +416,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		} catch (Exception e) {
 			Log.i(getClass().getSimpleName(), "Application is finished, service stoped force");
 		}
-		offMode(SMODE_PAUSE);
+		offMode(SMODE_PAUSE);	
 	}
 	
 	public boolean offOnShuffle() {

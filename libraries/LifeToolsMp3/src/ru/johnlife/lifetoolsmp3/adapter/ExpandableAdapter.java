@@ -180,7 +180,7 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 				int count = list.size();
 				for (int i = 0; i < count; i++) {
 					PlaylistData data = list.get(i);
-					String value = data.getName();
+					String value = data.getName().toLowerCase();
 					if (value.contains(prefix)) {
 						nlist.add(data);
 					}
