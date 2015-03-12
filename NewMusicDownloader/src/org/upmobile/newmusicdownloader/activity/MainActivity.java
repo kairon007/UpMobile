@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -82,17 +83,16 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		View v = (View) findViewById(android.R.id.home);
-	    int resId = getResources().getIdentifier("action_bar_title", "id", "android");
-		View v1 = (View) findViewById(resId);
-		if (null != v) {
-			((View) v.getParent().getParent()).setPadding(Util.dpToPx(this, 18), 0, 0, 0);
-			((View) v1).setPadding(Util.dpToPx(this, 62), 0, 0, 0);
+		int resId = getResources().getIdentifier("action_bar_title", "id", "android");
+		View v1 = findViewById(resId);
+		if (null != v1) {
+			v1.setPadding(Util.dpToPx(this, 52), 0, 0, 0);
+			getActionBar().setDisplayShowTitleEnabled(true);
 		}
 		getMenuInflater().inflate(R.menu.menu, menu);
 		MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -298,6 +298,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 				finish();
 			}
 		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		invalidateOptionsMenu();
 	}
 	
 	@Override

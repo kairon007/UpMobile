@@ -142,7 +142,6 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 	                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
 	                R.string.navigation_drawer_close);  /* "close drawer" description for accessibility */
         } else {
-        	android.util.Log.d("logd", "setUp: ");
         	drawerToggle = new android.support.v4.app.ActionBarDrawerToggle(
 	                    getActivity(),                    /* host Activity */
 	                    mDrawerLayout,                    /* DrawerLayout object */
