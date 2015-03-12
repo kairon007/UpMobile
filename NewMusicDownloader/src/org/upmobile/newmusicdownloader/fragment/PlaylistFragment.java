@@ -1,6 +1,7 @@
 package org.upmobile.newmusicdownloader.fragment;
 
 import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.ui.PlaylistView;
 
@@ -23,6 +24,7 @@ public class PlaylistFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		((MainActivity) getActivity()).setTitle(R.string.tab_playlist);
 		((MainActivity) getActivity()).setSelectedItem(Constants.PLAYLIST_FRAGMENT);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 	}

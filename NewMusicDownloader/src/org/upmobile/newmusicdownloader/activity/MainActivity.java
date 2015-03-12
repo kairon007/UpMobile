@@ -69,6 +69,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		getActionBar().setIcon(android.R.color.transparent);
         navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 		File file = new File(folderPath);
@@ -86,6 +87,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		View v = (View) findViewById(android.R.id.home);
+	    int resId = getResources().getIdentifier("action_bar_title", "id", "android");
+		View v1 = (View) findViewById(resId);
+		if (null != v) {
+			((View) v.getParent().getParent()).setPadding(Util.dpToPx(this, 18), 0, 0, 0);
+			((View) v1).setPadding(Util.dpToPx(this, 62), 0, 0, 0);
+		}
 		getMenuInflater().inflate(R.menu.menu, menu);
 		MenuItem searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -241,6 +249,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			directoryChooserDialog.chooseDirectory();
 			break;
 		}
+	}
+	
+	public void setActionBarTitle(String title) {
+		getActionBar().setTitle(title);
+	}
+	
+	public void setActionBarTitle(int title) {
+		setActionBarTitle(getResources().getString(title));
 	}
 	
 	public void changeFragment(Fragment targetFragment, boolean isAnimate) {

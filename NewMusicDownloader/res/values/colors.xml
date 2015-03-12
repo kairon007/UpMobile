@@ -8,5 +8,7 @@
     <color name="background_driver_dark"> #303030</color>
     <color name="background_driver_light"> #ffffff</color>
     <color name="light_grey">#ebebeb</color>
+    <color name="holo_dark">#ff000000</color>
+    <color name="holo_light">#fff3f3f3</color>
 
 </resources>

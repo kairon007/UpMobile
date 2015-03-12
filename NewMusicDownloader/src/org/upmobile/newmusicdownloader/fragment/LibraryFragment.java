@@ -1,6 +1,7 @@
 package org.upmobile.newmusicdownloader.fragment;
 
 import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.ui.LibraryView;
 
@@ -25,6 +26,7 @@ public class LibraryFragment extends Fragment {
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setSelectedItem(Constants.LIBRARY_FRAGMENT);
 		((MainActivity)	getActivity()).setCurrentTag(getClass().getSimpleName());
+		((MainActivity) getActivity()).setTitle(R.string.tab_library);
 		libraryView.onResume();
 		super.onResume();
 	}

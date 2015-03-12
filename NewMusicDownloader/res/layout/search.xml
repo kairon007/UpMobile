@@ -5,6 +5,8 @@
 
     <RelativeLayout
         android:id="@+id/touch_interceptor"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -82,7 +84,6 @@
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:lines="1"
-                            android:paddingLeft="8dp"
                             android:paddingRight="50dp"
                             android:singleLine="true"
                             android:textColor="?attr/textViewColor" />

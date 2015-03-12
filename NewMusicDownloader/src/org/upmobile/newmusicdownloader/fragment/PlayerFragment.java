@@ -240,6 +240,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		getActivity().registerReceiver(volumeReceiver, filter); 
 		((MainActivity) getActivity()).setSelectedItem(Constants.PLAYER_FRAGMENT);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
+		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
 //		getView().setFocusableInTouchMode(true);
 //		getView().requestFocus();
 //		getView().setOnKeyListener(new View.OnKeyListener() {

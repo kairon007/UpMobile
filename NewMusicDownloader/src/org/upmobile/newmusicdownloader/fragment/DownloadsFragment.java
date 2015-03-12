@@ -1,6 +1,7 @@
 package org.upmobile.newmusicdownloader.fragment;
 
 import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.ui.DownloadsView;
 
@@ -30,6 +31,7 @@ public class DownloadsFragment extends Fragment {
 		downloadsView.onResume();
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setSelectedItem(Constants.DOWNLOADS_FRAGMENT);
+		((MainActivity) getActivity()).setTitle(R.string.tab_downloads);
 		super.onResume();
 	}
 }
