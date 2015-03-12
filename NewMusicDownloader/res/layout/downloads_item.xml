@@ -1,99 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/front_layout"
     android:layout_width="match_parent"
     android:layout_height="72dp"
     android:background="@android:color/transparent"
-    android:descendantFocusability="blocksDescendants" >
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp" >
 
-    <LinearLayout
-        android:id="@+id/front_layout"
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="72dp"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="4dp" >
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:clickable="false" >
 
-        <ImageView
-            android:id="@+id/item_image"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_margin="5dp"
-            android:clickable="false"
-            android:padding="10dp" />
-
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="false" >
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="10dp" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2" >
-
-                    <TextView
-                        android:id="@+id/item_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:lines="1"
-                        android:textAppearance="?android:textAppearanceMedium" />
-
-                    <TextView
-                        android:id="@+id/item_duration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="clip_vertical"
-                        android:layout_weight="1"
-                        android:text="00:00"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:visibility="gone" />
-                </LinearLayout>
+                android:layout_height="0dp"
+                android:layout_weight="2" >
 
                 <TextView
-                    android:id="@+id/item_description"
+                    android:id="@+id/item_title"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fontFamily="sans-serif-light"
                     android:lines="1"
-                    android:paddingRight="5dp" />
+                    android:textAppearance="?android:textAppearanceMedium" />
 
-                <ProgressBar
-                    android:id="@+id/item_progress"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_gravity="top"
-                    android:layout_weight="2"
-                    android:paddingRight="5dp" />
-
+                <TextView
+                    android:id="@+id/item_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="clip_vertical"
+                    android:layout_weight="1"
+                    android:text="00:00"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:visibility="gone" />
             </LinearLayout>
 
-        </FrameLayout>
+            <TextView
+                android:id="@+id/item_description"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:lines="1" />
 
-        <ImageView
-            android:id="@+id/cancel"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="4dp"
-            android:background="@drawable/selectable_item_bg"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/download_cancel" />
+            <ProgressBar
+                android:id="@+id/item_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="top"
+                android:layout_weight="2" />
+        </LinearLayout>
+    </FrameLayout>
 
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/cancel"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/selectable_item_bg"
+        android:src="@drawable/download_cancel" />
 
-</FrameLayout>
+</LinearLayout>
