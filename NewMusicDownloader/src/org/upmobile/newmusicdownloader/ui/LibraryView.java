@@ -21,7 +21,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 
 	@Override
 	protected BaseAbstractAdapter<MusicData> getAdapter() {
-		return new LibraryAdapter(getContext(), R.layout.library_item);
+		return new LibraryAdapter(getContext(), R.layout.row_online_search);
 	}
 
 	@Override

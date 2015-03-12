@@ -2,7 +2,6 @@ package org.upmobile.newmusicdownloader.adapter;
 
 import java.util.ArrayList;
 
-import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
@@ -14,7 +13,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,11 +38,11 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 		private ViewGroup info;
 
 		public LibraryViewHolder(View v) {
-			info = (ViewGroup) v.findViewById(R.id.item_box_info);
-			cover = (ImageView) v.findViewById(R.id.item_cover);
-			title = (TextView) v.findViewById(R.id.item_title);
-			artist = (TextView) v.findViewById(R.id.item_artist);
-			duration = (TextView) v.findViewById(R.id.item_duration);
+			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
+			cover = (ImageView) v.findViewById(R.id.cover);
+			title = (TextView) v.findViewById(R.id.artistLine);
+			artist = (TextView) v.findViewById(R.id.titleLine);
+			duration = (TextView) v.findViewById(R.id.chunkTime);
 			threeDot = v.findViewById(R.id.threeDot);
 		}
 
