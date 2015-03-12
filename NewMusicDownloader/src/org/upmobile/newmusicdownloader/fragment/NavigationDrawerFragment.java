@@ -80,9 +80,9 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
             	if (item.getType() != DrawerItem.Types.TYPE_SECTION) {
             		selectItem(position);
             	}
-            }
+            }	
         });
-        setAdapter(false);
+        setAdapter(false); 	
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
@@ -166,7 +166,6 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
         };
