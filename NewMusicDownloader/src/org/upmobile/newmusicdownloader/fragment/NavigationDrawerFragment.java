@@ -88,6 +88,9 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     }
 
 	public void setAdapter(boolean isNowPlaying) {
+		if (null == getActivity()) {
+			return;
+		}
 		boolean isWhiteTheme = ((MainActivity) getActivity()).isWhiteTheme(getActivity());
 		String library = getActivity().getString(R.string.tab_library);
 		String download = getActivity().getString(R.string.tab_downloads);
