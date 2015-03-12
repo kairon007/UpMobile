@@ -48,6 +48,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	private final String APP_THEME_WHITE_BLACK_ACTION_BAR = "AppThemeWhite.BlackActionBar";
 	private final String APP_THEME_WHITE = "AppThemeWhite";
+	private final String APP_THEME = "AppTheme";
 	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
@@ -84,6 +85,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
+		int resId = getResources().getIdentifier("action_bar_title", "id", "android");
+		View v1 = findViewById(resId);
+		if (null != v1) {
+			((View) v1.getParent().getParent().getParent().getParent()).setBackgroundColor(getResources().getColor(!isDarkActionBar(this)? android.R.color.white : android.R.color.black));
+		}
 		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
@@ -366,6 +372,18 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		    	Log.e(Util.class.getSimpleName(), e.getMessage());
 		        return false;
 		    }
+	}
+	
+	public boolean isDarkActionBar(Context context) {
+	    PackageInfo packageInfo;
+	    try {
+	        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+	        int themeResId = packageInfo.applicationInfo.theme;
+	        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME) || context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR);
+	    } catch (Exception e) {
+	    	Log.e(Util.class.getSimpleName(), e.getMessage());
+	        return false;
+	    }
 	}
 
 	@Override
