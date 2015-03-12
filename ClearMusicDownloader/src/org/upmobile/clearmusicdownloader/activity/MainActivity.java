@@ -101,7 +101,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	        int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
 	        ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
 	        closeIcon.setImageResource(R.drawable.ic_close_ab);
-	        closeIcon.setBackgroundResource(R.drawable.selectable_item_bg);
+	        closeIcon.setBackgroundResource(R.drawable.actionbar_selector);
 	        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
 	        TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
 	        autoComplete.setTextColor(color);
@@ -196,7 +196,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		} else if (targetFragment.equals(PlaylistFragment.class.getSimpleName())) {
 			searchView.setVisibility(View.VISIBLE);
 		} else {
-			searchView.setVisibility(View.GONE);
+			searchView.setVisibility(View.INVISIBLE);
 		}
 	}
 
