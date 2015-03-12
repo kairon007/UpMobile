@@ -62,6 +62,14 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/playlists_are_missing"
+        android:visibility="gone" />
+
     <ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView
         android:id="@+id/expandableListView"
         android:layout_width="match_parent"

@@ -49,6 +49,7 @@ public abstract class BasePlaylistView extends View {
 	private ExpandableAdapter expandableAdapter;
 	private View playLastPlaylist;
 	private View createNewPlayList;
+	private View emptyView;
 	private AlertDialog.Builder newPlaylistDialog;
 	private PopupMenu menu;
 	
@@ -95,10 +96,11 @@ public abstract class BasePlaylistView extends View {
 				playbackService = PlaybackService.get(getContext());
 			}
 		}).start();
-		view = (ViewGroup) inflater.inflate(getLayoutId() > 0 ? getLayoutId() : ru.johnlife.lifetoolsmp3.R.layout.playlist_view, null);
+		view = (ViewGroup) inflater.inflate(getLayoutId() > 0 ? getLayoutId() : R.layout.playlist_view, null);
 		listView = getListView(view) != null ? getListView(view) : (AnimatedExpandableListView) view.findViewById(R.id.expandableListView);
 		playLastPlaylist = view.findViewById(R.id.lastPlayedPlaylist);
 		createNewPlayList = view.findViewById(R.id.createNewPlaylist);
+		emptyView = view.findViewById(R.id.emptyText);
 		initListeners();
 		expandableAdapter = new ExpandableAdapter(view.getContext());
 		expandableAdapter.setProjectPrefics(getDirectory());
@@ -108,6 +110,7 @@ public abstract class BasePlaylistView extends View {
 			((AnimatedExpandableListView) listView).setGroupIndicator(null);
 		}
 		((AnimatedExpandableListView) listView).setAdapter(expandableAdapter);
+		((AnimatedExpandableListView) listView).setEmptyView(emptyView);
 		((AnimatedExpandableListView) listView).setOnGroupClickListener(new OnGroupClickListener() {
 
             @Override
