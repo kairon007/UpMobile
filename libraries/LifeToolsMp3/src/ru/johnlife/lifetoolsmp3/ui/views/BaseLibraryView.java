@@ -5,9 +5,12 @@ import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,6 +29,8 @@ import android.widget.TextView;
 
 @SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View implements Handler.Callback {
+
+	private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 
 	public static final int MSG_FILL_ADAPTER = 1;
 	
@@ -61,6 +66,17 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		msg.obj = list;
 		uiHandler.sendMessage(msg);
 	};
+	
+	OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
+
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+			if (key.contains(PREF_DIRECTORY_PREFIX)) {
+				ArrayList<MusicData> list = querySong();
+				fillAdapter(list);
+			}
+		}
+	};
 
 	protected abstract BaseAbstractAdapter<MusicData> getAdapter();
 	protected abstract ListView getListView(View view);
@@ -69,6 +85,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	protected abstract int getLayoutId();
 	
 	protected void onPause() {
+		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sPrefListener);
 		if (null != checkRemovedFiles) {
 			checkRemovedFiles.cancel(true);
 			checkRemovedFiles = null;
@@ -76,6 +93,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	}
 	
 	protected void onResume() {
+		MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sPrefListener);
 		checkRemovedFiles = new CheckRemovedFiles(adapter.getAll());
 		if (checkRemovedFiles.getStatus() == Status.RUNNING) return;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
