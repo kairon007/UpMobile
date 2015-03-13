@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
-import org.upmobile.newmaterialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.app.NewMaterialMusicDownloaderApp;
 import org.upmobile.newmaterialmusicdownloader.fragment.DownloadsFragment;
@@ -70,7 +69,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
 	@Override
