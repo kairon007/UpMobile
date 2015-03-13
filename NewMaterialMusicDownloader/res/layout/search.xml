@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/touch_interceptor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/listview" />
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-thin"
+                android:gravity="center"
+                android:text="@string/search_your_results_appear_here"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
+                android:id="@+id/progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@color/main_color_accent"
+                android:visibility="gone" />
+            
+            <ImageView
+                android:id="@+id/loader_image"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center"
+                android:src="@drawable/loader"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/search_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="98dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:id="@+id/choise_engines_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/main_color_500"
+                android:divider="@drawable/layout_divider"
+                android:orientation="vertical"
+                android:showDividers="end" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/layout_divider"
+                    android:dividerPadding="4dp"
+                    android:orientation="horizontal"
+                    android:showDividers="middle" >
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" >
+
+                        <EditText
+                            android:id="@+id/text"
+                            style="@style/EditTextAppearance.Line"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_main_search"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:lines="1"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="56dp"
+                            android:singleLine="true" />
+
+                        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                            style="@style/RippleStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center_vertical|right"
+                            app:rippleColor="@color/main_color_for_search_fragment_text" >
+
+                            <com.csform.android.uiapptemplate.font.MusicTextView
+                                android:id="@+id/clear"
+                                style="@style/TextViewAppearance.CustomMusicButtons.Colored.Search"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:padding="4dp"
+                                android:text="@string/font_cancel"
+                                android:textSize="16sp" />
+
+                        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                    </FrameLayout>
+
+                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                        style="@style/RippleStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_vertical|end"
+                        app:rippleColor="@color/main_color_for_search_fragment_text" >
+
+                        <com.csform.android.uiapptemplate.font.MusicTextView
+                            android:id="@+id/search"
+                            style="@style/TextViewAppearance.CustomMusicButtons.Colored.Search"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:padding="4dp"
+                            android:text="@string/font_search_online"
+                            android:textSize="32sp" />
+                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+                    <ImageButton
+                        android:id="@+id/downloads"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_download" />
+                </LinearLayout>
+
+				<FrameLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="48dp"
+				    android:paddingLeft="16dp"
+				    android:background="@color/main_color_500"
+				    android:paddingRight="16dp" >
+
+				    <Spinner
+				        android:id="@+id/choise_engines"
+				        style="@style/Spinner.Material"
+				        android:layout_width="match_parent"
+				        android:layout_height="match_parent" />
+				    
+				    <com.csform.android.uiapptemplate.font.MusicTextView
+				        style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+				        android:layout_width="wrap_content"
+				        android:layout_height="match_parent"
+				        android:layout_gravity="end"
+				        android:gravity="center_vertical|end"
+				        android:paddingRight="8dp"
+				        android:text="@string/font_drop_down"
+				        android:textColor="@color/main_color_accent"
+				        android:textSize="16sp" />
+				    
+				</FrameLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

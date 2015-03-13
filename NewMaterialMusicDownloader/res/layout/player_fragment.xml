@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    android:padding="4dp"
+    tools:ignore="ContentDescription" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|start"
+        android:orientation="horizontal"
+        android:minHeight="48dp" >
+
+        <com.csform.android.uiapptemplate.view.cb.CheckBox
+            android:id="@+id/cbUseCover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"/>
+
+        <TextView
+            style="@style/TextViewAppearance.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:text="@string/edit_mp3_use_album_cover" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/holo_transparent_button"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+
+            <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                style="@style/RippleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true" >
+
+                <LinearLayout
+                    android:id="@+id/songNameBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom" >
+
+                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                        android:id="@+id/songName"
+                        style="@style/TextViewAppearance.Headline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1" />
+
+                    <com.csform.android.uiapptemplate.font.MusicTextView
+                        style="@style/TextViewAppearance.CustomMusicButtons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:padding="4dp"
+                        android:text="@string/font_edit"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+            <EditText
+                android:id="@+id/songNameEdit"
+                style="@style/EditTextAppearance.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="4dp"
+                android:paddingLeft="4dp"
+                android:paddingBottom="4dp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+
+            <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                style="@style/RippleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true" >
+
+                <LinearLayout
+                    android:id="@+id/artistNameBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom" >
+
+                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                        android:id="@+id/artistName"
+                        style="@style/TextViewAppearance.Headline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1" />
+
+                    <com.csform.android.uiapptemplate.font.MusicTextView
+                        style="@style/TextViewAppearance.CustomMusicButtons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:padding="4dp"
+                        android:text="@string/font_edit"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+            <EditText
+                android:id="@+id/artistNameEdit"
+                style="@style/EditTextAppearance.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/trackTime"
+                    style="@style/TextViewAppearance.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start" />
+
+                <TextView
+                    android:id="@+id/trackTotalTime"
+                    style="@style/TextViewAppearance.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <SeekBar
+                    android:id="@+id/progress_track"
+                    style="@style/SeerkBar.Indeterminate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:max="100"
+                    android:progress="0" />
+
+                <com.csform.android.uiapptemplate.view.spb.SmoothProgressBar
+                    android:id="@+id/player_wait_song"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:spb_color="@color/main_color_500"
+                    app:spb_mirror_mode="false"
+                    app:spb_progressiveStart_activated="false"
+                    app:spb_progressiveStart_speed="1.5"
+                    app:spb_progressiveStop_speed="3.4"
+                    app:spb_reversed="false"
+                    app:spb_sections_count="4"
+                    app:spb_speed="2.0"
+                    app:spb_stroke_separator_length="4dp"
+                    app:spb_stroke_width="4dp" >
+                </com.csform.android.uiapptemplate.view.spb.SmoothProgressBar>
+            </FrameLayout>
+
+            <!-- <SeekBar -->
+            <!-- android:id="@+id/progress_track" -->
+            <!-- style="@style/SeerkBar.Indeterminate" -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="match_parent" -->
+            <!-- android:layout_weight="1" -->
+            <!-- android:max="100" /> -->
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:minHeight="@dimen/playerbutton_height" >
+
+        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+            style="@style/RippleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/shuffle"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:text="@string/font_random"
+                android:textSize="24sp" />
+        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+            style="@style/RippleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/prev"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:text="@string/font_previous"
+                android:textSize="24sp" />
+        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+            style="@style/RippleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/playpause"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:text="@string/font_play"
+                android:textSize="24sp" />
+        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+            style="@style/RippleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/stop"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:text="@string/font_stop"
+                android:textSize="24sp" />
+        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+            style="@style/RippleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/next"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:text="@string/font_next"
+                android:textSize="24sp" />
+        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+            style="@style/RippleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/repeat"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:text="@string/font_repeat"
+                android:textSize="24sp" />
+        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+    </LinearLayout>
+
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" >
+
+        <com.csform.android.uiapptemplate.view.cpb.CircularProgressButton
+            android:id="@+id/download"
+            style="@style/CircularProgressBarStyle.Full"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:minHeight="48dp"
+            android:text="@string/download_dialog_download" />
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp" >
+        
+        <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
+            android:id="@+id/lyrics_progress"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:background="@color/main_color_accent"
+            android:visibility="gone" />
+
+<!--         <com.csform.android.uiapptemplate.view.ProgressWheel -->
+<!--             android:id="@+id/lyrics_progress" -->
+<!--             style="@style/ProgressBarMaterial" -->
+<!--             android:layout_width="56dp" -->
+<!--             android:layout_height="56dp" -->
+<!--             android:layout_gravity="center" -->
+<!--             android:visibility="visible" /> -->
+
+        <com.csform.android.uiapptemplate.font.RobotoTextView
+            android:id="@+id/lyrics_text"
+            style="@style/TextViewAppearance.Body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</LinearLayout>
