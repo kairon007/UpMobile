@@ -1,4 +1,9 @@
-package org.upmobile.newmaterialmusicdownloader;
+package org.upmobile.newmaterialmusicdownloader.activity;
+
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.R.id;
+import org.upmobile.newmaterialmusicdownloader.R.layout;
+import org.upmobile.newmaterialmusicdownloader.R.menu;
 
 import android.app.Activity;
 import android.os.Bundle;
