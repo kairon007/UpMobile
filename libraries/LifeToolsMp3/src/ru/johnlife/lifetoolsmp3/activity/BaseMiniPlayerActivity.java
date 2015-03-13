@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.support.v7.app.ActionBarActivity;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public abstract class BaseMiniPlayerActivity extends Activity {
+public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 
 	protected final String ARRAY_SAVE = "extras_array_save";
 	protected PlaybackService service;
