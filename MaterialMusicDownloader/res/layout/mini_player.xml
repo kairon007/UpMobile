@@ -66,15 +66,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical" >
 
-                    <com.csform.android.uiapptemplate.font.MusicTextView
+                    <ImageButton
                         android:id="@+id/mini_player_download"
-                        style="@style/TextViewAppearance.CustomMusicButtons.Colored"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:padding="1dp"
-                        android:text="@string/font_download_button"
-                        android:textSize="46sp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:src="@null"
                         android:visibility="gone" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
             </FrameLayout>

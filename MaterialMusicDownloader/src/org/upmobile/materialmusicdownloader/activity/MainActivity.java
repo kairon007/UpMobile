@@ -227,8 +227,14 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	
 	@Override
 	protected void setPlayPauseMini(boolean playPayse) {
-		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 47), Util.dpToPx(this, 46), Util.dpToPx(this, 46), playPayse ? getString(R.string.font_pause_mini) : getString(R.string.font_play_mini));
+		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 46), Util.dpToPx(this, 46), Util.dpToPx(this, 45), playPayse ? getString(R.string.font_pause_mini) : getString(R.string.font_play_mini));
 		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
+	}
+	
+	@Override
+	protected void setImageDownloadButton() {
+		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 46), Util.dpToPx(this, 46), Util.dpToPx(this, 45), getString(R.string.font_download_button));
+		((ImageView) findViewById(R.id.mini_player_download)).setImageBitmap(bmp);
 	}
 	
 	@Override

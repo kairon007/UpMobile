@@ -49,6 +49,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 	protected abstract void showPlayerFragment();
 	protected abstract void showPlayerElement(boolean flag);
 	protected void lockListViewAnimation() {}
+	protected void setImageDownloadButton() {}
 	
 	@Override
 	protected void onStart() {
@@ -74,6 +75,7 @@ public abstract class BaseMiniPlayerActivity extends Activity {
 		download = findViewById(R.id.mini_player_download);
 		miniPlayer = findViewById(getMiniPlayerID());
 		fakeView = findViewById(getFakeViewID());
+		setImageDownloadButton();
 	}
 	
 	private void setListeners() {
