@@ -10,7 +10,6 @@ import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.adapter.NavigationAdapter;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -21,6 +20,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -241,7 +241,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     }
 
     private ActionBar getActionBar() {
-        return getActivity().getActionBar();
+        return ((MainActivity) getActivity()).getSupportActionBar();
     }
     
     public void setEnabled(boolean enabled) {

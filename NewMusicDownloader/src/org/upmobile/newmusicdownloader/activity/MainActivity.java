@@ -35,14 +35,12 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 
 public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
 
@@ -72,7 +70,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		getActionBar().setIcon(android.R.color.transparent);
+		getSupportActionBar().setIcon(android.R.color.transparent);
         navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 		File file = new File(folderPath);
@@ -98,66 +96,66 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		getMenuInflater().inflate(R.menu.menu, menu);
 		MenuItem searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		searchView.setOnSearchClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (navigationDrawerFragment.isDrawerOpen()) {
-					navigationDrawerFragment.closeDrawer();
-					searchView.onActionViewExpanded();
-				}
-			}
-		});
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				hideKeyboard();
-				String lastFragmentName = getPreviousFragmentName(1);
-				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-					searchView.clearFocus();
-					LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-					if (fragment.isVisible()) {
-						if (query.isEmpty()) {
-							fragment.clearFilter();
-						} else {
-							fragment.setFilter(query);
-						}
-					}
-				} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
-					searchView.clearFocus();
-					PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-					if (fragment.isVisible()) {
-						if (query.isEmpty()) {
-							fragment.clearFilter();
-						} else {
-							fragment.setFilter(query);
-						}
-					}
-				}
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				if ("".equals(newText)) {
-					String fragmentName =  getPreviousFragmentName(1);
-					Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-					if (LibraryFragment.class == fragment.getClass()) {
-						if (fragment.isVisible()) {
-							((LibraryFragment) fragment).clearFilter();
-						}
-					} else if (PlaylistFragment.class == fragment.getClass()) {
-						if (fragment.isVisible()) {
-							((PlaylistFragment) fragment).clearFilter();
-						}
-					}
-				}
-				return false;
-			}
-			
-		});
+//		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
+//		searchView.setOnSearchClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				if (navigationDrawerFragment.isDrawerOpen()) {
+//					navigationDrawerFragment.closeDrawer();
+//					searchView.onActionViewExpanded();
+//				}
+//			}
+//		});
+//		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+//			
+//			@Override
+//			public boolean onQueryTextSubmit(String query) {
+//				hideKeyboard();
+//				String lastFragmentName = getPreviousFragmentName(1);
+//				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
+//					searchView.clearFocus();
+//					LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+//					if (fragment.isVisible()) {
+//						if (query.isEmpty()) {
+//							fragment.clearFilter();
+//						} else {
+//							fragment.setFilter(query);
+//						}
+//					}
+//				} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
+//					searchView.clearFocus();
+//					PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+//					if (fragment.isVisible()) {
+//						if (query.isEmpty()) {
+//							fragment.clearFilter();
+//						} else {
+//							fragment.setFilter(query);
+//						}
+//					}
+//				}
+//				return false;
+//			}
+//
+//			@Override
+//			public boolean onQueryTextChange(String newText) {
+//				if ("".equals(newText)) {
+//					String fragmentName =  getPreviousFragmentName(1);
+//					Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
+//					if (LibraryFragment.class == fragment.getClass()) {
+//						if (fragment.isVisible()) {
+//							((LibraryFragment) fragment).clearFilter();
+//						}
+//					} else if (PlaylistFragment.class == fragment.getClass()) {
+//						if (fragment.isVisible()) {
+//							((PlaylistFragment) fragment).clearFilter();
+//						}
+//					}
+//				}
+//				return false;
+//			}
+//			
+//		});
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -253,7 +251,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	}
 	
 	public void setActionBarTitle(String title) {
-		getActionBar().setTitle(title);
+		getSupportActionBar().setTitle(title);
 	}
 	
 	public void setActionBarTitle(int title) {
