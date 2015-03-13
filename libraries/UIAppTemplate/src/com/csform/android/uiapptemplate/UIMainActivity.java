@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
@@ -66,6 +65,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
 //        int color = getResources().getColor(R.color.main_color_for_search_fragment_text);
 //        String str = Integer.toHexString(color);
 //        String strColor =  "#"+str.substring(2);
@@ -109,7 +109,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 			@Override
 			public boolean onQueryTextSubmit(String q) {
 				searchView.clearFocus();
-				hideKeyboard();
+				Util.hideKeyboard(UIMainActivity.this, searchView);
 				onQueryTextSubmitAct(q);
 				return false;
 			}
@@ -143,8 +143,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		View view  = findViewById(R.id.drawer_layout);
-		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		Util.hideKeyboard(this, view);
 	    int itemId = item.getItemId();
 		if (itemId == R.id.action_search) {
 			searchView.setIconified(false);// to Expand the SearchView when clicked
@@ -152,12 +151,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		}    
 		return false;
 	}
-	
-	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (null != searchView) imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-	}
-	
+
 	@Override
 	public void setTitle(int titleId) {
 		setTitle(getString(titleId));
@@ -217,7 +211,9 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate) {
 		String fragmentName =  ((Fragment) baseMaterialFragment).getClass().getSimpleName();
 		setSearchViewVisibility(fragmentName);
-		hideKeyboard();
+		if (null != searchView) {
+			Util.hideKeyboard(this, searchView);
+		}
 		isEnabledFilter = false;
 		if (null != searchView) {
 			searchView.setIconified(true);
