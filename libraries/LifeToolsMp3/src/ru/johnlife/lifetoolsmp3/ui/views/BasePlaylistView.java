@@ -237,7 +237,6 @@ public abstract class BasePlaylistView extends View {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				String newTitle =  ((EditText) dialoglayout.findViewById(R.id.newPlaylistET)).getText().toString().trim();
-				android.util.Log.d("logks", "new  title = " + newTitle);
 				if (newTitle.isEmpty()) {
 					dialog.cancel();
 					showMessage(getContext(), R.string.playlist_cannot_be_empty);

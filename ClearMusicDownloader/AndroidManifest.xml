@@ -41,12 +41,12 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:theme="@style/AppTheme"
         android:persistent="true" >
         <activity
             android:name="org.upmobile.clearmusicdownloader.activity.MainActivity"
             android:configChanges="screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTask" >
             <intent-filter>

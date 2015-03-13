@@ -6,10 +6,14 @@
         <item name="android:textSize">25sp</item>
     </style>
 
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowTitleSize">0dp</item>
         <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+    
+    
 
 </resources>
