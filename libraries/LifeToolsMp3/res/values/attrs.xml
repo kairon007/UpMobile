@@ -6,5 +6,15 @@
         <attr name="miniPlayerPause" format="reference" />
         <attr name="miniPlayerDownload" format="reference" />
     </declare-styleable>
+    
+    <declare-styleable name="Undobar">
+        <attr name="undoBarStyle" format="reference" />
+        <attr name="inAnimation" format="reference" />
+        <attr name="outAnimation" format="reference" />
+        <attr name="containerStyle" format="reference" />
+        <attr name="messageStyle" format="reference" />
+        <attr name="buttonStyle" format="reference" />
+        <attr name="dividerStyle" format="reference" />
+    </declare-styleable>
 
 </resources>
