@@ -1,10 +1,23 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat"></style>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light"></style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="windowActionBar">false</item> 
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimaryDark">@color/material_primary_dark</item>
+        <item name="colorPrimary">@color/material_primary</item>
+        <item name="colorAccent">@color/material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/material_primary</item> <!-- this is color of ripple!!! -->
+        <item name="colorButtonNormal">@color/button_material_dark</item>
+        <item name="colorSwitchThumbNormal">@color/switch_thumb_normal_material_dark</item>
+        <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
+        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+        <item name="android:ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
     </style>
+
+    <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse"></style>
 
 </resources>

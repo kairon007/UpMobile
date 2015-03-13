@@ -1,5 +1,7 @@
 package org.upmobile.newmaterialmusicdownloader.ui;
 
+import org.upmobile.newmaterialmusicdownloader.Nulldroid_Settings;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
@@ -14,7 +16,7 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected BaseSettings getSettings() {
-		return null;
+		return new Nulldroid_Settings();
 	}
 
 	@Override

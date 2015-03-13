@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/layout_divider"
+    android:dividerPadding="4dp"
+    android:minHeight="64dp"
+    android:orientation="horizontal"
+    android:showDividers="middle" >
+
+    <LinearLayout
+        android:id="@+id/boxInfoItem"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/selectable_item_bg"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp" >
+
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:minHeight="48dp" >
+
+            <RelativeLayout
+                android:id="@+id/RelativeLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:lines="1"
+                    android:text="29"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="22sp" />
+
+                <!-- android:textColor="@color/dimmed" -->
+
+                <TextView
+                    android:id="@+id/caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/number"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-10dp"
+                    android:gravity="center_horizontal"
+                    android:text="tracks"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/default_cover"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="8dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/artistLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/font_size_title" />
+
+                <TextView
+                    android:id="@+id/chunkTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="right"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/font_size_title"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <!-- android:textColor="#ffff" -->
+
+
+            <!-- android:textColor="@color/dimmed" -->
+
+            <TextView
+                android:id="@+id/titleLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/font_size_normal" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/threeDot"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:src="@drawable/threedot"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnDownload"
+        android:layout_width="48dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/selectable_item_bg"
+        android:contentDescription="@string/expand"
+        android:longClickable="true"
+        android:scaleType="center"
+        android:src="@drawable/icon_download" />
+
+</LinearLayout>
