@@ -1,6 +1,5 @@
 package com.csform.android.uiapptemplate;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,25 +9,16 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
-import android.widget.TextView;
 
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
@@ -75,36 +65,36 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
         }
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        int color = getResources().getColor(R.color.main_color_for_search_fragment_text);
-        String str = Integer.toHexString(color);
-        String strColor =  "#"+str.substring(2);
-        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
-        ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
-        searchIcon.setImageBitmap(getSearchActinBarIcon());
-        searchIcon.setBackgroundResource(R.drawable.spinner_selector);
-        int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
-        ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
-        closeIcon.setImageBitmap(getCloseActinBarIcon());
-        closeIcon.setBackgroundResource(R.drawable.spinner_selector);
-        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
-        TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
-        autoComplete.setTextColor(color);
-        try {
-			Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
-			SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
-			stopHint.append(Html.fromHtml("<font color = " + strColor + ">" + getResources().getString(R.string.hint_main_search) + "</font>"));
-			Drawable search_icon = new BitmapDrawable(getResources(),getSearchActinBarIcon());
-			Method textSizeMethod = clazz.getMethod("getTextSize");
-			Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
-			int textSize = (int) (rawTextSize * 1.5);
-			search_icon.setBounds(0, 0, textSize, textSize);
-			stopHint.setSpan(new ImageSpan(search_icon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
-			setHintMethod.invoke(autoComplete, stopHint);
-		} catch (Exception e) {
-			android.util.Log.d(getClass().getName() , "Appear problem: " + e);
-		}
+        searchView = (SearchView) searchItem.getActionView();
+//        int color = getResources().getColor(R.color.main_color_for_search_fragment_text);
+//        String str = Integer.toHexString(color);
+//        String strColor =  "#"+str.substring(2);
+//        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+//        ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
+//        searchIcon.setImageBitmap(getSearchActinBarIcon());
+//        searchIcon.setBackgroundResource(R.drawable.spinner_selector);
+//        int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
+//        ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
+//        closeIcon.setImageBitmap(getCloseActinBarIcon());
+//        closeIcon.setBackgroundResource(R.drawable.spinner_selector);
+//        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
+//        TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
+//        autoComplete.setTextColor(color);
+//        try {
+//			Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
+//			SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
+//			stopHint.append(Html.fromHtml("<font color = " + strColor + ">" + getResources().getString(R.string.hint_main_search) + "</font>"));
+//			Drawable search_icon = new BitmapDrawable(getResources(),getSearchActinBarIcon());
+//			Method textSizeMethod = clazz.getMethod("getTextSize");
+//			Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
+//			int textSize = (int) (rawTextSize * 1.5);
+//			search_icon.setBounds(0, 0, textSize, textSize);
+//			stopHint.setSpan(new ImageSpan(search_icon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//			Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
+//			setHintMethod.invoke(autoComplete, stopHint);
+//		} catch (Exception e) {
+//			android.util.Log.d(getClass().getName() , "Appear problem: " + e);
+//		}
         searchView.setOnSearchClickListener(new OnClickListener() {
 			
         	@Override

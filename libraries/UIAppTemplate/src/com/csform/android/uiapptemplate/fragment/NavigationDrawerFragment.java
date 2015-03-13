@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Constants;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -126,7 +125,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        ActionBar actionBar = getActionBar();
+        android.support.v7.app.ActionBar actionBar = getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.main_color_500)));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
@@ -236,8 +235,8 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		return super.onOptionsItemSelected(item);
 	}
 
-    private ActionBar getActionBar() {
-        return getActivity().getActionBar();
+    private android.support.v7.app.ActionBar getActionBar() {
+        return ((UIMainActivity) getActivity()).getSupportActionBar();
     }
     
     public void setEnabled(boolean enabled) {

@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarStyle">@style/ActionBarStyle</item>
         <item name="colorPrimary">@color/material_blue_300</item>
-        <item name="colorPrimaryDark">@color/main_color_700</item>
+        <item name="colorPrimaryDark">@color/main_color_500</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarItemBackground">@drawable/spinner_selector</item>
         <item name="actionBarItemBackground">@drawable/spinner_selector</item>
