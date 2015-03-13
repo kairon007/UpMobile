@@ -83,6 +83,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		}
 		fileObserver.startWatching();
 		super.onCreate(savedInstanceState);
+		getSupportActionBar().hide();
 		initSearchView();
 		
 		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
