@@ -63,5 +63,6 @@
     <string name="undo_deletion">Hoàn tác xóa</string>
 	<string name="playlist_cannot_be_empty">Tên danh sách không thể để trống</string>
 	<string name="playlist_is_empty">Playlist có sản phẩm nào</string>
+	<string name="no_previous_playlists">Không Playlists trước</string>
 
 </resources>

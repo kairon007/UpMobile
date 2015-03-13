@@ -66,5 +66,6 @@
     <string name="undo_deletion">삭제 취소</string>
 	<string name="playlist_cannot_be_empty">재생 목록 이름은 비워 둘 수 없습니다</string>
 	<string name="playlist_is_empty">재생 목록이 비어 있습니다</string>
+	<string name="no_previous_playlists">아니 이전 재생 목록 없음</string>
 
 </resources>

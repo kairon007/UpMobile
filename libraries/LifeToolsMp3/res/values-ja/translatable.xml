@@ -66,5 +66,6 @@
     <string name="undo_deletion">削除する元に戻す</string>
 	<string name="playlist_cannot_be_empty">プレイリストの名前を空にすることはできません</string>
 	<string name="playlist_is_empty">プレイリストは空です</string>
+	<string name="no_previous_playlists">以前プレイリストません</string>
 
 </resources>

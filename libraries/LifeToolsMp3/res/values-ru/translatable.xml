@@ -68,5 +68,6 @@
     <string name="undo_deletion">Отменить удаление</string>
 	<string name="playlist_cannot_be_empty">Имя списка воспроизведения не может быть пустым</string>
 	<string name="playlist_is_empty">Плейлист пуст</string>
+	<string name="no_previous_playlists">Нет предыдущих плейлистов</string>
 
 </resources>

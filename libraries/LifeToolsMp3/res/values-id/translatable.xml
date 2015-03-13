@@ -66,5 +66,6 @@
     <string name="undo_deletion">Urungkan menghapus</string>
 	<string name="playlist_cannot_be_empty">Nama Playlist tidak boleh kosong</string>
 	<string name="playlist_is_empty">Playlist kosong</string>
+	<string name="no_previous_playlists">Tidak ada Playlist sebelumnya</string>
 	
 </resources>

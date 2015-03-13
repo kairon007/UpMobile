@@ -66,5 +66,6 @@
     <string name="undo_deletion">Відмінити видалення</string>
 	<string name="playlist_cannot_be_empty">Назву списку відтворення не може бути порожнім</string>
 	<string name="playlist_is_empty">Плейлист порожній</string>
+	<string name="no_previous_playlists">Немає попередніх Плейлисти</string>
 
 </resources>

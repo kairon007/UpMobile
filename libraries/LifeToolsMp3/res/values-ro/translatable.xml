@@ -66,5 +66,6 @@
     <string name="undo_deletion">Anulați șterge</string>
 	<string name="playlist_cannot_be_empty">Numele Playlist nu poate fi gol</string>
 	<string name="playlist_is_empty">Playlist este gol</string>
+	<string name="no_previous_playlists">Nu Liste de redare anterioare</string>
 
 </resources>

@@ -68,5 +68,6 @@
     <string name="undo_deletion">Zpět Odstranit</string>
 	<string name="playlist_cannot_be_empty">Playlist Název nemůže být prázdný</string>
     <string name="playlist_is_empty">Playlist je prázdný</string>
+    <string name="no_previous_playlists">Žádné předchozí Playlisty</string>
     
 </resources>

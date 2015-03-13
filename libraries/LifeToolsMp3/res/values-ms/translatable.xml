@@ -66,5 +66,6 @@
     <string name="undo_deletion">Buat asal memadam</string>
 	<string name="playlist_cannot_be_empty">Nama senarai main tidak boleh kosong</string>
 	<string name="playlist_is_empty">Senarai main kosong</string>
+	<string name="no_previous_playlists">Tiada Senarai main sebelumnya</string>
 
 </resources>

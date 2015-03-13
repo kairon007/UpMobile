@@ -68,5 +68,6 @@
     <string name="undo_deletion">Адмяніць выдаленне</string>
 	<string name="playlist_cannot_be_empty">Імя спісу прайгравання не можа быць пустым</string>
 	<string name="playlist_is_empty">Плэйліст пусты</string>
+	<string name="no_previous_playlists">Няма папярэдніх плэйлістоў</string>
 
 </resources>

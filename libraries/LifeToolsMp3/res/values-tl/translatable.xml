@@ -66,5 +66,6 @@
     <string name="undo_deletion">I-undo tanggalin</string>
 	<string name="playlist_cannot_be_empty">Ang pangalan ng playlist hindi maaaring walang laman</string>
 	<string name="playlist_is_empty">Playlist ay walang laman</string>
+	<string name="no_previous_playlists">Walang nakaraang Playlist</string>
 
 </resources>
