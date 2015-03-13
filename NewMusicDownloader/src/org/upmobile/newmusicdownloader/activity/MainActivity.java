@@ -36,13 +36,15 @@ import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 
-public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
+public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, OnQueryTextListener, Constants {
 
 	private final String APP_THEME_WHITE_BLACK_ACTION_BAR = "AppThemeWhite.BlackActionBar";
 	private final String APP_THEME_WHITE = "AppThemeWhite";
@@ -96,67 +98,60 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		getMenuInflater().inflate(R.menu.menu, menu);
 		MenuItem searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-//		searchView.setOnSearchClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				if (navigationDrawerFragment.isDrawerOpen()) {
-//					navigationDrawerFragment.closeDrawer();
-//					searchView.onActionViewExpanded();
-//				}
-//			}
-//		});
-//		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-//			
-//			@Override
-//			public boolean onQueryTextSubmit(String query) {
-//				hideKeyboard();
-//				String lastFragmentName = getPreviousFragmentName(1);
-//				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-//					searchView.clearFocus();
-//					LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-//					if (fragment.isVisible()) {
-//						if (query.isEmpty()) {
-//							fragment.clearFilter();
-//						} else {
-//							fragment.setFilter(query);
-//						}
-//					}
-//				} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
-//					searchView.clearFocus();
-//					PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-//					if (fragment.isVisible()) {
-//						if (query.isEmpty()) {
-//							fragment.clearFilter();
-//						} else {
-//							fragment.setFilter(query);
-//						}
-//					}
-//				}
-//				return false;
-//			}
-//
-//			@Override
-//			public boolean onQueryTextChange(String newText) {
-//				if ("".equals(newText)) {
-//					String fragmentName =  getPreviousFragmentName(1);
-//					Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-//					if (LibraryFragment.class == fragment.getClass()) {
-//						if (fragment.isVisible()) {
-//							((LibraryFragment) fragment).clearFilter();
-//						}
-//					} else if (PlaylistFragment.class == fragment.getClass()) {
-//						if (fragment.isVisible()) {
-//							((PlaylistFragment) fragment).clearFilter();
-//						}
-//					}
-//				}
-//				return false;
-//			}
-//			
-//		});
+		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
+		searchView.setOnQueryTextListener(this);
+		searchView.setOnSearchClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (navigationDrawerFragment.isDrawerOpen()) {
+					navigationDrawerFragment.closeDrawer();
+					searchView.onActionViewExpanded();
+				}
+			}
+		});
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onQueryTextChange(String query) {
+		if (query.isEmpty()) {
+			String fragmentName = getPreviousFragmentName(1);
+			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
+			if (LibraryFragment.class == fragment.getClass() && fragment.isVisible()) {
+				((LibraryFragment) fragment).clearFilter();
+			} else if (PlaylistFragment.class == fragment.getClass() && fragment.isVisible()) {
+				((PlaylistFragment) fragment).clearFilter();
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		Util.hideKeyboard(this, searchView);
+		String lastFragmentName = getPreviousFragmentName(1);
+		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
+			searchView.clearFocus();
+			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+			if (fragment.isVisible()) {
+				if (query.isEmpty()) {
+					fragment.clearFilter();
+				} else {
+					fragment.setFilter(query);
+				}
+			}
+		} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
+			searchView.clearFocus();
+			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+			if (fragment.isVisible()) {
+				if (query.isEmpty()) {
+					fragment.clearFilter();
+				} else {
+					fragment.setFilter(query);
+				}
+			}
+		}
+		return false;
 	}
 	
 	@Override
@@ -186,12 +181,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			service = PlaybackService.get(this);
 		}
 		super.onResume();
-	}
-	
-	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (null != searchView)
-			imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 	}
 	
 	@Override
@@ -393,4 +382,5 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	protected String getDirectory() {
 		return NewMusicDownloaderApp.getDirectory();
 	}
+
 }

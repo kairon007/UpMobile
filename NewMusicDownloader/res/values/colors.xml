@@ -10,5 +10,6 @@
     <color name="light_grey">#ebebeb</color>
     <color name="holo_dark">#ff000000</color>
     <color name="holo_light">#fff3f3f3</color>
+    <color name="default_black_color">#ff212121</color>
 
 </resources>
