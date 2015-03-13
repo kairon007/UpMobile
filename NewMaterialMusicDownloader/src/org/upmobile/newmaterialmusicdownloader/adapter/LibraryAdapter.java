@@ -76,9 +76,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 					service.setArrayPlayback(list);
 				}
 				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
-				((MainActivity) getContext()).showPlayerElement(true);
+//				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
-				((MainActivity)getContext()).setSelectedItem(LIBRARY_FRAGMENT);
+//				((MainActivity)getContext()).setSelectedItem(LIBRARY_FRAGMENT);
 				break;
 			}
 		}
@@ -105,7 +105,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		service.remove(song);
 		song.reset(getContext());
 		if (isEmpty()) {
-			((MainActivity) getContext()).showPlayerElement(false);
+//			((MainActivity) getContext()).showPlayerElement(false);
 			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
 			emptyMsg.setVisibility(View.VISIBLE);
 			emptyMsg.setText(R.string.library_empty);

@@ -8,6 +8,7 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBar">false</item> 
         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
         <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
     </style>

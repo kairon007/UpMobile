@@ -2,7 +2,6 @@ package org.upmobile.newmaterialmusicdownloader.fragment;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.ui.SearchView;
 
 import android.app.Fragment;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class SearchFragment extends Fragment implements BaseMaterialFragment, Constants {
@@ -39,18 +37,18 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment, Co
 	
 	@Override
 	public void onResume() {
-		((UIMainActivity) getActivity()).setVisibleSearchView(false);
-		query = ((UIMainActivity) getActivity()).getQuery();
-		if (null != query) {
-			searchView.setExtraSearch(query);
-			searchView.setSearchField(query);
-			searchView.trySearch();
-			query = null;
-		}
-		((UIMainActivity) getActivity()).setSelectedItem(SEARCH_FRAGMENT);
-		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
-		((MainActivity) getActivity()).setDrawerEnabled(true);
-		((UIMainActivity) getActivity()).invalidateOptionsMenu();
+//		((UIMainActivity) getActivity()).setVisibleSearchView(false);
+//		query = ((UIMainActivity) getActivity()).getQuery();
+//		if (null != query) {
+//			searchView.setExtraSearch(query);
+//			searchView.setSearchField(query);
+//			searchView.trySearch();
+//			query = null;
+//		}
+//		((UIMainActivity) getActivity()).setSelectedItem(SEARCH_FRAGMENT);
+//		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
+//		((MainActivity) getActivity()).setDrawerEnabled(true);
+//		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
 

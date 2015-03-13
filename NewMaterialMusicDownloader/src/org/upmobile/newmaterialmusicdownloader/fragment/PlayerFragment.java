@@ -168,7 +168,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (isDestroy) {
 				return;
 			}
-			((MainActivity) getActivity()).showPlayerElement(true);
+//			((MainActivity) getActivity()).showPlayerElement(true);
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
 			changePlayPauseView(true);
@@ -274,7 +274,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			} else {
 				player.play(song);
 			}
-			((MainActivity) getActivity()).setDrawerEnabled(false);
+//			((MainActivity) getActivity()).setDrawerEnabled(false);
 		} else {
 			song = player.getPlayingSong();
 		}
@@ -297,7 +297,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		getActivity().onBackPressed();
-		((MainActivity)getActivity()).setDrawerEnabled(true);
+//		((MainActivity)getActivity()).setDrawerEnabled(true);
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -338,7 +338,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onDestroy() {
 		isDestroy = true;
-		((MainActivity)getActivity()).setDrawerEnabled(true);
+//		((MainActivity)getActivity()).setDrawerEnabled(true);
 		super.onDestroy();
 	}
 

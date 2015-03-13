@@ -25,10 +25,10 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 	
 	@Override
 	public void onResume() {
-		((UIMainActivity) getActivity()).setSelectedItem(LIBRARY_FRAGMENT);
-		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
-		((UIMainActivity)getActivity()).setDrawerEnabled(true);
-		((UIMainActivity) getActivity()).invalidateOptionsMenu();
+//		((UIMainActivity) getActivity()).setSelectedItem(LIBRARY_FRAGMENT);
+//		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
+//		((UIMainActivity)getActivity()).setDrawerEnabled(true);
+//		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		libraryView.onResume();
 		super.onResume();
 	}

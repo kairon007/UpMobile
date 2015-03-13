@@ -48,13 +48,13 @@ public class SearchView extends OnlineSearchView implements Constants {
 			}
 			service.setArrayPlayback(list);
 		} 
-		((MainActivity) getContext()).showPlayerElement(true);
+//		((MainActivity) getContext()).showPlayerElement(true);
 		try {
 			((MainActivity) getContext()).startSong(((Song)getResultAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		((MainActivity)getContext()).setSelectedItem(Constants.SEARCH_FRAGMENT);
+//		((MainActivity)getContext()).setSelectedItem(Constants.SEARCH_FRAGMENT);
 		super.click(view, position);
 	}
 

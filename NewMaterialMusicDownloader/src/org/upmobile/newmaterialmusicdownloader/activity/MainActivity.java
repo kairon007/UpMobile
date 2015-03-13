@@ -11,14 +11,16 @@ import org.upmobile.newmaterialmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.SearchFragment;
-import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog;
 import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -29,19 +31,33 @@ import android.os.Bundle;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.font.MusicTextView;
-import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.devspark.appmsg.AppMsg;
 import com.devspark.appmsg.AppMsg.Style;
+import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.Badgeable;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
-public class MainActivity extends UIMainActivity implements Constants, FolderSelectCallback {
+public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback {
 
 	private final String folderPath = NewMaterialMusicDownloaderApp.getDirectory();
 	private int currentFragmentID;
+	private Drawer.Result drawerResult = null;
 
 	private FileObserver fileObserver = new FileObserver(folderPath) {
 
@@ -59,33 +75,96 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		changeFragment(getFragments().get(0), false);
+		setContentView(R.layout.activity_material_main);
 		File file = new File(folderPath);
-		if (!file.exists()) file.mkdirs();
+		if (!file.exists())
+			file.mkdirs();
 		if (null != service) {
 			if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
 				ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
 				service.setArrayPlayback(list);
 			}
-			if (service.isPlaying()) showPlayerElement(true);
+			if (service.isPlaying())
+				showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		// Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		drawerResult = new Drawer()
+				.withActivity(this)
+				.withToolbar(toolbar)
+				.withActionBarDrawerToggle(true)
+				.withHeader(R.layout.drawer_header)
+				.addDrawerItems(
+						new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_ab).withBadge("99").withIdentifier(1),
+						new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(FontAwesome.Icon.faw_gamepad),
+						new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(FontAwesome.Icon.faw_eye).withBadge("6").withIdentifier(2),
+						new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(FontAwesome.Icon.faw_eye).withBadge("6").withIdentifier(2),
+						new SectionDrawerItem().withName("one"), new SecondaryDrawerItem().withName("one").withIcon(FontAwesome.Icon.faw_cog),
+						new SecondaryDrawerItem().withName("one").withIcon(FontAwesome.Icon.faw_question).setEnabled(false), new DividerDrawerItem(),
+						new SecondaryDrawerItem().withName("one").withIcon(FontAwesome.Icon.faw_github).withBadge("12+").withIdentifier(1))
+				.withOnDrawerListener(new Drawer.OnDrawerListener() {
+					@Override
+					public void onDrawerOpened(View drawerView) {
+						// Скрываем клавиатуру при открытии Navigation Drawer
+						InputMethodManager inputMethodManager = (InputMethodManager) MainActivity.this
+								.getSystemService(Activity.INPUT_METHOD_SERVICE);
+						inputMethodManager.hideSoftInputFromWindow(MainActivity.this.getCurrentFocus().getWindowToken(), 0);
+					}
+
+					@Override
+					public void onDrawerClosed(View drawerView) {
+					}
+				}).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+					@Override
+					// Обработка клика
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+						if (drawerItem instanceof Nameable) {
+							Toast.makeText(MainActivity.this, MainActivity.this.getString(((Nameable) drawerItem).getNameRes()), Toast.LENGTH_SHORT)
+									.show();
+						}
+						if (drawerItem instanceof Badgeable) {
+							Badgeable badgeable = (Badgeable) drawerItem;
+							if (badgeable.getBadge() != null) {
+								// учтите, не делайте так, если ваш бейдж
+								// содержит символ "+"
+								try {
+									int badge = Integer.valueOf(badgeable.getBadge());
+									if (badge > 0) {
+										drawerResult.updateBadge(String.valueOf(badge - 1), position);
+									}
+								} catch (Exception e) {
+									Log.d("test", "Не нажимайте на бейдж, содержащий плюс! :)");
+								}
+							}
+						}
+						changeFragment(getFragments().get(position - 1), false);
+					}
+				}).withOnDrawerItemLongClickListener(new Drawer.OnDrawerItemLongClickListener() {
+					@Override
+					// Обработка длинного клика, например, только для
+					// SecondaryDrawerItem
+					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+						if (drawerItem instanceof SecondaryDrawerItem) {
+							Toast.makeText(MainActivity.this, MainActivity.this.getString(((SecondaryDrawerItem) drawerItem).getNameRes()),
+									Toast.LENGTH_SHORT).show();
+						}
+						return false;
+					}
+				}).build();
 	}
 
-	@Override
-	protected ArrayList<BaseMaterialFragment> getFragments() {
-		ArrayList<BaseMaterialFragment> fragments = new ArrayList<BaseMaterialFragment>();
+	protected ArrayList<Fragment> getFragments() {
+		ArrayList<Fragment> fragments = new ArrayList<Fragment>();
 		fragments.add(new SearchFragment());
 		fragments.add(new DownloadsFragment());
 		fragments.add(new PlaylistFragment());
 		fragments.add(new LibraryFragment());
 		fragments.add(new PlayerFragment());
 		return fragments;
-	}
-	
-	@Override
-	protected void clickOnSearchView(String message) {
-		changeFragment(new SearchFragment(message), false);
 	}
 	
 	@Override
@@ -108,7 +187,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	public void onBackPressed() {
 		super.onBackPressed();
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
-		isEnabledFilter = false;
+//		isEnabledFilter = false;
 		if (null != player && player.isVisible()) {
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
@@ -119,11 +198,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 				fragment = new LibraryFragment();
 				currentFragmentID = LIBRARY_FRAGMENT;
 			} else {
-				setVisibleSearchView(false);
+//				setVisibleSearchView(false);
 				fragment = new SearchFragment();
 				currentFragmentID = SEARCH_FRAGMENT;
 			}
-			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, fragment.getClass().getSimpleName()).commit();
+//			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, fragment.getClass().getSimpleName()).commit();
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
@@ -143,10 +222,6 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		if (service.hasArray()) {
 			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
 		}
-	}
-	
-	public void showPlayerElement(boolean flag) {
-		addPlayerElement(flag);
 	}
 	
 	public void showMessage(String message) {
@@ -201,11 +276,6 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	@Override
-	public void showDialog() {
-		new FolderSelectorDialog().show(this);
-	}
-	
-	@Override
 	protected int getMiniPlayerID() {
 		return R.id.mini_player;
 	}
@@ -246,71 +316,85 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		showPlayerElement(PlaybackService.get(this).isPlaying());
 	}
 	
-	@Override
-	public void onQueryTextSubmitAct(String query) {
-		String lastFragmentName = getPreviousFragmentName(1);
-		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-			if (fragment.isVisible()) {
-				if (query.isEmpty()) {
-					fragment.clearFilter();
-				} else {
-					fragment.setFilter(query);
-				}
-			}
-		} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
-			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-			if (fragment.isVisible()) {
-				if (query.isEmpty()) {
-					fragment.clearFilter();
-				} else {
-					fragment.setFilter(query);
-				}
-			}
-		}
-	}
+//	@Override
+//	public void onQueryTextSubmitAct(String query) {
+//		String lastFragmentName = getPreviousFragmentName(1);
+//		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
+//			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+//			if (fragment.isVisible()) {
+//				if (query.isEmpty()) {
+//					fragment.clearFilter();
+//				} else {
+//					fragment.setFilter(query);
+//				}
+//			}
+//		} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
+//			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+//			if (fragment.isVisible()) {
+//				if (query.isEmpty()) {
+//					fragment.clearFilter();
+//				} else {
+//					fragment.setFilter(query);
+//				}
+//			}
+//		}
+//	}
 
-	@Override
-	public void onQueryTextChangeAct(String newText) {
-		if ("".equals(newText)) {
-			String fragmentName =  getPreviousFragmentName(1);
-			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-			if (LibraryFragment.class == fragment.getClass()) {
-				if (fragment.isVisible()) {
-					((LibraryFragment) fragment).clearFilter();
-				}
-			} else if (PlaylistFragment.class == fragment.getClass()) {
-				if (fragment.isVisible()) {
-					((PlaylistFragment) fragment).clearFilter();
-				}
-			}
-		}
-	}
+//	@Override
+//	public void onQueryTextChangeAct(String newText) {
+//		if ("".equals(newText)) {
+//			String fragmentName =  getPreviousFragmentName(1);
+//			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
+//			if (LibraryFragment.class == fragment.getClass()) {
+//				if (fragment.isVisible()) {
+//					((LibraryFragment) fragment).clearFilter();
+//				}
+//			} else if (PlaylistFragment.class == fragment.getClass()) {
+//				if (fragment.isVisible()) {
+//					((PlaylistFragment) fragment).clearFilter();
+//				}
+//			}
+//		}
+//	}
 	
-	@Override
-	protected void showPlayerFragment() {
-		setDrawerEnabled(false);
-		onNavigationDrawerItemSelected(PLAYER_FRAGMENT);
-	}
-	
-	@Override
-	public int getSettingsIcon() {
-		return R.string.font_play_settings;
-	}
-	
+//	@Override
+//	protected void showPlayerFragment() {
+//		setDrawerEnabled(false);
+//		onNavigationDrawerItemSelected(PLAYER_FRAGMENT);
+//	}
+//	
+//	@Override
+//	public int getSettingsIcon() {
+//		return R.string.font_play_settings;
+//	}
+
 	@Override
 	protected int getFakeViewID() {
 		return R.id.fake_view;
 	}
 
 	@Override
-	protected Bitmap getSearchActinBarIcon() {
-		return getDefaultBitmapCover(Util.dpToPx(this, 24), Util.dpToPx(this, 24), Util.dpToPx(this, 22), getResources().getString(R.string.font_search_online), R.color.main_color_for_search_fragment_text);
+	protected void showPlayerFragment() {
+		// TODO Auto-generated method stub
+
 	}
-	
+
 	@Override
-	protected Bitmap getCloseActinBarIcon() {
-		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel),  R.color.main_color_for_search_fragment_text);
+	protected void showPlayerElement(boolean flag) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void changeFragment(Fragment fragment, boolean isAnimate) {
+		if (((Fragment) fragment).isAdded()) {
+			((Fragment) fragment).onResume();
+		}
+		FragmentTransaction tr = getFragmentManager().beginTransaction();
+		if (isAnimate) {
+			tr.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_down, R.anim.slide_out_down);
+		}
+		tr.replace(R.id.content_frame, (Fragment) fragment, fragment.getClass().getSimpleName()).addToBackStack(fragment.getClass().getSimpleName())
+				.commit();
 	}
 
 }
