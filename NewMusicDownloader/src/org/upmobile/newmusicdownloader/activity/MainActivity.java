@@ -157,9 +157,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		View view  = findViewById(R.id.drawer_layout);
-		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-	    switch(item.getItemId()) {
+		Util.hideKeyboard(this, view);
+		switch(item.getItemId()) {
         case R.id.action_search:
             searchView.setIconified(false);// to Expand the SearchView when clicked
             return true;
