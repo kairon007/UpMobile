@@ -128,6 +128,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         android.support.v7.app.ActionBar actionBar = getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.main_color_500)));
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         
 
