@@ -85,7 +85,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		super.onCreate(savedInstanceState);
 		initSearchView();
 		
-//		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 
 	}
 	
