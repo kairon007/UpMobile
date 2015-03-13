@@ -20,7 +20,7 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 
 	private LayoutInflater inflater;
 
-	private ArrayList<PlaylistData> items;
+	private ArrayList<PlaylistData> items = new ArrayList<PlaylistData>();
 	private ArrayList<PlaylistData> itemsOriginal;
 	
 	private ResultFilter filter;

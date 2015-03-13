@@ -114,12 +114,12 @@ public class PlaylistView extends BasePlaylistView{
 	
 	@Override
 	public void showMessage(Context context, int message) {
-		showMessage(getContext(), getContext().getResources().getString(message));
+		showMessage(context, getResources().getString(message));
 	}
 	
 	@Override
 	public void showMessage(Context context, String message) {
-		((MainActivity) getContext()).showMessage(message);
+		((MainActivity) context).showMessage(message);
 	}
 
 	@Override

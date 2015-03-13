@@ -6,6 +6,7 @@ import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.ExpandableAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -413,7 +414,12 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void applyFilter(String srcFilter) {
-		expandableAdapter.getFilter().filter(srcFilter);
+		if (expandableAdapter.isEmpty()) {
+			String message =  getResources().getString(R.string.playlist_is_empty);
+			showMessage(getContext(), message);
+		} else {
+			expandableAdapter.getFilter().filter(srcFilter);
+		}
 	}
 	
 	public void clearFilter() {

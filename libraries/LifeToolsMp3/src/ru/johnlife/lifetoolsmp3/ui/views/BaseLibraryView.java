@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.ContentObserver;
@@ -26,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View implements Handler.Callback {
@@ -135,13 +138,22 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	}
 	
 	public void applyFilter(String srcFilter) {
-		adapter.getFilter().filter(srcFilter);
-		filterQuery = srcFilter;
+		if (adapter.isEmpty()) {
+			String message =  getResources().getString(R.string.library_empty);
+			showMessage(message);
+		} else {
+			adapter.getFilter().filter(srcFilter);
+			filterQuery = srcFilter;
+		}
 	}
 	
 	public void clearFilter() {
 		adapter.clearFilter();
 		filterQuery = "";
+	}
+	
+	public void showMessage(String message) {
+		Toast.makeText(getContext(), message ,Toast.LENGTH_SHORT).show();
 	}
 	
 	protected void adapterCancelTimer() {

@@ -2,6 +2,7 @@ package org.upmobile.materialmusicdownloader.ui;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
@@ -63,6 +64,11 @@ public class LibraryView extends BaseLibraryView implements Constants {
 		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
 		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
 		((DynamicListView)listView).enableSimpleSwipeUndo();
+	}
+	
+	@Override
+	public void showMessage(String message) {
+		((MainActivity)getContext()).showMessage(message);
 	}
 	
 	@Override
