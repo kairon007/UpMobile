@@ -1,4 +1,4 @@
-package org.upmobile.newmaterialmusicdownloader;
+package org.upmobile.newmaterialmusic;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.upmobile.newmaterialmusicdownloader;
+package org.upmobile.newmaterialmusic;
 
 
 import java.io.ByteArrayOutputStream;
@@ -17,6 +17,7 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.upmobile.newmaterialmusicdownloader.R;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import android.annotation.SuppressLint;
@@ -1710,116 +1711,116 @@ public class Nulldroid_Advertisement implements Nulldroid_Advertisment {
 	
 	public static void startappDirectShowInterstitial(final Activity activity, String adPositionKey) { 
 		
-		try {
-	
-			if (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG)) {
-				initializeStartapp(activity); // initialize startapp	
-			}
-			
-			
-			
-			final StartAppNativeAd startAppNativeAd = new StartAppNativeAd(activity);
-
-			
-			// Declare Ad Callbacks Listener
-			AdEventListener adListener = new AdEventListener() {     // Callback Listener
-			      @Override
-			      public void onReceiveAd(Ad arg0) {
-			    	  try {
-				            // Native Ad received
-				            ArrayList<NativeAdDetails> ads = startAppNativeAd.getNativeAds();    // get NativeAds list
-	
-				            // shuffle
-				            Collections.shuffle(ads);
-				            
-				            // Print all ads details to log
-				            Iterator<NativeAdDetails> iterator = ads.iterator();
-				            while(iterator.hasNext()){
-				            	NativeAdDetails nativeAdDetails = iterator.next();
-				            	if (nativeAdDetails != null) {
-				            		String packageName = nativeAdDetails.getPackacgeName();
-				            		if (!Nulldroid_Advertisement.isPackageInstalled(activity, packageName)) {
-				            			nativeAdDetails.sendImpression(activity);
-				            			nativeAdDetails.sendClick(activity);
-				            			
-				            			return; // return once you send a single click
-				            		}	
-				            	}
-				            }
-			    	  } catch(Exception e) {
-			    		  
-			    	  }
-			    	  
-			      }
-
-			      @Override
-			      public void onFailedToReceiveAd(Ad arg0) {
-			            // Native Ad failed to receive
-			            
-			      }
-			};
-
-			// Declare Native Ad Preferences
-			NativeAdPreferences nativePrefs = new NativeAdPreferences()
-			                                          .setAdsNumber(5)                // Load 3 Native Ads
-			                                          .setAutoBitmapDownload(false)    // Retrieve Images object
-			                                          .setImageSize(NativeAdBitmapSize.SIZE100X100);
-
-			
-			// Load Native Ads
-			startAppNativeAd.loadAd(nativePrefs, adListener);
-			
-			try {
-				if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
-					activity.finish();
-				}
-            }catch(Exception e) {
-            	
-            }
-			
-			
-			
-		} catch(Exception e) {
-			
-		}
+//		try {
+//	
+//			if (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG)) {
+//				initializeStartapp(activity); // initialize startapp	
+//			}
+//			
+//			
+//			
+//			final StartAppNativeAd startAppNativeAd = new StartAppNativeAd(activity);
+//
+//			
+//			// Declare Ad Callbacks Listener
+//			AdEventListener adListener = new AdEventListener() {     // Callback Listener
+//			      @Override
+//			      public void onReceiveAd(Ad arg0) {
+//			    	  try {
+//				            // Native Ad received
+//				            ArrayList<NativeAdDetails> ads = startAppNativeAd.getNativeAds();    // get NativeAds list
+//	
+//				            // shuffle
+//				            Collections.shuffle(ads);
+//				            
+//				            // Print all ads details to log
+//				            Iterator<NativeAdDetails> iterator = ads.iterator();
+//				            while(iterator.hasNext()){
+//				            	NativeAdDetails nativeAdDetails = iterator.next();
+//				            	if (nativeAdDetails != null) {
+//				            		String packageName = nativeAdDetails.getPackacgeName();
+//				            		if (!Nulldroid_Advertisement.isPackageInstalled(activity, packageName)) {
+//				            			nativeAdDetails.sendImpression(activity);
+//				            			nativeAdDetails.sendClick(activity);
+//				            			
+//				            			return; // return once you send a single click
+//				            		}	
+//				            	}
+//				            }
+//			    	  } catch(Exception e) {
+//			    		  
+//			    	  }
+//			    	  
+//			      }
+//
+//			      @Override
+//			      public void onFailedToReceiveAd(Ad arg0) {
+//			            // Native Ad failed to receive
+//			            
+//			      }
+//			};
+//
+//			// Declare Native Ad Preferences
+//			NativeAdPreferences nativePrefs = new NativeAdPreferences()
+//			                                          .setAdsNumber(5)                // Load 3 Native Ads
+//			                                          .setAutoBitmapDownload(false)    // Retrieve Images object
+//			                                          .setImageSize(NativeAdBitmapSize.SIZE100X100);
+//
+//			
+//			// Load Native Ads
+//			startAppNativeAd.loadAd(nativePrefs, adListener);
+//			
+//			try {
+//				if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
+//					activity.finish();
+//				}
+//            }catch(Exception e) {
+//            	
+//            }
+//			
+//			
+//			
+//		} catch(Exception e) {
+//			
+//		}
 	}
 		
 	
 	public static void startappShowInterstitial(final Activity activity, final String adPositionKey) { 
 		
-		try {
-			
-			if (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG)) {
-				initializeStartapp(activity); // initialize startapp	
-			}
-				
-			StartAppAd startappAd = getStartappAd(activity);
-			//startappAd.showAd(); // show the ad
-			startappAd.loadAd(new AdEventListener() {
-			    @Override
-			    public void onReceiveAd(Ad ad) {
-			    	
-			    	ad.show();
-			    	
-			    	try{
-				    	if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
-				    		activity.finish();
-				    	}
-			    	} catch(Exception e) {
-			    		
-			    	}
-			    }
-			    
-			    @Override
-			    public void onFailedToReceiveAd(Ad ad) {
-			    	
-			    	showDefaultInterstitial(activity, adPositionKey); 
-			    }
-			}); // load the next ad
-			
-		} catch(Exception e) {
-			
-		}
+//		try {
+//			
+//			if (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG)) {
+//				initializeStartapp(activity); // initialize startapp	
+//			}
+//				
+//			StartAppAd startappAd = getStartappAd(activity);
+//			//startappAd.showAd(); // show the ad
+//			startappAd.loadAd(new AdEventListener() {
+//			    @Override
+//			    public void onReceiveAd(Ad ad) {
+//			    	
+//			    	ad.show();
+//			    	
+//			    	try{
+//				    	if (adPositionKey != null && (adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_LETANG) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_EXIT)  || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_SEARCH_EXIT) || adPositionKey.equals(Nulldroid_Settings.KEY_REMOTE_SETTING_INTERSTITIAL_DOWNLOADS_EXIT))) {
+//				    		activity.finish();
+//				    	}
+//			    	} catch(Exception e) {
+//			    		
+//			    	}
+//			    }
+//			    
+//			    @Override
+//			    public void onFailedToReceiveAd(Ad ad) {
+//			    	
+//			    	showDefaultInterstitial(activity, adPositionKey); 
+//			    }
+//			}); // load the next ad
+//			
+//		} catch(Exception e) {
+//			
+//		}
 	}
 		
  	

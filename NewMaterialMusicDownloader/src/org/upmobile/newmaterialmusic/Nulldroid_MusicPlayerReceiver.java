@@ -1,4 +1,4 @@
-package org.upmobile.newmaterialmusicdownloader;
+package org.upmobile.newmaterialmusic;
 
 
 import android.content.BroadcastReceiver;

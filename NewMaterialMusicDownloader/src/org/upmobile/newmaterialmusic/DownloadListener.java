@@ -1,8 +1,9 @@
-package org.upmobile.newmaterialmusicdownloader;
+package org.upmobile.newmaterialmusic;
 
 import java.io.File;
 
-import org.upmobile.newmaterialmusicdownloader.app.NewMaterialMusicDownloaderApp;
+import org.upmobile.newmaterialmusic.app.NewMaterialMusicDownloaderApp;
+import org.upmobile.newmaterialmusicdownloader.R;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;

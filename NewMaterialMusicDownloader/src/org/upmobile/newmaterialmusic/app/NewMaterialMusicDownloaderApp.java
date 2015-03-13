@@ -1,6 +1,6 @@
-package org.upmobile.newmaterialmusicdownloader.app;
+package org.upmobile.newmaterialmusic.app;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusic.Constants;
 
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.content.SharedPreferences.Editor;

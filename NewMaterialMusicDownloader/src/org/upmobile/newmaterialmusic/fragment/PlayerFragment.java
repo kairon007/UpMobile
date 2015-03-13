@@ -1,11 +1,11 @@
-package org.upmobile.newmaterialmusicdownloader.fragment;
+package org.upmobile.newmaterialmusic.fragment;
 
 import java.io.File;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
-import org.upmobile.newmaterialmusicdownloader.DownloadListener;
+import org.upmobile.newmaterialmusic.Constants;
+import org.upmobile.newmaterialmusic.DownloadListener;
+import org.upmobile.newmaterialmusic.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;

@@ -1,11 +1,11 @@
-package org.upmobile.newmaterialmusicdownloader.adapter;
+package org.upmobile.newmaterialmusic.adapter;
 
 import java.util.ArrayList;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusic.Constants;
+import org.upmobile.newmaterialmusic.activity.MainActivity;
+import org.upmobile.newmaterialmusic.app.NewMaterialMusicDownloaderApp;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.app.NewMaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;

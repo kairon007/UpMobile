@@ -1,7 +1,8 @@
-package org.upmobile.newmaterialmusicdownloader.fragment;
+package org.upmobile.newmaterialmusic.fragment;
 
+import org.upmobile.newmaterialmusic.Constants;
+import org.upmobile.newmaterialmusic.ui.PlaylistView;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.ui.DownloadsView;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -9,29 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
-public class DownloadsFragment extends Fragment implements BaseMaterialFragment {
+public class PlaylistFragment extends Fragment implements BaseMaterialFragment, Constants {
 	
-	private DownloadsView downloadsView;
+	private PlaylistView playlistView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		downloadsView = new DownloadsView(inflater);
-		return downloadsView.getView();
+		playlistView = new PlaylistView(getActivity().getLayoutInflater());
+		return playlistView.getView();
 	}
-
-	@Override
-	public void onPause() {
-		downloadsView.onPause();
-		super.onPause();
-	}
-
+	
 	@Override
 	public void onResume() {
-		downloadsView.onResume();
-//		((UIMainActivity) getActivity()).setSelectedItem(1);
+//		((UIMainActivity) getActivity()).setSelectedItem(PLAYLIST_FRAGMENT);
 //		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 //		((UIMainActivity)getActivity()).setDrawerEnabled(true);
 //		((UIMainActivity) getActivity()).invalidateOptionsMenu();
@@ -40,16 +33,25 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 
 	@Override
 	public int getDrawerIcon() {
-		return R.string.font_download_pic;
+		return R.string.font_playlist;
 	}
 
 	@Override
 	public int getDrawerTitle() {
-		return R.string.tab_downloads;
+		return R.string.tab_playlist;
 	}
 
 	@Override
 	public int getDrawerTag() {
 		return getClass().getSimpleName().hashCode();
 	}
+	
+	public void setFilter(String filter) {
+		playlistView.applyFilter(filter);
+	}
+	
+	public void clearFilter() {
+		playlistView.clearFilter();
+	}
+
 }

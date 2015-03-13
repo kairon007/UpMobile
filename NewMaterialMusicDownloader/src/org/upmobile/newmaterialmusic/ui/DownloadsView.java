@@ -1,9 +1,9 @@
-package org.upmobile.newmaterialmusicdownloader.ui;
+package org.upmobile.newmaterialmusic.ui;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusic.Constants;
+import org.upmobile.newmaterialmusic.adapter.DownloadsAdapter;
+import org.upmobile.newmaterialmusic.app.NewMaterialMusicDownloaderApp;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.adapter.DownloadsAdapter;
-import org.upmobile.newmaterialmusicdownloader.app.NewMaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;

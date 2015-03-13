@@ -1,7 +1,7 @@
-package org.upmobile.newmaterialmusicdownloader.adapter;
+package org.upmobile.newmaterialmusic.adapter;
 
+import org.upmobile.newmaterialmusic.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;

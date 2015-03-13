@@ -1,4 +1,4 @@
-package org.upmobile.newmaterialmusicdownloader.ui.dialog;
+package org.upmobile.newmaterialmusic.ui.dialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.upmobile.newmaterialmusic.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
 import android.app.Activity;
 import android.app.Dialog;

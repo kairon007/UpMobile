@@ -1,12 +1,12 @@
-package org.upmobile.newmaterialmusicdownloader.ui;
+package org.upmobile.newmaterialmusic.ui;
 
 import java.util.ArrayList;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
-import org.upmobile.newmaterialmusicdownloader.Nulldroid_Advertisement;
-import org.upmobile.newmaterialmusicdownloader.Nulldroid_Settings;
+import org.upmobile.newmaterialmusic.Constants;
+import org.upmobile.newmaterialmusic.Nulldroid_Advertisement;
+import org.upmobile.newmaterialmusic.Nulldroid_Settings;
+import org.upmobile.newmaterialmusic.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;

@@ -1,8 +1,8 @@
-package org.upmobile.newmaterialmusicdownloader.fragment;
+package org.upmobile.newmaterialmusic.fragment;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusic.Constants;
+import org.upmobile.newmaterialmusic.ui.SearchView;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.ui.SearchView;
 
 import android.app.Fragment;
 import android.os.Bundle;

@@ -1,17 +1,17 @@
-package org.upmobile.newmaterialmusicdownloader.activity;
+package org.upmobile.newmaterialmusic.activity;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusic.Constants;
+import org.upmobile.newmaterialmusic.app.NewMaterialMusicDownloaderApp;
+import org.upmobile.newmaterialmusic.fragment.DownloadsFragment;
+import org.upmobile.newmaterialmusic.fragment.LibraryFragment;
+import org.upmobile.newmaterialmusic.fragment.PlayerFragment;
+import org.upmobile.newmaterialmusic.fragment.PlaylistFragment;
+import org.upmobile.newmaterialmusic.fragment.SearchFragment;
+import org.upmobile.newmaterialmusic.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.app.NewMaterialMusicDownloaderApp;
-import org.upmobile.newmaterialmusicdownloader.fragment.DownloadsFragment;
-import org.upmobile.newmaterialmusicdownloader.fragment.LibraryFragment;
-import org.upmobile.newmaterialmusicdownloader.fragment.PlayerFragment;
-import org.upmobile.newmaterialmusicdownloader.fragment.PlaylistFragment;
-import org.upmobile.newmaterialmusicdownloader.fragment.SearchFragment;
-import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
