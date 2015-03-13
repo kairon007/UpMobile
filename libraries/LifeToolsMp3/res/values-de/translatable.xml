@@ -68,5 +68,6 @@
     <string name="undo_deletion">Rückgängig löschen</string>
 	<string name="playlist_cannot_be_empty">Playlist Name darf nicht leer sein</string>
     <string name="playlist_is_empty">Playlist ist leer</string>
+    <string name="no_previous_playlists">Keine Schauplaylists</string>
 	
 </resources>

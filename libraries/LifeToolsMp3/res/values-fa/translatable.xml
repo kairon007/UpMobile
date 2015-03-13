@@ -68,5 +68,6 @@
     <string name="undo_deletion">لغو حذف</string>
 	<string name="playlist_cannot_be_empty">نام لیست پخش نمی تواند خالی باشد</string>
 	<string name="playlist_is_empty">لیست پخش خالی است</string>
+	<string name="no_previous_playlists">هیچ لیست پخشی قبلی</string>
 	
 </resources>

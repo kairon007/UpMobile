@@ -65,5 +65,6 @@
     <string name="undo_deletion">撤消刪除</string>
 	<string name="playlist_cannot_be_empty">播放列表名稱不能為空</string>
 	<string name="playlist_is_empty">播放列表是空的</string>
+	<string name="no_previous_playlists">以前没有播放列表</string>
 
 </resources>

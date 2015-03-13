@@ -66,5 +66,7 @@
     <string name="undo_deletion">Annulla eliminare</string>
 	<string name="playlist_cannot_be_empty">Nome playlist non può essere vuoto</string>
 	<string name="playlist_is_empty">Playlist è vuota</string>
+	
+	<string name="no_previous_playlists">Nessun precedenti Playlist</string>
 
 </resources>

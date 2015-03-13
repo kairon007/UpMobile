@@ -66,5 +66,6 @@
     <string name="undo_deletion">Ongedaan verwijderen</string>
 	<string name="playlist_cannot_be_empty">Playlist naam mag niet leeg zijn</string>
 	<string name="playlist_is_empty">Afspeellijst is leeg</string>
+	<string name="no_previous_playlists">Geen vorige Afspeellijsten</string>
 
 </resources>

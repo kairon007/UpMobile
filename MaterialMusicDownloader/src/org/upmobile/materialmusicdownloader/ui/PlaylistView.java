@@ -33,7 +33,8 @@ public class PlaylistView extends BasePlaylistView{
 			public void onPositive(MaterialDialog dialog) {
 				super.onPositive(dialog);
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
-				if (input.getText().toString().isEmpty()) {
+				String newTitle =  input.getText().toString().trim();
+				if (newTitle.isEmpty()) {
 					dialog.cancel();
 					showMessage(getContext(), R.string.playlist_cannot_be_empty);
 					return;

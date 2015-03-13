@@ -68,5 +68,6 @@
     <string name="undo_deletion">Αναίρεση διαγραφής</string>
 	<string name="playlist_cannot_be_empty">Το όνομα λίστας αναπαραγωγής δεν μπορεί να είναι κενό</string>
 	<string name="playlist_is_empty">Playlist είναι άδειο</string>
+	<string name="no_previous_playlists">Δεν υπάρχουν προηγούμενες λίστες αναπαραγωγής</string>
 
 </resources>

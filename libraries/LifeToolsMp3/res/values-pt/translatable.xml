@@ -66,5 +66,7 @@
     <string name="undo_deletion">Desfazer excluir</string>
 	<string name="playlist_cannot_be_empty">Playlist nome não pode ser vazio</string>
 	<string name="playlist_is_empty">Lista está vazia</string>
+	
+	<string name="no_previous_playlists">Não há listas anteriores</string>
 
 </resources>

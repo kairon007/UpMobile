@@ -68,5 +68,6 @@
     <string name="undo_deletion">Annuler Supprimer</string>
 	<string name="playlist_cannot_be_empty">Nom de la sélection ne peut pas être vide</string>
 	<string name="playlist_is_empty">Playlist est vide</string>
+	<string name="no_previous_playlists">Aucun Playlists précédentes</string>
 	
 </resources>
