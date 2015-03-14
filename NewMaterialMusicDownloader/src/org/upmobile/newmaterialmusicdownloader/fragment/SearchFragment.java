@@ -2,6 +2,8 @@ package org.upmobile.newmaterialmusicdownloader.fragment;
 
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.ui.SearchView;
 
 import android.app.Fragment;
@@ -20,4 +22,9 @@ public class SearchFragment extends Fragment implements Constants{
 		return searchView.getView();
 	}
 
+	@Override
+	public void onResume() {
+		((MainActivity) getActivity()).setTitle(R.string.tab_search);
+		super.onResume();
+	}
 }

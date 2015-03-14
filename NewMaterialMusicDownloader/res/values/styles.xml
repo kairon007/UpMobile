@@ -18,6 +18,10 @@
         <item name="android:ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
     </style>
 
-    <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse"></style>
+    <style name="MyActionBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
+    </style>
 
 </resources>

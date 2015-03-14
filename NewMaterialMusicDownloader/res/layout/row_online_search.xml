@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="72dp"
+    android:background="@android:color/white"
     android:divider="@drawable/layout_divider"
     android:dividerPadding="4dp"
-    android:minHeight="64dp"
     android:orientation="horizontal"
     android:showDividers="middle" >
 
@@ -13,23 +13,21 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/selectable_item_bg"
         android:clickable="true"
-        android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingStart="8dp" >
+        android:orientation="horizontal" >
 
         <FrameLayout
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:minHeight="48dp" >
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical" >
 
             <RelativeLayout
                 android:id="@+id/RelativeLayout1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <TextView
                     android:id="@+id/number"
@@ -39,7 +37,8 @@
                     android:lines="1"
                     android:text="29"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:visibility="gone" />
 
                 <!-- android:textColor="@color/dimmed" -->
 
@@ -53,13 +52,15 @@
                     android:gravity="center_horizontal"
                     android:text="tracks"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone" />
             </RelativeLayout>
 
-            <ImageView
+            <ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView
                 android:id="@+id/cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
                 android:contentDescription="@string/default_cover"
                 android:scaleType="fitCenter" />
         </FrameLayout>
@@ -68,9 +69,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:padding="8dp" >
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,13 +117,15 @@
                 android:textSize="@dimen/font_size_normal" />
         </LinearLayout>
 
-        <View
+        <ImageView
             android:id="@+id/threeDot"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
             android:clickable="true"
+            android:scaleType="centerInside"
             android:src="@drawable/threedot"
-            android:visibility="gone" />
+            android:visibility="visible" />
     </LinearLayout>
 
     <ImageView
@@ -131,6 +137,7 @@
         android:contentDescription="@string/expand"
         android:longClickable="true"
         android:scaleType="center"
-        android:src="@drawable/icon_download" />
+        android:src="@drawable/icon_download"
+        android:visibility="gone" />
 
 </LinearLayout>

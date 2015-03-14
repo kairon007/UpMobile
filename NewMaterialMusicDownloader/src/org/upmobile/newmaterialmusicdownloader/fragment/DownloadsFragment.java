@@ -1,6 +1,8 @@
 package org.upmobile.newmaterialmusicdownloader.fragment;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.ui.DownloadsView;
 
 import android.app.Fragment;
@@ -17,6 +19,12 @@ public class DownloadsFragment extends Fragment implements Constants{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		downloadsView = new DownloadsView(inflater);
 		return downloadsView.getView();
+	}
+	
+	@Override
+	public void onResume() {
+		((MainActivity) getActivity()).setTitle(R.string.tab_downloads);
+		super.onResume();
 	}
 
 }

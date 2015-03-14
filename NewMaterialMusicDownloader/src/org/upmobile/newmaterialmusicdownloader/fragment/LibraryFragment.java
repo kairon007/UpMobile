@@ -1,6 +1,8 @@
 package org.upmobile.newmaterialmusicdownloader.fragment;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.ui.LibraryView;
 
 import android.app.Fragment;
@@ -25,5 +27,11 @@ public class LibraryFragment extends Fragment implements Constants {
 	
 	public void clearFilter() {
 		libraryView.clearFilter();
+	}
+	
+	@Override
+	public void onResume() {
+		((MainActivity) getActivity()).setTitle(R.string.tab_library);
+		super.onResume();
 	}
 }

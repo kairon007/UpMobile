@@ -26,7 +26,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
+import com.devspark.appmsg.AppMsg;
+import com.devspark.appmsg.AppMsg.Style;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
@@ -188,7 +191,30 @@ public class MainActivity extends BaseMiniPlayerActivity {
 	}
 
 	@Override
-	protected void showPlayerElement(boolean flag) {
+	public void showPlayerElement(boolean flag) {
 		drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_black).withTextColor(R.color.material_primary_text), Constants.PLAYER_FRAGMENT);
 	}
+	
+	public void setTitle(int title) {
+		setTitle(getString(title));
+	}
+	
+	public void setTitle(String title) {
+		getSupportActionBar().setTitle(title);
+	}
+	
+	public void showMessage(String message) {
+		AppMsg.cancelAll(this);
+		AppMsg.makeText(this, message, new Style(3000, R.color.material_primary)).show();
+	}
+	
+	public void showMessage(int message) {
+		showMessage(getString(message));
+	}
+	
+	@Override
+	protected void setPlayPauseMini(boolean playPayse) {
+		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageResource(playPayse ? R.drawable.ic_play_arrow_black : R.drawable.ic_pause_black);
+	}
 }
+
