@@ -237,6 +237,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	}
 	
 	protected String getPreviousFragmentName(int position) {
+		if (getFragmentManager().getBackStackEntryCount() < position) return getFragments().get(0).getClass().getSimpleName();
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
 		String previousFragmentName = backEntry.getName();
 		return previousFragmentName;
