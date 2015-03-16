@@ -10,7 +10,7 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="MaterialAppTheme" parent="AppBaseTheme">
         <item name="colorPrimaryDark">@color/material_primary_dark</item>
         <item name="colorPrimary">@color/material_primary</item>
         <item name="colorAccent">@color/material_accent</item>
@@ -20,7 +20,7 @@
         <item name="attr_image_drawer">@drawable/header_image</item>
     </style>
 
-    <style name="Black" parent="AppBaseTheme">
+    <style name="MaterialAppTheme.Black" parent="AppBaseTheme">
         <item name="colorPrimaryDark">@color/black_material_accent</item>
         <item name="colorPrimary">@color/black_material_primary</item>
         <item name="colorAccent">@color/black_material_accent</item>
@@ -30,7 +30,7 @@
         <item name="attr_image_drawer">@drawable/header_image</item>
     </style>
 
-    <style name="Brown" parent="AppBaseTheme">
+    <style name="MaterialAppTheme.Brown" parent="AppBaseTheme">
         <item name="colorPrimaryDark">@color/brown_material_primary_dark</item>
         <item name="colorPrimary">@color/brown_material_primary</item>
         <item name="colorAccent">@color/brown_material_accent</item>
@@ -41,7 +41,7 @@
         <item name="attr_image_drawer">@drawable/header_image_brown</item>
     </style>
 
-    <style name="DeepOrange" parent="AppBaseTheme">
+    <style name="MaterialAppTheme.DeepOrange" parent="AppBaseTheme">
         <item name="colorPrimaryDark">@color/orange_material_primary_dark</item>
         <item name="colorPrimary">@color/orange_material_primary</item>
         <item name="colorAccent">@color/orange_material_accent</item>
@@ -51,7 +51,7 @@
         <item name="attr_image_drawer">@drawable/header_image_orange</item>
     </style>
 
-    <style name="Green" parent="AppBaseTheme">
+    <style name="MaterialAppTheme.Green" parent="AppBaseTheme">
         <item name="colorPrimaryDark">@color/green_material_primary_dark</item>
         <item name="colorPrimary">@color/green_material_primary</item>
         <item name="colorAccent">@color/green_material_accent</item>

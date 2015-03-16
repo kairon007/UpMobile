@@ -1,45 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/lastPlayedPlaylist"
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingLeft="16dp" >
+        app:rippleColor="?attr/colorPrimaryDark" >
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/lastPlayedPlaylist"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/last_played_playlist"
-            style="@style/TextStyleLine2" />
-    </LinearLayout>
+            android:layout_height="48dp"
+            android:paddingLeft="16dp" >
 
-    <LinearLayout
-        android:id="@+id/createNewPlaylist"
+            <TextView
+                style="@style/TextStyleLine2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/last_played_playlist" />
+        </LinearLayout>
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingLeft="16dp" >
+        app:rippleColor="?attr/colorPrimaryDark" >
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="@string/create_new_playlist"
-            style="@style/TextStyleLine2" />
+        <LinearLayout
+            android:id="@+id/createNewPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingLeft="16dp" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="16dp"
-            android:src="@android:drawable/ic_menu_add" />
-    </LinearLayout>
+            <TextView
+                style="@style/TextStyleLine2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/create_new_playlist" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingRight="16dp"
+                android:src="@android:drawable/ic_menu_add" />
+        </LinearLayout>
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
     <View
         android:layout_width="match_parent"
@@ -53,11 +66,11 @@
 
         <TextView
             android:id="@+id/textView1"
+            style="@style/TextStyleLine2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/all_playlists"
-            style="@style/TextStyleLine2" />
+            android:text="@string/all_playlists" />
     </FrameLayout>
 
     <TextView
