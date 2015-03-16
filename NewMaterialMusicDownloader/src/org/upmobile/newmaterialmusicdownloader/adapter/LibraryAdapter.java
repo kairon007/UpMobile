@@ -85,7 +85,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	
 	@Override
 	protected int getDefaultCover() {
-		return R.drawable.ic_album_black;
+		return R.drawable.ic_album_grey;
 	}
 	
 	public void deleteSong(MusicData song) {

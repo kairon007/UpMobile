@@ -53,7 +53,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/default_cover"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_album_black" />
+                android:src="@drawable/ic_album_grey" />
         </FrameLayout>
 
         <LinearLayout

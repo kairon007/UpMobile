@@ -15,7 +15,7 @@
             android:id="@+id/mini_player_cover"
             android:layout_width="64dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_album_black" />
+            android:src="@drawable/ic_album_grey" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0"
-                android:src="@drawable/ic_play_arrow_black"
+                android:src="@drawable/ic_play_arrow_grey"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

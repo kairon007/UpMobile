@@ -59,16 +59,16 @@ public class MainActivity extends BaseMiniPlayerActivity {
 				.withActionBarDrawerToggle(true)
 				.withHeader(R.layout.drawer_header)
 				.addDrawerItems(
-						new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_black)
+						new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey)
 								.withTextColor(R.color.material_primary_text),
-						new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_black)
+						new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey)
 								.withTextColor(R.color.material_primary_text),
-						new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_black)
+						new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey)
 								.withTextColor(R.color.material_primary_text),
-						new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_black)
+						new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey)
 								.withTextColor(R.color.material_primary_text),
 						new SectionDrawerItem().withName(R.string.tab_settings).withTextColor(R.color.material_primary_text),
-						new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_black))
+						new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey))
 				.withOnDrawerListener(new Drawer.OnDrawerListener() {
 					@Override
 					public void onDrawerOpened(View drawerView) {
@@ -275,9 +275,9 @@ public class MainActivity extends BaseMiniPlayerActivity {
 	@Override
 	public void showPlayerElement(boolean flag) {
 		drawerResult.removeItem(Constants.PLAYER_FRAGMENT + 1);
-		drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_black).withTextColor(R.color.material_primary_text), Constants.PLAYER_FRAGMENT);
+		drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_grey).withTextColor(R.color.material_primary_text), Constants.PLAYER_FRAGMENT);
 		drawerResult.addItem(new SectionDrawerItem().withName(R.string.tab_settings).withTextColor(R.color.material_primary_text));
-		drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_black));
+		drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
 	}
 
 	public void setTitle(int title) {
@@ -299,7 +299,7 @@ public class MainActivity extends BaseMiniPlayerActivity {
 
 	@Override
 	protected void setPlayPauseMini(boolean playPayse) {
-		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageResource(playPayse ? R.drawable.ic_play_arrow_black : R.drawable.ic_pause_black);
+		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageResource(playPayse ? R.drawable.ic_play_arrow_grey : R.drawable.ic_pause_grey);
 	}
 	protected void setSearchViewVisibility(String fragmentName) {
 		isVisibleSearchView  = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));

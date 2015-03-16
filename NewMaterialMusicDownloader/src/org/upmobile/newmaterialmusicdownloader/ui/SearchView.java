@@ -86,7 +86,7 @@ public class SearchView extends OnlineSearchView {
 	}
 	@Override
 	public int defaultCover() {
-		return R.drawable.ic_album_black;
+		return R.drawable.ic_album_grey;
 	}
 	
 	@Override
