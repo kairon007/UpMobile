@@ -1,16 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light"></style>
-
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
-        <item name="colorPrimaryDark">@color/material_primary_dark</item>
-        <item name="colorPrimary">@color/material_primary</item>
-        <item name="colorAccent">@color/material_accent</item>
-        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
-        <item name="colorControlActivated">?attr/colorAccent</item>
-        <item name="colorControlHighlight">@color/material_primary</item> <!-- this is color of ripple!!! -->
         <item name="colorButtonNormal">@color/button_material_dark</item>
         <item name="colorSwitchThumbNormal">@color/switch_thumb_normal_material_dark</item>
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
@@ -18,9 +9,59 @@
         <item name="android:ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
     </style>
 
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="colorPrimaryDark">@color/material_accent</item>
+        <item name="colorPrimary">@color/material_primary</item>
+        <item name="colorAccent">@color/material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/material_primary</item>
+    </style>
+
+    <style name="Black" parent="AppBaseTheme">
+        <item name="colorPrimaryDark">@color/black_material_accent</item>
+        <item name="colorPrimary">@color/black_material_primary</item>
+        <item name="colorAccent">@color/black_material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/black_material_primary</item>
+        <item name="attr_image_drawer">@drawable/header_image</item>
+    </style>
+
+    <style name="Brown" parent="AppBaseTheme">
+        <item name="colorPrimaryDark">@color/brown_material_primary_dark</item>
+        <item name="colorPrimary">@color/brown_material_primary</item>
+        <item name="colorAccent">@color/brown_material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/brown_material_primary</item>
+        <item name="colorSwitchThumbNormal">@color/switch_thumb_normal_material_dark</item>
+        <item name="attr_image_drawer">@drawable/header_image_brown</item>
+    </style>
+
+    <style name="DeepOrange" parent="AppBaseTheme">
+        <item name="colorPrimaryDark">@color/orange_material_primary_dark</item>
+        <item name="colorPrimary">@color/orange_material_primary</item>
+        <item name="colorAccent">@color/orange_material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/orange_material_primary</item>
+        <item name="attr_image_drawer">@drawable/header_image_orange</item>
+    </style>
+
+    <style name="Green" parent="AppBaseTheme">
+        <item name="colorPrimaryDark">@color/green_material_primary_dark</item>
+        <item name="colorPrimary">@color/green_material_primary</item>
+        <item name="colorAccent">@color/green_material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/green_material_primary</item>
+        <item name="attr_image_drawer">@drawable/header_image_green</item>
+    </style>
+
     <style name="MyActionBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
-        <!-- Support library compatibility -->
         <item name="windowActionBarOverlay">true</item>
     </style>
 

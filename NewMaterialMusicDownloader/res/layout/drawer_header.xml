@@ -5,6 +5,6 @@
     android:adjustViewBounds="true"
     android:orientation="vertical"
     android:scaleType="fitCenter"
-    android:src="@drawable/header_image" >
+    android:src="?attr/attr_image_drawer" >
 
 </ImageView>
