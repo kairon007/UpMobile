@@ -17,6 +17,8 @@
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/material_primary</item>
+        <item name="colorTextPrimary">@color/material_primary_text</item>
+        <item name="colorTextSecondary">@color/material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image</item>
     </style>
 
@@ -27,6 +29,8 @@
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/black_material_primary</item>
+        <item name="colorTextPrimary">@color/black_material_primary_text</item>
+        <item name="colorTextSecondary">@color/black_material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image</item>
     </style>
 
@@ -38,6 +42,8 @@
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/brown_material_primary</item>
         <item name="colorSwitchThumbNormal">@color/switch_thumb_normal_material_dark</item>
+        <item name="colorTextPrimary">@color/brown_material_primary_text</item>
+        <item name="colorTextSecondary">@color/brown_material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image_brown</item>
     </style>
 
@@ -49,6 +55,8 @@
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/orange_material_primary</item>
         <item name="attr_image_drawer">@drawable/header_image_orange</item>
+        <item name="colorTextPrimary">@color/orange_material_primary_text</item>
+        <item name="colorTextSecondary">@color/orange_material_secondary_text</item>
     </style>
 
     <style name="MaterialAppTheme.Green" parent="AppBaseTheme">
@@ -59,6 +67,8 @@
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/green_material_primary</item>
         <item name="attr_image_drawer">@drawable/header_image_green</item>
+        <item name="colorTextPrimary">@color/green_material_primary_text</item>
+        <item name="colorTextSecondary">@color/green_material_secondary_text</item>
     </style>
 
     <style name="MyActionBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -67,12 +77,12 @@
     </style>
 
     <style name="TextStyleLine1">
-        <item name="android:textColor">@color/material_primary_text</item>
+        <item name="android:textColor">?attr/colorTextPrimary</item>
         <item name="android:textSize">@dimen/material_title</item>
     </style>
 
     <style name="TextStyleLine2">
-        <item name="android:textColor">@color/material_secondary_text</item>
+        <item name="android:textColor">?attr/colorTextSecondary</item>
         <item name="android:textSize">@dimen/material_body</item>
     </style>
 
