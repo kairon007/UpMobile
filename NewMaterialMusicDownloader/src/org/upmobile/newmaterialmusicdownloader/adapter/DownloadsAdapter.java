@@ -1,13 +1,11 @@
 package org.upmobile.newmaterialmusicdownloader.adapter;
 
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +23,10 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 
 
 		public DownloadsViewHolder(View v) {
-//			title = (TextView) v.findViewById(R.id.item_title);
-//			artist = (TextView) v.findViewById(R.id.item_description);
-//			progress = (ProgressBar) v.findViewById(R.id.item_progress);
-//			image = (ImageView) v.findViewById(R.id.item_image);
+			title = (TextView) v.findViewById(R.id.artistLine);
+			artist = (TextView) v.findViewById(R.id.titleLine);
+			progress = (ProgressBar) v.findViewById(R.id.item_progress);
+			image = (ImageView) v.findViewById(R.id.cover);
 		}
 	}
 

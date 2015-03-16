@@ -313,5 +313,5 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	protected Bitmap getCloseActinBarIcon() {
 		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel),  R.color.main_color_for_search_fragment_text);
 	}
-
+	
 }

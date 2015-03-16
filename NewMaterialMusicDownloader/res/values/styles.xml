@@ -24,4 +24,14 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
+    <style name="TextStyleLine1">
+        <item name="android:textColor">@color/material_primary_text</item>
+        <item name="android:textSize">@dimen/material_title</item>
+    </style>
+
+    <style name="TextStyleLine2">
+        <item name="android:textColor">@color/material_secondary_text</item>
+        <item name="android:textSize">@dimen/material_body</item>
+    </style>
+
 </resources>

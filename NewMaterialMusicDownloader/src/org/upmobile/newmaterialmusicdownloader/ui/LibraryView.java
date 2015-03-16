@@ -3,11 +3,17 @@ package org.upmobile.newmaterialmusicdownloader.ui;
 import org.upmobile.newmaterialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,6 +46,21 @@ public class LibraryView extends BaseLibraryView {
 	@Override
 	protected String getFolderPath() {
 		return NewMaterialApp.getDirectory();
+	}
+	
+	@Override
+	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
+		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+	        @Override
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	            for (int position : reverseSortedPositions) {
+	            	((LibraryAdapter)adapter).deleteSong((MusicData)adapter.getItem(position)); 
+	            }
+	        }
+	    });
+		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
+		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
+		((DynamicListView)listView).enableSimpleSwipeUndo();
 	}
 
 }

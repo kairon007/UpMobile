@@ -6,8 +6,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="8dp" >
+        android:layout_height="match_parent" >
 
         <include
             android:layout_width="match_parent"
@@ -16,8 +15,9 @@
 
         <TextView
             android:id="@+id/message"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:fontFamily="sans-serif-thin"
             android:gravity="center"
             android:text="@string/search_your_results_appear_here"
@@ -50,8 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@drawable/layout_divider"
-                android:dividerPadding="4dp"
                 android:orientation="horizontal"
+                android:paddingLeft="15dp"
                 android:showDividers="middle" >
 
                 <LinearLayout
@@ -66,10 +66,10 @@
                         android:layout_weight="1"
                         android:hint="@string/hint_main_search"
                         android:imeOptions="actionSearch"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white"
                         android:inputType="text"
-                        android:lines="1" />
+                        android:lines="1"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white" />
 
                     <ImageButton
                         android:id="@+id/clear"
@@ -99,7 +99,9 @@
             <Spinner
                 android:id="@+id/choise_engines"
                 android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:layout_height="48dp"
+                android:paddingLeft="@dimen/material_edges_padding"
+                android:paddingRight="@dimen/material_edges_padding" />
         </LinearLayout>
     </LinearLayout>
 

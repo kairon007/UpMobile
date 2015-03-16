@@ -25,6 +25,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	@Override
 	public void onResume() {
 		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
+		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
 }

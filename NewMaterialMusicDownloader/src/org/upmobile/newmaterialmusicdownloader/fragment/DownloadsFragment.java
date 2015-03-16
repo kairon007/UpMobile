@@ -24,6 +24,7 @@ public class DownloadsFragment extends Fragment implements Constants{
 	@Override
 	public void onResume() {
 		((MainActivity) getActivity()).setTitle(R.string.tab_downloads);
+		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
 

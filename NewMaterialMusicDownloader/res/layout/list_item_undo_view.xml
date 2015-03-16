@@ -4,7 +4,7 @@
     android:layout_height="72dp"
     android:orientation="vertical" >
 
-    <com.csform.android.uiapptemplate.font.RobotoTextView
+    <TextView
         android:id="@+id/undo_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

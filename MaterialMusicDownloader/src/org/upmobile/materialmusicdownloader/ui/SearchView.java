@@ -7,6 +7,7 @@ import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -142,6 +143,6 @@ public class SearchView extends OnlineSearchView implements Constants {
 	
 	@Override
 	protected String getDirectory() {
-		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
+		return MaterialMusicDownloaderApp.getDirectory();
 	}
 }

@@ -32,6 +32,7 @@ public class LibraryFragment extends Fragment implements Constants {
 	@Override
 	public void onResume() {
 		((MainActivity) getActivity()).setTitle(R.string.tab_library);
+		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
 }

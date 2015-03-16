@@ -32,6 +32,7 @@ public class PlaylistFragment extends Fragment implements Constants{
 	@Override
 	public void onResume() {
 		((MainActivity) getActivity()).setTitle(R.string.tab_playlist);
+		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
 	

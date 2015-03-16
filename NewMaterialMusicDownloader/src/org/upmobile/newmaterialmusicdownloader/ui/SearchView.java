@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.upmobile.newmaterialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
@@ -86,5 +87,15 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	public int defaultCover() {
 		return R.drawable.ic_album_black;
+	}
+	
+	@Override
+	public boolean isUseDefaultSpinner() {
+		return true;
+	}
+	
+	@Override
+	protected String getDirectory() {
+		return NewMaterialApp.getDirectory();
 	}
 }
