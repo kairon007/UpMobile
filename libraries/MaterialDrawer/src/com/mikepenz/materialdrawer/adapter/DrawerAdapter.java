@@ -34,7 +34,7 @@ public class DrawerAdapter extends BaseDrawerAdapter {
         this.mDrawerItems = drawerItems;
 
         if (this.mDrawerItems == null) {
-            mDrawerItems = new ArrayList<>();
+            mDrawerItems = new ArrayList<IDrawerItem>();
         }
 
         mapTypes();
@@ -42,7 +42,7 @@ public class DrawerAdapter extends BaseDrawerAdapter {
 
     public void add(IDrawerItem... drawerItems) {
         if (this.mDrawerItems == null) {
-            mDrawerItems = new ArrayList<>();
+            mDrawerItems = new ArrayList<IDrawerItem>();
         }
 
         if (drawerItems != null) {

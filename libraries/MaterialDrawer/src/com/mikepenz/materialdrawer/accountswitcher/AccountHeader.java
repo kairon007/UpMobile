@@ -392,7 +392,7 @@ public class AccountHeader {
      */
     public AccountHeader addProfiles(IProfile... profiles) {
         if (this.mProfiles == null) {
-            this.mProfiles = new ArrayList<>();
+            this.mProfiles = new ArrayList<IProfile>();
         }
 
         if (profiles != null) {
@@ -627,7 +627,7 @@ public class AccountHeader {
             };
 
             IProfile[] newActiveProfiles = new IProfile[4];
-            Stack<IProfile> unusedProfiles = new Stack<>();
+            Stack<IProfile> unusedProfiles = new Stack<IProfile>();
 
             // try to keep existing active profiles in the same positions
             for (int i = 0; i < mProfiles.size(); i++) {
@@ -647,7 +647,7 @@ public class AccountHeader {
                 }
             }
 
-            Stack<IProfile> activeProfiles = new Stack<>();
+            Stack<IProfile> activeProfiles = new Stack<IProfile>();
             // try to fill the gaps with new available profiles
             for (int i = 0; i < 4; i++) {
                 if (newActiveProfiles[i] != null) {
@@ -721,7 +721,7 @@ public class AccountHeader {
             }
         } else {
             if (mProfiles != null) {
-                ArrayList<IProfile> previousActiveProfiles = new ArrayList<>(Arrays.asList(mCurrentProfile, mProfileFirst, mProfileSecond, mProfileThird));
+                ArrayList<IProfile> previousActiveProfiles = new ArrayList<IProfile>(Arrays.asList(mCurrentProfile, mProfileFirst, mProfileSecond, mProfileThird));
 
                 if (previousActiveProfiles.contains(newSelection)) {
                     int position = -1;
@@ -959,7 +959,7 @@ public class AccountHeader {
     protected void buildDrawerSelectionList() {
         int selectedPosition = -1;
         int position = 0;
-        ArrayList<IDrawerItem> profileDrawerItems = new ArrayList<>();
+        ArrayList<IDrawerItem> profileDrawerItems = new ArrayList<IDrawerItem>();
         for (IProfile profile : mProfiles) {
             if (profile == mCurrentProfile) {
                 selectedPosition = position;

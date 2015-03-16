@@ -535,7 +535,7 @@ public class Drawer {
      */
     public Drawer addDrawerItems(IDrawerItem... drawerItems) {
         if (this.mDrawerItems == null) {
-            this.mDrawerItems = new ArrayList<>();
+            this.mDrawerItems = new ArrayList<IDrawerItem>();
         }
 
         if (drawerItems != null) {
