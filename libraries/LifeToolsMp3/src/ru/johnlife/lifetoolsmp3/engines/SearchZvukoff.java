@@ -2,6 +2,8 @@ package ru.johnlife.lifetoolsmp3.engines;
 
 import java.net.URLEncoder;
 
+import org.jsoup.Connection.Method;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,16 +25,21 @@ public class SearchZvukoff extends SearchWithPages{
 	protected Void doInBackground(Void... paramVarArgs) {
 		try {
 			String link = String.format(URL, URLEncoder.encode(getSongName(), "UTF-8"), page);
-			Document doc = Jsoup.connect(link)
+			Response res = Jsoup.connect(link)
+					.method(Method.GET)
+					.followRedirects(true)
+					.ignoreHttpErrors(true)
 					.userAgent(getRandomUserAgent())
-					.timeout(10000)
-					.get();
+					.timeout(20000)
+					.execute();
+			Document doc = res.parse();
 			Elements songs = doc.body().select("div[class=song song-xl]");
 			for (Element element : songs) {
 				String artist = element.select("div[class=song-artist]").select("span").text().toString();
 				String title = element.select("div[class=song-name]").select("span").text().toString();
 				long duration = Long.parseLong(element.select("a").attr("duration").toString()) * 1000;
 				String downloadUrl = HTTP_ZVUKOFF_RU + element.select("a[class=song-play btn4 play]").attr("href").toString();
+				android.util.Log.d("logd", "doInBackground: ");
 				addSong(new RemoteSong(downloadUrl).setArtistName(artist).setSongTitle(title).setDuration(duration));
 			}
 		} catch (Exception e) {

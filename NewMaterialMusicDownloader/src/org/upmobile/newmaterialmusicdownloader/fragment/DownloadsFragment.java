@@ -22,7 +22,14 @@ public class DownloadsFragment extends Fragment implements Constants{
 	}
 	
 	@Override
+	public void onPause() {
+		downloadsView.onPause();
+		super.onPause();
+	}
+	
+	@Override
 	public void onResume() {
+		downloadsView.onResume();
 		((MainActivity) getActivity()).setTitle(R.string.tab_downloads);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
