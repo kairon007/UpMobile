@@ -11,12 +11,13 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="colorPrimaryDark">@color/material_accent</item>
+        <item name="colorPrimaryDark">@color/material_primary_dark</item>
         <item name="colorPrimary">@color/material_primary</item>
         <item name="colorAccent">@color/material_accent</item>
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/material_primary</item>
+        <item name="attr_image_drawer">@drawable/header_image</item>
     </style>
 
     <style name="Black" parent="AppBaseTheme">
@@ -73,6 +74,13 @@
     <style name="TextStyleLine2">
         <item name="android:textColor">@color/material_secondary_text</item>
         <item name="android:textSize">@dimen/material_body</item>
+    </style>
+
+    <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">
+        <item name="android:thumb">@drawable/seekbar_selector</item>
+        <item name="android:progressDrawable">@drawable/seekbar</item>
+        <item name="android:indeterminateDrawable">@drawable/seekbar</item>
+        <item name="android:focusable">true</item>
     </style>
 
 </resources>
