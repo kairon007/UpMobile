@@ -10,6 +10,7 @@ import org.upmobile.newmaterialmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.SearchFragment;
+import org.upmobile.newmaterialmusicdownloader.ui.dialog.DirectoryChooserDialogWrapper;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -41,7 +42,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-public class MainActivity extends BaseMiniPlayerActivity {
+public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 
 	private Drawer.Result drawerResult = null;
 	private SearchView searchView;
@@ -88,29 +89,29 @@ public class MainActivity extends BaseMiniPlayerActivity {
 		Fragment selectedFragment = null;
 		boolean isAnimate = false;
 		switch (framgment) {
-		case Constants.SEARCH_FRAGMENT:
+		case SEARCH_FRAGMENT:
 			selectedFragment = new SearchFragment();
 			break;
-		case Constants.DOWNLOADS_FRAGMENT:
+		case DOWNLOADS_FRAGMENT:
 			selectedFragment = new DownloadsFragment();
 			break;
-		case Constants.PLAYLIST_FRAGMENT:
+		case PLAYLIST_FRAGMENT:
 			selectedFragment = new PlaylistFragment();
 			break;
-		case Constants.LIBRARY_FRAGMENT:
+		case LIBRARY_FRAGMENT:
 			selectedFragment = new LibraryFragment();
 			break;
-		case Constants.PLAYER_FRAGMENT:
+		case PLAYER_FRAGMENT:
 			selectedFragment = new PlayerFragment();
 			isAnimate = true;
 			break;
-		case Constants.SETTINGS_FRAGMENT:
+		case SETTINGS_FRAGMENT:
 		case 6:
 			final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 			if (null == service) {
 				service = PlaybackService.get(this);
 			}
-			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
+			DirectoryChooserDialogWrapper directoryChooserDialog = new DirectoryChooserDialogWrapper(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
 
 						@Override
 						public void onChosenDir(String chDir) {

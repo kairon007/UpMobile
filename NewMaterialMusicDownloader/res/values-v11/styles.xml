@@ -1,7 +1,8 @@
 <resources>
 
     <style name="AppBaseTheme" parent="Theme.AppCompat">
-        <item name="windowActionBar">false</item> 
+        <item name="windowActionBar">false</item>
+        <item name="attr_image_drawer">@drawable/header_image</item> 
     </style>
 
 </resources>

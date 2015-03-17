@@ -88,6 +88,10 @@ public class DirectoryChooserDialog {
 		} catch (IOException ioe) {
 		}
 	}
+	
+	protected boolean getResourcefromTheme() {
+		return false;
+	}
 
 	public void setNewFolderEnabled(boolean isNewFolderEnabled) {
 		m_isNewFolderEnabled = isNewFolderEnabled;
@@ -153,9 +157,8 @@ public class DirectoryChooserDialog {
 					dirsDialog.dismiss();
 					keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
 					return true;
-				} else {
-					return false;
 				}
+				return false;
 			}
 		});
 		dirsDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -199,7 +202,12 @@ public class DirectoryChooserDialog {
 	}
 
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
-		AlertDialog.Builder dialogBuilder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme);
+		AlertDialog.Builder dialogBuilder;
+		if (getResourcefromTheme()) {
+			dialogBuilder = new AlertDialog.Builder(m_context);
+		} else {
+			dialogBuilder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme);
+		}
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View contentView;
 		if(isWhiteTheme || Util.getThemeName(m_context).equals(Util.WHITE_THEME)) {
@@ -353,7 +361,7 @@ public class DirectoryChooserDialog {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				View v = super.getView(position, convertView, parent);
-				if (v instanceof TextView) {
+				if (v instanceof TextView  && !getResourcefromTheme()) {
 					// Enable list item (directory) text wrapping
 					TextView tv = (TextView) v;
 					tv.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
