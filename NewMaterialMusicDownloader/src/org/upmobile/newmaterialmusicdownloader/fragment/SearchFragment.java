@@ -28,4 +28,10 @@ public class SearchFragment extends Fragment implements Constants{
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
+	
+	@Override
+	public void onPause() {
+		searchView.saveState();
+		super.onPause();
+	}
 }
