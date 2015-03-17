@@ -4,9 +4,7 @@
     android:layout_height="64dp"
     android:layout_gravity="center"
     android:background="@android:color/white"
-    android:orientation="horizontal"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp" >
+    android:orientation="horizontal" >
 
     <View
         android:layout_width="match_parent"
