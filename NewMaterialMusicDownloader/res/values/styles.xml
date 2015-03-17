@@ -36,6 +36,7 @@
     </style>
 
     <style name="MaterialAppTheme.Brown" parent="AppBaseTheme">
+        <item name="windowActionBar">false</item>
         <item name="colorPrimaryDark">@color/brown_material_primary_dark</item>
         <item name="colorPrimary">@color/brown_material_primary</item>
         <item name="colorAccent">@color/brown_material_accent</item>
@@ -49,6 +50,7 @@
     </style>
 
     <style name="MaterialAppTheme.DeepOrange" parent="AppBaseTheme">
+        <item name="windowActionBar">false</item>
         <item name="colorPrimaryDark">@color/orange_material_primary_dark</item>
         <item name="colorPrimary">@color/orange_material_primary</item>
         <item name="colorAccent">@color/orange_material_accent</item>
@@ -75,6 +77,7 @@
     <style name="MyActionBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
+        <item name="android:background">?attr/colorPrimary</item>
     </style>
 
     <style name="TextStyleLine1">
@@ -92,6 +95,20 @@
         <item name="android:progressDrawable">@drawable/seekbar</item>
         <item name="android:indeterminateDrawable">@drawable/seekbar</item>
         <item name="android:focusable">true</item>
+    </style>
+    
+    <style name="RippleStyle">
+        <item name="rippleOverlay">false</item>
+        <item name="rippleColor">@color/orange_material_primary</item>
+        <item name="rippleAlpha">0.7</item>
+        <item name="rippleDimension">45dp</item>
+        <item name="rippleHover">true</item>
+        <item name="rippleDuration">200</item>
+        <item name="rippleFadeDuration">50</item>
+        <item name="rippleBackground">@android:color/transparent</item>
+        <item name="rippleDelayClick">true</item>
+        <item name="ripplePersistent">false</item>
+        <item name="rippleInAdapter">false</item>
     </style>
 
 </resources>
