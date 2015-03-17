@@ -17,7 +17,6 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -29,7 +28,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -270,15 +268,24 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 
 	@Override
 	protected void showPlayerFragment() {
-		changeFragment(Constants.PLAYER_FRAGMENT);
+		changeFragment(PLAYER_FRAGMENT);
 	}
 
 	@Override
 	public void showPlayerElement(boolean flag) {
-		drawerResult.removeItem(Constants.PLAYER_FRAGMENT + 1);
-		drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_grey).withTextColor(R.color.material_primary_text), Constants.PLAYER_FRAGMENT);
-		drawerResult.addItem(new SectionDrawerItem().withName(R.string.tab_settings).withTextColor(R.color.material_primary_text));
-		drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
+		int draverItemsCount = drawerResult.getAdapter().getCount();
+		if (flag){
+			if (draverItemsCount < FULL_DRAVER_SIZE) {
+				drawerResult.removeItem(PLAYER_FRAGMENT + 1);
+				drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_grey).withTextColor(R.color.material_primary_text), PLAYER_FRAGMENT);
+				drawerResult.addItem(new SectionDrawerItem().withName(R.string.tab_settings).withTextColor(R.color.material_primary_text));
+				drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
+			} 
+		} else {
+			if (draverItemsCount > LESS_DRAVER_SIZE) {
+				drawerResult.removeItem(PLAYER_FRAGMENT);
+			}
+		}
 	}
 
 	public void setTitle(int title) {
@@ -300,7 +307,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 
 	@Override
 	protected void setPlayPauseMini(boolean playPayse) {
-		((ImageView) findViewById(R.id.mini_player_play_pause)).setColorFilter(getResources().getColor(getResIdFromAttribute(this, R.attr.colorPrimary)));
+		((ImageView) findViewById(R.id.mini_player_play_pause)).setColorFilter(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)));
 		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageResource(playPayse ? R.drawable.ic_play_arrow_grey : R.drawable.ic_pause_grey);
 	}
 	
@@ -315,7 +322,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 	
 	@Override
 	protected void setImageDownloadButton() {
-		((ImageView) findViewById(R.id.mini_player_download)).setColorFilter(getResources().getColor(getResIdFromAttribute(this, R.attr.colorPrimary)));
+		((ImageView) findViewById(R.id.mini_player_download)).setColorFilter(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)));
 		((ImageView) findViewById(R.id.mini_player_download)).setImageResource(R.drawable.ic_file_download_grey);
 	}
 	
@@ -323,10 +330,4 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 		isVisibleSearchView  = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
 	}
 	
-	private int getResIdFromAttribute(final Activity activity, final int attr) {
-		if (attr == 0) return 0;
-		final TypedValue typedvalueattr = new TypedValue();
-		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
-		return typedvalueattr.resourceId;
-	}
 }

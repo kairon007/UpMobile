@@ -12,6 +12,9 @@ public interface Constants {
 	public static final int LIBRARY_FRAGMENT = 3;
 	public static final int PLAYER_FRAGMENT = 4;
 	public static final int SETTINGS_FRAGMENT = 5;
+	
+	public static final int FULL_DRAVER_SIZE = 7;
+	public static final int LESS_DRAVER_SIZE = 6;
 
 	public static String MAIN_ACTION = "playbackservice.action.main";
 	public static String PLAY_ACTION = "playbackservice.action.play";
