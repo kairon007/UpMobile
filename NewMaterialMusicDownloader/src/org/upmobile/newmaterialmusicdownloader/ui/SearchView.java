@@ -7,6 +7,8 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate;
+
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -99,6 +101,12 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	public boolean isUseDefaultSpinner() {
 		return true;
+	}
+	
+	@Override
+	public Object initRefreshProgress() {
+		ProgressBarCircularIndeterminate progress = (ProgressBarCircularIndeterminate) LayoutInflater.from(getContext()).inflate(R.layout.progress, null);
+		return progress;
 	}
 	
 	@Override
