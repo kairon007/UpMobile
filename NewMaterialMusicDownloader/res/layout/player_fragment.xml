@@ -156,8 +156,8 @@
                     android:id="@+id/progress_track"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:dsb_progressColor="?attr/colorPrimary"
-                    app:dsb_indicatorColor="?attr/colorPrimary" />
+                    app:dsb_indicatorColor="?attr/colorPrimaryApp"
+                    app:dsb_progressColor="?attr/colorPrimaryApp" />
 
                 <com.csform.android.uiapptemplate.view.spb.SmoothProgressBar
                     android:id="@+id/player_wait_song"
@@ -210,6 +210,7 @@
                 android:id="@+id/prev"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_fast_rewind_grey" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -254,6 +255,7 @@
                 android:id="@+id/next"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_fast_forward_grey" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -285,8 +287,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@android:color/transparent"
             android:minHeight="48dp"
+            android:background="@color/green_material_accent"
             android:text="@string/download_dialog_download" />
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
