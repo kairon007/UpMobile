@@ -57,5 +57,16 @@
         <attr name="dsb_indicatorFormatter" format="string|reference" />
         <attr name="dsb_rippleColor" format="color|reference" />
     </declare-styleable>
+    
+    <declare-styleable name="AppCompatColors">
+        <attr name="colorPrimaryDarkApp" format="reference" />
+        <attr name="colorPrimaryApp" format="reference" />
+        <attr name="colorAccentApp" format="reference" />
+        <attr name="colorControlNormalApp" format="reference" />
+        <attr name="colorControlActivatedApp" format="reference" />
+        <attr name="colorControlHighlightApp" format="reference" />
+        <attr name="colorTextPrimaryApp" format="reference" />
+        <attr name="colorTextSecondaryApp" format="reference" />
+    </declare-styleable>
 
 </resources>
