@@ -34,7 +34,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	private TextView title;
 	private TextView artist;
 	private ImageView cover;
-	private ImageButton playPause;
+	private View playPause;
 	private View download;
 	private View miniPlayer;
 	private View fakeView;
@@ -71,7 +71,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 		title = (TextView)findViewById(R.id.mini_player_title);
 		artist = (TextView)findViewById(R.id.mini_player_artist);
 		cover = (ImageView)findViewById(R.id.mini_player_cover);
-		playPause = (ImageButton)findViewById(R.id.mini_player_play_pause);
+		playPause = (View) findViewById(R.id.mini_player_play_pause);
 		progress = findViewById(R.id.mini_player_progress);
 		download = findViewById(R.id.mini_player_download);
 		miniPlayer = findViewById(getMiniPlayerID());
@@ -295,7 +295,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	 * @param playPayse true - image play, false - image pause
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
-		playPause.setImageResource(playPayse ? getResIdFromAttribute(this, R.attr.miniPlayerPlay) : getResIdFromAttribute(this, R.attr.miniPlayerPause));
+		((ImageButton) playPause).setImageResource(playPayse ? getResIdFromAttribute(this, R.attr.miniPlayerPlay) : getResIdFromAttribute(this, R.attr.miniPlayerPause));
 	}
 	
 	private void downloadSong() {

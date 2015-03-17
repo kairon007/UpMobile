@@ -16,12 +16,14 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
+import ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.SearchView;
@@ -298,11 +300,33 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 
 	@Override
 	protected void setPlayPauseMini(boolean playPayse) {
+		((ImageView) findViewById(R.id.mini_player_play_pause)).setColorFilter(getResources().getColor(getResIdFromAttribute(this, R.attr.colorPrimary)));
 		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageResource(playPayse ? R.drawable.ic_play_arrow_grey : R.drawable.ic_pause_grey);
+	}
+	
+	@Override
+	protected void setCover(Bitmap bmp) {
+		if (null == bmp) {
+			((CircularImageView) findViewById(R.id.mini_player_cover)).setImageResource(R.drawable.ic_album_grey);
+			return;
+		}
+		((CircularImageView)findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
+	}
+	
+	@Override
+	protected void setImageDownloadButton() {
+		((ImageView) findViewById(R.id.mini_player_download)).setColorFilter(getResources().getColor(getResIdFromAttribute(this, R.attr.colorPrimary)));
+		((ImageView) findViewById(R.id.mini_player_download)).setImageResource(R.drawable.ic_file_download_grey);
 	}
 	
 	protected void setSearchViewVisibility(String fragmentName) {
 		isVisibleSearchView  = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
 	}
 	
+	private int getResIdFromAttribute(final Activity activity, final int attr) {
+		if (attr == 0) return 0;
+		final TypedValue typedvalueattr = new TypedValue();
+		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
+		return typedvalueattr.resourceId;
+	}
 }
