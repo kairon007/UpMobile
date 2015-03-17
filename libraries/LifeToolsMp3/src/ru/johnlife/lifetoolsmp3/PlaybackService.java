@@ -361,7 +361,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 
 	public void play(AbstractSong song) {
-		if (arrayPlayback == null && arrayPlayback.indexOf(song) == -1) {
+		if (arrayPlayback == null || arrayPlayback.indexOf(song) == -1) {
 			return;
 		}
 		int position = arrayPlayback.indexOf(song);
@@ -693,7 +693,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			if (intent.getAction().equals(CLOSE_ACTION)) {
 				stopPressed();
 			} else if (intent.getAction().equals(PLAY_ACTION)) {
-				play(playingSong);
+				if (null != playingSong) {
+					play(playingSong);
+				}
 			} else if (intent.getAction().equals(NEXT_ACTION)) {
 				shift(1);
 			}
