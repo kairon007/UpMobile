@@ -9,6 +9,7 @@ import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -69,6 +70,10 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	public void refreshLibrary() {
 
+	}
+	
+	public void saveState() {
+		StateKeeper.getInstance().saveStateAdapter(this);
 	}
 
 	@Override
