@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:ellipsize="start"
-    android:gravity="left|center_vertical"
+   	android:textColor="@android:color/black"
+    android:gravity="center_vertical"
     android:paddingLeft="@dimen/material_edges_padding"
     android:paddingRight="@dimen/material_edges_padding"
     android:lines="1" />
