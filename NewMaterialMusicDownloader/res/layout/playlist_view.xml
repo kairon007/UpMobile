@@ -6,9 +6,9 @@
     android:orientation="vertical" >
 
     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        app:rippleColor="?attr/colorPrimaryDark" >
+        android:layout_height="48dp" >
 
         <LinearLayout
             android:id="@+id/lastPlayedPlaylist"
@@ -26,9 +26,9 @@
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        app:rippleColor="?attr/colorPrimaryDark" >
+        android:layout_height="48dp" >
 
         <LinearLayout
             android:id="@+id/createNewPlaylist"

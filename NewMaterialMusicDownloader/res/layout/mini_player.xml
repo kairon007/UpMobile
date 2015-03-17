@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="top"
-        android:background="?attr/colorAccent" />
+        android:background="?attr/colorAccentApp" />
 
     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
         style="@style/RippleStyle"

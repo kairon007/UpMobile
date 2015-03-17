@@ -21,6 +21,14 @@
         <item name="colorTextPrimary">@color/material_primary_text</item>
         <item name="colorTextSecondary">@color/material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image</item>
+        <item name="colorPrimaryDarkApp">@color/material_primary_dark</item>
+        <item name="colorPrimaryApp">@color/material_primary</item>
+        <item name="colorAccentApp">@color/material_accent</item>
+        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivatedApp">?attr/colorAccent</item>
+        <item name="colorControlHighlightApp">@color/material_primary</item>
+        <item name="colorTextPrimaryApp">@color/material_primary_text</item>
+        <item name="colorTextSecondaryApp">@color/material_secondary_text</item>
     </style>
 
     <style name="MaterialAppTheme.Black" parent="AppBaseTheme">
@@ -33,6 +41,14 @@
         <item name="colorTextPrimary">@color/black_material_primary_text</item>
         <item name="colorTextSecondary">@color/black_material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image</item>
+        <item name="colorPrimaryDarkApp">@color/black_material_accent</item>
+        <item name="colorPrimaryApp">@color/black_material_primary</item>
+        <item name="colorAccentApp">@color/black_material_accent</item>
+        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivatedApp">?attr/colorAccent</item>
+        <item name="colorControlHighlightApp">@color/black_material_primary</item>
+        <item name="colorTextPrimaryApp">@color/black_material_primary_text</item>
+        <item name="colorTextSecondaryApp">@color/black_material_secondary_text</item>
     </style>
 
     <style name="MaterialAppTheme.Brown" parent="AppBaseTheme">
@@ -47,6 +63,14 @@
         <item name="colorTextPrimary">@color/brown_material_primary_text</item>
         <item name="colorTextSecondary">@color/brown_material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image_brown</item>
+        <item name="colorPrimaryDarkApp">@color/brown_material_primary_dark</item>
+        <item name="colorPrimaryApp">@color/brown_material_primary</item>
+        <item name="colorAccentApp">@color/brown_material_accent</item>
+        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivatedApp">?attr/colorAccent</item>
+        <item name="colorControlHighlightApp">@color/brown_material_primary</item>
+        <item name="colorTextPrimaryApp">@color/brown_material_primary_text</item>
+        <item name="colorTextSecondaryApp">@color/brown_material_secondary_text</item>
     </style>
 
     <style name="MaterialAppTheme.DeepOrange" parent="AppBaseTheme">
@@ -57,9 +81,17 @@
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/orange_material_primary</item>
-        <item name="attr_image_drawer">@drawable/header_image_orange</item>
         <item name="colorTextPrimary">@color/orange_material_primary_text</item>
         <item name="colorTextSecondary">@color/orange_material_secondary_text</item>
+        <item name="attr_image_drawer">@drawable/header_image_orange</item>
+        <item name="colorPrimaryDarkApp">@color/orange_material_primary_dark</item>
+        <item name="colorPrimaryApp">@color/orange_material_primary</item>
+        <item name="colorAccentApp">@color/orange_material_accent</item>
+        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivatedApp">?attr/colorAccent</item>
+        <item name="colorControlHighlightApp">@color/orange_material_primary</item>
+        <item name="colorTextPrimaryApp">@color/orange_material_primary_text</item>
+        <item name="colorTextSecondaryApp">@color/orange_material_secondary_text</item>
     </style>
 
     <style name="MaterialAppTheme.Green" parent="AppBaseTheme">
@@ -69,30 +101,38 @@
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/green_material_primary</item>
-        <item name="attr_image_drawer">@drawable/header_image_green</item>
         <item name="colorTextPrimary">@color/green_material_primary_text</item>
         <item name="colorTextSecondary">@color/green_material_secondary_text</item>
+        <item name="attr_image_drawer">@drawable/header_image_green</item>
+        <item name="colorPrimaryDarkApp">@color/green_material_primary_dark</item>
+        <item name="colorPrimaryApp">@color/green_material_primary</item>
+        <item name="colorAccentApp">@color/green_material_accent</item>
+        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivatedApp">?attr/colorAccent</item>
+        <item name="colorControlHighlightApp">@color/green_material_primary</item>
+        <item name="colorTextPrimaryApp">@color/green_material_primary_text</item>
+        <item name="colorTextSecondaryApp">@color/green_material_secondary_text</item>
     </style>
 
     <style name="MyActionBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">?attr/colorPrimaryApp</item>
     </style>
 
     <style name="TextStyleLine1">
-        <item name="android:textColor">?attr/colorTextPrimary</item>
+        <item name="android:textColor">?attr/colorTextPrimaryApp</item>
         <item name="android:textSize">@dimen/material_title</item>
     </style>
 
     <style name="TextStyleLine2">
-        <item name="android:textColor">?attr/colorTextSecondary</item>
+        <item name="android:textColor">?attr/colorTextSecondaryApp</item>
         <item name="android:textSize">@dimen/material_body</item>
     </style>
     
     <style name="RippleStyle">
         <item name="rippleOverlay">false</item>
-        <item name="rippleColor">@color/orange_material_primary</item>
+        <item name="rippleColor">?attr/colorPrimaryApp</item>
         <item name="rippleAlpha">0.7</item>
         <item name="rippleDimension">45dp</item>
         <item name="rippleHover">true</item>
