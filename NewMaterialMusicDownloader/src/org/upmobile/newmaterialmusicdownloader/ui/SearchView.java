@@ -85,6 +85,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	protected boolean showDownloadButton() {
 		return false;
 	}
+	
 	@Override
 	public int defaultCover() {
 		return R.drawable.ic_album_grey;
@@ -98,6 +99,11 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	protected String getDirectory() {
 		return NewMaterialApp.getDirectory();
+	}
+	
+	@Override
+	protected int getDropDownViewResource() {
+		return R.layout.drop_down_view;
 	}
 
 	@Override
