@@ -89,13 +89,6 @@
         <item name="android:textColor">?attr/colorTextSecondary</item>
         <item name="android:textSize">@dimen/material_body</item>
     </style>
-
-    <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">
-        <item name="android:thumb">@drawable/seekbar_selector</item>
-        <item name="android:progressDrawable">@drawable/seekbar</item>
-        <item name="android:indeterminateDrawable">@drawable/seekbar</item>
-        <item name="android:focusable">true</item>
-    </style>
     
     <style name="RippleStyle">
         <item name="rippleOverlay">false</item>

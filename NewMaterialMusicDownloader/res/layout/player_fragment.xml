@@ -152,14 +152,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <SeekBar
+                <ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar
                     android:id="@+id/progress_track"
-                    style="@style/SeerkBar.Indeterminate"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:max="100"
-                    android:progress="0" />
+                    android:layout_height="wrap_content"
+                    app:dsb_progressColor="?attr/colorPrimary"
+                    app:dsb_indicatorColor="?attr/colorPrimary" />
 
                 <com.csform.android.uiapptemplate.view.spb.SmoothProgressBar
                     android:id="@+id/player_wait_song"
@@ -178,14 +176,6 @@
                     app:spb_stroke_width="4dp" >
                 </com.csform.android.uiapptemplate.view.spb.SmoothProgressBar>
             </FrameLayout>
-
-            <!-- <SeekBar -->
-            <!-- android:id="@+id/progress_track" -->
-            <!-- style="@style/SeerkBar.Indeterminate" -->
-            <!-- android:layout_width="match_parent" -->
-            <!-- android:layout_height="match_parent" -->
-            <!-- android:layout_weight="1" -->
-            <!-- android:max="100" /> -->
         </LinearLayout>
     </LinearLayout>
 
@@ -234,7 +224,7 @@
                 android:id="@+id/playpause"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                 android:layout_gravity="center"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_play_arrow_grey" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -249,7 +239,7 @@
                 android:id="@+id/stop"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                 android:layout_gravity="center"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_stop_grey" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -278,7 +268,7 @@
                 android:id="@+id/repeat"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                 android:layout_gravity="center"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_repeat_grey" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
     </LinearLayout>
@@ -312,14 +302,6 @@
             android:layout_gravity="center"
             android:background="@color/main_color_accent"
             android:visibility="gone" />
-
-        <!-- <com.csform.android.uiapptemplate.view.ProgressWheel -->
-        <!-- android:id="@+id/lyrics_progress" -->
-        <!-- style="@style/ProgressBarMaterial" -->
-        <!-- android:layout_width="56dp" -->
-        <!-- android:layout_height="56dp" -->
-        <!-- android:layout_gravity="center" -->
-        <!-- android:visibility="visible" /> -->
 
         <com.csform.android.uiapptemplate.font.RobotoTextView
             android:id="@+id/lyrics_text"

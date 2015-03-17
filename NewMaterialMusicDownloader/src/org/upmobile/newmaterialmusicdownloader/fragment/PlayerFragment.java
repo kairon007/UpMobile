@@ -22,6 +22,8 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar.OnProgressChangeListener;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -53,8 +55,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
@@ -103,7 +103,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private EditText etArtist;
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
-	private SeekBar playerProgress;
+	private DiscreteSeekBar playerProgress;
 	private SmoothProgressBar wait;
 
 	private int checkIdCover;
@@ -127,7 +127,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				Log.d(getClass().getSimpleName(), e + "");
 			}
 		}
-
 	};
 
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
@@ -448,7 +447,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		repeat = (ImageView) contentView.findViewById(R.id.repeat);
 		stop = (ImageView) contentView.findViewById(R.id.stop);
 		download = (CircularProgressButton) contentView.findViewById(R.id.download);
-		playerProgress = (SeekBar) contentView.findViewById(R.id.progress_track);
+		playerProgress = (DiscreteSeekBar) contentView.findViewById(R.id.progress_track);
 		tvTitle = (TextView) contentView.findViewById(R.id.songName);
 		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
 		tvArtist = (TextView) contentView.findViewById(R.id.artistName);
@@ -482,27 +481,24 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		artistBox.setOnClickListener(this);
 		titleBox.setOnClickListener(this);
 		cbUseCover.setOnCheckedChangeListener(this);
-		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
+		playerProgress.setOnProgressChangeListener(new OnProgressChangeListener() {
+			
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-			}
-
+			public void onStopTrackingTouch(DiscreteSeekBar seekBar) { }
+			
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
-
+			public void onStartTrackingTouch(DiscreteSeekBar seekBar) { }
+			
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
 				if (fromUser) {
 					try {
-						player.seekTo(progress);
+						player.seekTo(value);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
-
 		});
 		scrollView.setOnTouchListener(new OnTouchListener() {
 

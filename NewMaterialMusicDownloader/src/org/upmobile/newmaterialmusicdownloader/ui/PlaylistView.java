@@ -1,12 +1,15 @@
 package org.upmobile.newmaterialmusicdownloader.ui;
 
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 
 public class PlaylistView extends BasePlaylistView {
 
@@ -47,6 +50,16 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected TextView getMessageView(View view) {
 		return null;
+	}
+	
+	@Override
+	public void showMessage(Context context, int message) {
+		showMessage(context, getResources().getString(message));
+	}
+	
+	@Override
+	public void showMessage(Context context, String message) {
+		((MainActivity) context).showMessage(message);
 	}
 
 }
