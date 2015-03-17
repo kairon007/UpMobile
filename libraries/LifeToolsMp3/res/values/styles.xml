@@ -37,6 +37,7 @@
         <item name="dsb_indicatorColor">@color/dsb_progress_color</item>
         <item name="dsb_indicatorElevation">4dp</item>
         <item name="dsb_mirrorForRtl">true</item>
+        <item name="dsb_timeFormatt">true</item>
     </style>
 
     <style name="DefaultIndicatorTextAppearance" parent="android:TextAppearance.Small">

@@ -127,6 +127,7 @@ public class DiscreteSeekBar extends View {
     private int mKeyProgressIncrement = 1;
     private boolean mMirrorForRtl = false;
     private boolean mAllowTrackClick = true;
+    private boolean mTimeFormatt = false;
     //We use our own Formatter to avoid creating new instances on every progress change
     Formatter mFormatter;
     private String mIndicatorFormatter;
@@ -176,6 +177,7 @@ public class DiscreteSeekBar extends View {
         int value = 0;
         mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
         mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_allowTrackClickToDrag, mAllowTrackClick);
+        mTimeFormatt = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_timeFormatt, mTimeFormatt);
 
         int indexMax = R.styleable.DiscreteSeekBar_dsb_max;
         int indexMin = R.styleable.DiscreteSeekBar_dsb_min;
@@ -594,6 +596,17 @@ public class DiscreteSeekBar extends View {
             mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
         } else {
             mFormatBuilder.setLength(0);
+        }
+        if (mTimeFormatt) {
+			value /= 1000;
+			int min = value / 60;
+			int sec = value % 60;
+			int h = min / 60;
+			min = min % 60;
+			if (h > 0) {
+				return mFormatter.format("%d:%02d:%02d", h, min, sec).toString();
+			}
+			return mFormatter.format("%d:%02d", min, sec).toString();
         }
         return mFormatter.format(format, value).toString();
     }
