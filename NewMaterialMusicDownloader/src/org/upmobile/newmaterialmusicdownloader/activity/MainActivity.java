@@ -289,7 +289,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 
 	public void showMessage(String message) {
 		AppMsg.cancelAll(this);
-		AppMsg.makeText(this, message, new Style(3000, getResIdFromAttribute(this, R.attr.colorPrimary))).show();
+		AppMsg.makeText(this, message, new Style(3000, Util.getResIdFromAttribute(this, R.attr.colorPrimary))).show();
 	}
 
 	public void showMessage(int message) {
@@ -305,10 +305,4 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 		isVisibleSearchView  = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
 	}
 	
-	private int getResIdFromAttribute(final Activity activity, final int attr) {
-		if (attr == 0) return 0;
-		final TypedValue typedvalueattr = new TypedValue();
-		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
-		return typedvalueattr.resourceId;
-	}
 }
