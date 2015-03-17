@@ -253,7 +253,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 
 	@Override
 	protected int getMiniPlayerID() {
-		return R.id.mini_player_main;
+		return R.id.mini_player;
 	}
 
 	@Override
