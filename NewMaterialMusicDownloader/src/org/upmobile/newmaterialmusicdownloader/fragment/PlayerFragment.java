@@ -613,7 +613,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 *            - If "true", the button changes the picture to "play", if
 	 *            "false" changes to "pause"
 	 */
-	private void changePlayPauseView(boolean isPlaying) {
+	private void changePlayPauseView(boolean isPlaying) { 
 		play.setImageResource(!player.isPlaying() ? R.drawable.ic_play_arrow_grey : R.drawable.ic_pause_grey);
 	}
 
@@ -773,10 +773,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (null != bitmap) {
 			imageView.setImageBitmap(bitmap);
 		} else {
-			imageView.setImageResource(R.drawable.ic_album_grey);
+			imageView.setImageResource(R.drawable.big_album);
 		}
-		imageView.setMinimumHeight(Util.dpToPx(getActivity(), 196));
-		imageView.setMinimumWidth(Util.dpToPx(getActivity(), 196));
+		imageView.setMinimumHeight(Util.dpToPx(getActivity(), 168));
+		imageView.setMinimumWidth(Util.dpToPx(getActivity(), 168));
 		scrollView.setZoomView(imageView);
 	}
 	

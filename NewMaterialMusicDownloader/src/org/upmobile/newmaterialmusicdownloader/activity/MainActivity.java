@@ -61,14 +61,10 @@ public class MainActivity extends BaseMiniPlayerActivity {
 				.withActionBarDrawerToggle(true)
 				.withHeader(R.layout.drawer_header)
 				.addDrawerItems(
-						new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey)
-								.withTextColor(R.color.material_primary_text),
-						new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey)
-								.withTextColor(R.color.material_primary_text),
-						new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey)
-								.withTextColor(R.color.material_primary_text),
-						new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey)
-								.withTextColor(R.color.material_primary_text),
+						new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey).withTextColor(R.color.material_primary_text),
+						new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey).withTextColor(R.color.material_primary_text),
+						new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey).withTextColor(R.color.material_primary_text),
+						new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey).withTextColor(R.color.material_primary_text),
 						new SectionDrawerItem().withName(R.string.tab_settings).withTextColor(R.color.material_primary_text),
 						new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey))
 				.withOnDrawerListener(new Drawer.OnDrawerListener() {
