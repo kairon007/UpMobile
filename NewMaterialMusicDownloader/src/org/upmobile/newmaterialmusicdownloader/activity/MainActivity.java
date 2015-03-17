@@ -46,6 +46,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 
 	private Drawer.Result drawerResult = null;
 	private SearchView searchView;
+	private int currentFragmentId = 0; 
 	private boolean isVisibleSearchView = false;
 
 	@Override
@@ -85,10 +86,19 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 				}).build();
 	}
 
-	public void changeFragment(int framgment) {
+	public void changeFragment(int fragmentId) {
 		Fragment selectedFragment = null;
+		
+		if (null != drawerResult) {
+			if (fragmentId < SETTINGS_FRAGMENT) {
+				currentFragmentId = fragmentId;
+			}
+			drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
+		}
+		
+		currentFragmentId = fragmentId;
 		boolean isAnimate = false;
-		switch (framgment) {
+		switch (fragmentId) {
 		case SEARCH_FRAGMENT:
 			selectedFragment = new SearchFragment();
 			break;
