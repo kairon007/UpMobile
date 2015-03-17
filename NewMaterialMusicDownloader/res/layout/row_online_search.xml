@@ -2,129 +2,143 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_item_height"
+    android:background="@android:color/white"
     android:divider="@drawable/layout_divider"
     android:dividerPadding="4dp"
     android:orientation="horizontal"
     android:showDividers="middle" >
 
-    <LinearLayout
-        android:id="@+id/boxInfoItem"
+    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+        style="@style/RippleStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@android:color/white"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingLeft="8dp"
-        android:paddingTop="8dp" >
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" >
-
-            <RelativeLayout
-                android:id="@+id/RelativeLayout1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <TextView
-                    android:id="@+id/number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
-                <!-- android:textColor="@color/dimmed" -->
-
-                <TextView
-                    android:id="@+id/caption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView
-                android:id="@+id/cover"
-                android:layout_width="@dimen/material_action_bar_hight"
-                android:layout_height="@dimen/material_action_bar_hight"
-                android:layout_gravity="center"
-                android:contentDescription="@string/default_cover"
-                android:src="@drawable/ic_album_grey" />
-        </FrameLayout>
+        android:clickable="true" >
 
         <LinearLayout
+            android:id="@+id/boxInfoItem"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp" >
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:padding="4dp" >
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center_vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/RelativeLayout1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:id="@+id/number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <!-- android:textColor="@color/dimmed" -->
+
+                    <TextView
+                        android:id="@+id/caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView
+                    android:id="@+id/cover"
+                    android:layout_width="@dimen/material_action_bar_hight"
+                    android:layout_height="@dimen/material_action_bar_hight"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/default_cover"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_album_grey" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" >
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:id="@+id/artistLine"
+                        style="@style/TextStyleLine1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="In The End"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/material_title" />
+
+                    <TextView
+                        android:id="@+id/chunkTime"
+                        style="@style/TextStyleLine2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:gravity="right"
+                        android:paddingRight="4dp"
+                        android:singleLine="true"
+                        android:text="00:00"
+                        android:visibility="visible" />
+                </LinearLayout>
+                <!-- android:textColor="#ffff" -->
+
+
+                <!-- android:textColor="@color/dimmed" -->
 
                 <TextView
-                    android:id="@+id/artistLine"
-                    style="@style/TextStyleLine1"
+                    android:id="@+id/titleLine"
+                    style="@style/TextStyleLine2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="In The End"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/material_title" />
-
-                <TextView
-                    android:id="@+id/chunkTime"
-                    style="@style/TextStyleLine2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:gravity="right"
-                    android:singleLine="true"
-                    android:text="00:00"
-                    android:visibility="visible" />
+                    android:text="Linkin Park" />
             </LinearLayout>
-            <!-- android:textColor="#ffff" -->
 
+            <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                style="@style/RippleStyle"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical" >
 
-            <!-- android:textColor="@color/dimmed" -->
-
-            <TextView
-                android:id="@+id/titleLine"
-                style="@style/TextStyleLine2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="Linkin Park" />
+                <ImageView
+                    android:id="@+id/threeDot"
+                    android:layout_width="@dimen/material_header_height"
+                    android:layout_height="@dimen/material_header_height"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/threedot"
+                    android:visibility="visible" />
+            </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/threeDot"
-            android:layout_width="@dimen/material_header_height"
-            android:layout_height="@dimen/material_header_height"
-            android:layout_gravity="center_vertical"
-            android:scaleType="centerInside"
-            android:src="@drawable/threedot"
-            android:visibility="visible" />
-    </LinearLayout>
+    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
     <ImageView
         android:id="@+id/btnDownload"
         android:layout_width="48dp"
         android:layout_height="64dp"
-        android:layout_gravity="center_vertical"
         android:background="@drawable/selectable_item_bg"
         android:contentDescription="@string/expand"
         android:longClickable="true"

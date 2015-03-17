@@ -24,11 +24,11 @@
             android:text="@string/search_your_results_appear_here"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <ProgressBar
+        <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
             android:id="@+id/progress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/colorAccentApp"
             android:layout_gravity="center"
             android:visibility="gone" />
     </FrameLayout>
