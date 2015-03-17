@@ -72,7 +72,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.special.utils.UIParallaxScroll;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener, PlaybackService.OnErrorListener {
 
 	private final int MESSAGE_DURATION = 5000;
     public static final int DURATION = 500; // in ms
@@ -198,6 +198,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setListener();
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
+		player.setOnErrorListener(this);
 		downloadButtonState(!player.isGettingURl());
 		playerTitleBar.getBackground().setAlpha(0);
 		playerTitleBarArtis.setVisibility(View.INVISIBLE);
@@ -933,5 +934,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onConfigurationChanged(Configuration newConfig) {
 		isNeedCalculateCover = true;
 		super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	public void error(final String error) {
+		((MainActivity) getActivity()).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT);
+				player.stopPressed();
+			}
+		});
 	}
 }

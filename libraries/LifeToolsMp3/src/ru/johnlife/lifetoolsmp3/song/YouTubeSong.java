@@ -16,6 +16,7 @@ import android.util.Log;
 
 public class YouTubeSong extends SongWithCover {
 
+	private static final String ERROR_GETTING_URL = "Error getting url";
 	private static final String CONVERTING = "converting";
 	private static final String LOADING = "loading";
 	private static final String TS_CREATE = "ts_create";
@@ -77,6 +78,7 @@ public class YouTubeSong extends SongWithCover {
 	}
 	
 	private void getDownloadUrl(final String watchId) {
+		pushItemResponse = null;
 		getUrl = new AsyncTask<Void, Void, String>() {
 			@Override
 			protected String doInBackground(Void... params) {
@@ -89,7 +91,7 @@ public class YouTubeSong extends SongWithCover {
 							.timeout(10000)
 							.execute();
 					String pushItem = "/a/pushItem/?item=" + "https%3A//www.youtube.com/watch%3Fv%3D" + watchId + "&el=na&bf=" + "false" + "&r=" + System.currentTimeMillis();
-					Response pushItemResponse = Jsoup
+					pushItemResponse = Jsoup
 							.connect(YOUTUBE_MP3_URL + sig_url(pushItem))
 							.userAgent(USER_AGENT)
 							.cookies(connectResponse.cookies())
@@ -106,12 +108,21 @@ public class YouTubeSong extends SongWithCover {
 					return watchId;
 				} catch (Exception e) {
 					Log.e(getClass().getSimpleName(), "Something went wrong :( " + e.getMessage());
+					onPostExecute(ERROR_GETTING_URL);
 				}
 				return watchId;
 			}
 
 			@Override
 			protected void onPostExecute(String result) {
+				if (!ERROR_GETTING_URL.equals(result)) return;
+				for (DownloadUrlListener downloadUrlListener : downloadUrlListeners) {
+					downloadUrlListener.error(ERROR_GETTING_URL);
+				}
+				this.cancel(true);
+				if (null != timer) {
+					timer.cancel();
+				}
 			}
 		}.execute();
 	}
@@ -336,4 +347,5 @@ public class YouTubeSong extends SongWithCover {
 			return new YouTubeSong[size];
 		}
 	};
+	private Response pushItemResponse;
 }

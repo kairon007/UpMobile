@@ -150,5 +150,6 @@
     <string name="all_playlists">All Playlists</string>
     <string name="create">Create</string>
     <string name="select_playlist">Select Playlist</string>
+    <string name="error_getting_url">Error getting url</string>
     
 </resources>

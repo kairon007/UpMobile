@@ -80,6 +80,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private ArrayList<AbstractSong> arrayPlaybackOriginal;
 	private ArrayList<OnStatePlayerListener> stateListeners = new ArrayList<OnStatePlayerListener>();
 	private OnPlaybackServiceDestroyListener destroyListener;
+	private OnErrorListener errorListener;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
@@ -106,6 +107,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public interface OnPlaybackServiceDestroyListener {
 		public void playbackServiceIsDestroyed();
+	}
+	
+	public interface OnErrorListener {
+		public void error(String error);
 	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -461,6 +466,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				@Override
 				public void error(String error) {
 					mode &= ~SMODE_GET_URL;
+					if (null != errorListener) {
+						errorListener.error(error);
+					}
 				}
 			});
 			return;
@@ -674,6 +682,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		this.destroyListener = destroyListener;
 	}
 
+	public void setOnErrorListener(OnErrorListener errorListener) {
+		this.errorListener = errorListener;
+		
+	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {

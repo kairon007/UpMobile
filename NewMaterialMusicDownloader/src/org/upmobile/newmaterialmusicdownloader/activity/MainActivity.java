@@ -15,6 +15,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -290,7 +292,7 @@ public class MainActivity extends BaseMiniPlayerActivity {
 
 	public void showMessage(String message) {
 		AppMsg.cancelAll(this);
-		AppMsg.makeText(this, message, new Style(3000, R.color.material_primary)).show();
+		AppMsg.makeText(this, message, new Style(3000, getResIdFromAttribute(this, R.attr.colorPrimary))).show();
 	}
 
 	public void showMessage(int message) {
@@ -301,7 +303,15 @@ public class MainActivity extends BaseMiniPlayerActivity {
 	protected void setPlayPauseMini(boolean playPayse) {
 		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageResource(playPayse ? R.drawable.ic_play_arrow_grey : R.drawable.ic_pause_grey);
 	}
+	
 	protected void setSearchViewVisibility(String fragmentName) {
 		isVisibleSearchView  = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
+	}
+	
+	private int getResIdFromAttribute(final Activity activity, final int attr) {
+		if (attr == 0) return 0;
+		final TypedValue typedvalueattr = new TypedValue();
+		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
+		return typedvalueattr.resourceId;
 	}
 }

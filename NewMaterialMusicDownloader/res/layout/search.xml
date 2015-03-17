@@ -55,37 +55,39 @@
                 android:paddingLeft="15dp"
                 android:showDividers="middle" >
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1" >
 
                     <EditText
                         android:id="@+id/text"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:hint="@string/hint_main_search"
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:lines="1"
                         android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white" />
+                        android:textColorHint="@android:color/white"
+                        android:paddingRight="56dp"
+                        android:singleLine="true" />
 
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:layout_gravity="right|center_vertical"
                         app:rippleColor="?attr/colorButtonNormal" >
 
                         <ImageButton
                             android:id="@+id/clear"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_gravity="center_vertical"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
                             android:background="@android:color/transparent"
-                            android:src="@drawable/close" />
+                            android:src="@drawable/ic_close_white" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
-                </LinearLayout>
+                </FrameLayout>
 
                 <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                     android:layout_width="48dp"
@@ -97,7 +99,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/ic_action_search" />
+                        android:src="@drawable/ic_search_white" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
                 <ImageButton

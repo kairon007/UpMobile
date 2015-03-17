@@ -17,7 +17,6 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -25,7 +24,7 @@ import com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminat
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
-public class SearchView extends OnlineSearchView implements Constants {
+public class SearchView extends OnlineSearchView implements Constants, PlaybackService.OnErrorListener{
 
 	private PlaybackService service;
     
@@ -37,6 +36,7 @@ public class SearchView extends OnlineSearchView implements Constants {
 	protected void click(final View view, int position) {
 		if (null == service) {
 			service = PlaybackService.get(getContext());
+			service.setOnErrorListener(this);
 		}
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
@@ -144,5 +144,17 @@ public class SearchView extends OnlineSearchView implements Constants {
 	@Override
 	protected String getDirectory() {
 		return MaterialMusicDownloaderApp.getDirectory();
+	}
+
+	@Override
+	public void error(final String error) {
+		((MainActivity) getContext()).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				((MainActivity) getContext()).showMessage(error);
+				service.stopPressed();
+			}
+		});
 	}
 }

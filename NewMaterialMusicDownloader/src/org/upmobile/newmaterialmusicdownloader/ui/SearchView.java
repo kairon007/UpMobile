@@ -17,7 +17,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class SearchView extends OnlineSearchView {
+public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
 
 	private PlaybackService service;
 	public SearchView(LayoutInflater inflater) {
@@ -28,6 +28,7 @@ public class SearchView extends OnlineSearchView {
 	protected void click(final View view, int position) {
 		if (null == service) {
 			service = PlaybackService.get(getContext());
+			service.setOnErrorListener(this);
 		}
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
@@ -97,5 +98,17 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	protected String getDirectory() {
 		return NewMaterialApp.getDirectory();
+	}
+
+	@Override
+	public void error(final String error) {
+		((MainActivity) getContext()).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				((MainActivity) getContext()).showMessage(error);
+				service.stopPressed();
+			}
+		});
 	}
 }

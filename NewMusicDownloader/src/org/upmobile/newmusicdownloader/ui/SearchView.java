@@ -21,8 +21,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-public class SearchView extends OnlineSearchView {
+public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
 
 	private PlaybackService service;
     
@@ -41,6 +42,7 @@ public class SearchView extends OnlineSearchView {
 	protected void click(final View view, int position) {
 		if (null == service) {
 			service = PlaybackService.get(getContext());
+			service.setOnErrorListener(this);
 		}
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
@@ -113,5 +115,17 @@ public class SearchView extends OnlineSearchView {
 	@Override
 	protected String getDirectory() {
 		return NewMusicDownloaderApp.getDirectory();
+	}
+	
+	@Override
+	public void error(final String error) {
+		((MainActivity) getContext()).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(getContext(), error, Toast.LENGTH_SHORT);
+				service.stopPressed();
+			}
+		});
 	}
 }

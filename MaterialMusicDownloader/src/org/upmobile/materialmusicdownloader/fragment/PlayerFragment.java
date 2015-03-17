@@ -60,7 +60,7 @@ import com.csform.android.uiapptemplate.view.cb.CheckBox;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 import com.csform.android.uiapptemplate.view.spb.SmoothProgressBar;
 
-public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener{
+public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener{
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -267,6 +267,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setListeners();
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
+		player.setOnErrorListener(this);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
@@ -856,4 +857,21 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		return getClass().getSimpleName().hashCode();
 	}
 
+	@Override
+	public void error(final String error) {
+		((MainActivity) getActivity()).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				((MainActivity) getActivity()).showMessage(error);
+				player.stopPressed();
+				download.setProgress(0);
+				download.setIndeterminateProgressMode(false);
+				download.setOnClickListener(PlayerFragment.this);
+				setDownloadButtonState(true);
+			}
+		});
+	}
 }
+
+

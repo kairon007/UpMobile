@@ -50,7 +50,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener, PlaybackService.OnErrorListener{
 
 	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
 	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
@@ -103,6 +103,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
 		player = PlaybackService.get(getActivity());
+		player.setOnErrorListener(this);
 		player.addStatePlayerListener(this);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
@@ -708,5 +709,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void stopPressed() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void error(final String error) {
+		((MainActivity) getActivity()).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT);
+				player.stopPressed();
+			}
+		});
 	}
 }
