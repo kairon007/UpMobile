@@ -10,12 +10,12 @@ import org.upmobile.newmaterialmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.SearchFragment;
-import org.upmobile.newmaterialmusicdownloader.ui.dialog.DirectoryChooserDialogWrapper;
+import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog;
+import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -42,7 +42,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-public class MainActivity extends BaseMiniPlayerActivity implements Constants{
+public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback {
 
 	private Drawer.Result drawerResult = null;
 	private SearchView searchView;
@@ -121,19 +121,20 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 			if (null == service) {
 				service = PlaybackService.get(this);
 			}
-			DirectoryChooserDialogWrapper directoryChooserDialog = new DirectoryChooserDialogWrapper(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
-
-						@Override
-						public void onChosenDir(String chDir) {
-							File file = new File(chDir);
-							Editor editor = sp.edit();
-							editor.putString(Constants.PREF_DIRECTORY, chDir);
-							editor.putString(Constants.PREF_DIRECTORY_PREFIX, File.separator + file.getAbsoluteFile().getName() + File.separator);
-							editor.commit();
-						}
-					});
-			directoryChooserDialog.chooseDirectory();
-			break;
+			new FolderSelectorDialog().show(this);
+//			DirectoryChooserDialogWrapper directoryChooserDialog = new DirectoryChooserDialogWrapper(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
+//
+//						@Override
+//						public void onChosenDir(String chDir) {
+//							File file = new File(chDir);
+//							Editor editor = sp.edit();
+//							editor.putString(Constants.PREF_DIRECTORY, chDir);
+//							editor.putString(Constants.PREF_DIRECTORY_PREFIX, File.separator + file.getAbsoluteFile().getName() + File.separator);
+//							editor.commit();
+//						}
+//					});
+//			directoryChooserDialog.chooseDirectory();
+//			break;
 		default:
 			selectedFragment = new SearchFragment();
 			break;
@@ -338,6 +339,16 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants{
 	
 	protected void setSearchViewVisibility(String fragmentName) {
 		isVisibleSearchView  = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
+	}
+
+	@Override
+	public void onFolderSelection(File folder) {
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		Editor editor = sp.edit();
+		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
+		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
+		editor.commit();
+		showPlayerElement(PlaybackService.get(this).isPlaying());
 	}
 	
 }
