@@ -748,8 +748,10 @@ public abstract class OnlineSearchView extends View {
 			refreshSpinner = (View) initRefreshProgress();
 			this.inflater = LayoutInflater.from(getContext());
 			this.footer = new FrameLayout(context);
-			footer.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, 72));
-			footer.addView(refreshSpinner, new FrameLayout.LayoutParams(48, 48, Gravity.CENTER));
+			int footerHeight = Util.dpToPx(getContext(), 72);
+			int progressSize = Util.dpToPx(getContext(), 48);
+			footer.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, footerHeight));
+			footer.addView(refreshSpinner, new FrameLayout.LayoutParams(progressSize, progressSize, Gravity.CENTER));
 			hideRefreshProgress();
 		}
 		
