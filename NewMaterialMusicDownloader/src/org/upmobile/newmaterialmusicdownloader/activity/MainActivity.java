@@ -117,24 +117,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			break;
 		case SETTINGS_FRAGMENT:
 		case 6:
-			final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-			if (null == service) {
-				service = PlaybackService.get(this);
-			}
 			new FolderSelectorDialog().show(this);
-//			DirectoryChooserDialogWrapper directoryChooserDialog = new DirectoryChooserDialogWrapper(this, false, new DirectoryChooserDialog.ChosenDirectoryListener() {
-//
-//						@Override
-//						public void onChosenDir(String chDir) {
-//							File file = new File(chDir);
-//							Editor editor = sp.edit();
-//							editor.putString(Constants.PREF_DIRECTORY, chDir);
-//							editor.putString(Constants.PREF_DIRECTORY_PREFIX, File.separator + file.getAbsoluteFile().getName() + File.separator);
-//							editor.commit();
-//						}
-//					});
-//			directoryChooserDialog.chooseDirectory();
-//			break;
 		default:
 			selectedFragment = new SearchFragment();
 			break;
@@ -285,17 +268,21 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	public void showPlayerElement(boolean flag) {
 		int draverItemsCount = drawerResult.getAdapter().getCount();
-		if (flag){
+		if (flag) {
 			if (draverItemsCount < FULL_DRAVER_SIZE) {
 				drawerResult.removeItem(PLAYER_FRAGMENT + 1);
 				drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_grey).withTextColor(R.color.material_primary_text), PLAYER_FRAGMENT);
 				drawerResult.addItem(new SectionDrawerItem().withName(R.string.tab_settings).withTextColor(R.color.material_primary_text));
 				drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
-			} 
+			}
+			drawerResult.removeItem(SETTINGS_FRAGMENT + 1);
+			drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
 		} else {
 			if (draverItemsCount > LESS_DRAVER_SIZE) {
 				drawerResult.removeItem(PLAYER_FRAGMENT);
 			}
+			drawerResult.removeItem(SETTINGS_FRAGMENT);
+			drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
 		}
 	}
 
