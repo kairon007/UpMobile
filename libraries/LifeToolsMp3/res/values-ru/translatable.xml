@@ -64,7 +64,7 @@
     <string name="delete_item">Удалить элемент</string>    
     <string name="no_songs_in_the_last_playlist">Нет песен в последнем проигрываемом плейлисте</string>
     <string name="the_playlist_was_deleted">Последний проигрываемый плейлист был удалён</string>
-    <string name="playlists_are_missing">Списки воспроизведения отсутствует</string>
+    <string name="playlists_are_missing">Списки воспроизведения отсутствуют</string>
     <string name="undo_deletion">Отменить удаление</string>
 	<string name="playlist_cannot_be_empty">Имя списка воспроизведения не может быть пустым</string>
 	<string name="playlist_is_empty">Плейлист пуст</string>
