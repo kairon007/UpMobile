@@ -10,7 +10,6 @@ import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.ContentObserver;
@@ -36,7 +35,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 
 	public static final int MSG_FILL_ADAPTER = 1;
-	public static final int MSG_EMPTY_ADAPTER = 2;
 	
 	private ViewGroup view;
 	private BaseAbstractAdapter<MusicData> adapter;
@@ -50,14 +48,14 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			querySong();
+			fillAdapter(querySong());
 		}
 
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
-				querySong();
+				fillAdapter(querySong());
 			}
 		}
 	};
@@ -74,7 +72,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			if (key.contains(PREF_DIRECTORY_PREFIX)) {
-				querySong();
+				fillAdapter(querySong());
 			}
 		}
 	};
@@ -117,10 +115,10 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		super(inflater.getContext());
 		uiHandler = new Handler((Callback) this);
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
-		querySong();
 		init(inflater);
-		emptyMessage.setVisibility(View.VISIBLE);
 		if (null != listView) {
+			adapter.add(querySong());
+			listView.setEmptyView(emptyMessage);
 			listView.setAdapter(adapter);
 			animateListView(listView, adapter);
 		}
@@ -169,29 +167,22 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		specialInit(view);
 	}
 	
-	protected void querySong() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				ArrayList<MusicData> result = new ArrayList<MusicData>();
-				Cursor cursor = buildQuery(getContext().getContentResolver(), getFolderPath());
-				if (cursor.getCount() != 0 | cursor.moveToFirst()) {
-					MusicData d = new MusicData();
-					d.populate(cursor);
-					result.add(d);
-					while (cursor.moveToNext()) {
-						MusicData data = new MusicData();
-						data.populate(cursor);
-						result.add(data);
-					}
-					cursor.close();
-				}
-				cursor.close();
-				fillAdapter(result);
-			}
-
-		}).start();
+	protected ArrayList<MusicData> querySong() {
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		Cursor cursor = buildQuery(getContext().getContentResolver(), getFolderPath());
+		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			return result;
+		}
+		MusicData d = new MusicData();
+		d.populate(cursor);
+		result.add(d);
+		while (cursor.moveToNext()) {
+			MusicData data = new MusicData();
+			data.populate(cursor);
+			result.add(data);
+		}
+		cursor.close();
+		return result;
 	}
 	
 	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
@@ -202,24 +193,18 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	
 	@Override
 	public boolean handleMessage(Message msg) {
+		ArrayList<MusicData> list = ((ArrayList<MusicData>) msg.obj);
 		if (msg.what == MSG_FILL_ADAPTER) {
-			emptyMessage.setVisibility(View.GONE);
 			if (adapter.isEmpty()) {
 				adapter = getAdapter();
-				adapter.add(((ArrayList<MusicData>)msg.obj));
-				adapter.notifyDataSetChanged();
+				adapter.add(list);
 				listView.setAdapter(adapter);
 			} else {
 				adapter.setDoNotifyData(false);
 				adapter.clear();
-				adapter.add((ArrayList<MusicData>) msg.obj);
-				adapter.notifyDataSetChanged();
+				adapter.add(list);
 			}
-		}  else if (msg.what == MSG_EMPTY_ADAPTER) {
-			if (emptyMessage.getVisibility() != View.VISIBLE) {
-				emptyMessage.setVisibility(View.VISIBLE);
-			}
-		}
+		} 
 		return true;
 	}
 
