@@ -88,14 +88,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void changeFragment(int fragmentId) {
 		Fragment selectedFragment = null;
-		
 		if (null != drawerResult) {
 			if (fragmentId < SETTINGS_FRAGMENT) {
 				currentFragmentId = fragmentId;
 			}
 			drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
 		}
-		
 		currentFragmentId = fragmentId;
 		boolean isAnimate = false;
 		switch (fragmentId) {
@@ -118,6 +116,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		case SETTINGS_FRAGMENT:
 		case 6:
 			new FolderSelectorDialog().show(this);
+			break;
 		default:
 			selectedFragment = new SearchFragment();
 			break;
