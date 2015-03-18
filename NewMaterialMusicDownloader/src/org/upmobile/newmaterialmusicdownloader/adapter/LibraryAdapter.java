@@ -10,6 +10,7 @@ import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, Constants {
@@ -139,4 +141,22 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	protected void startSong(AbstractSong abstractSong) {
 		((MainActivity) getContext()).startSong(abstractSong);
 	}
+	
+	@Override
+	protected void showPlaylistsDialog(final ArrayList<PlaylistData> playlistDatas, final View v, String[] data) {
+		new MaterialDialog.Builder(getContext())
+			.title(R.string.select_playlist)
+			.titleColorAttr(R.attr.colorTextPrimaryApp)
+			.items(data)
+			.itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallback() {
+				@Override
+				public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+					addToPlaylist(getContext().getContentResolver(), ((MusicData) v.getTag()).getId(), playlistDatas.get(which).getId());
+					dialog.cancel();
+				}
+			})
+			.positiveText(R.string.add_to_playlist)
+			.show();
+	}
+
 }

@@ -21,6 +21,7 @@ import android.os.Looper;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -40,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,7 +62,7 @@ import com.csform.android.uiapptemplate.view.dlg.util.TypefaceHelper;
 /**
  * @author Aidan Follestad (afollestad)
  */
-public class MaterialDialog extends DialogBase implements View.OnClickListener {
+public class MaterialDialog extends DialogBase implements View.OnClickListener, AdapterView.OnItemClickListener {
 	protected final View view;
 	protected final Builder mBuilder;
 	protected ListView listView;
@@ -70,6 +72,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 	protected FrameLayout customViewFrame;
 	protected ProgressBar mProgress;
 	protected TextView mProgressLabel;
+	protected TextView mProgressMinMax;
 	protected TextView content;
 	protected View positiveButton;
 	protected View neutralButton;
@@ -152,6 +155,18 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 				mProgress.setMax(mBuilder.mProgressMax);
 				mProgressLabel = (TextView) mBuilder.customView
 						.findViewById(R.id.label);
+				mProgressMinMax = (TextView) mBuilder.customView
+						.findViewById(R.id.minMax);
+				if (mBuilder.mShowMinMax) {
+					mProgressMinMax.setVisibility(View.VISIBLE);
+					mProgressMinMax.setText("0/" + mBuilder.mProgressMax);
+					ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mProgress
+							.getLayoutParams();
+					lp.leftMargin = 0;
+					lp.rightMargin = 0;
+				} else {
+					mProgressMinMax.setVisibility(View.GONE);
+				}
 				mProgressLabel.setText("0%");
 			}
 			int bottomPadding = (int) getContext().getResources().getDimension(
@@ -219,9 +234,17 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 				else
 					paddingBottom = r
 							.getDimensionPixelSize(R.dimen.md_dialog_frame_margin);
-				sv.setPadding(0, paddingTop, 0, paddingBottom);
 				sv.setClipToPadding(false);
-				innerView.setPadding(framePadding, 0, framePadding, 0);
+				if (innerView instanceof EditText) {
+					// Setting padding to an EditText causes visual errors, set
+					// it to the parent instead
+					sv.setPadding(framePadding, paddingTop, framePadding, paddingBottom);
+				} else {
+					// Setting padding to scroll view pushes the scroll bars
+					// out, don't do it if not necessary (like above)
+					sv.setPadding(0, paddingTop, 0, paddingBottom);
+					innerView.setPadding(framePadding, 0, framePadding, 0);
+				}
 				sv.addView(innerView, new ScrollView.LayoutParams(
 						ViewGroup.LayoutParams.MATCH_PARENT,
 						ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -270,6 +293,19 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 			} else {
 				icon.setVisibility(View.GONE);
 			}
+		}
+		int maxIconSize = builder.maxIconSize;
+		if (maxIconSize == -1) {
+			maxIconSize = DialogUtils.resolveDimension(mBuilder.context, R.attr.md_icon_max_size);
+		}
+		if (builder.limitIconToDefaultSize || DialogUtils.resolveBoolean(mBuilder.context, R.attr.md_icon_limit_icon_to_default_size)) {
+			maxIconSize = mBuilder.context.getResources().getDimensionPixelSize(R.dimen.md_icon_max_size);
+		}
+		if (maxIconSize > -1) {
+			icon.setAdjustViewBounds(true);
+			icon.setMaxHeight(maxIconSize);
+			icon.setMaxWidth(maxIconSize);
+			icon.requestLayout();
 		}
 		if (builder.title == null) {
 			titleFrame.setVisibility(View.GONE);
@@ -495,51 +531,8 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 				.findViewById(R.id.contentListViewFrame);
 		listViewContainer.setVisibility(View.VISIBLE);
 		listView.setAdapter(mBuilder.adapter);
-		if (listType != null) {
-			// Only set listener for 1st-party adapter, leave custom adapter
-			// implementation to user with getListView()
-			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					if (listType == ListType.MULTI) {
-						// Keep our selected items up to date
-						boolean isChecked = !((CheckBox) view
-								.findViewById(R.id.control)).isChecked(); // Inverted
-																			// because
-																			// the
-																			// view's
-																			// click
-																			// listener
-																			// is
-																			// called
-																			// before
-																			// the
-																			// check
-																			// is
-																			// toggled
-						boolean previouslySelected = selectedIndicesList
-								.contains(position);
-						if (isChecked) {
-							if (!previouslySelected) {
-								selectedIndicesList.add(position);
-							}
-						} else if (previouslySelected) {
-							selectedIndicesList.remove(Integer
-									.valueOf(position));
-						}
-					} else if (listType == ListType.SINGLE) {
-						// Keep our selected item up to date
-						if (mBuilder.selectedIndex != position) {
-							mBuilder.selectedIndex = position;
-							((MaterialDialogAdapter) mBuilder.adapter)
-									.notifyDataSetChanged();
-						}
-					}
-					onClick(view);
-				}
-			});
-		}
+		if (listType != null || mBuilder.listCallbackCustom != null)
+			listView.setOnItemClickListener(this);
 	}
 
 	/**
@@ -640,6 +633,43 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 
 	private boolean canListViewScroll() {
 		return canAdapterViewScroll(listView);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		if (listType != null) {
+			// MaterialDialogAdapter, used for built-in adapters
+			if (listType == ListType.MULTI) {
+				// Keep our selected items up to date
+				boolean isChecked = !((CheckBox) view
+						.findViewById(R.id.control)).isChecked(); 
+				// Inverted because the view's click listener is called before the check is toggled
+				boolean previouslySelected = selectedIndicesList
+						.contains(position);
+				if (isChecked) {
+					if (!previouslySelected) {
+						selectedIndicesList.add(position);
+					}
+				} else if (previouslySelected) {
+					selectedIndicesList.remove(Integer.valueOf(position));
+				}
+			} else if (listType == ListType.SINGLE) {
+				// Keep our selected item up to date
+				if (mBuilder.selectedIndex != position) {
+					mBuilder.selectedIndex = position;
+					((MaterialDialogAdapter) mBuilder.adapter)
+							.notifyDataSetChanged();
+				}
+			}
+			onClick(view);
+		} else if (mBuilder.listCallbackCustom != null) {
+			// Custom adapter
+			CharSequence text = null;
+			if (view instanceof TextView)
+				text = ((TextView) view).getText();
+			mBuilder.listCallbackCustom.onSelection(this, view, position, text);
+		}
 	}
 
 	public static class NotImplementedException extends Error {
@@ -972,6 +1002,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 		protected ListCallback listCallback;
 		protected ListCallback listCallbackSingle;
 		protected ListCallbackMulti listCallbackMulti;
+		protected ListCallback listCallbackCustom;
 		protected boolean alwaysCallMultiChoiceCallback = false;
 		protected boolean alwaysCallSingleChoiceCallback = false;
 		protected Theme theme = Theme.LIGHT;
@@ -984,6 +1015,8 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 		protected Typeface mediumFont;
 		protected boolean useCustomFonts;
 		protected Drawable icon;
+		protected boolean limitIconToDefaultSize;
+		protected int maxIconSize = -1;
 		protected ListAdapter adapter;
 		protected OnDismissListener dismissListener;
 		protected OnCancelListener cancelListener;
@@ -995,6 +1028,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 		protected int backgroundColor;
 		protected int itemColor;
 		protected boolean mIndeterminateProgress;
+		protected boolean mShowMinMax;
 		protected int mProgress = -2;
 		protected int mProgressMax = 0;
 		// Since 0 is black and -1 is white, no default value is good for
@@ -1443,6 +1477,27 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 			return this;
 		}
 
+		/**
+		 * Makes this dialog a progress dialog.
+		 * 
+		 * @param indeterminate
+		 *            If true, an infinite circular spinner is shown. If false,
+		 *            a horizontal progress bar is shown that is incremented or
+		 *            set via the built MaterialDialog instance.
+		 * @param max
+		 *            When indeterminate is false, the max value the horizontal
+		 *            progress bar can get to.
+		 * @param showMinMax
+		 *            For determinate dialogs, the min and max will be displayed
+		 *            to the left (start) of the progress bar, e.g. 50/100.
+		 * @return An instance of the Builder so calls can be chained.
+		 */
+		public Builder progress(boolean indeterminate, int max,
+				boolean showMinMax) {
+			this.mShowMinMax = showMinMax;
+			return progress(indeterminate, max);
+		}
+
 		public Builder positiveColor(int color) {
 			this.positiveColor = color;
 			return this;
@@ -1563,12 +1618,49 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 		 * Sets a custom {@link android.widget.ListAdapter} for the dialog's
 		 * list
 		 * 
+		 * @param adapter
+		 *            The adapter to set to the list.
 		 * @return This Builder object to allow for chaining of calls to set
 		 *         methods
+		 * @deprecated Use {@link #adapter(ListAdapter, ListCallback)} instead.
 		 */
+		@Deprecated
 		public Builder adapter(@NonNull ListAdapter adapter) {
 			this.adapter = adapter;
 			return this;
+		}
+
+		/**
+		 * Sets a custom {@link android.widget.ListAdapter} for the dialog's
+		 * list
+		 * 
+		 * @param adapter
+		 *            The adapter to set to the list.
+		 * @param callback
+		 *            The callback invoked when an item in the list is selected.
+		 * @return This Builder object to allow for chaining of calls to set
+		 *         methods
+		 */
+		public Builder adapter(@NonNull ListAdapter adapter,
+				ListCallback callback) {
+			this.adapter = adapter;
+			this.listCallbackCustom = callback;
+			return this;
+		}
+
+		public Builder limitIconToDefaultSize() {
+			this.limitIconToDefaultSize = true;
+			return this;
+		}
+
+		public Builder maxIconSize(int maxIconSize) {
+			this.maxIconSize = maxIconSize;
+			return this;
+		}
+
+		public Builder maxIconSizeRes(@DimenRes int maxIconSizeRes) {
+			return maxIconSize((int) this.context.getResources().getDimension(
+					maxIconSizeRes));
 		}
 
 		public Builder showListener(@NonNull OnShowListener listener) {
@@ -1597,6 +1689,12 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 		}
 
 		public MaterialDialog build() {
+			if ((content == null || content.toString().trim().length() == 0)
+					&& title != null && (items == null || items.length == 0)
+					&& customView == null && adapter == null) {
+				this.content = this.title;
+				this.title = null;
+			}
 			return new MaterialDialog(this);
 		}
 
@@ -1848,6 +1946,9 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 		mProgress.setProgress(progress);
 		int percentage = (int) (((float) getCurrentProgress() / (float) getMaxProgress()) * 100f);
 		mProgressLabel.setText(percentage + "%");
+		if (mProgressMinMax != null)
+			mProgressMinMax.setText(getCurrentProgress() + "/"
+					+ getMaxProgress());
 	}
 
 	public final void setMaxProgress(int max) {
@@ -2007,7 +2108,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 		}
 	}
 
-	private static enum ListType {
+	private enum ListType {
 		REGULAR, SINGLE, MULTI;
 		public static int getLayoutForType(ListType type) {
 			switch (type) {
@@ -2023,12 +2124,12 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener {
 		}
 	}
 
-	public static interface ListCallback {
+	public interface ListCallback {
 		void onSelection(MaterialDialog dialog, View itemView, int which,
 				CharSequence text);
 	}
 
-	public static interface ListCallbackMulti {
+	public interface ListCallbackMulti {
 		void onSelection(MaterialDialog dialog, Integer[] which,
 				CharSequence[] text);
 	}
