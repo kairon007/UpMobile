@@ -42,7 +42,6 @@ import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -261,7 +260,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		setHasOptionsMenu(true);
 		scrollView = new PullToZoomScrollView(getActivity());
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
 		init();
@@ -275,7 +273,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			} else {
 				player.play(song);
 			}
-//			((MainActivity) getActivity()).setDrawerEnabled(false);
 		} else {
 			song = player.getPlayingSong();
 		}
@@ -296,15 +293,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		getActivity().onBackPressed();
-//		((MainActivity)getActivity()).setDrawerEnabled(true);
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
 	public void onResume() {
 		thatSongIsDownloaded();
+		((MainActivity) getActivity()).setCurrentFragmentId(PLAYER_FRAGMENT);
+		((MainActivity) getActivity()).setDraverEnabled(false);
 		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();

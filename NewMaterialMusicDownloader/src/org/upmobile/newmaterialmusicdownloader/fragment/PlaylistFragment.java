@@ -31,6 +31,8 @@ public class PlaylistFragment extends Fragment implements Constants{
 	
 	@Override
 	public void onResume() {
+		((MainActivity) getActivity()).setCurrentFragmentId(PLAYLIST_FRAGMENT);
+		((MainActivity) getActivity()).setDraverEnabled(true);
 		((MainActivity) getActivity()).setTitle(R.string.tab_playlist);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
