@@ -36,4 +36,9 @@ public class PlaylistFragment extends Fragment implements Constants{
 		super.onResume();
 	}
 	
+	@Override
+	public void onPause() {
+		playlistView.onPause();
+		super.onPause();
+	}
 }

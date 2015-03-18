@@ -4,5 +4,14 @@
     <attr name="attr_image_drawer" format="reference" />
     <attr name="colorTextPrimary" format="reference" />
     <attr name="colorTextSecondary" format="reference" />
+    
+    <attr name="colorPrimaryDarkApp" format="reference" />
+    <attr name="colorPrimaryApp" format="reference" />
+    <attr name="colorAccentApp" format="reference" />
+    <attr name="colorControlNormalApp" format="reference" />
+    <attr name="colorControlActivatedApp" format="reference" />
+    <attr name="colorControlHighlightApp" format="reference" />
+    <attr name="colorTextPrimaryApp" format="reference" />
+    <attr name="colorTextSecondaryApp" format="reference" />
 
 </resources>

@@ -12,7 +12,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -21,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.csform.android.uiapptemplate.view.MaterialRippleLayout;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ButtonCallback;
 import com.csform.android.uiapptemplate.view.dlg.Theme;
@@ -59,12 +63,12 @@ public class PlaylistView extends BasePlaylistView {
 				dialog.cancel();
 			}
 		};
-		MaterialRippleLayout layout = new MaterialRippleLayout(getContext());
         fabIconNew = new ImageView(getContext());
         fabIconNew.setColorFilter(getResources().getColor(Util.getResIdFromAttribute((Activity) getContext(), R.attr.colorPrimary)));
         fabIconNew.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_circle_grey));
         rightLowerButton = new FloatingActionButton.Builder(getContext())
                 .setContentView(fabIconNew, new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT))
+                .setBackgroundDrawable(getStateList())
                 .build();
         rightLowerButton.setOnClickListener(new OnClickListener() {
 			
@@ -73,11 +77,6 @@ public class PlaylistView extends BasePlaylistView {
 				showDialog();
 			}
 		});
-	}
-
-	@Override
-	protected Object[] groupItems() {
-		return null;
 	}
 
 	@Override
@@ -153,7 +152,29 @@ public class PlaylistView extends BasePlaylistView {
 	}
 	
 	public void onPause () {
-		
+		rightLowerButton.detach();
 	}
 	
+	private StateListDrawable getStateList() {
+		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorAccentApp));
+		Drawable mDrawable = getContext().getResources().getDrawable(R.drawable.button_action_touch); 
+		mDrawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY));
+		StateListDrawable stateListDrawable = new StateListDrawable();
+		stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, mDrawable);
+		stateListDrawable.addState(new int[]{}, getResources().getDrawable(R.drawable.button_action));
+		return stateListDrawable;
+	}
+	
+	@Override
+	protected Object[] groupItems() {
+		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimaryApp));
+		Drawable arrowDown = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_18dp); 
+		Drawable arrowUp = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_18dp);
+		return new Object[]{arrowDown, arrowUp, color};
+	}
+	
+	@Override
+	protected boolean isAnimateExpandCollapse() {
+		return false;
+	}
 }

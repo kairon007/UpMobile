@@ -28,7 +28,8 @@
     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
         style="@style/RippleStyle"
         android:layout_width="match_parent"
-        android:layout_height="48dp" >
+        android:layout_height="48dp"
+        android:visibility="gone" >
 
         <LinearLayout
             android:id="@+id/createNewPlaylist"
@@ -57,7 +58,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_accent" />
+        android:background="?attr/colorAccentApp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -85,7 +86,13 @@
         android:id="@+id/expandableListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp" >
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:cacheColorHint="@android:color/transparent"
+        android:childDivider="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="4dp"
+        android:paddingBottom="8dp" >
     </ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView>
 
 </LinearLayout>

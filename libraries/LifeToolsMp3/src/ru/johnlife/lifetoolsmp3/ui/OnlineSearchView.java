@@ -560,6 +560,7 @@ public abstract class OnlineSearchView extends View {
 			}
 			if (!isUseDefaultSpinner()) {
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				android.util.Log.d("logd", "initBoxEngines: 1");
 			} else {
 				if (getDropDownViewResource() > 0) {
 					adapter.setDropDownViewResource(getDropDownViewResource());

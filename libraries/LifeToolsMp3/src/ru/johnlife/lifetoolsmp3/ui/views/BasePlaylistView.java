@@ -6,7 +6,6 @@ import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.ExpandableAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -22,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -67,6 +67,8 @@ public abstract class BasePlaylistView extends View {
 	protected abstract ListView getListView(View view);
 
 	protected abstract TextView getMessageView(View view);
+	
+	protected boolean isAnimateExpandCollapse() {return true;};
 
 	public final String[] PROJECTION_PLAYLIST = { 
 			MediaStore.Audio.Playlists._ID, 
@@ -121,12 +123,20 @@ public abstract class BasePlaylistView extends View {
             		return false;
             	}
                 if (((AnimatedExpandableListView) listView).isGroupExpanded(groupPosition)) {
-                	((AnimatedExpandableListView) listView).collapseGroupWithAnimation(groupPosition);
+                	if (isAnimateExpandCollapse()) {
+                		((AnimatedExpandableListView) listView).collapseGroupWithAnimation(groupPosition);
+                	} else {
+                		((AnimatedExpandableListView) listView).collapseGroup(groupPosition);
+                	}
                 	if (null !=groupItems() && groupItems().length > 1) {
                 		setGroupIndicator(v, 0);
                 	}
                 } else {
-                	((AnimatedExpandableListView) listView).expandGroupWithAnimation(groupPosition);
+                	if (isAnimateExpandCollapse()) {
+                		((AnimatedExpandableListView) listView).expandGroupWithAnimation(groupPosition); 
+                	} else {
+                		((AnimatedExpandableListView) listView).expandGroup(groupPosition);
+                	}
                 	if (null !=groupItems() && groupItems().length > 1) {
                 		setGroupIndicator(v, 1);
                 	}
@@ -165,7 +175,17 @@ public abstract class BasePlaylistView extends View {
 		if (groupItems()[0].getClass() == String.class) {
 			((TextView) v.findViewById(R.id.customGroupIndicator)).setText(groupItems()[i].toString());
 		} else {
-			((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageBitmap((Bitmap) groupItems()[i]);
+			if (groupItems()[0].getClass() == Bitmap.class) {
+				((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageBitmap((Bitmap) groupItems()[i]);
+				if (groupItems().length > 1) {
+					((ImageView) v.findViewById(R.id.customGroupIndicator)).setColorFilter((int) groupItems()[2]);
+				}
+			} else {
+				((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageDrawable((Drawable) groupItems()[i]);
+				if (groupItems().length > 1) {
+					((ImageView) v.findViewById(R.id.customGroupIndicator)).setColorFilter((int) groupItems()[2]);
+				}
+			}
 		}
 	}
 
