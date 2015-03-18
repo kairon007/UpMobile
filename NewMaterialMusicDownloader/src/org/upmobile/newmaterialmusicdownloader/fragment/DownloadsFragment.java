@@ -30,6 +30,8 @@ public class DownloadsFragment extends Fragment implements Constants{
 	@Override
 	public void onResume() {
 		downloadsView.onResume();
+		((MainActivity) getActivity()).setCurrentFragmentId(DOWNLOADS_FRAGMENT);
+		((MainActivity) getActivity()).setDraverEnabled(true);
 		((MainActivity) getActivity()).setTitle(R.string.tab_downloads);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
