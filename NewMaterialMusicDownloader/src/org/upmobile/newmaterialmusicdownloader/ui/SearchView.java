@@ -12,10 +12,12 @@ import com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminat
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +108,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	public Object initRefreshProgress() {
 		ProgressBarCircularIndeterminate progress = (ProgressBarCircularIndeterminate) LayoutInflater.from(getContext()).inflate(R.layout.progress, null);
+		progress.setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute((Activity) getContext(), R.attr.colorAccentApp)));
 		return progress;
 	}
 	

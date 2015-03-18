@@ -108,7 +108,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:background="@color/main_color_accent" />
+                    android:background="?attr/colorAccentApp" />
             </FrameLayout>
         </LinearLayout>
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>

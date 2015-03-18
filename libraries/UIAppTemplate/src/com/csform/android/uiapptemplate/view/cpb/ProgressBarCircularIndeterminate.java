@@ -1,9 +1,9 @@
 package com.csform.android.uiapptemplate.view.cpb;
 
-import com.csform.android.uiapptemplate.view.CustomView;
-
-import android.content.res.Resources;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,10 +12,14 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
+
+import com.csform.android.uiapptemplate.view.CustomView;
 
 public class ProgressBarCircularIndeterminate extends CustomView {
 
+	private static final String BACKGROUND = "background";
 	int backgroundColor = Color.parseColor("#1E88E5");
 
 	public ProgressBarCircularIndeterminate(Context context, AttributeSet attrs) {
@@ -36,12 +40,24 @@ public class ProgressBarCircularIndeterminate extends CustomView {
 
 		// Set background Color
 		// Color by resource
-		int bacgroundColor = attrs.getAttributeResourceValue(ANDROIDXML, "background", -1);
+		int bacgroundColor = -1;
+		try {
+			for (int i = 0; i < attrs.getAttributeCount(); i++) {
+				if (attrs.getAttributeName(i).equals(BACKGROUND)) {
+					bacgroundColor = Util.getResIdFromAttribute((BaseMiniPlayerActivity) getContext(), Integer.parseInt(attrs.getAttributeValue(i).replace("?", "")));
+				}
+			}
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e + "");
+		}
+		if (bacgroundColor == -1) {
+			bacgroundColor = attrs.getAttributeResourceValue(ANDROIDXML, BACKGROUND, -1);
+		}
 		if (bacgroundColor != -1) {
 			setBackgroundColor(getResources().getColor(bacgroundColor));
 		} else {
 			// Color by hexadecimal
-			int background = attrs.getAttributeIntValue(ANDROIDXML, "background", -1);
+			int background = attrs.getAttributeIntValue(ANDROIDXML, BACKGROUND, -1);
 			if (background != -1)
 				setBackgroundColor(background);
 			else

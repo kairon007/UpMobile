@@ -175,6 +175,6 @@ public class PlaylistView extends BasePlaylistView {
 	
 	@Override
 	protected boolean isAnimateExpandCollapse() {
-		return false;
+		return true;
 	}
 }
