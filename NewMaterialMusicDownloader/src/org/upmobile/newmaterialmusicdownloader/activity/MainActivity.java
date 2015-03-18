@@ -52,12 +52,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private SearchView searchView;
 	private int currentFragmentId = SEARCH_FRAGMENT;
 	private boolean isVisibleSearchView = false;
+	private boolean isOpenFromDraver = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		changeFragment(SEARCH_FRAGMENT);
+		changeFragment(SEARCH_FRAGMENT, true);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,7 +83,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			}).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-					changeFragment(position - 1);
+					changeFragment(position - 1, true);
 				}
 			}).build();
 
@@ -92,7 +93,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 			@Override
 			public void onClick(View v) {
-				if (currentFragmentId == PLAYER_FRAGMENT) {
+				if (currentFragmentId == PLAYER_FRAGMENT && !isOpenFromDraver) {
 					onBackPressed();
 				} else {
 					drawerResult.openDrawer();
@@ -178,6 +179,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		if (null != player && player.isVisible()) {
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
+			isOpenFromDraver = true;
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
@@ -188,9 +190,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		}
 	}
 
-	public void changeFragment(int fragmentId) {
+	public void changeFragment(int fragmentId, boolean fromDraver) {
 		Fragment selectedFragment = null;
-
+		isOpenFromDraver = fromDraver;
+		
 		if (null != drawerResult) {
 			if (fragmentId < SETTINGS_FRAGMENT) {
 				currentFragmentId = fragmentId;
@@ -246,12 +249,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void setDraverEnabled(boolean isVisibleDraver) {
-		toggle.setDrawerIndicatorEnabled(isVisibleDraver);
-		drawerResult.getDrawerLayout().setDrawerLockMode(isVisibleDraver ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+		boolean value = isVisibleDraver || isOpenFromDraver;
+		toggle.setDrawerIndicatorEnabled(value);
+		drawerResult.getDrawerLayout().setDrawerLockMode(value ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 	}
 
 	public void setCurrentFragmentId(int currentFragmentId) {
 		this.currentFragmentId = currentFragmentId;
+		drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
 	}
 
 	@Override
@@ -361,7 +366,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	protected void showPlayerFragment() {
-		changeFragment(PLAYER_FRAGMENT);
+		changeFragment(PLAYER_FRAGMENT, false);
 	}
 
 	@Override

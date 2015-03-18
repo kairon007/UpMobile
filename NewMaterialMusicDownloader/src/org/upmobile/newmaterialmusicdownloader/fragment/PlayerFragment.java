@@ -262,33 +262,19 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		isDestroy = false;
 		scrollView = new PullToZoomScrollView(getActivity());
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
+		scrollView.setContentContainerView(contentView);
 		init();
 		setListeners();
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
-		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
-			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
-				player.play();
-			} else {
-				player.play(song);
-			}
-		} else {
-			song = player.getPlayingSong();
-		}
-		setCoverToZoomView(null);
+		song = player.getPlayingSong();
 		getCover(song);
 		setImageButton();
 		showLyrics();
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
-		if (prepared) { 
-			changePlayPauseView(!player.isPlaying());
-		} else {
-			changePlayPauseView(prepared);
-		}
-		scrollView.setContentContainerView(contentView);
+		changePlayPauseView(prepared && !player.isPlaying());
 		return scrollView;
 	}
 	
@@ -298,21 +284,15 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).setCurrentFragmentId(PLAYER_FRAGMENT);
 		((MainActivity) getActivity()).setDraverEnabled(false);
 		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
 
 	@Override
 	public void onDestroyView() {
 		player.removeStatePlayerListener(stateListener);
+		isDestroy = true;
 		cancelProgressTask();
 		super.onDestroyView();
-	}
-
-	private void cancelProgressTask() {
-		if (null != progressUpdater) {
-			progressUpdater.cancel(true);
-		}
 	}
 
 	@Override
@@ -325,13 +305,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			clearCover();
 		}
 		super.onPause();
-	}
-
-	@Override
-	public void onDestroy() {
-		isDestroy = true;
-//		((MainActivity)getActivity()).setDrawerEnabled(true);
-		super.onDestroy();
 	}
 
 	@Override
@@ -422,15 +395,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 	}
 
-	private void clearCover() {
-		setCheckBoxState(false);
-		if (MusicData.class == song.getClass()) {
-			setCoverToZoomView(null);
-			((MusicData) song).clearCover();
-			RenameTask.deleteCoverFromFile(new File(song.getPath()));
-		}
-	}
-
 	private void init() {
 		play = (ImageView) contentView.findViewById(R.id.playpause);
 		previous = (ImageView) contentView.findViewById(R.id.prev);
@@ -452,12 +416,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
 		undo = new UndoBar(getActivity());
-		stop.setColorFilter(getResources().getColor(getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		play.setColorFilter(getResources().getColor(getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		previous.setColorFilter(getResources().getColor(getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		forward.setColorFilter(getResources().getColor(getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		shuffle.setColorFilter(getResources().getColor(getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		repeat.setColorFilter(getResources().getColor(getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
+		stop.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
+		play.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
+		previous.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
+		forward.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
+		shuffle.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
+		repeat.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
 	}
 
 	private void setListeners() {
@@ -493,13 +457,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			}
 		});
 		scrollView.setOnTouchListener(new OnTouchListener() {
-
+	
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				closeEditViews();
 				return v.performClick();
 			}
-
+			
 		});
 	}
 
@@ -529,6 +493,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			cancelProgressTask();
 			download.setProgress(0);
 			download.setOnClickListener(this);
+		}
+	}
+
+	private void cancelProgressTask() {
+		if (null != progressUpdater) {
+			progressUpdater.cancel(true);
 		}
 	}
 
@@ -666,6 +636,30 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 	}
 
+	private void saveTags() {
+		File f = new File(song.getPath());
+		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
+			((MainActivity) getActivity()).showMessage(R.string.file_already_exists);
+			return;
+		}
+		RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
+	
+			@Override
+			public void success(String path) {
+				song.setPath(path);
+				renameTask.cancelProgress();
+				player.update(song.getTitle(), song.getArtist(), path);
+			}
+	
+			@Override
+			public void error() {
+			}
+	
+		};
+		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
+		renameTask.start(true, false);
+	}
+
 	private void showLyrics() {
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
@@ -694,34 +688,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		checkIdLyrics = fetchedListener.hashCode();
 	}
 
-	private void saveTags() {
-		File f = new File(song.getPath());
-		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
-			((MainActivity) getActivity()).showMessage(R.string.file_already_exists);
-			return;
-		}
-		RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
-
-			@Override
-			public void success(String path) {
-				song.setPath(path);
-				renameTask.cancelProgress();
-				player.update(song.getTitle(), song.getArtist(), path);
-			}
-
-			@Override
-			public void error() {
-			}
-
-		};
-		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
-		renameTask.start(true, false);
-	}
-
-	private void getCover(final AbstractSong song) {
+	private void getCover(final AbstractSong s) {
 		setCheckBoxState(false);
 		setCoverToZoomView(null);
-		if (song.getClass() != MusicData.class) {
+		if (s.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
 				@Override
@@ -730,22 +700,29 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 						return;
 					}
 					if (null != bmp) {
-						((RemoteSong) song).setHasCover(true);
+						((RemoteSong) s).setHasCover(true);
 						setCoverToZoomView(bmp);
 						setCheckBoxState(true);
-					} else {
-					}
+					} 
 				}
 			};
 			checkIdCover = readyListener.hashCode();
-			((RemoteSong) song).getCover(readyListener);
+			((RemoteSong) s).getCover(readyListener);
 		} else {
-			Bitmap bitmap = ((MusicData) song).getCover(getActivity());
+			Bitmap bitmap = ((MusicData) s).getCover(getActivity());
 			if (bitmap != null) {
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
-			} else {
-			}
+			} 
+		}
+	}
+
+	private void clearCover() {
+		setCheckBoxState(false);
+		if (MusicData.class == song.getClass()) {
+			setCoverToZoomView(null);
+			((MusicData) song).clearCover();
+			RenameTask.deleteCoverFromFile(new File(song.getPath()));
 		}
 	}
 
@@ -766,13 +743,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		imageView.setMinimumHeight(Util.dpToPx(getActivity(), 168));
 		imageView.setMinimumWidth(Util.dpToPx(getActivity(), 168));
 		scrollView.setZoomView(imageView);
-	}
-	
-	private int getResIdFromAttribute(final Activity activity, final int attr) {
-		if (attr == 0) return 0;
-		final TypedValue typedvalueattr = new TypedValue();
-		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
-		return typedvalueattr.resourceId;
 	}
 	
 	private void setCheckBoxState(boolean state) {
@@ -849,9 +819,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 							setDownloadButtonState(true);
 						}
 					}
+					running.close();
 				}
-				running.close();
-				
 			}
 
 			@Override
