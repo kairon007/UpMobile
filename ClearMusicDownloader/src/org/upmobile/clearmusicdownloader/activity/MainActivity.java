@@ -1,11 +1,9 @@
 package org.upmobile.clearmusicdownloader.activity;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
-import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
@@ -23,23 +21,18 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
-import android.widget.TextView;
 
 import com.special.BaseClearActivity;
 import com.special.menu.ResideMenu;
@@ -76,51 +69,22 @@ public class MainActivity extends BaseClearActivity implements Constants {
 				service.setArrayPlayback(list);
 			}
 		}
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		File file = new File(folder_path);
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 		fileObserver.startWatching();
 		super.onCreate(savedInstanceState);
-		getSupportActionBar().hide();
 		initSearchView();
 		
-		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 
 	}
 	
 	private void initSearchView() {
 		searchView = (SearchView) findViewById(R.id.ab_search);
-		 int color = getResources().getColor(android.R.color.white);
-	        String str = Integer.toHexString(color);
-	        String strColor =  "#"+str.substring(2);
-	        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
-	        ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
-	        searchIcon.setImageResource(R.drawable.ic_search_ab);
-	        searchIcon.setBackgroundResource(R.drawable.actionbar_selector);
-	        int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
-	        ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
-	        closeIcon.setImageResource(R.drawable.ic_close_ab);
-	        closeIcon.setBackgroundResource(R.drawable.actionbar_selector);
-	        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
-	        TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
-	        autoComplete.setTextColor(color);
-	        try {
-				Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
-				SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
-				stopHint.append(Html.fromHtml("<font color = " + strColor + ">" + getResources().getString(R.string.hint_main_search) + "</font>"));
-				Drawable search_icon = getResources().getDrawable(R.drawable.ic_search_ab);
-				Method textSizeMethod = clazz.getMethod("getTextSize");
-				Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
-				int textSize = (int) (rawTextSize * 1.5);
-				search_icon.setBounds(0, 0, textSize, textSize);
-				stopHint.setSpan(new ImageSpan(search_icon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
-				setHintMethod.invoke(autoComplete, stopHint);
-			} catch (Exception e) {
-				android.util.Log.d("logks", getClass().getName() + "Appear problem: " + e);
-			}
+		AutoCompleteTextView mQueryTextView = (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
+		mQueryTextView.setTextColor(Color.WHITE);
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
@@ -138,7 +102,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 							fragment.setFilter(query);
 						}
 					}
-				} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
+				} else if (lastFragmentName.equals(PlaylistFragment.class.getSimpleName())) {
 					searchView.clearFocus();
 					PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 					if (fragment.isVisible()) {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="fragment_text">
         <item name="android:textColor">#ffacacac</item>
         <item name="android:textSize">25sp</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:windowActionBar">false</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light, ">
+        <item name="windowActionBar">false</item>
         <item name="android:windowTitleSize">0dp</item>
         <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
@@ -17,6 +17,25 @@
     <style name="AppThemeTrans" parent="@style/AppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+
+        <!-- Background for the search query section (e.g. EditText) -->
+        <!-- <item name="queryBackground">...</item> -->
+        <!-- Background for the actions section (e.g. voice, submit) -->
+        <!-- <item name="submitBackground">...</item> -->
+        <!-- Close button icon -->2
+        <item name="closeIcon">@drawable/ic_close_ab</item>
+        <!-- Search button icon -->
+        <item name="searchIcon">@drawable/ic_search_ab</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:editTextColor">@android:color/white</item>
+    </style>
+
+    <style name="AutoCompleteTextView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>

@@ -60,14 +60,15 @@
                     android:layout_gravity="end"
                     android:layout_weight="1">
 
-                    <SearchView
+                    <android.support.v7.widget.SearchView
                         android:id="@+id/ab_search"
+                        style="@style/MySearchViewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
                         android:gravity="end"
                         android:visibility="gone" >
-                    </SearchView>
+                    </android.support.v7.widget.SearchView>
 
                 </FrameLayout>
             </LinearLayout>
