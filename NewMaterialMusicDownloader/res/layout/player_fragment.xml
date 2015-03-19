@@ -64,6 +64,8 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
+                        android:paddingLeft="4dp"
+                        android:layout_gravity="end|top"
                         android:src="@drawable/ic_mode_edit_grey" />
                 </LinearLayout>
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -72,6 +74,7 @@
                 android:id="@+id/songNameEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textNoSuggestions"
                 android:paddingBottom="4dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
@@ -105,6 +108,8 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
+                        android:paddingLeft="4dp"
+                        android:layout_gravity="end|top"
                         android:src="@drawable/ic_mode_edit_grey" />
                 </LinearLayout>
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
