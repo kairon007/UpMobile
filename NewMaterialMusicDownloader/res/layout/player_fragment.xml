@@ -279,7 +279,8 @@
         style="@style/RippleStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" >
+        android:layout_gravity="center"
+        android:layout_margin="8dp" >
 
         <com.csform.android.uiapptemplate.view.cpb.CircularProgressButton
             android:id="@+id/download"
@@ -288,7 +289,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:minHeight="48dp"
-            android:background="@color/green_material_accent"
             android:text="@string/download_dialog_download" />
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
