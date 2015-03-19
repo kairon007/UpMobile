@@ -622,6 +622,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void closeEditViews() {
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
+			boolean isSameWord = false;
 			hideKeyboard();
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
 				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
@@ -631,6 +632,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				String artist = Util.removeSpecialCharacters(etArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etArtist.getText().toString());
 				song.setArtist(artist);
 				tvArtist.setText(artist);
+			} else {
+				isSameWord = true;
 			}
 			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
@@ -638,7 +641,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			etTitle.setVisibility(View.GONE);
 			if (song.getClass() != MusicData.class) {
 				player.update(song.getTitle(), song.getArtist(), null);
-			} else {
+			} else if (!isSameWord){
 				saveTags();
 			}
 		}
