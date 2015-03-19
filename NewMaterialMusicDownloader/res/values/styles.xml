@@ -30,6 +30,9 @@
         <item name="colorControlHighlightApp">@color/material_primary</item>
         <item name="colorTextPrimaryApp">@color/material_primary_text</item>
         <item name="colorTextSecondaryApp">@color/material_secondary_text</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_default</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_default</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_default</item>
     </style>
 
     <style name="MaterialAppTheme.Black" parent="AppBaseTheme">
@@ -51,6 +54,9 @@
         <item name="colorControlHighlightApp">@color/black_material_primary</item>
         <item name="colorTextPrimaryApp">@color/black_material_primary_text</item>
         <item name="colorTextSecondaryApp">@color/black_material_secondary_text</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_black</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_black</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_black</item>
     </style>
 
     <style name="MaterialAppTheme.Brown" parent="AppBaseTheme">
@@ -74,6 +80,9 @@
         <item name="colorControlHighlightApp">@color/brown_material_primary</item>
         <item name="colorTextPrimaryApp">@color/brown_material_primary_text</item>
         <item name="colorTextSecondaryApp">@color/brown_material_secondary_text</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_brown</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_brown</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_brown</item>
     </style>
 
     <style name="MaterialAppTheme.DeepOrange" parent="AppBaseTheme">
@@ -96,6 +105,9 @@
         <item name="colorControlHighlightApp">@color/orange_material_primary</item>
         <item name="colorTextPrimaryApp">@color/orange_material_primary_text</item>
         <item name="colorTextSecondaryApp">@color/orange_material_secondary_text</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_orange</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_orange</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_orange</item>
     </style>
 
     <style name="MaterialAppTheme.Green" parent="AppBaseTheme">
@@ -117,6 +129,9 @@
         <item name="colorControlHighlightApp">@color/green_material_primary</item>
         <item name="colorTextPrimaryApp">@color/green_material_primary_text</item>
         <item name="colorTextSecondaryApp">@color/green_material_secondary_text</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_green</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_green</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_green</item>
     </style>
 
     <style name="MyActionBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -136,9 +151,9 @@
     </style>
 
     <style name="CircularProgressBarStyle.Full" parent="@style/CircularProgressBarStyle">
-        <item name="cpb_selectorIdle">@drawable/cpb_idle_state_selector_full</item>
-        <item name="cpb_selectorComplete">@drawable/cpb_idle_state_selector_full</item>
-        <item name="cpb_selectorError">@drawable/cpb_idle_state_selector_full</item>
+        <item name="cpb_selectorIdle">?attr/cpbSelectorIdle</item>
+        <item name="cpb_selectorComplete">?attr/cpbSelectorComplete</item>
+        <item name="cpb_selectorError">?attr/cpbSelectorError</item>
         <item name="cpb_colorProgress">?attr/colorAccentApp</item>
         <item name="cpb_colorIndicator">?attr/colorPrimaryApp</item>
         <item name="android:textColor">?attr/colorTextPrimaryApp</item>
