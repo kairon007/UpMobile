@@ -123,7 +123,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 	@Override
 	protected String getDirectory() {
-		return NewMaterialApp.getDirectory();
+		return NewMaterialApp.getDirectoryPrefix();
 	}
 	
 	
