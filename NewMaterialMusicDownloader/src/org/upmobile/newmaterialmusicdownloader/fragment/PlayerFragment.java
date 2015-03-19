@@ -107,6 +107,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private int checkIdCover;
 	private int checkIdLyrics;
+	
+	private int primaryColor;
 
 	private boolean isDestroy;
 
@@ -257,6 +259,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		primaryColor = getResources().getColor(Util.getResIdFromAttribute(activity, R.attr.colorPrimary));
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
@@ -416,12 +424,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
 		undo = new UndoBar(getActivity());
-		stop.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		play.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		previous.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		forward.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		shuffle.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
-		repeat.setColorFilter(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorPrimary)));
+		stop.setColorFilter(primaryColor);
+		play.setColorFilter(primaryColor);
+		previous.setColorFilter(primaryColor);
+		forward.setColorFilter(primaryColor);
+		shuffle.setColorFilter(primaryColor);
+		repeat.setColorFilter(primaryColor);
 	}
 
 	private void setListeners() {

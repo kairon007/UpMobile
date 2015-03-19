@@ -180,6 +180,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
 			isOpenFromDraver = true;
+			setPlayerFragmentFisible(false);
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
@@ -199,6 +200,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				currentFragmentId = fragmentId;
 			}
 			drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
+		}
+		
+		if (PLAYER_FRAGMENT != fragmentId) {
+			setPlayerFragmentFisible(false);
 		}
 
 		currentFragmentId = fragmentId;
@@ -233,6 +238,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			if (isAnimate) {
 				transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_down, R.anim.slide_out_down);
+				showMiniPlayer(false);
 			}
 			transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 		}
@@ -366,6 +372,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	protected void showPlayerFragment() {
+		setPlayerFragmentFisible(true);
 		changeFragment(PLAYER_FRAGMENT, false);
 	}
 

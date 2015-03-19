@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3.activity;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -40,6 +41,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	private View fakeView;
 	protected View progress;
 	private boolean isMiniPlayerPrepared = false;
+	
+	private boolean isPlayerFragmentFisible = false;
+	private boolean isAnimated = false;
+	
 	private int checkIdCover;
 	private DownloadClickListener downloadListener;
 
@@ -71,7 +76,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 		title = (TextView)findViewById(R.id.mini_player_title);
 		artist = (TextView)findViewById(R.id.mini_player_artist);
 		cover = (ImageView)findViewById(R.id.mini_player_cover);
-		playPause = (View) findViewById(R.id.mini_player_play_pause);
+		playPause = findViewById(R.id.mini_player_play_pause);
 		progress = findViewById(R.id.mini_player_progress);
 		download = findViewById(R.id.mini_player_download);
 		miniPlayer = findViewById(getMiniPlayerID());
@@ -158,9 +163,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				ViewGroup parent = (ViewGroup) v.getParent();
-				if (parent.getAnimation() != null && parent.getAnimation().hasStarted()) {
+				if (isAnimated || isPlayerFragmentFisible || (parent.getAnimation() != null && parent.getAnimation().hasStarted())) {
 					return;
 				}
+				isAnimated = true;
 				showPlayerFragment();
 			}
 		});
@@ -207,6 +213,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				
 				@Override
 				public void onAnimationEnd(Animation animation) {
+					isAnimated = false;
 					if (isShift) {
 						miniPlayer.setVisibility(View.GONE);
 						showMiniPlayer(true);
@@ -240,6 +247,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				
 				@Override
 				public void onAnimationEnd(Animation animation) {
+					isAnimated = false;
 					miniPlayer.setVisibility(View.GONE);
 				}
 			});
@@ -295,7 +303,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	 * @param playPayse true - image play, false - image pause
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
-		((ImageButton) playPause).setImageResource(playPayse ? getResIdFromAttribute(this, R.attr.miniPlayerPlay) : getResIdFromAttribute(this, R.attr.miniPlayerPause));
+		((ImageButton) playPause).setImageResource(playPayse ? Util.getResIdFromAttribute(this, R.attr.miniPlayerPlay) : Util.getResIdFromAttribute(this, R.attr.miniPlayerPause));
 	}
 	
 	private void downloadSong() {
@@ -303,13 +311,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
-	}
-	
-	private int getResIdFromAttribute(final Activity activity, final int attr) {
-		if (attr == 0) return 0;
-		final TypedValue typedvalueattr = new TypedValue();
-		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
-		return typedvalueattr.resourceId;
 	}
 	
 	protected void setCover(Bitmap bmp) {
@@ -328,5 +329,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 		progress.setVisibility(flag ? View.VISIBLE : View.GONE);
 	}
 	
-	
+	protected void setPlayerFragmentFisible(boolean value) {
+		isPlayerFragmentFisible = value;
+	}
 }
