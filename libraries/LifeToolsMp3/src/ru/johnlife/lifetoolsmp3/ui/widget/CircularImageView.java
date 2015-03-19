@@ -159,6 +159,11 @@ public class CircularImageView extends ImageView {
 		setLayerType(LAYER_TYPE_SOFTWARE, paintBorder);
 		paintBorder.setShadowLayer(4.0f, 0.0f, 2.0f, Color.BLACK);
 	}
+	
+	public void addShadow(float a, float b, float c) {
+		setLayerType(LAYER_TYPE_SOFTWARE, paintBorder);
+		paintBorder.setShadowLayer(a, b, c, Color.BLACK);
+	}
 
 	@Override
 	public void onDraw(Canvas canvas) {

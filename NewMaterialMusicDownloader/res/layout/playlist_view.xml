@@ -82,17 +82,38 @@
         android:text="@string/playlists_are_missing"
         android:visibility="gone" />
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView
-        android:id="@+id/expandableListView"
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:cacheColorHint="@android:color/transparent"
-        android:childDivider="@android:color/transparent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="4dp"
-        android:paddingBottom="8dp" >
-    </ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView>
+        android:layout_height="wrap_content" >
+
+        <ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView
+            android:id="@+id/expandableListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:childDivider="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="4dp"
+            android:paddingBottom="8dp" >
+        </ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView>
+
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" >
+
+            <ImageView
+                android:id="@+id/floatingButton"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:src="@null"
+                android:visibility="visible" />
+        </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>

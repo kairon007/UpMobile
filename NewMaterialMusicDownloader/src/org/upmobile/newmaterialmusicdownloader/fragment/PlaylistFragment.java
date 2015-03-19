@@ -37,10 +37,4 @@ public class PlaylistFragment extends Fragment implements Constants{
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
-	
-	@Override
-	public void onPause() {
-		playlistView.onPause();
-		super.onPause();
-	}
 }
