@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -165,6 +166,7 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
+			android.util.Log.d("logks", "ExpandableAdapter.ResultFilter, performFiltering: pattern = " + constraint);
 			FilterResults results = new FilterResults();
 			String prefix = constraint.toString().toLowerCase();
 			if (itemsOriginal == null) {
@@ -180,7 +182,8 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 				int count = list.size();
 				for (int i = 0; i < count; i++) {
 					PlaylistData data = list.get(i);
-					String value = data.getName().toLowerCase();
+					String[] tempArray = data.getName().split("/");
+					String value = tempArray[tempArray.length - 1];
 					if (value.contains(prefix)) {
 						nlist.add(data);
 					}
