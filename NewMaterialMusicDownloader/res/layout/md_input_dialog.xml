@@ -24,6 +24,9 @@
         android:layout_height="match_parent"
         android:paddingBottom="4dp"
         android:paddingLeft="4dp"
+        android:maxLength="30"
+        android:singleLine="true"
+        android:textColor="?attr/colorTextSecondaryApp"
         android:paddingRight="4dp" />
 
 </LinearLayout>

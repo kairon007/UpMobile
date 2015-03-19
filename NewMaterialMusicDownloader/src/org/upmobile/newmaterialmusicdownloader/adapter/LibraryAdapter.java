@@ -147,6 +147,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		new MaterialDialog.Builder(getContext())
 			.title(R.string.select_playlist)
 			.titleColorAttr(R.attr.colorTextPrimaryApp)
+			.positiveColorAttr(R.attr.colorPrimaryApp)
 			.items(data)
 			.itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallback() {
 				@Override

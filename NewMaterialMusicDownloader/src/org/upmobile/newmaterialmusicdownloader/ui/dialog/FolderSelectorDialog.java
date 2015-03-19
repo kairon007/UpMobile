@@ -119,6 +119,8 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				.items(getContentsArray())
 				.titleColorAttr(R.attr.colorTextPrimaryApp)
 				.itemColorAttr(R.attr.colorTextSecondaryApp)
+				.positiveColorAttr(R.attr.colorPrimaryApp)
+				.neutralColorAttr(R.attr.colorPrimaryApp)
 				.itemsCallback(this)
 				.callback(mButtonCallback)
 				.autoDismiss(false)
