@@ -69,7 +69,6 @@
 
             <EditText
                 android:id="@+id/songNameEdit"
-                style="@style/EditTextAppearance.Headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="4dp"
@@ -111,7 +110,6 @@
 
             <EditText
                 android:id="@+id/artistNameEdit"
-                style="@style/EditTextAppearance.Headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="4dp"
@@ -164,7 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
-                    app:spb_color="@color/main_color_500"
+                    app:spb_color="?attr/colorAccentApp"
                     app:spb_mirror_mode="false"
                     app:spb_progressiveStart_activated="false"
                     app:spb_progressiveStart_speed="1.5"
