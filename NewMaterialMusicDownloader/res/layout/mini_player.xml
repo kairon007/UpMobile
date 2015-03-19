@@ -63,20 +63,20 @@
             </LinearLayout>
 
             <FrameLayout
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical" >
 
                 <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                     style="@style/RippleStyle"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical" >
 
                     <ImageView
                         android:id="@+id/mini_player_download"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_file_download_grey"
                         android:visibility="gone" />
