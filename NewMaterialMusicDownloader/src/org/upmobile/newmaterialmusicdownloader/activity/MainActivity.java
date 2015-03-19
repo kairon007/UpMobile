@@ -53,6 +53,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private int currentFragmentId = SEARCH_FRAGMENT;
 	private boolean isVisibleSearchView = false;
 	private boolean isOpenFromDraver = false;
+	private int lastCheckPosition = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -341,6 +342,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void showMessage(int message) {
 		showMessage(getString(message));
+	}
+	
+	public int getLastCheckPosition() {
+		return lastCheckPosition;
+	}
+
+	public void setLastCheckPosition(int lastCheckPosition) {
+		this.lastCheckPosition = lastCheckPosition;
 	}
 
 	protected String getPreviousFragmentName(int position) {
