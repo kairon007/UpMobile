@@ -173,6 +173,20 @@
         <item name="rippleInAdapter">false</item>
     </style>
     
+        <style name="RippleStyleWhiteBack">
+        <item name="rippleOverlay">false</item>
+        <item name="rippleColor">?attr/colorPrimaryApp</item>
+        <item name="rippleAlpha">0.7</item>
+        <item name="rippleDimension">45dp</item>
+        <item name="rippleHover">true</item>
+        <item name="rippleDuration">200</item>
+        <item name="rippleFadeDuration">50</item>
+        <item name="rippleBackground">@android:color/white</item>
+        <item name="rippleDelayClick">true</item>
+        <item name="ripplePersistent">false</item>
+        <item name="rippleInAdapter">false</item>
+    </style>
+    
     <style name="CheckBox">
         <item name="checkbox_color">?attr/colorPrimaryApp</item>
         <item name="checkbox_checked_color">?attr/colorAccentApp</item>

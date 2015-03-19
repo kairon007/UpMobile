@@ -8,8 +8,6 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,7 +28,6 @@ import android.widget.TextView;
 
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ButtonCallback;
-import com.csform.android.uiapptemplate.view.dlg.Theme;
 import com.nineoldandroids.view.ViewHelper;
 
 public class PlaylistView extends BasePlaylistView {
@@ -152,7 +149,8 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected void showPlayerFragment(MusicData musicData) {
-
+		((MainActivity) getContext()).showPlayerElement(true);
+		((MainActivity) getContext()).startSong(musicData);		
 	}
 
 	@Override
@@ -216,6 +214,6 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected boolean isAnimateExpandCollapse() {
-		return true;
+		return false;
 	}
 }
