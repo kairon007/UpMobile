@@ -52,12 +52,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <ProgressBar
-                android:id="@+id/mini_player_progress"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0" />
-
             <ImageButton
                 android:id="@+id/mini_player_download"
                 android:layout_width="48dp"
@@ -67,6 +61,12 @@
                 android:background="@drawable/selectable_item_bg"
                 android:src="?attr/miniPlayerDownload"
                 android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/mini_player_progress"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0" />
 
             <ImageButton
                 android:id="@+id/mini_player_play_pause"

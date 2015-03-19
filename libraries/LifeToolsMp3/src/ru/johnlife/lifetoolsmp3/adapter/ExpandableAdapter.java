@@ -166,7 +166,6 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
-			android.util.Log.d("logks", "ExpandableAdapter.ResultFilter, performFiltering: pattern = " + constraint);
 			FilterResults results = new FilterResults();
 			String prefix = constraint.toString().toLowerCase();
 			if (itemsOriginal == null) {
