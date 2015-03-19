@@ -1,0 +1,15 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="TextStyleLine1">
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textColor">?attr/colorTextPrimaryApp</item>
+        <item name="android:textSize">@dimen/material_title</item>
+    </style>
+
+    <style name="TextStyleLine2">
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textColor">?attr/colorTextSecondaryApp</item>
+        <item name="android:textSize">@dimen/material_body</item>
+    </style>
+
+</resources>

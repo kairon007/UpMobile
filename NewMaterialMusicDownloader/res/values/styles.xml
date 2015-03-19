@@ -40,7 +40,7 @@
         <item name="colorControlHighlight">@color/black_material_primary</item>
         <item name="colorTextPrimary">@color/black_material_primary_text</item>
         <item name="colorTextSecondary">@color/black_material_secondary_text</item>
-        <item name="attr_image_drawer">@drawable/header_image</item>
+        <item name="attr_image_drawer">@drawable/header_image_black</item>
         <item name="colorPrimaryDarkApp">@color/black_material_accent</item>
         <item name="colorPrimaryApp">@color/black_material_primary</item>
         <item name="colorAccentApp">@color/black_material_accent</item>
