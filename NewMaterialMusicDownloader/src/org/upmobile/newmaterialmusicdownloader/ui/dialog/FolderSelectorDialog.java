@@ -9,20 +9,16 @@ import java.util.List;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ButtonCallback;
-import com.csform.android.uiapptemplate.view.dlg.Theme;
 
 public class FolderSelectorDialog extends DialogFragment implements	MaterialDialog.ListCallback {
 
@@ -43,6 +39,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 			MaterialDialog dlg = new MaterialDialog.Builder(getActivity())
 			.title(R.string.add_new_folder)
 			.titleColorAttr(R.attr.colorTextPrimaryApp)
+			.positiveColorAttr(R.attr.colorPrimaryApp)
 			.customView(R.layout.md_input_dialog, false)
 			.callback(new ButtonCallback() {
 				
