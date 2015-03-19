@@ -68,6 +68,7 @@
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:lines="1"
+                        android:fontFamily="sans-serif-thin"
                         android:textColor="@android:color/white"
                         android:textColorHint="@android:color/white"
                         android:paddingRight="56dp"
