@@ -47,7 +47,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	}
 	
 	@Override
-	protected TextView getMessageView(View view) {
+	public TextView getMessageView(View view) {
 		return (TextView) view.findViewById(R.id.message_listview);
 	}
 	

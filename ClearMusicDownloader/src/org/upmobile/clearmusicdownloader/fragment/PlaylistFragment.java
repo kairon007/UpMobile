@@ -1,5 +1,6 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
+import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.ui.PlaylistView;
 
@@ -23,10 +24,12 @@ public class PlaylistFragment extends Fragment {
 
 	public void setFilter(String filter) {
 		playlistView.applyFilter(filter);
+		playlistView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);
 	}
 	
 	public void clearFilter() {
 		playlistView.clearFilter();
+		playlistView.getMessageView(getView()).setText(R.string.playlist_is_empty);
 	}
 
 }

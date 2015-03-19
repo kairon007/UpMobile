@@ -66,7 +66,7 @@ public abstract class BasePlaylistView extends View {
 
 	protected abstract ListView getListView(View view);
 
-	protected abstract TextView getMessageView(View view);
+	public abstract TextView getMessageView(View view);
 	
 	protected boolean isAnimateExpandCollapse() {return true;};
 
@@ -103,7 +103,7 @@ public abstract class BasePlaylistView extends View {
 		listView = getListView(view) != null ? getListView(view) : (AnimatedExpandableListView) view.findViewById(R.id.expandableListView);
 		playLastPlaylist = view.findViewById(R.id.lastPlayedPlaylist);
 		createNewPlayList = view.findViewById(R.id.createNewPlaylist);
-		emptyView = view.findViewById(R.id.emptyText);
+		emptyView = getMessageView(view);
 		initListeners();
 		expandableAdapter = new ExpandableAdapter(view.getContext());
 		expandableAdapter.setProjectPrefics(getDirectory());
@@ -177,12 +177,12 @@ public abstract class BasePlaylistView extends View {
 		} else {
 			if (groupItems()[0].getClass() == Bitmap.class) {
 				((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageBitmap((Bitmap) groupItems()[i]);
-				if (groupItems().length > 1) {
+				if (groupItems().length > 2) {
 					((ImageView) v.findViewById(R.id.customGroupIndicator)).setColorFilter((Integer) groupItems()[2]);
 				}
 			} else {
 				((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageDrawable((Drawable) groupItems()[i]);
-				if (groupItems().length > 1) {
+				if (groupItems().length > 2) {
 					((ImageView) v.findViewById(R.id.customGroupIndicator)).setColorFilter((Integer) groupItems()[2]);
 				}
 			}

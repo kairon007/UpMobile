@@ -1,5 +1,6 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
+import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.ui.LibraryView;
 
@@ -22,6 +23,7 @@ public class LibraryFragment extends Fragment {
 	
 	public void setFilter(String filter) {
 		libraryView.applyFilter(filter);
+		libraryView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);
 	}
 	
 	public void clearFilter() {

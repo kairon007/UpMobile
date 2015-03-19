@@ -23,10 +23,12 @@ public class PlaylistFragment extends Fragment implements Constants{
 	
 	public void setFilter(String filter) {
 		playlistView.applyFilter(filter);
+		playlistView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);
 	}
 	
 	public void clearFilter() {
 		playlistView.clearFilter();
+		playlistView.getMessageView(getView()).setText(R.string.playlist_is_empty);
 	}
 	
 	@Override

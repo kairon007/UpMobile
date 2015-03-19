@@ -38,8 +38,8 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected TextView getMessageView(View view) {
-		return null;
+	public TextView getMessageView(View view) {
+		return (TextView) view.findViewById(R.id.emptyText);
 	}
 
 	@Override
