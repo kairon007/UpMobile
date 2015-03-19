@@ -79,7 +79,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	
 	protected abstract BaseAbstractAdapter<MusicData> getAdapter();
 	protected abstract ListView getListView(View view);
-	protected abstract TextView getMessageView(View view);
+	public abstract TextView getMessageView(View view);
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
 	

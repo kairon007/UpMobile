@@ -47,6 +47,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 	
 	public void setFilter(String filter) {
 		libraryView.applyFilter(filter);
+		libraryView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);
 	}
 	
 	public void clearFilter() {

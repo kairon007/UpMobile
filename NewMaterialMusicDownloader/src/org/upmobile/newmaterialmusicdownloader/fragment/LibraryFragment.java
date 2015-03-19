@@ -23,9 +23,11 @@ public class LibraryFragment extends Fragment implements Constants {
 	
 	public void setFilter(String filter) {
 		libraryView.applyFilter(filter);
+		libraryView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);
 	}
 	
 	public void clearFilter() {
+		libraryView.getMessageView(getView()).setText(R.string.library_empty);
 		libraryView.clearFilter();
 	}
 	
