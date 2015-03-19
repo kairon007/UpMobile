@@ -38,6 +38,7 @@
 
                     <TextView
                         android:id="@+id/number"
+                        android:fontFamily="sans-serif-thin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone" />
@@ -46,6 +47,7 @@
 
                     <TextView
                         android:id="@+id/caption"
+                        android:fontFamily="sans-serif-thin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:visibility="gone" />
@@ -96,6 +98,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
                         android:gravity="right"
+                        android:fontFamily="sans-serif-thin"
                         android:paddingRight="4dp"
                         android:singleLine="true"
                         android:text="00:00"
