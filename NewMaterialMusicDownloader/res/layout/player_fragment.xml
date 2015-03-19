@@ -35,7 +35,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -59,6 +61,8 @@
                         style="@style/TextStyleLine1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:maxLength="45"
+                        android:ellipsize="middle"
                         android:lines="1" />
 
                     <ImageView
@@ -71,11 +75,11 @@
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
             <EditText
+                android:inputType="none"
                 android:id="@+id/songNameEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textNoSuggestions"
-                android:paddingBottom="4dp"
+                android:maxLength="45"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:visibility="gone" />
@@ -101,6 +105,7 @@
                     <com.csform.android.uiapptemplate.font.RobotoTextView
                         android:id="@+id/artistName"
                         style="@style/TextStyleLine1"
+                        android:maxLength="45"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:lines="1" />
@@ -118,7 +123,7 @@
                 android:id="@+id/artistNameEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
+                android:maxLength="45"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:visibility="gone" />

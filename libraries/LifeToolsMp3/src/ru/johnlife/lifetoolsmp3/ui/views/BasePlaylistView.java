@@ -177,12 +177,12 @@ public abstract class BasePlaylistView extends View {
 		} else {
 			if (groupItems()[0].getClass() == Bitmap.class) {
 				((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageBitmap((Bitmap) groupItems()[i]);
-				if (groupItems().length > 1) {
+				if (groupItems().length > 2) {
 					((ImageView) v.findViewById(R.id.customGroupIndicator)).setColorFilter((Integer) groupItems()[2]);
 				}
 			} else {
 				((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageDrawable((Drawable) groupItems()[i]);
-				if (groupItems().length > 1) {
+				if (groupItems().length > 2) {
 					((ImageView) v.findViewById(R.id.customGroupIndicator)).setColorFilter((Integer) groupItems()[2]);
 				}
 			}
