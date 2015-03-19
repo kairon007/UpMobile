@@ -12,6 +12,7 @@
     <!-- Application theme. -->
     <style name="MaterialAppTheme" parent="AppBaseTheme">
         <item name="windowActionBar">false</item>
+        <item name="elementSelector">@drawable/selectable_element_bg_default</item>
         <item name="colorPrimaryDark">@color/material_primary_dark</item>
         <item name="colorPrimary">@color/material_primary</item>
         <item name="colorAccent">@color/material_accent</item>
@@ -32,6 +33,7 @@
     </style>
 
     <style name="MaterialAppTheme.Black" parent="AppBaseTheme">
+        <item name="elementSelector">@drawable/selectable_element_bg_black</item>
         <item name="colorPrimaryDark">@color/black_material_accent</item>
         <item name="colorPrimary">@color/black_material_primary</item>
         <item name="colorAccent">@color/black_material_accent</item>
@@ -53,6 +55,7 @@
 
     <style name="MaterialAppTheme.Brown" parent="AppBaseTheme">
         <item name="windowActionBar">false</item>
+        <item name="elementSelector">@drawable/selectable_element_bg_brown</item>
         <item name="colorPrimaryDark">@color/brown_material_primary_dark</item>
         <item name="colorPrimary">@color/brown_material_primary</item>
         <item name="colorAccent">@color/brown_material_accent</item>
@@ -75,6 +78,7 @@
 
     <style name="MaterialAppTheme.DeepOrange" parent="AppBaseTheme">
         <item name="windowActionBar">false</item>
+        <item name="elementSelector">@drawable/selectable_element_bg_orange</item>
         <item name="colorPrimaryDark">@color/orange_material_primary_dark</item>
         <item name="colorPrimary">@color/orange_material_primary</item>
         <item name="colorAccent">@color/orange_material_accent</item>
@@ -95,6 +99,7 @@
     </style>
 
     <style name="MaterialAppTheme.Green" parent="AppBaseTheme">
+        <item name="elementSelector">@drawable/selectable_element_bg_green</item>
         <item name="colorPrimaryDark">@color/green_material_primary_dark</item>
         <item name="colorPrimary">@color/green_material_primary</item>
         <item name="colorAccent">@color/green_material_accent</item>

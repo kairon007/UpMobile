@@ -5,6 +5,7 @@
     <attr name="colorTextPrimary" format="reference" />
     <attr name="colorTextSecondary" format="reference" />
     
+    <attr name="elementSelector" formar="reference"/>
     <attr name="colorPrimaryDarkApp" format="reference" />
     <attr name="colorPrimaryApp" format="reference" />
     <attr name="colorAccentApp" format="reference" />

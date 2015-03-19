@@ -588,7 +588,7 @@ public abstract class OnlineSearchView extends View {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					keyEngines = (String) adapter.getItem(position);
+					keyEngines = adapter.getItem(position);
 					sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
 					SharedPreferences.Editor editor = sPref.edit();
 					if (keyEngines.equals(getTitleSearchEngine())) {
