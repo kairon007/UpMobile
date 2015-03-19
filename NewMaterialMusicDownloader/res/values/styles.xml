@@ -157,5 +157,10 @@
         <item name="ripplePersistent">false</item>
         <item name="rippleInAdapter">false</item>
     </style>
+    
+    <style name="CheckBox">
+        <item name="checkbox_color">?attr/colorPrimaryApp</item>
+        <item name="checkbox_checked_color">?attr/colorAccentApp</item>
+    </style>
 
 </resources>
