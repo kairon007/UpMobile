@@ -40,10 +40,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -270,6 +271,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		isDestroy = false;
 		scrollView = new PullToZoomScrollView(getActivity());
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
+		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		scrollView.setContentContainerView(contentView);
 		init();
 		setListeners();
@@ -751,8 +753,15 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		} else {
 			imageView.setImageResource(R.drawable.big_album);
 		}
-		imageView.setMinimumHeight(Util.dpToPx(getActivity(), 168));
-		imageView.setMinimumWidth(Util.dpToPx(getActivity(), 168));
+		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
+		int width = display.getWidth(); 
+		int height = display.getHeight();
+		int coverHeight = height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 72);
+		int minHeight = coverHeight > width ? width : coverHeight;
+		imageView.setMinimumHeight(minHeight);
+		imageView.setMinimumWidth(minHeight);
+		imageView.setMaxHeight(minHeight + Util.dpToPx(getActivity(), 8)); 
+		imageView.setMaxWidth(minHeight + Util.dpToPx(getActivity(), 8));
 		scrollView.setZoomView(imageView);
 	}
 	

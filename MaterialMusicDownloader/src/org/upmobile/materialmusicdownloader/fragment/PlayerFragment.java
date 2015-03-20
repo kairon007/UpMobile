@@ -36,10 +36,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -263,6 +265,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setHasOptionsMenu(true);
 		scrollView = new PullToZoomScrollView(getActivity());
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
+		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		init();
 		setListeners();
 		player = PlaybackService.get(getActivity());
@@ -752,7 +755,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		ImageView imageView = new ImageView(getActivity());
 		imageView.setPadding(8, 8, 8, 8);
 		String cover =  getResources().getString(R.string.font_musics);
-		imageView.setImageBitmap(null == bitmap ? ((MainActivity) getActivity()).getDefaultBitmapCover(260, 260, 230, cover) : bitmap);
+		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
+		int width = display.getWidth(); 
+		int height = display.getHeight();
+		int coverHeight = height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 72);
+		int minHeight = coverHeight > width ? width : coverHeight;
+		imageView.setImageBitmap(null == bitmap ? ((MainActivity) getActivity()).getDefaultBitmapCover(minHeight, minHeight, minHeight - 32, cover) : bitmap);
+		imageView.setMinimumHeight(minHeight);
+		imageView.setMinimumWidth(minHeight);
+		imageView.setMaxHeight(minHeight + Util.dpToPx(getActivity(), 8)); 
+		imageView.setMaxWidth(minHeight + Util.dpToPx(getActivity(), 8));
 		scrollView.setZoomView(imageView);
 	}
 	
