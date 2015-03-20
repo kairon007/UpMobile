@@ -20,12 +20,12 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.BounceInterpolator;
+import android.widget.AbsListView.LayoutParams;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
@@ -102,7 +102,8 @@ public class PlaylistView extends BasePlaylistView {
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		int[] colors = new int[] { Color.DKGRAY, Color.DKGRAY, Color.DKGRAY, Color.LTGRAY, Color.WHITE, Color.TRANSPARENT };
 		float[] positions = new float[] { 0.4f, 0.7f, 0.7f, 0.8f, 0.9f, 1f };
-		RadialGradient radialGradient = new RadialGradient((int) widthPx / 2, (int) heightPx / 2, Util.dpToPx(getContext(), 23), colors, positions, Shader.TileMode.CLAMP);
+		RadialGradient radialGradient = new RadialGradient((int) widthPx / 2, (int) heightPx / 2, Util.dpToPx(getContext(), 23), colors, positions,
+				Shader.TileMode.CLAMP);
 		paint.setShader(radialGradient);
 		canvas.drawCircle(((int) widthPx) / 2, ((int) heightPx) / 2, Util.dpToPx(getContext(), 20), paint);
 		// draw main circle
@@ -114,8 +115,10 @@ public class PlaylistView extends BasePlaylistView {
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(mainCircleHeightPx / 20);
 		paint.setColor(getResources().getColor(android.R.color.white));
-		canvas.drawLine(mainCircleWidthPx / 10 * 3, mainCircleWidthPx / 10 * 4 + mainCircleWidthPx / 10, mainCircleWidthPx / 10 * 7, mainCircleWidthPx / 10 * 4 + mainCircleWidthPx / 10, paint);
-		canvas.drawLine(mainCircleWidthPx / 10 * 4 + mainCircleWidthPx / 10, mainCircleWidthPx / 10 * 3, mainCircleWidthPx / 10 * 4 + mainCircleWidthPx / 10, mainCircleWidthPx / 10 * 7, paint);
+		canvas.drawLine(mainCircleWidthPx / 10 * 3, mainCircleWidthPx / 10 * 4 + mainCircleWidthPx / 10, mainCircleWidthPx / 10 * 7,
+				mainCircleWidthPx / 10 * 4 + mainCircleWidthPx / 10, paint);
+		canvas.drawLine(mainCircleWidthPx / 10 * 4 + mainCircleWidthPx / 10, mainCircleWidthPx / 10 * 3, mainCircleWidthPx / 10 * 4
+				+ mainCircleWidthPx / 10, mainCircleWidthPx / 10 * 7, paint);
 		return bitMap;
 	}
 
@@ -127,7 +130,7 @@ public class PlaylistView extends BasePlaylistView {
 		floatingButton.setVisibility(View.VISIBLE);
 	}
 
-	public void hide() {		
+	public void hide() {
 		hidePosition = ViewHelper.getY(floatingButton) + Util.dpToPx(getContext(), 100);
 		ObjectAnimator animator = ObjectAnimator.ofFloat(floatingButton, "y", hidePosition);
 		animator.setInterpolator(new BounceInterpolator());
@@ -153,7 +156,7 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected void showPlayerFragment(MusicData musicData) {
 		((MainActivity) getContext()).showPlayerElement(true);
-		((MainActivity) getContext()).startSong(musicData);		
+		((MainActivity) getContext()).startSong(musicData);
 	}
 
 	@Override
@@ -178,16 +181,11 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected void showDialog() {
-		 builder = new MaterialDialog.Builder(getContext())
-		.title(R.string.create_new_playlist)
-		.customView(R.layout.md_input_dialog, false)
-		.titleColorAttr(R.attr.colorPrimaryApp)
-		.positiveColorAttr(R.attr.colorPrimaryApp).callback(buttonCallback)
-		.autoDismiss(false)
-		.positiveText(R.string.create)
-		.negativeText(android.R.string.cancel);
-		 dialog = builder.build();
-		 dialog.show();
+		builder = new MaterialDialog.Builder(getContext()).title(R.string.create_new_playlist).customView(R.layout.md_input_dialog, false)
+				.titleColorAttr(R.attr.colorPrimaryApp).positiveColorAttr(R.attr.colorPrimaryApp).callback(buttonCallback).autoDismiss(false)
+				.positiveText(R.string.create).negativeText(android.R.string.cancel);
+		dialog = builder.build();
+		dialog.show();
 	}
 
 	@Override
@@ -219,11 +217,12 @@ public class PlaylistView extends BasePlaylistView {
 	protected boolean isAnimateExpandCollapse() {
 		return false;
 	}
-	
+
 	@Override
 	protected View getFooter() {
-		RelativeLayout footer = new RelativeLayout(getContext());
-		footer.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(getContext(), 24)));
+		FrameLayout footer = new FrameLayout(getContext());
+		footer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(getContext(), 24)));
+		footer.requestLayout();
 		return footer;
 	}
 }

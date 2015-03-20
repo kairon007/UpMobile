@@ -37,6 +37,13 @@ public class LibraryFragment extends Fragment implements Constants {
 		((MainActivity) getActivity()).setDraverEnabled(true);
 		((MainActivity) getActivity()).setTitle(R.string.tab_library);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
+		libraryView.onResume();
 		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		libraryView.onPause();
+		super.onPause();
 	}
 }
