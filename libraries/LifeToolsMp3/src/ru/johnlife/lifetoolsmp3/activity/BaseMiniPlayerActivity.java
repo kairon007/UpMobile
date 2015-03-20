@@ -42,7 +42,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	protected View progress;
 	private boolean isMiniPlayerPrepared = false;
 	
-	private boolean isPlayerFragmentFisible = false;
+	private boolean isPlayerFragmentVisible = false;
 	private boolean isAnimated = false;
 	
 	private int checkIdCover;
@@ -163,7 +163,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				ViewGroup parent = (ViewGroup) v.getParent();
-				if (isAnimated || isPlayerFragmentFisible || (parent.getAnimation() != null && parent.getAnimation().hasStarted())) {
+				if (isAnimated || isPlayerFragmentVisible || (parent.getAnimation() != null && parent.getAnimation().hasStarted())) {
 					return;
 				}
 				isAnimated = true;
@@ -329,7 +329,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 		progress.setVisibility(flag ? View.VISIBLE : View.GONE);
 	}
 	
-	protected void setPlayerFragmentFisible(boolean value) {
-		isPlayerFragmentFisible = value;
+	protected void setPlayerFragmentVisible(boolean value) {
+		isPlayerFragmentVisible = value;
 	}
 }

@@ -51,9 +51,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private ActionBarDrawerToggle toggle;
 	private SearchView searchView;
 	private int currentFragmentId = SEARCH_FRAGMENT;
+	private int lastCheckPosition = 0;
 	private boolean isVisibleSearchView = false;
 	private boolean isOpenFromDraver = false;
-	private int lastCheckPosition = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +82,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				public void onDrawerClosed(View drawerView) {
 				}
 			}).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+				
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
 					changeFragment(position - 1, true);
+					
 				}
 			}).build();
 
@@ -181,8 +183,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
 			isOpenFromDraver = true;
-			drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
-			setPlayerFragmentFisible(false);
+			setPlayerFragmentVisible(false);
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
@@ -196,19 +197,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	public void changeFragment(int fragmentId, boolean fromDraver) {
 		Fragment selectedFragment = null;
 		isOpenFromDraver = fromDraver;
-		
-		if (null != drawerResult) {
-			if (fragmentId < SETTINGS_FRAGMENT) {
-				currentFragmentId = fragmentId;
-			}
-			drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
-		}
-		
+
 		if (PLAYER_FRAGMENT != fragmentId) {
-			setPlayerFragmentFisible(false);
+			setPlayerFragmentVisible(false);
 		}
 
-		currentFragmentId = fragmentId;
 		boolean isAnimate = false;
 		switch (fragmentId) {
 		case SEARCH_FRAGMENT:
@@ -263,8 +256,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void setCurrentFragmentId(int currentFragmentId) {
+		android.util.Log.d("logks", "MainActivity, setCurrentFragmentId: id = " + currentFragmentId);
 		this.currentFragmentId = currentFragmentId;
 		drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
+	}
+	
+	public int getCurrentFragmentId() {
+		return currentFragmentId;
 	}
 
 	@Override
@@ -382,7 +380,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	protected void showPlayerFragment() {
-		setPlayerFragmentFisible(true);
+		setPlayerFragmentVisible(true);
 		changeFragment(PLAYER_FRAGMENT, false);
 	}
 

@@ -12,6 +12,9 @@ import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -125,6 +128,17 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				.positiveText(android.R.string.ok)
 				.negativeText(android.R.string.cancel)
 				.build();
+		
+		
+		
+	}
+	
+	@Override
+	public void onDismiss(DialogInterface dialog) {
+		int id = ((MainActivity) getActivity()).getCurrentFragmentId();
+		android.util.Log.d("logks", "FolderSelectorDialog, onDismiss: id = " + id);
+		((MainActivity) getActivity()).setCurrentFragmentId(id);
+		super.onDismiss(dialog);
 	}
 	
 	@Override
