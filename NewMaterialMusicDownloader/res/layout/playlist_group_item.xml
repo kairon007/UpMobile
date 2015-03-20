@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.csform.android.uiapptemplate.view.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/org.upmobile.newmaterialmusicdownloader"
     style="@style/RippleStyle"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:gravity="center_vertical"
-    app:rippleBackground="@android:color/white"
-    android:paddingRight="8dp" xmlns:app="http://schemas.android.com/apk/res/org.upmobile.newmaterialmusicdownloader">
+    android:paddingRight="8dp"
+    app:rippleBackground="@android:color/white" >
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -23,7 +24,7 @@
             android:tint="?attr/colorPrimaryApp"
             android:visibility="visible" />
 
-        <com.csform.android.uiapptemplate.font.RobotoTextView
+        <TextView
             android:id="@+id/textTitle"
             style="@style/TextStyleLine2"
             android:layout_width="match_parent"

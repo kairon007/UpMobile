@@ -56,29 +56,29 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom" >
 
-                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                    <TextView
                         android:id="@+id/songName"
                         style="@style/TextStyleLine1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxLength="45"
                         android:ellipsize="middle"
-                        android:lines="1" />
+                        android:lines="1"
+                        android:maxLength="45" />
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:paddingLeft="4dp"
                         android:layout_gravity="end|top"
+                        android:paddingLeft="4dp"
                         android:src="@drawable/ic_mode_edit_grey" />
                 </LinearLayout>
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
             <EditText
-                android:inputType="none"
                 android:id="@+id/songNameEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="none"
                 android:maxLength="45"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
@@ -102,19 +102,19 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom" >
 
-                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                    <TextView
                         android:id="@+id/artistName"
                         style="@style/TextStyleLine1"
-                        android:maxLength="45"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:lines="1" />
+                        android:lines="1"
+                        android:maxLength="45" />
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:paddingLeft="4dp"
                         android:layout_gravity="end|top"
+                        android:paddingLeft="4dp"
                         android:src="@drawable/ic_mode_edit_grey" />
                 </LinearLayout>
             </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -314,7 +314,7 @@
             android:background="@color/main_color_accent"
             android:visibility="gone" />
 
-        <com.csform.android.uiapptemplate.font.RobotoTextView
+        <TextView
             android:id="@+id/lyrics_text"
             style="@style/TextStyleLine2"
             android:layout_width="match_parent"

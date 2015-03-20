@@ -44,7 +44,7 @@
                 android:orientation="vertical"
                 android:paddingLeft="8dp" >
 
-                <com.csform.android.uiapptemplate.font.RobotoTextView
+                <TextView
                     android:id="@+id/mini_player_title"
                     style="@style/TextStyleLine1"
                     android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                     android:ems="16"
                     android:lines="1" />
 
-                <com.csform.android.uiapptemplate.font.RobotoTextView
+                <TextView
                     android:id="@+id/mini_player_artist"
                     style="@style/TextStyleLine2"
                     android:layout_width="match_parent"
