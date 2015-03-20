@@ -4,6 +4,6 @@
     <item android:state_pressed="true" android:color="@color/brown_material_primary"/>
     <item android:state_focused="true" android:color="@color/brown_material_primary"/>
     <item android:state_enabled="false" android:color="@android:color/transparent"/>
-    <item android:state_enabled="true" android:color="@android:color/transparent"/>
+    <item android:state_enabled="true" android:color="@color/brown_material_primary"/>
 
 </selector>
