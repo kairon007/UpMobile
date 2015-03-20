@@ -3,13 +3,19 @@
 
     <style name="AppBaseTheme" parent="Theme.AppCompat">
         <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
 
     <style name="AppBaseTheme.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="EditTextStyle" parent="@style/Widget.AppCompat.EditText">
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 

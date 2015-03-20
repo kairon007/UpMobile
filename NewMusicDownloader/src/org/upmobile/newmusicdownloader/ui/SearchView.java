@@ -128,4 +128,9 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			}
 		});
 	}
+	
+	@Override
+	public boolean isUseDefaultSpinner() {
+		return true;
+	}
 }

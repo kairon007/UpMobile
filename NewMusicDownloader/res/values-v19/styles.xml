@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="fragment_text">
         <item name="android:textColor">#ffacacac</item>
         <item name="android:textSize">25sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
+    <style name="AppBaseTheme" parent="Theme.AppCompat">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
+
+    <style name="AppBaseTheme.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
+
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
     
+    <style name="EditTextStyle" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
 </resources>

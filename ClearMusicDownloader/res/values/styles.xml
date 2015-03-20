@@ -20,14 +20,7 @@
     </style>
 
     <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
-
-        <!-- Background for the search query section (e.g. EditText) -->
-        <!-- <item name="queryBackground">...</item> -->
-        <!-- Background for the actions section (e.g. voice, submit) -->
-        <!-- <item name="submitBackground">...</item> -->
-        <!-- Close button icon -->2
         <item name="closeIcon">@drawable/ic_close_ab</item>
-        <!-- Search button icon -->
         <item name="searchIcon">@drawable/ic_search_ab</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorHint">@android:color/white</item>

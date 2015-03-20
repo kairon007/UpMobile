@@ -13,10 +13,16 @@
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
+    
+        <style name="EditTextStyle" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+    
 
 </resources>

@@ -8,21 +8,14 @@
         <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
         <item name="android:ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
-    </style>
-
-    <style name="TextStyleLine1">
-        <item name="android:fontFamily">sans-serif-thin</item>
-        <item name="android:textColor">?attr/colorTextPrimaryApp</item>
-        <item name="android:textSize">@dimen/material_title</item>
-    </style>
-
-    <style name="TextStyleLine2">
-        <item name="android:fontFamily">sans-serif-thin</item>
-        <item name="android:textColor">?attr/colorTextSecondaryApp</item>
-        <item name="android:textSize">@dimen/material_body</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="EditTextStyle" parent="@style/Widget.AppCompat.EditText">
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
