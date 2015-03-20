@@ -58,7 +58,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 
 	@Override
 	protected int getDefaultCover() {
-		return 0;
+		return R.drawable.ic_album_grey;
 	}
 	
 	@Override

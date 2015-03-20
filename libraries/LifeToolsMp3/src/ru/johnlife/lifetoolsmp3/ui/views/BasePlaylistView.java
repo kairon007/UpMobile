@@ -68,6 +68,8 @@ public abstract class BasePlaylistView extends View {
 
 	public abstract TextView getMessageView(View view);
 	
+	protected View getFooter(){return null;};
+	
 	protected boolean isAnimateExpandCollapse() {return true;};
 
 	public final String[] PROJECTION_PLAYLIST = { 
@@ -114,6 +116,9 @@ public abstract class BasePlaylistView extends View {
 		}
 		((AnimatedExpandableListView) listView).setAdapter(expandableAdapter);
 		((AnimatedExpandableListView) listView).setEmptyView(emptyView);
+		if (null != getFooter()) {
+			((AnimatedExpandableListView) listView).addFooterView(getFooter());
+		}
 		((AnimatedExpandableListView) listView).setOnGroupClickListener(new OnGroupClickListener() {
 
             @Override

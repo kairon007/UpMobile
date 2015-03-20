@@ -20,10 +20,12 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.BounceInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
@@ -67,7 +69,7 @@ public class PlaylistView extends BasePlaylistView {
 			}
 		};
 		showPosition = ViewHelper.getY(floatingButton) - Util.dpToPx(getContext(), 16);
-		hidePosition = ViewHelper.getY(floatingButton) - floatingButton.getHeight() * 3;
+		hidePosition = ViewHelper.getY(floatingButton) + floatingButton.getHeight() * 3;
 		ViewHelper.setY(floatingButton, hidePosition);
 		showPosition = 0 - showPosition;
 		show();
@@ -125,7 +127,8 @@ public class PlaylistView extends BasePlaylistView {
 		floatingButton.setVisibility(View.VISIBLE);
 	}
 
-	public void hide() {
+	public void hide() {		
+		hidePosition = ViewHelper.getY(floatingButton) + Util.dpToPx(getContext(), 100);
 		ObjectAnimator animator = ObjectAnimator.ofFloat(floatingButton, "y", hidePosition);
 		animator.setInterpolator(new BounceInterpolator());
 		animator.setDuration(1500);
@@ -215,5 +218,12 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected boolean isAnimateExpandCollapse() {
 		return false;
+	}
+	
+	@Override
+	protected View getFooter() {
+		RelativeLayout footer = new RelativeLayout(getContext());
+		footer.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(getContext(), 24)));
+		return footer;
 	}
 }
