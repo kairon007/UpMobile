@@ -2,11 +2,9 @@ package org.upmobile.materialmusicdownloader.fragment;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.PlaylistView;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +54,7 @@ public class PlaylistFragment extends Fragment implements BaseMaterialFragment, 
 	
 	public void clearFilter() {
 		playlistView.clearFilter();
-		playlistView.getMessageView(getView()).setText(R.string.playlist_is_empty);
+		playlistView.getMessageView(getView()).setText(R.string.playlists_are_missing);
 	}
 
 }

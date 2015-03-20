@@ -5,8 +5,12 @@
         <item name="android:textColor">#ffacacac</item>
         <item name="android:textSize">25sp</item>
     </style>
+    
+    <style name="AppBaseTheme" parent="Theme.AppCompat" />
+    
+    <style name="AppBaseTheme.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar" />
 
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
         <item name="lyricsIndicator">@drawable/ic_player_lyrics</item>
@@ -33,7 +37,7 @@
         <item name="miniPlayerDownload">@drawable/mini_player_download</item>
     </style>
 
-    <style name="AppThemeWhite" parent="Theme.AppCompat.Light">
+    <style name="AppThemeWhite" parent="AppBaseTheme">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionBarStyle">@style/MyActionBar.White</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
@@ -61,7 +65,7 @@
         <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
     </style>
 
-    <style name="AppThemeWhite.BlackActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppThemeWhite.BlackActionBar" parent="AppBaseTheme.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionBarStyle">@style/MyActionBar.Black</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
