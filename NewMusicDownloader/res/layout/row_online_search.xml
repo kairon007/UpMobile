@@ -75,7 +75,8 @@
                 android:layout_weight="1" >
 
                 <TextView
-                    android:id="@+id/artistLine"
+                    android:id="@+id/titleLine"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -95,17 +96,14 @@
                     android:textSize="@dimen/font_size_title"
                     android:visibility="visible" />
             </LinearLayout>
-            <!-- android:textColor="#ffff" -->
-
-
-            <!-- android:textColor="@color/dimmed" -->
 
             <TextView
-                android:id="@+id/titleLine"
+                android:id="@+id/artistLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
+                android:fontFamily="sans-serif-thin"
                 android:singleLine="true"
                 android:textSize="@dimen/font_size_normal" />
         </LinearLayout>

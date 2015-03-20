@@ -133,4 +133,9 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	public boolean isUseDefaultSpinner() {
 		return true;
 	}
+	
+	@Override
+	protected int getIdCustomView() {
+		return R.layout.row_online_search;
+	}
 }
