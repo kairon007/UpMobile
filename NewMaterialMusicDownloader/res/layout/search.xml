@@ -77,7 +77,7 @@
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:layout_gravity="right|center_vertical"
+                        android:layout_gravity="end|center_vertical"
                         app:rippleColor="?attr/colorButtonNormal" >
 
                         <ImageButton

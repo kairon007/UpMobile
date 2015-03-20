@@ -332,4 +332,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	protected void setPlayerFragmentVisible(boolean value) {
 		isPlayerFragmentVisible = value;
 	}
+	
+	protected int getMiniVisibility(){
+		return null == miniPlayer ? -1 : miniPlayer.getVisibility();
+	}
+	
 }

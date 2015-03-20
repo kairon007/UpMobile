@@ -200,8 +200,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 		if (PLAYER_FRAGMENT != fragmentId) {
 			setPlayerFragmentVisible(false);
+			if (isMiniPlayerPrepared() && (getMiniVisibility() != View.VISIBLE)) {
+				showMiniPlayer(true);
+			}
 		}
-
+		
 		boolean isAnimate = false;
 		switch (fragmentId) {
 		case SEARCH_FRAGMENT:
