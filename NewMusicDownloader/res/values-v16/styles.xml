@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+    </style>
+
+    <style name="AppBaseTheme.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+</resources>
