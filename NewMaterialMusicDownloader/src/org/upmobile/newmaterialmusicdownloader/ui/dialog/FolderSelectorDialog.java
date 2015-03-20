@@ -13,8 +13,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -103,7 +101,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 
 	File[] listFiles() {
 		File[] contents = parentFolder.listFiles();
-		List<File> results = new ArrayList<>();
+		List<File> results = new ArrayList<File>();
 		for (File fi : contents) {
 			if (fi.isDirectory())
 				results.add(fi);

@@ -4,8 +4,7 @@
     <attr name="attr_image_drawer" format="reference" />
     <attr name="colorTextPrimary" format="reference" />
     <attr name="colorTextSecondary" format="reference" />
-    
-    <attr name="elementSelector" formar="reference"/>
+    <attr name="elementSelector" formar="reference" />
     <attr name="colorPrimaryDarkApp" format="reference" />
     <attr name="colorPrimaryApp" format="reference" />
     <attr name="colorAccentApp" format="reference" />
@@ -14,7 +13,6 @@
     <attr name="colorControlHighlightApp" format="reference" />
     <attr name="colorTextPrimaryApp" format="reference" />
     <attr name="colorTextSecondaryApp" format="reference" />
-    
     <attr name="cpbSelectorIdle" format="reference" />
     <attr name="cpbSelectorComplete" format="reference" />
     <attr name="cpbSelectorError" format="reference" />

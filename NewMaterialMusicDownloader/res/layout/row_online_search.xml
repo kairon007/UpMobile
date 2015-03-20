@@ -51,13 +51,12 @@
                         android:visibility="gone" />
                 </RelativeLayout>
 
-                <ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView
+                <ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView
                     android:id="@+id/cover"
                     android:layout_width="@dimen/material_action_bar_hight"
                     android:layout_height="@dimen/material_action_bar_hight"
                     android:layout_gravity="center"
-                    android:contentDescription="@string/default_cover"
-                    android:scaleType="fitCenter"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_album_grey" />
             </FrameLayout>
 
