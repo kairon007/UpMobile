@@ -13,9 +13,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="horizontal"
         android:background="@drawable/list_selector_white"
         android:clickable="true"
+        android:orientation="horizontal"
         android:padding="4dp" >
 
         <FrameLayout
@@ -64,15 +64,15 @@
                 app:line_color="@color/theme_color"
                 app:line_color_press="@color/green"
                 app:line_width="1dp"
-              	app:padding="0dp" />
+                app:padding="0dp" />
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:orientation="vertical"
             android:padding="8dp" >
 
@@ -82,53 +82,47 @@
                 android:layout_weight="1" >
 
                 <TextView
-                    android:id="@+id/artistLine"
+                    android:id="@+id/titleLine"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/second_text_color"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="ArtistLine"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/font_size_title" />
+                    android:textSize="@dimen/font_size_title"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/primary_text_color" />
 
                 <TextView
                     android:id="@+id/chunkTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:textColor="@color/primary_text_color"
                     android:gravity="right"
                     android:singleLine="true"
-                    android:text="ChunkTime"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/primary_text_color"
                     android:textSize="@dimen/font_size_title"
                     android:visibility="visible" />
             </LinearLayout>
-            <!-- android:textColor="#ffff" -->
-
-
-            <!-- android:textColor="@color/dimmed" -->
 
             <TextView
-                android:id="@+id/titleLine"
+                android:id="@+id/artistLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:textColor="@color/primary_text_color"
                 android:singleLine="true"
-                android:text="TitleLIne"
+                android:textColor="@color/second_text_color"
                 android:textSize="@dimen/font_size_normal" />
         </LinearLayout>
+
         <ImageView
             android:id="@+id/threeDot"
             android:layout_width="24dp"
             android:layout_height="48dp"
-            android:clickable="true"
-            android:background="@drawable/selectable_item_bg"
             android:layout_gravity="center_vertical"
+            android:background="@drawable/selectable_item_bg"
+            android:clickable="true"
             android:src="@drawable/threedot"
             android:visibility="visible" />
     </LinearLayout>
