@@ -16,7 +16,7 @@ import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.Fo
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView;
+import ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -392,10 +392,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	protected void setCover(Bitmap bmp) {
 		if (null == bmp) {
-			((CircularImageView) findViewById(R.id.mini_player_cover)).setImageResource(R.drawable.ic_album_grey);
+			((CircleImageView) findViewById(R.id.mini_player_cover)).setImageResource(R.drawable.ic_album_grey);
 			return;
 		}
-		((CircularImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
+		((CircleImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
 	}
 
 	@Override

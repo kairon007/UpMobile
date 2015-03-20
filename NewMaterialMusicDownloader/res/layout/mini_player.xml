@@ -29,7 +29,7 @@
             android:orientation="horizontal"
             android:paddingLeft="8dp" >
 
-            <ru.johnlife.lifetoolsmp3.ui.widget.CircularImageView
+            <ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView
                 android:id="@+id/mini_player_cover"
                 android:layout_width="@dimen/material_action_bar_hight"
                 android:layout_height="@dimen/material_action_bar_hight"
