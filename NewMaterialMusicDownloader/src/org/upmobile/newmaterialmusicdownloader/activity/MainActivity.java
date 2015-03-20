@@ -257,7 +257,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void setCurrentFragmentId(int currentFragmentId) {
-		android.util.Log.d("logks", "MainActivity, setCurrentFragmentId: id = " + currentFragmentId);
 		this.currentFragmentId = currentFragmentId;
 		drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
 	}
@@ -352,8 +351,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	protected String getPreviousFragmentName(int position) {
-		if (getFragmentManager().getBackStackEntryCount() < position)
-			return SearchFragment.class.getSimpleName();
+		if (getFragmentManager().getBackStackEntryCount() < position) return SearchFragment.class.getSimpleName();
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
 		String previousFragmentName = backEntry.getName();
 		return previousFragmentName;

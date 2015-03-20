@@ -112,6 +112,184 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private int primaryColor;
 
 	private boolean isDestroy;
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+		isDestroy = false;
+		scrollView = new PullToZoomScrollView(getActivity());
+		contentView = inflater.inflate(R.layout.player_fragment, container, false);
+		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		scrollView.setContentContainerView(contentView);
+		init();
+		setListeners();
+		player = PlaybackService.get(getActivity());
+		player.addStatePlayerListener(stateListener);
+		song = player.getPlayingSong();
+		getCover(song);
+		setImageButton();
+		showLyrics();
+		setElementsView(player.getCurrentPosition());
+		boolean prepared = player.isPrepared();
+		setClickablePlayerElement(prepared);
+		changePlayPauseView(prepared && !player.isPlaying());
+		return scrollView;
+	}
+	
+	private void init() {
+		play = (ImageView) contentView.findViewById(R.id.playpause);
+		previous = (ImageView) contentView.findViewById(R.id.prev);
+		forward = (ImageView) contentView.findViewById(R.id.next);
+		shuffle = (ImageView) contentView.findViewById(R.id.shuffle);
+		repeat = (ImageView) contentView.findViewById(R.id.repeat);
+		stop = (ImageView) contentView.findViewById(R.id.stop);
+		download = (CircularProgressButton) contentView.findViewById(R.id.download);
+		playerProgress = (DiscreteSeekBar) contentView.findViewById(R.id.progress_track);
+		tvTitle = (TextView) contentView.findViewById(R.id.songName);
+		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
+		tvArtist = (TextView) contentView.findViewById(R.id.artistName);
+		etArtist = (EditText) contentView.findViewById(R.id.artistNameEdit);
+		playerCurrTime = (TextView) contentView.findViewById(R.id.trackTime);
+		playerTotalTime = (TextView) contentView.findViewById(R.id.trackTotalTime);
+		playerLyricsView = (TextView) contentView.findViewById(R.id.lyrics_text);
+		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
+		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
+		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
+		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
+		undo = new UndoBar(getActivity());
+		stop.setColorFilter(primaryColor);
+		play.setColorFilter(primaryColor);
+		previous.setColorFilter(primaryColor);
+		forward.setColorFilter(primaryColor);
+		shuffle.setColorFilter(primaryColor);
+		repeat.setColorFilter(primaryColor);
+	}
+
+	private void setListeners() {
+		play.setOnClickListener(this);
+		stop.setOnClickListener(this);
+		shuffle.setOnClickListener(this);
+		repeat.setOnClickListener(this);
+		previous.setOnClickListener(this);
+		forward.setOnClickListener(this);
+		tvTitle.setOnClickListener(this);
+		tvArtist.setOnClickListener(this);
+		download.setOnClickListener(this);
+		artistBox.setOnClickListener(this);
+		titleBox.setOnClickListener(this);
+		cbUseCover.setOnCheckedChangeListener(this);
+		playerProgress.setOnProgressChangeListener(new OnProgressChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(DiscreteSeekBar seekBar) { }
+			
+			@Override
+			public void onStartTrackingTouch(DiscreteSeekBar seekBar) { }
+			
+			@Override
+			public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+				if (fromUser) {
+					try {
+						player.seekTo(value);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		scrollView.setOnTouchListener(new OnTouchListener() {
+	
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				closeEditViews();
+				return v.performClick();
+			}
+			
+		});
+	}
+	
+	@Override
+	public void onClick(View v) {
+		closeEditViews();
+		switch (v.getId()) {
+		case R.id.playpause:
+			play(0);
+			break;
+		case R.id.prev:
+			play(-1);
+			break;
+		case R.id.next:
+			play(1);
+			break;
+		case R.id.repeat:
+			Drawable drawableRepeat = repeat.getDrawable();
+			if (!player.offOnRepeat()) {
+				drawableRepeat.setAlpha(125);
+				repeat.setImageDrawable(drawableRepeat);
+			} else {
+				drawableRepeat.setAlpha(255);
+				repeat.setImageDrawable(drawableRepeat);
+			}
+			break;
+		case R.id.shuffle: 
+			Drawable drawableShuffle = shuffle.getDrawable();
+			if (player.offOnShuffle()) {
+				drawableShuffle.setAlpha(255);
+				shuffle.setImageDrawable(drawableShuffle);
+			} else {
+				drawableShuffle.setAlpha(125);
+				shuffle.setImageDrawable(drawableShuffle);
+			}
+			break;
+		case R.id.stop:
+			player.stopPressed();
+			break;
+		case R.id.download:
+			download();
+			break;
+		case R.id.songNameBox:
+			openTitleField();
+			break;
+		case R.id.artistNameBox:
+			openArtistField();
+			break;
+		}
+	}
+	
+	@Override
+	public void onResume() {
+		thatSongIsDownloaded();
+		((MainActivity) getActivity()).setCurrentFragmentId(PLAYER_FRAGMENT);
+		((MainActivity) getActivity()).setDraverEnabled(false);
+		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
+		((MainActivity) getActivity()).invalidateOptionsMenu();
+		super.onResume();
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		primaryColor = getResources().getColor(Util.getResIdFromAttribute(activity, R.attr.colorPrimary));
+	}
+
+	@Override
+	public void onDestroyView() {
+		player.removeStatePlayerListener(stateListener);
+		isDestroy = true;
+		cancelProgressTask();
+		super.onDestroyView();
+	}
+
+	@Override
+	public void onPause() {
+		if (null != lyricsFetcher) {
+			lyricsFetcher.cancel();
+		}
+		if (!isUseAlbumCover && song.isHasCover()) {
+			undo.clear();
+			clearCover();
+		}
+		super.onPause();
+	}
 
 	private Runnable progressAction = new Runnable() {
 
@@ -197,174 +375,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 	};
 	
-	private class ProgressUpdater extends AsyncTask<Long, Integer, Void> {
-
-		@Override
-		protected void onPreExecute() {
-			download.setClickable(false);
-			download.setOnClickListener(null);
-			download.setIndeterminateProgressMode(true);
-			download.setProgress(50);
-			super.onPreExecute();
-		}
-		
-		@Override
-		protected Void doInBackground(Long... params) {
-			if (isDestroy) return null;
-			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-			int progress = 0;
-			do {		
-				if (isCancelled()) return null;
-				if (params[0] != -1) {
-					Cursor c = manager.query(new DownloadManager.Query().setFilterById(params[0]));
-					if (c.moveToNext()) {
-						int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
-						int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
-						int size = c.getInt(sizeIndex);
-						int downloaded = c.getInt(downloadedIndex);
-						if (size != -1 && size != 0) {
-							progress = downloaded * 100 / size;
-						} else {
-							progress = downloaded * 100 / DEFAULT_SONG;
-						}
-						publishProgress(progress);
-					}
-					c.close();
-				}
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			} while (progress < 100);
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void params) {
-			download.setProgress(isCancelled() ? 0 : 100);
-		}
-		
-		@Override
-		protected void onCancelled() {
-			this.cancel(true);
-			super.onCancelled();
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			if (isCancelled()) return;
-			int progress = values[0];
-			download.setIndeterminateProgressMode(false);
-			download.setProgress(progress > 0 ? progress : 1);
-		}
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		primaryColor = getResources().getColor(Util.getResIdFromAttribute(activity, R.attr.colorPrimary));
-	}
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-		isDestroy = false;
-		scrollView = new PullToZoomScrollView(getActivity());
-		contentView = inflater.inflate(R.layout.player_fragment, container, false);
-		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-		scrollView.setContentContainerView(contentView);
-		init();
-		setListeners();
-		player = PlaybackService.get(getActivity());
-		player.addStatePlayerListener(stateListener);
-		song = player.getPlayingSong();
-		getCover(song);
-		setImageButton();
-		showLyrics();
-		setElementsView(player.getCurrentPosition());
-		boolean prepared = player.isPrepared();
-		setClickablePlayerElement(prepared);
-		changePlayPauseView(prepared && !player.isPlaying());
-		return scrollView;
-	}
-	
-	@Override
-	public void onResume() {
-		thatSongIsDownloaded();
-		((MainActivity) getActivity()).setCurrentFragmentId(PLAYER_FRAGMENT);
-		((MainActivity) getActivity()).setDraverEnabled(false);
-		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
-		super.onResume();
-	}
-
-	@Override
-	public void onDestroyView() {
-		player.removeStatePlayerListener(stateListener);
-		isDestroy = true;
-		cancelProgressTask();
-		super.onDestroyView();
-	}
-
-	@Override
-	public void onPause() {
-		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
-		}
-		if (!isUseAlbumCover && song.isHasCover()) {
-			undo.clear();
-			clearCover();
-		}
-		super.onPause();
-	}
-
-	@Override
-	public void onClick(View v) {
-		closeEditViews();
-		switch (v.getId()) {
-		case R.id.playpause:
-			play(0);
-			break;
-		case R.id.prev:
-			play(-1);
-			break;
-		case R.id.next:
-			play(1);
-			break;
-		case R.id.repeat:
-			Drawable drawableRepeat = repeat.getDrawable();
-			if (!player.offOnRepeat()) {
-				drawableRepeat.setAlpha(125);
-				repeat.setImageDrawable(drawableRepeat);
-			} else {
-				drawableRepeat.setAlpha(255);
-				repeat.setImageDrawable(drawableRepeat);
-			}
-			break;
-		case R.id.shuffle: 
-			Drawable drawableShuffle = shuffle.getDrawable();
-			if (player.offOnShuffle()) {
-				drawableShuffle.setAlpha(255);
-				shuffle.setImageDrawable(drawableShuffle);
-			} else {
-				drawableShuffle.setAlpha(125);
-				shuffle.setImageDrawable(drawableShuffle);
-			}
-			break;
-		case R.id.stop:
-			player.stopPressed();
-			break;
-		case R.id.download:
-			download();
-			break;
-		case R.id.songNameBox:
-			openTitleField();
-			break;
-		case R.id.artistNameBox:
-			openArtistField();
-			break;
-		}
-	}
-	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (!buttonView.isEnabled()) {
@@ -403,78 +413,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			undo.listener(listener);
 			undo.show();
 		}
-	}
-
-	private void init() {
-		play = (ImageView) contentView.findViewById(R.id.playpause);
-		previous = (ImageView) contentView.findViewById(R.id.prev);
-		forward = (ImageView) contentView.findViewById(R.id.next);
-		shuffle = (ImageView) contentView.findViewById(R.id.shuffle);
-		repeat = (ImageView) contentView.findViewById(R.id.repeat);
-		stop = (ImageView) contentView.findViewById(R.id.stop);
-		download = (CircularProgressButton) contentView.findViewById(R.id.download);
-		playerProgress = (DiscreteSeekBar) contentView.findViewById(R.id.progress_track);
-		tvTitle = (TextView) contentView.findViewById(R.id.songName);
-		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
-		tvArtist = (TextView) contentView.findViewById(R.id.artistName);
-		etArtist = (EditText) contentView.findViewById(R.id.artistNameEdit);
-		playerCurrTime = (TextView) contentView.findViewById(R.id.trackTime);
-		playerTotalTime = (TextView) contentView.findViewById(R.id.trackTotalTime);
-		playerLyricsView = (TextView) contentView.findViewById(R.id.lyrics_text);
-		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
-		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
-		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
-		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
-		undo = new UndoBar(getActivity());
-		stop.setColorFilter(primaryColor);
-		play.setColorFilter(primaryColor);
-		previous.setColorFilter(primaryColor);
-		forward.setColorFilter(primaryColor);
-		shuffle.setColorFilter(primaryColor);
-		repeat.setColorFilter(primaryColor);
-	}
-
-	private void setListeners() {
-		play.setOnClickListener(this);
-		stop.setOnClickListener(this);
-		shuffle.setOnClickListener(this);
-		repeat.setOnClickListener(this);
-		previous.setOnClickListener(this);
-		forward.setOnClickListener(this);
-		tvTitle.setOnClickListener(this);
-		tvArtist.setOnClickListener(this);
-		download.setOnClickListener(this);
-		artistBox.setOnClickListener(this);
-		titleBox.setOnClickListener(this);
-		cbUseCover.setOnCheckedChangeListener(this);
-		playerProgress.setOnProgressChangeListener(new OnProgressChangeListener() {
-			
-			@Override
-			public void onStopTrackingTouch(DiscreteSeekBar seekBar) { }
-			
-			@Override
-			public void onStartTrackingTouch(DiscreteSeekBar seekBar) { }
-			
-			@Override
-			public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-				if (fromUser) {
-					try {
-						player.seekTo(value);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		scrollView.setOnTouchListener(new OnTouchListener() {
-	
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				closeEditViews();
-				return v.performClick();
-			}
-			
-		});
 	}
 
 	/**
@@ -847,5 +785,68 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			public void error(String error) {
 			}
 		});
+	}
+	
+	private class ProgressUpdater extends AsyncTask<Long, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			download.setClickable(false);
+			download.setOnClickListener(null);
+			download.setIndeterminateProgressMode(true);
+			download.setProgress(50);
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected Void doInBackground(Long... params) {
+			if (isDestroy) return null;
+			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+			int progress = 0;
+			do {		
+				if (isCancelled()) return null;
+				if (params[0] != -1) {
+					Cursor c = manager.query(new DownloadManager.Query().setFilterById(params[0]));
+					if (c.moveToNext()) {
+						int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+						int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+						int size = c.getInt(sizeIndex);
+						int downloaded = c.getInt(downloadedIndex);
+						if (size != -1 && size != 0) {
+							progress = downloaded * 100 / size;
+						} else {
+							progress = downloaded * 100 / DEFAULT_SONG;
+						}
+						publishProgress(progress);
+					}
+					c.close();
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			} while (progress < 100);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void params) {
+			download.setProgress(isCancelled() ? 0 : 100);
+		}
+		
+		@Override
+		protected void onCancelled() {
+			this.cancel(true);
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			if (isCancelled()) return;
+			int progress = values[0];
+			download.setIndeterminateProgressMode(false);
+			download.setProgress(progress > 0 ? progress : 1);
+		}
 	}
 }
