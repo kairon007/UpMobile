@@ -771,11 +771,11 @@ public abstract class OnlineSearchView extends View {
 			String artist = song.getArtist().replace("&#039;", "'");
 			song.setTitle(title);
 			song.setArtist(artist);
-			builder.setLine1(title,
+			builder.setLine1(artist,
 					Util.getFormatedStrDuration(song.getDuration()))
 					.setLongClickable(false)
 					.setExpandable(false)
-					.setLine2(artist)
+					.setLine2(title)
 					.setId(position)
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
 					.setButtonVisible(showDownloadButton() ? true : false);

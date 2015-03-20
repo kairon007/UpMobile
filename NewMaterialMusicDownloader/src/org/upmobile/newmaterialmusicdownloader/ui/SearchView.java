@@ -65,6 +65,11 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	protected Nulldroid_Advertisment getAdvertisment() {
 		return null;
 	}
+	
+	@Override
+	protected int getIdCustomView() {
+		return R.layout.row_online_search;
+	}
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
