@@ -248,6 +248,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
 		editor.commit();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
+		LibraryFragment libraryFragment = (LibraryFragment)getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+		if (null != libraryFragment) {
+			libraryFragment.updateLibrary();
+		}
 	}
 
 	public void setDraverEnabled(boolean isVisibleDraver) {

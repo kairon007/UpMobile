@@ -212,6 +212,11 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		//Animate ListView in childs, if need
 	}
 	
+	public void updateLibrary() {
+		adapter.clear();
+		fillAdapter(querySong());
+	}
+	
 	private class CheckRemovedFiles extends AsyncTask<Void, Void, ArrayList<MusicData>> {
 		
 
@@ -244,6 +249,5 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			}
 			super.onPostExecute(result);
 		}
-		
 	}
 }
