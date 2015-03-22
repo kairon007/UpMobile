@@ -19,6 +19,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -44,6 +46,7 @@ import android.widget.Toast;
 
 public abstract class BasePlaylistView extends View {
 
+	private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 	private final static String EXTERNAL = "external";
 	private ViewGroup view;
 	private ListView listView;
@@ -87,12 +90,30 @@ public abstract class BasePlaylistView extends View {
 	private ArrayList<PlaylistData> playlists;
 	private PlaybackService playbackService;
 	private AlertDialog dialog;
+	
+	private OnSharedPreferenceChangeListener sharedPreferenceListener = new OnSharedPreferenceChangeListener() {
+		
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+			if (key.contains(PREF_DIRECTORY_PREFIX)) {
+				updatePlaylist();
+			}
+		}
+	};
 
 	public BasePlaylistView(LayoutInflater inflater) {
 		super(inflater.getContext());
 		init(inflater);
 	}
-
+	
+	public void onResume() {
+		MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
+	}
+	
+	public void onPause () {
+		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferenceListener);
+	}
+	
 	private void init(LayoutInflater inflater) {
 		new Thread(new Runnable() {
 
@@ -203,6 +224,7 @@ public abstract class BasePlaylistView extends View {
 			playlistData.setSongs(getSongsFromPlaylist(playlistData.getId()));
 		}
 		expandableAdapter.setData(playlists);
+		expandableAdapter.notifyDataSetChanged();
 	}
 
 	private void initListeners() {
