@@ -139,6 +139,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 	@Override
 	protected void startSong(AbstractSong abstractSong) {
+		((MainActivity) getContext()).showPlayerElement(true);
 		((MainActivity) getContext()).startSong(abstractSong);
 	}
 	
