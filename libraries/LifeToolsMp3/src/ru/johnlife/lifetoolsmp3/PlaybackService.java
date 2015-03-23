@@ -776,6 +776,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		    .setShowActionsInCompactView(2))
 		    .setContentTitle(playingSong.getTitle())
 		    .setContentText(playingSong.getArtist())
+		    .setContentIntent(pendingIntent)
 		    .setLargeIcon(cover)
 		    .build();
 			startForeground(NOTIFICATION_ID, notification);
