@@ -231,7 +231,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			int pos = arrayPlayback.indexOf(playingSong);
 			arrayPlayback.remove(song);
 			if (arrayPlayback.isEmpty()) {
-				reset();
+				stopPressed();
 				return;
 			}
 			if (pos >= 0) {
