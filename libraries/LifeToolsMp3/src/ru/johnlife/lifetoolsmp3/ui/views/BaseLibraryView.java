@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -83,7 +82,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
 	
-	protected void onPause() {
+	public void onPause() {
 		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sPrefListener);
 		if (null != checkRemovedFiles) {
 			checkRemovedFiles.cancel(true);
@@ -91,7 +90,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		}
 	}
 	
-	protected void onResume() {
+	public void onResume() {
 		MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sPrefListener);
 		checkRemovedFiles = new CheckRemovedFiles(adapter.getAll());
 		if (checkRemovedFiles.getStatus() == Status.RUNNING) return;
@@ -188,8 +187,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	
 	@Override
 	public boolean handleMessage(Message msg) {
-		ArrayList<MusicData> list = ((ArrayList<MusicData>) msg.obj);
 		if (msg.what == MSG_FILL_ADAPTER) {
+			ArrayList<MusicData> list = ((ArrayList<MusicData>) msg.obj);
 			if (adapter.isEmpty()) {
 				adapter = getAdapter();
 				adapter.add(list);
@@ -198,6 +197,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 				adapter.setDoNotifyData(false);
 				adapter.clear();
 				adapter.add(list);
+				adapter.notifyDataSetChanged();
 			}
 		} 
 		return true;
@@ -205,11 +205,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 
 	protected void animateListView(ListView listView, BaseAbstractAdapter<MusicData> adapter) {
 		//Animate ListView in childs, if need
-	}
-	
-	public void updateLibrary() {
-		adapter.clear();
-		fillAdapter(querySong());
 	}
 	
 	private class CheckRemovedFiles extends AsyncTask<Void, Void, ArrayList<MusicData>> {
