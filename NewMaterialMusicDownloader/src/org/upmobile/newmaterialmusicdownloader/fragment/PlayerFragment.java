@@ -20,6 +20,7 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
@@ -40,24 +41,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 import com.csform.android.uiapptemplate.view.cb.CheckBox;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 import com.csform.android.uiapptemplate.view.spb.SmoothProgressBar;
@@ -72,9 +68,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private PlaybackService player;
 	private DownloadListener downloadListener;
 
-	private PullToZoomScrollView scrollView;
 	private View contentView;
 
+	private NotifyingScrollView scrollView;
 	private CircularProgressButton download;
 	private UndoBar undo;
 	private LinearLayout artistBox;
@@ -116,10 +112,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		scrollView = new PullToZoomScrollView(getActivity());
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
 		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-		scrollView.setContentContainerView(contentView);
 		init();
 		setListeners();
 		player = PlaybackService.get(getActivity());
@@ -132,10 +126,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
 		changePlayPauseView(prepared && !player.isPlaying());
-		return scrollView;
+		return contentView;
 	}
 	
 	private void init() {
+		scrollView = (NotifyingScrollView)contentView.findViewById(R.id.scroll_view);
+		scrollView.setImageResource(R.id.scrollable_cover);
+//		scrollView.enableClickToScroll(R.id.fake_view);
 		play = (ImageView) contentView.findViewById(R.id.playpause);
 		previous = (ImageView) contentView.findViewById(R.id.prev);
 		forward = (ImageView) contentView.findViewById(R.id.next);
@@ -196,15 +193,15 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				}
 			}
 		});
-		scrollView.setOnTouchListener(new OnTouchListener() {
-	
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				closeEditViews();
-				return v.performClick();
-			}
-			
-		});
+//		scrollView.setOnTouchListener(new OnTouchListener() {
+//	
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				closeEditViews();
+//				return v.performClick();
+//			}
+//			
+//		});
 	}
 	
 	@Override
@@ -683,24 +680,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
-		ImageView imageView = new ImageView(getActivity());
-		imageView.setPadding(8, 8, 8, 8);
-		imageView.setScaleType(ScaleType.FIT_CENTER);
 		if (null != bitmap) {
-			imageView.setImageBitmap(bitmap);
+			scrollView.setImageBitmap(bitmap);
 		} else {
-			imageView.setImageResource(R.drawable.big_album);
+			scrollView.setImageBitmap(R.drawable.big_album);
 		}
-		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
-		int width = display.getWidth(); 
-		int height = display.getHeight();
-		int coverHeight = height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 72);
-		int minHeight = coverHeight > width ? width : coverHeight;
-		imageView.setMinimumHeight(minHeight);
-		imageView.setMinimumWidth(minHeight);
-		imageView.setMaxHeight(minHeight + Util.dpToPx(getActivity(), 8)); 
-		imageView.setMaxWidth(minHeight + Util.dpToPx(getActivity(), 8));
-		scrollView.setZoomView(imageView);
 	}
 	
 	private void setCheckBoxState(boolean state) {
