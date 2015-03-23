@@ -50,6 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
+                android:fontFamily="sans-serif"
                 android:inputType="textNoSuggestions"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
@@ -72,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
-                android:fontFamily="sans-serif-condensed"
+                android:fontFamily="sans-serif"
                 android:inputType="textNoSuggestions"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
@@ -95,6 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
+                android:fontFamily="sans-serif"
                 android:inputType="textNoSuggestions"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
@@ -120,7 +122,6 @@
                     android:paddingLeft="8dp"
                     android:text="@string/edit_mp3_use_album_cover"
                     android:textSize="@dimen/dialog_default_text_size" />
-
             </LinearLayout>
         </LinearLayout>
 
