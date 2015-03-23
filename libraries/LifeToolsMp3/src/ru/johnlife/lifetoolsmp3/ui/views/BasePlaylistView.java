@@ -461,12 +461,7 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void applyFilter(String srcFilter) {
-		if (expandableAdapter.isEmpty()) {
-			String message =  getResources().getString(R.string.playlist_is_empty);
-			showMessage(getContext(), message);
-		} else {
-			expandableAdapter.getFilter().filter(srcFilter);
-		}
+		expandableAdapter.getFilter().filter(srcFilter);
 	}
 	
 	public void clearFilter() {

@@ -229,6 +229,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		@Override
 		protected void publishResults(CharSequence constraint, final FilterResults results) {
 			items = (ArrayList<T>) results.values;
+			if (null == items) return;
 			if (results.count == 0) {
             	notifyDataSetInvalidated();
             } else {

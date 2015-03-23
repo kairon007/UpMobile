@@ -129,13 +129,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	}
 	
 	public void applyFilter(String srcFilter) {
-		if (adapter.isEmpty()) {
-			String message =  getResources().getString(R.string.library_empty);
-			showMessage(message);
-		} else {
-			adapter.getFilter().filter(srcFilter);
-			filterQuery = srcFilter;
-		}
+		adapter.getFilter().filter(srcFilter);
+		filterQuery = srcFilter;
 	}
 	
 	public void clearFilter() {
