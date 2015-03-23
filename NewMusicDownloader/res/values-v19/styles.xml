@@ -17,10 +17,15 @@
         <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
 
+    <style name="AppBaseTheme.Light" parent="Theme.AppCompat.Light">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
+
     <style name="TextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
-    
+
     <style name="EditTextStyle" parent="@style/Widget.AppCompat.EditText">
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>

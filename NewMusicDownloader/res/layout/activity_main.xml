@@ -9,8 +9,8 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="?attr/mainBackground"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:background="?attr/mainBackground" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,9 +20,9 @@
                 android:id="@+id/fake_view"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:visibility="gone"
-                android:layout_alignParentBottom="true" />
-            
+                android:layout_alignParentBottom="true"
+                android:visibility="gone" />
+
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="match_parent"
@@ -34,8 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_alignParentBottom="true"
-                android:visibility="gone"
-                layout="@layout/mini_player" />
+                layout="@layout/mini_player"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <fragment

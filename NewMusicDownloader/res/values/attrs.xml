@@ -9,6 +9,7 @@
         <attr name="searchBackgroundColor" format="reference" />
         <attr name="mainBackground" format="reference" />
         <attr name="sectionBackground" format="reference" />
+        <attr name="searchShadow" format="reference" />
         <attr name="blackWhite" format="reference" />
         <attr name="groupIndicator" format="reference" />
         <attr name="mediaPlay" format="reference" />

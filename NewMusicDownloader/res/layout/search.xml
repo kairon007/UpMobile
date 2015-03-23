@@ -5,15 +5,15 @@
 
     <RelativeLayout
         android:id="@+id/touch_interceptor"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" >
 
             <include
                 android:layout_width="match_parent"
@@ -49,7 +49,7 @@
         <LinearLayout
             android:id="@+id/search_scroll"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
+            android:layout_height="100dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:orientation="vertical"
@@ -73,7 +73,8 @@
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1" >
+                        android:layout_weight="1"
+                        android:paddingLeft="14dp" >
 
                         <EditText
                             android:id="@+id/text"
@@ -85,7 +86,8 @@
                             android:lines="1"
                             android:paddingRight="50dp"
                             android:singleLine="true"
-                            android:textColor="?attr/textViewColor" />
+                            android:textColor="?attr/textViewColor"
+                            android:textColorHint="?attr/textViewColor" />
 
                         <ImageButton
                             android:id="@+id/clear"
@@ -119,9 +121,15 @@
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:background="@drawable/selectable_item_bg"
                     android:popupBackground="?attr/searchBackgroundColor"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="?attr/searchShadow" />
         </LinearLayout>
     </RelativeLayout>
 
