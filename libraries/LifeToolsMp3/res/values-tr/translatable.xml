@@ -66,5 +66,6 @@
 	<string name="playlist_cannot_be_empty">Playlist adı boş olamaz</string>
 	<string name="playlist_is_empty">Playlist boş</string>
 	<string name="no_previous_playlists">Hiçbir önceki Çalma listeleri</string>
+	<string name="select_playlist">seç Playlist</string>
 
 </resources>

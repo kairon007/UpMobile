@@ -69,5 +69,6 @@
 	<string name="playlist_cannot_be_empty">Playlist Name darf nicht leer sein</string>
     <string name="playlist_is_empty">Playlist ist leer</string>
     <string name="no_previous_playlists">Keine Schauplaylists</string>
+    <string name="select_playlist">Wählen Sie die Playlists</string>
 	
 </resources>

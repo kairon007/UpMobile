@@ -69,5 +69,6 @@
 	<string name="playlist_cannot_be_empty">Playlist kan nie leeg wees</string>
 	<string name="playlist_is_empty">Playlist is leeg</string>
 	<string name="no_previous_playlists">Geen vorige Playlists</string>
+	<string name="select_playlist">Kies Playlist</string>
 
 </resources>

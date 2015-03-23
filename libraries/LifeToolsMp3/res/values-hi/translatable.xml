@@ -67,5 +67,6 @@
 	<string name="playlist_cannot_be_empty">प्लेलिस्ट का नाम रिक्त नहीं हो सकता</string>
 	<string name="playlist_is_empty">प्लेलिस्ट खाली है</string>
 	<string name="no_previous_playlists">कोई पिछला प्लेलिस्ट</string>
+	<string name="select_playlist">चयन करें प्लेलिस्ट</string>
 
 </resources>

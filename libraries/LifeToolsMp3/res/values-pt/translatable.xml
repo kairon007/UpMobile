@@ -68,5 +68,6 @@
 	<string name="playlist_is_empty">Lista está vazia</string>
 	
 	<string name="no_previous_playlists">Não há listas anteriores</string>
+	<string name="select_playlist">Selecionar Playlist</string>
 
 </resources>

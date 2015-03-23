@@ -69,5 +69,6 @@
 	<string name="playlist_cannot_be_empty">Імя спісу прайгравання не можа быць пустым</string>
 	<string name="playlist_is_empty">Плэйліст пусты</string>
 	<string name="no_previous_playlists">Няма папярэдніх плэйлістоў</string>
+	<string name="select_playlist">Выбраць плэйліст</string>
 
 </resources>

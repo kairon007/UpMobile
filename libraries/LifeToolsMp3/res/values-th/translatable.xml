@@ -67,5 +67,6 @@
 	<string name="playlist_cannot_be_empty">ชื่อเพลย์ลิสต้องไม่ว่างเปล่า</string>
 	<string name="playlist_is_empty">เพลย์ลิสเป็นที่ว่างเปล่า</string>
 	<string name="no_previous_playlists">ไม่มีรายการที่จะเล่นก่อนหน้านี้</string>
+	<string name="select_playlist">เลือกเพลย์ลิส</string>
 
 </resources>

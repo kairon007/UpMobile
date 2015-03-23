@@ -69,5 +69,6 @@
 	<string name="playlist_cannot_be_empty">اسم قائمة التشغيل لا يمكن أن يكون فارغا</string>
 	<string name="playlist_is_empty">قائمة التشغيل فارغ</string>
 	<string name="no_previous_playlists">لا قوائم التشغيل السابقة</string>
+	<string name="select_playlist">حدد قائمة التشغيل</string>
 
 </resources>
