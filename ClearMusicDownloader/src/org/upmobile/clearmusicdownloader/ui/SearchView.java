@@ -173,4 +173,9 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			}
 		});
 	}
+	
+	@Override
+	protected int getIdCustomView() {
+		return R.layout.row_online_search;
+	}
 }
