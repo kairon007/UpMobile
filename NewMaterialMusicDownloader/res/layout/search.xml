@@ -27,15 +27,15 @@
             android:id="@+id/progress"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?attr/colorAccentApp"
             android:layout_gravity="center"
+            android:background="?attr/colorAccentApp"
             android:visibility="gone" />
     </FrameLayout>
 
     <LinearLayout
         android:id="@+id/search_scroll"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
+        android:layout_height="98dp"
         android:orientation="vertical"
         android:scrollbars="none" >
 
@@ -43,12 +43,13 @@
             android:id="@+id/choise_engines_layout"
             android:layout_width="match_parent"
             android:layout_height="96dp"
-            android:background="?attr/colorPrimaryApp"
+            android:background="@drawable/search_background"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/colorPrimaryApp"
                 android:divider="@drawable/layout_divider"
                 android:orientation="horizontal"
                 android:paddingLeft="15dp"
@@ -67,10 +68,10 @@
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:lines="1"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white"
                         android:paddingRight="56dp"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white" />
 
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                         android:layout_width="48dp"
@@ -114,9 +115,20 @@
                 android:id="@+id/choise_engines"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="?attr/colorPrimaryApp"
                 android:paddingLeft="@dimen/material_edges_padding"
                 android:paddingRight="@dimen/material_edges_padding" />
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/search_background" >
+
+        </FrameLayout>
+
     </LinearLayout>
 
 </FrameLayout>
