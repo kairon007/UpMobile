@@ -28,7 +28,6 @@ import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar.OnProgressChangeListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.SimpleVisualizerView;
-import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.VisualizerViewLine;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -307,7 +306,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (null == mVisualizer) {
 			final SimpleVisualizerView visualizerView = new SimpleVisualizerView(getActivity()); 
 			visualizerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-			visualizerView.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorAccentApp)));
 			visualizerView.setAlpha(125);
 			((LinearLayout) contentView.findViewById(R.id.visualiser)).addView(visualizerView);
 			try {

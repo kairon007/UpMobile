@@ -12,7 +12,6 @@ public class NotifyingScrollView extends ScrollView {
 	
 	private ImageView image;
 	private OnScrollChangedListener onScrollChangedListener;
-	private final int maxOverscroll = Util.dpToPx(getContext(), 180);
 
 	public interface OnScrollChangedListener {
 		void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt);
@@ -30,11 +29,8 @@ public class NotifyingScrollView extends ScrollView {
 		super(context, attrs, defStyle);
 	}
 	
-	@Override
-	protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX,
-			int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-		return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX,
-				maxOverscroll, isTouchEvent);
+	private void init() {
+		
 	}
 	
 	@Override
@@ -69,15 +65,5 @@ public class NotifyingScrollView extends ScrollView {
 			throw new IllegalStateException(getClass().getSimpleName() + " - call setImageResource(int resource) first!");
 		}
 		image.setImageResource(resource);
-	}
-	
-	public void enableClickToScroll(int fakeViewID) {
-		((View)getParent()).findViewById(fakeViewID).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				NotifyingScrollView.this.overScrollBy(0, 0 - maxOverscroll, 0, 0, 0, 0, 0, 0, true);
-			}
-		});
 	}
 }
