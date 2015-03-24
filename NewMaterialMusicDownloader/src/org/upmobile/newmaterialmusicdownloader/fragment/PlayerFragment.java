@@ -27,6 +27,7 @@ import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar.OnProgressChangeListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.SimpleVisualizerView;
 import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.VisualizerViewLine;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -304,21 +305,22 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	private void setupVisualizerFxAndUI() {
 		if (null == mVisualizer) {
-			final VisualizerViewLine bar = new VisualizerViewLine(getActivity());
-			bar.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorAccentApp)));
-			bar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-			((LinearLayout) contentView.findViewById(R.id.visualiser)).addView(bar);
+			final SimpleVisualizerView visualizerView = new SimpleVisualizerView(getActivity()); 
+			visualizerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+			visualizerView.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorAccentApp)));
+			visualizerView.setAlpha(125);
+			((LinearLayout) contentView.findViewById(R.id.visualiser)).addView(visualizerView);
 			try {
 				mVisualizer = new Visualizer(player.getAudioSessionId());
 				mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
 				mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
 					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-						bar.updateVisualizer(bytes);
 					}
 
 					public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+						visualizerView.updateVisualizer(bytes);
 					}
-				}, Visualizer.getMaxCaptureRate() / 2, true, false);
+				}, Visualizer.getMaxCaptureRate() / 2, false, true);
 				mVisualizer.setEnabled(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -336,7 +338,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				if (player.isPrepared()) {
 					int current = player.getCurrentPosition();
 					playerProgress.setProgress(current);
-//					playerCurrTime.setText(Util.getFormatedStrDuration(current));
 					playerCurrTime.setTime(Util.getFormatedStrDuration(current));
 				}
 				playerProgress.postDelayed(this, 1000);
@@ -496,8 +497,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
-//		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
-//		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
 		playerTotalTime.setTime(Util.getFormatedStrDuration(song.getDuration()));
 		playerCurrTime.setTime(Util.getFormatedStrDuration(progress));
 	}

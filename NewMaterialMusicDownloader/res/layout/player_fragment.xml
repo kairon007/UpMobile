@@ -71,7 +71,7 @@
                 <LinearLayout
                     android:id="@+id/visualiser"
                     android:layout_width="match_parent"
-                    android:layout_height="24dp"
+                    android:layout_height="48dp"
                     android:orientation="vertical" >
                 </LinearLayout>
 
