@@ -23,9 +23,11 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
+import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar.OnProgressChangeListener;
-import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.VisualiserViewBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.VisualizerViewLine;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -99,8 +101,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private TextView tvArtist;
 	private EditText etTitle;
 	private EditText etArtist;
-	private TextView playerCurrTime;
-	private TextView playerTotalTime;
+	private DigitalClockView  playerCurrTime;
+	private DigitalClockView  playerTotalTime;
 	private DiscreteSeekBar playerProgress;
 	private SmoothProgressBar wait;
 
@@ -148,13 +150,18 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
 		tvArtist = (TextView) contentView.findViewById(R.id.artistName);
 		etArtist = (EditText) contentView.findViewById(R.id.artistNameEdit);
-		playerCurrTime = (TextView) contentView.findViewById(R.id.trackTime);
-		playerTotalTime = (TextView) contentView.findViewById(R.id.trackTotalTime);
+		playerCurrTime = (DigitalClockView ) contentView.findViewById(R.id.trackTime);
+		playerTotalTime = (DigitalClockView ) contentView.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) contentView.findViewById(R.id.lyrics_text);
 		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
+		DFont font = new DFont(Util.dpToPx(getActivity(), 12), 3);
+		font.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondaryApp)));
+		playerCurrTime.setFont(font);
+		playerTotalTime.setFont(font); 
+		playerProgress.setUseAnimateTextView(true);
 		undo = new UndoBar(getActivity());
 		stop.setColorFilter(primaryColor);
 		play.setColorFilter(primaryColor);
@@ -297,7 +304,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	private void setupVisualizerFxAndUI() {
 		if (null == mVisualizer) {
-			final VisualiserViewBar bar = new VisualiserViewBar(getActivity());
+			final VisualizerViewLine bar = new VisualizerViewLine(getActivity());
 			bar.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorAccentApp)));
 			bar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			((LinearLayout) contentView.findViewById(R.id.visualiser)).addView(bar);
@@ -329,7 +336,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				if (player.isPrepared()) {
 					int current = player.getCurrentPosition();
 					playerProgress.setProgress(current);
-					playerCurrTime.setText(Util.getFormatedStrDuration(current));
+//					playerCurrTime.setText(Util.getFormatedStrDuration(current));
+					playerCurrTime.setTime(Util.getFormatedStrDuration(current));
 				}
 				playerProgress.postDelayed(this, 1000);
 			} catch (Exception e) {
@@ -488,8 +496,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
-		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
-		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
+//		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
+//		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
+		playerTotalTime.setTime(Util.getFormatedStrDuration(song.getDuration()));
+		playerCurrTime.setTime(Util.getFormatedStrDuration(progress));
 	}
 
 	private void settingPlayerProgress() {
@@ -539,7 +549,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		play.setClickable(isClickable);
 		stop.setClickable(isClickable);
 		if (!isClickable) {
-			playerCurrTime.setText("0:00");
+//			playerCurrTime.setText("0:00");
+			playerCurrTime.setTime("0:00");
 		}
 	}
 

@@ -74,6 +74,10 @@ public class PopupIndicator {
     public void setValue(CharSequence value) {
         mPopupView.mMarker.setValue(value);
     }
+    
+    public void setUseAnimateTextView (boolean flag) {
+    	mPopupView.mMarker.setUseAnimateTextView(flag);
+    }
 
     public boolean isShowing() {
         return mShowing;

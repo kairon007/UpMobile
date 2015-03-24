@@ -257,6 +257,10 @@ public class DiscreteSeekBar extends View {
         setNumericTransformer(new DefaultNumericTransformer());
 
     }
+    
+    public void setUseAnimateTextView (boolean flag) {
+    	mIndicator.setUseAnimateTextView(flag);
+    }
 
     /**
      * Sets the current Indicator formatter string
