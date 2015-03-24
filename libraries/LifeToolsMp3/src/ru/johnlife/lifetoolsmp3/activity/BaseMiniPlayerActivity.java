@@ -66,7 +66,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			@Override
 			public void run() {
 				setListeners();
-				checkOnStart();
+				checkOnStart(true);
 			}
 		}).start();
 		super.onStart();
@@ -172,16 +172,18 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 		});
 	}
 	
-	private void checkOnStart() {
+	protected void checkOnStart(final boolean showMiniPlayer) {
 		if (service.isPlaying() || service.isPaused()) {
 			runOnUiThread(new Runnable() {
 				
 				@Override
 				public void run() {
-					isMiniPlayerPrepared = true;
-					BaseMiniPlayerActivity.this.song = service.getPlayingSong();
-					showMiniPlayer(true);
-					setPlayPauseMini(!service.isPlaying());
+					song = service.getPlayingSong();
+					if (showMiniPlayer) {
+						isMiniPlayerPrepared = true;
+						showMiniPlayer(true);
+						setPlayPauseMini(!service.isPlaying());
+					}
 				}
 			});
 		}

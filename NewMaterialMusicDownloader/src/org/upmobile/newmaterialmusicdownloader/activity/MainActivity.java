@@ -407,5 +407,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	protected void setSearchViewVisibility(String fragmentName) {
 		isVisibleSearchView = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
 	}
-
+	
+	@Override
+	protected void checkOnStart(boolean showMiniPlayer) {
+		super.checkOnStart(PLAYER_FRAGMENT != currentFragmentId);
+	}
+	
 }
