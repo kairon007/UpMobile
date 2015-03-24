@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/org.upmobile.newmaterialmusicdownloader"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:layout_gravity="center"
@@ -73,8 +73,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    app:rippleRoundedCorners="24dp"
-              		app:rippleDuration="800"  >
+                    app:rippleDuration="800"
+                    app:rippleRoundedCorners="24dp" >
 
                     <ImageView
                         android:id="@+id/mini_player_download"
@@ -96,16 +96,21 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
-                    app:rippleRoundedCorners="24dp"
-              		app:rippleDuration="800" >
+                    app:rippleDuration="800"
+                    app:rippleRoundedCorners="24dp" >
 
-                    <ImageView
+                    <ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView
                         android:id="@+id/mini_player_play_pause"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_file_download_grey"
-                        android:visibility="gone" />
+                        android:layout_centerInParent="true"
+                        android:clickable="true"
+                        android:foreground="?android:selectableItemBackground"
+                        android:stateListAnimator="@anim/button_elevation"
+                        app:mainColor="@android:color/transparent"
+                        app:colorButton="?attr/colorPrimaryApp"
+                        app:pauseBackground="@android:color/transparent"
+                        app:playBackground="@android:color/transparent" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
                 <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate

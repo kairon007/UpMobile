@@ -36,7 +36,6 @@
         <!-- Specifies whether or not to draw a shadow around your circular image. -->
         <attr name="shadow" format="boolean"></attr>
     </declare-styleable>
-    
     <declare-styleable name="CustomCircularImageViewTheme">
         <attr name="circularImageViewStyle" format="reference" />
     </declare-styleable>
@@ -58,4 +57,15 @@
         <attr name="dsb_indicatorFormatter" format="string|reference" />
         <attr name="dsb_rippleColor" format="color|reference" />
     </declare-styleable>
+
+    <declare-styleable name="PlayPauseButton">
+        <attr name="pauseBarWidth" format="dimension" />
+        <attr name="pauseBarHeight" format="dimension" />
+        <attr name="pauseBarDistance" format="dimension" />
+        <attr name="colorButton" format="color|reference" />
+        <attr name="mainColor" format="color|reference" />
+        <attr name="playBackground" format="color|reference" />
+        <attr name="pauseBackground" format="color|reference" />
+    </declare-styleable>
+
 </resources>

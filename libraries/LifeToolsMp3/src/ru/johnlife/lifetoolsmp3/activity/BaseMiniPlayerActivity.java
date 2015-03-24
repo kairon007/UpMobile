@@ -9,13 +9,12 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -147,6 +146,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 					service.pause();
 				} else {
 					service.play();
+				}
+				if (playPause.getClass() == PlayPauseView.class) {
+					((PlayPauseView) playPause).toggle();
 				}
 			}
 		});
@@ -305,7 +307,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	 * @param playPayse true - image play, false - image pause
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
-		((ImageButton) playPause).setImageResource(playPayse ? Util.getResIdFromAttribute(this, R.attr.miniPlayerPlay) : Util.getResIdFromAttribute(this, R.attr.miniPlayerPause));
+		if (playPause.getClass() != PlayPauseView.class) {
+			((ImageButton) playPause).setImageResource(playPayse ? Util.getResIdFromAttribute(this, R.attr.miniPlayerPlay) : Util.getResIdFromAttribute(this, R.attr.miniPlayerPause));
+		}
 	}
 	
 	private void downloadSong() {
