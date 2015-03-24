@@ -25,6 +25,7 @@ import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar.OnProgressChangeListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.VisualiserViewBar;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -32,6 +33,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.audiofx.Visualizer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -108,6 +110,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private int primaryColor;
 
 	private boolean isDestroy;
+	private Visualizer mVisualizer;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -259,6 +262,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).setDraverEnabled(false);
 		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
+		setupVisualizerFxAndUI();
 		super.onResume();
 	}
 	
@@ -285,9 +289,37 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			undo.clear();
 			clearCover();
 		}
+		if(null != mVisualizer) {
+			mVisualizer.release();
+		}
 		super.onPause();
 	}
+	
+	private void setupVisualizerFxAndUI() {
+		if (null == mVisualizer) {
+			final VisualiserViewBar bar = new VisualiserViewBar(getActivity());
+			bar.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorAccentApp)));
+			bar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+			((LinearLayout) contentView.findViewById(R.id.visualiser)).addView(bar);
+			try {
+				mVisualizer = new Visualizer(player.getAudioSessionId());
+				mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+				mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+						bar.updateVisualizer(bytes);
+					}
 
+					public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+					}
+				}, Visualizer.getMaxCaptureRate() / 2, true, false);
+				mVisualizer.setEnabled(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+				((LinearLayout) contentView.findViewById(R.id.visualiser)).setVisibility(View.GONE);
+			}
+		}
+	}
+	
 	private Runnable progressAction = new Runnable() {
 
 		@Override

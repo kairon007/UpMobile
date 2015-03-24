@@ -684,8 +684,15 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 
 	public void setOnErrorListener(OnErrorListener errorListener) {
 		this.errorListener = errorListener;
-		
 	}
+	
+	public int getAudioSessionId() {
+		if (null != player) {
+			return player.getAudioSessionId();
+		} else {
+			return 0;
+		}
+	} 
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {

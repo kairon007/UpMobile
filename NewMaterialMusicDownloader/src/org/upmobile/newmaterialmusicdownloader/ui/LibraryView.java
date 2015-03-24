@@ -62,4 +62,9 @@ public class LibraryView extends BaseLibraryView {
 		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
 		((DynamicListView)listView).enableSimpleSwipeUndo();
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
 }
