@@ -74,9 +74,12 @@
                         android:textColorHint="@android:color/white" />
 
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                        style="@style/RippleStyleCircle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
+                        app:rippleRoundedCorners="24dp"
+                		app:rippleDuration="800"
                         app:rippleColor="?attr/colorButtonNormal" >
 
                         <ImageButton
@@ -90,8 +93,11 @@
                 </FrameLayout>
 
                 <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                    style="@style/RippleStyleCircle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    app:rippleRoundedCorners="24dp"
+                	app:rippleDuration="800"
                     app:rippleColor="?attr/colorButtonNormal" >
 
                     <ImageButton

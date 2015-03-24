@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/org.upmobile.newmaterialmusicdownloader"
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_item_height"
     android:background="@android:color/white"
     android:divider="@drawable/layout_divider"
     android:dividerPadding="4dp"
     android:orientation="horizontal"
-    android:showDividers="middle" >
+    android:showDividers="middle">
 
     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
         style="@style/RippleStyle"
@@ -115,10 +116,12 @@
             </LinearLayout>
 
             <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                style="@style/RippleStyle"
+                style="@style/RippleStyleCircle"
                 android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical" >
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                app:rippleRoundedCorners="24dp"
+                app:rippleDuration="800">
 
                 <ImageView
                     android:id="@+id/threeDot"
