@@ -107,7 +107,8 @@
                         app:colorButton="?attr/colorPrimaryApp"
                         app:mainColor="@android:color/transparent"
                         app:pauseBackground="@android:color/transparent"
-                        app:playBackground="@android:color/transparent" />
+                        app:playBackground="@android:color/transparent"
+                        app:pauseBarHeight="35" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
                 <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate

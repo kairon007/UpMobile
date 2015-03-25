@@ -59,8 +59,8 @@
     </declare-styleable>
 
     <declare-styleable name="PlayPauseButton">
-        <attr name="pauseBarWidth" format="dimension" />
-        <attr name="pauseBarHeight" format="dimension" />
+        <attr name="pauseBarWidth" format="integer" />
+        <attr name="pauseBarHeight" format="integer" />
         <attr name="pauseBarDistance" format="dimension" />
         <attr name="colorButton" format="color|reference" />
         <attr name="mainColor" format="color|reference" />
