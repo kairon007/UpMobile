@@ -57,6 +57,17 @@
         <attr name="dsb_indicatorFormatter" format="string|reference" />
         <attr name="dsb_rippleColor" format="color|reference" />
     </declare-styleable>
+    
+    <declare-styleable name="FloatingEditText">
+        <attr name="floating_et_hint_scale" format="float"/>
+        <attr name="floating_et_color" format="color"/>
+        <attr name="floating_et_highlighted_color" format="color"/>
+        <attr name="floating_et_error_color" format="color"/>
+        <attr name="floating_et_underline_height" format="dimension"/>
+        <attr name="floating_et_underline_highlighted_height" format="dimension"/>
+        <attr name="floating_et_show_count" format="boolean"/>
+        <attr name="floating_et_char_count" format="integer"/>
+    </declare-styleable>
 
     <declare-styleable name="PlayPauseButton">
         <attr name="pauseBarWidth" format="integer" />

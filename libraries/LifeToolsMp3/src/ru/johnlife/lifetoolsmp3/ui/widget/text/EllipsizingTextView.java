@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui.widget;
+package ru.johnlife.lifetoolsmp3.ui.widget.text;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

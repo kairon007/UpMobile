@@ -51,4 +51,7 @@
     <dimen name="sub_action_button_size">36dp</dimen>
     <dimen name="sub_action_button_content_margin">6dp</dimen>
     
+    <dimen name="floating_edit_text_underline_height">1dp</dimen>
+    <dimen name="floating_edit_text_underline_highlighted_height">2dp</dimen>
+    
 </resources>

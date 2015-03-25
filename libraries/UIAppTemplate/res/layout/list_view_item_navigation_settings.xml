@@ -43,7 +43,7 @@
                 app:typeface="robotoBold" />
         </LinearLayout>
 
-        <ru.johnlife.lifetoolsmp3.ui.widget.EllipsizingTextView
+        <ru.johnlife.lifetoolsmp3.ui.widget.text.EllipsizingTextView
             android:id="@+id/path"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"

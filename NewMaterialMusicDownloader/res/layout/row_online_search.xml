@@ -121,7 +121,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
                 app:rippleRoundedCorners="24dp"
-                app:rippleDuration="800">
+                app:rippleDuration="400">
 
                 <ImageView
                     android:id="@+id/threeDot"

@@ -18,15 +18,14 @@
         android:textSize="16sp"
         tools:text="Dialog message" />
 
-    <EditText
+    <ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText
         android:id="@android:id/edit"
+        style="@style/FloatingEditText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="4dp"
-        android:paddingLeft="4dp"
-        android:maxLength="30"
-        android:singleLine="true"
-        android:textColor="?attr/colorTextSecondaryApp"
-        android:paddingRight="4dp" />
+        android:layout_height="wrap_content"
+        android:hint="Folder name"
+        android:maxLength="31"
+        android:inputType="textFilter|textMultiLine"
+        android:singleLine="true" />
 
 </LinearLayout>

@@ -200,8 +200,14 @@
         <item name="ripplePersistent">false</item>
         <item name="rippleInAdapter">false</item>
     </style>
-    
-    
+	
+    <style name="FloatingEditText">
+        <item name="floating_et_color">?attr/colorTextPrimaryApp</item>
+        <item name="floating_et_highlighted_color">?attr/colorAccentApp</item>
+        <item name="floating_et_error_color">@android:color/holo_red_light</item>
+        <item name="floating_et_char_count">30</item>
+        <item name="floating_et_show_count">true</item>
+    </style>
     
     <style name="CheckBox">
         <item name="checkbox_color">?attr/colorPrimaryApp</item>

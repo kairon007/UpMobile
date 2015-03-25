@@ -52,7 +52,13 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				@Override
 				public void onPositive(MaterialDialog dialog) {
 					EditText input = (EditText) dialog.findViewById(android.R.id.edit);
-					String newDirName = input.getText().toString();
+					String temp = input.getText().toString();
+					String newDirName = "";
+					if (temp.length() > 29) {
+						newDirName =  temp.substring(0, 30);
+					}  else {
+						newDirName = temp;
+					}
 					if (createSubDir(parentFolder.getAbsolutePath() + "/" + newDirName)) {
 						parentFolder = new File(parentFolder.getAbsolutePath() + "/" + newDirName);
 						updateList();

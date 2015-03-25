@@ -35,20 +35,20 @@
     <LinearLayout
         android:id="@+id/search_scroll"
         android:layout_width="match_parent"
-        android:layout_height="98dp"
+        android:layout_height="122dp"
         android:orientation="vertical"
         android:scrollbars="none" >
 
         <LinearLayout
             android:id="@+id/choise_engines_layout"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
+            android:layout_height="120dp"
             android:background="@drawable/search_background"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="72dp"
                 android:background="?attr/colorPrimaryApp"
                 android:divider="@drawable/layout_divider"
                 android:orientation="horizontal"
@@ -60,27 +60,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1" >
 
-                    <EditText
-                        android:id="@+id/text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="@string/hint_main_search"
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
-                        android:lines="1"
-                        android:paddingRight="56dp"
-                        android:singleLine="true"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white" />
-
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                         style="@style/RippleStyleCircle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
-                        app:rippleRoundedCorners="24dp"
-                		app:rippleDuration="800"
-                        app:rippleColor="?attr/colorButtonNormal" >
+                        app:rippleColor="?attr/colorButtonNormal"
+                        app:rippleDuration="800"
+                        app:rippleRoundedCorners="24dp" >
 
                         <ImageButton
                             android:id="@+id/clear"
@@ -88,22 +75,47 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:background="@android:color/transparent"
+                            android:scaleType="centerInside"
                             android:src="@drawable/ic_close_white" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="56dp" >
+
+                        <ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText
+                            android:id="@+id/text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:ems="10"
+                            android:hint="@string/hint_main_search"
+                            android:imeOptions="actionSearch"
+                            android:inputType="textFilter|textMultiLine"
+                            android:textColor="@android:color/white"
+                            app:floating_et_color="@android:color/white"
+                            app:floating_et_error_color="@android:color/holo_red_light"
+                            app:floating_et_highlighted_color="?attr/colorAccentApp" >
+                        </ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText>
+                    </FrameLayout>
                 </FrameLayout>
 
                 <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                     style="@style/RippleStyleCircle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    app:rippleRoundedCorners="24dp"
-                	app:rippleDuration="800"
-                    app:rippleColor="?attr/colorButtonNormal" >
+                    android:layout_gravity="center_vertical"
+                    app:rippleColor="?attr/colorButtonNormal"
+                    app:rippleDuration="800"
+                    app:rippleRoundedCorners="24dp" >
 
                     <ImageButton
                         android:id="@+id/search"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:layout_gravity="center_vertical"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_search_white" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -132,9 +144,7 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="4dp"
             android:background="@drawable/search_background" >
-
         </FrameLayout>
-
     </LinearLayout>
 
 </FrameLayout>
