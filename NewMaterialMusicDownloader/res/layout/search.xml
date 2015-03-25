@@ -60,11 +60,27 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1" >
 
+                    <ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText
+                        android:id="@+id/text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:ems="10"
+                        android:hint="@string/hint_main_search"
+                        android:imeOptions="actionSearch"
+                        android:inputType="textFilter|textMultiLine"
+                        android:textColor="@android:color/white"
+                        app:floating_et_color="@android:color/white"
+                        app:floating_et_error_color="@android:color/holo_red_light"
+                        app:floating_et_highlighted_color="?attr/colorAccentApp" >
+                    </ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText>
+
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                         style="@style/RippleStyleCircle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
+                        android:layout_marginBottom="4dp"
                         app:rippleColor="?attr/colorButtonNormal"
                         app:rippleDuration="800"
                         app:rippleRoundedCorners="24dp" >
@@ -79,27 +95,6 @@
                             android:src="@drawable/ic_close_white" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="56dp" >
-
-                        <ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText
-                            android:id="@+id/text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:ems="10"
-                            android:hint="@string/hint_main_search"
-                            android:imeOptions="actionSearch"
-                            android:inputType="textFilter|textMultiLine"
-                            android:textColor="@android:color/white"
-                            app:floating_et_color="@android:color/white"
-                            app:floating_et_error_color="@android:color/holo_red_light"
-                            app:floating_et_highlighted_color="?attr/colorAccentApp" >
-                        </ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText>
-                    </FrameLayout>
                 </FrameLayout>
 
                 <com.csform.android.uiapptemplate.view.MaterialRippleLayout
