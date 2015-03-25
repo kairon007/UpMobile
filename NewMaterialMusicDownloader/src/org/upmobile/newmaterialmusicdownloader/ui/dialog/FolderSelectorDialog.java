@@ -142,7 +142,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 	public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence s) {
 		if (canGoUp && i == 0) {
 			parentFolder = parentFolder.getParentFile();
-			canGoUp = parentFolder.getParent() != null;
+			canGoUp = !"/".equals(parentFolder.getParent());
 		} else {
 			parentFolder = parentContents[canGoUp ? i - 1 : i];
 			canGoUp = true;

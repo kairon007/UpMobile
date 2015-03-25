@@ -193,6 +193,7 @@
                                 style="@style/TextStyleLine2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:minWidth="48dp"
                                 android:layout_gravity="left"
                                 android:gravity="start" />
 
@@ -201,6 +202,7 @@
                                 style="@style/TextStyleLine2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:minWidth="48dp"
                                 android:layout_gravity="right"
                                 android:gravity="end" />
                         </FrameLayout>
