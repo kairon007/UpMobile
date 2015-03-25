@@ -617,6 +617,7 @@ public class DiscreteSeekBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+    	System.out.println("!!! onTouchEvent");
         if (!isEnabled()) {
             return false;
         }
@@ -624,7 +625,7 @@ public class DiscreteSeekBar extends View {
         switch (actionMasked) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = event.getX();
-                startDragging(event, isInScrollingContainer());
+                startDragging(event, false);
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (isDragging()) {
@@ -638,6 +639,7 @@ public class DiscreteSeekBar extends View {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+            	System.out.println("!!! ACTION_UP && ACTION_CANCEL");
                 stopDragging();
                 break;
         }
