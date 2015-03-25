@@ -75,15 +75,13 @@
                         app:floating_et_highlighted_color="?attr/colorAccent" >
                     </ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText>
 
-                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                        style="@style/RippleStyleCircle"
+                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
                         android:layout_marginBottom="4dp"
-                        app:rippleColor="?attr/colorButtonNormal"
-                        app:rippleDuration="800"
-                        app:rippleRoundedCorners="24dp" >
+                        app:rv_color="?attr/colorAccent"
+                        app:rv_type="doubleRipple" >
 
                         <ImageButton
                             android:id="@+id/clear"
@@ -93,18 +91,16 @@
                             android:background="@android:color/transparent"
                             android:scaleType="centerInside"
                             android:src="@drawable/ic_close_white" />
-                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
-
+                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
                 </FrameLayout>
 
-                <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                    style="@style/RippleStyleCircle"
+                <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
-                    app:rippleColor="?attr/colorButtonNormal"
-                    app:rippleDuration="800"
-                    app:rippleRoundedCorners="24dp" >
+                    app:rv_color="?attr/colorAccent"
+                    app:rv_zoom="true"
+                    app:rv_type="doubleRipple" >
 
                     <ImageButton
                         android:id="@+id/search"
@@ -113,7 +109,7 @@
                         android:layout_gravity="center_vertical"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_search_white" />
-                </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
                 <ImageButton
                     android:id="@+id/downloads"

@@ -18,5 +18,7 @@
     <color name="dsb_ripple_color_list">#77939393</color>
     <color name="dsb_ripple_color_pressed">#77939393</color>
     <color name="dsb_ripple_color_focused">#99999999</color>
+    
+    <color name="rippelColor">#FFFFFF</color>
 
 </resources>
