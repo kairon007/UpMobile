@@ -17,6 +17,7 @@
         style="@style/RippleStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:descendantFocusability="afterDescendants"
         android:clickable="true"
         android:paddingTop="1dp" >
 
@@ -103,12 +104,10 @@
                         android:id="@+id/mini_player_play_pause"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        android:clickable="true"
-                        android:foreground="?android:selectableItemBackground"
+                        android:layout_gravity="center_horizontal|center_vertical"
                         android:stateListAnimator="@anim/button_elevation"
-                        app:mainColor="@android:color/transparent"
                         app:colorButton="?attr/colorPrimaryApp"
+                        app:mainColor="@android:color/transparent"
                         app:pauseBackground="@android:color/transparent"
                         app:playBackground="@android:color/transparent" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>

@@ -13,10 +13,10 @@
         android:layout_height="180dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:background="?attr/colorTextSecondaryApp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:scaleType="centerInside"
-        android:background="?attr/colorTextSecondaryApp"
         android:src="@drawable/default_cover" />
 
     <LinearLayout
@@ -281,12 +281,16 @@
                         android:layout_weight="1"
                         app:rippleRoundedCorners="24dp" >
 
-                        <ImageView
+                        <ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView
                             android:id="@+id/playpause"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_play_arrow_grey" />
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:stateListAnimator="@anim/button_elevation"
+                            app:colorButton="?attr/colorPrimaryApp"
+                            app:mainColor="@android:color/transparent"
+                            app:pauseBackground="@android:color/transparent"
+                            app:playBackground="@android:color/transparent" />
                     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
                     <com.csform.android.uiapptemplate.view.MaterialRippleLayout

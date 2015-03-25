@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView;
+import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
@@ -89,7 +90,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private boolean isUseAlbumCover = false;
 
 	// playback sections
-	private ImageView play;
+	private PlayPauseView play;
 	private ImageView previous;
 	private ImageView forward;
 	private ImageView shuffle;
@@ -101,8 +102,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private TextView tvArtist;
 	private EditText etTitle;
 	private EditText etArtist;
-	private DigitalClockView  playerCurrTime;
-	private DigitalClockView  playerTotalTime;
+	private DigitalClockView playerCurrTime;
+	private DigitalClockView playerTotalTime;
 	private DiscreteSeekBar playerProgress;
 	private SmoothProgressBar wait;
 
@@ -138,7 +139,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		scrollView = (NotifyingScrollView)contentView.findViewById(R.id.scroll_view);
 		scrollView.setImageResource(R.id.scrollable_cover);
 //		scrollView.enableClickToScroll(R.id.fake_view);
-		play = (ImageView) contentView.findViewById(R.id.playpause);
+		play = (PlayPauseView) contentView.findViewById(R.id.playpause);
 		previous = (ImageView) contentView.findViewById(R.id.prev);
 		forward = (ImageView) contentView.findViewById(R.id.next);
 		shuffle = (ImageView) contentView.findViewById(R.id.shuffle);
@@ -164,7 +165,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		playerProgress.setUseAnimateTextView(true);
 		undo = new UndoBar(getActivity());
 		stop.setColorFilter(primaryColor);
-		play.setColorFilter(primaryColor);
 		previous.setColorFilter(primaryColor);
 		forward.setColorFilter(primaryColor);
 		shuffle.setColorFilter(primaryColor);
@@ -557,7 +557,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 *            "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) { 
-		play.setImageResource(!player.isPlaying() ? R.drawable.ic_play_arrow_grey : R.drawable.ic_pause_grey);
+		play.toggle(isPlaying);
 	}
 
 	private void setDownloadButtonState(boolean state) {

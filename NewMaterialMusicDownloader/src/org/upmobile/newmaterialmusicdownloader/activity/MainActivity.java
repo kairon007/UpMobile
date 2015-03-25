@@ -17,6 +17,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView;
+import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -384,9 +385,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	@Override
-	protected void setPlayPauseMini(boolean playPayse) {
-//		((ImageView) findViewById(R.id.mini_player_play_pause)).setColorFilter(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)));
-//		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageResource(playPayse ? R.drawable.ic_play_arrow_grey : R.drawable.ic_pause_grey);
+	protected void setPlayPauseMini(boolean playPause) {
+		((PlayPauseView) findViewById(R.id.mini_player_play_pause)).toggle(playPause);
 	}
 
 	@Override

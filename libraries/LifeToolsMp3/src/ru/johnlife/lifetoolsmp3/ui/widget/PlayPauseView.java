@@ -19,10 +19,9 @@ import android.util.Property;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class PlayPauseView extends FrameLayout {
+public class PlayPauseView extends View {
 	private static final Property<PlayPauseView, Integer> COLOR = new Property<PlayPauseView, Integer>(Integer.class, "color") {
 		@Override
 		public Integer get(PlayPauseView v) {
@@ -121,11 +120,12 @@ public class PlayPauseView extends FrameLayout {
 		mDrawable.draw(canvas);
 	}
 
-	public void toggle() {
+	public void toggle(boolean isPlay) {
 		if (null != mAnimatorSet) {
 			mAnimatorSet.cancel();
 		}
 		mAnimatorSet = new AnimatorSet();
+		mDrawable.setIsPlay(!isPlay);
 		final ObjectAnimator colorAnim = ObjectAnimator.ofInt(this, COLOR, mDrawable.isPlay() ? mPauseBackgroundColor : mPlayBackgroundColor);
 		colorAnim.setEvaluator(new ArgbEvaluator());
 		final Animator pausePlayAnim = mDrawable.getPausePlayAnimator();

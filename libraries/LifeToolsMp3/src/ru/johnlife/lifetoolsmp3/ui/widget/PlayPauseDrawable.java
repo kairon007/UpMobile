@@ -116,7 +116,7 @@ public class PlayPauseDrawable extends Drawable {
 		});
 		return anim;
 	}
-
+	
 	public void setIsPlay(boolean isPlay) {
 		mIsPlay = isPlay;
 	}

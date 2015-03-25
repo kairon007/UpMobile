@@ -148,7 +148,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 					service.play();
 				}
 				if (playPause.getClass() == PlayPauseView.class) {
-					((PlayPauseView) playPause).toggle();
+					((PlayPauseView) playPause).toggle(service.isPlaying());
 				}
 			}
 		});
