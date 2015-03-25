@@ -68,5 +68,8 @@
 	<string name="playlist_is_empty">Playlist ay walang laman</string>
 	<string name="no_previous_playlists">Walang nakaraang Playlist</string>
 	<string name="select_playlist">Pumili ng Playlist</string>
+	
+	<string name="folder_name">Pangalan ng folder</string>
+    <string name="playlist_name">Playlist name</string>
 
 </resources>

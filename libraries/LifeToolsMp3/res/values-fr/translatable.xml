@@ -71,4 +71,7 @@
 	<string name="no_previous_playlists">Aucun Playlists précédentes</string>
 	<string name="select_playlist">Sélectionnez playlist</string>
 	
+	<string name="folder_name">Nom du dossier</string>
+    <string name="playlist_name">Nom de la sélection</string>
+	
 </resources>

@@ -185,6 +185,7 @@ public class PlaylistView extends BasePlaylistView {
 				.titleColorAttr(R.attr.colorPrimary).positiveColorAttr(R.attr.colorPrimary).callback(buttonCallback).autoDismiss(false)
 				.positiveText(R.string.create).negativeText(android.R.string.cancel);
 		dialog = builder.build();
+		((EditText)dialog.getCustomView().findViewById(android.R.id.edit)).setHint(R.string.playlist_name);
 		dialog.show();
 	}
 

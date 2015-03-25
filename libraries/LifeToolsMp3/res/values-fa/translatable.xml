@@ -71,4 +71,7 @@
 	<string name="no_previous_playlists">هیچ لیست پخشی قبلی</string>
 	<string name="select_playlist">انتخاب لیست پخش</string>
 	
+	<string name="folder_name">نام پوشه</string>
+    <string name="playlist_name">نام لیست پخش</string>
+	
 </resources>

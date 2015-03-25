@@ -67,5 +67,8 @@
 	<string name="playlist_is_empty">Playlist boş</string>
 	<string name="no_previous_playlists">Hiçbir önceki Çalma listeleri</string>
 	<string name="select_playlist">seç Playlist</string>
+	
+	<string name="folder_name">Klasör adı</string>
+    <string name="playlist_name">Playlist isim</string>
 
 </resources>

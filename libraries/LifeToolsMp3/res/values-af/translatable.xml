@@ -70,5 +70,8 @@
 	<string name="playlist_is_empty">Playlist is leeg</string>
 	<string name="no_previous_playlists">Geen vorige Playlists</string>
 	<string name="select_playlist">Kies Playlist</string>
+	
+	<string name="folder_name">Folder name</string>
+    <string name="playlist_name">Playlist name</string>
 
 </resources>

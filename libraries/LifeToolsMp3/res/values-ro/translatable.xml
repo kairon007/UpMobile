@@ -68,5 +68,8 @@
 	<string name="playlist_is_empty">Playlist este gol</string>
 	<string name="no_previous_playlists">Nu Liste de redare anterioare</string>
 	<string name="select_playlist">Selectați Playlist</string>
+	
+	<string name="folder_name">Nume folder</string>
+    <string name="playlist_name">Numele Playlist</string>
 
 </resources>

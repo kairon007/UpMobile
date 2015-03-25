@@ -70,5 +70,8 @@
 	<string name="playlist_is_empty">Playlist είναι άδειο</string>
 	<string name="no_previous_playlists">Δεν υπάρχουν προηγούμενες λίστες αναπαραγωγής</string>
 	<string name="select_playlist">Επιλέξτε playlist</string>
+	
+	<string name="folder_name">όνομα φακέλου</string>
+    <string name="playlist_name">Το όνομα λίστας αναπαραγωγής</string>
 
 </resources>

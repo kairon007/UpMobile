@@ -78,6 +78,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 			.positiveText(android.R.string.ok)
 			.negativeText(android.R.string.cancel)
 			.build();
+			((EditText)dlg.getCustomView().findViewById(android.R.id.edit)).setHint(R.string.folder_name);
 			dlg.show();
 		}
 		

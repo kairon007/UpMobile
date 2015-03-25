@@ -70,5 +70,9 @@
 	<string name="playlist_is_empty">قائمة التشغيل فارغ</string>
 	<string name="no_previous_playlists">لا قوائم التشغيل السابقة</string>
 	<string name="select_playlist">حدد قائمة التشغيل</string>
+	
+	<string name="folder_name">اسم المجلد</string>
+    <string name="playlist_name">اسم قائمة التشغيل</string>
+	
 
 </resources>

@@ -68,5 +68,8 @@
 	<string name="playlist_is_empty">재생 목록이 비어 있습니다</string>
 	<string name="no_previous_playlists">아니 이전 재생 목록 없음</string>
 	<string name="select_playlist">재생 목록 선택</string>
+	
+	<string name="folder_name">폴더 이름</string>
+    <string name="playlist_name">재생 목록 이름</string>
 
 </resources>

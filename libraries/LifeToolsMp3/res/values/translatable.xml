@@ -56,6 +56,9 @@
 	
 	<string name="no_previous_playlists">No previous Playlists</string>
 	<string name="select_playlist">Select Playlist</string>
+	<string name="folder_name">Folder name</string>
+    <string name="playlist_name">Playlist name</string>
+	
 	
 	
 	

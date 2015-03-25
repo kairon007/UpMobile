@@ -67,5 +67,8 @@
 	<string name="playlist_is_empty">播放列表是空的</string>
 	<string name="no_previous_playlists">以前没有播放列表</string>
 	<string name="select_playlist">選擇播放列表</string>
+	
+	<string name="folder_name">文件夾名稱</string>
+    <string name="playlist_name">播放列表名稱</string>
 
 </resources>

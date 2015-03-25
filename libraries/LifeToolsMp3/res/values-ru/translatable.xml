@@ -70,5 +70,8 @@
 	<string name="playlist_is_empty">Плейлист пуст</string>
 	<string name="no_previous_playlists">Нет предыдущих плейлистов</string>
 	<string name="select_playlist">Выберите плейлист</string>
+	
+	<string name="folder_name">Название папки</string>
+    <string name="playlist_name">Название плейлиста</string>
 
 </resources>

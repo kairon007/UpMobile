@@ -69,4 +69,7 @@
 	<string name="no_previous_playlists">Tidak ada Playlist sebelumnya</string>
 	<string name="select_playlist">pilih Playlist</string>
 	
+	<string name="folder_name">Nama folder</string>
+    <string name="playlist_name">Nama Playlist</string>
+	
 </resources>

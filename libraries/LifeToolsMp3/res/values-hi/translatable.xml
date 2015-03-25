@@ -68,5 +68,8 @@
 	<string name="playlist_is_empty">प्लेलिस्ट खाली है</string>
 	<string name="no_previous_playlists">कोई पिछला प्लेलिस्ट</string>
 	<string name="select_playlist">चयन करें प्लेलिस्ट</string>
+	
+	<string name="folder_name">फ़ोल्डर का नाम</string>
+    <string name="playlist_name">प्लेलिस्ट का नाम</string>
 
 </resources>

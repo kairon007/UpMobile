@@ -71,4 +71,7 @@
     <string name="no_previous_playlists">Keine Schauplaylists</string>
     <string name="select_playlist">Wählen Sie die Playlists</string>
 	
+	<string name="folder_name">Ordnername</string>
+    <string name="playlist_name">Playname</string>
+	
 </resources>

@@ -68,5 +68,8 @@
 	<string name="playlist_is_empty">Afspeellijst is leeg</string>
 	<string name="no_previous_playlists">Geen vorige Afspeellijsten</string>
 	<string name="select_playlist">Selecteer playlist</string>
+	
+	<string name="folder_name">Mapnaam</string>
+    <string name="playlist_name">Playlist naam</string>
 
 </resources>

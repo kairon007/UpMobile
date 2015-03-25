@@ -65,5 +65,8 @@
 	<string name="playlist_is_empty">Playlist có sản phẩm nào</string>
 	<string name="no_previous_playlists">Không Playlists trước</string>
 	<string name="select_playlist">Chọn Playlist</string>
+	
+	<string name="folder_name">Tên thư mục</string>
+    <string name="playlist_name">Tên danh sách</string>
 
 </resources>

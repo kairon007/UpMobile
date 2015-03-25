@@ -68,5 +68,8 @@
 	<string name="playlist_is_empty">Lista odtwarzania jest pusty</string>
 	<string name="no_previous_playlists">Brak wcześniejszych Listy odtwarzania</string>
 	<string name="select_playlist">Wybierz Playlist</string>
+	
+	<string name="folder_name">Nazwa folderu</string>
+    <string name="playlist_name">Nazwa listy odtwarzania</string>
 
 </resources>
