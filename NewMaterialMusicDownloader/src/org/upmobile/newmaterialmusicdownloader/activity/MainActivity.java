@@ -386,7 +386,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	protected void setPlayPauseMini(boolean playPause) {
-		((PlayPauseView) findViewById(R.id.mini_player_play_pause)).toggle(playPause);
+		((PlayPauseView) findViewById(R.id.mini_player_play_pause)).toggle(!playPause);
 	}
 
 	@Override

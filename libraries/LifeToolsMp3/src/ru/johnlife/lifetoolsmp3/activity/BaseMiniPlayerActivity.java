@@ -147,9 +147,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				} else {
 					service.play();
 				}
-				if (playPause.getClass() == PlayPauseView.class) {
-					((PlayPauseView) playPause).toggle(service.isPlaying());
-				}
 			}
 		});
 		download.setOnClickListener(new OnClickListener() {

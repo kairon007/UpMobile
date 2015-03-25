@@ -132,7 +132,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
-		changePlayPauseView(prepared && !player.isPlaying());
+		changePlayPauseView(prepared && player.isPlaying());
 		return contentView;
 	}
 	
@@ -356,7 +356,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			if (isDestroy) {
 				return;
 			}
-			changePlayPauseView(true);
+			changePlayPauseView(false);
 		}
 
 		@Override
@@ -364,7 +364,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			if (isDestroy) {
 				return;
 			}
-			changePlayPauseView(false);
+			changePlayPauseView(true);
 		}
 
 		@Override
@@ -372,7 +372,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			if (isDestroy) {
 				return;
 			}
-			changePlayPauseView(true);
+			changePlayPauseView(false);
 			setElementsView(0);
 		}
 		
@@ -392,7 +392,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((MainActivity) getActivity()).showPlayerElement(true);
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
-			changePlayPauseView(false);
+			changePlayPauseView(true);
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();
@@ -560,7 +560,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 *            - If "true", the button changes the picture to "play", if
 	 *            "false" changes to "pause"
 	 */
-	private void changePlayPauseView(boolean isPlaying) { 
+	private void changePlayPauseView(boolean isPlaying) {
 		play.toggle(isPlaying);
 	}
 

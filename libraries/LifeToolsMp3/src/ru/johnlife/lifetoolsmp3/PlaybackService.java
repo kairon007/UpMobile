@@ -388,7 +388,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			buildSendMessage(playingSong, msg, 0, 0);
 		} else {
 			play(playingSong.getClass() != MusicData.class);
-			if (null != previousSong) {
+			if (null != previousSong && playingSong != previousSong) {
 				helper(State.STOP, previousSong);
 			}
 		}

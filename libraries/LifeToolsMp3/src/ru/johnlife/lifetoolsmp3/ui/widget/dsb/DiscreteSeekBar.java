@@ -617,7 +617,6 @@ public class DiscreteSeekBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-    	System.out.println("!!! onTouchEvent");
         if (!isEnabled()) {
             return false;
         }
@@ -639,7 +638,6 @@ public class DiscreteSeekBar extends View {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-            	System.out.println("!!! ACTION_UP && ACTION_CANCEL");
                 stopDragging();
                 break;
         }

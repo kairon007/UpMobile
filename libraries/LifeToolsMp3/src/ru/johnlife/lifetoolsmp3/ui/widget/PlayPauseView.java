@@ -122,12 +122,11 @@ public class PlayPauseView extends View {
 	}
 
 	public void toggle(boolean isPlay) {
-		if (isPlay == mDrawable.isPlay()) return;
 		if (null != mAnimatorSet) {
 			mAnimatorSet.cancel();
 		}
 		mAnimatorSet = new AnimatorSet();
-		mDrawable.setIsPlay(!isPlay);
+		mDrawable.setIsPlay(isPlay);
 		final ObjectAnimator colorAnim = ObjectAnimator.ofInt(this, COLOR, mDrawable.isPlay() ? mPauseBackgroundColor : mPlayBackgroundColor);
 		colorAnim.setEvaluator(new ArgbEvaluator());
 		final Animator pausePlayAnim = mDrawable.getPausePlayAnimator();
