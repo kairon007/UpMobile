@@ -2,6 +2,7 @@ package ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal.compat.SeekBarCompat;
@@ -249,7 +250,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 		number.setPadding(Util.dpToPx(getContext(), 6), Util.dpToPx(getContext(), 14), Util.dpToPx(getContext(), 4), 0);
 		number.setText("00:00");
 		number.setVisibility(View.INVISIBLE);
-		DFont font = new DFont(Util.dpToPx(getContext(), 12), 3);
+		DFont font = new DFont(Util.dpToPx(getContext(), 12), (int) getResources().getDisplayMetrics().density);
 		number.setFont(font);
 		resetSizes("");
 	}
