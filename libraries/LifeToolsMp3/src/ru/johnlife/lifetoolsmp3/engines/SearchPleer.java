@@ -4,20 +4,22 @@ import java.net.URLEncoder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Connection.Method;
+import org.jsoup.Jsoup;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.util.Log;
 
 public class SearchPleer extends SearchWithPages {
 	
-	private final static int COUNT_SONGS_ON_PAGE = 30;
+	private final String GET_URL_LINK = "http://pleer.com/site_api/files/get_url";
+	private final int COUNT_SONGS_ON_PAGE = 30;
+	private final String PLEER_URL = "http://pleer.com/browser-extension/search?limit=";
 	
 	public SearchPleer(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
 
-	private static String PLEER_URL = "http://pleer.com/browser-extension/search?limit=";
-	
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		
@@ -36,7 +38,26 @@ public class SearchPleer extends SearchWithPages {
 				} else {
 					for (int i = 0; i < listOfSongs.length(); i++) {
 						JSONObject jsonSong = listOfSongs.getJSONObject(i);
-						RemoteSong song = new RemoteSong(jsonSong.getString("file"));
+						/*
+						 * Temporarily fix, until the player fix your API
+						 */
+						String downloadUrl =  new JSONObject(Jsoup.connect(GET_URL_LINK)
+								.data("action", "download")
+								.data("id", jsonSong.getString("id"))
+								.method(Method.POST)
+								.ignoreContentType(true)
+								.followRedirects(true)
+								.ignoreHttpErrors(true)
+								.userAgent(getRandomUserAgent())
+								.execute()
+								.parse()
+								.body()
+								.text())
+								.getString("track_link");
+						/*
+						 * end
+						 */
+						RemoteSong song = new RemoteSong(downloadUrl);
 						String songTitle = jsonSong.getString("track");
 						song.setSongTitle(songTitle);
 						song.setArtistName(jsonSong.getString("artist"));

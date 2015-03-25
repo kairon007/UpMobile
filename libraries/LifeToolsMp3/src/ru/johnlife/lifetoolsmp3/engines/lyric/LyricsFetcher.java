@@ -4,10 +4,13 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jsoup.Connection.Method;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
@@ -15,7 +18,8 @@ import android.os.Build;
 import android.util.Log;
 
 public class LyricsFetcher {
-	
+	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+	private static final String AZLYRICS_URL = "http://www.azlyrics.com/";
 	private static final String TAG = "AZLyricsViewer:LyricsFetcher";
 	private static final boolean DEBUG = false;
 
@@ -27,8 +31,18 @@ public class LyricsFetcher {
 
 		@Override
 		protected String doInBackground(String... arg0) {
-			try {
-				Document document = Jsoup.connect(arg0[0]).get();
+			try { 
+				Response defaut = Jsoup.connect(AZLYRICS_URL).userAgent(USER_AGENT).timeout(10000).followRedirects(true).ignoreHttpErrors(true).execute();
+				Response res = Jsoup.connect(arg0[0])
+						.userAgent(USER_AGENT)
+						.followRedirects(true)
+						.cookies(defaut.cookies())
+						.header("Connection", "close")
+						.timeout(10000)
+						.ignoreHttpErrors(true)
+						.method(Method.GET)
+						.execute();
+				Document document = res.parse();
 				Element div = document.getElementsByAttributeValue("style", "margin-left:10px;margin-right:10px;").first();
 				String response = div.toString();
 				Pattern p = Pattern.compile("<!-- start of lyrics -->(.*)<!-- end of lyrics -->", Pattern.DOTALL);
@@ -40,6 +54,7 @@ public class LyricsFetcher {
 					if (DEBUG) Log.i(TAG, "doesn't match");
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			return null;
 		}
@@ -60,12 +75,13 @@ public class LyricsFetcher {
 		
 	}
 
+	@SuppressLint("NewApi")
 	public void fetchLyrics(String songName, String artistName) {
 		Locale locale = Locale.getDefault();
 		if (!checkParameter(songName, artistName)) {
 			new FetchLyrics().execute("");
 		}
-		String urlString = "http://www.azlyrics.com/lyrics/" + deleteSpecialCharacters(artistName.toLowerCase(locale)) + "/" + deleteSpecialCharacters(songName.toLowerCase(locale)) + ".html";
+		String urlString = AZLYRICS_URL + "lyrics/" + deleteSpecialCharacters(artistName.toLowerCase(locale)) + "/" + deleteSpecialCharacters(songName.toLowerCase(locale)) + ".html";
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
 			fetchLyrics = new FetchLyrics().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urlString);
 		} else {

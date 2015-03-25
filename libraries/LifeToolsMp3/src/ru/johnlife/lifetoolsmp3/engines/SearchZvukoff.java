@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
 public class SearchZvukoff extends SearchWithPages{
 	
+	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
 	private static String HTTP_ZVUKOFF_RU = "http://zvukoff.ru";
 	private static String URL = "http://zvukoff.ru/mp3/search?keywords=%s&page=%s";
 	
@@ -24,13 +25,15 @@ public class SearchZvukoff extends SearchWithPages{
 	@Override
 	protected Void doInBackground(Void... paramVarArgs) {
 		try {
+			Response head = Jsoup.connect(HTTP_ZVUKOFF_RU).timeout(10000).userAgent(USER_AGENT).execute();
 			String link = String.format(URL, URLEncoder.encode(getSongName(), "UTF-8"), page);
 			Response res = Jsoup.connect(link)
-					.method(Method.GET)
+					.userAgent(USER_AGENT)
 					.followRedirects(true)
+					.cookies(head.cookies())
+					.timeout(10000)
 					.ignoreHttpErrors(true)
-					.userAgent(getRandomUserAgent())
-					.timeout(20000)
+					.method(Method.GET)
 					.execute();
 			Document doc = res.parse();
 			Elements songs = doc.body().select("div[class=song song-xl]");
