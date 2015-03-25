@@ -23,7 +23,6 @@
         style="@style/FloatingEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Folder name"
         android:maxLength="31"
         android:inputType="textFilter|textMultiLine"
         android:singleLine="true" />

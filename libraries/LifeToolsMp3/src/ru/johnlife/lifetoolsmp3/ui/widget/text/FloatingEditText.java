@@ -67,7 +67,7 @@ public class FloatingEditText extends EditText {
 
     @SuppressLint("NewApi")
     public FloatingEditText(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs, android.R.attr.editTextStyle);
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.FloatingEditText);
         try {
 			hintScale = attr.getFloat(R.styleable.FloatingEditText_floating_et_hint_scale, HINT_SCALE);
