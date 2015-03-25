@@ -90,6 +90,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private boolean isUseAlbumCover = false;
 
 	// playback sections
+	private SimpleVisualizerView visualizerView;
 	private PlayPauseView play;
 	private ImageView previous;
 	private ImageView forward;
@@ -297,16 +298,19 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			clearCover();
 		}
 		if(null != mVisualizer) {
+			mVisualizer.setEnabled(false);
 			mVisualizer.release();
+			mVisualizer = null;
 		}
 		super.onPause();
 	}
 	
 	private void setupVisualizerFxAndUI() {
 		if (null == mVisualizer) {
-			final SimpleVisualizerView visualizerView = new SimpleVisualizerView(getActivity()); 
+			visualizerView = new SimpleVisualizerView(getActivity()); 
 			visualizerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			visualizerView.setAlpha(125);
+			((LinearLayout) contentView.findViewById(R.id.visualiser)).removeAllViewsInLayout();
 			((LinearLayout) contentView.findViewById(R.id.visualiser)).addView(visualizerView);
 			try {
 				mVisualizer = new Visualizer(player.getAudioSessionId());
