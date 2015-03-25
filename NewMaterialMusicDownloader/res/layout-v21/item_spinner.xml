@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="start"
-    android:background="?attr/colorPrimaryApp"
+    android:background="?attr/colorPrimary"
     android:paddingLeft="@dimen/material_edges_padding"
     android:paddingRight="@dimen/material_edges_padding" >
 

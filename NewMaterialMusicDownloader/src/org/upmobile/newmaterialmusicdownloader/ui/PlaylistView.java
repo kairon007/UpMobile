@@ -84,8 +84,8 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	private Bitmap createBitMap(int width, int height) {
-		return createBitMap(width, height, getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimaryApp)),
-				getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorAccentApp)));
+		return createBitMap(width, height, getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimary)),
+				getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorAccent)));
 	}
 
 	private Bitmap createBitMap(int width, int height, int colorPrimary, int colorAccent) {
@@ -182,7 +182,7 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected void showDialog() {
 		builder = new MaterialDialog.Builder(getContext()).title(R.string.create_new_playlist).customView(R.layout.md_input_dialog, false)
-				.titleColorAttr(R.attr.colorPrimaryApp).positiveColorAttr(R.attr.colorPrimaryApp).callback(buttonCallback).autoDismiss(false)
+				.titleColorAttr(R.attr.colorPrimary).positiveColorAttr(R.attr.colorPrimary).callback(buttonCallback).autoDismiss(false)
 				.positiveText(R.string.create).negativeText(android.R.string.cancel);
 		dialog = builder.build();
 		dialog.show();
@@ -196,7 +196,7 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	private StateListDrawable getStateList() {
-		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimaryDarkApp));
+		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimaryDark));
 		Drawable pressed = new BitmapDrawable(getResources(), createBitMap(48, 48, color, 0));
 		Drawable idle = new BitmapDrawable(getResources(), createBitMap(48, 48));
 		StateListDrawable stateListDrawable = new StateListDrawable();
@@ -207,7 +207,7 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected Object[] groupItems() {
-		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimaryApp));
+		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimary));
 		Drawable arrowDown = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_18dp);
 		Drawable arrowUp = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_18dp);
 		return new Object[] { arrowDown, arrowUp, color };

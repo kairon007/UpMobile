@@ -21,7 +21,7 @@
             android:layout_gravity="center_vertical"
             android:paddingTop="8dp"
             android:src="@drawable/ic_keyboard_arrow_down_white_18dp"
-            android:tint="?attr/colorPrimaryApp"
+            android:tint="?attr/colorPrimary"
             android:visibility="visible" />
 
         <TextView

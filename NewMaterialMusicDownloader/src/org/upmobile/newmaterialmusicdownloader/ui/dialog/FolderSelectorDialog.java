@@ -39,8 +39,8 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		public void onNeutral(MaterialDialog dialog) {
 			MaterialDialog dlg = new MaterialDialog.Builder(getActivity())
 			.title(R.string.add_new_folder)
-			.titleColorAttr(R.attr.colorTextPrimaryApp)
-			.positiveColorAttr(R.attr.colorPrimaryApp)
+			.titleColorAttr(R.attr.colorTextPrimary)
+			.positiveColorAttr(R.attr.colorPrimary)
 			.customView(R.layout.md_input_dialog, false)
 			.callback(new ButtonCallback() {
 				
@@ -121,10 +121,10 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		return new MaterialDialog.Builder(getActivity())
 				.title(parentFolder.getAbsolutePath())
 				.items(getContentsArray())
-				.titleColorAttr(R.attr.colorTextPrimaryApp)
-				.itemColorAttr(R.attr.colorTextSecondaryApp)
-				.positiveColorAttr(R.attr.colorPrimaryApp)
-				.neutralColorAttr(R.attr.colorPrimaryApp)
+				.titleColorAttr(R.attr.colorTextPrimary)
+				.itemColorAttr(R.attr.colorTextSecondary)
+				.positiveColorAttr(R.attr.colorPrimary)
+				.neutralColorAttr(R.attr.colorPrimary)
 				.itemsCallback(this)
 				.callback(mButtonCallback)
 				.autoDismiss(false)

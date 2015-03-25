@@ -113,7 +113,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	public Object initRefreshProgress() {
 		ProgressBarCircularIndeterminate progress = (ProgressBarCircularIndeterminate) LayoutInflater.from(getContext()).inflate(R.layout.progress, null);
-		progress.setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute((Activity) getContext(), R.attr.colorAccentApp)));
+		progress.setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute((Activity) getContext(), R.attr.colorAccent)));
 		return progress;
 	}
 	

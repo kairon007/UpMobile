@@ -3,5 +3,5 @@
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:layout_gravity="center"
-    android:background="?attr/colorAccentApp"
+    android:background="?attr/colorAccent"
     android:visibility="visible" />

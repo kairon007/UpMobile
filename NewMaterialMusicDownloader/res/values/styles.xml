@@ -22,14 +22,6 @@
         <item name="colorTextPrimary">@color/material_primary_text</item>
         <item name="colorTextSecondary">@color/material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image</item>
-        <item name="colorPrimaryDarkApp">@color/material_primary_dark</item>
-        <item name="colorPrimaryApp">@color/material_primary</item>
-        <item name="colorAccentApp">@color/material_accent</item>
-        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
-        <item name="colorControlActivatedApp">?attr/colorAccent</item>
-        <item name="colorControlHighlightApp">@color/material_primary</item>
-        <item name="colorTextPrimaryApp">@color/material_primary_text</item>
-        <item name="colorTextSecondaryApp">@color/material_secondary_text</item>
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_default</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_default</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_default</item>
@@ -46,14 +38,6 @@
         <item name="colorTextPrimary">@color/black_material_primary_text</item>
         <item name="colorTextSecondary">@color/black_material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image_black</item>
-        <item name="colorPrimaryDarkApp">@color/black_material_accent</item>
-        <item name="colorPrimaryApp">@color/black_material_primary</item>
-        <item name="colorAccentApp">@color/black_material_accent</item>
-        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
-        <item name="colorControlActivatedApp">?attr/colorAccent</item>
-        <item name="colorControlHighlightApp">@color/black_material_primary</item>
-        <item name="colorTextPrimaryApp">@color/black_material_primary_text</item>
-        <item name="colorTextSecondaryApp">@color/black_material_secondary_text</item>
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_black</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_black</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_black</item>
@@ -72,14 +56,6 @@
         <item name="colorTextPrimary">@color/brown_material_primary_text</item>
         <item name="colorTextSecondary">@color/brown_material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image_brown</item>
-        <item name="colorPrimaryDarkApp">@color/brown_material_primary_dark</item>
-        <item name="colorPrimaryApp">@color/brown_material_primary</item>
-        <item name="colorAccentApp">@color/brown_material_accent</item>
-        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
-        <item name="colorControlActivatedApp">?attr/colorAccent</item>
-        <item name="colorControlHighlightApp">@color/brown_material_primary</item>
-        <item name="colorTextPrimaryApp">@color/brown_material_primary_text</item>
-        <item name="colorTextSecondaryApp">@color/brown_material_secondary_text</item>
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_brown</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_brown</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_brown</item>
@@ -97,14 +73,6 @@
         <item name="colorTextPrimary">@color/orange_material_primary_text</item>
         <item name="colorTextSecondary">@color/orange_material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image_orange</item>
-        <item name="colorPrimaryDarkApp">@color/orange_material_primary_dark</item>
-        <item name="colorPrimaryApp">@color/orange_material_primary</item>
-        <item name="colorAccentApp">@color/orange_material_accent</item>
-        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
-        <item name="colorControlActivatedApp">?attr/colorAccent</item>
-        <item name="colorControlHighlightApp">@color/orange_material_primary</item>
-        <item name="colorTextPrimaryApp">@color/orange_material_primary_text</item>
-        <item name="colorTextSecondaryApp">@color/orange_material_secondary_text</item>
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_orange</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_orange</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_orange</item>
@@ -121,14 +89,6 @@
         <item name="colorTextPrimary">@color/green_material_primary_text</item>
         <item name="colorTextSecondary">@color/green_material_secondary_text</item>
         <item name="attr_image_drawer">@drawable/header_image_green</item>
-        <item name="colorPrimaryDarkApp">@color/green_material_primary_dark</item>
-        <item name="colorPrimaryApp">@color/green_material_primary</item>
-        <item name="colorAccentApp">@color/green_material_accent</item>
-        <item name="colorControlNormalApp">?android:attr/textColorSecondary</item>
-        <item name="colorControlActivatedApp">?attr/colorAccent</item>
-        <item name="colorControlHighlightApp">@color/green_material_primary</item>
-        <item name="colorTextPrimaryApp">@color/green_material_primary_text</item>
-        <item name="colorTextSecondaryApp">@color/green_material_secondary_text</item>
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_green</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_green</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_green</item>
@@ -137,16 +97,16 @@
     <style name="MyActionBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
-        <item name="android:background">?attr/colorPrimaryApp</item>
+        <item name="android:background">?attr/colorPrimary</item>
     </style>
 
     <style name="TextStyleLine1">
-        <item name="android:textColor">?attr/colorTextPrimaryApp</item>
+        <item name="android:textColor">?attr/colorTextPrimary</item>
         <item name="android:textSize">@dimen/material_title</item>
     </style>
 
     <style name="TextStyleLine2">
-        <item name="android:textColor">?attr/colorTextSecondaryApp</item>
+        <item name="android:textColor">?attr/colorTextSecondary</item>
         <item name="android:textSize">@dimen/material_body</item>
     </style>
 
@@ -154,14 +114,14 @@
         <item name="cpb_selectorIdle">?attr/cpbSelectorIdle</item>
         <item name="cpb_selectorComplete">?attr/cpbSelectorComplete</item>
         <item name="cpb_selectorError">?attr/cpbSelectorError</item>
-        <item name="cpb_colorProgress">?attr/colorAccentApp</item>
-        <item name="cpb_colorIndicator">?attr/colorPrimaryApp</item>
-        <item name="android:textColor">?attr/colorTextPrimaryApp</item>
+        <item name="cpb_colorProgress">?attr/colorAccent</item>
+        <item name="cpb_colorIndicator">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorTextPrimary</item>
     </style>
 
     <style name="RippleStyle">
         <item name="rippleOverlay">false</item>
-        <item name="rippleColor">?attr/colorPrimaryApp</item>
+        <item name="rippleColor">?attr/colorPrimary</item>
         <item name="rippleAlpha">0.7</item>
         <item name="rippleDimension">45dp</item>
         <item name="rippleHover">true</item>
@@ -175,7 +135,7 @@
     
     <style name="RippleStyleCircle">
         <item name="rippleOverlay">true</item>
-        <item name="rippleColor">?attr/colorPrimaryApp</item>
+        <item name="rippleColor">?attr/colorPrimary</item>
         <item name="rippleAlpha">0.6</item>
         <item name="rippleDimension">45dp</item>
         <item name="rippleHover">true</item>
@@ -189,7 +149,7 @@
 
     <style name="RippleStyleWhiteBack">
         <item name="rippleOverlay">false</item>
-        <item name="rippleColor">?attr/colorPrimaryApp</item>
+        <item name="rippleColor">?attr/colorPrimary</item>
         <item name="rippleAlpha">0.7</item>
         <item name="rippleDimension">45dp</item>
         <item name="rippleHover">true</item>
@@ -202,16 +162,16 @@
     </style>
 	
     <style name="FloatingEditText">
-        <item name="floating_et_color">?attr/colorTextPrimaryApp</item>
-        <item name="floating_et_highlighted_color">?attr/colorAccentApp</item>
+        <item name="floating_et_color">?attr/colorTextPrimary</item>
+        <item name="floating_et_highlighted_color">?attr/colorAccent</item>
         <item name="floating_et_error_color">@android:color/holo_red_light</item>
         <item name="floating_et_char_count">30</item>
         <item name="floating_et_show_count">true</item>
     </style>
     
     <style name="CheckBox">
-        <item name="checkbox_color">?attr/colorPrimaryApp</item>
-        <item name="checkbox_checked_color">?attr/colorAccentApp</item>
+        <item name="checkbox_color">?attr/colorPrimary</item>
+        <item name="checkbox_checked_color">?attr/colorAccent</item>
     </style>
 
 </resources>

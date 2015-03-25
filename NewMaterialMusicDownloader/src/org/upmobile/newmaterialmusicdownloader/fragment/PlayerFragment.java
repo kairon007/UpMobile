@@ -160,7 +160,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
 		DFont font = new DFont(Util.dpToPx(getActivity(), 12), 2);
-		font.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondaryApp)));
+		font.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondary)));
 		playerCurrTime.setFont(font);
 		playerTotalTime.setFont(font); 
 		playerProgress.setUseAnimateTextView(true);
