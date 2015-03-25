@@ -159,7 +159,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
-		DFont font = new DFont(Util.dpToPx(getActivity(), 12), 3);
+		DFont font = new DFont(Util.dpToPx(getActivity(), 12), 2);
 		font.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondaryApp)));
 		playerCurrTime.setFont(font);
 		playerTotalTime.setFont(font); 
