@@ -388,7 +388,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((MainActivity) getActivity()).showPlayerElement(true);
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
-			changePlayPauseView(true);
+			changePlayPauseView(false);
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();

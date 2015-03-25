@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui.widget;
 
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.Util;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
@@ -35,9 +36,9 @@ public class PlayPauseView extends View {
 	};
 	
 	private static final int DEFAULT_COLOR = Color.BLACK;
-	private static final int DEFAULT_WIDTH = 28;
-	private static final int DEFAULT_HEIGHT = 100;
-	private static final int DEFAULT_DISTANCE = 16;
+	private static final int DEFAULT_WIDTH = 10;
+	private static final int DEFAULT_HEIGHT = 32;
+	private static final int DEFAULT_DISTANCE = 8;
 	private static final int DEFAULT_COLOR_BUTTON = Color.WHITE;
 	private static final long PLAY_PAUSE_ANIMATION_DURATION = 200;
 	private final PlayPauseDrawable mDrawable;
@@ -57,10 +58,10 @@ public class PlayPauseView extends View {
 		super(context, attrs);
 		setWillNotDraw(false);
 		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.PlayPauseButton);
-		mBackgroundColor = attributes.getColor(R.styleable.PlayPauseButton_mainColor, 0);
-		mPauseBarWidth = attributes.getDimensionPixelSize(R.styleable.PlayPauseButton_pauseBarWidth, DEFAULT_WIDTH);
-		mPauseBarHeight = attributes.getDimensionPixelSize(R.styleable.PlayPauseButton_pauseBarHeight, DEFAULT_HEIGHT);
-		mPauseBarDistance = attributes.getDimensionPixelSize(R.styleable.PlayPauseButton_pauseBarDistance, DEFAULT_DISTANCE);
+		mBackgroundColor = attributes.getColor(R.styleable.PlayPauseButton_mainColor, DEFAULT_COLOR);
+		mPauseBarWidth = Util.dpToPx(context, (int) attributes.getDimension(R.styleable.PlayPauseButton_pauseBarWidth, DEFAULT_WIDTH));
+		mPauseBarHeight = Util.dpToPx(context, (int) attributes.getDimension(R.styleable.PlayPauseButton_pauseBarHeight, DEFAULT_HEIGHT));
+		mPauseBarDistance = Util.dpToPx(context, (int) attributes.getDimension(R.styleable.PlayPauseButton_pauseBarDistance, DEFAULT_DISTANCE));
 		mColorButton = attributes.getColor(R.styleable.PlayPauseButton_colorButton, DEFAULT_COLOR_BUTTON);
 		mPaint.setAntiAlias(true);
 		mPaint.setStyle(Paint.Style.FILL);
@@ -121,6 +122,7 @@ public class PlayPauseView extends View {
 	}
 
 	public void toggle(boolean isPlay) {
+		if (isPlay == mDrawable.isPlay()) return;
 		if (null != mAnimatorSet) {
 			mAnimatorSet.cancel();
 		}
