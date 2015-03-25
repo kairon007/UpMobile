@@ -276,7 +276,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					mode &= ~SMODE_GET_URL;
 				}
 				try {
-					android.util.Log.d("logd", "handleMessage: " + (String) msg.obj);
 					Uri uri = Uri.parse((String) msg.obj);
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
