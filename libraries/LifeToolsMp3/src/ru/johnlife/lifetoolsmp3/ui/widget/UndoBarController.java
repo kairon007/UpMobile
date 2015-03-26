@@ -49,7 +49,7 @@ public class UndoBarController extends LinearLayout {
     public static final UndoBarStyle MESSAGESTYLE = new UndoBarStyle(-1, -1, 5000);
 
 
-    private LinkedList<Message> mMessages = new LinkedList();
+    private LinkedList<Message> mMessages = new LinkedList<Message>();
     private Message currentMessage;
     private boolean mShowing;
 
