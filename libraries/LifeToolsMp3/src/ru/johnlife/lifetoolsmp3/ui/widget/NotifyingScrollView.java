@@ -1,6 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui.widget;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
@@ -14,7 +13,7 @@ public class NotifyingScrollView extends ScrollView {
 	private OnScrollChangedListener onScrollChangedListener;
 
 	public interface OnScrollChangedListener {
-		void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt);
+		void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt, int alpha);
 	}
 
 	public NotifyingScrollView(Context context) {
@@ -29,19 +28,21 @@ public class NotifyingScrollView extends ScrollView {
 		super(context, attrs, defStyle);
 	}
 	
-	private void init() {
-		
-	}
-	
 	@Override
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 		super.onScrollChanged(l, t, oldl, oldt);
 		if (onScrollChangedListener != null) {
-			onScrollChangedListener.onScrollChanged(this, l, t, oldl, oldt);
+			int alpha = 255;
+			if (t < 0) {
+				alpha = 0;
+			} else if (t < image.getHeight()) {
+				float alphaScale = (float)t / (float)image.getHeight();
+				alpha =  (int)(alphaScale * alpha);
+			}
+			onScrollChangedListener.onScrollChanged(this, l, t, oldl, oldt, alpha);
 		}
 		if (null != image) {
-			int offset = Util.dpToPx(getContext(), 90);
-			image.scrollTo(0, t / 2 + offset);
+			image.scrollTo(0, t / 2);
 		}
 	}
 

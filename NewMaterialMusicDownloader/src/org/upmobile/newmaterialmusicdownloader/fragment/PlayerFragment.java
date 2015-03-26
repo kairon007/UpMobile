@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView;
+import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView.OnScrollChangedListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
@@ -59,6 +60,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -119,6 +121,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private String lastTitle = ""; 
 	
 	private int primaryColor;
+	private int coverHeight;
 
 	private boolean isDestroy;
 	private Visualizer mVisualizer;
@@ -210,6 +213,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				}
 			}
 		});
+		scrollView.setOnScrollChangedListener(new OnScrollChangedListener() {
+			
+			@Override
+			public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt, int alpha) {
+				((MainActivity)getActivity()).setToolbarAlpha(alpha);
+			}
+		});
 //		scrollView.setOnTouchListener(new OnTouchListener() {
 //	
 //			@Override
@@ -287,6 +297,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setToolbarOverlay(true);
+		((MainActivity) getActivity()).setToolbarAlpha(0);
 		setupVisualizerFxAndUI();
 		super.onResume();
 	}
