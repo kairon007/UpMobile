@@ -3,6 +3,7 @@ package org.upmobile.materialmusicdownloader.ui;
 import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
+import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
@@ -13,6 +14,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
@@ -156,5 +158,13 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 				service.stopPressed();
 			}
 		});
+	}
+	
+	@Override
+	protected void download(RemoteSong song) {
+		DownloadListener downloadListener = new DownloadListener(getContext(), song, 0);
+		downloadListener.setDownloadPath(getDirectory());
+		downloadListener.setUseAlbumCover(true);
+		downloadListener.downloadSong(false);
 	}
 }

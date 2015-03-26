@@ -316,10 +316,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 
 			@Override
 			public void success(String url) {
-				downloadListener = new DownloadClickListener(BaseMiniPlayerActivity.this, (RemoteSong) song, 0);
-				downloadListener.setDownloadPath(getDirectory());
-				downloadListener.setUseAlbumCover(true);
-				downloadListener.downloadSong(false);
+				((RemoteSong) song).setDownloadUrl(url);
+				download(((RemoteSong) song));
 			}
 
 			@Override
@@ -331,6 +329,13 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				});
 			}
 		});
+	}
+	
+	protected void download(RemoteSong song) {
+		downloadListener = new DownloadClickListener(BaseMiniPlayerActivity.this, song, 0);
+		downloadListener.setDownloadPath(getDirectory());
+		downloadListener.setUseAlbumCover(true);
+		downloadListener.downloadSong(false);
 	}
 	
 	protected void setCover(Bitmap bmp) {

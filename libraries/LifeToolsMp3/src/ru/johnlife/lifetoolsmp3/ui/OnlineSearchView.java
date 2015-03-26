@@ -491,12 +491,9 @@ public abstract class OnlineSearchView extends View {
 						@Override
 						public void success(String url) {
 							((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).setDownloadUrl(url);
-							downloadListener = new DownloadClickListener(getContext(), (RemoteSong) getResultAdapter().getItem((Integer) v.getTag()), 0);
-							downloadListener.setDownloadPath(getDirectory());
-							downloadListener.setUseAlbumCover(true);
-							downloadListener.downloadSong(false);
+							download(((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())));
 						}
-						
+
 						@Override
 						public void error(String error) {
 						}
@@ -507,6 +504,13 @@ public abstract class OnlineSearchView extends View {
 			}
 		});
 		menu.show();
+	}
+	
+	protected void download(RemoteSong song) {
+		downloadListener = new DownloadClickListener(getContext(), song, 0);
+		downloadListener.setDownloadPath(getDirectory());
+		downloadListener.setUseAlbumCover(true);
+		downloadListener.downloadSong(false);
 	}
 
 	public void initSearchEngines(Context context, String valueEngines) {

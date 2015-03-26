@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
+import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
@@ -19,6 +20,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -312,6 +314,14 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	@Override
 	protected Bitmap getCloseActinBarIcon() {
 		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel),  R.color.main_color_for_search_fragment_text);
+	}
+	
+	@Override
+	protected void download(RemoteSong song) {
+		DownloadListener downloadListener = new DownloadListener(this, song, 0);
+		downloadListener.setDownloadPath(getDirectory());
+		downloadListener.setUseAlbumCover(true);
+		downloadListener.downloadSong(false);
 	}
 	
 }

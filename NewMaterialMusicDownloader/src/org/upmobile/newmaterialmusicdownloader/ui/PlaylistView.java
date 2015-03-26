@@ -84,7 +84,7 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	private Bitmap createBitMap(int width, int height) {
-		return createBitMap(width, height, getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimary)),
+		return createBitMap(width, height, getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorAccent)),
 				getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorAccent)));
 	}
 

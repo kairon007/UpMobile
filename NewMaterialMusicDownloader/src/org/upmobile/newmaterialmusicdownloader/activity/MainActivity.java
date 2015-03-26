@@ -3,6 +3,7 @@ package org.upmobile.newmaterialmusicdownloader.activity;
 import java.io.File;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusicdownloader.DownloadListener;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import org.upmobile.newmaterialmusicdownloader.fragment.DownloadsFragment;
@@ -16,6 +17,7 @@ import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.Fo
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView;
 import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import android.app.Fragment;
@@ -411,6 +413,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	protected void checkOnStart(boolean showMiniPlayer) {
 		super.checkOnStart(PLAYER_FRAGMENT != currentFragmentId);
+	}
+	
+	@Override
+	protected void download(RemoteSong song) {
+		DownloadListener downloadListener = new DownloadListener(this, song, 0);
+		downloadListener.setDownloadPath(getDirectory());
+		downloadListener.setUseAlbumCover(true);
+		downloadListener.downloadSong(false);
 	}
 	
 }
