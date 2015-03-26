@@ -9,10 +9,11 @@
 
     <View
         android:id="@+id/undobar_divider"
-        style="@style/UndoBarDividerClassic"/>
+        style="@style/UndoBarDividerClassic" />
 
     <Button
         android:id="@+id/undobar_button"
-        style="@style/UndoBarButtonMaterial"/>
+        style="@style/UndoBarButtonMaterial"
+        android:textColor="?attr/colorAccent" />
 
 </LinearLayout>

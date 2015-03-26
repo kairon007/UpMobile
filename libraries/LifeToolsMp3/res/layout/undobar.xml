@@ -13,8 +13,6 @@
 
     <Button
         android:id="@+id/undobar_button"
-        style="@style/UndoBarButtonClassic"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp" />
+        style="@style/UndoBarButtonClassic"/>
 
 </LinearLayout>

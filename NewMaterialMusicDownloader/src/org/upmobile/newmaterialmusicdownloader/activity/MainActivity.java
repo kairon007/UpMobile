@@ -20,6 +20,8 @@ import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView;
 import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -40,8 +42,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 
-import com.devspark.appmsg.AppMsg;
-import com.devspark.appmsg.AppMsg.Style;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
@@ -336,9 +336,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		getSupportActionBar().setTitle(title);
 	}
 
-	public void showMessage(String message) {
-		AppMsg.cancelAll(this);
-		AppMsg.makeText(this, message, new Style(3000, Util.getResIdFromAttribute(this, R.attr.colorPrimary))).show();
+	public void showMessage(String msg) {
+		UndoBar message = new UndoBar(this);
+		message.message(msg);
+		message.style(UndoBarController.MESSAGESTYLE);
+		message.show(false);
 	}
 
 	public void showMessage(int message) {

@@ -46,7 +46,7 @@ public class UndoBarController extends LinearLayout {
 
     public static final UndoBarStyle UNDOSTYLE = new UndoBarStyle(R.drawable.ic_undobar_undo, android.R.string.cancel);
     public static final UndoBarStyle RETRYSTYLE = new UndoBarStyle(R.drawable.ic_retry, R.string.retry, -1);
-    public static final UndoBarStyle MESSAGESTYLE = new UndoBarStyle(-1, -1, 5000);
+    public static final UndoBarStyle MESSAGESTYLE = new UndoBarStyle(-1, -1, 3000);
 
 
     private LinkedList<Message> mMessages = new LinkedList<Message>();

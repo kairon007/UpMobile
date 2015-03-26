@@ -42,7 +42,7 @@
         <LinearLayout
             android:id="@+id/choise_engines_layout"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="94dp"
             android:background="?attr/colorPrimary"
             android:orientation="vertical" >
 

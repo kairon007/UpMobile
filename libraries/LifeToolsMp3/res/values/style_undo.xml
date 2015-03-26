@@ -124,7 +124,7 @@
         <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:background">#B4323232</item>
+        <item name="android:background">@color/message_background</item>
         <item name="android:maxHeight">80dp</item>
         <item name="android:inAnimation">@anim/undobar_material_in_anim</item>
         <item name="android:outAnimation">@anim/undobar_material_out_anim</item>
