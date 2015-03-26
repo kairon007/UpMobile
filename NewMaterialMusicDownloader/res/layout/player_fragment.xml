@@ -107,6 +107,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="middle"
                                     android:lines="1"
+                                    android:layout_weight="1"
                                     android:maxLength="45" />
 
                                 <ImageView
@@ -114,6 +115,7 @@
                                     android:layout_height="24dp"
                                     android:layout_gravity="end|top"
                                     android:paddingLeft="4dp"
+                                    android:layout_weight="0"
                                     android:src="@drawable/ic_mode_edit_grey" />
                             </LinearLayout>
                         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
@@ -123,9 +125,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="none"
+                            android:imeOptions="actionDone"
                             android:maxLength="45"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
+                            android:singleLine="true"
                             android:visibility="gone" >
 
                             <requestFocus />
@@ -156,14 +160,17 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:lines="1"
+                                    android:layout_weight="1"
                                     android:maxLength="45" />
 
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
                                     android:layout_gravity="end|top"
+                                    android:layout_weight="0"
                                     android:paddingLeft="4dp"
                                     android:src="@drawable/ic_mode_edit_grey" />
+
                             </LinearLayout>
                         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
@@ -174,6 +181,8 @@
                             android:maxLength="45"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
+                            android:imeOptions="actionDone"
+                           	android:singleLine="true"
                             android:visibility="gone" />
                     </FrameLayout>
 

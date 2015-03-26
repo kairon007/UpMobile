@@ -46,11 +46,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -58,12 +60,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.csform.android.uiapptemplate.view.cb.CheckBox;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 import com.csform.android.uiapptemplate.view.spb.SmoothProgressBar;
 
-public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener{
+public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener{
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -214,6 +217,16 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 //			}
 //			
 //		});
+		etArtist.setOnEditorActionListener(this);
+		etTitle.setOnEditorActionListener(this);
+	}
+	
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		if(actionId == EditorInfo.IME_ACTION_DONE) {
+			closeEditViews();
+        }
+		return false;
 	}
 	
 	@Override
@@ -925,4 +938,5 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setProgress(progress > 0 ? progress : 1);
 		}
 	}
+
 }
