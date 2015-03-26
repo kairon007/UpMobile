@@ -423,4 +423,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		downloadListener.downloadSong(false);
 	}
 	
+	public void setToolbarOverlay(boolean isOverlay) {
+		findViewById(R.id.fake_toolbar).setVisibility(isOverlay ? View.GONE : View.VISIBLE);
+	}
+
+	public void setToolbarAlpha(int alpha) {
+		findViewById(R.id.toolbar).getBackground().setAlpha(alpha);
+	}
 }

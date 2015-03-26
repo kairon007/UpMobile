@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">@color/button_material_dark</item>
+        <item name="colorSwitchThumbNormal">@color/switch_thumb_normal_material_dark</item>
+        <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
+        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+        <item name="android:ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="MaterialAppTheme" parent="AppBaseTheme">
+        <item name="elementSelector">@drawable/selectable_element_bg_default</item>
+        <item name="colorPrimaryDark">@color/material_primary_dark</item>
+        <item name="colorPrimary">@color/material_primary</item>
+        <item name="colorAccent">@color/material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/material_primary</item>
+        <item name="colorTextPrimary">@color/material_primary_text</item>
+        <item name="colorTextSecondary">@color/material_secondary_text</item>
+        <item name="attr_image_drawer">@drawable/header_image</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_default</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_default</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_default</item>
+    </style>
+
+    <style name="MaterialAppTheme.Black" parent="AppBaseTheme">
+        <item name="elementSelector">@drawable/selectable_element_bg_black</item>
+        <item name="colorPrimaryDark">@color/black_material_accent</item>
+        <item name="colorPrimary">@color/black_material_primary</item>
+        <item name="colorAccent">@color/black_material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/black_material_primary</item>
+        <item name="colorTextPrimary">@color/black_material_primary_text</item>
+        <item name="colorTextSecondary">@color/black_material_secondary_text</item>
+        <item name="attr_image_drawer">@drawable/header_image_black</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_black</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_black</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_black</item>
+    </style>
+
+    <style name="MaterialAppTheme.Brown" parent="AppBaseTheme">
+        <item name="elementSelector">@drawable/selectable_element_bg_brown</item>
+        <item name="colorPrimaryDark">@color/brown_material_primary_dark</item>
+        <item name="colorPrimary">@color/brown_material_primary</item>
+        <item name="colorAccent">@color/brown_material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/brown_material_primary</item>
+        <item name="colorSwitchThumbNormal">@color/switch_thumb_normal_material_dark</item>
+        <item name="colorTextPrimary">@color/brown_material_primary_text</item>
+        <item name="colorTextSecondary">@color/brown_material_secondary_text</item>
+        <item name="attr_image_drawer">@drawable/header_image_brown</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_brown</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_brown</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_brown</item>
+    </style>
+
+    <style name="MaterialAppTheme.DeepOrange" parent="AppBaseTheme">
+        <item name="elementSelector">@drawable/selectable_element_bg_orange</item>
+        <item name="colorPrimaryDark">@color/orange_material_primary_dark</item>
+        <item name="colorPrimary">@color/orange_material_primary</item>
+        <item name="colorAccent">@color/orange_material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/orange_material_primary</item>
+        <item name="colorTextPrimary">@color/orange_material_primary_text</item>
+        <item name="colorTextSecondary">@color/orange_material_secondary_text</item>
+        <item name="attr_image_drawer">@drawable/header_image_orange</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_orange</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_orange</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_orange</item>
+    </style>
+
+    <style name="MaterialAppTheme.Green" parent="AppBaseTheme">
+        <item name="elementSelector">@drawable/selectable_element_bg_green</item>
+        <item name="colorPrimaryDark">@color/green_material_primary_dark</item>
+        <item name="colorPrimary">@color/green_material_primary</item>
+        <item name="colorAccent">@color/green_material_accent</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/green_material_primary</item>
+        <item name="colorTextPrimary">@color/green_material_primary_text</item>
+        <item name="colorTextSecondary">@color/green_material_secondary_text</item>
+        <item name="attr_image_drawer">@drawable/header_image_green</item>
+        <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_green</item>
+        <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_green</item>
+        <item name="cpbSelectorError">@drawable/cpb_error_state_selector_green</item>
+    </style>
+
+</resources>

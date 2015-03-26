@@ -146,7 +146,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void init() {
 		scrollView = (NotifyingScrollView)contentView.findViewById(R.id.scroll_view);
 		scrollView.setImageResource(R.id.scrollable_cover);
-//		scrollView.enableClickToScroll(R.id.fake_view);
 		play = (PlayPauseView) contentView.findViewById(R.id.playpause);
 		previous = (ImageView) contentView.findViewById(R.id.prev);
 		forward = (ImageView) contentView.findViewById(R.id.next);
@@ -287,6 +286,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).setDraverEnabled(false);
 		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
+		((MainActivity) getActivity()).setToolbarOverlay(true);
 		setupVisualizerFxAndUI();
 		super.onResume();
 	}
@@ -299,6 +299,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	@Override
 	public void onDestroyView() {
+		((MainActivity) getActivity()).setToolbarOverlay(false);
 		player.removeStatePlayerListener(stateListener);
 		isDestroy = true;
 		cancelProgressTask();
