@@ -108,6 +108,7 @@ public abstract class OnlineSearchView extends View {
 	private View emptyHeader;
 	private View progress;
 	private View viewItem;
+	private FrameLayout footer;
 	private TextView message;
 	private TextView searchField;
 	private Spinner spEnginesChoiser;
@@ -334,7 +335,7 @@ public abstract class OnlineSearchView extends View {
 		}
 		if (!isRestored) {
 			listView.addHeaderView(emptyHeader);
-			listView.addFooterView(resultAdapter.getProgress());
+			listView.addFooterView(resultAdapter.getProgress(), null, false);
 			listView.setAdapter(resultAdapter);
 			animateListView(false);
 		}
@@ -724,10 +725,12 @@ public abstract class OnlineSearchView extends View {
 	
 	public void showRefreshProgress() {
 		refreshSpinner.setVisibility(View.VISIBLE);
+		footer.setVisibility(View.VISIBLE);
 	}
 	
 	public void hideRefreshProgress() {
 		refreshSpinner.setVisibility(View.GONE);
+		footer.setVisibility(View.GONE);
 	} 
 	
 	public int defaultCover() {
@@ -741,13 +744,12 @@ public abstract class OnlineSearchView extends View {
 	public class SongSearchAdapter extends BaseAbstractAdapter<Song> {
 
 		private LayoutInflater inflater;
-		private FrameLayout footer;
 
 		private SongSearchAdapter(Context context) {
 			super(context, -1, new ArrayList<Song>());
 			refreshSpinner = (View) initRefreshProgress();
 			this.inflater = LayoutInflater.from(getContext());
-			this.footer = new FrameLayout(context);
+			footer = new FrameLayout(context);
 			int footerHeight = Util.dpToPx(getContext(), 72);
 			int progressSize = Util.dpToPx(getContext(), 48);
 			footer.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, footerHeight));
@@ -830,10 +832,6 @@ public abstract class OnlineSearchView extends View {
 
 		public View getProgress() {
 			return footer;
-		}
-
-		public void hideProgress() {
-			refreshSpinner.setVisibility(View.GONE);
 		}
 
 		@Override
@@ -1208,7 +1206,7 @@ public abstract class OnlineSearchView extends View {
 		resultAdapter = new SongSearchAdapter(getContext());
 		resultAdapter.add(list);
 		listView.addHeaderView(emptyHeader);
-		listView.addFooterView(resultAdapter.getProgress());
+		listView.addFooterView(resultAdapter.getProgress(), null, false);
 		listView.setAdapter(resultAdapter);
 		animateListView(true);
 		listView.setSelection(position);
