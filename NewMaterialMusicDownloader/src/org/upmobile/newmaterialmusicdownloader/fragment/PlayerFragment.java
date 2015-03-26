@@ -115,6 +115,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private int checkIdCover;
 	private int checkIdLyrics;
 	
+	private String lastArtist = "";
+	private String lastTitle = ""; 
+	
 	private int primaryColor;
 
 	private boolean isDestroy;
@@ -424,8 +427,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setElementsView(0);
 			playerProgress.setVisibility(View.GONE);
 			wait.setVisibility(View.VISIBLE);
-			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
-			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 		}
 	};
 	
@@ -667,6 +668,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void showLyrics() {
+		if (lastArtist.equals(song.getArtist()) && lastTitle.equals(song.getTitle())) return;
+		contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
+		contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
+		lastArtist = song.getArtist();
+		lastTitle = song.getTitle();
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
 			playerLyricsView.setText("");
