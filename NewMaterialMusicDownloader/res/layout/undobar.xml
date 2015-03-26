@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/_undobar"
-    style="@style/UndoBarClassic" >
+    style="@style/UndoBarMaterial" >
 
     <TextView
         android:id="@+id/undobar_message"
-        style="@style/UndoBarMessageClassic" />
+        style="@style/UndoBarMessageMaterial" />
 
     <View
         android:id="@+id/undobar_divider"
@@ -13,8 +13,6 @@
 
     <Button
         android:id="@+id/undobar_button"
-        style="@style/UndoBarButtonClassic"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp" />
+        style="@style/UndoBarButtonMaterial"/>
 
 </LinearLayout>
