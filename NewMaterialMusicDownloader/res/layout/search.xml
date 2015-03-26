@@ -35,7 +35,7 @@
     <LinearLayout
         android:id="@+id/search_scroll"
         android:layout_width="match_parent"
-        android:layout_height="122dp"
+        android:layout_height="98dp"
         android:orientation="vertical"
         android:scrollbars="none" >
 
@@ -48,7 +48,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="wrap_content"
                 android:divider="@drawable/layout_divider"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
@@ -59,22 +59,17 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1" >
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText
+                    <EditText
                         android:id="@+id/text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:ems="10"
+                        android:layout_height="match_parent"
                         android:hint="@string/hint_main_search"
                         android:imeOptions="actionSearch"
+                        android:lines="1"
+                        android:paddingRight="56dp"
+                        android:singleLine="true"
                         android:inputType="textFilter|textMultiLine"
-                        android:textColor="@android:color/white"
-                        app:floating_et_color="@android:color/white"
-                        app:floating_et_error_color="@android:color/holo_red_light"
-                        app:floating_et_highlighted_color="?attr/colorAccent"
-                        app:floating_et_right_padding="48dp" >
-
-                    </ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText>
+                        android:textColor="@android:color/white"/>
 
                     <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         android:layout_width="48dp"
