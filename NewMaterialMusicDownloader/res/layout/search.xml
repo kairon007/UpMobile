@@ -76,9 +76,7 @@
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
                         android:layout_marginBottom="4dp"
-                        app:rv_rippleDuration="50"
-                        app:rv_color="?attr/colorAccent"
-                        app:rv_type="doubleRipple" >
+                        style="@style/RippleStyleCircle" >
 
                         <ImageButton
                             android:id="@+id/clear"
@@ -95,10 +93,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
-                    app:rv_rippleDuration="200"
-                    app:rv_color="?attr/colorAccent"
-                    app:rv_zoom="true"
-                    app:rv_type="doubleRipple" >
+                    style="@style/RippleStyleCircle" >
 
                     <ImageButton
                         android:id="@+id/search"

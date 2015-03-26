@@ -87,42 +87,42 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal" >
 
-                        <LinearLayout
-                            android:id="@+id/songNameBox"
+                        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                            style="@style/RippleStyleCircle"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="bottom" >
+                            android:layout_height="match_parent" >
 
-                            <TextView
-                                android:id="@+id/songName"
-                                style="@style/TextStyleLine1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="middle"
-                                android:lines="1"
-                                android:maxLength="45" />
+                            <LinearLayout
+                                android:id="@+id/songNameBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="bottom" >
 
-                            <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
-                                style="@style/RippleStyleCircle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" >
+                                <TextView
+                                    android:id="@+id/songName"
+                                    style="@style/TextStyleLine1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="middle"
+                                    android:lines="1"
+                                    android:maxLength="45" />
 
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
                                     android:layout_gravity="end|top"
-                                    android:paddingLeft="4dp"
                                     android:layout_weight="0"
+                                    android:paddingLeft="4dp"
                                     android:src="@drawable/ic_mode_edit_grey" />
-                            </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
-                        </LinearLayout>
+                            </LinearLayout>
+                        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
                         <EditText
                             android:id="@+id/songNameEdit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
                             android:imeOptions="actionDone"
+                            android:inputType="none"
                             android:maxLength="45"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
@@ -138,24 +138,24 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal" >
 
-                        <LinearLayout
-                            android:id="@+id/artistNameBox"
+                        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                            style="@style/RippleStyleRectangle"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="bottom" >
+                            android:layout_height="match_parent" >
 
-                            <TextView
-                                android:id="@+id/artistName"
-                                style="@style/TextStyleLine1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:lines="1"
-                                android:maxLength="45" />
+                            <LinearLayout
+                                android:id="@+id/artistNameBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="bottom" >
 
-                            <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
-                                style="@style/RippleStyleRectangle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" >
+                                <TextView
+                                    android:id="@+id/artistName"
+                                    style="@style/TextStyleLine1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:lines="1"
+                                    android:maxLength="45" />
 
                                 <ImageView
                                     android:layout_width="24dp"
@@ -164,18 +164,18 @@
                                     android:layout_weight="0"
                                     android:paddingLeft="4dp"
                                     android:src="@drawable/ic_mode_edit_grey" />
-                            </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
-                        </LinearLayout>
+                            </LinearLayout>
+                        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
                         <EditText
                             android:id="@+id/artistNameEdit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
                             android:maxLength="45"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
-                            android:imeOptions="actionDone"
-                           	android:singleLine="true"
+                            android:singleLine="true"
                             android:visibility="gone" />
                     </FrameLayout>
 
@@ -250,8 +250,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="1"
-                        app:rippleRoundedCorners="24dp" >
+                        android:layout_weight="1" >
 
                         <ImageView
                             android:id="@+id/shuffle"
@@ -266,8 +265,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="1"
-                        app:rippleRoundedCorners="24dp" >
+                        android:layout_weight="1" >
 
                         <ImageView
                             android:id="@+id/prev"
@@ -282,8 +280,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="1"
-                        app:rippleRoundedCorners="24dp" >
+                        android:layout_weight="1" >
 
                         <ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView
                             android:id="@+id/playpause"
@@ -301,8 +298,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="1"
-                        app:rippleRoundedCorners="24dp" >
+                        android:layout_weight="1" >
 
                         <ImageView
                             android:id="@+id/stop"
@@ -317,8 +313,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="1"
-                        app:rippleRoundedCorners="24dp" >
+                        android:layout_weight="1" >
 
                         <ImageView
                             android:id="@+id/next"
@@ -333,8 +328,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="1"
-                        app:rippleRoundedCorners="24dp" >
+                        android:layout_weight="1" >
 
                         <ImageView
                             android:id="@+id/repeat"
@@ -347,7 +341,7 @@
 
                 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                     style="@style/RippleStyleRectangle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp" >
 
