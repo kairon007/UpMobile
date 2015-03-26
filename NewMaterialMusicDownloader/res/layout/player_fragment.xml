@@ -87,28 +87,25 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal" >
 
-                        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                            style="@style/RippleStyleCircle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            app:rippleRoundedCorners="12dp" >
+                        <LinearLayout
+                            android:id="@+id/songNameBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="bottom" >
 
-                            <LinearLayout
-                                android:id="@+id/songNameBox"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="bottom" >
+                            <TextView
+                                android:id="@+id/songName"
+                                style="@style/TextStyleLine1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="middle"
+                                android:lines="1"
+                                android:maxLength="45" />
 
-                                <TextView
-                                    android:id="@+id/songName"
-                                    style="@style/TextStyleLine1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:ellipsize="middle"
-                                    android:lines="1"
-                                    android:layout_weight="1"
-                                    android:maxLength="45" />
+                            <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                                style="@style/RippleStyleCircle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" >
 
                                 <ImageView
                                     android:layout_width="24dp"
@@ -117,8 +114,8 @@
                                     android:paddingLeft="4dp"
                                     android:layout_weight="0"
                                     android:src="@drawable/ic_mode_edit_grey" />
-                            </LinearLayout>
-                        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                            </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                        </LinearLayout>
 
                         <EditText
                             android:id="@+id/songNameEdit"
@@ -141,27 +138,24 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal" >
 
-                        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                            style="@style/RippleStyleCircle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            app:rippleRoundedCorners="12dp" >
+                        <LinearLayout
+                            android:id="@+id/artistNameBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="bottom" >
 
-                            <LinearLayout
-                                android:id="@+id/artistNameBox"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="bottom" >
+                            <TextView
+                                android:id="@+id/artistName"
+                                style="@style/TextStyleLine1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:lines="1"
+                                android:maxLength="45" />
 
-                                <TextView
-                                    android:id="@+id/artistName"
-                                    style="@style/TextStyleLine1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:lines="1"
-                                    android:layout_weight="1"
-                                    android:maxLength="45" />
+                            <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                                style="@style/RippleStyleRectangle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" >
 
                                 <ImageView
                                     android:layout_width="24dp"
@@ -170,9 +164,8 @@
                                     android:layout_weight="0"
                                     android:paddingLeft="4dp"
                                     android:src="@drawable/ic_mode_edit_grey" />
-
-                            </LinearLayout>
-                        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                            </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                        </LinearLayout>
 
                         <EditText
                             android:id="@+id/artistNameEdit"
@@ -202,18 +195,18 @@
                                 style="@style/TextStyleLine2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:minWidth="48dp"
                                 android:layout_gravity="left"
-                                android:gravity="start" />
+                                android:gravity="start"
+                                android:minWidth="48dp" />
 
                             <ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView
                                 android:id="@+id/trackTotalTime"
                                 style="@style/TextStyleLine2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:minWidth="48dp"
                                 android:layout_gravity="right"
-                                android:gravity="end" />
+                                android:gravity="end"
+                                android:minWidth="48dp" />
                         </FrameLayout>
 
                         <FrameLayout
@@ -252,7 +245,7 @@
                     android:layout_height="wrap_content"
                     android:baselineAligned="false" >
 
-                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -266,9 +259,9 @@
                             android:layout_height="48dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_shuffle_grey" />
-                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
-                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -282,9 +275,9 @@
                             android:layout_height="48dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_fast_rewind_grey" />
-                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
-                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -301,9 +294,9 @@
                             app:mainColor="@android:color/transparent"
                             app:pauseBackground="@android:color/transparent"
                             app:playBackground="@android:color/transparent" />
-                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
-                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -317,9 +310,9 @@
                             android:layout_height="48dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_stop_grey" />
-                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
-                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -333,9 +326,9 @@
                             android:layout_height="48dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_fast_forward_grey" />
-                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
-                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -349,12 +342,12 @@
                             android:layout_height="48dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_repeat_grey" />
-                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
                 </LinearLayout>
 
-                <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                    style="@style/RippleStyle"
-                    android:layout_width="match_parent"
+                <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                    style="@style/RippleStyleRectangle"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp" >
 
@@ -366,7 +359,7 @@
                         android:layout_gravity="center"
                         android:minHeight="48dp"
                         android:text="@string/download_dialog_download" />
-                </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
                 <FrameLayout
                     android:layout_width="match_parent"

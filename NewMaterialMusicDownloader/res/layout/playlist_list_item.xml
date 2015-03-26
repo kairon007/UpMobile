@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.csform.android.uiapptemplate.view.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/org.upmobile.newmaterialmusicdownloader"
-    style="@style/RippleStyleWhiteBack"
+<ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/RippleStyleRectangle"
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_item_height"
     android:paddingLeft="8dp" >
@@ -67,4 +66,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+</ru.johnlife.lifetoolsmp3.ui.widget.RippleView>

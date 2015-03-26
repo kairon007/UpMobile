@@ -3,12 +3,10 @@
     style="@style/TextStyleLine2"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:paddingLeft="16dp"
     android:layout_gravity="start|center_vertical"
+    android:background="?attr/elementSelector"
     android:gravity="start|center_vertical"
-    android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:textColor="@android:color/white"
-    android:background="?attr/elementSelector">
-
-</TextView>
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:textColor="@android:color/white" />

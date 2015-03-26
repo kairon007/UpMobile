@@ -13,12 +13,13 @@
         android:layout_gravity="top"
         android:background="?attr/colorAccent" />
 
-    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-        style="@style/RippleStyle"
+    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:paddingTop="1dp" >
+        android:paddingTop="1dp"
+        app:rv_color="?attr/colorPrimary"
+        app:rv_type="rectangle" >
 
         <LinearLayout
             android:id="@+id/mini_player_main"
@@ -68,13 +69,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical" >
 
-                <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                    style="@style/RippleStyleCircle"
+                <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    app:rippleDuration="800"
-                    app:rippleRoundedCorners="24dp" >
+                    app:rv_color="?attr/colorPrimary"
+                    app:rv_rippleDuration="200"
+                    app:rv_type="doubleRipple" >
 
                     <ImageView
                         android:id="@+id/mini_player_download"
@@ -83,7 +84,7 @@
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_file_download_grey"
                         android:visibility="gone" />
-                </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
             </FrameLayout>
 
             <FrameLayout
@@ -91,13 +92,12 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical" >
 
-                <com.csform.android.uiapptemplate.view.MaterialRippleLayout
+                <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                     style="@style/RippleStyleCircle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
-                    app:rippleDuration="800"
-                    app:rippleRoundedCorners="24dp" >
+                    app:rv_color="?attr/colorPrimary" >
 
                     <ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView
                         android:id="@+id/mini_player_play_pause"
@@ -107,9 +107,9 @@
                         app:colorButton="?attr/colorPrimary"
                         app:mainColor="@android:color/transparent"
                         app:pauseBackground="@android:color/transparent"
-                        app:playBackground="@android:color/transparent"
-                        app:pauseBarHeight="35" />
-                </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                        app:pauseBarHeight="35"
+                        app:playBackground="@android:color/transparent" />
+                </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
                 <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
                     android:id="@+id/mini_player_progress"
@@ -119,6 +119,6 @@
                     android:background="?attr/colorAccent" />
             </FrameLayout>
         </LinearLayout>
-    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
 </FrameLayout>

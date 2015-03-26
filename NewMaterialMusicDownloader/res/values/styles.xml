@@ -118,48 +118,6 @@
         <item name="cpb_colorIndicator">?attr/colorPrimary</item>
         <item name="android:textColor">?attr/colorTextPrimary</item>
     </style>
-
-    <style name="RippleStyle">
-        <item name="rippleOverlay">false</item>
-        <item name="rippleColor">?attr/colorPrimary</item>
-        <item name="rippleAlpha">0.7</item>
-        <item name="rippleDimension">45dp</item>
-        <item name="rippleHover">true</item>
-        <item name="rippleDuration">200</item>
-        <item name="rippleFadeDuration">50</item>
-        <item name="rippleBackground">@android:color/transparent</item>
-        <item name="rippleDelayClick">true</item>
-        <item name="ripplePersistent">false</item>
-        <item name="rippleInAdapter">false</item>
-    </style>
-    
-    <style name="RippleStyleCircle">
-        <item name="rippleOverlay">true</item>
-        <item name="rippleColor">?attr/colorPrimary</item>
-        <item name="rippleAlpha">0.6</item>
-        <item name="rippleDimension">45dp</item>
-        <item name="rippleHover">true</item>
-        <item name="rippleDuration">200</item>
-        <item name="rippleFadeDuration">50</item>
-        <item name="rippleBackground">@android:color/transparent</item>
-        <item name="rippleDelayClick">true</item>
-        <item name="ripplePersistent">false</item>
-        <item name="rippleInAdapter">false</item>
-    </style>
-
-    <style name="RippleStyleWhiteBack">
-        <item name="rippleOverlay">false</item>
-        <item name="rippleColor">?attr/colorPrimary</item>
-        <item name="rippleAlpha">0.7</item>
-        <item name="rippleDimension">45dp</item>
-        <item name="rippleHover">true</item>
-        <item name="rippleDuration">200</item>
-        <item name="rippleFadeDuration">50</item>
-        <item name="rippleBackground">@android:color/white</item>
-        <item name="rippleDelayClick">true</item>
-        <item name="ripplePersistent">false</item>
-        <item name="rippleInAdapter">false</item>
-    </style>
 	
     <style name="FloatingEditText">
         <item name="floating_et_color">?attr/colorTextPrimary</item>
@@ -173,5 +131,20 @@
         <item name="checkbox_color">?attr/colorPrimary</item>
         <item name="checkbox_checked_color">?attr/colorAccent</item>
     </style>
+    
+    <style name="RippleStyle">
+        <item name="rv_rippleDuration">150</item>
+    </style>
+    
+    <style name="RippleStyleRectangle" parent="RippleStyle">
+        <item name="rv_color">?attr/colorPrimary</item>
+    </style>
+    
+    <style name="RippleStyleCircle" parent="RippleStyle">
+        <item name="rv_color">@android:color/white</item>
+        <item name="rv_type">doubleRipple</item>
+    </style>
+    
+    
 
 </resources>
