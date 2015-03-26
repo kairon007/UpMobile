@@ -7,12 +7,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.AttributeSet;
 import android.view.View;
 
 public class SimpleVisualizerView extends View {
 	
 	private byte[] mBytes;
-	private Rect mRect;
+	private Rect mRect = new Rect();
 	protected float[] mPoints;
 	private Paint mForePaint = new Paint();
 	private int mLinesCount = 16;
@@ -24,6 +25,16 @@ public class SimpleVisualizerView extends View {
 		super(context);
 		init();
 	}
+	
+    public SimpleVisualizerView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public SimpleVisualizerView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init();
+    }
 
 	private void init() {
 		mForePaint.setAntiAlias(true);
@@ -75,13 +86,15 @@ public class SimpleVisualizerView extends View {
 	}
 	
 	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		mRect.set(0, 0, getWidth(), getHeight());
+		mLinesStroke = getWidth() / mLinesCount;
+		mLinesStroke = (int)(mLinesStroke * 0.45);	}
+	
+	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		if (null == mRect) {
-			mRect = new Rect(0, 0, getWidth(), getHeight());
-			mLinesStroke = getWidth() / mLinesCount;
-			mLinesStroke = (int)(mLinesStroke * 0.45);
-		}
 		if (mBytes == null) return;
 		Integer[] currentValues = new Integer[mLinesCount];
 		for (int i = 0; i < mLinesCount; i++) {
