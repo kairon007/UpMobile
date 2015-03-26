@@ -72,7 +72,7 @@ public class RippleView extends FrameLayout {
     private void init(final Context context, final AttributeSet attrs) {
         if (isInEditMode()) return;
         final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RippleView);
-        rippleColor = typedArray.getColor(R.styleable.RippleView_rv_color, getResources().getColor(R.color.rippelColor));
+        rippleColor = typedArray.getColor(R.styleable.RippleView_rv_color, Color.TRANSPARENT);
         rippleType = typedArray.getInt(R.styleable.RippleView_rv_type, 0);
         hasToZoom = typedArray.getBoolean(R.styleable.RippleView_rv_zoom, false);
         isCentered = typedArray.getBoolean(R.styleable.RippleView_rv_centered, false);
@@ -89,7 +89,7 @@ public class RippleView extends FrameLayout {
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(rippleColor);
         paint.setAlpha(PAINT_ALPHA);
-        this.setWillNotDraw(false);
+        setWillNotDraw(false);
         
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
         	
@@ -115,48 +115,48 @@ public class RippleView extends FrameLayout {
                 return true;
             }
         });
-        this.setDrawingCacheEnabled(true);
-        this.setClickable(true);
+        setClickable(true);
     }
 
-    @Override
-    public void draw(@NonNull Canvas canvas) {
-    	super.draw(canvas);
-        if (animationRunning) {
-            if (DURATION <= timer * FRAME_RATE) {
-                animationRunning = false;
-                timer = 0;
-                durationEmpty = -1;
-                timerEmpty = 0;
-                canvas.restore();
-                invalidate();
-                return;
-            } else
-                canvasHandler.postDelayed(runnable, FRAME_RATE);
-            if (timer == 0)
-            	canvas.save();
-            canvas.drawCircle(x, y, (radiusMax * (((float) timer * FRAME_RATE) / DURATION)), paint);
-            paint.setColor(Color.parseColor("#ffff4444"));
-            if (rippleType == 1 && originBitmap != null && (((float) timer * FRAME_RATE) / DURATION) > 0.4f) {
-                if (durationEmpty == -1)
-                	durationEmpty = DURATION - timer * FRAME_RATE;
-                timerEmpty++;
-                final Bitmap tmpBitmap = getCircleBitmap((int) ((radiusMax) * (((float) timerEmpty * FRAME_RATE) / (durationEmpty))));
-                canvas.drawBitmap(tmpBitmap, 0, 0, paint);
-                tmpBitmap.recycle();
-            }
-            paint.setColor(rippleColor);
-            if (rippleType == 1) {
-                if ((((float) timer * FRAME_RATE) / DURATION) > 0.6f)
-                    paint.setAlpha((int) (PAINT_ALPHA - ((PAINT_ALPHA) * (((float) timerEmpty * FRAME_RATE) / (durationEmpty)))));
-                else
-                    paint.setAlpha(PAINT_ALPHA);
-            }
-            else
-                paint.setAlpha((int) (PAINT_ALPHA - ((PAINT_ALPHA) * (((float) timer * FRAME_RATE) / DURATION))));
-            timer++;
-        }
-    }
+	@Override
+	public void draw(@NonNull Canvas canvas) {
+		super.draw(canvas);
+		if (!animationRunning)
+			return;
+		if (DURATION <= timer * FRAME_RATE) {
+			animationRunning = false;
+			timer = 0;
+			durationEmpty = -1;
+			timerEmpty = 0;
+			canvas.restore();
+			invalidate();
+			return;
+		} else {
+			canvasHandler.postDelayed(runnable, FRAME_RATE);
+		}
+		if (timer == 0) {
+			canvas.save();
+		}
+		canvas.drawCircle(x, y, (radiusMax * (((float) timer * FRAME_RATE) / DURATION)), paint);
+		paint.setColor(Color.parseColor("#ffff4444"));
+		if (rippleType == 1 && originBitmap != null	&& (((float) timer * FRAME_RATE) / DURATION) > 0.4f) {
+			if (durationEmpty == -1)
+				durationEmpty = DURATION - timer * FRAME_RATE;
+			timerEmpty++;
+			final Bitmap tmpBitmap = getCircleBitmap((int) ((radiusMax) * (((float) timerEmpty * FRAME_RATE) / (durationEmpty))));
+			canvas.drawBitmap(tmpBitmap, 0, 0, paint);
+			tmpBitmap.recycle();
+		}
+		paint.setColor(rippleColor);
+		if (rippleType == 1) {
+			if ((((float) timer * FRAME_RATE) / DURATION) > 0.6f)
+				paint.setAlpha((int) (PAINT_ALPHA - ((PAINT_ALPHA) * (((float) timerEmpty * FRAME_RATE) / (durationEmpty)))));
+			else
+				paint.setAlpha(PAINT_ALPHA);
+		} else
+			paint.setAlpha((int) (PAINT_ALPHA - ((PAINT_ALPHA) * (((float) timer * FRAME_RATE) / DURATION))));
+		timer++;
+	}
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -180,7 +180,7 @@ public class RippleView extends FrameLayout {
     private void createAnimation(final float x, final float y) {
         if (!animationRunning) {
             if (hasToZoom) {
-            	this.startAnimation(scaleAnimation);
+            	startAnimation(scaleAnimation);
             }
             radiusMax = Math.max(WIDTH, HEIGHT);
             if (rippleType != 2)
@@ -195,7 +195,7 @@ public class RippleView extends FrameLayout {
             }
             animationRunning = true;
             if (rippleType == 1 && originBitmap == null)
-                originBitmap = getDrawingCache(true);
+                originBitmap = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
             invalidate();
         }
     }
@@ -211,7 +211,7 @@ public class RippleView extends FrameLayout {
     
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        this.onTouchEvent(event);
+        onTouchEvent(event);
         return super.onInterceptTouchEvent(event);
     }
 
