@@ -43,16 +43,15 @@
             android:id="@+id/choise_engines_layout"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:background="@drawable/search_background"
+            android:background="?attr/colorPrimary"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:background="?attr/colorPrimary"
                 android:divider="@drawable/layout_divider"
                 android:orientation="horizontal"
-                android:paddingLeft="15dp"
+                android:paddingLeft="16dp"
                 android:showDividers="middle" >
 
                 <FrameLayout
@@ -72,7 +71,9 @@
                         android:textColor="@android:color/white"
                         app:floating_et_color="@android:color/white"
                         app:floating_et_error_color="@android:color/holo_red_light"
-                        app:floating_et_highlighted_color="?attr/colorAccent" >
+                        app:floating_et_highlighted_color="?attr/colorAccent"
+                        app:floating_et_right_padding="48dp" >
+
                     </ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText>
 
                     <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
@@ -80,6 +81,7 @@
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
                         android:layout_marginBottom="4dp"
+                        app:rv_rippleDuration="50"
                         app:rv_color="?attr/colorAccent"
                         app:rv_type="doubleRipple" >
 
@@ -98,6 +100,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
+                    app:rv_rippleDuration="200"
                     app:rv_color="?attr/colorAccent"
                     app:rv_zoom="true"
                     app:rv_type="doubleRipple" >
@@ -124,9 +127,10 @@
                 android:id="@+id/choise_engines"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="?attr/colorPrimary"
+                android:gravity="top"
                 android:paddingLeft="@dimen/material_edges_padding"
                 android:paddingRight="@dimen/material_edges_padding" />
+
         </LinearLayout>
 
         <FrameLayout

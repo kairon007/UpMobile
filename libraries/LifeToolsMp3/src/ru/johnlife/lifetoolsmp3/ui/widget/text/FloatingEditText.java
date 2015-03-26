@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
@@ -33,12 +34,14 @@ public class FloatingEditText extends EditText {
     private static final int StateHintZoomOut = 2;
     private static final float HINT_SCALE = 0.6f;
     
-    private Rect lineRect = new Rect();
     private Paint hintPaint;
     private Paint countPaint;
-    private Drawable underline;
     
     private String validateMessage;
+    
+    private int spacingBtmToUnderline = 16;// Btm = Bottom
+    private int spacingBtmToText = 24;
+    private int spacingTopToText = 16;
     
     //attr
     private int color;
@@ -46,10 +49,14 @@ public class FloatingEditText extends EditText {
     private int errorColor;
     private int underlineHeight;
     private int underlineHighlightedHeight;
+    private int leftPadding;
+    private int rightPadding;
     private int maxCharCount = MAX_CHAR_COUNT;
     private int currentCharCount = 0;
     private float hintScale;
     private boolean showCharCount = false;
+    
+    
     
     private boolean isExcessiveCount = false;
     private int state = StateHintNormal;
@@ -78,6 +85,8 @@ public class FloatingEditText extends EditText {
 			underlineHighlightedHeight = attr.getDimensionPixelSize(R.styleable.FloatingEditText_floating_et_underline_highlighted_height, getResources().getDimensionPixelSize(R.dimen.floating_edit_text_underline_highlighted_height));
 			showCharCount = attr.getBoolean(R.styleable.FloatingEditText_floating_et_show_count, false);
 			maxCharCount = attr.getInteger(R.styleable.FloatingEditText_floating_et_char_count, MAX_CHAR_COUNT);
+			leftPadding = attr.getDimensionPixelSize(R.styleable.FloatingEditText_floating_et_left_padding, 0);
+			rightPadding = attr.getDimensionPixelSize(R.styleable.FloatingEditText_floating_et_right_padding, 0);
         } finally {
 			attr.recycle();
 		}
@@ -88,11 +97,11 @@ public class FloatingEditText extends EditText {
         countPaint = new Paint();
         countPaint.setAntiAlias(true);
 
-        underline = new Drawable() {
+        Drawable underline = new Drawable() {
         	
             @Override
             public void draw(Canvas canvas) {
-                if (verified) {
+                if (verified && !isExcessiveCount) {
                     if (isFocused()) {
                         Rect rect = getThickLineRect(canvas);
                         hintPaint.setColor(highlightedColor);
@@ -107,11 +116,13 @@ public class FloatingEditText extends EditText {
                     hintPaint.setColor(errorColor);
                     canvas.drawRect(rect, hintPaint);
 
-                    hintPaint.setColor(errorColor);
-                    hintPaint.setTextSize(getTextSize() * 0.6f);
-                    float x = getCompoundPaddingLeft();
-                    float y = rect.bottom + (dpToPx( 16) - hintPaint.getFontMetricsInt().top) / 2;
-                    canvas.drawText(validateMessage, x, y, hintPaint);
+                    if (!verified) {
+						hintPaint.setColor(errorColor);
+						hintPaint.setTextSize(getTextSize() * 0.6f);
+						float x = getCompoundPaddingLeft();
+						float y = rect.bottom + (dpToPx(16) - hintPaint.getFontMetricsInt().top) / 2;
+						canvas.drawText(validateMessage, x, y, hintPaint);
+					}
                 }
             }
 
@@ -135,25 +146,27 @@ public class FloatingEditText extends EditText {
         } else {
             setBackground(underline);
         }
-        int paddingTop = dpToPx( 16); //TODO set height dimens
-        int paddingBottom = dpToPx( 24);
-        setPadding(0, paddingTop, 0, paddingBottom);
+		int paddingTop = dpToPx(spacingTopToText);
+		int paddingBottom = dpToPx(spacingBtmToText);
+        setPadding(leftPadding, paddingTop, rightPadding, paddingBottom);
         setSingleLine();
     }
     
     private Rect getThinLineRect(Canvas canvas) {
+    	Rect lineRect = new Rect();
         lineRect.left = getPaddingLeft();
-        lineRect.top = canvas.getHeight() - underlineHeight - dpToPx( 16);
+        lineRect.top = canvas.getHeight() - underlineHeight - dpToPx(spacingBtmToUnderline);
         lineRect.right = getWidth();
-        lineRect.bottom = canvas.getHeight() - dpToPx( 16);
+        lineRect.bottom = canvas.getHeight() - dpToPx(spacingBtmToUnderline);
         return lineRect;
     }
 
     private Rect getThickLineRect(Canvas canvas) {
+    	Rect lineRect = new Rect();
         lineRect.left = getPaddingLeft();
-        lineRect.top = canvas.getHeight() - underlineHighlightedHeight - dpToPx( 16);
+        lineRect.top = canvas.getHeight() - underlineHighlightedHeight - dpToPx(spacingBtmToUnderline);
         lineRect.right = getWidth();
-        lineRect.bottom = canvas.getHeight() - dpToPx( 16);
+        lineRect.bottom = canvas.getHeight() - dpToPx(spacingBtmToUnderline);
         return lineRect;
     }
 
@@ -182,13 +195,7 @@ public class FloatingEditText extends EditText {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
         currentCharCount = text.length();
         if (showCharCount) {
-			if (maxCharCount <= currentCharCount && null != underline) {
-				isExcessiveCount = true;
-				underline.setColorFilter(new PorterDuffColorFilter(errorColor, PorterDuff.Mode.MULTIPLY));
-			} else {
-				underline.setColorFilter(new PorterDuffColorFilter(highlightedColor, PorterDuff.Mode.MULTIPLY));
-				isExcessiveCount = false;
-			}
+        	isExcessiveCount = maxCharCount <= currentCharCount;
 		}
 		this.verified = true;
         this.validateMessage = null;
@@ -275,8 +282,6 @@ public class FloatingEditText extends EditText {
 			countPaint.setColor(isExcessiveCount ? errorColor : highlightedColor);
 			countPaint.setTextSize(textSize);
 			canvas.drawText(str, x, y, countPaint);
-			int color = isExcessiveCount ? errorColor : highlightedColor;
-			underline.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY));
 		}
 	}
 
