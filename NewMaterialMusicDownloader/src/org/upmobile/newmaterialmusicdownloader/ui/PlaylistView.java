@@ -197,7 +197,11 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	private StateListDrawable getStateList() {
-		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimaryDark));
+		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorAccent));
+		float[] hsv = new float[3];
+		Color.colorToHSV(color, hsv);
+		hsv[2] *= 0.8f;
+		color = Color.HSVToColor(hsv);
 		Drawable pressed = new BitmapDrawable(getResources(), createBitMap(48, 48, color, 0));
 		Drawable idle = new BitmapDrawable(getResources(), createBitMap(48, 48));
 		StateListDrawable stateListDrawable = new StateListDrawable();
