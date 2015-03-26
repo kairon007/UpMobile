@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -115,7 +116,12 @@ public abstract class BaseDownloadsView extends View{
 			} catch (Exception e) {
 			}
 		}
-		return list;
+		return sortList(list);
+	}
+	
+	private ArrayList<MusicData> sortList (ArrayList<MusicData> arrayList) {
+		Collections.sort(arrayList);
+		return arrayList;
 	}
 
 	private ArrayList<MusicData> updateList(Cursor c, ArrayList<MusicData> result) {
