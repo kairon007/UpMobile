@@ -8,6 +8,7 @@ import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListe
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import android.annotation.TargetApi;
@@ -24,6 +25,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 
@@ -310,10 +312,25 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	}
 	
 	private void downloadSong() {
-		downloadListener = new DownloadClickListener(this, (RemoteSong) song, 0);
-		downloadListener.setDownloadPath(getDirectory());
-		downloadListener.setUseAlbumCover(true);
-		downloadListener.downloadSong(false);
+		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+
+			@Override
+			public void success(String url) {
+				downloadListener = new DownloadClickListener(BaseMiniPlayerActivity.this, (RemoteSong) song, 0);
+				downloadListener.setDownloadPath(getDirectory());
+				downloadListener.setUseAlbumCover(true);
+				downloadListener.downloadSong(false);
+			}
+
+			@Override
+			public void error(final String error) {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						showMessage(error);
+					}
+				});
+			}
+		});
 	}
 	
 	protected void setCover(Bitmap bmp) {
@@ -334,6 +351,14 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	
 	protected void setPlayerFragmentVisible(boolean value) {
 		isPlayerFragmentVisible = value;
+	}
+	
+	public void showMessage(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+	}
+
+	public void showMessage(int message) {
+		showMessage(getString(message));
 	}
 	
 }

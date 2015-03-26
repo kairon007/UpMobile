@@ -67,8 +67,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
+	private final int BAD_SONG = 2048; // 200kb
 	private AbstractSong song;
-	private AsyncTask<Long, Integer, Void> progressUpdater;
+	private AsyncTask<Long,Integer,String> progressUpdater;
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
@@ -782,6 +783,16 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 			@Override
 			public void error(String error) {
+				((MainActivity) getActivity()).runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						((MainActivity) getActivity()).showMessage(R.string.download_failed);
+						download.setProgress(0);
+						download.setOnClickListener(PlayerFragment.this);
+						setDownloadButtonState(true);
+					}
+				});
 			}
 		});
 	}
@@ -815,7 +826,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		});
 	}
 	
-	private class ProgressUpdater extends AsyncTask<Long, Integer, Void> {
+	private class ProgressUpdater extends AsyncTask<Long, Integer, String> {
+
+		private static final String FAILURE = "failure";
 
 		@Override
 		protected void onPreExecute() {
@@ -827,7 +840,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		
 		@Override
-		protected Void doInBackground(Long... params) {
+		protected String doInBackground(Long... params) {
 			if (isDestroy) return null;
 			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 			int progress = 0;
@@ -836,16 +849,43 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				if (params[0] != -1) {
 					Cursor c = manager.query(new DownloadManager.Query().setFilterById(params[0]));
 					if (c.moveToNext()) {
+						int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 						int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
 						int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 						int size = c.getInt(sizeIndex);
 						int downloaded = c.getInt(downloadedIndex);
-						if (size != -1 && size != 0) {
-							progress = downloaded * 100 / size;
-						} else {
-							progress = downloaded * 100 / DEFAULT_SONG;
+						switch (status) {
+						case DownloadManager.STATUS_FAILED:
+							return FAILURE;
+						case DownloadManager.ERROR_CANNOT_RESUME:
+							return FAILURE;
+						case DownloadManager.ERROR_FILE_ERROR:
+							return FAILURE;
+						case DownloadManager.ERROR_HTTP_DATA_ERROR:
+							return FAILURE;
+						case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+							return FAILURE;
+						case DownloadManager.ERROR_UNKNOWN:
+							return FAILURE;
+						case DownloadManager.STATUS_RUNNING:
+							if (size != -1 && size != 0) {
+								progress = downloaded * 100 / size;
+							} else {
+								progress = downloaded * 100 / DEFAULT_SONG;
+							}
+							publishProgress(progress);
+							break;
+						case DownloadManager.STATUS_SUCCESSFUL:
+							File file = new File(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+							if (downloaded < BAD_SONG || downloaded != size) {
+								file.delete();
+								return FAILURE;
+							} else {
+								progress = 100;
+								publishProgress(100);
+							}
+							break;
 						}
-						publishProgress(progress);
 					}
 					c.close();
 				}
@@ -859,8 +899,16 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 
 		@Override
-		protected void onPostExecute(Void params) {
-			download.setProgress(isCancelled() ? 0 : 100);
+		protected void onPostExecute(String params) {
+			if(FAILURE.equals(params)) {
+				((MainActivity) getActivity()).showMessage(R.string.download_failed);
+				download.setProgress(0);
+				download.setOnClickListener(PlayerFragment.this);
+				setDownloadButtonState(true);
+				this.cancel(true);
+			} else {
+				download.setProgress(isCancelled() ? 0 : 100);
+			}
 		}
 		
 		@Override

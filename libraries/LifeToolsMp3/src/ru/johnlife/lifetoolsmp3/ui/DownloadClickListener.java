@@ -420,11 +420,23 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			if (c.moveToFirst()) {
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 				switch (status) {
+				case DownloadManager.ERROR_CANNOT_RESUME:
+					failed(c, artist, title);
+					return;
+				case DownloadManager.ERROR_FILE_ERROR:
+					failed(c, artist, title);
+					return;
+				case DownloadManager.ERROR_HTTP_DATA_ERROR:
+					failed(c, artist, title);
+					return;
+				case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+					failed(c, artist, title);
+					return;
+				case DownloadManager.ERROR_UNKNOWN:
+					failed(c, artist, title);
+					return;
 				case DownloadManager.STATUS_FAILED:
-					notifyAboutFailed(currentDownloadId);
-					c.close();
-					DownloadCache.getInstanse().remove(artist, title);
-					this.cancel();
+					failed(c, artist, title);
 					return;
 				case DownloadManager.STATUS_RUNNING:
 					if (isFullAction()) {
@@ -496,6 +508,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				manager.remove(currentDownloadId);
 				this.cancel();
 			}
+		}
+
+		private void failed(Cursor c, final String artist, final String title) {
+			notifyAboutFailed(currentDownloadId);
+			c.close();
+			DownloadCache.getInstanse().remove(artist, title);
+			this.cancel();
 		}
 
 		private String cutPath(String s) {
