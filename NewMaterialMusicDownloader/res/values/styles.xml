@@ -49,7 +49,7 @@
     </style>
 
     <style name="RippleStyleCircle" parent="RippleStyle">
-        <item name="rv_color">@android:color/white</item>
+        <item name="rv_color">?attr/colorPrimary</item>
         <item name="rv_type">doubleRipple</item>
     </style>
 

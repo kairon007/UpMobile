@@ -65,18 +65,19 @@
                         android:layout_height="match_parent"
                         android:hint="@string/hint_main_search"
                         android:imeOptions="actionSearch"
+                        android:inputType="textFilter|textMultiLine"
                         android:lines="1"
                         android:paddingRight="56dp"
                         android:singleLine="true"
-                        android:inputType="textFilter|textMultiLine"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white" />
 
                     <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                        style="@style/RippleStyleCircle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
-                        android:layout_marginBottom="4dp"
-                        style="@style/RippleStyleCircle" >
+                        app:rv_color="@android:color/white"
+                        android:layout_marginBottom="4dp" >
 
                         <ImageButton
                             android:id="@+id/clear"
@@ -90,10 +91,11 @@
                 </FrameLayout>
 
                 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                    style="@style/RippleStyleCircle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_gravity="center_vertical"
-                    style="@style/RippleStyleCircle" >
+                    app:rv_color="@android:color/white"
+                    android:layout_gravity="center_vertical" >
 
                     <ImageButton
                         android:id="@+id/search"
@@ -120,7 +122,6 @@
                 android:gravity="top"
                 android:paddingLeft="@dimen/material_edges_padding"
                 android:paddingRight="@dimen/material_edges_padding" />
-
         </LinearLayout>
 
         <FrameLayout
