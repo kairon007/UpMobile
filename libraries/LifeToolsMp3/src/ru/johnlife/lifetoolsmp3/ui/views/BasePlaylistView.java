@@ -138,7 +138,7 @@ public abstract class BasePlaylistView extends View {
 		((AnimatedExpandableListView) listView).setAdapter(expandableAdapter);
 		((AnimatedExpandableListView) listView).setEmptyView(emptyView);
 		if (null != getFooter()) {
-			((AnimatedExpandableListView) listView).addFooterView(getFooter());
+			((AnimatedExpandableListView) listView).addFooterView(getFooter(), null, false);
 		}
 		((AnimatedExpandableListView) listView).setOnGroupClickListener(new OnGroupClickListener() {
 
