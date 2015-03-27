@@ -34,6 +34,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -142,6 +143,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
 		changePlayPauseView(prepared && player.isPlaying());
+		contentView.findViewById(R.id.controlPane).measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		scrollView.recalculateCover(R.id.controlPane, R.id.visualizer);
 		return contentView;
 	}
 	
@@ -950,6 +953,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
 		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		scrollView.recalculateCover(R.id.controlPane, R.id.visualizer);
+		super.onConfigurationChanged(newConfig);
 	}
 
 }

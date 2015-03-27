@@ -1,8 +1,10 @@
 package ru.johnlife.lifetoolsmp3.ui.widget;
 
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -72,5 +74,22 @@ public class NotifyingScrollView extends ScrollView {
 			throw new IllegalStateException(getClass().getSimpleName() + " - call setImageResource(int resource) first!");
 		}
 		image.setImageResource(resource);
+	}
+	
+	public void recalculateCover(int res, int visId) {
+		Display display = ((BaseMiniPlayerActivity) getContext()).getWindowManager().getDefaultDisplay(); 
+		int width = display.getWidth(); 
+		int height = display.getHeight();
+		int coverHeight = height - ((View)getParent()).findViewById(res).getMeasuredHeight();
+		int minHeight = coverHeight > width ? width : coverHeight;
+		setMinImageSize(minHeight, minHeight);
+		((View)getParent()).findViewById(visId).getLayoutParams().height = minHeight;
+		((View)getParent()).requestLayout();
+	}
+	
+	public void setMinImageSize(int minWidth, int minHeight) {
+		image.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		image.getLayoutParams().height = minHeight;
+		image.getLayoutParams().width = minHeight;
 	}
 }
