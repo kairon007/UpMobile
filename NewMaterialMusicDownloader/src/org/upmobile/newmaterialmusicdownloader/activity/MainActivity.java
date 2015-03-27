@@ -60,7 +60,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private ActionBarDrawerToggle toggle;
 	private SearchView searchView;
 	private View floatBtnContainer;
-	private int currentFragmentId = SEARCH_FRAGMENT;
+	private int currentFragmentId = -1;
 	private int lastCheckPosition = 0;
 	private boolean isVisibleSearchView = false;
 	private boolean isOpenFromDraver = false;
@@ -207,6 +207,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	public void changeFragment(int fragmentId, boolean fromDraver) {
 		Fragment selectedFragment = null;
 		isOpenFromDraver = fromDraver;
+		
+		if (currentFragmentId == fragmentId) {
+			android.util.Log.d("logks", "don't create fragment");
+			return;
+		}
 
 		if (PLAYER_FRAGMENT != fragmentId) {
 			setPlayerFragmentVisible(false);
