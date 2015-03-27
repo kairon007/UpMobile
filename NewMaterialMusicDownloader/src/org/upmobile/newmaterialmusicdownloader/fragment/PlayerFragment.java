@@ -121,7 +121,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private String lastTitle = ""; 
 	
 	private int primaryColor;
-	private int coverHeight;
 
 	private boolean isDestroy;
 	private Visualizer mVisualizer;

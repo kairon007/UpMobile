@@ -12,6 +12,7 @@ import android.view.View;
 
 public class SimpleVisualizerView extends View {
 	
+//	private static final Object LOCK = new Object();
 	private byte[] mBytes;
 	private Rect mRect = new Rect();
 	protected float[] mPoints;
@@ -43,9 +44,16 @@ public class SimpleVisualizerView extends View {
 		mForePaint.setStrokeWidth(10);
 	}
 
-	public void updateVisualizer(byte[] bytes) {
+	public synchronized void updateVisualizer(byte[] bytes) {
 		mBytes = bytes;
-		invalidate();
+//		synchronized (LOCK) {
+//			try {
+//				LOCK.wait();
+				invalidate();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 
 	public void setColor(int color) {
@@ -83,6 +91,7 @@ public class SimpleVisualizerView extends View {
 				}
 			}
 		}
+//		LOCK.notifyAll();
 	}
 	
 	@Override
