@@ -191,15 +191,19 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			drawerResult.closeDrawer();
 			return;
 		}
+		boolean isToggleEnabled = toggle.isDrawerIndicatorEnabled();
 		setSearchViewVisibility(getPreviousFragmentName(2));
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
-		if (null != player && player.isVisible()) {
+		if (null != player && player.isVisible() && !isToggleEnabled) {
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
 			isOpenFromDraver = true;
 			setPlayerFragmentVisible(false);
 		} else {
-			if (null != service && isMiniPlayerPrepared()) {
+			if (PLAYER_FRAGMENT == currentFragmentId && isToggleEnabled) {
+				service.stopPressed();
+				finish();
+			} else if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
 				showPlayerElement(false);
 			} else {

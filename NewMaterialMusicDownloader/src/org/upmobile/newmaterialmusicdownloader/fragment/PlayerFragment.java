@@ -78,6 +78,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
+	private Visualizer mVisualizer;
 
 	private View contentView;
 
@@ -123,7 +124,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private int primaryColor;
 
 	private boolean isDestroy;
-	private Visualizer mVisualizer;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
