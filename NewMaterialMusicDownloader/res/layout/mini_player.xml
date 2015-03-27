@@ -91,8 +91,8 @@
 
                 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                     style="@style/RippleStyleCircle"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical" >
 
                     <ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView
@@ -103,7 +103,7 @@
                         app:colorButton="?attr/colorPrimary"
                         app:mainColor="@android:color/transparent"
                         app:pauseBackground="@android:color/transparent"
-                        app:pauseBarHeight="35"
+                        app:pauseBarHeight="37"
                         app:playBackground="@android:color/transparent" />
                 </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
