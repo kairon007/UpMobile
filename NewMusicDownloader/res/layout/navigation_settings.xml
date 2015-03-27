@@ -27,7 +27,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.EllipsizingTextView
+    <ru.johnlife.lifetoolsmp3.ui.widget.text.EllipsizingTextView
         android:id="@+id/navmenusection_path"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
