@@ -344,9 +344,8 @@ public class UndoBarController extends LinearLayout {
                 hasNav = true;
             }
             return hasNav;
-        } else { // fallback
-            return !ViewConfiguration.get(context).hasPermanentMenuKey();
         }
+		return !ViewConfiguration.get(context).hasPermanentMenuKey();
     }
 
     private int getInternalDimensionSize(Resources res, String key) {
@@ -568,7 +567,7 @@ public class UndoBarController extends LinearLayout {
             noIcon = false;
             immediate = false;
         }
-
+        
         public UndoBar style(@NonNull UndoBarStyle style) {
             this.style = style;
             return this;

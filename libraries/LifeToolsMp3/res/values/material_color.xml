@@ -8,5 +8,5 @@
   <color name="material_secondary_text">#727272</color>
   <color name="material_icons">#FFFFFF</color>
   <color name="material_divider">#B6B6B6</color>
-  <color name="message_background">#B4323232</color>
+  <color name="message_background">#323232</color>
 </resources>

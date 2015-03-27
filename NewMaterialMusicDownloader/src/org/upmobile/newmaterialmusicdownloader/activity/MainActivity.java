@@ -42,6 +42,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -348,19 +349,22 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		message.message(msg);
 		message.style(UndoBarController.MESSAGESTYLE);
 		floatBtnContainer = findViewById(R.id.containerFloatingBtn);
-		if (null != floatBtnContainer) {
-			throwUp(92);
+		View miniplayer = findViewById(getMiniPlayerID());
+		if (null != floatBtnContainer && miniplayer.getVisibility() != View.VISIBLE) {
+			int toBottom = Util.dpToPx(MainActivity.this, 92);
+			throwUp(toBottom);
 			message.listener(new UndoBarController.AdvancedUndoListener() {
-				
+
 				@Override
 				public void onUndo(@Nullable Parcelable token) {
 				}
-				
+
 				@Override
 				public void onHide(@Nullable Parcelable token) {
-					throwUp(12);
+					int toBottom = Util.dpToPx(MainActivity.this, 12);
+					throwUp(toBottom);
 				}
-				
+
 				@Override
 				public void onClear(@NonNull Parcelable[] token) {
 				}
