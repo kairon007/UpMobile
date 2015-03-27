@@ -14,14 +14,17 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-public class RippleView extends FrameLayout {
+public class RippleView extends FrameLayout implements OnGestureListener {
 
     private int WIDTH;
     private int HEIGHT;
@@ -46,6 +49,7 @@ public class RippleView extends FrameLayout {
     private Bitmap originBitmap;
     private int rippleColor;
     private int ripplePadding;
+    private View childView;
     private GestureDetector gestureDetector;
     
     private final Runnable runnable = new Runnable() {
@@ -84,39 +88,15 @@ public class RippleView extends FrameLayout {
         zoomScale = typedArray.getFloat(R.styleable.RippleView_rv_zoomScale, 1.03f);
         zoomDuration = typedArray.getInt(R.styleable.RippleView_rv_zoomDuration, 200);
         typedArray.recycle();
+        gestureDetector = new GestureDetector(context, this);
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(rippleColor);
         paint.setAlpha(PAINT_ALPHA);
         setWillNotDraw(false);
-        
-        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-        	
-        	@Override
-        	public boolean onDown(MotionEvent e) {
-        		return super.onDown(e);
-        	}
-        	
-            @Override
-            public void onLongPress(MotionEvent event) {
-                super.onLongPress(event);
-            		animateRipple(event);
-            		sendClickEvent(true);
-            }
-
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                return true;
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return true;
-            }
-        });
-        setClickable(true);
-    }
+		setClickable(true);
+	}
 
 	@Override
 	public void draw(@NonNull Canvas canvas) {
@@ -138,7 +118,6 @@ public class RippleView extends FrameLayout {
 			canvas.save();
 		}
 		canvas.drawCircle(x, y, (radiusMax * (((float) timer * FRAME_RATE) / DURATION)), paint);
-		paint.setColor(Color.parseColor("#ffff4444"));
 		if (rippleType == 1 && originBitmap != null	&& (((float) timer * FRAME_RATE) / DURATION) > 0.4f) {
 			if (durationEmpty == -1)
 				durationEmpty = DURATION - timer * FRAME_RATE;
@@ -169,6 +148,35 @@ public class RippleView extends FrameLayout {
         scaleAnimation.setRepeatCount(1);
     }
 
+	@Override
+	public boolean onDown(MotionEvent event) {
+		animateRipple(event);
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent event) { }
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent event) {
+		return true;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) {
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent event) { 
+		sendClickEvent(true);
+	}
+
+	@Override
+	public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+		return false;
+	}
+    
     public void animateRipple(MotionEvent event) {
         createAnimation(event.getX(), event.getY());
     }
@@ -190,7 +198,7 @@ public class RippleView extends FrameLayout {
                 this.x = getMeasuredWidth() / 2;
                 this.y = getMeasuredHeight() / 2;
             } else {
-                this.x = x;
+            	this.x = x;
                 this.y = y;
             }
             animationRunning = true;
@@ -201,19 +209,51 @@ public class RippleView extends FrameLayout {
     }
 
 	@Override
+	public final void addView(View child, int index, ViewGroup.LayoutParams params) {
+		if (getChildCount() > 0) {
+			throw new IllegalStateException("RippleView can host only one child");
+		}
+		childView = child;
+		super.addView(child, index, params);
+	}
+
+	@Override
+	public void setOnClickListener(OnClickListener onClickListener) {
+		if (childView == null) {
+			throw new IllegalStateException("RippleView must have a child view to handle clicks");
+		}
+		childView.setOnClickListener(onClickListener);
+	}
+
+	@Override
 	public boolean onTouchEvent(@NonNull MotionEvent event) {
-        if (gestureDetector.onTouchEvent(event)) {
-            animateRipple(event);
-            sendClickEvent(false);
-        }
+        if (gestureDetector.onTouchEvent(event))
+        	sendClickEvent(false);
         return super.onTouchEvent(event);
 	}
-    
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        onTouchEvent(event);
-        return super.onInterceptTouchEvent(event);
-    }
+
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent event) {
+		return !findClickableViewInChild(childView, (int) event.getX(), (int) event.getY());
+	}
+	
+	private boolean findClickableViewInChild(View view, int x, int y) {
+		if (view instanceof ViewGroup) {
+			ViewGroup viewGroup = (ViewGroup) view;
+			for (int i = 0; i < viewGroup.getChildCount(); i++) {
+				View child = viewGroup.getChildAt(i);
+				final Rect rect = new Rect();
+				child.getHitRect(rect);
+				final boolean contains = rect.contains(x, y);
+				if (contains) {
+					return findClickableViewInChild(child, x - rect.left, y - rect.top);
+				}
+			}
+		} else if (view != childView) {
+			return (view.isEnabled() && (view.isClickable() || view.isLongClickable() || view.isFocusableInTouchMode()));
+		}
+		return view.isFocusableInTouchMode();
+	}
 
 	private void sendClickEvent(final Boolean isLongClick) {
 		if (getParent() instanceof AdapterView) {
@@ -225,6 +265,8 @@ public class RippleView extends FrameLayout {
 			} else {
 				((AdapterView) getParent()).performItemClick(this, position, id);
 			}
+		} else {
+			childView.performClick();
 		}
 	}
 

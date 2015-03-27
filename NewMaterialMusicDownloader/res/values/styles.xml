@@ -42,10 +42,12 @@
 
     <style name="RippleStyle">
         <item name="rv_rippleDuration">150</item>
+        <item name="rv_alpha">160</item>
     </style>
 
     <style name="RippleStyleRectangle" parent="RippleStyle">
         <item name="rv_color">?attr/colorPrimary</item>
+        <item name="rv_type">rectangle</item>
     </style>
 
     <style name="RippleStyleCircle" parent="RippleStyle">
