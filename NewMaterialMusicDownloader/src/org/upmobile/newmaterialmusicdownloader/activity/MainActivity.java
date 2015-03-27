@@ -187,6 +187,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	public void onBackPressed() {
+		if (drawerResult.isDrawerOpen()) {
+			drawerResult.closeDrawer();
+			return;
+		}
 		setSearchViewVisibility(getPreviousFragmentName(2));
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (null != player && player.isVisible()) {
@@ -209,7 +213,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		isOpenFromDraver = fromDraver;
 		
 		if (currentFragmentId == fragmentId) {
-			android.util.Log.d("logks", "don't create fragment");
 			return;
 		}
 
