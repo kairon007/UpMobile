@@ -16,6 +16,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:textSize="16sp"
+        android:visibility="gone"
         tools:text="Dialog message" />
 
     <ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText

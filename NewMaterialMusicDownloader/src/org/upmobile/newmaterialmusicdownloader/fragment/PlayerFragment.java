@@ -418,7 +418,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((MainActivity) getActivity()).showPlayerElement(true);
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
-			changePlayPauseView(true);
+			play.toggle(true);
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();
@@ -574,7 +574,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		play.setClickable(isClickable);
 		stop.setClickable(isClickable);
 		if (!isClickable) {
-//			playerCurrTime.setText("0:00");
 			playerCurrTime.setTime("0:00");
 		}
 	}
@@ -585,7 +584,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 *            "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
-		if(play.isPlay() != isPlaying) return;
+		if (play.isPlay() != isPlaying) {
+			return;
+		}
 		play.toggle(isPlaying);
 	}
 
