@@ -38,8 +38,8 @@ public class PlaylistView extends BasePlaylistView {
 	private MaterialDialog.ButtonCallback buttonCallback;
 	private MaterialDialog.Builder builder;
 	private MaterialDialog dialog;
-	float showPosition;
-	float hidePosition;
+	private float showPosition;
+	private float hidePosition;
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
@@ -87,7 +87,7 @@ public class PlaylistView extends BasePlaylistView {
 		return createBitMap(width, height, getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorAccent)),
 				getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorAccent)));
 	}
-
+	
 	private Bitmap createBitMap(int width, int height, int colorPrimary, int colorAccent) {
 		float widthPx = Util.dpToPx(getContext(), width);
 		float heightPx = Util.dpToPx(getContext(), height);
@@ -137,7 +137,7 @@ public class PlaylistView extends BasePlaylistView {
 		animator.setDuration(1500);
 		animator.start();
 	}
-
+	
 	@Override
 	protected Bitmap getDeafultCover() {
 		return ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_album_grey)).getBitmap();

@@ -30,7 +30,10 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
@@ -39,8 +42,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -53,6 +58,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private Drawer.Result drawerResult = null;
 	private ActionBarDrawerToggle toggle;
 	private SearchView searchView;
+	private View floatBtnContainer;
 	private int currentFragmentId = SEARCH_FRAGMENT;
 	private int lastCheckPosition = 0;
 	private boolean isVisibleSearchView = false;
@@ -337,10 +343,39 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void showMessage(String msg) {
+		UndoBarController.clear(this);
 		UndoBar message = new UndoBar(this);
 		message.message(msg);
 		message.style(UndoBarController.MESSAGESTYLE);
+		floatBtnContainer = findViewById(R.id.containerFloatingBtn);
+		if (null != floatBtnContainer) {
+			throwUp(92);
+			message.listener(new UndoBarController.AdvancedUndoListener() {
+				
+				@Override
+				public void onUndo(@Nullable Parcelable token) {
+				}
+				
+				@Override
+				public void onHide(@Nullable Parcelable token) {
+					throwUp(12);
+				}
+				
+				@Override
+				public void onClear(@NonNull Parcelable[] token) {
+				}
+			});
+			message.show(false);
+			return;
+		}
 		message.show(false);
+	}
+	
+	public void throwUp(int height) {
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		lp.bottomMargin = height;
+		floatBtnContainer.setLayoutParams(lp);
 	}
 
 	public void showMessage(int message) {
