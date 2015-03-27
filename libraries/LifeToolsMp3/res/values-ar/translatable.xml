@@ -73,6 +73,6 @@
 	
 	<string name="folder_name">اسم المجلد</string>
     <string name="playlist_name">اسم قائمة التشغيل</string>
-	
+	<string name="does_not_support_type">لاعب لا يدعم هذا النوع من الملفات الصوتية</string>
 
 </resources>

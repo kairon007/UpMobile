@@ -71,5 +71,6 @@
 	
 	<string name="folder_name">Mapnaam</string>
     <string name="playlist_name">Playlist naam</string>
+    <string name="does_not_support_type">De speler ondersteunt niet dit soort audiobestand</string>
 
 </resources>

@@ -72,5 +72,6 @@
 	
 	<string name="folder_name">Nome da pasta</string>
     <string name="playlist_name">Nome Playlist</string>
-
+	<string name="does_not_support_type">O jogador não suporta este tipo de arquivo de áudio</string>
+	
 </resources>

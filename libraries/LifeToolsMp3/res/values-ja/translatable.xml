@@ -71,5 +71,6 @@
 	
 	<string name="folder_name">フォルダ名</string>
     <string name="playlist_name">プレイリスト名</string>
+    <string name="does_not_support_type">プレイヤーは、オーディオこの種類のファイルをサポートしていません</string>
 
 </resources>

@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener.State;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -277,12 +276,16 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				}
 				try {
 					Uri uri = Uri.parse((String) msg.obj);
+					android.util.Log.d("logd", "handleMessage: " + uri);
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
 					sendNotification(true);
 				} catch (Exception e) {
 					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
+					if(e.toString().contains("setDataSourceFD failed") && null !=errorListener) {
+						errorListener.error(getString(R.string.does_not_support_type));
+					}
 				}
 			}
 			break;

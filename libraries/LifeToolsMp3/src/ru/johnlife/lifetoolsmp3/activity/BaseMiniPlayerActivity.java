@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.activity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -139,6 +140,21 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			@Override
 			public void error() {}
 			
+		});
+		service.setOnErrorListener(new OnErrorListener() {
+			
+			@Override
+			public void error(final String error) {
+				runOnUiThread( new Runnable() {
+					public void run() {
+						setPlayPauseMini(false);
+						isMiniPlayerPrepared = false;
+						showMiniPlayer(false);
+						showPlayerElement(false);
+						showMessage(error);
+					}
+				});
+			}
 		});
 		playPause.setOnClickListener(new OnClickListener() {
 			

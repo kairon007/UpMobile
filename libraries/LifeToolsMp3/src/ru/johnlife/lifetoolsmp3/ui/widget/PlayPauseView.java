@@ -120,6 +120,10 @@ public class PlayPauseView extends View {
 		canvas.drawCircle(mWidth / 2f, mHeight / 2f, radius, mPaint);
 		mDrawable.draw(canvas);
 	}
+	
+	public boolean isPlay() {
+		return mDrawable.isPlay();
+	}
 
 	public void toggle(boolean isPlay) {
 		if (null != mAnimatorSet) {

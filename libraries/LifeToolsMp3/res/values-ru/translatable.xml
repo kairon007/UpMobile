@@ -73,5 +73,6 @@
 	
 	<string name="folder_name">Название папки</string>
     <string name="playlist_name">Название плейлиста</string>
+    <string name="does_not_support_type">Плеер не поддерживает этот тип аудиофайла</string>
 
 </resources>
