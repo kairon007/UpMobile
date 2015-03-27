@@ -583,6 +583,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 *            "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
+		if(play.isPlay() != isPlaying) return;
 		play.toggle(isPlaying);
 	}
 
