@@ -58,6 +58,19 @@
         <attr name="dsb_rippleColor" format="color|reference" />
     </declare-styleable>
     
+     <declare-styleable name="ProgressWheel">
+        <attr name="matProg_progressIndeterminate" format="boolean" />
+        <attr name="matProg_barColor" format="color|reference" />
+        <attr name="matProg_rimColor" format="color|reference" />
+        <attr name="matProg_rimWidth" format="dimension" />
+        <attr name="matProg_spinSpeed" format="float" />
+        <attr name="matProg_barSpinCycleTime" format="integer" />
+        <attr name="matProg_circleRadius" format="dimension" />
+        <attr name="matProg_fillRadius" format="boolean" />
+        <attr name="matProg_barWidth" format="dimension" />
+        <attr name="matProg_linearProgress" format="boolean" />
+    </declare-styleable>
+    
     <declare-styleable name="FloatingEditText">
         <attr name="floating_et_hint_scale" format="float"/>
         <attr name="floating_et_color" format="color"/>

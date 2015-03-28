@@ -39,6 +39,16 @@
         <item name="checkbox_color">?attr/colorPrimary</item>
         <item name="checkbox_checked_color">?attr/colorAccent</item>
     </style>
+    
+    <style name="ProgressBar">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="matProg_progressIndeterminate">true</item>
+        <item name="matProg_spinSpeed">0.8</item>
+        <item name="matProg_barSpinCycleTime">2000</item>
+        <item name="matProg_barColor">?attr/colorAccent</item>
+    </style> 
 
     <style name="RippleStyle">
         <item name="rv_rippleDuration">150</item>

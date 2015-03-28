@@ -23,12 +23,9 @@
             android:text="@string/search_your_results_appear_here"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
+        <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
             android:id="@+id/progress"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:background="?attr/colorAccent"
+            style="@style/ProgressBar"
             android:visibility="gone" />
     </FrameLayout>
 
