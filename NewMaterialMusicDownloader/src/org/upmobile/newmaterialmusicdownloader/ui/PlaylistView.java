@@ -225,9 +225,9 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected View getFooter() {
-		FrameLayout footer = new FrameLayout(getContext());
-		footer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(getContext(), 24)));
-		footer.requestLayout();
-		return footer;
+//		FrameLayout footer = new FrameLayout(getContext());
+//		footer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(getContext(), 24)));
+//		footer.requestLayout();
+		return null;
 	}
 }

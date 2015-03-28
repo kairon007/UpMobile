@@ -362,7 +362,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		floatBtnContainer = findViewById(R.id.containerFloatingBtn);
 		View miniplayer = findViewById(getMiniPlayerID());
 		if (null != floatBtnContainer && miniplayer.getVisibility() != View.VISIBLE) {
-			int toBottom = Util.dpToPx(MainActivity.this, 92);
+			int toBottom = Util.dpToPx(MainActivity.this, 72);
 			throwUp(toBottom);
 			message.listener(new UndoBarController.AdvancedUndoListener() {
 
@@ -372,7 +372,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 				@Override
 				public void onHide(@Nullable Parcelable token) {
-					int toBottom = Util.dpToPx(MainActivity.this, 12);
+					int toBottom = Util.dpToPx(MainActivity.this, 16);
 					throwUp(toBottom);
 				}
 
