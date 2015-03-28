@@ -46,6 +46,8 @@ import android.os.Looper;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.graphics.Palette;
+import android.support.v7.graphics.Palette.PaletteAsyncListener;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -85,6 +87,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private NotifyingScrollView scrollView;
 	private CircularProgressButton download;
+	private SimpleVisualizerView visualizerView;
 	private UndoBar undo;
 	private LinearLayout artistBox;
 	private LinearLayout titleBox;
@@ -170,6 +173,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
+		visualizerView = (SimpleVisualizerView) contentView.findViewById(R.id.visualizer);
 		DFont font = new DFont(Util.dpToPx(getActivity(), 12), 2);
 		font.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondary)));
 		playerCurrTime.setFont(font);
@@ -338,7 +342,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	private void setupVisualizerFxAndUI() {
 		if (null == mVisualizer) {
-			final SimpleVisualizerView visualizerView = (SimpleVisualizerView)contentView.findViewById(R.id.visualizer);
 			try {
 				mVisualizer = new Visualizer(player.getAudioSessionId());
 				mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
@@ -755,7 +758,19 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
+		visualizerView.setUpVizualizerColor(-1, -1);
 		if (null != bitmap) {
+		Palette.generateAsync(bitmap, new PaletteAsyncListener() {
+			
+			@Override
+			public void onGenerated(Palette palette) {
+				if (null == palette || null == palette.getVibrantSwatch() || null == palette.getMutedSwatch()) {
+					visualizerView.setUpVizualizerColor(-1, -1);
+					return;
+				}
+				visualizerView.setUpVizualizerColor(palette.getVibrantSwatch().getRgb(), palette.getMutedSwatch().getRgb());
+			}
+		});
 			scrollView.setImageBitmap(bitmap);
 		} else {
 			scrollView.setImageBitmap(R.drawable.big_album);

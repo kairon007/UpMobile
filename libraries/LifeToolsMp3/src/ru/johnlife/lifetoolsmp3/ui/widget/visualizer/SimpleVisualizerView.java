@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -21,6 +22,8 @@ public class SimpleVisualizerView extends View {
 	private int mLinesStroke;
 	private int frameLength = 5;
 	private List<Integer[]> values = new ArrayList<Integer[]>();
+	private int primary  = -1;
+	private int accent = -1;
 	
 	public SimpleVisualizerView(Context context) {
 		super(context);
@@ -60,6 +63,11 @@ public class SimpleVisualizerView extends View {
 		mForePaint.setColor(color);
 	}
 	
+	public void setUpVizualizerColor (int primary, int accent) {
+		this.primary = primary;
+		this.accent = accent;
+	}
+ 	
     /**
      * Helper to setColor(), that only assigns the color's alpha value,
      * leaving its r,g,b values unchanged. Results are undefined if the alpha
@@ -78,10 +86,20 @@ public class SimpleVisualizerView extends View {
 		}
 		for (int i = values.size(); i > 0; i--) {
 			if (i == values.size()) {
+				if (primary != -1) {
+					mForePaint.setColor(primary);
+				} else {
+					mForePaint.setColor(Color.WHITE);
+				}
 				setAlpha(150);
 			} else {
-				float alpha = (float)i / (float)frameLength;
-				setAlpha((int)(alpha * 75));
+				if (accent != -1) {
+					mForePaint.setColor(accent);
+				} else {
+					mForePaint.setColor(Color.WHITE);
+				}
+				float alpha = (float) i / (float) frameLength;
+				setAlpha((int) (alpha * 75));
 			}
 			Integer[] frameValues = values.get(i - 1);
 			for (int j = 0; j < frameValues.length; j++) {
