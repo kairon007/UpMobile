@@ -306,6 +306,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).setToolbarOverlay(true);
 		((MainActivity) getActivity()).setToolbarAlpha(scrollView.getToolbarAlpha());
 		setupVisualizerFxAndUI();
+		showLyrics();
 		super.onResume();
 	}
 	
@@ -683,9 +684,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void showLyrics() {
-		if (lastArtist.equals(song.getArtist()) && lastTitle.equals(song.getTitle())) return;
+		if (lastArtist.equals(song.getArtist()) && lastTitle.equals(song.getTitle())
+				&& !playerLyricsView.getText().toString().isEmpty()) return;
 		contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
-		contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
+		playerLyricsView.setVisibility(View.GONE);
 		lastArtist = song.getArtist();
 		lastTitle = song.getTitle();
 		if (null != lyricsFetcher) {
