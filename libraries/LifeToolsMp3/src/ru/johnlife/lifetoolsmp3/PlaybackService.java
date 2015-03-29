@@ -276,7 +276,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				}
 				try {
 					Uri uri = Uri.parse((String) msg.obj);
-					android.util.Log.d("logd", "handleMessage: " + uri);
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();

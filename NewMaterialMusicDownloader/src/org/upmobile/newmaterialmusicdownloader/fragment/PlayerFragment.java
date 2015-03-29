@@ -78,6 +78,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private final int BAD_SONG = 2048; // 200kb
 	private AbstractSong song;
 	private AsyncTask<Long,Integer,String> progressUpdater;
+	private AsyncTask<Bitmap, Void, Palette> paletteGenerator;
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
@@ -758,9 +759,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
+		if (null != paletteGenerator) {
+			paletteGenerator.cancel(true);
+		}
 		visualizerView.setUpVizualizerColor(-1, -1);
 		if (null != bitmap) {
-		Palette.generateAsync(bitmap, new PaletteAsyncListener() {
+		paletteGenerator = Palette.generateAsync(bitmap, new PaletteAsyncListener() {
+			
 			
 			@Override
 			public void onGenerated(Palette palette) {
