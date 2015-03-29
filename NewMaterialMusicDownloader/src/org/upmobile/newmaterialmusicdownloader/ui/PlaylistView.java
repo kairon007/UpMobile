@@ -21,9 +21,8 @@ import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
-import android.widget.AbsListView.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +39,7 @@ public class PlaylistView extends BasePlaylistView {
 	private MaterialDialog dialog;
 	private float showPosition;
 	private float hidePosition;
+	private int currentFirstItem;
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
@@ -178,6 +178,22 @@ public class PlaylistView extends BasePlaylistView {
 	public void showMessage(Context context, String message) {
 		((MainActivity) context).showMessage(message);
 	}
+	
+	@Override
+	protected void goScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		if (0 == totalItemCount) {
+			return;
+		}
+		boolean isSomeRow = firstVisibleItem == currentFirstItem;
+		if (!isSomeRow) {
+			if (firstVisibleItem > currentFirstItem) {
+				hide();
+			} else {
+				show();
+			}
+			currentFirstItem = firstVisibleItem;
+		}
+	}
 
 	@Override
 	protected void showDialog() {
@@ -225,9 +241,6 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected View getFooter() {
-//		FrameLayout footer = new FrameLayout(getContext());
-//		footer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(getContext(), 24)));
-//		footer.requestLayout();
 		return null;
 	}
 }

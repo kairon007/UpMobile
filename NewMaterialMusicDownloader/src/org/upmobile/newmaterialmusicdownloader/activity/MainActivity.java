@@ -367,7 +367,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		View miniplayer = findViewById(getMiniPlayerID());
 		if (null != floatBtnContainer && miniplayer.getVisibility() != View.VISIBLE) {
 			int toBottom = Util.dpToPx(MainActivity.this, 72);
-			throwUp(toBottom);
+			throwUp(toBottom, true);
 			message.listener(new UndoBarController.AdvancedUndoListener() {
 
 				@Override
@@ -377,7 +377,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				@Override
 				public void onHide(@Nullable Parcelable token) {
 					int toBottom = Util.dpToPx(MainActivity.this, 16);
-					throwUp(toBottom);
+					throwUp(toBottom, false);
 				}
 
 				@Override
@@ -390,8 +390,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		message.show(false);
 	}
 	
-	public void throwUp(int height) {
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+	public void throwUp(int height, boolean isThrowUp) {
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, isThrowUp ? LayoutParams.WRAP_CONTENT : 96);
 		lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lp.bottomMargin = height;
 		floatBtnContainer.setLayoutParams(lp);

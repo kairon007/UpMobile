@@ -31,6 +31,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
@@ -195,6 +197,23 @@ public abstract class BasePlaylistView extends View {
 				return false;
 			}
 		});
+		listView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				goScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+			}
+
+		});
+	}
+	
+	protected void goScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		
 	}
 	
 	private void setGroupIndicator(View v, int i) {
