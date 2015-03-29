@@ -21,15 +21,23 @@
         android:layout_above="@id/fake_view"
         android:layout_below="@+id/fake_toolbar" />
 
-    <include
-        android:id="@+id/mini_player"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        layout="@layout/mini_player"
-        android:visibility="gone" />
+        android:layout_marginRight="8dp" >
+
+        <include
+            android:id="@+id/mini_player"
+            layout="@layout/mini_player"
+            android:visibility="gone" />
+        
+        <include
+            android:id="@+id/mini_player_duplicate"
+            layout="@layout/mini_player"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/fake_toolbar"
@@ -42,8 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/material_action_bar_hight"
         android:background="?attr/colorPrimary"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
     </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>

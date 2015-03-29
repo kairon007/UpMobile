@@ -254,7 +254,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			if (isAnimate) {
-				transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_down, R.anim.slide_out_down);
+				transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
 				showMiniPlayer(false);
 			}
 			transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
@@ -420,6 +420,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	protected int getMiniPlayerID() {
 		return R.id.mini_player;
+	}
+	
+	@Override
+	protected int getMiniPlayerDuplicateID() {
+		return R.id.mini_player_duplicate;
 	}
 
 	@Override

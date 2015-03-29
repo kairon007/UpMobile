@@ -323,5 +323,10 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
 	}
+
+	@Override
+	protected int getMiniPlayerDuplicateID() {
+		return R.id.mini_player_duplicate;
+	}
 	
 }

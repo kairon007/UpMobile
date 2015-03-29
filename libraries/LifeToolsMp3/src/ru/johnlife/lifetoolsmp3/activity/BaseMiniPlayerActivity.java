@@ -52,6 +52,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 
 	protected abstract String getDirectory();
 	protected abstract int getMiniPlayerID();
+	protected abstract int getMiniPlayerDuplicateID();
 	protected abstract int getMiniPlayerClickableID();
 	protected abstract int getFakeViewID();
 	protected abstract void showPlayerFragment();
@@ -213,18 +214,42 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	private void showMiniPlayer(boolean isShow, final boolean isShift) {
 		if (null == miniPlayer) return;
+		if (miniPlayer.getVisibility() == View.VISIBLE && isShift) {
+
+//			Animation slideLeft = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_left);
+//			slideLeft.setAnimationListener(new AnimationListener() {
+//				
+//				@Override
+//				public void onAnimationStart(Animation paramAnimation) {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//				
+//				@Override
+//				public void onAnimationRepeat(Animation paramAnimation) {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//				
+//				@Override
+//				public void onAnimationEnd(Animation paramAnimation) {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//			});
+//			miniPlayer.setAnimation(slideLeft);
+//			miniPlayer.startAnimation(slideLeft);
+			
+			startFakeAnimation();
+		}
 		if (isShow && isMiniPlayerPrepared) {
-			if ((miniPlayer.getVisibility() == View.VISIBLE) && !isShift) return;
-			Animation slideUp = AnimationUtils.loadAnimation(this, isShift ? R.anim.slide_down : R.anim.slide_up);
+			if (miniPlayer.getVisibility() == View.VISIBLE) return;
+			Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_up);
 			slideUp.setAnimationListener(new AnimationListener() {
 				
 				@Override
 				public void onAnimationStart(Animation animation) {
-					if (isShift) {
-						fakeView.setVisibility(View.GONE);
-					} else {
-						setData(song);
-					}
+					setData(song);
 				}
 				
 				@Override
@@ -233,12 +258,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
-					if (isShift) {
-						miniPlayer.setVisibility(View.GONE);
-						showMiniPlayer(true);
-					} else {
-						fakeView.setVisibility(View.VISIBLE);
-					}
+					fakeView.setVisibility(View.VISIBLE);
 					if (null != song && song.getClass() == MusicData.class) {
 						download.setVisibility(View.GONE);
 					} else {
@@ -246,14 +266,12 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 					}
 				}
 			});
-			if (!isShift) {
-				miniPlayer.setVisibility(View.VISIBLE);
-			}
+			miniPlayer.setVisibility(View.VISIBLE);
 			miniPlayer.setAnimation(slideUp);
 			miniPlayer.startAnimation(slideUp);
 		} else {
 			if (miniPlayer.getVisibility() == View.GONE) return;
-			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_down);
 			slideDown.setAnimationListener(new AnimationListener() {
 				
 				@Override
@@ -273,6 +291,38 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			miniPlayer.setAnimation(slideDown);
 			miniPlayer.startAnimation(slideDown);
 		}
+	}
+	
+	private void startFakeAnimation() {
+		final View fakeMiniPlayer = findViewById(getMiniPlayerDuplicateID());
+		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_artist)).setText(artist.getText());
+		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_title)).setText(title.getText());
+		((ImageView)fakeMiniPlayer.findViewById(R.id.mini_player_cover)).setImageDrawable(cover.getDrawable());
+		if (playPause.getClass() != PlayPauseView.class) {
+			((ImageView)fakeMiniPlayer.findViewById(R.id.mini_player_play_pause)).setImageDrawable(((ImageButton)playPause).getDrawable());
+		}
+		fakeMiniPlayer.findViewById(R.id.mini_player_progress).setVisibility(View.GONE);
+		Animation slideOutLeft = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_left);
+		slideOutLeft.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				fakeMiniPlayer.setVisibility(View.GONE);
+			}
+		});
+		Animation slideInRight = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_right);
+		fakeMiniPlayer.setVisibility(View.VISIBLE);
+		setData(song);
+		fakeMiniPlayer.setAnimation(slideOutLeft);
+		miniPlayer.setAnimation(slideInRight);
+		fakeMiniPlayer.startAnimation(slideOutLeft);
+		miniPlayer.startAnimation(slideInRight);
 	}
 	
 	public void startSong(AbstractSong song) {

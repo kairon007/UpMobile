@@ -30,22 +30,32 @@
                 android:id="@+id/fake_view"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:visibility="gone"
-                android:layout_alignParentBottom="true" />
-            
+                android:layout_alignParentBottom="true"
+                android:visibility="gone" />
+
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@id/fake_view" />
 
-            <include
-                android:id="@+id/mini_player"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_alignParentBottom="true"
-                android:visibility="gone"
-                layout="@layout/mini_player" />
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" >
+
+                <include
+                    android:id="@+id/mini_player"
+                    layout="@layout/mini_player"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/mini_player_duplicate"
+                    layout="@layout/mini_player"
+                    android:visibility="gone" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <fragment

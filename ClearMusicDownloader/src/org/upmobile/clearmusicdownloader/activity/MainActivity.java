@@ -334,5 +334,10 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	protected String getDirectory() {
 		return ClearMusicDownloaderApp.getDirectory();
 	}
+
+	@Override
+	protected int getMiniPlayerDuplicateID() {
+		return R.id.mini_player_duplicate;
+	}
 	
 }

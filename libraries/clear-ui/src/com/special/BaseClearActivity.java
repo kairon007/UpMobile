@@ -129,9 +129,9 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 		resideMenu.clearIgnoredViewList();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate) {
-			transaction.setCustomAnimations(R.anim.slide_in_up,
-					R.anim.slide_out_up, R.anim.slide_in_down,
-					R.anim.slide_out_down);
+			transaction.setCustomAnimations(R.anim.fragment_slide_in_up,
+					R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down,
+					R.anim.fragment_slide_out_down);
 		}
 		transaction.replace(R.id.main_fragment, targetFragment,targetFragment.getClass().getSimpleName())
 				.addToBackStack(targetFragment.getClass().getSimpleName())

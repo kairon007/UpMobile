@@ -255,7 +255,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		currentTag = targetFragment.getClass().getSimpleName();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate) {
-			transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_down, R.anim.slide_out_down);
+			transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
 		}
 		transaction.replace(R.id.content_frame, targetFragment, currentTag)
 		.addToBackStack(targetFragment.getClass().getSimpleName())
@@ -385,6 +385,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	@Override
 	protected String getDirectory() {
 		return NewMusicDownloaderApp.getDirectory();
+	}
+
+	@Override
+	protected int getMiniPlayerDuplicateID() {
+		return R.id.mini_player_duplicate;
 	}
 
 }
