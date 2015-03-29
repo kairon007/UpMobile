@@ -773,6 +773,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		});
 			scrollView.setImageBitmap(bitmap);
 		} else {
+			visualizerView.setUpVizualizerColor(-1, -1);
 			scrollView.setImageBitmap(R.drawable.big_album);
 		}
 	}
