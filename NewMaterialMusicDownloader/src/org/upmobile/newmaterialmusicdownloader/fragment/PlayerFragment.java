@@ -52,9 +52,11 @@ import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -227,15 +229,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				((MainActivity)getActivity()).setToolbarAlpha(alpha);
 			}
 		});
-//		scrollView.setOnTouchListener(new OnTouchListener() {
-//	
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				closeEditViews();
-//				return v.performClick();
-//			}
-//			
-//		});
+		scrollView.setOnTouchListener(new OnTouchListener() {
+	
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				closeEditViews();
+				return v.performClick();
+			}
+		});
 		etArtist.setOnEditorActionListener(this);
 		etTitle.setOnEditorActionListener(this);
 	}
