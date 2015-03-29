@@ -42,10 +42,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -59,6 +62,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private ActionBarDrawerToggle toggle;
 	private SearchView searchView;
 	private View floatBtnContainer;
+	private TextView title;
 	private int currentFragmentId = -1;
 	private int lastCheckPosition = 0;
 	private boolean isVisibleSearchView = false;
@@ -72,6 +76,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		title = (TextView)findViewById(R.id.toolbar_title);
 		drawerResult = new Drawer()
 			.withActivity(this)
 			.withToolbar(toolbar)
@@ -260,7 +266,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 		}
 	}
-
+	
 	@Override
 	public void onFolderSelection(File folder) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -351,7 +357,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void setTitle(String title) {
-		getSupportActionBar().setTitle(title);
+		this.title.setText(title);
 	}
 
 	public void showMessage(String msg) {
@@ -489,5 +495,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void setToolbarAlpha(int alpha) {
 		findViewById(R.id.toolbar).getBackground().setAlpha(alpha);
+		title.setAlpha((float) alpha / 255);
 	}
 }
