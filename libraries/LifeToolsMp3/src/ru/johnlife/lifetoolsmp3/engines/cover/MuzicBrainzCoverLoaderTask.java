@@ -10,6 +10,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.jsoup.Connection.Method;
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -40,18 +43,14 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 			try {
 				String[] arrayString2, arrayString4;
 				String link = String.format(URL_PATTERN, URLEncoder.encode(artist, "UTF-8"), URLEncoder.encode(title, "UTF-8"));
-				HttpClient httpclient = new DefaultHttpClient();
-				HttpGet httpget = new HttpGet(link);
-				HttpResponse response = httpclient.execute(httpget);
-				HttpEntity entity = response.getEntity();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-				StringBuffer sb = new StringBuffer();
-				String line;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-				}
-				reader.close();
-				arrayString2 = filterRecordingByScore(sb.toString());
+				Response res = Jsoup.connect(link)
+						.userAgent("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36")
+						.ignoreContentType(true)
+						.ignoreHttpErrors(true)
+						.followRedirects(true)
+						.method(Method.GET)
+						.execute();
+				arrayString2 = filterRecordingByScore(res.body().toString());
 				arrayString4 = takeMBID(arrayString2);
 				String fromWhereToGetThePic = getTheLinkToPicture(arrayString4);
 				if (fromWhereToGetThePic == null) return null;
@@ -139,7 +138,6 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 			StringBuffer sb = null;
 			if (arrayString4[i] != null) {
 				String link = partialLink + arrayString4[i];
-
 				try {
 					HttpClient httpclient = new DefaultHttpClient(); // Create
 					// HTTP
