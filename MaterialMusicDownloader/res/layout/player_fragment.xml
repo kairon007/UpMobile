@@ -13,23 +13,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|start"
-        android:orientation="horizontal"
-        android:minHeight="48dp" >
+        android:minHeight="48dp"
+        android:orientation="horizontal" >
 
         <com.csform.android.uiapptemplate.view.cb.CheckBox
             android:id="@+id/cbUseCover"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:minHeight="48dp"/>
+            android:minHeight="48dp" />
 
         <TextView
             style="@style/TextViewAppearance.Title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:textSize="18sp"
-            android:text="@string/edit_mp3_use_album_cover" />
+            android:text="@string/edit_mp3_use_album_cover"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -78,9 +78,11 @@
                 style="@style/EditTextAppearance.Headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="4dp"
-                android:paddingLeft="4dp"
+                android:imeOptions="actionDone"
                 android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:singleLine="true"
                 android:visibility="gone" />
         </FrameLayout>
 
@@ -124,9 +126,11 @@
                 style="@style/EditTextAppearance.Headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
                 android:paddingBottom="4dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
+                android:singleLine="true"
                 android:visibility="gone" />
         </FrameLayout>
 
@@ -347,7 +351,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp" >
-        
+
         <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
             android:id="@+id/lyrics_progress"
             android:layout_width="56dp"
@@ -356,13 +360,13 @@
             android:background="@color/main_color_accent"
             android:visibility="gone" />
 
-<!--         <com.csform.android.uiapptemplate.view.ProgressWheel -->
-<!--             android:id="@+id/lyrics_progress" -->
-<!--             style="@style/ProgressBarMaterial" -->
-<!--             android:layout_width="56dp" -->
-<!--             android:layout_height="56dp" -->
-<!--             android:layout_gravity="center" -->
-<!--             android:visibility="visible" /> -->
+        <!-- <com.csform.android.uiapptemplate.view.ProgressWheel -->
+        <!-- android:id="@+id/lyrics_progress" -->
+        <!-- style="@style/ProgressBarMaterial" -->
+        <!-- android:layout_width="56dp" -->
+        <!-- android:layout_height="56dp" -->
+        <!-- android:layout_gravity="center" -->
+        <!-- android:visibility="visible" /> -->
 
         <com.csform.android.uiapptemplate.font.RobotoTextView
             android:id="@+id/lyrics_text"
