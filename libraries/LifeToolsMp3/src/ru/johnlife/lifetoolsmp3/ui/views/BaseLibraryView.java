@@ -60,6 +60,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	};
 	
 	private void fillAdapter(ArrayList<MusicData> list) {
+		if (list.isEmpty()) return;
 		Message msg = new Message();
 		msg.what = MSG_FILL_ADAPTER;
 		msg.obj = list;
