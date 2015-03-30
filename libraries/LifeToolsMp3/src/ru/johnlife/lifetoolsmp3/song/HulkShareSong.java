@@ -23,7 +23,7 @@ public class HulkShareSong extends RemoteSong {
 		return false;
 	}
 
-	public Void getDownloadUrl(final String songId) {
+	public void getDownloadUrl(final String songId) {
 		new AsyncTask<Void, Void, String>() {
 
 			@Override
@@ -49,7 +49,6 @@ public class HulkShareSong extends RemoteSong {
 				downloadUrlListeners.clear();
 			};
 		}.execute();
-		return null;
 	}
 
 }
