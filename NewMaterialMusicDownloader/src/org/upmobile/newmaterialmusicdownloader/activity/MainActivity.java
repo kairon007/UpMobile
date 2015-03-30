@@ -458,6 +458,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			((CircleImageView) findViewById(R.id.mini_player_cover)).setImageResource(R.drawable.ic_album_grey);
 			return;
 		}
+		service.updatePictureNotification(bmp);
 		((CircleImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
 	}
 

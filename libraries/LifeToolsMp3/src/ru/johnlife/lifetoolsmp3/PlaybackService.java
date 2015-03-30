@@ -279,7 +279,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
-					sendNotification(true);
+					sendNotification(true, null);
 				} catch (Exception e) {
 					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 					if(e.toString().contains("setDataSourceFD failed") && null !=errorListener) {
@@ -293,7 +293,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				helper(State.PLAY, (AbstractSong) msg.obj);
 				player.start();
 				onMode(SMODE_PLAYING);
-				sendNotification(true);
+				sendNotification(true, null);
 			}
 			break;
 		case MSG_PAUSE:
@@ -301,7 +301,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				helper(State.PAUSE, (AbstractSong) msg.obj);
 				player.pause();
 				mode |= SMODE_PAUSE;
-				sendNotification(false);
+				sendNotification(false, null);
 			}
 			break;
 		case MSG_SEEK_TO:
@@ -338,7 +338,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				break;
 			}
 			play(playingSong.getClass() != MusicData.class);
-			sendNotification(true);
+			sendNotification(true, null);
 			break;
 		default:
 			Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
@@ -377,7 +377,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			}
 		}
 		playingSong = arrayPlayback.get(position);
-		printStateDebug();
 		if (check(SMODE_PREPARED)) {
 			int msg;
 			if (check(SMODE_PAUSE)) {
@@ -691,9 +690,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public int getAudioSessionId() {
 		if (null != player) {
 			return player.getAudioSessionId();
-		} else {
-			return 0;
-		}
+		} 
+		return 0;
 	} 
 	
 	@Override
@@ -718,10 +716,12 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	@SuppressLint("NewApi")
-	private void sendNotification(boolean playing) {
+	private void sendNotification(boolean playing, Bitmap updateCover) {
 		if (!check(SMODE_NOTIFICATION)) return;
 		Bitmap cover = playingSong.getCover(this);
-		if (null == cover) {
+		if (null != updateCover) {
+			cover = updateCover;
+		} else if (null == cover) {
 			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.icon);
 		}
 		Intent notificationIntent = new Intent(this, ((Activity) activityContext).getClass());
@@ -797,6 +797,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	    manager.cancel(NOTIFICATION_ID);  
 	    stopForeground(true);
 	}  
+	
+	public void  updatePictureNotification(Bitmap bmp) {
+		sendNotification(isPlaying(), bmp);
+	}
 	
 	public void showNotification(boolean flag) {
 		if (flag) {

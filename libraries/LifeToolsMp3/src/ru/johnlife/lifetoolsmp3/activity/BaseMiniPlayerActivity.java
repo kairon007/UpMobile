@@ -409,6 +409,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			cover.setImageResource(R.drawable.no_cover_art_big);
 		} else {
 			cover.setImageBitmap(bmp);
+			service.updatePictureNotification(bmp);
 		}
 	}
 	

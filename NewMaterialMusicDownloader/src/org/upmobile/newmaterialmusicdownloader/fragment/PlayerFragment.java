@@ -732,6 +732,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 					if (null != bmp) {
 						((RemoteSong) s).setHasCover(true);
 						setCoverToZoomView(bmp);
+						player.updatePictureNotification(bmp);
 						setCheckBoxState(true);
 					} 
 				}
