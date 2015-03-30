@@ -80,6 +80,14 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 		if (soundcloudClientSecret == null || soundcloudClientSecret.equals("")) soundcloudClientSecret = defaultSoundcloudClientSecret;
 		return soundcloudClientSecret;
 	}
+	
+	public static String getVkClientToken() {
+		String defaultVkClientToken = "d73280406276167551f44ed738cf446489f37417ac74e2a43508e777ac1ec1348dbcd974676541353139d";
+		SharedPreferences prefs = MusicApp.getSharedPreferences();
+		String vkClientToken = prefs.getString("vk_client_token", defaultVkClientToken);
+		if (vkClientToken == null || vkClientToken.equals("")) vkClientToken = defaultVkClientToken;
+		return vkClientToken;
+	}
 
 	
 	protected StringBuffer readLink(String link) throws MalformedURLException {
