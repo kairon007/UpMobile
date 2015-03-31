@@ -112,8 +112,7 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	
 	@Override
 	public Object initRefreshProgress() {
-		ProgressBarCircularIndeterminate progress = (ProgressBarCircularIndeterminate) LayoutInflater.from(getContext()).inflate(org.upmobile.materialmusicdownloader.R.layout.progress, null);
-		return progress;
+		return LayoutInflater.from(getContext()).inflate(org.upmobile.materialmusicdownloader.R.layout.progress, null);
 	}
 	
 	@Override

@@ -29,13 +29,10 @@
                 android:text="@string/search_your_results_appear_here"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
-                android:id="@+id/progress"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:background="@color/main_color_accent"
-                android:visibility="gone" />
+            <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
+            android:id="@+id/progress"
+            style="@style/ProgressBar"
+            android:visibility="gone" />
             
             <ImageView
                 android:id="@+id/loader_image"
@@ -75,6 +72,7 @@
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
                         android:layout_weight="1" >
 
                         <EditText

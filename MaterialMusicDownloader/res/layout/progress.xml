@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="56dp"
-    android:layout_height="56dp"
-    android:layout_gravity="center"
-    android:background="@color/main_color_accent"
+<ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ProgressBar"
     android:visibility="visible" />

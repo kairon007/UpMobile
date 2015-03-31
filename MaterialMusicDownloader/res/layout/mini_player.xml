@@ -95,13 +95,11 @@
                         android:src="@drawable/mini_player_pause"
                         android:visibility="gone" />
                 </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
-
-                <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
+                
+                <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
                     android:id="@+id/mini_player_progress"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center"
-                    android:background="@color/main_color_accent" />
+                    style="@style/ProgressBar" />
+
             </FrameLayout>
         </LinearLayout>
     </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
