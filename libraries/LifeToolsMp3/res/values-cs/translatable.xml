@@ -74,5 +74,6 @@
 	<string name="folder_name">Název složky</string>
     <string name="playlist_name">Playlist jméno</string>
     <string name="does_not_support_type">Přehrávač nepodporuje tento typ zvukového souboru</string>
+    <string name="done">Připravený</string>
     
 </resources>

@@ -72,5 +72,6 @@
 	<string name="folder_name">Nazwa folderu</string>
     <string name="playlist_name">Nazwa listy odtwarzania</string>
     <string name="does_not_support_type">Odtwarzacz nie obsługuje tego typu plików audio</string>
+    <string name="done">Gotowy</string>
 
 </resources>

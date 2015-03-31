@@ -69,5 +69,6 @@
 	<string name="folder_name">Tên thư mục</string>
     <string name="playlist_name">Tên danh sách</string>
     <string name="does_not_support_type">Người chơi không hỗ trợ loại tập tin âm thanh</string>
+    <string name="done">Làm xong</string>
 
 </resources>

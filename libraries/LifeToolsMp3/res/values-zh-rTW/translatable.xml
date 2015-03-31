@@ -71,5 +71,6 @@
 	<string name="folder_name">文件夾名稱</string>
     <string name="playlist_name">播放列表名稱</string>
     <string name="does_not_support_type">該播放器不支持此類型的音頻文件</string>
+    <string name="done">做完</string>
 
 </resources>

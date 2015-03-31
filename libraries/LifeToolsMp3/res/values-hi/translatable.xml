@@ -72,5 +72,6 @@
 	<string name="folder_name">फ़ोल्डर का नाम</string>
     <string name="playlist_name">प्लेलिस्ट का नाम</string>
 	<string name="does_not_support_type">खिलाड़ी ऑडियो फ़ाइल के इस प्रकार का समर्थन नहीं करता</string>
+	<string name="done">रेडी</string>
 	
 </resources>

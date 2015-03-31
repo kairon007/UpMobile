@@ -74,5 +74,6 @@
 	<string name="folder_name">Folder name</string>
     <string name="playlist_name">Playlist name</string>
     <string name="does_not_support_type">Die speler nie hierdie tipe van klank lêer ondersteun</string>
+    <string name="done">Gereed</string>
 
 </resources>

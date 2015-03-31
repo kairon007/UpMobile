@@ -74,5 +74,6 @@
 	<string name="folder_name">Назва тэчкі</string>
     <string name="playlist_name">Назва плэйліста</string>
 	<string name="does_not_support_type">Плэер не падтрымлівае гэты тып аўдыёфайла</string>
+	<string name="done">Гатова</string>
 
 </resources>

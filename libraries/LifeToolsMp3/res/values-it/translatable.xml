@@ -73,5 +73,6 @@
 	<string name="folder_name">Nome cartella</string>
     <string name="playlist_name">Nome playlist</string>
     <string name="does_not_support_type">Il lettore non supporta questo tipo di file audio</string>
+    <string name="done">Pronto</string>
 
 </resources>
