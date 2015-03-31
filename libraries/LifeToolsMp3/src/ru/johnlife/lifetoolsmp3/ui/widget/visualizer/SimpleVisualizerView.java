@@ -13,7 +13,6 @@ import android.view.View;
 
 public class SimpleVisualizerView extends View {
 	
-//	private static final Object LOCK = new Object();
 	private byte[] mBytes;
 	private Rect mRect = new Rect();
 	protected float[] mPoints;
@@ -49,14 +48,7 @@ public class SimpleVisualizerView extends View {
 
 	public synchronized void updateVisualizer(byte[] bytes) {
 		mBytes = bytes;
-//		synchronized (LOCK) {
-//			try {
-//				LOCK.wait();
-				invalidate();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		invalidate();
 	}
 
 	public void setColor(int color) {
@@ -109,7 +101,6 @@ public class SimpleVisualizerView extends View {
 				}
 			}
 		}
-//		LOCK.notifyAll();
 	}
 	
 	@Override
@@ -127,15 +118,18 @@ public class SimpleVisualizerView extends View {
 		for (int i = 0; i < mLinesCount; i++) {
 			int value = 0;
 			for (int j = 0; j < mBytes.length /mLinesCount; j++) {
-				int position = i * mLinesCount + j;
+				int position = i * (mBytes.length / mLinesCount) + j;
 				byte rfk = mBytes[position];
+				if ((position + 1) == mBytes.length) {
+					position--;
+				}
 				byte ifk = mBytes[position + 1];
 				float magnitude = (rfk * rfk + ifk * ifk);
 				if (magnitude > 0) {
 					value += (10 * Math.log10(magnitude));
 				}
 			}
-			currentValues[i] = value / mLinesCount * 2;
+			currentValues[i] = value;
 		}
 		performDraw(canvas, currentValues);
 	}
