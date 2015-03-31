@@ -3,6 +3,7 @@
   <color name="material_primary">#00BCD4</color>
   <color name="material_primary_dark">#0097A7</color>
   <color name="material_primary_light">#B2EBF2</color>
+  <color name="material_accent_dark">#BF8630</color>
   <color name="material_accent">#FF9800</color>
   <color name="material_primary_text">#212121</color>
   <color name="material_secondary_text">#727272</color>

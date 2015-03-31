@@ -17,7 +17,7 @@ public class PlaylistFragment extends Fragment implements Constants{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		playlistView = new PlaylistView(getActivity().getLayoutInflater());
+		playlistView = new PlaylistView(inflater);
 		return playlistView.getView();
 	}
 	
@@ -47,9 +47,4 @@ public class PlaylistFragment extends Fragment implements Constants{
 		super.onPause();
 	}
 	
-	@Override
-	public void onDestroy() {
-		playlistView.hide();
-		super.onDestroy();
-	}
 }

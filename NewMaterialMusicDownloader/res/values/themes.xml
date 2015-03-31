@@ -15,6 +15,7 @@
         <item name="colorPrimaryDark">@color/material_primary_dark</item>
         <item name="colorPrimary">@color/material_primary</item>
         <item name="colorAccent">@color/material_accent</item>
+        <item name="colorAccentDark">@color/material_accent_dark</item>
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/material_primary</item>
@@ -31,6 +32,7 @@
         <item name="colorPrimaryDark">@color/black_material_accent</item>
         <item name="colorPrimary">@color/black_material_primary</item>
         <item name="colorAccent">@color/black_material_accent</item>
+        <item name="colorAccentDark">@color/black_material_accent_dark</item>
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/black_material_primary</item>
@@ -47,6 +49,7 @@
         <item name="colorPrimaryDark">@color/brown_material_primary_dark</item>
         <item name="colorPrimary">@color/brown_material_primary</item>
         <item name="colorAccent">@color/brown_material_accent</item>
+        <item name="colorAccentDark">@color/brown_material_accent_dark</item>
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/brown_material_primary</item>
@@ -64,6 +67,7 @@
         <item name="colorPrimaryDark">@color/orange_material_primary_dark</item>
         <item name="colorPrimary">@color/orange_material_primary</item>
         <item name="colorAccent">@color/orange_material_accent</item>
+        <item name="colorAccentDark">@color/orange_material_accent_dark</item>
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/orange_material_primary</item>
@@ -79,6 +83,7 @@
         <item name="elementSelector">@drawable/selectable_element_bg_green</item>
         <item name="colorPrimaryDark">@color/green_material_primary_dark</item>
         <item name="colorPrimary">@color/green_material_primary</item>
+        <item name="colorAccentDark">@color/green_material_accent_dark</item>
         <item name="colorAccent">@color/green_material_accent</item>
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlActivated">?attr/colorAccent</item>

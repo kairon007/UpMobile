@@ -4,6 +4,7 @@
     <attr name="attr_image_drawer" format="reference" />
     <attr name="colorTextPrimary" format="reference" />
     <attr name="colorTextSecondary" format="reference" />
+    <attr name="colorAccentDark" format="reference" />
     <attr name="elementSelector" formar="reference" />
     <attr name="cpbSelectorIdle" format="reference" />
     <attr name="cpbSelectorComplete" format="reference" />
