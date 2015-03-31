@@ -131,7 +131,8 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_download" />
+                        android:src="@drawable/ic_download"
+                        android:visibility="gone" />
                 </LinearLayout>
 
 				<FrameLayout

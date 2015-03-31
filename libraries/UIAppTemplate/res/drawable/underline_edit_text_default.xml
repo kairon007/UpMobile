@@ -4,13 +4,13 @@
     <item
         android:bottom="3dp"
         android:drawable="@drawable/underline_edit_text_default_line"
-        android:left="8dp"
+        android:left="0dp"
         android:right="8dp"
         android:top="40dp"/>
     <item
         android:bottom="4dp"
         android:drawable="@drawable/underline_edit_text_default_line_cover"
-        android:left="9dp"
+        android:left="1dp"
         android:right="9dp"/>
 
 </layer-list>
