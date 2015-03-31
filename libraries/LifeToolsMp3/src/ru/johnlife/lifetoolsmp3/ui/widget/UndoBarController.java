@@ -550,7 +550,8 @@ public class UndoBarController extends LinearLayout {
         private boolean noIcon = false;
         public boolean immediate;
         private boolean noQueueMessage = false; // special settings - view will showed only one time
-
+        
+        private int height = 48;
 
         public UndoBar(@NonNull Activity activity) {
             this.activity = activity;
@@ -567,6 +568,10 @@ public class UndoBarController extends LinearLayout {
             noIcon = false;
             immediate = false;
         }
+        
+        public int getHeightBar() {
+			return height;
+		}
         
         public UndoBar style(@NonNull UndoBarStyle style) {
             this.style = style;
@@ -658,7 +663,7 @@ public class UndoBarController extends LinearLayout {
             colorDrawable = enable;
             return this;
         }
-
+        
         /**
          * Show undobar with animation or not
          *
@@ -683,7 +688,9 @@ public class UndoBarController extends LinearLayout {
                 bar.addMessage(msg);
             else
                 bar.showUndoBar(msg);
+            bar.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
             init();
+            height = bar.getMeasuredHeight();
             return bar;
         }
 
@@ -730,6 +737,7 @@ public class UndoBarController extends LinearLayout {
             dest.writeInt(this.translucent);
             dest.writeByte(colorDrawable ? (byte) 1 : (byte) 0);
             dest.writeByte(noIcon ? (byte) 1 : (byte) 0);
+            dest.writeInt(height);
         }
 
         private UndoBar(Parcel in) {
@@ -740,6 +748,7 @@ public class UndoBarController extends LinearLayout {
             this.translucent = in.readInt();
             this.colorDrawable = in.readByte() != 0;
             this.noIcon = in.readByte() != 0;
+            this.height = in.readInt();
         }
 
         public static final Parcelable.Creator<UndoBar> CREATOR = new Parcelable.Creator<UndoBar>() {
@@ -752,7 +761,6 @@ public class UndoBarController extends LinearLayout {
             }
         };
     }
-
 
     private static class Message implements Parcelable {
         private UndoBarStyle style;
