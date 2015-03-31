@@ -179,6 +179,8 @@ public abstract class OnlineSearchView extends View {
 				return ru.johnlife.lifetoolsmp3.engines.SearchKugou.class; 
 			} else if (searchEngineName.equals("SearchTaringaMp3")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3.class;
+			} else if (searchEngineName.equals("SearchPleerV2")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchPleerV2.class;
 			}
 		}
 		return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
