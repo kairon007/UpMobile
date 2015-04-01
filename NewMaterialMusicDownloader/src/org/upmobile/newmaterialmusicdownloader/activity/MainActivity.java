@@ -372,6 +372,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		UndoBar message = new UndoBar(this);
 		message.message(msg);
 		message.style(UndoBarController.MESSAGESTYLE);
+		if (PLAYLIST_FRAGMENT != currentFragmentId) {
+			message.show(false);
+			return;
+		}
 		floatBtnContainer = (View) findViewById(R.id.floatingButton).getParent();
 		View miniplayer = findViewById(getMiniPlayerID());
 		if (null != floatBtnContainer && miniplayer.getVisibility() != View.VISIBLE) {
