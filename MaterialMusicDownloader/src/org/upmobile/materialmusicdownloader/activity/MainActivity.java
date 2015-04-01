@@ -172,7 +172,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image) {
-		return getDefaultBitmapCover(outWidth, outHeight, property, image, 0);
+			return property < 0 ? null : getDefaultBitmapCover(outWidth, outHeight, property, image, 0);
 	}
 	
 	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image, int customColor) {

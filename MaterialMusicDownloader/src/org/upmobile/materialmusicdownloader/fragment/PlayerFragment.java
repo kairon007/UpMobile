@@ -743,7 +743,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 						((RemoteSong) song).setHasCover(true);
 						setCoverToZoomView(bmp);
 						setCheckBoxState(true);
-					} else {
 					}
 				}
 			};
@@ -754,7 +753,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (bitmap != null) {
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
-			} else {
 			}
 		}
 	}
@@ -771,8 +769,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
 		int width = display.getWidth(); 
 		int height = display.getHeight();
-		int coverHeight = height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 72);
-		int minHeight = coverHeight > width ? width : coverHeight;
+		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 72));
+		int minHeight = (coverHeight > width )? width : coverHeight;
 		imageView.setImageBitmap(null == bitmap ? ((MainActivity) getActivity()).getDefaultBitmapCover(minHeight, minHeight, minHeight - 32, cover) : bitmap);
 		imageView.setMinimumHeight(minHeight);
 		imageView.setMinimumWidth(minHeight);
