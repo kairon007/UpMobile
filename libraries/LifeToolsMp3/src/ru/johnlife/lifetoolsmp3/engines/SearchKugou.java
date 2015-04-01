@@ -1,6 +1,5 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
@@ -8,7 +7,6 @@ import org.json.JSONObject;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.SongKugou;
 
 
@@ -36,7 +34,6 @@ public class SearchKugou extends SearchWithPages {
 					.execute();
 			JSONObject parent = new JSONObject(res.parse().text());
 			JSONArray songs = parent.getJSONArray("data");
-			android.util.Log.d("logd", "doInBackground: " + songs.length());
 			for (int i = 0; i < songs.length(); i++) {
 				JSONObject song = songs.getJSONObject(i);
 				String artist = getArtistName( song.getString("filename"));
