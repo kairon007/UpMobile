@@ -84,13 +84,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
-	private Visualizer mVisualizer;
 
 	private View contentView;
 
 	private NotifyingScrollView scrollView;
 	private CircularProgressButton download;
-	private SimpleVisualizerView visualizerView;
 	private UndoBar undo;
 	private LinearLayout artistBox;
 	private LinearLayout titleBox;
@@ -98,6 +96,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	// lyric sections
 	private LyricsFetcher lyricsFetcher;
 	private TextView playerLyricsView;
+	
+	// visualizer sectoin
+	private SimpleVisualizerView visualizerView;
+	private Visualizer mVisualizer;
+	private CheckBox cbShowVisualizer;
 	
 	//custom check box
 	private CheckBox cbUseCover;
@@ -176,6 +179,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
 		visualizerView = (SimpleVisualizerView) contentView.findViewById(R.id.visualizer);
+		cbShowVisualizer = (CheckBox) contentView.findViewById(R.id.cbShowEqualizer);
 		DFont font = new DFont(Util.dpToPx(getActivity(), 12), 2);
 		font.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondary)));
 		playerCurrTime.setFont(font);
@@ -202,6 +206,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		artistBox.setOnClickListener(this);
 		titleBox.setOnClickListener(this);
 		cbUseCover.setOnCheckedChangeListener(this);
+		cbShowVisualizer.setOnCheckedChangeListener(this);
 		playerProgress.setOnProgressChangeListener(new OnProgressChangeListener() {
 			
 			@Override
@@ -305,7 +310,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setToolbarOverlay(true);
 		((MainActivity) getActivity()).setToolbarAlpha(scrollView.getToolbarAlpha());
-		setupVisualizerFxAndUI();
+		setupVisualizerFxAndUI(false);
 		showLyrics();
 		super.onResume();
 	}
@@ -342,12 +347,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		super.onPause();
 	}
 	
-	private void setupVisualizerFxAndUI() {
+	private void setupVisualizerFxAndUI(boolean isShowVisualizer) {
+		visualizerView.setVisibility(isShowVisualizer ? View.VISIBLE : View.INVISIBLE);
 		if (null == mVisualizer) {
 			try {
 				mVisualizer = new Visualizer(player.getAudioSessionId());
 				mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
 				mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+
 					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
 					}
 
@@ -360,6 +367,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				e.printStackTrace();
 			}
 		}
+		mVisualizer.setEnabled(isShowVisualizer);
 	}
 	
 	private Runnable progressAction = new Runnable() {
@@ -446,6 +454,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		
+		if (buttonView.getId() == R.id.cbShowEqualizer) {
+			setupVisualizerFxAndUI(isChecked);
+			return;
+		}
 		if (!buttonView.isEnabled()) {
 			return;
 		}
