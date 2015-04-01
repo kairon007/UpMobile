@@ -174,6 +174,13 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 
         mDrawerLayout.setDrawerListener(useOldToggle() ? mDrawerToggle : drawerToggle);
     }
+    
+    public boolean isDrawerIndicatorEnabled() {
+		if (useOldToggle()) {
+			return mDrawerToggle.isDrawerIndicatorEnabled();
+		}
+		return drawerToggle.isDrawerIndicatorEnabled();
+	}
 
     private void selectItem(int position) {
         previousSelectedPosition = mCurrentSelectedPosition;

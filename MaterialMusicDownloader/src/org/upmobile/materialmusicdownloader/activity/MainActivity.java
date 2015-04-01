@@ -110,11 +110,21 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		if (hadClosedDraver) {
+			hadClosedDraver = false;
+			return;
+		}
+		boolean isDraverClose = isDraverClosed();
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		isEnabledFilter = false;
 		if (null != player && player.isVisible()) {
-			showMiniPlayer(true);
-			getFragmentManager().popBackStack();
+			if (isDraverClose) {
+				service.stopPressed();
+				finish();
+			} else {
+				showMiniPlayer(true);
+				getFragmentManager().popBackStack();
+			}
 		} else if (currentFragmentID == LIBRARY_FRAGMENT){
 			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();
 			Fragment fragment;
