@@ -11,9 +11,11 @@
         style="@style/TextStyleLine2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="18dp"
         android:ellipsize="start"
+        android:fontFamily="sans-serif"
+        android:paddingLeft="18dp"
         android:singleLine="true"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
 </FrameLayout>

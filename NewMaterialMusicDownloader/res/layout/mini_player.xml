@@ -53,16 +53,20 @@
                     android:layout_gravity="center_vertical"
                     android:ellipsize="end"
                     android:ems="16"
-                    android:lines="1" />
+                    android:fontFamily="sans-serif"
+                    android:lines="1"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/mini_player_artist"
                     style="@style/TextStyleLine2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end" />
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="bold" />
             </LinearLayout>
-            
+
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,7 +114,6 @@
                 <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
                     android:id="@+id/mini_player_progress"
                     style="@style/ProgressBar" />
-
             </FrameLayout>
         </LinearLayout>
     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>

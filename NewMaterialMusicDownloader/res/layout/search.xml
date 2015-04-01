@@ -66,7 +66,9 @@
                         android:lines="1"
                         android:singleLine="true"
                         android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white" />
+                        android:textColorHint="@android:color/white"
+                        android:fontFamily="sans-serif"
+                        android:textStyle="bold" />
 
                     <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         style="@style/RippleStyleCircle"
@@ -120,7 +122,6 @@
                 android:gravity="top"
                 android:paddingLeft="@dimen/material_edges_padding"
                 android:paddingRight="@dimen/material_edges_padding" />
-
         </LinearLayout>
 
         <FrameLayout
