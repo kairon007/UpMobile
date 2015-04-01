@@ -392,6 +392,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			});
 			message.show(false);
 			int height = message.getHeightBar();
+			if (height < 48) {
+				height = 48;
+			} else if (80 < height) {
+				height = 80;
+			}
 			floatBtnContainer.setPadding(0, 0, 0, Util.dpToPx(this, height));
 			return;
 		}

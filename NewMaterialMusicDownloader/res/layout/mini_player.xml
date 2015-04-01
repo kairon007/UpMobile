@@ -7,12 +7,6 @@
     android:background="@android:color/white"
     android:orientation="horizontal" >
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="top"
-        android:background="?attr/colorAccent" />
-
     <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
         style="@style/RippleStyleRectangle"
         android:layout_width="match_parent"

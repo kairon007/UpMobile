@@ -267,8 +267,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				}
 			});
 			miniPlayer.setVisibility(View.VISIBLE);
-			miniPlayer.setAnimation(slideUp);
-			miniPlayer.startAnimation(slideUp);
+			View parentMiniPlayer = (View) miniPlayer.getParent();
+			parentMiniPlayer.setVisibility(View.VISIBLE);
+			parentMiniPlayer.setAnimation(slideUp);
+			parentMiniPlayer.startAnimation(slideUp);
 		} else {
 			if (miniPlayer.getVisibility() == View.GONE) return;
 			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_down);
@@ -277,6 +279,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				@Override
 				public void onAnimationStart(Animation animation) {
 					fakeView.setVisibility(View.GONE);
+					((View)miniPlayer.getParent()).setVisibility(View.GONE);
 				}
 				
 				@Override
@@ -286,14 +289,16 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
 					miniPlayer.setVisibility(View.GONE);
+					((View)miniPlayer.getParent()).setVisibility(View.GONE);
 				}
 			});
-			miniPlayer.setAnimation(slideDown);
-			miniPlayer.startAnimation(slideDown);
+			View parentMiniPlayer = (View) miniPlayer.getParent();
+			parentMiniPlayer.setAnimation(slideDown);
+			parentMiniPlayer.startAnimation(slideDown);
 		}
 	}
 	
-	private void startFakeAnimation() {
+	private void startFakeAnimation () {
 		final View fakeMiniPlayer = findViewById(getMiniPlayerDuplicateID());
 		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_artist)).setText(artist.getText());
 		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_title)).setText(title.getText());
