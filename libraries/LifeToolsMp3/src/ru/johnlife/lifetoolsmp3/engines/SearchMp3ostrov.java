@@ -21,7 +21,7 @@ public class SearchMp3ostrov extends SearchWithPages{
 	@Override
 	protected Void doInBackground(Void... params) {
 		try {
-			String link = URL + "?string=" + URLEncoder.encode(getSongName(), "UTF-8");
+			String link = URL + "?string=" + URLEncoder.encode(getSongName(), "UTF-8" + "&p=" + page);
 			Response defaultResponse = Jsoup.connect(URL).followRedirects(true).ignoreContentType(true).ignoreHttpErrors(true).userAgent(getRandomUserAgent()).execute();
 			Response searchResponse = Jsoup.connect(link)
 					.cookies(defaultResponse.cookies())
