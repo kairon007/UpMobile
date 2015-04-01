@@ -18,6 +18,7 @@
     <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Agora jogando</string>
     <string name="tab_settings">Definições</string>
+    <string name="tab_download_location">Local de download</string>
     <string name="message_please_wait">Por favor, aguarde…</string>
     <string name="message_loading">Carregando...</string>
     <string name="message_searching_for">Pesquisando por</string>
@@ -74,5 +75,6 @@
     <string name="playlist_name">Nome Playlist</string>
 	<string name="does_not_support_type">O jogador não suporta este tipo de arquivo de áudio</string>
 	<string name="done">Pronto</string>
+	<string name="show_equalizer">Mostrar equalizador</string>
 	
 </resources>

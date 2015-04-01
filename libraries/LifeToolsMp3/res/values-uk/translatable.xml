@@ -18,6 +18,7 @@
     <string name="tab_playlist">Плейлист</string>
     <string name="tab_now_plaing">Зараз грає</string>
     <string name="tab_settings">Налаштування</string>
+    <string name="tab_download_location">Завантажити місце</string>
     <string name="message_please_wait">Будь ласка, зачекайте...</string>
     <string name="message_loading">Звантаження...</string>
     <string name="message_searching_for">Пошук для</string>
@@ -73,5 +74,6 @@
     <string name="playlist_name">Назва плейлиста</string>
     <string name="does_not_support_type">Плеєр не підтримує цей тип аудіофайлу</string>
     <string name="done">Готово</string>
+    <string name="show_equalizer">Показати еквалайзер</string>
 
 </resources>

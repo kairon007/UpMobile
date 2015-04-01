@@ -18,6 +18,7 @@
     <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Şimdi çalan</string>
     <string name="tab_settings">Ayarlar</string>
+    <string name="tab_download_location">Indir konumu</string>
     <string name="message_please_wait">Lütfen Bekleyin...</string>
     <string name="message_loading">Yükleniyor...</string>
     <string name="message_searching_for">Şunu ara:</string>
@@ -72,5 +73,6 @@
     <string name="playlist_name">Playlist isim</string>
     <string name="does_not_support_type">Oyuncu ses dosyasının bu tür desteklemiyor</string>
     <string name="done">Hazır</string>
+    <string name="show_equalizer">Göster ekolayzır</string>
 
 </resources>

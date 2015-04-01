@@ -17,6 +17,8 @@
     <string name="tab_library">Thư viện</string>
     <string name="tab_playlist">Danh sách phát</string>
     <string name="tab_now_plaing">Bây giờ chơi</string>
+    <string name="tab_settings">Cài đặt</string>
+    <string name="tab_download_location">địa điểm tải về</string>
     <string name="message_please_wait">Vui lòng Chờ ...</string>
     <string name="message_loading">Đang Nạp...</string>
     <string name="message_searching_for">Đang tìm kiếm</string>
@@ -70,5 +72,6 @@
     <string name="playlist_name">Tên danh sách</string>
     <string name="does_not_support_type">Người chơi không hỗ trợ loại tập tin âm thanh</string>
     <string name="done">Làm xong</string>
+    <string name="show_equalizer">Hiện equalizer</string>
 
 </resources>

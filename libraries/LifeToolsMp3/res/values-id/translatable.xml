@@ -18,6 +18,7 @@
     <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Sekarang bermain</string>
     <string name="tab_settings">Pengaturan</string>
+    <string name="tab_download_location">Download lokasi</string>
     <string name="message_please_wait">Harap Tunggu...</string>
     <string name="message_loading">Memuat...</string>
     <string name="message_searching_for">Mencari</string>
@@ -73,5 +74,6 @@
     <string name="playlist_name">Nama Playlist</string>
     <string name="does_not_support_type">Odtwarzacz nie obsługuje tego typu plików audio</string>
     <string name="done">Sudah Siap</string>
+    <string name="show_equalizer">Tampilkan equalizer</string>
 	
 </resources>

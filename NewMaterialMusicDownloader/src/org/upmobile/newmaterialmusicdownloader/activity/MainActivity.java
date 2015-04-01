@@ -53,6 +53,8 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback {
+	
+
 
 	private Drawer.Result drawerResult = null;
 	private ActionBarDrawerToggle toggle;
@@ -81,8 +83,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			.withHeader(R.layout.drawer_header)
 			.addDrawerItems(new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey).withTextColor(R.color.material_primary_text),
 				new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey).withTextColor(R.color.material_primary_text),
-				new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey).withTextColor(R.color.material_primary_text),
-				new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey).withTextColor(R.color.material_primary_text), new SectionDrawerItem().withName(R.string.tab_settings).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey).withTextColor(R.color.material_primary_text), 
+				new SectionDrawerItem().withName(R.string.tab_download_location).withTextColor(R.color.material_primary_text),
 				new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey)).withOnDrawerListener(new Drawer.OnDrawerListener() {
 				@Override
 				public void onDrawerOpened(View drawerView) {
@@ -96,8 +99,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+					System.out.println("!!! Position="+position);
 					changeFragment(position - 1, true);
-					
 				}
 			}).build();
 
@@ -214,18 +217,18 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void changeFragment(int fragmentId, boolean fromDraver) {
+		if (currentFragmentId == fragmentId) return;
+		if (null != service && !service.isPlaying()) {
+			if (fragmentId >= PLAYER_FRAGMENT) {
+				fragmentId ++;
+			}
+		}
 		Fragment selectedFragment = null;
 		isOpenFromDraver = fromDraver;
-		
-		if (currentFragmentId == fragmentId) {
-			return;
-		}
-
 		if (PLAYER_FRAGMENT != fragmentId) {
 			setPlayerFragmentVisible(false);
 			showMiniPlayer(true);
 		}
-		
 		boolean isAnimate = false;
 		switch (fragmentId) {
 		case SEARCH_FRAGMENT:
@@ -241,6 +244,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			selectedFragment = new LibraryFragment();
 			break;
 		case PLAYER_FRAGMENT:
+			if (!service.isPlaying()) return;
 			selectedFragment = new PlayerFragment();
 			isAnimate = true;
 			break;
@@ -281,7 +285,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void setCurrentFragmentId(int currentFragmentId) {
 		this.currentFragmentId = currentFragmentId;
-		drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
+		if (null != service && service.isPlaying()) {
+			drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
+		} else {
+			if (currentFragmentId >= PLAYER_FRAGMENT) {
+				drawerResult.getListView().setItemChecked(currentFragmentId, true);
+			}
+		}
 	}
 	
 	public int getCurrentFragmentId() {
@@ -295,7 +305,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			if (draverItemsCount < FULL_DRAVER_SIZE) {
 				drawerResult.removeItem(PLAYER_FRAGMENT + 1);
 				drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_grey).withTextColor(R.color.material_primary_text), PLAYER_FRAGMENT);
-				drawerResult.addItem(new SectionDrawerItem().withName(R.string.tab_settings).withTextColor(R.color.material_primary_text));
+				drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey).withTextColor(R.color.material_primary_text), PLAYLIST_FRAGMENT);
+				drawerResult.addItem(new SectionDrawerItem().withName(R.string.tab_download_location).withTextColor(R.color.material_primary_text));
 				drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
 			}
 			drawerResult.removeItem(SETTINGS_FRAGMENT + 1);

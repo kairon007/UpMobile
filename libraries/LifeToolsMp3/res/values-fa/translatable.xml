@@ -18,6 +18,7 @@
     <string name="tab_playlist">لیست پخش</string>
     <string name="tab_now_plaing">  در حال حاضر بازی</string>
     <string name="tab_settings">تنظیمات</string>
+    <string name="tab_download_location">دانلود مکان</string>
     <string name="message_please_wait">    لطفا صبر کنید...</string>
     <string name="message_loading">    در حال بارگذاری...</string>
     <string name="message_searching_for">    در حال جستجوی</string>
@@ -75,5 +76,6 @@
     <string name="playlist_name">نام لیست پخش</string>
     <string name="does_not_support_type">بهترین بازیکن این نوع فایل های صوتی را پشتیبانی نمی کند</string>
     <string name="done">اماده</string>
+    <string name="show_equalizer">نمایش اکولایزر</string>
 	
 </resources>

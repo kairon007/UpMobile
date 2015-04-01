@@ -18,6 +18,7 @@
     <string name="tab_library">Knihovna</string>
     <string name="tab_now_plaing">Právě hraje</string>
     <string name="tab_settings">Nastavení</string>
+    <string name="tab_download_location">Stáhnout příjezdovou</string>
     <string name="message_please_wait">Čekejte, prosím...</string>
     <string name="message_loading">Načítám...</string>
     <string name="message_searching_for">Vyhledávám</string>
@@ -75,5 +76,6 @@
     <string name="playlist_name">Playlist jméno</string>
     <string name="does_not_support_type">Přehrávač nepodporuje tento typ zvukového souboru</string>
     <string name="done">Připravený</string>
+    <string name="show_equalizer">Show ekvalizér</string>
     
 </resources>

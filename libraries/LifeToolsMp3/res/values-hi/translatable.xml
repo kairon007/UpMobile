@@ -18,6 +18,7 @@
     <string name="tab_playlist">प्लेलिस्ट</string>
     <string name="tab_now_plaing">अब खेल रहे हैं</string>
     <string name="tab_settings">सेटिंग्स</string>
+    <string name="tab_download_location">डाउनलोड स्थान</string>
     <string name="message_please_wait">कृपया प्रतीक्षा करें...</string>
     <string name="message_loading">लोड हो रहा है ...</string>
     <string name="message_searching_for">को खोज रहे हैं</string>
@@ -73,5 +74,6 @@
     <string name="playlist_name">प्लेलिस्ट का नाम</string>
 	<string name="does_not_support_type">खिलाड़ी ऑडियो फ़ाइल के इस प्रकार का समर्थन नहीं करता</string>
 	<string name="done">रेडी</string>
+	<string name="show_equalizer">दिखाएँ तुल्यकारक</string>
 	
 </resources>

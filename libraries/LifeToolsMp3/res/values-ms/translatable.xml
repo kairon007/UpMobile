@@ -18,6 +18,7 @@
     <string name="tab_playlist">Senarai Main</string>
     <string name="tab_now_plaing">Sekarang bermain</string>
     <string name="tab_settings">Tetapan</string>
+    <string name="tab_download_location">Muat lokasi</string>
     <string name="message_please_wait">Sila Tunggu...</string>
     <string name="message_loading">Sedang memuat...</string>
     <string name="message_searching_for">Mencari</string>
@@ -73,5 +74,6 @@
     <string name="playlist_name">Nama senarai main</string>
     <string name="does_not_support_type">Pemain ini tidak menyokong jenis fail audio</string>
     <string name="done">Bersedia</string>
+    <string name="show_equalizer">Show penyamaan</string>
 
 </resources>

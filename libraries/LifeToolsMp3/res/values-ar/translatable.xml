@@ -18,6 +18,7 @@
     <string name="tab_playlist">قائمة التشغيل</string>
     <string name="tab_now_plaing">اللعب الآن</string>
     <string name="tab_settings">الإعدادات</string>
+    <string name="tab_download_location">موقع التحميل</string>
     <string name="message_please_wait">يرجى الانتظار…</string>
     <string name="message_loading">قيد التحميل…</string>
     <string name="message_searching_for">قيد البحث عن</string>
@@ -75,5 +76,6 @@
     <string name="playlist_name">اسم قائمة التشغيل</string>
 	<string name="does_not_support_type">لاعب لا يدعم هذا النوع من الملفات الصوتية</string>
 	<string name="done">استعداد</string>
+	<string name="show_equalizer">مشاهدة التعادل</string>
 
 </resources>

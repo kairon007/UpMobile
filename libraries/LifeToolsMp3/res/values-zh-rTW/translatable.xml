@@ -17,6 +17,8 @@
     <string name="tab_library">音樂庫</string>
     <string name="tab_playlist">播放列表</string>
     <string name="tab_now_plaing">現在玩</string>
+    <string name="tab_settings"></string>
+    <string name="tab_download_location">下載地址</string>
     <string name="message_please_wait">請等待...</string>
     <string name="message_loading">載入中...</string>
     <string name="message_searching_for">正在搜索</string>
@@ -72,5 +74,6 @@
     <string name="playlist_name">播放列表名稱</string>
     <string name="does_not_support_type">該播放器不支持此類型的音頻文件</string>
     <string name="done">做完</string>
+    <string name="show_equalizer">顯示均衡器</string>
 
 </resources>

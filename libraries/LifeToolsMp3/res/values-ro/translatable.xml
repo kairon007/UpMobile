@@ -18,6 +18,7 @@
     <string name="tab_playlist">Playlist</string>
     <string name="tab_now_plaing">Acum joc</string>
     <string name="tab_settings">Setări</string>
+    <string name="tab_download_location">Descărcați locație</string>
     <string name="message_please_wait">Vă rugăm să așteptați...</string>
     <string name="message_loading">Se încarcă...</string>
     <string name="message_searching_for">Caută</string>
@@ -73,5 +74,6 @@
     <string name="playlist_name">Numele Playlist</string>
     <string name="does_not_support_type">Jucatorul nu acceptă acest tip de fișier audio</string>
     <string name="done">Gata</string>
+    <string name="show_equalizer">Arată egalizator</string>
 
 </resources>

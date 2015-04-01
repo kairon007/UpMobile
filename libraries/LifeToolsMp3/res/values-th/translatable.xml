@@ -18,6 +18,7 @@
     <string name="tab_playlist">เพลย์ลิส</string>
     <string name="tab_now_plaing">ตอนนี้เล่น</string>
     <string name="tab_settings">การตั้งค่า</string>
+    <string name="tab_download_location">ดาวน์โหลดสถานที่ตั้ง</string>
     <string name="message_please_wait">โปรดรอ...</string>
     <string name="message_loading">กำลังโหลด...</string>
     <string name="message_searching_for">กำลังค้นหา</string>
@@ -73,5 +74,6 @@
     <string name="playlist_name">ชื่อเพลย์ลิส</string>
     <string name="does_not_support_type">ผู้เล่นไม่สนับสนุนชนิดของไฟล์เสียงนี้</string>
     <string name="done">พร้อมแล้ว</string>
+    <string name="show_equalizer">แสดงควอไลเซอร์</string>
 
 </resources>
