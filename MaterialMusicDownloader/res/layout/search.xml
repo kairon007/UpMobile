@@ -30,9 +30,9 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
-            android:id="@+id/progress"
-            style="@style/ProgressBar"
-            android:visibility="gone" />
+                android:id="@+id/progress"
+                style="@style/ProgressBar"
+                android:visibility="gone" />
             
             <ImageView
                 android:id="@+id/loader_image"
