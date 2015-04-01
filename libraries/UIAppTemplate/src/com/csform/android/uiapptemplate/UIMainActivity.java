@@ -32,6 +32,8 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private boolean isVisibleSearchView = false;
 	protected boolean isEnabledFilter = false;
+	protected boolean hadClosedDraver = false;
+	private int currentPosition = -1;
 	
 	protected abstract <T extends BaseMaterialFragment> ArrayList<T> getFragments();
 	protected void clickOnSearchView(String message) {}
@@ -56,7 +58,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        View v = (View) findViewById(android.R.id.home);
+        View v = findViewById(android.R.id.home);
         if (null != v) {
 			if (useOldToggle()) {
 				((View) v.getParent().getParent()).setPadding(32, 0, 0, 0);
@@ -169,6 +171,9 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
+		if (position == currentPosition) {
+			return;
+		}
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT){
@@ -190,7 +195,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
-	    	BaseMaterialFragment fragment = (BaseMaterialFragment) mFragments.get(Constants.PLAYER_FRAGMENT);
+	    	BaseMaterialFragment fragment = mFragments.get(Constants.PLAYER_FRAGMENT);
 		    if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
 		    	changeFragment(fragment, true);
 		    }
@@ -202,6 +207,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		default:
 			break;
 		}
+		currentPosition = position;
 	}
 	
 	protected void setSearchViewVisibility(String fragmentName) {
@@ -234,6 +240,10 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	@Override
 	public void onBackPressed() {
 		setSearchViewVisibility(getPreviousFragmentName(2));
+		hadClosedDraver = navigationDrawerFragment.isDrawerOpen();
+		if (hadClosedDraver) {
+			navigationDrawerFragment.closeDrawer();
+		}
 	}
 	
 	protected String getPreviousFragmentName(int position) {
@@ -251,12 +261,17 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	public void setDrawerEnabled(boolean isEnabled) {
 		navigationDrawerFragment.setEnabled(isEnabled);
 	}
+	
+	protected boolean isDraverClosed() {
+		return navigationDrawerFragment.isDrawerIndicatorEnabled();
+	}
 
 	public String getQuery() {
 		return query;
 	}
 	
 	public void setSelectedItem(int position) {
+		currentPosition = position;
 		if (null != navigationDrawerFragment) {
 			navigationDrawerFragment.setSelectedItem(position);
 		}

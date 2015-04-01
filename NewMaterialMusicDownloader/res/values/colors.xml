@@ -4,6 +4,7 @@
     <!-- Orange style -->
     <color name="orange_material_primary_dark">#E64A19</color>
     <color name="orange_material_primary">#FF5722</color>
+    <color name="orange_material_accent_dark">#00773B</color>
     <color name="orange_material_accent">#12A158</color>
     <color name="orange_material_primary_text">#212121</color>
     <color name="orange_material_secondary_text">#727272</color>
@@ -11,6 +12,7 @@
     <!-- Green style -->
     <color name="green_material_primary_dark">#388E3C</color>
     <color name="green_material_primary">#4CAF50</color>
+    <color name="green_material_accent_dark">#B37B7A</color>
     <color name="green_material_accent">#EF8C89</color>
     <color name="green_material_primary_text">#212121</color>
     <color name="green_material_secondary_text">#727272</color>
@@ -18,6 +20,7 @@
     <!-- Brown style -->
     <color name="brown_material_primary_dark">#5D4037</color>
     <color name="brown_material_primary">#795548</color>
+    <color name="brown_material_accent_dark">#A61B1B</color>
     <color name="brown_material_accent">#FF5252</color>
     <color name="brown_material_primary_text">#212121</color>
     <color name="brown_material_secondary_text">#727272</color>
@@ -25,6 +28,7 @@
     <!-- Black style -->
     <color name="black_material_primary_dark">#FFFFFF</color>
     <color name="black_material_primary">#263238</color>
+    <color name="black_material_accent_dark">#BF9A70</color>
     <color name="black_material_accent">#FEBD72</color>
     <color name="black_material_primary_text">#000000</color>
     <color name="black_material_secondary_text">#607D8B</color>

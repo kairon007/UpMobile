@@ -145,11 +145,4 @@
     
     <string name="ellipsis">\u2026</string>
     
-    <string name="last_played_playlist">Last played Playlist</string>
-    <string name="create_new_playlist">Create new Playlist</string>
-    <string name="all_playlists">All Playlists</string>
-    <string name="create">Create</string>
-    <string name="error_getting_url">Error getting url</string>
-    <string name="does_not_support_type">The player does not support this type of audio file</string>
-    
 </resources>

@@ -537,7 +537,7 @@ public class CircularProgressButton extends Button {
     }
 
     public void setProgress(int progress) {
-        mProgress = progress;
+    	mProgress = progress;
 
         if (mMorphingInProgress || getWidth() == 0) {
             return;
@@ -550,6 +550,8 @@ public class CircularProgressButton extends Button {
                 morphProgressToComplete();
             } else if (mState == State.IDLE) {
                 morphIdleToComplete();
+            } else if (mState == State.COMPLETE) {
+            	mProgress = 0;
             }
         } else if (mProgress > IDLE_STATE_PROGRESS) {
             if (mState == State.IDLE) {
@@ -625,7 +627,6 @@ public class CircularProgressButton extends Button {
         savedState.mProgress = mProgress;
         savedState.mIndeterminateProgressMode = mIndeterminateProgressMode;
         savedState.mConfigurationChanged = true;
-
         return savedState;
     }
 

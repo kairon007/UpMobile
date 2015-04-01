@@ -74,5 +74,6 @@
 	<string name="folder_name">Nombre de la carpeta</string>
     <string name="playlist_name">Nombre de la lista</string>
 	<string name="does_not_support_type">El reproductor no admite este tipo de archivo de audio</string>
+	<string name="done">Listo</string>
 	
 </resources>

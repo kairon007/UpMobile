@@ -15,6 +15,8 @@
         <attr name="buttonStyle" format="reference" />
         <attr name="dividerStyle" format="reference" />
     </declare-styleable>
+    
+    
 
     <!-- CircularImageView for custom shape -->
     <declare-styleable name="CircularImageView">
@@ -109,6 +111,18 @@
         <attr name="rv_ripplePadding" format="dimension" />
         <attr name="rv_zoom" format="boolean" />
         <attr name="rv_zoomScale" format="float" />
+    </declare-styleable>
+    
+     <declare-styleable name="FloatingActionButton">
+        <attr name="fab_colorPressed" format="color|reference" />
+        <attr name="fab_colorNormal" format="color|reference" />
+        <attr name="fab_colorRipple" format="color" />
+        <attr name="fab_colorDisabled" format="color" />
+        <attr name="fab_shadow" format="boolean" />
+        <attr name="fab_type" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="mini" value="1" />
+        </attr>
     </declare-styleable>
 
 </resources>

@@ -13,7 +13,8 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 
 	private static String URL_PATTERN = "http://www.myfreemp3.cc/mp3/%s?page=%s";
 //	private static String partServer = "http://89.248.172.6/dvv.php?q=";
-	private static String partServer = "http://s.myfreemp3.biz/biz.php?q=";
+//	private static String partServer = "http://s.myfreemp3.biz/biz.php?q=";
+	private String partServer = "http://s.myfreemp3.biz/p.php?q=";
 
 	public SearchMyFreeMp3(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
@@ -21,11 +22,8 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		
-		
 		try {
 			String strLink = String.format(URL_PATTERN, URLEncoder.encode(getSongName(), "UTF-8"), page);
-			
 			if(!checkConnection(strLink)) {
 				return null;
 			}

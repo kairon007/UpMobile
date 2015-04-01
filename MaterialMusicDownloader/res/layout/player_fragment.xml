@@ -352,21 +352,10 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp" >
 
-        <com.csform.android.uiapptemplate.view.cpb.ProgressBarCircularIndeterminate
+        <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
             android:id="@+id/lyrics_progress"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center"
-            android:background="@color/main_color_accent"
+            style="@style/ProgressBar"
             android:visibility="gone" />
-
-        <!-- <com.csform.android.uiapptemplate.view.ProgressWheel -->
-        <!-- android:id="@+id/lyrics_progress" -->
-        <!-- style="@style/ProgressBarMaterial" -->
-        <!-- android:layout_width="56dp" -->
-        <!-- android:layout_height="56dp" -->
-        <!-- android:layout_gravity="center" -->
-        <!-- android:visibility="visible" /> -->
 
         <com.csform.android.uiapptemplate.font.RobotoTextView
             android:id="@+id/lyrics_text"

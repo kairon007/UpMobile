@@ -72,5 +72,6 @@
 	<string name="folder_name">Nama folder</string>
     <string name="playlist_name">Nama senarai main</string>
     <string name="does_not_support_type">Pemain ini tidak menyokong jenis fail audio</string>
+    <string name="done">Bersedia</string>
 
 </resources>

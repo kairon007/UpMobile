@@ -74,5 +74,6 @@
 	<string name="folder_name">نام پوشه</string>
     <string name="playlist_name">نام لیست پخش</string>
     <string name="does_not_support_type">بهترین بازیکن این نوع فایل های صوتی را پشتیبانی نمی کند</string>
+    <string name="done">اماده</string>
 	
 </resources>

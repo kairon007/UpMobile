@@ -72,5 +72,6 @@
 	<string name="folder_name">폴더 이름</string>
     <string name="playlist_name">재생 목록 이름</string>
     <string name="does_not_support_type">플레이어는 오디오 파일 형식을 지원하지 않습니다</string>
+    <string name="done">준비된</string>
 
 </resources>

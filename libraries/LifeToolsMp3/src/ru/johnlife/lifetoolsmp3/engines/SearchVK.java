@@ -1,11 +1,8 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -56,7 +53,7 @@ public class SearchVK extends SearchWithPages {
 					}
 				}
 			}
-		} catch (UnsupportedEncodingException | MalformedURLException | JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;

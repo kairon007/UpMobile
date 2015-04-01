@@ -104,7 +104,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private boolean isUseAlbumCover = false;
 
 	// playback sections
-//	private SimpleVisualizerView visualizerView;
 	private PlayPauseView play;
 	private ImageView previous;
 	private ImageView forward;
@@ -347,7 +346,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (null == mVisualizer) {
 			try {
 				mVisualizer = new Visualizer(player.getAudioSessionId());
-				mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+				mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
 				mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
 					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
 					}

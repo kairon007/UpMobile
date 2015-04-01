@@ -53,11 +53,17 @@
 	<string name="undo_deletion">UNDO DELETION</string>
 	<string name="playlist_cannot_be_empty">The name of the Playlist cannot be empty</string>
 	<string name="playlist_is_empty">Playlist is empty</string>
-	
 	<string name="no_previous_playlists">No previous Playlists</string>
 	<string name="select_playlist">Select Playlist</string>
 	<string name="folder_name">Folder name</string>
     <string name="playlist_name">Playlist name</string>
+    <string name="last_played_playlist">Last played Playlist</string>
+    <string name="create_new_playlist">Create new Playlist</string>
+    <string name="all_playlists">All Playlists</string>
+    <string name="create">Create</string>
+    <string name="error_getting_url">Error getting url</string>
+    <string name="does_not_support_type">The player does not support this type of audio file</string>
+    <string name="done">Done</string>
 	
 	
 	

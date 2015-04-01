@@ -71,5 +71,6 @@
 	<string name="folder_name">Klasör adı</string>
     <string name="playlist_name">Playlist isim</string>
     <string name="does_not_support_type">Oyuncu ses dosyasının bu tür desteklemiyor</string>
+    <string name="done">Hazır</string>
 
 </resources>

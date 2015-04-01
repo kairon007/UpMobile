@@ -54,9 +54,8 @@ public class RippleView extends FrameLayout implements OnGestureListener {
     private View childView;
     private GestureDetector gestureDetector;
     private ScaleAnimation scaleAnimation;
-
     private Handler canvasHandler;
-    
+
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -254,7 +253,10 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			animateRipple(event);
 			break;
 		case MotionEvent.ACTION_MOVE:
+			childView.onTouchEvent(event);
+			break;
 		case MotionEvent.ACTION_CANCEL:
+			animationRunning = false;
 			removeCallbacks(runnable);
 			childView.setPressed(false);
 			childView.onTouchEvent(event);

@@ -74,5 +74,6 @@
 	<string name="folder_name">όνομα φακέλου</string>
     <string name="playlist_name">Το όνομα λίστας αναπαραγωγής</string>
     <string name="does_not_support_type">Η συσκευή αναπαραγωγής δεν υποστηρίζει αυτόν τον τύπο αρχείου ήχου</string>
+    <string name="done">έτοιμος</string>
 
 </resources>

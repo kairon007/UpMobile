@@ -51,7 +51,7 @@ public abstract class BasePlaylistView extends View {
 	private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 	private final static String EXTERNAL = "external";
 	private ViewGroup view;
-	private ListView listView;
+	protected ListView listView;
 	private ExpandableAdapter expandableAdapter;
 	private View playLastPlaylist;
 	private View createNewPlayList;
@@ -72,8 +72,6 @@ public abstract class BasePlaylistView extends View {
 	protected abstract ListView getListView(View view);
 
 	public abstract TextView getMessageView(View view);
-	
-	protected View getFooter(){return null;};
 	
 	protected boolean isAnimateExpandCollapse() {return true;};
 
@@ -139,9 +137,6 @@ public abstract class BasePlaylistView extends View {
 		}
 		((AnimatedExpandableListView) listView).setAdapter(expandableAdapter);
 		((AnimatedExpandableListView) listView).setEmptyView(emptyView);
-		if (null != getFooter()) {
-			((AnimatedExpandableListView) listView).addFooterView(getFooter(), null, false);
-		}
 		((AnimatedExpandableListView) listView).setOnGroupClickListener(new OnGroupClickListener() {
 
             @Override
@@ -197,23 +192,6 @@ public abstract class BasePlaylistView extends View {
 				return false;
 			}
 		});
-		listView.setOnScrollListener(new OnScrollListener() {
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				goScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-			}
-
-		});
-	}
-	
-	protected void goScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		
 	}
 	
 	private void setGroupIndicator(View v, int i) {

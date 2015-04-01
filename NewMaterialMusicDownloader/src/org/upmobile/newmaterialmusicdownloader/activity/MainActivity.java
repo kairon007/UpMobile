@@ -42,10 +42,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikepenz.materialdrawer.Drawer;
@@ -363,11 +361,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		UndoBar message = new UndoBar(this);
 		message.message(msg);
 		message.style(UndoBarController.MESSAGESTYLE);
-		floatBtnContainer = findViewById(R.id.containerFloatingBtn);
+		floatBtnContainer = (View) findViewById(R.id.floatingButton).getParent();
 		View miniplayer = findViewById(getMiniPlayerID());
 		if (null != floatBtnContainer && miniplayer.getVisibility() != View.VISIBLE) {
-			int toBottom = Util.dpToPx(MainActivity.this, 72);
-			throwUp(toBottom, true);
 			message.listener(new UndoBarController.AdvancedUndoListener() {
 
 				@Override
@@ -376,8 +372,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 				@Override
 				public void onHide(@Nullable Parcelable token) {
-					int toBottom = Util.dpToPx(MainActivity.this, 16);
-					throwUp(toBottom, false);
+					floatBtnContainer.setPadding(0, 0, 0, 0);
 				}
 
 				@Override
@@ -385,16 +380,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				}
 			});
 			message.show(false);
+			int height = message.getHeightBar();
+			floatBtnContainer.setPadding(0, 0, 0, Util.dpToPx(this, height));
 			return;
 		}
 		message.show(false);
-	}
-	
-	public void throwUp(int height, boolean isThrowUp) {
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, isThrowUp ? LayoutParams.WRAP_CONTENT : 96);
-		lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		lp.bottomMargin = height;
-		floatBtnContainer.setLayoutParams(lp);
 	}
 
 	public void showMessage(int message) {

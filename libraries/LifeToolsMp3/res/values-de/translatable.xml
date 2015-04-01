@@ -74,4 +74,5 @@
 	<string name="folder_name">Ordnername</string>
     <string name="playlist_name">Playname</string>
 	<string name="does_not_support_type">De speler ondersteunt niet dit soort audiobestand</string>
+	<string name="done">Bereit</string>
 </resources>

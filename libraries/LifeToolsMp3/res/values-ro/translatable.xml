@@ -72,5 +72,6 @@
 	<string name="folder_name">Nume folder</string>
     <string name="playlist_name">Numele Playlist</string>
     <string name="does_not_support_type">Jucatorul nu acceptă acest tip de fișier audio</string>
+    <string name="done">Gata</string>
 
 </resources>
