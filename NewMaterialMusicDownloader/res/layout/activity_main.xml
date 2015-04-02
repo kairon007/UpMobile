@@ -26,8 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:background="@drawable/top_shadow" >
+        android:background="@drawable/top_shadow"
+        android:visibility="gone" >
 
         <include
             android:id="@+id/mini_player"
@@ -46,6 +46,12 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/toolbar" />
 
+    <FrameLayout
+        android:id="@+id/toolbar_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/bottom_shadow" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -56,20 +62,13 @@
 
         <TextView
             android:id="@+id/toolbar_title"
+            style="@style/ToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/app_name"
-            android:textColor="@android:color/white"
-            style="@style/ToolbarTitle" />
-
+            android:textColor="@android:color/white" />
     </android.support.v7.widget.Toolbar>
-
-    <FrameLayout
-        android:id="@+id/toolbar_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="63dp"
-        android:background="@drawable/bottom_shadow" />
 
 </RelativeLayout>
