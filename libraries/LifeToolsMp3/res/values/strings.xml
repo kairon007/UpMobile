@@ -126,7 +126,7 @@
     <string name="downloadcomplete">Download Completed</string>
     <string name="dlfailed">Download Failed</string>
     <string name="dlcancelled">Download Cancelled</string>
-    <string name="downloading">Downloading File</string>
+    <string name="downloading">Downloading...</string>
     <string name="totaldl">Total Downloads</string>
     <string name="clearall">Clear All</string>
     <string name="file_is_bad">bad_file</string>
@@ -144,5 +144,7 @@
     <string name="delete_item">Delete item</string>
     
     <string name="ellipsis">\u2026</string>
+    
+    <string name="downloaded">Downloaded</string>
     
 </resources>

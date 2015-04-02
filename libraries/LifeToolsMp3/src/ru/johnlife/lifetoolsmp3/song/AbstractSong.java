@@ -25,6 +25,8 @@ public interface AbstractSong extends Parcelable, Cloneable{
 	
 	public boolean getDownloadUrl(DownloadUrlListener listener);
 	
+	public String getComment();
+	
 	public void setArtist(String artist);
 	
 	public void setTitle(String title);

@@ -80,7 +80,7 @@ public class DownloadGrooveshark extends AsyncTask<Void, Void, Integer> {
 		builder.setContentText(context.getText(R.string.download_finished)).setProgress(0, 0, false);
 		notifyManager.notify(ID, builder.build());
 		if (null != infoListener) {
-			infoListener.success();
+			infoListener.success("");
 		}
 		super.onPostExecute(result);
 	}

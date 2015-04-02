@@ -64,7 +64,6 @@ public class RemoteSong extends Song {
 	private final WrapperCoverListener coverListener = new WrapperCoverListener();
 	private int coverLoaderIndex = 0;
 	
-	protected String downloadUrl;
 	public ArrayList<String []> headers;
 	private WeakReference<Bitmap> cover;
 	private WeakReference<Bitmap> smallCover;
@@ -95,7 +94,7 @@ public class RemoteSong extends Song {
 		duration = songDuration;
 		return this;
 	}
-
+	
 	public String getUrl() {
 		if (null != downloadUrl && !downloadUrl.isEmpty()) {
 			return downloadUrl;

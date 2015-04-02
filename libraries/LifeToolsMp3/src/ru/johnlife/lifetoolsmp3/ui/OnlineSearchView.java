@@ -11,6 +11,7 @@ import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
@@ -23,9 +24,11 @@ import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.InfoListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,6 +38,7 @@ import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -44,6 +48,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -53,10 +58,12 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -91,6 +98,7 @@ public abstract class OnlineSearchView extends View {
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 	private final String SPREF_ENGINES = "shar_pref_key_engines_array";
 	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
+	private final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 	private ArrayAdapter<String> adapter;
 	private Iterator<Engine> taskIterator;
 	private SharedPreferences sPref;
@@ -120,8 +128,10 @@ public abstract class OnlineSearchView extends View {
 	private String extraSearch = null;
 	private String keyEngines;
 	private int clickPosition;
+	private SparseBooleanArray positions;
 	private boolean isRestored = false;
 	private BaseSearchTask searchTask;
+	private ArrayList<MusicData> libraryList;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -179,8 +189,6 @@ public abstract class OnlineSearchView extends View {
 				return ru.johnlife.lifetoolsmp3.engines.SearchKugou.class; 
 			} else if (searchEngineName.equals("SearchTaringaMp3")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3.class;
-			} else if (searchEngineName.equals("SearchPleerV2")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchPleerV2.class;
 			}
 		}
 		return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
@@ -222,11 +230,17 @@ public abstract class OnlineSearchView extends View {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-			String value = sharedPreferences.getString(key, null);
-			initSearchEngines(getContext(), value);
-			String str = Util.removeSpecialCharacters(searchField.getText().toString());
-			if (!resultAdapter.isEmpty() && !str.equals("")) {
-				trySearch();
+			if (key.contains(PREF_DIRECTORY_PREFIX)) {
+				updateQuery();
+				return;
+			}
+			if (key.contains(SPREF_CURRENT_ENGINES)) {
+				String value = sharedPreferences.getString(key, null);
+				initSearchEngines(getContext(), value);
+				String str = Util.removeSpecialCharacters(searchField.getText().toString());
+				if (!resultAdapter.isEmpty() && !str.equals("")) {
+					trySearch();
+				}
 			}
 		}
 	};
@@ -259,6 +273,10 @@ public abstract class OnlineSearchView extends View {
 			}
 		}
 	};
+	
+	protected boolean showDownloadLabel() {
+		return false;
+	}
 
 	protected abstract BaseSettings getSettings();
 
@@ -319,7 +337,7 @@ public abstract class OnlineSearchView extends View {
 		if (resultAdapter == null) {
 			resultAdapter = new SongSearchAdapter(getContext());
 		}
-		sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+		sPref = MusicApp.getSharedPreferences();
 		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
 		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
 		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
@@ -329,6 +347,23 @@ public abstract class OnlineSearchView extends View {
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) search(searchField.getText().toString());
 		setMessage(getResources().getString(R.string.search_your_results_appear_here));
 		initBoxEngines();
+		positions = new SparseBooleanArray();
+		updateQuery();
+	}
+	
+	public void updateQuery() {
+		if(!showDownloadLabel()) return;
+		libraryList = querySong();
+	}
+	
+	public void removeFromStackPositions(View v) {
+		if(!showDownloadLabel()) return;
+		removeFromStackPositions(listView.getPositionForView(v) - 1);
+	}
+	
+	public void removeFromStackPositions(int position) {
+		if(!showDownloadLabel()) return;
+		positions.delete(position);
 	}
 
 	public View getView() {
@@ -485,6 +520,8 @@ public abstract class OnlineSearchView extends View {
 	@SuppressLint("NewApi")
 	public void showMenu(final View v) {
 		PopupMenu menu = new PopupMenu(getContext(), v);
+		final int position = (Integer) v.getTag();
+		positions.put(position, true);
 		menu.getMenuInflater().inflate(R.menu.search_menu, menu.getMenu());
 		
 		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -492,7 +529,6 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.search_menu_play) {
-					int position = (Integer) v.getTag();
 					click(null, position);
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
@@ -501,7 +537,7 @@ public abstract class OnlineSearchView extends View {
 						@Override
 						public void success(String url) {
 							((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).setDownloadUrl(url);
-							download(((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())));
+							download(getViewByPosition(position + 1),((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())));
 						}
 
 						@Override
@@ -516,17 +552,60 @@ public abstract class OnlineSearchView extends View {
 		menu.show();
 	}
 	
-	protected void download(RemoteSong song) {
+	protected void download(final View v, RemoteSong song) {
 		downloadListener = new DownloadClickListener(getContext(), song, 0);
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
+		if(!showDownloadLabel()) return;
+		downloadListener.setInfolistener(new InfoListener() {
+
+			@Override
+			public void success(String str) {
+				((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						removeFromStackPositions(v);
+						((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloaded);
+						((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.GREEN);
+						updateQuery();
+					}
+				});
+			}
+
+			@Override
+			public void erorr(String str) {
+				((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						v.findViewById(R.id.infoView).setVisibility(View.GONE);
+						removeFromStackPositions(v);
+					}
+				});
+			}
+		});
+		v.findViewById(R.id.infoView).setVisibility(View.VISIBLE);
+		((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloading);
+		((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
+	}
+	
+	public View getViewByPosition(int pos) {
+	    final int firstListItemPosition = listView.getFirstVisiblePosition();
+	    final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+	    if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+	        return listView.getAdapter().getView(pos, null, listView);
+	    } else {
+	        final int childIndex = pos - firstListItemPosition;
+	        return listView.getChildAt(childIndex);
+	    }
 	}
 
 	public void initSearchEngines(Context context, String valueEngines) {
-		// TODO this set number engines
 		if (null == valueEngines) {
-			sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+			sPref = MusicApp.getSharedPreferences();
 			keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
 		} else {
 			keyEngines = valueEngines;
@@ -575,7 +654,6 @@ public abstract class OnlineSearchView extends View {
 			}
 			if (!isUseDefaultSpinner()) {
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				android.util.Log.d("logd", "initBoxEngines: 1");
 			} else {
 				if (getDropDownViewResource() > 0) {
 					adapter.setDropDownViewResource(getDropDownViewResource());
@@ -604,7 +682,7 @@ public abstract class OnlineSearchView extends View {
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 					keyEngines = adapter.getItem(position);
-					sPref = getContext().getSharedPreferences(SPREF_ENGINES, Context.MODE_PRIVATE);
+					sPref = MusicApp.getSharedPreferences();
 					SharedPreferences.Editor editor = sPref.edit();
 					if (keyEngines.equals(getTitleSearchEngine())) {
 						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
@@ -755,6 +833,45 @@ public abstract class OnlineSearchView extends View {
 		return ((BitmapDrawable) getResources().getDrawable(defaultCover())).getBitmap();
 	}
 	
+	protected ArrayList<MusicData> querySong() {
+		ArrayList<MusicData> result = new ArrayList<MusicData>();
+		Cursor cursor = buildQuery(getContext().getContentResolver(), getDirectory());
+		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			return result;
+		}
+		MusicData d = new MusicData();
+		d.populate(cursor);
+		result.add(d);
+		while (cursor.moveToNext()) {
+			MusicData data = new MusicData();
+			data.populate(cursor);
+			result.add(data);
+		}
+		cursor.close();
+		return result;
+	}
+	
+	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
+		String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + "" + "%'";
+		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+		return cursor;
+	}
+	
+	public int isThisSongDownloaded(String url) {
+		for (MusicData data : libraryList) {
+			if (null != url) {
+				if (url.equals(data.getComment())) {
+					return 0;
+				} 
+				// Check to songs from youtube
+				if (null != data.getComment() && data.getComment().contains("youtube-mp3.org") && url.contains("youtube-mp3.org") && data.getComment().substring(0, data.getComment().indexOf("ts_create")).equalsIgnoreCase(url.substring(0, url.indexOf("ts_create")))) {
+					return 0;
+				}
+			}
+		}
+		return -1;
+	}
+	
 	public class SongSearchAdapter extends BaseAbstractAdapter<Song> {
 
 		private LayoutInflater inflater;
@@ -778,20 +895,21 @@ public abstract class OnlineSearchView extends View {
 			}
 			return list;
 		}
-
+		
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			Song song = (Song) getItem(position);
 			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()), getIdCustomView());
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
+			String comment = song.getComment();
 			song.setTitle(title);
 			song.setArtist(artist);
-			builder.setLine1(artist,
-					Util.getFormatedStrDuration(song.getDuration()))
+			builder.setLine1(artist, Util.getFormatedStrDuration(song.getDuration()))
 					.setLongClickable(false)
 					.setExpandable(false)
 					.setLine2(title)
+					.setDownloadLable(showDownloadLabel() ? positions.get(position) ? 1 :isThisSongDownloaded(comment) : -1)
 					.setId(position)
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
 					.setButtonVisible(showDownloadButton() ? true : false);

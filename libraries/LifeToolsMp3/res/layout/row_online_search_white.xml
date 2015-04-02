@@ -112,6 +112,12 @@
                 android:singleLine="true"
                 android:textSize="@dimen/font_size_normal" />
         </LinearLayout>
+        
+        <TextView 
+            android:id="@+id/infoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <View
             android:id="@+id/threeDot"

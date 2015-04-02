@@ -30,6 +30,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	private String title;
 	private String artist;
 	private String album;
+	private String comment;
 	private int mode;
 	private long id;
 	private long duration;
@@ -54,6 +55,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		artist = parcel.readString();
 		progress = parcel.readInt();
 		album = parcel.readString();
+		comment = parcel.readString();
 	}
 
 	public static final Parcelable.Creator<MusicData> CREATOR = new Parcelable.Creator<MusicData>() {
@@ -76,6 +78,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		artist = cursor.getString(3);
 		duration = cursor.getLong(4);
 		album = cursor.getString(5);
+		comment = getComment();
 	}
 
 	public void reset(final Context context) {
@@ -110,6 +113,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		dest.writeString(artist);
 		dest.writeInt(progress);
 		dest.writeString(album);
+		dest.writeString(comment);
 	}
 
 	@Override
@@ -125,6 +129,21 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 			return null;
 		}
 		return cover;
+	}
+	
+	@Override
+	public String getComment() {
+		if (null != comment && !comment.isEmpty()) return comment;
+		File file = new File(path);
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			comment = metadata.getComment();
+		} catch (Exception e) {
+			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
+			return null;
+		}
+		return comment;
 	}
 	
 	@Override

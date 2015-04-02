@@ -208,7 +208,7 @@ public class ResideMenu extends FrameLayout{
         setScaleDirection(ResideMenu.DIRECTION_LEFT);
         
         if (showShadow && imageViewShadow != null){
-            imageViewShadow.setImageResource(R.drawable.shadow);
+            imageViewShadow.setImageResource(R.drawable.shadow_shape);
         }
 
         isOpened = true;
@@ -493,7 +493,7 @@ public class ResideMenu extends FrameLayout{
 				}
 			} else if (pressedState == PRESSED_MOVE_HORIZANTAL) {
 				if (showShadow && imageViewShadow != null) {
-					imageViewShadow.setImageResource(R.drawable.shadow);
+					imageViewShadow.setImageResource(R.drawable.shadow_shape);
 				}
 
 				if (currentActivityScaleX < 0.95)

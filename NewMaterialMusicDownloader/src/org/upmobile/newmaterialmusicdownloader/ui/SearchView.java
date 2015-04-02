@@ -11,14 +11,18 @@ import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.InfoListener;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
 
@@ -136,10 +140,48 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	}
 	
 	@Override
-	protected void download(RemoteSong song) {
+	protected boolean showDownloadLabel() {
+		return true;
+	}
+	
+	@Override
+	protected void download(final View v, RemoteSong song) {
 		DownloadListener downloadListener = new DownloadListener(getContext(), song, 0);
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
+		if (!showDownloadLabel()) return;
+		downloadListener.setInfolistener(new InfoListener() {
+
+			@Override
+			public void success(String str) {
+				((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						android.util.Log.d("logd", "run: ------------------------------------------------------");
+						((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloaded);
+						((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.GREEN);
+						removeFromStackPositions(v);
+						updateQuery();
+					}
+				});
+			}
+
+			@Override
+			public void erorr(String str) {
+				((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						removeFromStackPositions(v);
+						v.findViewById(R.id.infoView).setVisibility(View.GONE);
+					}
+				});
+			}
+		});
+		v.findViewById(R.id.infoView).setVisibility(View.VISIBLE);
+		((TextView)v.findViewById(R.id.infoView)).setText(R.string.downloading);
+		((TextView)v.findViewById(R.id.infoView)).setTextColor(Color.RED);
 	}
 }

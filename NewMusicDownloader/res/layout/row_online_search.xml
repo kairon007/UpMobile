@@ -12,9 +12,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="horizontal"
         android:background="@drawable/selectable_item_bg"
-        android:clickable="true" >
+        android:clickable="true"
+        android:orientation="horizontal" >
 
         <FrameLayout
             android:layout_width="72dp"
@@ -63,9 +63,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:orientation="vertical"
             android:padding="8dp" >
 
@@ -76,7 +75,6 @@
 
                 <TextView
                     android:id="@+id/titleLine"
-                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -97,25 +95,45 @@
                     android:visibility="visible" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/artistLine"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-thin"
-                android:singleLine="true"
-                android:textSize="@dimen/font_size_normal" />
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/artistLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-thin"
+                    android:singleLine="true"
+                    android:textSize="@dimen/font_size_normal" />
+
+                <TextView
+                    android:id="@+id/infoView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:fontFamily="sans-serif-thin"
+                    android:gravity="right"
+                    android:paddingRight="4dp"
+                    android:singleLine="true"
+                    android:text="@string/downloaded"
+                    android:textColor="@android:color/holo_green_light"
+                    android:textSize="@dimen/font_size_normal"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
-        
-         <ImageView
+
+        <ImageView
             android:id="@+id/threeDot"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selectable_item_bg"
             android:clickable="true"
             android:scaleType="centerInside"
-            android:background="@drawable/selectable_item_bg"
-            android:layout_gravity="center_vertical"
             android:src="@drawable/threedot"
             android:visibility="visible" />
     </LinearLayout>

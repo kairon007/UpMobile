@@ -27,7 +27,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	private PlaybackService service;
 	private ImageView baseProgress;
 	private ImageView refreshProgress;
-    private String PACKAGE = "IDENTIFY";
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
@@ -177,5 +176,10 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	protected int getIdCustomView() {
 		return R.layout.row_online_search;
+	}
+	
+	@Override
+	protected boolean showDownloadLabel() {
+		return true;
 	}
 }

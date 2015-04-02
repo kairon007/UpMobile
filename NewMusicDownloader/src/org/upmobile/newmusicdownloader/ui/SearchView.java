@@ -2,7 +2,6 @@ package org.upmobile.newmusicdownloader.ui;
 
 import java.util.ArrayList;
 
-import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmusicdownloader.R;
@@ -16,7 +15,6 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -137,5 +135,10 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	protected int getIdCustomView() {
 		return R.layout.row_online_search;
+	}
+	
+	@Override
+	protected boolean showDownloadLabel() {
+		return true;
 	}
 }

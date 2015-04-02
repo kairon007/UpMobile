@@ -72,7 +72,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			if (service.isPlaying()) showPlayerElement(true);
 		}
 		fileObserver.startWatching();
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
 	@Override

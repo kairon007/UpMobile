@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class AdapterHelper {
 		private TextView number;
 		private TextView titleLine;
 		private TextView chunkTime;
+		private TextView dowloadLabel;
 		private ImageView btnDownload;
 		private ImageView cover;
 		private View view, threeDot;
@@ -67,6 +69,25 @@ public class AdapterHelper {
 			cover = (ImageView)view.findViewById(R.id.cover);
 			left = (View) number.getParent();
 			threeDot = view.findViewById(R.id.threeDot);
+			dowloadLabel = (TextView) view.findViewById(R.id.infoView);
+		}
+		/**
+		 * 
+		 * @param isDownloaded
+		 * 0 - The song is downloaded
+		 * 1 - The song also downloaded
+		 * -1 - The song before downloading
+		 * 
+		 */
+		public ViewBuilder setDownloadLable(int isDownloaded) {
+			if (isDownloaded == -1) {
+				dowloadLabel.setVisibility(View.GONE);
+				return this;
+			}
+			dowloadLabel.setVisibility(View.VISIBLE);
+			dowloadLabel.setTextColor(isDownloaded == 1 ? Color.RED : Color.GREEN);
+			dowloadLabel.setText(isDownloaded == 1 ? R.string.downloading : R.string.downloaded);
+			return this;
 		}
 		
 		public ViewBuilder setExpandable(boolean value) {

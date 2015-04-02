@@ -73,6 +73,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private int id;
 	private long progress = 0;
 	private boolean useAlbumCover = true;
+	private InfoListener infolistener;
 	protected boolean interrupted = false;
 	
 	private CanceledCallback cancelDownload = new CanceledCallback() {
@@ -138,14 +139,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context, new InfoListener() {
 				
 				@Override
-				public void success() {
+				public void success(String str) {
 					setMetadataToFile(musicDir.getAbsolutePath()  + "/" + sb, new File(musicDir.getAbsolutePath()  + "/" + sb), useAlbumCover);
 					insertToMediaStore(song, musicDir.getAbsolutePath()  + "/" + sb);
 					showMessage(context, R.string.download_finished);
 				}
 				
 				@Override
-				public void erorr() {
+				public void erorr(String str) {
 				}
 			});
 			manager.execute();
@@ -362,6 +363,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		metadata.clear();
 		metadata.setSongTitle(song.getTitle().trim());
 		metadata.setArtist(song.getArtist().trim());
+		metadata.setComment(song.getUrl());
 		if (null != cover && useCover) {
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);
@@ -489,6 +491,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						setFileUri(currentDownloadId, src.getAbsolutePath());
 						prepare(src, song, path);
 						DownloadCache.getInstanse().remove(artist, title);
+						if (null != infolistener) {
+							infolistener.success(song.getUrl());
+						}
 						this.cancel();
 					}
 					return;
@@ -514,6 +519,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			notifyAboutFailed(currentDownloadId);
 			c.close();
 			DownloadCache.getInstanse().remove(artist, title);
+			if (null != infolistener) {
+				infolistener.erorr("");
+			}
 			this.cancel();
 		}
 
@@ -678,13 +686,17 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 	
 	public interface InfoListener {
-		public void success();
+		public void success(String str);
 		
-		public void erorr();
+		public void erorr(String str);
 	}
 	
 	public Integer getSongID() {
 		return songId;
+	}
+
+	public void setInfolistener(InfoListener infolistener) {
+		this.infolistener = infolistener;
 	}
 
 }

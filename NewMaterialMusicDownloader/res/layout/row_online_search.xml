@@ -100,14 +100,33 @@
                         android:visibility="visible" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/artistLine"
-                    style="@style/TextStyleLine2"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:singleLine="true" />
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:id="@+id/artistLine"
+                        style="@style/TextStyleLine2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true" />
+
+                    <TextView
+                        android:id="@+id/infoView"
+                        style="@style/TextStyleLine2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="right"
+                        android:paddingRight="4dp"
+                        android:singleLine="true"
+                        android:textColor="@android:color/holo_green_light"
+                        android:text="Downloaded"
+                        android:visibility="gone" />
+                </LinearLayout>
             </LinearLayout>
 
             <ru.johnlife.lifetoolsmp3.ui.widget.RippleView

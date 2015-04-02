@@ -143,6 +143,8 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * in the song.
 	 */
 	
+	public String downloadUrl;
+	
 	public Bitmap cover;
 	
 	private boolean hasCover = false;
@@ -362,5 +364,10 @@ public class Song implements Comparable<Song>, AbstractSong {
 	
 	public void setHasCover(boolean hasCover) {
 		this.hasCover = hasCover;
+	}
+
+	@Override
+	public String getComment() {
+		return downloadUrl;
 	}
 }
