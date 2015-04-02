@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.DownloadListener;
+import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import org.upmobile.newmaterialmusicdownloader.fragment.DownloadsFragment;
@@ -55,8 +56,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback {
 	
-
-
 	private Drawer.Result drawerResult = null;
 	private ActionBarDrawerToggle toggle;
 	private SearchView searchView;
@@ -78,7 +77,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		changeFragment(SEARCH_FRAGMENT, true);
+		changeFragment(ManagerFragmentId.searchFragment(), true);
 		drawerResult = new Drawer()
 			.withActivity(this)
 			.withToolbar(toolbar)
@@ -89,7 +88,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey).withTextColor(R.color.material_primary_text),
 				new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey).withTextColor(R.color.material_primary_text), 
 				new SectionDrawerItem().withName(R.string.tab_download_location).withTextColor(R.color.material_primary_text),
-				new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey)).withOnDrawerListener(new Drawer.OnDrawerListener() {
+				new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey))
+			.withOnDrawerListener(new Drawer.OnDrawerListener() {
 				@Override
 				public void onDrawerOpened(View drawerView) {
 					Util.hideKeyboard(MainActivity.this, drawerView);
@@ -102,7 +102,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-					changeFragment(position - 1, true);
+					changeFragment(position, true);
 				}
 			}).build();
 
@@ -112,7 +112,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 			@Override
 			public void onClick(View v) {
-				if (currentFragmentId == PLAYER_FRAGMENT && !isOpenFromDraver) {
+				if (currentFragmentId == ManagerFragmentId.playerFragment() && !isOpenFromDraver) {
 					onBackPressed();
 				} else {
 					drawerResult.openDrawer();
@@ -133,6 +133,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			showPlayerElement(true);
 		} else if (PlaybackService.hasInstance()) {
 			service = PlaybackService.get(this);
+			showPlayerElement(service.isPrepared());
 		}
 		super.onResume();
 	}
@@ -206,7 +207,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			isOpenFromDraver = true;
 			setPlayerFragmentVisible(false);
 		} else {
-			if (PLAYER_FRAGMENT == currentFragmentId && isToggleEnabled) {
+			if (ManagerFragmentId.playerFragment() == currentFragmentId && isToggleEnabled) {
 				service.stopPressed();
 				finish();
 			} else if (null != service && isMiniPlayerPrepared()) {
@@ -219,45 +220,30 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void changeFragment(int fragmentId, boolean fromDraver) {
-		//TODO
 		if (currentFragmentId == fragmentId) return;
-		if (null != service && !service.isPlaying()) {
-			if (fragmentId >= PLAYER_FRAGMENT) {
-				fragmentId++;
-			}
-		}
 		Fragment selectedFragment = null;
 		isOpenFromDraver = fromDraver;
-		if (PLAYER_FRAGMENT != fragmentId) {
+		if (ManagerFragmentId.playerFragment() != fragmentId) {
 			setPlayerFragmentVisible(false);
 			showMiniPlayer(true);
 		}
 		boolean isAnimate = false;
-		switch (fragmentId) {
-		case SEARCH_FRAGMENT:
+		if (fragmentId == ManagerFragmentId.searchFragment()) {
 			selectedFragment = new SearchFragment();
-			break;
-		case DOWNLOADS_FRAGMENT:
+		} else if (fragmentId == ManagerFragmentId.downloadFragment()) {
 			selectedFragment = new DownloadsFragment();
-			break;
-		case PLAYLIST_FRAGMENT:
+		} else if (fragmentId == ManagerFragmentId.playlistFragment()) {
 			selectedFragment = new PlaylistFragment();
-			break;
-		case LIBRARY_FRAGMENT:
+		} else if (fragmentId == ManagerFragmentId.libraryFragment()) {
 			selectedFragment = new LibraryFragment();
-			break;
-		case PLAYER_FRAGMENT:
+		} else if (fragmentId == ManagerFragmentId.playerFragment()) {
 			if (!service.isPlaying()) return;
 			selectedFragment = new PlayerFragment();
 			isAnimate = true;
-			break;
-		case SETTINGS_FRAGMENT:
-		case 6:
+		} else if (fragmentId == ManagerFragmentId.settingFragment()) {
 			new FolderSelectorDialog().show(this);
-			break;
-		default:
+		} else {
 			selectedFragment = new SearchFragment();
-			break;
 		}
 		if (null != selectedFragment) {
 			setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
@@ -288,13 +274,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void setCurrentFragmentId(int currentFragmentId) {
 		this.currentFragmentId = currentFragmentId;
-		if (null != service && service.isPlaying()) {
-			drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
-		} else {
-			if (currentFragmentId >= PLAYER_FRAGMENT) {
-				drawerResult.getListView().setItemChecked(currentFragmentId - 1, true);
-			}
-		}
+		drawerResult.getListView().setItemChecked(currentFragmentId, true);
 	}
 	
 	public int getCurrentFragmentId() {
@@ -303,23 +283,23 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	public void showPlayerElement(boolean flag) {
-		int draverItemsCount = drawerResult.getAdapter().getCount();
-		if (flag) {
-			if (draverItemsCount < FULL_DRAVER_SIZE) {
-				drawerResult.removeItem(PLAYER_FRAGMENT + 1);
-				drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_grey).withTextColor(R.color.material_primary_text), PLAYER_FRAGMENT);
-				drawerResult.addItem(new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey).withTextColor(R.color.material_primary_text), PLAYLIST_FRAGMENT);
-				drawerResult.addItem(new SectionDrawerItem().withName(R.string.tab_download_location).withTextColor(R.color.material_primary_text));
-				drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
-			}
-			drawerResult.removeItem(SETTINGS_FRAGMENT + 1);
-			drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
+		ManagerFragmentId.switchMode(flag);
+		drawerResult.removeAllItems();
+		if (flag || service.isPrepared()) {
+			drawerResult.addItems(new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_now_plaing).withIcon(R.drawable.ic_headset_grey).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey).withTextColor(R.color.material_primary_text), 
+				new SectionDrawerItem().withName(R.string.tab_download_location).withTextColor(R.color.material_primary_text),
+				new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
 		} else {
-			if (draverItemsCount > LESS_DRAVER_SIZE) {
-				drawerResult.removeItem(PLAYER_FRAGMENT);
-			}
-			drawerResult.removeItem(SETTINGS_FRAGMENT);
-			drawerResult.addItem(new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
+			drawerResult.addItems(new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey).withTextColor(R.color.material_primary_text),
+				new PrimaryDrawerItem().withName(R.string.tab_playlist).withIcon(R.drawable.ic_queue_music_grey).withTextColor(R.color.material_primary_text), 
+				new SectionDrawerItem().withName(R.string.tab_download_location).withTextColor(R.color.material_primary_text),
+				new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
 		}
 	}
 
@@ -378,7 +358,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		UndoBar message = new UndoBar(this);
 		message.message(msg);
 		message.style(UndoBarController.MESSAGESTYLE);
-		if (PLAYLIST_FRAGMENT != currentFragmentId) {
+		if (ManagerFragmentId.playlistFragment() != currentFragmentId) {
 			message.show(false);
 			return;
 		}
@@ -460,7 +440,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	protected void showPlayerFragment() {
 		setPlayerFragmentVisible(true);
-		changeFragment(PLAYER_FRAGMENT, false);
+		changeFragment(ManagerFragmentId.playerFragment(), false);
 	}
 
 	@Override
@@ -490,7 +470,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	
 	@Override
 	protected void checkOnStart(boolean showMiniPlayer) {
-		super.checkOnStart(PLAYER_FRAGMENT != currentFragmentId);
+		super.checkOnStart(ManagerFragmentId.playerFragment() != currentFragmentId);
 	}
 	
 	@Override

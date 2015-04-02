@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.DownloadListener;
+import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
@@ -304,7 +305,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	@Override
 	public void onResume() {
 		thatSongIsDownloaded();
-		((MainActivity) getActivity()).setCurrentFragmentId(PLAYER_FRAGMENT);
+		((MainActivity) getActivity()).setCurrentFragmentId(ManagerFragmentId.playerFragment());
 		((MainActivity) getActivity()).setDraverEnabled(false);
 		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
