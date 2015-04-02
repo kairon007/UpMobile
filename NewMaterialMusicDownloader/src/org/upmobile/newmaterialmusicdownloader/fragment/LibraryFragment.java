@@ -37,6 +37,7 @@ public class LibraryFragment extends Fragment implements Constants {
 		((MainActivity) getActivity()).setDraverEnabled(true);
 		((MainActivity) getActivity()).setTitle(R.string.tab_library);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
+		((MainActivity) getActivity()).showToolbarShadow(true);
 		libraryView.onResume();
 		super.onResume();
 	}

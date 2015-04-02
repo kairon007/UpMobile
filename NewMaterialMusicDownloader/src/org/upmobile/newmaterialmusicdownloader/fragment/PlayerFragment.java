@@ -310,6 +310,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setToolbarOverlay(true);
 		((MainActivity) getActivity()).setToolbarAlpha(scrollView.getToolbarAlpha());
+		((MainActivity) getActivity()).showToolbarShadow(false);
 		setupVisualizerFxAndUI(false);
 		showLyrics();
 		super.onResume();

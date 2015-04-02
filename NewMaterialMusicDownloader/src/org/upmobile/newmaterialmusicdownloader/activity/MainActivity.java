@@ -43,6 +43,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,6 +61,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private ActionBarDrawerToggle toggle;
 	private SearchView searchView;
 	private View floatBtnContainer;
+	private FrameLayout toolbarShadow;
 	private TextView title;
 	private int currentFragmentId = -1;
 	private int lastCheckPosition = 0;
@@ -70,12 +72,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		changeFragment(SEARCH_FRAGMENT, true);
+		title = (TextView)findViewById(R.id.toolbar_title);
+		toolbarShadow = (FrameLayout) findViewById(R.id.toolbar_shadow);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		title = (TextView)findViewById(R.id.toolbar_title);
+		changeFragment(SEARCH_FRAGMENT, true);
 		drawerResult = new Drawer()
 			.withActivity(this)
 			.withToolbar(toolbar)
@@ -216,10 +219,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void changeFragment(int fragmentId, boolean fromDraver) {
+		//TODO
 		if (currentFragmentId == fragmentId) return;
 		if (null != service && !service.isPlaying()) {
 			if (fragmentId >= PLAYER_FRAGMENT) {
-				fragmentId ++;
+				fragmentId++;
 			}
 		}
 		Fragment selectedFragment = null;
@@ -364,6 +368,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void setTitle(String title) {
 		this.title.setText(title);
+	}
+	public void showToolbarShadow(boolean isShowing) {
+		toolbarShadow.setVisibility(isShowing ? View.VISIBLE : View.GONE);
 	}
 
 	public void showMessage(String msg) {

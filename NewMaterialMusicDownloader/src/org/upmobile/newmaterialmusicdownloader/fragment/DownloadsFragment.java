@@ -34,6 +34,7 @@ public class DownloadsFragment extends Fragment implements Constants{
 		((MainActivity) getActivity()).setDraverEnabled(true);
 		((MainActivity) getActivity()).setTitle(R.string.tab_downloads);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
+		((MainActivity) getActivity()).showToolbarShadow(true);
 		super.onResume();
 	}
 

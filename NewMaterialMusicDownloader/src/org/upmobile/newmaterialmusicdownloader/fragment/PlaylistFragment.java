@@ -37,6 +37,7 @@ public class PlaylistFragment extends Fragment implements Constants{
 		((MainActivity) getActivity()).setDraverEnabled(true);
 		((MainActivity) getActivity()).setTitle(R.string.tab_playlist);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
+		((MainActivity) getActivity()).showToolbarShadow(true);
 		playlistView.onResume();
 		super.onResume();
 	}

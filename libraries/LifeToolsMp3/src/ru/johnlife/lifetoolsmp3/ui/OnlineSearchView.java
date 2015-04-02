@@ -341,7 +341,7 @@ public abstract class OnlineSearchView extends View {
 		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
 		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
 		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
-		if (searchField.getWidth() - ((View) view.findViewById(R.id.clear)).getWidth() < width) {
+		if (searchField.getWidth() - (view.findViewById(R.id.clear)).getWidth() < width) {
 			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
 		} else searchField.setHint(R.string.hint_main_search);
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) search(searchField.getText().toString());

@@ -64,7 +64,7 @@ public class SearchGrooveshark extends BaseSearchTask {
 										.setHeader(headers));
 				}
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		return null;
