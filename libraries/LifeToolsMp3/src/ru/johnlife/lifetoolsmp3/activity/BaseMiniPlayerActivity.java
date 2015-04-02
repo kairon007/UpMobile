@@ -46,6 +46,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	
 	private boolean isPlayerFragmentVisible = false;
 	private boolean isAnimated = false;
+	private boolean isClickOnDownload = false;
 	
 	private int checkIdCover;
 	private DownloadClickListener downloadListener;
@@ -172,7 +173,11 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View paramView) {
-				downloadSong();
+				if (!isClickOnDownload) { // TODO this set checking for song, it was downloaded
+					downloadSong();
+					paramView.setVisibility(View.GONE);
+					isClickOnDownload = true;
+				}
 			}
 
 		});
@@ -239,7 +244,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 //			});
 //			miniPlayer.setAnimation(slideLeft);
 //			miniPlayer.startAnimation(slideLeft);
-			
+			download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
+			isClickOnDownload  = false;
 			startFakeAnimation();
 		}
 		if (isShow && isMiniPlayerPrepared) {
@@ -259,11 +265,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
 					fakeView.setVisibility(View.VISIBLE);
-					if (null != song && song.getClass() == MusicData.class) {
-						download.setVisibility(View.GONE);
-					} else {
-						download.setVisibility(View.VISIBLE);
-					}
+					download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
+					isClickOnDownload  = false;
 				}
 			});
 			miniPlayer.setVisibility(View.VISIBLE);
