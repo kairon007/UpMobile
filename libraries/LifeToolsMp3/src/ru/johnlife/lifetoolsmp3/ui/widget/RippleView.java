@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui.widget;
 
 import ru.johnlife.lifetoolsmp3.R;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -17,7 +19,9 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
@@ -48,6 +52,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
     private boolean isCentered;
     private boolean isLongClick;
     private boolean animationRunning;
+    private boolean eventCanceled;
     
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Bitmap originBitmap;
@@ -238,31 +243,55 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			return super.onTouchEvent(event);
 		}
 		gestureDetector.onTouchEvent(event);
+		childView.onTouchEvent(event);
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
 			if (!isLongClick) {
 				sendClickEvent();
-				childView.onTouchEvent(event);
 			}
 			isLongClick = false;
 			break;
 		case MotionEvent.ACTION_DOWN:
+			eventCanceled = false;
 			removeCallbacks(runnable);
+			if (isInScrollingContainer()) {
+				final float x = event.getX();
+				final float y = event.getY();
+				postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						if (!eventCanceled) {
+							animateRipple(x, y);
+							eventCanceled = false;
+						}
+					}
+				}, ViewConfiguration.getTapTimeout());
+			} else {
+				animateRipple(event);
+			}
 			childView.setPressed(true);
-			childView.onTouchEvent(event);
-			animateRipple(event);
-			break;
-		case MotionEvent.ACTION_MOVE:
-			childView.onTouchEvent(event);
 			break;
 		case MotionEvent.ACTION_CANCEL:
+			eventCanceled = true;
 			animationRunning = false;
 			removeCallbacks(runnable);
 			childView.setPressed(false);
-			childView.onTouchEvent(event);
 			break;
 		}
 		return true;
+	}
+	
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	private boolean isInScrollingContainer() {
+		ViewParent p = getParent();
+		while (p != null && p instanceof ViewGroup) {
+			if (((ViewGroup) p).shouldDelayChildPressedState()) {
+				return true;
+			}
+			p = p.getParent();
+		}
+		return false;
 	}
 
 	@Override
