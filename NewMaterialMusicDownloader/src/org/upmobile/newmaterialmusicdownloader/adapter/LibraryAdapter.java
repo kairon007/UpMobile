@@ -7,6 +7,7 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -68,6 +69,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		public void onClick(View view) {
 			switch (view.getId()) {
 			case R.id.boxInfoItem:
+				Util.hideKeyboard(getContext(), view);
 				if (!service.isCorrectlyState(MusicData.class, getCount())) {
 					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 					service.setArrayPlayback(list);

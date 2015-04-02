@@ -139,6 +139,7 @@ public abstract class BasePlaylistView extends View {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+            	Util.hideKeyboard(getContext(), v);
             	if (playlists.get(groupPosition).getSongs().size() == 0) {
             		showMessage(getContext(), R.string.playlist_is_empty);
             		return false;
@@ -168,10 +169,11 @@ public abstract class BasePlaylistView extends View {
 		((AnimatedExpandableListView) listView).setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				int groupPosition = ExpandableListView.getPackedPositionGroup(arg3);
-		        int childPosition = ExpandableListView.getPackedPositionChild(arg3);
-				showMenu(arg1, playlists.get(groupPosition), childPosition == -1 ? null : playlists.get(groupPosition).getSongs().get(childPosition) );
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				Util.hideKeyboard(getContext(), view);
+				int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+		        int childPosition = ExpandableListView.getPackedPositionChild(id);
+				showMenu(view, playlists.get(groupPosition), childPosition == -1 ? null : playlists.get(groupPosition).getSongs().get(childPosition) );
 				return true;
 			}
 		});
@@ -180,6 +182,7 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+				Util.hideKeyboard(getContext(), v);
 				if (null != playbackService) {
 					MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, playlists.get(groupPosition).getId()).commit();
 					playbackService.setArrayPlayback(new ArrayList<AbstractSong>(playlists.get(groupPosition).getSongs()));
@@ -235,6 +238,7 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public void onClick(View paramView) {
+				Util.hideKeyboard(getContext(), paramView);
 				long id = MusicApp.getSharedPreferences().getLong(Constants.PREF_LAST_PLAYLIST_ID, -1);
 				if (id == -1) {
 					showMessage(getContext(), R.string.no_previous_playlists);

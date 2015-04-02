@@ -456,7 +456,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		
+		closeEditViews();
+		Util.hideKeyboard(getActivity(), buttonView);
 		if (buttonView.getId() == R.id.cbShowEqualizer) {
 			setupVisualizerFxAndUI(isChecked);
 			return;
@@ -466,7 +467,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		isUseAlbumCover = isChecked;
 		cbUseCover.setChecked(isChecked);
-		closeEditViews();
 		if (song.getClass() != MusicData.class) {
 			return;
 		}

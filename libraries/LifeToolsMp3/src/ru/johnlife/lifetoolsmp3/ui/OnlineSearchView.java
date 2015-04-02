@@ -162,7 +162,9 @@ public abstract class OnlineSearchView extends View {
 	
 	protected boolean showDownloadButton() { return showFullElement() ? false : true; }
 
-	protected void click(View view, int position) {}
+	protected void click(View view, int position) {
+		Util.hideKeyboard(getContext(), view);
+	}
 	
 	protected boolean isAppPT () { return false; }
 
@@ -372,7 +374,7 @@ public abstract class OnlineSearchView extends View {
 		view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				hideKeyboard();
+				Util.hideKeyboard(getContext(), v);
 				searchField.setText(null);
 				setMessage(getResources().getString(R.string.search_your_results_appear_here));
 				resultAdapter.clear();
@@ -384,7 +386,7 @@ public abstract class OnlineSearchView extends View {
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				hideKeyboard();
+				Util.hideKeyboard(getContext(), v);
 				ImageLoader.getInstance().stop();
 				trySearch();
 			}
@@ -394,7 +396,7 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN && v.getId() != R.id.text) {
-					hideKeyboard();
+					Util.hideKeyboard(getContext(), v);
 					view.findViewById(R.id.text).setFocusable(false);
 				}
 				return v.performClick();
@@ -453,13 +455,6 @@ public abstract class OnlineSearchView extends View {
 	    int firstVisiblePosition = listView.getFirstVisiblePosition();
 	    int top = c.getTop();
 	    return -top + firstVisiblePosition * c.getHeight();
-	}
-	
-	public void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-		searchField.setFocusable(false);
-		searchField.setFocusable(true);
 	}
 	
 	@SuppressLint("NewApi")
@@ -621,7 +616,8 @@ public abstract class OnlineSearchView extends View {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					if (((Activity) getContext()).getWindowManager().getDefaultDisplay().getHeight() < 400) {
-						hideKeyboard();
+						Util.hideKeyboard(getContext(), v);
+//						hideKeyboard();
 					}
 					return false;
 				}
@@ -907,7 +903,7 @@ public abstract class OnlineSearchView extends View {
 	
 	
 	public void trySearch() {
-		hideKeyboard();
+		Util.hideKeyboard(getContext(), view);
 		String searchString = searchField.getText().toString();
 		if (searchString.equals(lastSearchString)) return;
 		lastSearchString = searchString;
