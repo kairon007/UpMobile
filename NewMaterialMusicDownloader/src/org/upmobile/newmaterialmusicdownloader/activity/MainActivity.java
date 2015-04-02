@@ -99,7 +99,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-					System.out.println("!!! Position="+position);
 					changeFragment(position - 1, true);
 				}
 			}).build();
@@ -289,7 +288,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			drawerResult.getListView().setItemChecked(currentFragmentId + 1, true);
 		} else {
 			if (currentFragmentId >= PLAYER_FRAGMENT) {
-				drawerResult.getListView().setItemChecked(currentFragmentId, true);
+				drawerResult.getListView().setItemChecked(currentFragmentId - 1, true);
 			}
 		}
 	}
