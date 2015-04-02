@@ -54,11 +54,6 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	}
 
 	@Override
-	protected boolean isSetListener() {
-		return false;
-	}
-
-	@Override
 	protected int getDefaultCover() {
 		return 0;
 	}

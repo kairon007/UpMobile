@@ -77,11 +77,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			}
 		}
 	}
-
-	@Override
-	protected boolean isSetListener() {
-		return false;
-	}
 	
 	@Override
 	protected int getDefaultCover() {

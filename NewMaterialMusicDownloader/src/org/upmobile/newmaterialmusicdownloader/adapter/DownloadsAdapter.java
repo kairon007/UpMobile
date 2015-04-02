@@ -7,9 +7,12 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,6 +30,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 			artist = (TextView) v.findViewById(R.id.titleLine);
 			progress = (ProgressBar) v.findViewById(R.id.item_progress);
 			image = (ImageView) v.findViewById(R.id.cover);
+			threeDot = (ImageView) v.findViewById(R.id.threeDot);
 		}
 	}
 
@@ -49,11 +53,6 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 		} catch (UnsupportedOperationException e) {
 			android.util.Log.d(getClass().getSimpleName(), e + "");
 		}
-	}
-
-	@Override
-	protected boolean isSetListener() {
-		return false;
 	}
 
 	@Override
@@ -84,5 +83,22 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	
 	public void setCanNotify(boolean isCanNotify) {
 		this.isCanNotify = isCanNotify;
+	}
+	
+	@Override
+	protected void showMenu(final View view, final MusicData item) {
+		PopupMenu menu = new PopupMenu(getContext(), view);
+		menu.getMenuInflater().inflate(R.menu.downloads_menu, menu.getMenu());
+		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem paramMenuItem) {
+				if (paramMenuItem.getItemId() == R.id.downloads_menu_cancel) {
+					removeItem(item);
+				}
+				return false;
+			}
+		});
+		menu.show();
 	}
 }

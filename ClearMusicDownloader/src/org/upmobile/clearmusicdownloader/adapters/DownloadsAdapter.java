@@ -64,11 +64,6 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	}
 
 	@Override
-	protected boolean isSetListener() {
-		return true;
-	}
-
-	@Override
 	protected int getDefaultCover() {
 		return R.drawable.def_cover_circle;
 	}

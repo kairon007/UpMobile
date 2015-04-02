@@ -50,7 +50,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected abstract void startSong(AbstractSong abstractSong);
 	
 	protected void remove() {};
-	protected void setListener(ViewGroup parent, View view, final int position){}
 	protected Bitmap getDefaultBitmap() {
 		return null; 
 	}
@@ -66,7 +65,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {
 		View view = super.getView(position, convertView, p);
-		if (isSetListener()) setListener(p, view, position);
 		return view;
 	}
 

@@ -852,11 +852,6 @@ public abstract class OnlineSearchView extends View {
 		protected ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter.ViewHolder<Song> createViewHolder(View v) {
 			return null;
 		}
-
-		@Override
-		protected boolean isSetListener() {
-			return false;
-		}
 	}
 	
 	public static boolean isOffline(Context context) {

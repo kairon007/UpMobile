@@ -6,14 +6,13 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData> {
-	
-	protected void setListener(ViewGroup parent, View view, final int position) { }
 
 	public BaseDownloadsAdapter(Context context, int resource) {
 		super(context, resource);
@@ -22,7 +21,6 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {
 		View view = super.getView(position, convertView, p);
-		if (isSetListener()) setListener(p, view, position);
 		return view;
 	}
 	
@@ -33,14 +31,15 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 		protected TextView duration;
 		protected ImageView image;
 		protected ProgressBar progress;
+		protected View threeDot;
 		
 		@Override
-		protected void hold(MusicData item, int position) {
+		protected void hold(final MusicData item, int position) {
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			progress.setIndeterminate(item.getProgress() == 0);
 			progress.setProgress(item.getProgress());
-			if (duration != null) {
+			if (null != duration) {
 				duration.setText(Util.getFormatedStrDuration(item.getDuration()));
 			}
 			if (getDefaultCover() > 0) {
@@ -48,7 +47,20 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 			} else {
 				image.setImageBitmap(getDefaultBitmap());
 			}
+			if (null != threeDot) {
+				threeDot.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View view) {
+						showMenu(view, item);	
+					}
+				});
+			}
 		}
+	}
+	
+	protected void showMenu(final View view, MusicData item) {
+		//for children if necessary
 	}
 	
 	protected void removeItem(MusicData item) {

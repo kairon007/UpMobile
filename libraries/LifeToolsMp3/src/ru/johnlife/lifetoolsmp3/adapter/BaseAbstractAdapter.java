@@ -40,8 +40,6 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 
 	public void cancelTimer() {}
 	
-	protected abstract boolean isSetListener();
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {

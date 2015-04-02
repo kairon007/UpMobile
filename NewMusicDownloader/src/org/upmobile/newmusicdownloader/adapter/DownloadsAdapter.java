@@ -66,11 +66,6 @@ public class DownloadsAdapter extends BaseDownloadsAdapter {
 	}
 
 	@Override
-	protected boolean isSetListener() {
-		return false;
-	}
-
-	@Override
 	protected int getDefaultCover() {
 		return R.drawable.no_cover_art_light_big_dark;
 	}
