@@ -153,6 +153,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
         super.onSizeChanged(w, h, oldw, oldh);
         width = w;
         height = h;
+        System.out.println("!!! widht="+width+" height="+height);
         scaleAnimation = new ScaleAnimation(1.0f, rippleZoomScale, 1.0f, rippleZoomScale, w / 2, h / 2);
         scaleAnimation.setDuration(rippleZoomDuration);
         scaleAnimation.setRepeatMode(Animation.REVERSE);
@@ -199,7 +200,8 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 
     private void createAnimation(final float x, final float y) {
         if (!animationRunning) {
-            if (hasToZoom) {
+            if (width <= 0 || height <= 0) return;
+        	if (hasToZoom) {
             	startAnimation(scaleAnimation);
             }
             radiusMax = Math.max(width, height);
