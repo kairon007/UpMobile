@@ -37,32 +37,59 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical" >
 
-                <com.csform.android.uiapptemplate.font.RobotoTextView
-                    android:id="@+id/titleLine"
-                    style="@style/TextViewAppearance.Body"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:ellipsize="end"
-                    android:ems="16"
-                    android:lines="1" />
+                    android:orientation="horizontal" >
 
-                <com.csform.android.uiapptemplate.font.RobotoTextView
-                    android:id="@+id/artistLine"
-                    style="@style/CaptionLineGray"
+                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                        android:id="@+id/titleLine"
+                        style="@style/TextViewAppearance.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:ems="16"
+                        android:lines="1" />
+
+                    <TextView
+                        android:id="@+id/chunkTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:gravity="center_vertical|end"
+                        android:paddingRight="8dp"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="@color/main_color_grey_500" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end" />
+                    android:orientation="horizontal" >
+
+                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                        android:id="@+id/artistLine"
+                        style="@style/CaptionLineGray"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end" />
+
+                    <TextView
+                        android:id="@+id/infoView"
+                        style="@style/CaptionLineGray"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="right"
+                        android:paddingRight="4dp"
+                        android:singleLine="true"
+                        android:text="Downloaded"
+                        android:textColor="@android:color/holo_green_light"
+                        android:visibility="gone" />
+                </LinearLayout>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/chunkTime"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|end"
-                android:paddingRight="8dp"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/main_color_grey_500" />
 
             <com.csform.android.uiapptemplate.view.MaterialRippleLayout
                 style="@style/RippleStyle"

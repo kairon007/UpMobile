@@ -96,7 +96,6 @@ public abstract class OnlineSearchView extends View {
 	private static final Void[] NO_PARAMS = {};
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
-	private final String SPREF_ENGINES = "shar_pref_key_engines_array";
 	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
 	private final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 	private ArrayAdapter<String> adapter;
@@ -142,58 +141,72 @@ public abstract class OnlineSearchView extends View {
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
-
-	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
-		if (searchEngineName != null) {
-			if (searchEngineName.equals("SearchMyFreeMp3")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3.class;
-			} else if (searchEngineName.equals("SearchGrooveshark")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark.class;
-			} else if (searchEngineName.equals("SearchZaycev")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchZaycev.class;
-			} else if (searchEngineName.equals("SearchZaycevScrape")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchZaycevScrape.class;
-			} else if (searchEngineName.equals("SearchHulkShare")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchHulkShare.class;
-			} else if (searchEngineName.equals("SearchPleer")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
-			} else if (searchEngineName.equals("SearchPoisk")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchPoisk.class;
-			} else if (searchEngineName.equals("SearchSogou")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSogou.class;
-			} else if (searchEngineName.equals("SearchTing")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchTing.class;
-			} else if (searchEngineName.equals("SearchVmusice")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchVmusice.class;
-			} else if (searchEngineName.equals("SearchNothing")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchNothing.class;
-			} else if (searchEngineName.equals("SearchSoundCloud")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud.class;
-			} else if (searchEngineName.equals("SearchYouTube")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchYouTube.class;
-			} else if (searchEngineName.equals("SearchYouTubeMusic")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic.class;
-			} else if (searchEngineName.equals("SearchGear")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchGear.class;
-			} else if (searchEngineName.equals("SearchSoArdIyyin")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin.class;
-			} else if (searchEngineName.equals("SearchJamendo")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchJamendo.class;
-			} else if (searchEngineName.equals("SearchZvukoff")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchZvukoff.class;
-			} else if (searchEngineName.equals("SearchGoearV2")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchGoearV2.class;
-			} else if (searchEngineName.equals("SearchVK")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchVK.class;
-			} else if (searchEngineName.equals("SearchKugou")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchKugou.class; 
-			} else if (searchEngineName.equals("SearchTaringaMp3")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3.class;
-			}
-		}
-		return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
+	
+	protected boolean showDownloadLabel() {
+		return false;
 	}
 
+	protected abstract BaseSettings getSettings();
+
+	protected abstract Nulldroid_Advertisment getAdvertisment();
+
+	protected abstract void stopSystemPlayer(Context context);
+	
+	public abstract void refreshLibrary();
+	
+	public abstract boolean isWhiteTheme(Context context);
+
+	protected boolean showFullElement() { return true; }
+	
+	protected boolean showPopupMenu() { return false; }
+	
+	protected boolean showDownloadButton() { return showFullElement() ? false : true; }
+
+	protected void click(View view, int position) {}
+	
+	protected boolean isAppPT () { return false; }
+
+	protected boolean onlyOnWifi() { return true; }
+	
+	protected void hideView () {
+		//hide player in MusicDownloder application
+	}
+	
+	protected int getAdapterBackground () { return 0; }
+	
+	protected int  getIdCustomView() { return 0; }
+	
+	protected String getDirectory() { return null; }
+	
+	public boolean isUseDefaultSpinner(){ return false; }
+	
+	protected int getDropDownViewResource() { return 0;	}
+	
+	public void specialInit(View view) {}
+
+	
+	public OnlineSearchView(LayoutInflater inflater) {
+		super(inflater.getContext());
+		init(inflater);
+		initSearchEngines(getContext(), null);
+		keeper = StateKeeper.getInstance();
+		keeper.restoreState(this);
+		if (resultAdapter == null) {
+			resultAdapter = new SongSearchAdapter(getContext());
+		}
+		sPref = MusicApp.getSharedPreferences();
+		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
+		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
+		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
+		if (searchField.getWidth() - view.findViewById(R.id.clear).getWidth() < width) {
+			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
+		} else searchField.setHint(R.string.hint_main_search);
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) search(searchField.getText().toString());
+		setMessage(getResources().getString(R.string.search_your_results_appear_here));
+		initBoxEngines();
+		positions = new SparseBooleanArray();
+		updateQuery();
+	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
 
@@ -241,6 +254,7 @@ public abstract class OnlineSearchView extends View {
 				if (!resultAdapter.isEmpty() && !str.equals("")) {
 					trySearch();
 				}
+				positions.clear();
 			}
 		}
 	};
@@ -274,98 +288,6 @@ public abstract class OnlineSearchView extends View {
 		}
 	};
 	
-	protected boolean showDownloadLabel() {
-		return false;
-	}
-
-	protected abstract BaseSettings getSettings();
-
-	protected abstract Nulldroid_Advertisment getAdvertisment();
-
-	protected abstract void stopSystemPlayer(Context context);
-	
-	public abstract void refreshLibrary();
-	
-	public abstract boolean isWhiteTheme(Context context);
-
-	protected boolean showFullElement() {
-		return true;
-	}
-	
-	protected boolean showPopupMenu() {
-		return false;
-	}
-	
-	protected boolean showDownloadButton() {
-		return showFullElement() ? false : true;
-	}
-
-	protected void click(View view, int position) {
-
-	}
-	
-	protected boolean isAppPT () {
-		return false;
-	}
-
-	protected boolean onlyOnWifi() {
-		return true;
-	}
-	
-	protected void hideView () {
-		//hide player in MusicDownloder application
-	}
-	
-	protected int getAdapterBackground () {
-		return 0;
-	}
-	
-	protected int  getIdCustomView() {
-		return 0;
-	}
-	
-	protected String getDirectory() {
-		return null;
-	}
-	
-	public OnlineSearchView(LayoutInflater inflater) {
-		super(inflater.getContext());
-		init(inflater);
-		initSearchEngines(getContext(), null);
-		keeper = StateKeeper.getInstance();
-		keeper.restoreState(this);
-		if (resultAdapter == null) {
-			resultAdapter = new SongSearchAdapter(getContext());
-		}
-		sPref = MusicApp.getSharedPreferences();
-		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
-		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
-		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
-		if (searchField.getWidth() - (view.findViewById(R.id.clear)).getWidth() < width) {
-			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
-		} else searchField.setHint(R.string.hint_main_search);
-		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) search(searchField.getText().toString());
-		setMessage(getResources().getString(R.string.search_your_results_appear_here));
-		initBoxEngines();
-		positions = new SparseBooleanArray();
-		updateQuery();
-	}
-	
-	public void updateQuery() {
-		if(!showDownloadLabel()) return;
-		libraryList = querySong();
-	}
-	
-	public void removeFromStackPositions(View v) {
-		if(!showDownloadLabel()) return;
-		removeFromStackPositions(listView.getPositionForView(v) - 1);
-	}
-	
-	public void removeFromStackPositions(int position) {
-		if(!showDownloadLabel()) return;
-		positions.delete(position);
-	}
-
 	public View getView() {
 		if (!showFullElement()) {
 			view.findViewById(R.id.downloads).setVisibility(View.GONE);
@@ -500,6 +422,29 @@ public abstract class OnlineSearchView extends View {
 			hideBaseProgress();
 		}
 		return view;
+	} 
+	
+	private void init(LayoutInflater inflater) {
+		view = (ViewGroup) inflater.inflate(R.layout.search, null);
+		message = (TextView) view.findViewById(R.id.message);
+		progress = view.findViewById(R.id.progress);
+		listView = (ListView) view.findViewById(R.id.list);
+		searchField = (TextView) view.findViewById(R.id.text);
+		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
+		spEnginesChoiserLayout = view.findViewById(R.id.choise_engines_layout);
+		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
+		emptyHeader = inflate(getContext(), R.layout.empty_header, null);
+		specialInit(view);
+	}
+	
+	public void updateQuery() {
+		if(!showDownloadLabel()) return;
+		libraryList = querySong();
+	}
+	
+	public void removeFromStackPositions(int position) {
+		if(!showDownloadLabel()) return;
+		positions.delete(position);
 	}
 	
 	public int getScrollListView() {
@@ -521,7 +466,6 @@ public abstract class OnlineSearchView extends View {
 	public void showMenu(final View v) {
 		PopupMenu menu = new PopupMenu(getContext(), v);
 		final int position = (Integer) v.getTag();
-		positions.put(position, true);
 		menu.getMenuInflater().inflate(R.menu.search_menu, menu.getMenu());
 		
 		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -537,7 +481,9 @@ public abstract class OnlineSearchView extends View {
 						@Override
 						public void success(String url) {
 							((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).setDownloadUrl(url);
-							download(getViewByPosition(position + 1),((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())));
+							View viewByPosition = getViewByPosition(position + 1);
+							download(viewByPosition,((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())) , position);
+							positions.put(position, true);
 						}
 
 						@Override
@@ -552,13 +498,16 @@ public abstract class OnlineSearchView extends View {
 		menu.show();
 	}
 	
-	protected void download(final View v, RemoteSong song) {
+	protected void download(final View v, RemoteSong song, final int position) {
 		downloadListener = new DownloadClickListener(getContext(), song, 0);
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
-		if(!showDownloadLabel()) return;
+		if (!showDownloadLabel()) return;
 		downloadListener.setInfolistener(new InfoListener() {
+
+			private int pos = position;
+			private View rowView = v;
 
 			@Override
 			public void success(String str) {
@@ -566,9 +515,9 @@ public abstract class OnlineSearchView extends View {
 
 					@Override
 					public void run() {
-						removeFromStackPositions(v);
-						((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloaded);
-						((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.GREEN);
+						((TextView) rowView.findViewById(R.id.infoView)).setText(R.string.downloaded);
+						((TextView) rowView.findViewById(R.id.infoView)).setTextColor(Color.GREEN);
+						removeFromStackPositions(pos);
 						updateQuery();
 					}
 				});
@@ -580,8 +529,8 @@ public abstract class OnlineSearchView extends View {
 
 					@Override
 					public void run() {
-						v.findViewById(R.id.infoView).setVisibility(View.GONE);
-						removeFromStackPositions(v);
+						removeFromStackPositions(pos);
+						rowView.findViewById(R.id.infoView).setVisibility(View.GONE);
 					}
 				});
 			}
@@ -681,6 +630,7 @@ public abstract class OnlineSearchView extends View {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					lastSearchString = "";
 					keyEngines = adapter.getItem(position);
 					sPref = MusicApp.getSharedPreferences();
 					SharedPreferences.Editor editor = sPref.edit();
@@ -721,30 +671,6 @@ public abstract class OnlineSearchView extends View {
 			spEnginesChoiser.setVisibility(View.GONE);
 			sPref.unregisterOnSharedPreferenceChangeListener(sPrefListener);
 		}
-	}
-
-	private void init(LayoutInflater inflater) {
-		view = (ViewGroup) inflater.inflate(R.layout.search, null);
-		message = (TextView) view.findViewById(R.id.message);
-		progress = view.findViewById(R.id.progress);
-		listView = (ListView) view.findViewById(R.id.list);
-		searchField = (TextView) view.findViewById(R.id.text);
-		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
-		spEnginesChoiserLayout = view.findViewById(R.id.choise_engines_layout);
-		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
-		emptyHeader = inflate(getContext(), R.layout.empty_header, null);
-		specialInit(view);
-	}
-	
-	public boolean isUseDefaultSpinner(){
-		return false;
-	}
-	
-	protected int getDropDownViewResource() {
-		return 0;
-	}
-	
-	public void specialInit(View view) {
 	}
 
 	public void hideBaseProgress() {
@@ -810,6 +736,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private View refreshSpinner;
+	private String lastSearchString = "";
 	
 	public Object initRefreshProgress() {
 		return new View(getContext());
@@ -978,10 +905,14 @@ public abstract class OnlineSearchView extends View {
 		return activeNetworkInfo == null;
 	}
 	
+	
 	public void trySearch() {
 		hideKeyboard();
 		String searchString = searchField.getText().toString();
-		if (isOffline(searchField.getContext())) {
+		if (searchString.equals(lastSearchString)) return;
+		lastSearchString = searchString;
+		positions.clear();
+		if (isOffline(getContext())) {
 			message.setText(R.string.search_message_no_internet);
 			resultAdapter.clear();
 		} else if ((null == searchString) || (searchString.isEmpty())) {
@@ -1430,5 +1361,56 @@ public abstract class OnlineSearchView extends View {
 	public static String getTitleSearchEngine8() {
 		SharedPreferences prefs = MusicApp.getSharedPreferences();
 		return prefs.getString("search_engines_title_8", "Search Engine 8");
+	}
+	
+	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
+		if (searchEngineName != null) {
+			if (searchEngineName.equals("SearchMyFreeMp3")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3.class;
+			} else if (searchEngineName.equals("SearchGrooveshark")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark.class;
+			} else if (searchEngineName.equals("SearchZaycev")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchZaycev.class;
+			} else if (searchEngineName.equals("SearchZaycevScrape")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchZaycevScrape.class;
+			} else if (searchEngineName.equals("SearchHulkShare")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchHulkShare.class;
+			} else if (searchEngineName.equals("SearchPleer")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
+			} else if (searchEngineName.equals("SearchPoisk")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchPoisk.class;
+			} else if (searchEngineName.equals("SearchSogou")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSogou.class;
+			} else if (searchEngineName.equals("SearchTing")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchTing.class;
+			} else if (searchEngineName.equals("SearchVmusice")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchVmusice.class;
+			} else if (searchEngineName.equals("SearchNothing")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchNothing.class;
+			} else if (searchEngineName.equals("SearchSoundCloud")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud.class;
+			} else if (searchEngineName.equals("SearchYouTube")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchYouTube.class;
+			} else if (searchEngineName.equals("SearchYouTubeMusic")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic.class;
+			} else if (searchEngineName.equals("SearchGear")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchGear.class;
+			} else if (searchEngineName.equals("SearchSoArdIyyin")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin.class;
+			} else if (searchEngineName.equals("SearchJamendo")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchJamendo.class;
+			} else if (searchEngineName.equals("SearchZvukoff")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchZvukoff.class;
+			} else if (searchEngineName.equals("SearchGoearV2")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchGoearV2.class;
+			} else if (searchEngineName.equals("SearchVK")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchVK.class;
+			} else if (searchEngineName.equals("SearchKugou")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchKugou.class; 
+			} else if (searchEngineName.equals("SearchTaringaMp3")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3.class;
+			}
+		}
+		return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
 	}
 }

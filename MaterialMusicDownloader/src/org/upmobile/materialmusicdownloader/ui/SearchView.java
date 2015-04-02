@@ -169,13 +169,16 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	}
 	
 	@Override
-	protected void download(final View v, RemoteSong song) {
-		DownloadListener downloadListener = new DownloadListener(getContext(), song, 0);
+	protected void download(final View v, RemoteSong song, final int position) {
+		downloadListener = new DownloadListener(getContext(), song, 0);
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
 		if (!showDownloadLabel()) return;
 		downloadListener.setInfolistener(new InfoListener() {
+			
+			private int pos = position;
+			private View rowView = v;
 
 			@Override
 			public void success(String str) {
@@ -183,9 +186,9 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 
 					@Override
 					public void run() {
-						removeFromStackPositions(v);
-						((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloaded);
-						((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.GREEN);
+						((TextView) rowView.findViewById(R.id.infoView)).setText(R.string.downloaded);
+						((TextView) rowView.findViewById(R.id.infoView)).setTextColor(Color.GREEN);
+						removeFromStackPositions(pos);
 						updateQuery();
 					}
 				});
@@ -197,14 +200,14 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 
 					@Override
 					public void run() {
-						removeFromStackPositions(v);
-						v.findViewById(R.id.infoView).setVisibility(View.GONE);
+						removeFromStackPositions(pos);
+						rowView.findViewById(R.id.infoView).setVisibility(View.GONE);
 					}
 				});
 			}
 		});
 		v.findViewById(R.id.infoView).setVisibility(View.VISIBLE);
-		((TextView)v.findViewById(R.id.infoView)).setText(R.string.downloading);
-		((TextView)v.findViewById(R.id.infoView)).setTextColor(Color.RED);
+		((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloading);
+		((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
 	}
 }
