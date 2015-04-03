@@ -9,6 +9,7 @@ import java.util.List;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -46,11 +47,13 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				
 				@Override
 				public void onNegative(MaterialDialog dialog) {
+					Util.hideKeyboard(getActivity(), dialog.getCustomView());
 					dialog.dismiss();
 				};
 				
 				@Override
 				public void onPositive(MaterialDialog dialog) {
+					Util.hideKeyboard(getActivity(), dialog.getCustomView());
 					EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 					String temp = input.getText().toString();
 					String newDirName = "";
