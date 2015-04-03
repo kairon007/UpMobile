@@ -208,8 +208,10 @@ public final class Util {
 	}
 	
 	public static void hideKeyboard(Context context, View view) {
-		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		if (null != view) {
+			InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
 	}
 	
 	public static int getResIdFromAttribute(final Activity activity, final int attr) {
