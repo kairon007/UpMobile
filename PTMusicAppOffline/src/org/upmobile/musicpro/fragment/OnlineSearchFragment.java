@@ -6,6 +6,7 @@ import org.upmobile.musicpro.slidingmenu.SlidingMenu;
 import org.upmobile.musicpro.widget.SearchView;
 
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,17 +36,12 @@ public class OnlineSearchFragment extends BaseFragment{
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					searchView.hideKeyboard();
+					Util.hideKeyboard(getActivity(), v);
 				}
 				return false;
 			}
 		});
 		return view;
-	}
-	
-	@Override
-	protected void hideKeyBoard() {
-		searchView.hideKeyboard();
 	}
 	
 	@Override

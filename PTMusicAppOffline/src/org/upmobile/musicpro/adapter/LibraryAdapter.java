@@ -96,11 +96,6 @@ public class LibraryAdapter extends BaseAbstractAdapter<MusicData> {
 		return new LibraryViewHolder(v);
 	}
 
-	@Override
-	protected boolean isSetListener() {
-		return false;
-	}
-
 	private class LibraryViewHolder extends ViewHolder<MusicData> implements OnLongClickListener{
 		
 		private MusicData data;
