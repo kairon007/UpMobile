@@ -26,7 +26,7 @@ public class DownloadsView extends BaseDownloadsView{
 
 	@Override
 	protected String getDirectory() {
-		return NewMusicDownloaderApp.getDirectoryPrefix();
+		return NewMusicDownloaderApp.getDirectory();
 	}
 
 	@Override

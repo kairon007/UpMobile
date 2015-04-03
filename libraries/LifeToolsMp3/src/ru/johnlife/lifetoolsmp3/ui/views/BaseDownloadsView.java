@@ -127,7 +127,7 @@ public abstract class BaseDownloadsView extends View{
 	private ArrayList<MusicData> updateList(Cursor c, ArrayList<MusicData> result) {
 		while (c.moveToNext()) {
 			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
-			if (c.getString(8).contains(Environment.getExternalStorageDirectory() + getDirectory())) {
+			if (c.getString(8).contains(getDirectory())) {
 				if (!result.contains(song)){
 					result.add(song);
 				}

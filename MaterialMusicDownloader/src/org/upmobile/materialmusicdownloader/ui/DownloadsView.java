@@ -28,7 +28,7 @@ public class DownloadsView extends BaseDownloadsView implements Constants {
 
 	@Override
 	protected String getDirectory() {
-		return MaterialMusicDownloaderApp.getDirectoryPrefix();
+		return MaterialMusicDownloaderApp.getDirectory();
 	}
 
 	@Override
