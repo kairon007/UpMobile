@@ -237,7 +237,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else if (fragmentId == ManagerFragmentId.libraryFragment()) {
 			selectedFragment = new LibraryFragment();
 		} else if (fragmentId == ManagerFragmentId.playerFragment()) {
-			if (!service.isPlaying()) return;
 			selectedFragment = new PlayerFragment();
 			isAnimate = true;
 		} else if (fragmentId == ManagerFragmentId.settingFragment()) {
