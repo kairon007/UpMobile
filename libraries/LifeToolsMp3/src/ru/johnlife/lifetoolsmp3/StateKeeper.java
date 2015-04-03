@@ -1,7 +1,13 @@
 package ru.johnlife.lifetoolsmp3;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.TreeMap;
+
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -14,6 +20,7 @@ public class StateKeeper {
 	
 	private Object tag;
 	private static StateKeeper instance = null;
+	private TreeMap<String, SongInfo> songHolder = new TreeMap<String, SongInfo>();
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
 	private Player playerInstance;
@@ -115,9 +122,8 @@ public class StateKeeper {
 		if (openClose) {
 			generalFlags |= flag;
 			return;
-		} else {
-			generalFlags &= ~flag;
 		}
+		generalFlags &= ~flag;
 		tag = null;
 		if (flag == STREAM_DIALOG) {
 			playerInstance = null;
@@ -237,6 +243,36 @@ public class StateKeeper {
 		}
 	}
 	
+	public void initSongHolder(String folder) {
+		File[] files = new File(folder).listFiles();
+		for (int i = 0; i < files.length; i++) {
+			try {
+				MusicMetadataSet src_set = new MyID3().read(files[i]);
+				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+				String comment = metadata.getComment();
+				songHolder.put(comment, new SongInfo(SongInfo.DOWNLOADING, -1));
+			} catch (Exception e) {
+				android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
+			}
+		}
+	}
+	
+	public void putSongInfo(String url, SongInfo info) {
+		songHolder.put(url, info);
+	}
+	
+	public void removeSongInfo (String url) {
+		songHolder.remove(url);
+	}
+	
+	public SongInfo checkSongInfo(String url) {
+		SongInfo info = songHolder.get(url);
+		if (null == info) {
+			info = new SongInfo(SongInfo.NOT_DOWNLOAD, -1);
+		}
+		return info;
+	}
+	
 	public int getTempID3UseCover() {
 		return tempID3UseCover;
 	}
@@ -330,4 +366,40 @@ public class StateKeeper {
 	public ArrayList<Song> getResults() {
 		return results;
 	}
+	
+	public class SongInfo {
+		
+		public static final int DOWNLOADED = 0;
+		public static final int DOWNLOADING = 1;
+		public static final int NOT_DOWNLOAD = -1;
+
+		private int status;
+		private int position;
+
+		public SongInfo() {
+		}
+
+		public SongInfo(int status, int position) {
+			this.status = status;
+			this.position = position;
+		}
+
+		public int getStatus() {
+			return status;
+		}
+
+		public void setStatus(int status) {
+			this.status = status;
+		}
+
+		public int getPosition() {
+			return position;
+		}
+
+		public void setPosition(int position) {
+			this.position = position;
+		}
+
+	}
+	
 }
