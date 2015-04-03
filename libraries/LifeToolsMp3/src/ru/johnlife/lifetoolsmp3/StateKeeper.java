@@ -248,9 +248,14 @@ public class StateKeeper {
 		for (int i = 0; i < files.length; i++) {
 			try {
 				MusicMetadataSet src_set = new MyID3().read(files[i]);
-				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-				String comment = metadata.getComment();
-				songHolder.put(comment, new SongInfo(SongInfo.DOWNLOADING, -1));
+				if (null != src_set) {
+					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+					String comment = metadata.getComment();
+					if (null == comment) {
+						comment = metadata.hashCode() + "";
+					}
+					songHolder.put(comment, new SongInfo(SongInfo.DOWNLOADED, -1));
+				}
 			} catch (Exception e) {
 				android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
 			}
@@ -367,7 +372,7 @@ public class StateKeeper {
 		return results;
 	}
 	
-	public class SongInfo {
+	public static class SongInfo {
 		
 		public static final int DOWNLOADED = 0;
 		public static final int DOWNLOADING = 1;

@@ -363,7 +363,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		metadata.clear();
 		metadata.setSongTitle(song.getTitle().trim());
 		metadata.setArtist(song.getArtist().trim());
-		metadata.setComment(song.getUrl());
+		metadata.setComment(song.getUrl().contains("youtube-mp3.org") ? song.getUrl().substring(0, song.getUrl().indexOf("ts_create")) : song.getUrl());
 		if (null != cover && useCover) {
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);

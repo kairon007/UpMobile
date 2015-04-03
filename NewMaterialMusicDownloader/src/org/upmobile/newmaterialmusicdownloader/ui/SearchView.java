@@ -11,13 +11,11 @@ import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.InfoListener;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -151,38 +149,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
 		if (!showDownloadLabel()) return;
-		downloadListener.setInfolistener(new InfoListener() {
-			
-			private int pos = position;
-			private View rowView = v;
-
-			@Override
-			public void success(String str) {
-				((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						((TextView) rowView.findViewById(R.id.infoView)).setText(R.string.downloaded);
-						((TextView) rowView.findViewById(R.id.infoView)).setTextColor(Color.GREEN);
-						removeFromStackPositions(pos);
-						updateQuery();
-					}
-				});
-			}
-
-			@Override
-			public void erorr(String str) {
-				((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						removeFromStackPositions(pos);
-						rowView.findViewById(R.id.infoView).setVisibility(View.GONE);
-					}
-				});
-			}
-		});
-		v.findViewById(R.id.infoView).setVisibility(View.VISIBLE);
+		((TextView) v.findViewById(R.id.infoView)).findViewById(R.id.infoView).setVisibility(View.VISIBLE);
 		((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloading);
 		((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
 	}

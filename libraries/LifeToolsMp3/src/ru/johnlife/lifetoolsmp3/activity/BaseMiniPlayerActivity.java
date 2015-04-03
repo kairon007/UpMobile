@@ -4,6 +4,8 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -392,6 +394,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			public void success(String url) {
 				((RemoteSong) song).setDownloadUrl(url);
 				download(((RemoteSong) song));
+				String comment = ((RemoteSong) song).getUrl();
+				StateKeeper.getInstance().putSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment, new SongInfo(SongInfo.DOWNLOADING, service.getArrayPlayback().indexOf(song)));
 			}
 
 			@Override
