@@ -112,7 +112,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 			@Override
 			public void onClick(View v) {
-				if (currentFragmentId == ManagerFragmentId.playerFragment() && !isOpenFromDraver) {
+				if (!isOpenFromDraver) {
 					onBackPressed();
 				} else {
 					drawerResult.openDrawer();
@@ -282,6 +282,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	public void showPlayerElement(boolean flag) {
+		System.out.println("!!! showPlayerElement flag="+flag+" isOpenFromDrawer="+isOpenFromDraver);
 		ManagerFragmentId.switchMode(flag);
 		drawerResult.removeAllItems();
 		if (flag || service.isPrepared()) {
