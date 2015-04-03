@@ -25,6 +25,7 @@ import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -894,6 +895,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				setDownloadButtonState(true);
 			}
 		});
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		setCoverToZoomView(song.getCover(getActivity()));
 	}
 }
 
