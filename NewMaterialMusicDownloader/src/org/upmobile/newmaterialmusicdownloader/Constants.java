@@ -19,6 +19,7 @@ public interface Constants extends ru.johnlife.lifetoolsmp3.Constants {
 	
 	public static final String PREF_DIRECTORY_PREFIX = "newmaterialmusicdownloader.pref.directory.prefix";
 	public static final String PREF_DIRECTORY = "newmaterialmusicdownloader.pref.directory";
+	public static final String PREF_VISUALIZER = "newmaterialmusicdownloader.pref.visualizer";
 	
 	public static final String DIRECTORY_PREFIX = File.separator + "NewMaterialMusicDownloader" + File.separator;
 	public static final String DIRECTORY = Environment.getExternalStorageDirectory() + DIRECTORY_PREFIX;

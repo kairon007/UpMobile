@@ -7,6 +7,7 @@ import org.upmobile.newmaterialmusicdownloader.DownloadListener;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -35,6 +36,8 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -45,6 +48,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
@@ -312,7 +316,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).setToolbarOverlay(true);
 		((MainActivity) getActivity()).setToolbarAlpha(scrollView.getToolbarAlpha());
 		((MainActivity) getActivity()).showToolbarShadow(false);
-		setupVisualizerFxAndUI(false);
+		SharedPreferences sp = NewMaterialApp.getSharedPreferences();
+		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, false);
+		cbShowVisualizer.setChecked(stateVisualizer);
+		setupVisualizerFxAndUI(stateVisualizer);
 		showLyrics();
 		super.onResume();
 	}
@@ -459,6 +466,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		closeEditViews();
 		Util.hideKeyboard(getActivity(), buttonView);
 		if (buttonView.getId() == R.id.cbShowEqualizer) {
+			Editor editor = NewMaterialApp.getSharedPreferences().edit();
+			editor.putBoolean(PREF_VISUALIZER, isChecked);
+			editor.commit();
 			setupVisualizerFxAndUI(isChecked);
 			return;
 		}
