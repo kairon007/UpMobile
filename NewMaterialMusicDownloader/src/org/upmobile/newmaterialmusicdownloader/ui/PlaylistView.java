@@ -11,15 +11,8 @@ import ru.johnlife.lifetoolsmp3.ui.button.fab.ScrollDirectionListener;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RadialGradient;
-import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -60,6 +53,7 @@ public class PlaylistView extends BasePlaylistView {
 			@Override
 			public void onPositive(MaterialDialog dialog) {
 				super.onPositive(dialog);
+				Util.hideKeyboard(getContext(), dialog.getCustomView());
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 				String newTitle = input.getText().toString().trim();
 				if (newTitle.isEmpty()) {
