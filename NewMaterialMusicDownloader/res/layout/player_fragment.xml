@@ -37,7 +37,7 @@
                 android:id="@+id/visualizer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="180dp"/>
+                android:minHeight="180dp" />
 
             <LinearLayout
                 android:id="@+id/controlPane"
@@ -67,7 +67,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/edit_mp3_use_album_cover" />
                 </LinearLayout>
-                
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -120,9 +120,9 @@
                                     style="@style/TextStyleLine1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:lines="1"
                                     android:layout_weight="1"
-                                    android:maxLength="45" />
+                                    android:ellipsize="end"
+                                    android:lines="1" />
 
                                 <ImageView
                                     android:layout_width="24dp"
@@ -140,7 +140,6 @@
                             android:layout_height="wrap_content"
                             android:imeOptions="actionDone"
                             android:inputType="none"
-                            android:maxLength="45"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
                             android:singleLine="true"
@@ -171,9 +170,9 @@
                                     style="@style/TextStyleLine1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:lines="1"
                                     android:layout_weight="1"
-                                    android:maxLength="45" />
+                                    android:ellipsize="end"
+                                    android:lines="1" />
 
                                 <ImageView
                                     android:layout_width="24dp"
@@ -190,7 +189,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:imeOptions="actionDone"
-                            android:maxLength="45"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
                             android:singleLine="true"
@@ -391,7 +389,6 @@
                         android:gravity="center"
                         android:visibility="gone" />
                 </FrameLayout>
-
             </LinearLayout>
         </LinearLayout>
     </ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView>
