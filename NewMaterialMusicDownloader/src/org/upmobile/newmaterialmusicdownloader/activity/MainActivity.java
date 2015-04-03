@@ -282,7 +282,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	public void showPlayerElement(boolean flag) {
-		System.out.println("!!! showPlayerElement flag="+flag+" isOpenFromDrawer="+isOpenFromDraver);
 		ManagerFragmentId.switchMode(flag);
 		drawerResult.removeAllItems();
 		if (flag || service.isPrepared()) {
