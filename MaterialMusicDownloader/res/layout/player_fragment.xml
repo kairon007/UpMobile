@@ -236,7 +236,7 @@
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/font_previous"
-                android:textSize="24sp" />
+                android:textSize="36sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -256,7 +256,7 @@
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/font_play"
-                android:textSize="24sp" />
+                android:textSize="36sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout
@@ -276,7 +276,7 @@
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/font_next"
-                android:textSize="24sp" />
+                android:textSize="36sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 
         <com.csform.android.uiapptemplate.view.MaterialRippleLayout

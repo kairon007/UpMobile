@@ -117,6 +117,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private int percent = 0;
 
 	private boolean isDestroy;
+	private boolean isStopped;
 
 	private Runnable progressAction = new Runnable() {
 
@@ -184,7 +185,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		
 		@Override
-		public void stopPressed(){}
+		public void stopPressed(){
+			isStopped = true;
+		}
 
 		@Override
 		public void error() {
@@ -203,6 +206,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();
+			isStopped = false;
 		}
 
 		@Override
@@ -376,6 +380,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		closeEditViews();
 		switch (v.getId()) {
 		case R.id.playpause:
+			if (!player.isPrepared() && song.getClass() != MusicData.class) {
+				playerProgress.setIndeterminate(true);
+			}
 			play(0);
 			break;
 		case R.id.prev:
@@ -593,7 +600,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			playerProgress.post(progressAction);
 		} else {
 			percent = 0;
-			playerProgress.setIndeterminate(true);
+			if (!isStopped) {
+				playerProgress.setIndeterminate(true);
+			}
 		}
 	}
 
