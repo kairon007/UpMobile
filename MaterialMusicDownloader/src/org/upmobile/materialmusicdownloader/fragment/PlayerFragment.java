@@ -28,6 +28,11 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,9 +69,8 @@ import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 import com.csform.android.uiapptemplate.view.cb.CheckBox;
 import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
-import com.csform.android.uiapptemplate.view.spb.SmoothProgressBar;
 
-public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener{
+public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -98,7 +102,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView forward;
 	private TextView shuffle;
 	private TextView repeat;
-	private TextView stop;
 
 	// info sections
 	private TextView tvTitle;
@@ -108,10 +111,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
 	private SeekBar playerProgress;
-	private SmoothProgressBar wait;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
+	private int percent = 0;
 
 	private boolean isDestroy;
 
@@ -124,6 +127,17 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				if (player.isPrepared()) {
 					int current = player.getCurrentPosition();
 					playerProgress.setProgress(current);
+					if (song.getClass() != MusicData.class) {
+						if ((playerProgress.getMax() * percent / 100) > current) {
+							playerProgress.setSecondaryProgress(0);
+							playerProgress.setSecondaryProgress(playerProgress.getMax() * percent / 100);
+							playerProgress.setIndeterminate(false);
+						} else {
+							playerProgress.setIndeterminate(true);
+						}
+					} else {
+						playerProgress.setSecondaryProgress(0);
+					}
 					playerCurrTime.setText(Util.getFormatedStrDuration(current));
 				}
 				playerProgress.postDelayed(this, 1000);
@@ -134,6 +148,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	};
 
+	private OnBufferingUpdateListener bufferListener = new OnBufferingUpdateListener() {
+		
+		@Override
+		public void onBufferingUpdate(MediaPlayer mp, int percent) {
+			PlayerFragment.this.percent = percent;
+		}
+	};
+	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
@@ -193,8 +215,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			getCover(song);
 			showLyrics();
 			setElementsView(0);
-			playerProgress.setVisibility(View.GONE);
-			wait.setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 		}
@@ -275,6 +295,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
 		player.setOnErrorListener(this);
+		player.setOnBufferingUpdateListener(bufferListener);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
@@ -370,15 +391,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				repeat.setAlpha(1);
 			}
 			break;
-		case R.id.shuffle: 
+		case R.id.shuffle:
 			if (player.offOnShuffle()) {
 				shuffle.setAlpha(1);
 			} else {
 				shuffle.setAlpha((float) 0.5);
 			}
-			break;
-		case R.id.stop:
-			player.stopPressed();
 			break;
 		case R.id.download:
 			download();
@@ -447,9 +465,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		forward = (TextView) contentView.findViewById(R.id.next);
 		shuffle = (TextView) contentView.findViewById(R.id.shuffle);
 		repeat = (TextView) contentView.findViewById(R.id.repeat);
-		stop = (TextView) contentView.findViewById(R.id.stop);
 		download = (CircularProgressButton) contentView.findViewById(R.id.download);
 		playerProgress = (SeekBar) contentView.findViewById(R.id.progress_track);
+		int colorAccent = getActivity().getResources().getColor(R.color.material_accent);
+		Drawable drawable = playerProgress.getIndeterminateDrawable();
+		drawable.setColorFilter(new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
 		tvTitle = (TextView) contentView.findViewById(R.id.songName);
 		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
 		tvArtist = (TextView) contentView.findViewById(R.id.artistName);
@@ -460,13 +480,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
-		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
 		undo = new UndoBar(getActivity());
 	}
 
 	private void setListeners() {
 		play.setOnClickListener(this);
-		stop.setOnClickListener(this);
 		shuffle.setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
@@ -492,6 +510,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				if (fromUser) {
 					try {
 						player.seekTo(progress);
+						playerProgress.setSecondaryProgress(progress);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -557,32 +576,24 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setVisibility(View.VISIBLE);
 		}
 		tvArtist.setText(song.getArtist());
+		tvArtist.requestLayout();
 		tvTitle.setText(song.getTitle());
+		tvTitle.requestLayout();
 		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
 		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
 	}
 
 	private void settingPlayerProgress() {
+		playerProgress.removeCallbacks(progressAction);
+		playerProgress.setProgress(player.isPrepared() ? player.getCurrentPosition() : 0);
+		playerProgress.setSecondaryProgress(player.isPrepared() ? percent : 0);
 		if (player.isPrepared()) {
+			playerProgress.setIndeterminate(false);
 			playerProgress.setMax((int) song.getDuration());
-			playerProgress.setProgress(player.getCurrentPosition());
-			secondSetting(true);
 			playerProgress.post(progressAction);
 		} else {
-			playerProgress.setProgress(0);
-			secondSetting(false);
-		}
-	}
-
-	private void secondSetting(boolean b) {
-		playerProgress.setEnabled(b);
-		playerProgress.setClickable(b);
-		if (b || player.isStoped()) {
-			playerProgress.setVisibility(View.VISIBLE);
-			wait.setVisibility(View.GONE);
-		} else {
-			playerProgress.setVisibility(View.GONE);
-			wait.setVisibility(View.VISIBLE);
+			percent = 0;
+			playerProgress.setIndeterminate(true);
 		}
 	}
 
@@ -601,7 +612,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void setClickablePlayerElement(boolean isClickable) {
 		play.setClickable(isClickable);
-		stop.setClickable(isClickable);
 		if (!isClickable) {
 			playerCurrTime.setText("0:00");
 		}
@@ -857,12 +867,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					}
 				}
 				running.close();
-				
 			}
 
 			@Override
-			public void error(String error) {
-			}
+			public void error(String error) {}
 		});
 	}
 
@@ -903,5 +911,3 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setCoverToZoomView(song.getCover(getActivity()));
 	}
 }
-
-

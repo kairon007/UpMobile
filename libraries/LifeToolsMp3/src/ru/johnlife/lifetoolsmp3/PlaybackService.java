@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener.State;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -23,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -808,6 +810,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		} else {
 			offMode(SMODE_NOTIFICATION);
 		}
+	}
+	
+	public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener) {
+		player.setOnBufferingUpdateListener(listener);
 	}
 
 	// it design for debug

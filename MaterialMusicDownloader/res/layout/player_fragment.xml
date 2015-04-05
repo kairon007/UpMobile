@@ -70,7 +70,6 @@
                         style="@style/TextViewAppearance.CustomMusicButtons"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="top"
                         android:paddingLeft="0dp"
                         android:paddingTop="0dp"
                         android:text="@string/font_edit"
@@ -125,7 +124,6 @@
                         style="@style/TextViewAppearance.CustomMusicButtons"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="top"
                         android:paddingLeft="0dp"
                         android:paddingTop="0dp"
                         android:text="@string/font_edit"
@@ -155,13 +153,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_gravity="bottom"
                 android:layout_weight="1"
                 android:orientation="horizontal" >
 
                 <TextView
                     android:id="@+id/trackTime"
                     style="@style/TextViewAppearance.Body"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start" />
@@ -169,42 +168,20 @@
                 <TextView
                     android:id="@+id/trackTotalTime"
                     style="@style/TextViewAppearance.Body"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end" />
             </LinearLayout>
 
-            <FrameLayout
+            <SeekBar
+                android:id="@+id/progress_track"
+                style="@style/SeerkBar.Indeterminate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <SeekBar
-                    android:id="@+id/progress_track"
-                    style="@style/SeerkBar.Indeterminate"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:max="100"
-                    android:progress="0" />
-
-                <com.csform.android.uiapptemplate.view.spb.SmoothProgressBar
-                    android:id="@+id/player_wait_song"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    app:spb_color="@color/main_color_500"
-                    app:spb_mirror_mode="false"
-                    app:spb_progressiveStart_activated="false"
-                    app:spb_progressiveStart_speed="1.5"
-                    app:spb_progressiveStop_speed="3.4"
-                    app:spb_reversed="false"
-                    app:spb_sections_count="4"
-                    app:spb_speed="2.0"
-                    app:spb_stroke_separator_length="4dp"
-                    app:spb_stroke_width="4dp" >
-                </com.csform.android.uiapptemplate.view.spb.SmoothProgressBar>
-            </FrameLayout>
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:max="100"
+                android:progress="0" />
 
             <!-- <SeekBar -->
             <!-- android:id="@+id/progress_track" -->
@@ -279,26 +256,6 @@
                 android:minHeight="48dp"
                 android:padding="8dp"
                 android:text="@string/font_play"
-                android:textSize="24sp" />
-        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
-
-        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-            style="@style/RippleStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1" >
-
-            <com.csform.android.uiapptemplate.font.MusicTextView
-                android:id="@+id/stop"
-                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:minHeight="48dp"
-                android:padding="8dp"
-                android:text="@string/font_stop"
                 android:textSize="24sp" />
         </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
 

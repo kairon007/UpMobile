@@ -138,10 +138,10 @@
         <item name="rimColor">@color/main_color_accent</item>
     </style>
 
-    <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.SeekBar">
+    <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
         <item name="android:thumb">@drawable/seekbar_selector</item>
         <item name="android:progressDrawable">@drawable/seekbar</item>
-        <item name="android:indeterminateDrawable">@drawable/seekbar</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
         <item name="android:focusable">true</item>
     </style>
 
