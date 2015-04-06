@@ -93,6 +93,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public abstract class OnlineSearchView extends View {
 
+	public static final String EMPTY_DIRECTORY = "directory.not.create.for.application";
 	public static List<Engine> engines = null;
 	private static final Void[] NO_PARAMS = {};
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";

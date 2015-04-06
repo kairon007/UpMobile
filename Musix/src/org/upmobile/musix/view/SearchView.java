@@ -40,6 +40,11 @@ public class SearchView extends OnlineSearchView {
 		}
 		return null;
 	}
+	
+	@Override
+	protected String getDirectory() {
+		return EMPTY_DIRECTORY;
+	}
 
 	@Override
 	protected void stopSystemPlayer(Context context) {

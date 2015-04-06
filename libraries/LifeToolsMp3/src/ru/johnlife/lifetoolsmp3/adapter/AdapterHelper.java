@@ -71,6 +71,7 @@ public class AdapterHelper {
 			threeDot = view.findViewById(R.id.threeDot);
 			dowloadLabel = (TextView) view.findViewById(R.id.infoView);
 		}
+		
 		/**
 		 * 
 		 * @param isDownloaded
@@ -80,6 +81,9 @@ public class AdapterHelper {
 		 * 
 		 */
 		public ViewBuilder setDownloadLable(int isDownloaded) {
+			if (null == dowloadLabel) {
+				return this;
+			}
 			if (isDownloaded == -1) {
 				dowloadLabel.setVisibility(View.GONE);
 				return this;
