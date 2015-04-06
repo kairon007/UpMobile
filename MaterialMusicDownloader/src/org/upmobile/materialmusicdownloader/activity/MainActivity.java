@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
-import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
@@ -105,6 +104,12 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			service = PlaybackService.get(this);
 		}
 		super.onResume();
+	}
+	
+	@Override
+	protected void checkOnStart(boolean showMiniPlayer) {
+		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
+		super.checkOnStart(null == player || !player.isVisible());
 	}
 	
 	@Override
