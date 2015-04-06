@@ -970,7 +970,7 @@ public abstract class OnlineSearchView extends View {
 	public void trySearch() {
 		Util.hideKeyboard(getContext(), view);
 		String searchString = searchField.getText().toString();
-		if (searchString.equals(lastSearchString)) return;
+		if (searchString.equals(lastSearchString) && message.getVisibility() != View.VISIBLE) return;
 		lastSearchString = searchString;
 		keeper.initSongHolder(getDirectory());
 		if (isOffline(getContext())) {
