@@ -246,7 +246,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 //			});
 //			miniPlayer.setAnimation(slideLeft);
 //			miniPlayer.startAnimation(slideLeft);
-			download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
+			android.util.Log.d("logks", "comment = " + song.getComment());
+			customDownloadButton();
 			isClickOnDownload  = false;
 			startFakeAnimation();
 		}
@@ -267,7 +268,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
 					fakeView.setVisibility(View.VISIBLE);
-					download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
+					customDownloadButton();
 					isClickOnDownload  = false;
 				}
 			});
@@ -301,6 +302,11 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			parentMiniPlayer.setAnimation(slideDown);
 			parentMiniPlayer.startAnimation(slideDown);
 		}
+	}
+	private void customDownloadButton() {
+		SongInfo info = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		boolean isDownloaded = info.getStatus() != SongInfo.NOT_DOWNLOAD;
+		download.setVisibility(song.getClass() == MusicData.class || isDownloaded ? View.GONE : View.VISIBLE);
 	}
 	
 	private void startFakeAnimation () {

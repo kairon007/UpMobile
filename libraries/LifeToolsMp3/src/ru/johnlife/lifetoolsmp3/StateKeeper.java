@@ -274,10 +274,12 @@ public class StateKeeper {
 	}
 	
 	public SongInfo checkSongInfo(String url) {
-		SongInfo info = songHolder.get(url);
-		if (null == info) {
+		SongInfo info;
+		if (null == url || null == songHolder.get(url)) {
 			info = new SongInfo(SongInfo.NOT_DOWNLOAD, -1);
+			return info;
 		}
+		info = songHolder.get(url);
 		return info;
 	}
 	
