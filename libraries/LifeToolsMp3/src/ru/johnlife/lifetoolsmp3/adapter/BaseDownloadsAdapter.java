@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
@@ -65,6 +66,7 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 	
 	protected void removeItem(MusicData item) {
 		DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
+		StateKeeper.getInstance().removeSongInfo(item.getDownloadUrl());
 		remove(item);
 	}
 	

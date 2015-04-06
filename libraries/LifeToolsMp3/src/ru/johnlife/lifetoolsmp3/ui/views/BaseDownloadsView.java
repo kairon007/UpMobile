@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
@@ -14,7 +15,6 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -126,7 +126,7 @@ public abstract class BaseDownloadsView extends View{
 
 	private ArrayList<MusicData> updateList(Cursor c, ArrayList<MusicData> result) {
 		while (c.moveToNext()) {
-			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252);
+			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252, c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI)));
 			if (c.getString(8).contains(getDirectory())) {
 				if (!result.contains(song)){
 					result.add(song);
@@ -135,7 +135,7 @@ public abstract class BaseDownloadsView extends View{
 		}
 		ArrayList<DownloadCache.Item> list = DownloadCache.getInstanse().getCachedItems();
 		for (Item item : list) {
-			MusicData song = new MusicData(item.getTitle(), item.getArtist(), item.getId(), -1);
+			MusicData song = new MusicData(item.getTitle(), item.getArtist(), item.getId(), -1, "");
 			if (item.isCached() && !result.contains(song)) {
 				result.add(song);
 			}
@@ -158,7 +158,7 @@ public abstract class BaseDownloadsView extends View{
 		while (c.moveToNext()) {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252));
+					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252, c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI))));
 					break;
 				}
 			}
@@ -171,7 +171,7 @@ public abstract class BaseDownloadsView extends View{
 		while (c.moveToNext()) {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252));
+					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252, c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI))));
 					break;
 				}
 			}
@@ -187,6 +187,7 @@ public abstract class BaseDownloadsView extends View{
 					@Override
 					public void run() {
 						DownloadCache.getInstanse().remove(musicData.getArtist(), musicData.getTitle());
+						StateKeeper.getInstance().removeSongInfo(musicData.getDownloadUrl());
 						adapter.remove(musicData);
 					}
 				});

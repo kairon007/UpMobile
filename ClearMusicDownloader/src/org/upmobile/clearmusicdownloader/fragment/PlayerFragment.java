@@ -12,8 +12,10 @@ import org.upmobile.clearmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -789,6 +791,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
+				StateKeeper.getInstance().putSongInfo(url, new SongInfo(SongInfo.DOWNLOADING, player.getArrayPlayback().indexOf(song)));
 				Runnable callbackRun = new Runnable() {
 
 					@Override
