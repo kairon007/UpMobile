@@ -599,12 +599,15 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerProgress.setSecondaryProgress(player.isPrepared() ? percent : 0);
 		if (player.isPrepared()) {
 			playerProgress.setIndeterminate(false);
+			playerProgress.setEnabled(true);
 			playerProgress.setMax((int) song.getDuration());
 			playerProgress.post(progressAction);
 		} else {
 			percent = 0;
 			if (!isStopped) {
 				playerProgress.setIndeterminate(true);
+			} else {
+				playerProgress.setEnabled(false);
 			}
 		}
 	}
