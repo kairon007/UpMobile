@@ -75,5 +75,8 @@
     <string name="does_not_support_type">ผู้เล่นไม่สนับสนุนชนิดของไฟล์เสียงนี้</string>
     <string name="done">พร้อมแล้ว</string>
     <string name="show_equalizer">แสดงควอไลเซอร์</string>
+    
+        <string name="downloading">ดาวน์โหลด...</string>
+    <string name="downloaded">ดาวน์โหลด</string>
 
 </resources>

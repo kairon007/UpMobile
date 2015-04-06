@@ -77,5 +77,8 @@
     <string name="does_not_support_type">Η συσκευή αναπαραγωγής δεν υποστηρίζει αυτόν τον τύπο αρχείου ήχου</string>
     <string name="done">έτοιμος</string>
     <string name="show_equalizer">Εμφάνιση ισοσταθμιστή</string>
+    
+        <string name="downloading">Λήψη...</string>
+    <string name="downloaded">Κατέβηκε</string>
 
 </resources>

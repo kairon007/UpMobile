@@ -78,4 +78,7 @@
     <string name="done">Готово</string>
     <string name="show_equalizer">Показать эквалайзер</string>
 
+    <string name="downloading">Загружается...</string>
+    <string name="downloaded">Загружено</string>
+    
 </resources>

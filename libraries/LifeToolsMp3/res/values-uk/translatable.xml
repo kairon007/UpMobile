@@ -75,5 +75,8 @@
     <string name="does_not_support_type">Плеєр не підтримує цей тип аудіофайлу</string>
     <string name="done">Готово</string>
     <string name="show_equalizer">Показати еквалайзер</string>
+    
+        <string name="downloading">Завантаження...</string>
+    <string name="downloaded">Завантажений</string>
 
 </resources>

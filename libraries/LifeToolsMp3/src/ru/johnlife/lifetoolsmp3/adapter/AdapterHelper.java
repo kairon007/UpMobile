@@ -89,7 +89,7 @@ public class AdapterHelper {
 				return this;
 			}
 			dowloadLabel.setVisibility(View.VISIBLE);
-			dowloadLabel.setTextColor(isDownloaded == 1 ? Color.RED : Color.GREEN);
+			dowloadLabel.setTextColor(isDownloaded == 1 ? Color.RED : view.getResources().getColor(R.color.dark_green));
 			dowloadLabel.setText(isDownloaded == 1 ? R.string.downloading : R.string.downloaded);
 			return this;
 		}

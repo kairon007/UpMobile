@@ -74,5 +74,8 @@
     <string name="does_not_support_type">Oyuncu ses dosyasının bu tür desteklemiyor</string>
     <string name="done">Hazır</string>
     <string name="show_equalizer">Göster ekolayzır</string>
+    
+        <string name="downloading">İndirme...</string>
+    <string name="downloaded">İndirilen</string>
 
 </resources>

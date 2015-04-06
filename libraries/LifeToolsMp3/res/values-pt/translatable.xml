@@ -77,4 +77,7 @@
 	<string name="done">Pronto</string>
 	<string name="show_equalizer">Mostrar equalizador</string>
 	
+	    <string name="downloading">Transferido...</string>
+    <string name="downloaded">Transferido</string>
+	
 </resources>

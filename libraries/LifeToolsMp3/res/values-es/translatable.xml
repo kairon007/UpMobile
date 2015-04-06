@@ -78,4 +78,8 @@
 	<string name="done">Listo</string>
 	<string name="show_equalizer">Mostrar ecualizador</string>
 	
+	<string name="downloading">Descarga de...</string>
+    <string name="downloaded">Descargado</string>
+    
+	
 </resources>

@@ -75,5 +75,8 @@
     <string name="does_not_support_type">プレイヤーは、オーディオこの種類のファイルをサポートしていません</string>
     <string name="done">レディー</string>
     <string name="show_equalizer">ショーイコライザー</string>
+    
+    <string name="downloading">ダウンロード...</string>
+    <string name="downloaded">ダウンロード</string>
 
 </resources>

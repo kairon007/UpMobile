@@ -78,4 +78,7 @@
     <string name="done">Připravený</string>
     <string name="show_equalizer">Show ekvalizér</string>
     
+        <string name="downloading">Stahování...</string>
+    <string name="downloaded">Staženo</string>
+    
 </resources>

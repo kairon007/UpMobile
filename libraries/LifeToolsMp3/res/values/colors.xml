@@ -9,6 +9,7 @@
     <color name="transparent_grey">#608f8f8f</color>
     <color name="trasparent_black">#99000000</color>
     <color name="holo_light_blue">#ff33b5e5</color>
+    <color name="dark_green">#ff34855F</color>
     
     <color name="dsb_progress_color_list">#ff009688</color>
     <color name="dsb_progress_color">#ff009688</color>

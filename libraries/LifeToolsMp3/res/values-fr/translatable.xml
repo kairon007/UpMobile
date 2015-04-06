@@ -77,5 +77,8 @@
 	<string name="does_not_support_type">Le lecteur ne supporte pas ce type de fichier audio</string>
 	<string name="done">Prêt</string>
 	<string name="show_equalizer">Afficher égaliseur</string>
+	
+	    <string name="downloading">Téléchargement...</string>
+    <string name="downloaded">Téléchargé</string>
     
 </resources>

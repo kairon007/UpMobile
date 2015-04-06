@@ -76,4 +76,7 @@
 	<string name="done">रेडी</string>
 	<string name="show_equalizer">दिखाएँ तुल्यकारक</string>
 	
+	    <string name="downloading">डाउनलोड कर रहा है...</string>
+    <string name="downloaded">डाउनलोड किए गए</string>
+	
 </resources>

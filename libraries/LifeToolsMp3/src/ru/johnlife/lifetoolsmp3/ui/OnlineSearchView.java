@@ -500,7 +500,7 @@ public abstract class OnlineSearchView extends View {
 				if (null == ((TextView) v.findViewById(R.id.infoView))) return;
 				((TextView) v.findViewById(R.id.infoView)).setVisibility(View.VISIBLE);
 				((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloaded);
-				((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.GREEN);
+				((TextView) v.findViewById(R.id.infoView)).setTextColor(getResources().getColor(R.color.dark_green));
 			}
 		});
 	}
