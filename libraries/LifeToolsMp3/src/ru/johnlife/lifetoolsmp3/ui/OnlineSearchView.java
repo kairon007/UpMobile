@@ -209,7 +209,8 @@ public abstract class OnlineSearchView extends View {
 		initBoxEngines();
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		keeper.initSongHolder(getDirectory());
-		((BaseMiniPlayerActivity) getContext()).setDownloadPressListener(downloadPressListener);
+		if (getContext().getClass() == BaseMiniPlayerActivity.class)
+			((BaseMiniPlayerActivity) getContext()).setDownloadPressListener(downloadPressListener);
 		updateQuery();
 	}
 	
@@ -285,7 +286,7 @@ public abstract class OnlineSearchView extends View {
 		
 		@Override
 		public void downloadButtonPressed(final RemoteSong song) {
-			((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
+			((Activity) getContext()).runOnUiThread(new Runnable() {
 				
 				@Override
 				public void run() {
@@ -509,7 +510,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	private void setLableDownloaded(final View v) {
-		((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
+		((Activity) getContext()).runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -534,7 +535,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void removeDownloadedLable(final View v) {
-		((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
+		((Activity) getContext()).runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {

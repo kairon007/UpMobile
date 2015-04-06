@@ -106,6 +106,12 @@
                 android:textColor="@color/gray_dark" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/infoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <View
             android:id="@+id/threeDot"
             android:layout_width="48dp"

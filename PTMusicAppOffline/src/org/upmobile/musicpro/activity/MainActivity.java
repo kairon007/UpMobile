@@ -16,9 +16,7 @@ import org.upmobile.musicpro.service.MusicService;
 import org.upmobile.musicpro.service.MusicService.ServiceBinder;
 import org.upmobile.musicpro.service.PlayerListener;
 import org.upmobile.musicpro.slidingmenu.SlidingMenu;
-import org.upmobile.musicpro.util.LanguageUtil;
 import org.upmobile.musicpro.util.Logger;
-import org.upmobile.musicpro.util.MySharedPreferences;
 import org.upmobile.musicpro.widget.AutoBgButton;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;

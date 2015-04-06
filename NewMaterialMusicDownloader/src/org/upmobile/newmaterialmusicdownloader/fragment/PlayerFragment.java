@@ -48,7 +48,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
@@ -319,7 +318,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		SharedPreferences sp = NewMaterialApp.getSharedPreferences();
 		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, false);
 		cbShowVisualizer.setChecked(stateVisualizer);
-		setupVisualizerFxAndUI(stateVisualizer);
+		if (!stateVisualizer) {
+			setupVisualizerFxAndUI(stateVisualizer);
+		}
 		showLyrics();
 		super.onResume();
 	}

@@ -17,17 +17,19 @@ import android.view.View;
 
 public class SearchView extends OnlineSearchView {
 
-	private Context context;
-	
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
-		context = inflater.getContext();
 		StateKeeper.getInstance().activateOptions(StateKeeper.IS_PT_TEXT);
 	}
 
 	@Override
 	protected BaseSettings getSettings() {
 		return new Nulldroid_Settings();
+	}
+	
+	@Override
+	protected String getDirectory() {
+		return EMPTY_DIRECTORY;
 	}
 
 	@Override

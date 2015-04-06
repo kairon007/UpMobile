@@ -244,7 +244,7 @@ public class StateKeeper {
 	}
 	
 	public void initSongHolder(String folder) {
-		if (folder.equals(OnlineSearchView.EMPTY_DIRECTORY)) {
+		if (OnlineSearchView.EMPTY_DIRECTORY.equals(folder)) {
 			return;
 		}
 		if (!new File(folder).exists()) {
