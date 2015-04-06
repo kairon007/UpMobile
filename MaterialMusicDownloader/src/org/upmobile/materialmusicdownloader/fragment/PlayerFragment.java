@@ -518,8 +518,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				if (fromUser) {
 					try {
+						playerProgress.setSecondaryProgress(0);
+						playerProgress.setSecondaryProgress(Math.max(progress, playerProgress.getMax() * percent / 100));
 						player.seekTo(progress);
-						playerProgress.setSecondaryProgress(progress);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
