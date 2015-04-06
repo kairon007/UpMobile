@@ -608,6 +608,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				playerProgress.setIndeterminate(true);
 			} else {
 				playerProgress.setEnabled(false);
+				playerProgress.setIndeterminate(false);
 			}
 		}
 	}
