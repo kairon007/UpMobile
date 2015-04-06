@@ -10,6 +10,7 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.engines.Engine;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
@@ -388,6 +389,8 @@ public class StateKeeper {
 
 		private int status;
 		private int position;
+		private MusicData musicData;
+		private RemoteSong remoteSong;
 
 		public SongInfo() {
 		}
@@ -395,6 +398,15 @@ public class StateKeeper {
 		public SongInfo(int status, int position) {
 			this.status = status;
 			this.position = position;
+		}
+		public SongInfo(int status, MusicData musicData) {
+			this.status = status;
+			this.setMusicData(musicData);
+		}
+		
+		public SongInfo(int status, RemoteSong remoteSong) {
+			this.status = status;
+			this.setRemoteSong(remoteSong);
 		}
 
 		public int getStatus() {
@@ -411,6 +423,22 @@ public class StateKeeper {
 
 		public void setPosition(int position) {
 			this.position = position;
+		}
+
+		public MusicData getMusicData() {
+			return musicData;
+		}
+
+		public void setMusicData(MusicData musicData) {
+			this.musicData = musicData;
+		}
+
+		public RemoteSong getRemoteSong() {
+			return remoteSong;
+		}
+
+		public void setRemoteSong(RemoteSong remoteSong) {
+			this.remoteSong = remoteSong;
 		}
 
 	}

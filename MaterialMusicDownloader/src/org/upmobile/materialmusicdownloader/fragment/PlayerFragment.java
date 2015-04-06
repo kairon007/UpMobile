@@ -847,7 +847,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
-				StateKeeper.getInstance().putSongInfo(url, new SongInfo(SongInfo.DOWNLOADING, player.getArrayPlayback().indexOf(song)));
+				StateKeeper.getInstance().putSongInfo(url, new SongInfo(SongInfo.DOWNLOADING, ((RemoteSong) song)));
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 					@Override

@@ -273,7 +273,7 @@ public abstract class OnlineSearchView extends View {
 				
 				@Override
 				public void run() {
-					View v = getViewByPosition((getResultAdapter().getPosition(song) + 1));
+					View v = getViewByPosition(getResultAdapter().getPosition(song));
 					if (null == ((TextView) v.findViewById(R.id.infoView))) return;
 					((TextView) v.findViewById(R.id.infoView)).setVisibility(View.VISIBLE);
 					((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloading);
@@ -483,8 +483,8 @@ public abstract class OnlineSearchView extends View {
 	private void addLables(ArrayList<MusicData> list) {
 		for (MusicData musicData : list) {
 			String comment = musicData.getComment();
-			if (null != comment && !(keeper.checkSongInfo(comment).getPosition() == -1) && comment.contains("http") ) {
-					View v = getViewByPosition(keeper.checkSongInfo(comment).getPosition());
+			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http") ) {
+					View v = getViewByPosition(getResultAdapter().getPosition(keeper.checkSongInfo(comment).getRemoteSong()));
 					setLableDownloaded(v);
 					keeper.removeSongInfo(comment);
 					keeper.putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADED, -1));
@@ -507,8 +507,8 @@ public abstract class OnlineSearchView extends View {
 
 	private void removeLables(ArrayList<MusicData> list) {
 		for (MusicData musicData : list) {
-			if (null != musicData.getComment() && !(keeper.checkSongInfo(musicData.getComment()).getPosition() == -1) && musicData.getComment().contains("http") ) {
-				View v = getViewByPosition(keeper.checkSongInfo(musicData.getComment()).getPosition());
+			if (null != musicData.getComment() && keeper.checkSongInfo(musicData.getComment()).getRemoteSong() != null && musicData.getComment().contains("http") ) {
+				View v = getViewByPosition(getResultAdapter().getPosition(keeper.checkSongInfo(musicData.getComment()).getRemoteSong()));
 				removeDownloadedLable(v);
 				keeper.removeSongInfo(musicData.getComment());
 			}
@@ -555,10 +555,10 @@ public abstract class OnlineSearchView extends View {
 						@Override
 						public void success(String url) {
 							((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).setDownloadUrl(url);
-							View viewByPosition = getViewByPosition((position + 1));
+							View viewByPosition = getViewByPosition(getResultAdapter().getPosition(((RemoteSong) getResultAdapter().getItem((Integer) v.getTag()))));
 							download(viewByPosition,((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())) , position);
 							String comment = ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment();
-							keeper.putSongInfo(comment, new SongInfo(1, (position + 1)));
+							keeper.putSongInfo(comment, new SongInfo(1, ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag()))));
 						}
 
 						@Override
@@ -585,6 +585,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public View getViewByPosition(int pos) {
+		pos = pos + 1;
 	    final int firstListItemPosition = listView.getFirstVisiblePosition();
 	    final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 
