@@ -100,7 +100,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 			BaseMaterialFragment fragment = mFragments.get(i);
 			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag(), DrawerItem.Types.TYPE_MENU));
 		}
-		mDrawerItems.add(new DrawerItem(R.string.tab_settings, DrawerItem.Types.TYPE_SECTION));
+		mDrawerItems.add(new DrawerItem(R.string.tab_download_location, DrawerItem.Types.TYPE_SECTION));
 		mDrawerItems.add(new DrawerItem(((UIMainActivity) getActivity()).getSettingsIcon(), ((UIMainActivity) getActivity()).getDirectory(), DrawerItem.Types.TYPE_SETTING ));
 		mAdapter = new DrawerAdapter(getActivity(), mDrawerItems, true);
 		mDrawerListView.setAdapter(mAdapter);
