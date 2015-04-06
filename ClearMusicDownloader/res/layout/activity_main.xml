@@ -98,7 +98,6 @@
                         android:id="@+id/cross_promo_box_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
                         android:textColor="#000000"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -107,16 +106,14 @@
                         android:id="@+id/cross_promo_box_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
                         android:textColor="#000000"
-                        android:textSize="11sp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/cross_promo_box_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
                     android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -143,9 +140,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp" >
+                android:layout_alignParentBottom="true" >
 
                 <include
                     android:id="@+id/mini_player"
