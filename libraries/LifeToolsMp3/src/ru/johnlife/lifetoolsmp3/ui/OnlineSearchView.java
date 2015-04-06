@@ -98,19 +98,29 @@ public abstract class OnlineSearchView extends View {
 	private static final Void[] NO_PARAMS = {};
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
+	
+	protected AlertDialog.Builder progressDialog;
+	protected AlertDialog alertProgressDialog;
+	protected DownloadClickListener downloadListener;
+	protected ListView listView;
+	protected ProgressDialog progressSecond;	// For PtMusicAppOffline
+
 	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
 	private final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
+	private int clickPosition;
+	private boolean isRestored = false;
+	private String extraSearch = null;
+	private String keyEngines;
 	private ArrayAdapter<String> adapter;
+	private ArrayList<MusicData> libraryList;
 	private Iterator<Engine> taskIterator;
 	private SharedPreferences sPref;
-	protected DownloadClickListener downloadListener;
 	private StateKeeper keeper;
 	private Player player;
 	private RemoteSong downloadSong;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private SongSearchAdapter resultAdapter;
-	protected ProgressDialog progressSecond;// For PtMusicAppOffline
 	private ViewGroup view;
 	private View spEnginesChoiserLayout;
 	private View spEnginesChoiserScroll;
@@ -121,17 +131,9 @@ public abstract class OnlineSearchView extends View {
 	private TextView message;
 	private TextView searchField;
 	private Spinner spEnginesChoiser;
-	protected ListView listView;
-	protected AlertDialog.Builder progressDialog;
-	protected AlertDialog alertProgressDialog;
 	private AlertDialog alertDialog;
 	private Bitmap listViewImage;
-	private String extraSearch = null;
-	private String keyEngines;
-	private int clickPosition;
-	private boolean isRestored = false;
 	private BaseSearchTask searchTask;
-	private ArrayList<MusicData> libraryList;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -143,51 +145,27 @@ public abstract class OnlineSearchView extends View {
 		}
 	};
 	
-	protected boolean showDownloadLabel() {
-		return false;
-	}
-
-	protected abstract BaseSettings getSettings();
-
-	protected abstract Nulldroid_Advertisment getAdvertisment();
-
-	protected abstract void stopSystemPlayer(Context context);
-	
 	public abstract void refreshLibrary();
-	
 	public abstract boolean isWhiteTheme(Context context);
-
-	protected boolean showFullElement() { return true; }
-	
-	protected boolean showPopupMenu() { return false; }
-	
-	protected boolean showDownloadButton() { return showFullElement() ? false : true; }
-
-	protected void click(View view, int position) {
-		Util.hideKeyboard(getContext(), view);
-	}
-	
-	protected boolean isAppPT () { return false; }
-
-	protected boolean onlyOnWifi() { return true; }
-	
-	protected void hideView () {
-		//hide player in MusicDownloder application
-	}
-	
-	protected int getAdapterBackground () { return 0; }
-	
-	protected int  getIdCustomView() { return 0; }
-	
-	protected String getDirectory() { return null; }
-	
+	public void specialInit(View view) {}
 	public boolean isUseDefaultSpinner(){ return false; }
 	
+	protected abstract BaseSettings getSettings();
+	protected abstract Nulldroid_Advertisment getAdvertisment();
+	protected abstract void stopSystemPlayer(Context context);
+	protected void hideView () { }	//hide player in MusicDownloder application
+	protected void click(View view, int position) { Util.hideKeyboard(getContext(), view); }
+	protected boolean showDownloadLabel() { return false; }
+	protected boolean showFullElement() { return true; }
+	protected boolean showPopupMenu() { return false; }
+	protected boolean showDownloadButton() { return showFullElement() ? false : true; }
+	protected boolean isAppPT () { return false; }
+	protected boolean onlyOnWifi() { return true; }
 	protected int getDropDownViewResource() { return 0;	}
-	
-	public void specialInit(View view) {}
+	protected int getAdapterBackground () { return 0; }
+	protected int  getIdCustomView() { return 0; }
+	protected String getDirectory() { return null; }
 
-	
 	public OnlineSearchView(LayoutInflater inflater) {
 		super(inflater.getContext());
 		init(inflater);
@@ -209,8 +187,9 @@ public abstract class OnlineSearchView extends View {
 		initBoxEngines();
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		keeper.initSongHolder(getDirectory());
-		if (getContext().getClass() == BaseMiniPlayerActivity.class)
+		if (showDownloadLabel()) {
 			((BaseMiniPlayerActivity) getContext()).setDownloadPressListener(downloadPressListener);
+		}
 		updateQuery();
 	}
 	
@@ -269,7 +248,9 @@ public abstract class OnlineSearchView extends View {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			updateLables();
+			if (showDownloadLabel()) {
+				updateLables();
+			}
 		}
 
 		@SuppressLint("NewApi")
@@ -277,7 +258,9 @@ public abstract class OnlineSearchView extends View {
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
-				updateLables();
+				if (showDownloadLabel()) {
+					updateLables();
+				}
 			}
 		}
 	};
@@ -845,21 +828,6 @@ public abstract class OnlineSearchView extends View {
 		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		return cursor;
 	}
-	
-//	public int isThisSongDownloaded(String url) {
-//		for (MusicData data : libraryList) {
-//			if (null != url) {
-//				if (url.equals(data.getComment())) {
-//					return 0;
-//				} 
-//				// Check to songs from youtube
-//				if (null != data.getComment() && data.getComment().contains("youtube-mp3.org") && url.contains("youtube-mp3.org") && data.getComment().substring(0, data.getComment().indexOf("ts_create")).equalsIgnoreCase(url.substring(0, url.indexOf("ts_create")))) {
-//					return 0;
-//				}
-//			}
-//		}
-//		return -1;
-//	}
 	
 	public class SongSearchAdapter extends BaseAbstractAdapter<Song> {
 
