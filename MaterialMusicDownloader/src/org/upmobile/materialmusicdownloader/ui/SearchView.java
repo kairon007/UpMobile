@@ -83,6 +83,11 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	}
 
 	@Override
+	protected void showMessage(String msg) {
+		((MainActivity)getContext()).showMessage(msg);
+	}
+	
+	@Override
 	public boolean isWhiteTheme(Context context) {
 		return false;
 	}
@@ -91,7 +96,7 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	protected boolean showFullElement() {
 		return false;
 	}
-
+	
 	@Override
 	protected boolean showDownloadButton() {
 		return false;

@@ -1048,7 +1048,8 @@ public abstract class OnlineSearchView extends View {
 
 	public void getDownloadUrl(final View view, final int position) {
 		if (isOffline(getContext())) {
-			Toast.makeText(getContext(), getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
+			String msg =  getContext().getString(R.string.search_message_no_internet);
+			showMessage(msg);
 			return;
 		}
 		if (!onlyOnWifi()) {
@@ -1285,6 +1286,10 @@ public abstract class OnlineSearchView extends View {
 	
 	public int getClickPosition() {
 		return clickPosition;
+	}
+	
+	protected void showMessage(String msg) {
+		Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
 	}
 	
 	protected void animateListView(boolean isRestored) {

@@ -81,6 +81,11 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 
 	}
 	
+	@Override
+	protected void showMessage(String msg) {
+		((MainActivity) getContext()).showMessage(msg);
+	}
+	
 	public void saveState() {
 		StateKeeper.getInstance().saveStateAdapter(this);
 	}
