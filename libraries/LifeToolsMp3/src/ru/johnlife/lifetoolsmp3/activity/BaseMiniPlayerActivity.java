@@ -52,6 +52,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	
 	private int checkIdCover;
 	private DownloadClickListener downloadListener;
+	private DownloadPressListener downloadPressListener;
 
 	protected abstract String getDirectory();
 	protected abstract int getMiniPlayerID();
@@ -62,6 +63,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 	protected abstract void showPlayerElement(boolean flag);
 	protected void lockListViewAnimation() {}
 	protected void setImageDownloadButton() {}
+	
+	public interface DownloadPressListener {
+		public void downloadButtonPressed(RemoteSong song);
+	}
 	
 	@Override
 	protected void onStart() {
@@ -246,8 +251,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 //			});
 //			miniPlayer.setAnimation(slideLeft);
 //			miniPlayer.startAnimation(slideLeft);
-			android.util.Log.d("logks", "comment = " + song.getComment());
 			customDownloadButton();
+			download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 			isClickOnDownload  = false;
 			startFakeAnimation();
 		}
@@ -268,6 +273,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
 					fakeView.setVisibility(View.VISIBLE);
+					download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 					customDownloadButton();
 					isClickOnDownload  = false;
 				}
@@ -303,6 +309,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 			parentMiniPlayer.startAnimation(slideDown);
 		}
 	}
+
 	private void customDownloadButton() {
 		SongInfo info = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		boolean isDownloaded = info.getStatus() != SongInfo.NOT_DOWNLOAD;
@@ -402,6 +409,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				download(((RemoteSong) song));
 				String comment = ((RemoteSong) song).getUrl();
 				StateKeeper.getInstance().putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADING, service.getArrayPlayback().indexOf(song)));
+				if (null != downloadPressListener) {
+					downloadPressListener.downloadButtonPressed((RemoteSong) song);
+				}
 			}
 
 			@Override
@@ -449,6 +459,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 
 	public void showMessage(int message) {
 		showMessage(getString(message));
+	}
+	
+	public void setDownloadPressListener(DownloadPressListener downloadPressListener) {
+		this.downloadPressListener = downloadPressListener;
 	}
 	
 }

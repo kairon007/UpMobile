@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity.DownloadPressListener;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
@@ -207,6 +208,7 @@ public abstract class OnlineSearchView extends View {
 		initBoxEngines();
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		keeper.initSongHolder(getDirectory());
+		((BaseMiniPlayerActivity) getContext()).setDownloadPressListener(downloadPressListener);
 		updateQuery();
 	}
 	
@@ -278,7 +280,23 @@ public abstract class OnlineSearchView extends View {
 		}
 	};
 	
-	
+	DownloadPressListener downloadPressListener = new DownloadPressListener() {
+		
+		@Override
+		public void downloadButtonPressed(final RemoteSong song) {
+			((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					View v = getViewByPosition((getResultAdapter().getPosition(song) + 1));
+					if (null == ((TextView) v.findViewById(R.id.infoView))) return;
+					((TextView) v.findViewById(R.id.infoView)).setVisibility(View.VISIBLE);
+					((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloading);
+					((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
+				}
+			});
+		}
+	};
 
 	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
 
