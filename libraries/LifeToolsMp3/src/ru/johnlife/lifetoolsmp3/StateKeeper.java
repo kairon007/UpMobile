@@ -244,6 +244,9 @@ public class StateKeeper {
 	}
 	
 	public void initSongHolder(String folder) {
+		if (!new File(folder).exists()) {
+			new File(folder).mkdir();
+		}
 		File[] files = new File(folder).listFiles();
 		for (int i = 0; i < files.length; i++) {
 			try {
@@ -263,7 +266,7 @@ public class StateKeeper {
 	}
 	
 	public void putSongInfo(String url, SongInfo info) {
-		songHolder.put(url, info);
+		songHolder.put(url.contains("youtube-mp3.org") ? url.substring(0, url.indexOf("ts_create")) : url, info);
 	}
 	
 	public void removeSongInfo (String url) {

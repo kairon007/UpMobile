@@ -395,7 +395,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				((RemoteSong) song).setDownloadUrl(url);
 				download(((RemoteSong) song));
 				String comment = ((RemoteSong) song).getUrl();
-				StateKeeper.getInstance().putSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment, new SongInfo(SongInfo.DOWNLOADING, service.getArrayPlayback().indexOf(song)));
+				StateKeeper.getInstance().putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADING, service.getArrayPlayback().indexOf(song)));
 			}
 
 			@Override

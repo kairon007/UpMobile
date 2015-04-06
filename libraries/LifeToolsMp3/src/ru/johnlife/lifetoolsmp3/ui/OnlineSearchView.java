@@ -555,7 +555,7 @@ public abstract class OnlineSearchView extends View {
 							View viewByPosition = getViewByPosition((position + 1));
 							download(viewByPosition,((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())) , position);
 							String comment = ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment();
-							keeper.putSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment, new SongInfo(1, (position + 1)));
+							keeper.putSongInfo(comment, new SongInfo(1, (position + 1)));
 						}
 
 						@Override
@@ -805,6 +805,7 @@ public abstract class OnlineSearchView extends View {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		Cursor cursor = buildQuery(getContext().getContentResolver(), getDirectory());
 		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			cursor.close();
 			return result;
 		}
 		MusicData d = new MusicData();
