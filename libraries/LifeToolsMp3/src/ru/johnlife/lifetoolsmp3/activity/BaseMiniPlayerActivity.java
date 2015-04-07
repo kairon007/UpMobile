@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
+public abstract class BaseMiniPlayerActivity extends ActionBarActivity implements OnClickListener {
 
 	protected final String ARRAY_SAVE = "extras_array_save";
 	protected PlaybackService service;
@@ -165,41 +165,35 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 				});
 			}
 		});
-		playPause.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if (service.isPlaying()) {
-					service.pause();
-				} else {
-					service.play();
-				}
+		playPause.setOnClickListener(this);
+		download.setOnClickListener(this);
+		findViewById(getMiniPlayerClickableID()).setOnClickListener(this);
+	}
+	
+	@Override
+	public void onClick(View view) {
+		int miniPlayerClickableID = getMiniPlayerClickableID();
+		int id = view.getId();
+		if (id == R.id.mini_player_play_pause) {
+			if (service.isPlaying()) {
+				service.pause();
+			} else {
+				service.play();
 			}
-		});
-		download.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View paramView) {
-				if (!isClickOnDownload) { // TODO this set checking for song, it was downloaded
-					downloadSong();
-					paramView.setVisibility(View.GONE);
-					isClickOnDownload = true;
-				}
+		} else if (id == R.id.mini_player_download) {
+			if (!isClickOnDownload) { // TODO this set checking for song, it was downloaded
+				downloadSong();
+				view.setVisibility(View.GONE);
+				isClickOnDownload = true;
 			}
-
-		});
-		findViewById(getMiniPlayerClickableID()).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				ViewGroup parent = (ViewGroup) v.getParent();
-				if (isAnimated || isPlayerFragmentVisible || (parent.getAnimation() != null && parent.getAnimation().hasStarted())) {
-					return;
-				}
-				isAnimated = true;
-				showPlayerFragment();
+		} else if (id == miniPlayerClickableID) {
+			ViewGroup parent = (ViewGroup) view.getParent();
+			if (isAnimated || isPlayerFragmentVisible || (parent.getAnimation() != null && parent.getAnimation().hasStarted())) {
+				return;
 			}
-		});
+			isAnimated = true;
+			showPlayerFragment();
+		}
 	}
 	
 	protected void checkOnStart(final boolean showMiniPlayer) {
@@ -465,8 +459,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 		this.downloadPressListener = downloadPressListener;
 	}
 	
-	public View getMiniPlayerDownload() {
-		return download;
+	public void miniPlayerDownloadVisible(boolean flag) {
+		download.setVisibility(flag ? View.VISIBLE : View.GONE);
+		isClickOnDownload = !flag;
 	}
 	
 }

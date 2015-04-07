@@ -19,7 +19,6 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
-import android.view.View;
 
 public class DownloadListener extends DownloadClickListener {
 
@@ -89,7 +88,7 @@ public class DownloadListener extends DownloadClickListener {
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();
 				}
-				((BaseMiniPlayerActivity) context).getMiniPlayerDownload().setVisibility(View.VISIBLE);
+				((BaseMiniPlayerActivity) context).miniPlayerDownloadVisible(true);
 			}
 		});
 		undoBar.show(false);
