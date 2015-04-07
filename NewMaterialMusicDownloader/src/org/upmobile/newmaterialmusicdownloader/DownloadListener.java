@@ -84,7 +84,9 @@ public class DownloadListener extends DownloadClickListener {
 				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 				manager.remove(currentDownloadId);
 				StateKeeper.getInstance().removeSongInfo(song.getUrl());
-				cancelDownload.onCancel();
+				if (null != cancelDownload) {
+					cancelDownload.onCancel();
+				}
 			}
 		});
 		undoBar.show(false);
