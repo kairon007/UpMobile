@@ -251,6 +251,7 @@ public class StateKeeper {
 		if (!new File(folder).exists()) {
 			new File(folder).mkdir();
 		}
+		songHolder.clear();
 		File[] files = new File(folder).listFiles();
 		for (int i = 0; i < files.length; i++) {
 			try {
