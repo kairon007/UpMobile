@@ -447,19 +447,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 
 		@Override
-		public void onTrackTimeChanged(int time) {
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {
 			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void onBufferingUpdate(double percent) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void onOverBuffer(boolean isOverBuffer) {
 			// TODO Auto-generated method stub
 			
 		}

@@ -150,14 +150,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			public void error() {}
 
 			@Override
-			public void onTrackTimeChanged(int time) {}
+			public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
 
 			@Override
 			public void onBufferingUpdate(double percent) {}
-
-			@Override
-			public void onOverBuffer(boolean isOverBuffer) {}
-			
 		});
 		service.setOnErrorListener(new OnErrorListener() {
 			

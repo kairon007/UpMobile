@@ -220,13 +220,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 
 		@Override
-		public void onTrackTimeChanged(int time) {}
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
 
 		@Override
 		public void onBufferingUpdate(double percent) {}
-
-		@Override
-		public void onOverBuffer(boolean isOverBuffer) {}
 	};
 
 	@Override

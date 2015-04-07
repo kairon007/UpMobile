@@ -182,12 +182,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 
 		@Override
-		public void onOverBuffer(boolean isOverBuffer) {
-			playerProgress.setIndeterminate(isOverBuffer);
-		}
-
-		@Override
-		public void onTrackTimeChanged(final int time) {
+		public void onTrackTimeChanged(final int time, final boolean isOverBuffer) {
 			getActivity().runOnUiThread(new Runnable() {
 				
 				@Override
@@ -198,6 +193,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 						playerProgress.setSecondaryProgress((int)(playerProgress.getMax() * percent));
 					}
 					playerCurrTime.setText(Util.getFormatedStrDuration(time));
+					playerProgress.setIndeterminate(isOverBuffer);
 				}
 			});
 		}
@@ -301,6 +297,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setClickablePlayerElement(prepared);
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
+			playerProgress.setIndeterminate(false);
+			playerProgress.setMax((int)song.getDuration());
 		} else {
 			changePlayPauseView(prepared);
 		}

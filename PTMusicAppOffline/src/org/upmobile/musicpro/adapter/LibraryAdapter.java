@@ -74,13 +74,10 @@ public class LibraryAdapter extends BaseAbstractAdapter<MusicData> {
 		}
 
 		@Override
-		public void onTrackTimeChanged(int time) {}
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
 
 		@Override
 		public void onBufferingUpdate(double percent) {}
-
-		@Override
-		public void onOverBuffer(boolean isOverBuffer) {}
 	};
 
 	public LibraryAdapter(Context context, int resource) {

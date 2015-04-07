@@ -106,9 +106,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		public void	pause(AbstractSong song);
 		public void stop (AbstractSong song);
 		public void stopPressed();
-		public void onTrackTimeChanged(int time);
+		public void onTrackTimeChanged(int time, boolean isOverBuffer);	//TRUE - if overbuffered
 		public void onBufferingUpdate(double percent);
-		public void onOverBuffer(boolean isOverBuffer);	//TRUE - if overbuffered
 		public void update (AbstractSong song);
 		public void	error ();
 			
@@ -176,8 +175,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 						return;
 					}
 					for (OnStatePlayerListener listener : stateListeners) {
-						listener.onTrackTimeChanged(player.getCurrentPosition());
-						listener.onOverBuffer(player.getCurrentPosition() > playingSong.getDuration() * bufferingPercent);
+						listener.onTrackTimeChanged(player.getCurrentPosition(), 
+								player.getCurrentPosition() > playingSong.getDuration() * bufferingPercent);
 					}
 				}
 			}, 0, UPDATE_DELAY);
