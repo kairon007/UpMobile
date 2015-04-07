@@ -465,4 +465,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity {
 		this.downloadPressListener = downloadPressListener;
 	}
 	
+	public View getMiniPlayerDownload() {
+		return download;
+	}
+	
 }

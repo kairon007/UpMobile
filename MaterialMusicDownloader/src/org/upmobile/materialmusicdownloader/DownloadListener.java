@@ -8,6 +8,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
@@ -18,6 +19,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
+import android.view.View;
 
 public class DownloadListener extends DownloadClickListener {
 	
@@ -86,6 +88,7 @@ public class DownloadListener extends DownloadClickListener {
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();
 				}
+				((BaseMiniPlayerActivity) context).getMiniPlayerDownload().setVisibility(View.VISIBLE);
 			}
 		});
 		undoBar.show(false);
