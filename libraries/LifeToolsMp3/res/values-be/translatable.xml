@@ -33,6 +33,8 @@
     <string name="search_try_different_query">Паспрабуйце іншы запыт</string>
     <string name="search_please_enter_query">Увядзіце запыт</string>
     <string name="search_message_no_internet">Няма падлучэнне да інтэрнэту.\nВы можаце паўтарыць спробу пазней.</string>
+    <string name="download_finished">Загрузка завершана для </string>
+    <string name="download_started">Загрузка пачата для </string>
     <string name="download_dialog_download_location">Тэчка для скачвання</string>
     <string name="download_dialog_download">Скачаць</string>
     <string name="download_dialog_cancel">Адмена</string>

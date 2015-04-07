@@ -34,8 +34,6 @@
     <string name="next">Next</string>
     <string name="close">Close</string>
     <string name="download_failed">Download is failed</string>
-    <string name="download_finished">Download is finished</string>
-    <string name="download_started">Download is started for </string>
 	<string name="download_error">Please wait while song loads.</string>
 	<string name="download_canceled">Download is canceled</string>	
 	<string name="download_cached">The song is added to the cache.</string>

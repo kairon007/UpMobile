@@ -33,6 +33,8 @@
     <string name="search_try_different_query">Coba permintaan yang berbeda</string>
     <string name="search_please_enter_query">Harap masukkan permintaan</string>
     <string name="search_message_no_internet">Tidak ada koneksi internet.\nAnda dapat mencoba lagi nanti.</string>
+    <string name="download_finished">Download selesai untuk </string>
+    <string name="download_started">Memuat mulai </string>
     <string name="download_dialog_download_location">Lokasi Pengunduhan</string>
     <string name="download_dialog_download">Unduh</string>
     <string name="download_dialog_cancel">Batal</string>

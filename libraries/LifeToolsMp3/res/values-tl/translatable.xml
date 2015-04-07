@@ -33,6 +33,8 @@
     <string name="search_try_different_query">Sumubok ng ibang query</string>
     <string name="search_please_enter_query">Mangyaring magpasok ng query</string>
     <string name="search_message_no_internet">Walang koneksyon sa internet.\nMaaari mong subukang muli sa ibang pagkakataon.</string>
+    <string name="download_finished">Kumpleto na para i-download </string>
+    <string name="download_started">Nilo-load ang nagsimulang </string>
     <string name="download_dialog_download_location">Lokasyon ng Download</string>
     <string name="download_dialog_download">I-download</string>
     <string name="download_dialog_cancel">Kanselahin</string>

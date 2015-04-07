@@ -33,6 +33,8 @@
     <string name="search_try_different_query">Eine andere Anfrage versuchen</string>
     <string name="search_please_enter_query">Bitte geben Sie eine Anfrage ein</string>
     <string name="search_message_no_internet">Keine Internetverbindung.\nSie können später erneut versuchen.</string>
+    <string name="download_finished">Komplett für herunterladen </string>
+    <string name="download_started">Laden begonnen </string>
     <string name="download_dialog_download_location">Download-Ort</string>
     <string name="download_dialog_download">Download</string>
     <string name="download_dialog_cancel">Abbrechen</string>

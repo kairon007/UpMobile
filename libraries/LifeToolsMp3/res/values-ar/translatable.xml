@@ -33,6 +33,8 @@
     <string name="search_try_different_query">جرّب استعلام آخر</string>
     <string name="search_please_enter_query">يرجى إدخال استعلامك</string>
     <string name="search_message_no_internet">لا اتصال بالإنترنت.\nيمكنك إعادة المحاولة في وقت لاحق.</string>
+    <string name="download_finished">تحميل كاملة ل</string>
+    <string name="download_started">بدأ تحميل ل </string>
     <string name="download_dialog_download_location">موقع التحميل</string>
     <string name="download_dialog_download">تحميل</string>
     <string name="download_dialog_cancel">إلغاء</string>

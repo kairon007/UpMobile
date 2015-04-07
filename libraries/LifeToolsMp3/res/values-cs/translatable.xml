@@ -33,6 +33,8 @@
     <string name="search_try_different_query">Zkuste odlišný dotaz</string>
     <string name="search_please_enter_query">Zadejte prosím nějaký dotaz</string>
     <string name="search_message_no_internet">Žádné připojení k internetu.\nMůžete zkusit znovu později.</string>
+    <string name="download_finished">Stahování dokončeno pro </string>
+    <string name="download_started">Loading začal </string>
     <string name="download_dialog_download_location">Místo ke stažení</string>
     <string name="download_dialog_download">Stáhnout</string>
     <string name="download_dialog_cancel">Zrušit</string>

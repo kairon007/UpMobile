@@ -32,6 +32,8 @@
     <string name="search_no_results_for">No results for </string>
     <string name="search_try_different_query">Try a different query</string>
     <string name="search_please_enter_query">Please enter a query</string>
+    <string name="download_finished">Download is finished</string>
+    <string name="download_started">Download is started for </string>
     <string name="download_dialog_download_location">Download Location</string>
     <string name="download_dialog_download">Download</string>
     <string name="download_dialog_cancel">Cancel</string>

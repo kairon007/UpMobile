@@ -33,6 +33,8 @@
     <string name="search_try_different_query">Încercați o altă interogare</string>
     <string name="search_please_enter_query">Vă rugăm să introduceți o interogare</string>
     <string name="search_message_no_internet">Nu există conexiune la internet.\nPuteți încerca mai târziu.</string>
+    <string name="download_finished">Descarcati complet pentru </string>
+    <string name="download_started">Se incarca început să </string>
     <string name="download_dialog_download_location">Locația descărcării</string>
     <string name="download_dialog_download">Descărcare</string>
     <string name="download_dialog_cancel">Anulare</string>

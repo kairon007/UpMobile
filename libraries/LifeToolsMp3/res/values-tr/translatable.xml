@@ -33,6 +33,8 @@
     <string name="search_try_different_query">Farklı bir arama sorgusu deneyin</string>
     <string name="search_please_enter_query">Lütfen bir sorgu girin</string>
     <string name="search_message_no_internet">Hiçbir internet bağlantısı.\nDaha sonra yeniden deneyebilirsiniz.</string>
+    <string name="download_finished">Komple indirin </string>
+    <string name="download_started">Yükleniyor başladı </string>
     <string name="download_dialog_download_location">İndirme Konumu</string>
     <string name="download_dialog_download">İndir</string>
     <string name="download_dialog_cancel">İptal</string>

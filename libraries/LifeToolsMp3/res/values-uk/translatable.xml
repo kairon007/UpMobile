@@ -33,6 +33,8 @@
     <string name="search_try_different_query">Спробувати інший запит</string>
     <string name="search_please_enter_query">Будь ласка, введіть запит</string>
     <string name="search_message_no_internet">Немає підключення до інтернету.\nВи можете повторити спробу пізніше.</string>
+    <string name="download_finished">Завантаження завершено для </string>
+    <string name="download_started">Завантаження розпочата для </string>
     <string name="download_dialog_download_location">Завантажити місцезнаходження</string>
     <string name="download_dialog_download">Завантажити</string>
     <string name="download_dialog_cancel">Відміна</string>

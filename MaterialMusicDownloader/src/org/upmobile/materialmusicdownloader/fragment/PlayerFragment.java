@@ -4,15 +4,16 @@ import java.io.File;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
+import org.upmobile.materialmusicdownloader.DownloadListener.OnCancelDownload;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -240,7 +241,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		protected Void doInBackground(Long... params) {
 			if (isDestroy) return null;
-			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+			DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 			int progress = 0;
 			do {		
 				if (isCancelled()) return null;
@@ -276,7 +277,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		
 		@Override
 		protected void onCancelled() {
-			this.cancel(true);
+			download.setOnClickListener(PlayerFragment.this);
+			download.setIndeterminateProgressMode(false);
+			download.setProgress(0);
+			cancel(true);
 			super.onCancelled();
 		}
 
@@ -581,11 +585,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void setElementsView(int progress) {
 		settingPlayerProgress();
-		if (song.getClass() == MusicData.class) {
-			download.setVisibility(View.GONE);
-		} else {
-			download.setVisibility(View.VISIBLE);
-		}
+		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
 		tvArtist.requestLayout();
 		tvTitle.setText(song.getTitle());
@@ -682,7 +682,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void closeEditViews() {
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
-			hideKeyboard();
+			Util.hideKeyboard(getActivity(), contentView);
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
 				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
 				song.setTitle(title);
@@ -821,11 +821,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
-	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(contentView.getWindowToken(), 0);
-	}
-
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
@@ -853,6 +848,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					@Override
 					public void run() {
 						downloadListener.onClick(contentView);
+						downloadListener.setCancelCallback(new OnCancelDownload() {
+							@Override
+							public void onCancel() {
+								cancelProgressTask();
+							}
+						});
 						if (downloadListener.getSongID() == -1) {
 							progressUpdater = new ProgressUpdater();
 							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());

@@ -33,6 +33,8 @@
     <string name="search_try_different_query">尝试不同的查询</string>
     <string name="search_please_enter_query">请输入一个查询</string>
     <string name="search_message_no_internet">没有互联网连接。\n您可以稍后重试。</string>
+    <string name="download_finished">下载完整的 </string>
+    <string name="download_started">装载开始 </string>
     <string name="download_dialog_download_location">下载位置</string>
     <string name="download_dialog_download">下载</string>
     <string name="download_dialog_cancel">取消</string>
