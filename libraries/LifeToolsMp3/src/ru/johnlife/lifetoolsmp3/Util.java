@@ -203,6 +203,12 @@ public final class Util {
 	    return px;
 	}
 	
+	public static int pxToDp(Context context, int px) {
+	    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+	    int dp = Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));       
+	    return dp;
+	}
+	
 	public static Bitmap textViewToBitmap(View v, int width, int height){
 		Bitmap bmp = null;
 		bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);

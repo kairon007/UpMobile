@@ -42,6 +42,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -353,13 +354,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	public void showToolbarShadow(boolean isShowing) {
 		toolbarShadow.setVisibility(isShowing ? View.VISIBLE : View.GONE);
 	}
-
+	
 	public void showMessage(String msg) {
 		UndoBarController.clear(this);
 		UndoBar message = new UndoBar(this);
 		message.message(msg);
 		message.style(UndoBarController.MESSAGESTYLE);
-		if (ManagerFragmentId.playlistFragment() != currentFragmentId) {
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		int width = Util.pxToDp(this, metrics.widthPixels);
+		if (ManagerFragmentId.playlistFragment() != currentFragmentId || width > 520) {// for folder values-w520dp
 			message.show(false);
 			return;
 		}
