@@ -34,8 +34,7 @@ public class DownloadListener extends DownloadClickListener {
 
 	public DownloadListener(Context context, RemoteSong song, int id) {
 		super(context, song, id);
-		this.context = context;		
-		this.song = song;
+		this.context = context;
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
 	}

@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.DownloadListener;
+import org.upmobile.newmaterialmusicdownloader.DownloadListener.OnCancelDownload;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
@@ -663,7 +664,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void closeEditViews() {
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
 			boolean isSameWord = false;
-			hideKeyboard();
+			Util.hideKeyboard(getActivity(), contentView);
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
 				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
 				song.setTitle(title);
@@ -829,11 +830,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 	}
 
-	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(contentView.getWindowToken(), 0);
-	}
-
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
@@ -860,6 +856,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 					@Override
 					public void run() {
 						downloadListener.onClick(contentView);
+						downloadListener.setCancelCallback(new OnCancelDownload() {
+							@Override
+							public void onCancel() {
+								cancelProgressTask();
+							}
+						});
 						if (downloadListener.getSongID() == -1) {
 							progressUpdater = new ProgressUpdater();
 							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
@@ -929,7 +931,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		@Override
 		protected String doInBackground(Long... params) {
 			if (isDestroy) return null;
-			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+			DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 			int progress = 0;
 			do {		
 				if (isCancelled()) return null;
@@ -1000,7 +1002,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		
 		@Override
 		protected void onCancelled() {
-			this.cancel(true);
+			download.setOnClickListener(PlayerFragment.this);
+			download.setIndeterminateProgressMode(false);
+			download.setProgress(0);
+			cancel(true);
 			super.onCancelled();
 		}
 

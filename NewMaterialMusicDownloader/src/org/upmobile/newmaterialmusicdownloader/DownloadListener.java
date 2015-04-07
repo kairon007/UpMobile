@@ -2,40 +2,67 @@ package org.upmobile.newmaterialmusicdownloader;
 
 import java.io.File;
 
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarStyle;
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-
-import com.devspark.appmsg.AppMsg;
-import com.devspark.appmsg.AppMsg.Style;
+import android.os.Parcelable;
 
 public class DownloadListener extends DownloadClickListener {
 
+	private final int MESSAGE_DURATION = 5000;
+	
 	private Context context;
 	private String songArtist;
 	private String songTitle;
+	private OnCancelDownload cancelDownload;
+	
+	public interface OnCancelDownload {
+		public void onCancel();
+	}
 
 	public DownloadListener(Context context, RemoteSong song, int id) {
 		super(context, song, id);
+		this.context = context;
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
-		this.context = context;
+	}
+	
+	public void setCancelCallback(OnCancelDownload cancelListener) {
+		cancelDownload = cancelListener;
 	}
 
 	@Override
-	protected void prepare(File src, RemoteSong song, String pathToFile) {
-		((Activity)context).runOnUiThread(new Runnable() {	
-		@Override
-		public void run() {
-			String chuck = context.getString(R.string.download_finished);
-			String message = chuck + " " + songArtist + " - " +songTitle;
-			((MainActivity) context).showMessage(message);
+	protected void prepare(File src, final RemoteSong song, String pathToFile) {
+		((Activity) context).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				String chuck = context.getString(R.string.download_finished);
+				String message = chuck + " " + songArtist + " - " + songTitle;
+				UndoBar undoBar = new UndoBar(((Activity) context));
+				undoBar.message(message);
+				undoBar.duration(MESSAGE_DURATION);
+				undoBar.listener(new UndoListener() {
+
+					@Override
+					public void onUndo(Parcelable token) {
+						PlaybackService service = PlaybackService.get(context);
+						service.play(song);
+					}
+				});
+				undoBar.style(new UndoBarStyle(R.drawable.ic_play, R.string.play));
+				undoBar.show(false);
 			}
 		});
 	}
@@ -46,8 +73,21 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	public void showMessage(Context context, String message) {
-		((MainActivity) context).showMessage(message);
+	public void showMessage(final Context context, String message) {
+		UndoBar undoBar = new UndoBar(((Activity) context));
+		undoBar.message(message);
+		undoBar.duration(MESSAGE_DURATION);
+		undoBar.listener(new UndoListener() {
+
+			@Override
+			public void onUndo(Parcelable token) {
+				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+				manager.remove(currentDownloadId);
+				StateKeeper.getInstance().removeSongInfo(song.getUrl());
+				cancelDownload.onCancel();
+			}
+		});
+		undoBar.show(false);
 	}
 	
 	@Override
