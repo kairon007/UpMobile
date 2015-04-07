@@ -67,12 +67,12 @@
                     android:divider="@drawable/layout_divider"
                     android:dividerPadding="4dp"
                     android:orientation="horizontal"
+                    android:paddingLeft="18dp"
                     android:showDividers="middle" >
 
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="16dp"
                         android:layout_weight="1" >
 
                         <EditText
@@ -84,7 +84,6 @@
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:lines="1"
-                            android:paddingLeft="16dp"
                             android:paddingRight="56dp"
                             android:singleLine="true" />
 
