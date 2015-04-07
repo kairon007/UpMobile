@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/_undobar"
-    style="@style/UndoBarMaterial" >
+    style="@style/UBContainer" >
 
     <TextView
         android:id="@+id/undobar_message"
-        style="@style/UndoBarMessageMaterial" />
+        style="@style/UBMessage" />
 
     <View
         android:id="@+id/undobar_divider"
-        style="@style/UndoBarDividerClassic" />
+        style="@style/UBDivider" />
 
     <Button
         android:id="@+id/undobar_button"
-        style="@style/UndoBarButtonMaterial"
-        android:textColor="?attr/colorAccent" />
+        style="@style/UBButton" />
 
 </LinearLayout>
