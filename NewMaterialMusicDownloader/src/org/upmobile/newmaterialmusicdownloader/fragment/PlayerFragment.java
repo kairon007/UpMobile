@@ -275,23 +275,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			break;
 		case R.id.repeat:
 			Drawable drawableRepeat = repeat.getDrawable();
-			if (!player.offOnRepeat()) {
-				drawableRepeat.setAlpha(125);
-				repeat.setImageDrawable(drawableRepeat);
-			} else {
-				drawableRepeat.setAlpha(255);
-				repeat.setImageDrawable(drawableRepeat);
-			}
+			drawableRepeat.setAlpha(!player.offOnRepeat() ? 125 : 255);
+			repeat.setImageDrawable(drawableRepeat);
 			break;
 		case R.id.shuffle: 
 			Drawable drawableShuffle = shuffle.getDrawable();
-			if (player.offOnShuffle()) {
-				drawableShuffle.setAlpha(255);
-				shuffle.setImageDrawable(drawableShuffle);
-			} else {
-				drawableShuffle.setAlpha(125);
-				shuffle.setImageDrawable(drawableShuffle);
-			}
+			drawableShuffle.setAlpha(player.offOnShuffle() ? 255 : 125);
+			shuffle.setImageDrawable(drawableShuffle);
 			break;
 		case R.id.stop:
 			player.stopPressed();
@@ -405,25 +395,19 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 		@Override
 		public void pause(AbstractSong song) {
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			changePlayPauseView(false);
 		}
 
 		@Override
 		public void play(AbstractSong song) {
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			changePlayPauseView(true);
 		}
 
 		@Override
 		public void stop(AbstractSong s) {
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			changePlayPauseView(false);
 			setElementsView(0);
 		}
@@ -432,19 +416,17 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		public void stopPressed(){}
 
 		@Override
-		public void error() {
-		}
+		public void error() {}
 
 		@Override
 		public void start(AbstractSong s) {
 			song = s;
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			((MainActivity) getActivity()).showPlayerElement(true);
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
 			play.toggle(true);
+			getCover(song);
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();
@@ -452,15 +434,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 		@Override
 		public void update(AbstractSong current) {
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			download.setOnClickListener(PlayerFragment.this);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
 			cancelProgressTask();
 			song = current;
-			getCover(song);
 			showLyrics();
 			setElementsView(0);
 			playerProgress.setVisibility(View.GONE);
@@ -532,7 +511,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			}
 			clearCover();
 		}
-		getCover(song);
 		player.stop();
 		setClickablePlayerElement(false);
 		player.shift(delta);
@@ -553,11 +531,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void setElementsView(int progress) {
 		settingPlayerProgress();
-		if (song.getClass() == MusicData.class) {
-			download.setVisibility(View.GONE);
-		} else {
-			download.setVisibility(View.VISIBLE);
-		}
+		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
 		playerTotalTime.setTime(Util.getFormatedStrDuration(song.getDuration()));

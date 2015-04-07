@@ -58,7 +58,9 @@ public class DownloadListener extends DownloadClickListener {
 					@Override
 					public void onUndo(Parcelable token) {
 						PlaybackService service = PlaybackService.get(context);
-						service.play(song);
+						if (!service.getPlayingSong().equals(song)) {
+							service.play(song);
+						}
 					}
 				});
 				undoBar.style(new UndoBarStyle(R.drawable.ic_play, R.string.play));

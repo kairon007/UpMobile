@@ -164,25 +164,19 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 		@Override
 		public void pause(AbstractSong song) {
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			changePlayPauseView(true);
 		}
 
 		@Override
 		public void play(AbstractSong song) {
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			changePlayPauseView(false);
 		}
 
 		@Override
 		public void stop(AbstractSong s) {
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			changePlayPauseView(true);
 			setElementsView(0);
 		}
@@ -199,13 +193,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		public void start(AbstractSong s) {
 			song = s;
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			((MainActivity) getActivity()).showPlayerElement(true);
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
 			changePlayPauseView(true);
+			getCover(song);
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();
@@ -214,15 +207,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 		@Override
 		public void update(AbstractSong current) {
-			if (isDestroy) {
-				return;
-			}
+			if (isDestroy) return;
 			download.setOnClickListener(PlayerFragment.this);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
 			cancelProgressTask();
 			song = current;
-			getCover(song);
 			showLyrics();
 			setElementsView(0);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
@@ -573,7 +563,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 			clearCover();
 		}
-		getCover(song);
 		player.stop();
 		setClickablePlayerElement(false);
 		player.shift(delta);
@@ -762,15 +751,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void getCover(final AbstractSong song) {
 		setCheckBoxState(false);
 		setCoverToZoomView(null);
-		((View)cbUseCover.getParent()).setVisibility(View.GONE);
+		((View) cbUseCover.getParent()).setVisibility(View.GONE);
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover) {
-						return;
-					}
+					if (this.hashCode() != checkIdCover) return;
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
