@@ -11,6 +11,8 @@
         style="@style/RippleStyleRectangle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
         android:clickable="true"
         android:paddingTop="1dp" >
 
@@ -64,6 +66,7 @@
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingRight="8dp"
                 android:layout_gravity="center_vertical" >
 
                 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
@@ -74,29 +77,29 @@
 
                     <ImageView
                         android:id="@+id/mini_player_download"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@android:color/transparent"
+                        android:layout_width="37dp"
+                        android:layout_height="37dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_file_download_grey"
                         android:visibility="gone" />
                 </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical" >
 
                 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                     style="@style/RippleStyleCircle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical" >
 
                     <ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView
                         android:id="@+id/mini_player_play_pause"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_gravity="center_horizontal|center_vertical"
                         app:colorButton="?attr/colorPrimary"
                         app:mainColor="@android:color/transparent"

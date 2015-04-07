@@ -30,6 +30,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -459,8 +461,36 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	protected void setImageDownloadButton() {
-		((ImageView) findViewById(R.id.mini_player_download)).setColorFilter(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)));
-		((ImageView) findViewById(R.id.mini_player_download)).setImageResource(R.drawable.ic_file_download_grey);
+		int height = 48;
+		int width = 48;
+		Bitmap bitMap = Bitmap.createBitmap(Util.dpToPx(this, width), Util.dpToPx(this, height), Bitmap.Config.ARGB_8888);
+		bitMap = bitMap.copy(bitMap.getConfig(), true);
+		Canvas canvas = new Canvas(bitMap);
+		Paint paint = new Paint();
+		paint.setAntiAlias(true);
+		paint.setStyle(Paint.Style.FILL);
+		float verts[] = { 
+				Util.dpToPx(this, 0),
+				Util.dpToPx(this, (height / 3 - 2)), 
+				Util.dpToPx(this, (height - 1)), 
+				Util.dpToPx(this, (height / 3 - 2)), 
+				Util.dpToPx(this, (height / 8 * 4) ),
+				Util.dpToPx(this, (height / 8 * 6)) };
+		int verticesColors[] = { 
+				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
+				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
+				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
+				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
+				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
+				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)) };
+		canvas.drawVertices(Canvas.VertexMode.TRIANGLES, verts.length, verts, 0, null, 0, verticesColors, 0, null, 0, 0, paint);
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+		paint.setStrokeWidth(Util.dpToPx(this, height / 8));
+		paint.setColor(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)));
+		canvas.drawLine(0, Util.dpToPx(this, (height - 6)), Util.dpToPx(this, width), Util.dpToPx(this, (height - 6)), paint);
+		paint.setStrokeWidth(Util.dpToPx(this, 34));
+		canvas.drawLine(Util.dpToPx(this, width / 3), 0, Util.dpToPx(this, (height / 8 * 5 + 1)), 0, paint);
+		((ImageView) findViewById(R.id.mini_player_download)).setImageBitmap(bitMap);
 	}
 
 	protected void setSearchViewVisibility(String fragmentName) {
