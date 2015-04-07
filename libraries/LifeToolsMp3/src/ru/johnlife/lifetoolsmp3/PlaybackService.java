@@ -181,7 +181,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public void onCreate() {
 		HandlerThread thread = new HandlerThread(getClass().getName(), Process.THREAD_PRIORITY_BACKGROUND);
 		thread.start();
-		telephonyManager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
+		telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		headsetReceiver = new HeadsetIntentReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -269,6 +269,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		switch (msg.what) {
 		case MSG_START:
 			synchronized (LOCK) {
+				AbstractSong s = (AbstractSong) msg.obj;
 				if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
 					player.reset();
 					offMode(SMODE_PREPARED);
@@ -277,11 +278,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					mode &= ~SMODE_GET_URL;
 				}
 				try {
-					Uri uri = Uri.parse((String) msg.obj);
+					Uri uri = Uri.parse(s.getClass() == MusicData.class ? s.getPath() : s.getComment());
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
-					sendNotification(true, null);
+					sendNotification(true, s.getCover(this));
 				} catch (Exception e) {
 					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 					if(e.toString().contains("setDataSourceFD failed") && null !=errorListener) {
@@ -292,18 +293,20 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			break;
 		case MSG_PLAY:
 			if (check(SMODE_PREPARED)) {
-				helper(State.PLAY, (AbstractSong) msg.obj);
+				AbstractSong s = (AbstractSong) msg.obj;
+				helper(State.PLAY, s);
 				player.start();
 				onMode(SMODE_PLAYING);
-				sendNotification(true, null);
+				sendNotification(true, s.getCover(this));
 			}
 			break;
 		case MSG_PAUSE:
 			if (check(SMODE_PREPARED)) {
-				helper(State.PAUSE, (AbstractSong) msg.obj);
+				AbstractSong s = (AbstractSong) msg.obj;
+				helper(State.PAUSE, s);
 				player.pause();
 				mode |= SMODE_PAUSE;
-				sendNotification(false, null);
+				sendNotification(false, s.getCover(this));
 			}
 			break;
 		case MSG_SEEK_TO:
@@ -334,13 +337,14 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			}
 			break;
 		case MSG_SHIFT:
-			helper(State.UPDATE, playingSong);
+			AbstractSong s = (AbstractSong) msg.obj;
+			helper(State.UPDATE, s);
 			if (enabledRepeat()) {
-				buildSendMessage(playingSong.getPath(), MSG_START, 0, 0);
+				buildSendMessage(s, MSG_START, 0, 0);
 				break;
 			}
-			play(playingSong.getClass() != MusicData.class);
-			sendNotification(true, null);
+			play(s.getClass() != MusicData.class);
+			sendNotification(true, s.getCover(this));
 			break;
 		default:
 			Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
@@ -361,7 +365,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		previousSong = playingSong;
 		playingSong = arrayPlayback.get(position);
 		handler.removeMessages(0);
-		buildSendMessage(null, MSG_SHIFT, position, 0);
+		buildSendMessage(playingSong, MSG_SHIFT, position, 0);
 	}
 
 	public void play(AbstractSong song) {
@@ -463,7 +467,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					if (playingSong.getClass() == MusicData.class) return;
 					((RemoteSong) playingSong).setDownloadUrl(url);
 					mode &= ~SMODE_GET_URL;
-					buildSendMessage(url, MSG_START, 0, 0);
+					buildSendMessage(playingSong, MSG_START, 0, 0);
 				}
 
 				@Override
@@ -476,7 +480,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			});
 			return;
 		}
-		buildSendMessage(playingSong.getPath(), MSG_START, 0, 0);
+		buildSendMessage(playingSong, MSG_START, 0, 0);
 	}
 	
 	public void pause() {
@@ -488,9 +492,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (stateListeners == null) {
 			return;
 		}
-		Handler handler = new Handler(getMainLooper());
+		Handler h = new Handler(getMainLooper());
 		for (final OnStatePlayerListener stateListener : stateListeners) {
-			handler.post(new Runnable() {
+			h.post(new Runnable() {
 
 				@Override
 				public void run() {
@@ -723,9 +727,14 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		Bitmap cover = playingSong.getCover(this);
 		if (null != updateCover) {
 			cover = updateCover;
+			if (playingSong.getClass() != MusicData.class) {
+				((RemoteSong) playingSong).setCover(cover);
+			}
 		} else if (null == cover) {
 			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.icon);
 		}
+		float size = Util.dpToPx(this, 64);
+		cover = Util.resizeBitmap(cover, size, size);
 		Intent notificationIntent = new Intent(this, ((Activity) activityContext).getClass());
 		notificationIntent.setAction(MAIN_ACTION);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -246,7 +246,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 //			miniPlayer.setAnimation(slideLeft);
 //			miniPlayer.startAnimation(slideLeft);
 			customDownloadButton();
-			download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 			isClickOnDownload  = false;
 			startFakeAnimation();
 		}
@@ -267,7 +266,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
 					fakeView.setVisibility(View.VISIBLE);
-					download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 					customDownloadButton();
 					isClickOnDownload  = false;
 				}

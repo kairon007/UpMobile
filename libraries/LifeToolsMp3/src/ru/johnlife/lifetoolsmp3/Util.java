@@ -32,7 +32,6 @@ public final class Util {
 	
 	public final static String WHITE_THEME2 = "AppTheme.White2";
 	public final static String WHITE_THEME = "AppTheme.White";
-	private final static DateFormat isoDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
 	private final static int SMALL_BITMAP_SIZE = 100;
 	private final static String ZAYCEV_TAG = "(zaycev.net)";
 	
@@ -65,6 +64,7 @@ public final class Util {
 			}
 			return String.format("%d:%02d", min, sec);
 	}
+	
 	public static Bitmap resizeToSmall(Bitmap original) {
 		int originalSize = Math.max(original.getWidth(), original.getHeight());
 		float scale = 1;
@@ -76,6 +76,16 @@ public final class Util {
 		m.postScale(scale, scale);
 		Bitmap small = Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
 		return small;
+	}
+	
+	public static Bitmap resizeBitmap(Bitmap original, float height, float width) {
+		float scaleHeight = height /  original.getHeight();
+		float scaledWidth = width / original.getWidth();
+		float scale = Math.min(scaleHeight, scaledWidth);
+		Matrix m = new Matrix();
+		m.postScale(scale, scale);
+		Bitmap resize = Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
+		return resize;
 	}
 	
 	public static int existFile(String parentName, String fileName) {

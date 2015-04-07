@@ -14,14 +14,20 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AudioColumns;
+import android.provider.MediaStore.MediaColumns;
 
 public class MusicData implements Comparable<MusicData>, AbstractSong {
 
 	public static final String[] FILLED_PROJECTION = {
-			MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,
-			MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST,
-			MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.ALBUM, };
+				BaseColumns._ID, 
+				MediaColumns.DATA,
+				MediaColumns.TITLE, 
+				AudioColumns.ARTIST,
+				AudioColumns.DURATION, 
+				AudioColumns.ALBUM, };
 
 	public static final int MODE_VISIBLITY = 0x00000001;
 	public static final int MODE_PLAYING = 0x00000002;

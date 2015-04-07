@@ -33,7 +33,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Parcel;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AudioColumns;
+import android.provider.MediaStore.MediaColumns;
 
 /**
  * Represents a Song backed by the MediaStore. Includes basic metadata and
@@ -54,39 +57,33 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 */
 	public static final int FLAG_COUNT = 2;
 
-	public static final String[] EMPTY_PROJECTION = {
-		MediaStore.Audio.Media._ID,
+	public static final String[] EMPTY_PROJECTION = { BaseColumns._ID, };
+
+	public static final String[] FILLED_PROJECTION = { 
+							BaseColumns._ID, 
+							MediaColumns.DATA, 
+							MediaColumns.TITLE, 
+							AudioColumns.ALBUM, 
+							AudioColumns.ARTIST, 
+							AudioColumns.ALBUM_ID, 
+							AudioColumns.ARTIST_ID, 
+							AudioColumns.DURATION, 
+							AudioColumns.TRACK, 
 	};
 
-	public static final String[] FILLED_PROJECTION = {
-		MediaStore.Audio.Media._ID,
-		MediaStore.Audio.Media.DATA,
-		MediaStore.Audio.Media.TITLE,
-		MediaStore.Audio.Media.ALBUM,
-		MediaStore.Audio.Media.ARTIST,
-		MediaStore.Audio.Media.ALBUM_ID,
-		MediaStore.Audio.Media.ARTIST_ID,
-		MediaStore.Audio.Media.DURATION,
-		MediaStore.Audio.Media.TRACK,
+	public static final String[] EMPTY_PLAYLIST_PROJECTION = { MediaStore.Audio.Playlists.Members.AUDIO_ID, };
+
+	public static final String[] FILLED_PLAYLIST_PROJECTION = { 
+							MediaStore.Audio.Playlists.Members.AUDIO_ID, 
+							MediaStore.Audio.Playlists.Members.DATA, 
+							MediaStore.Audio.Playlists.Members.TITLE, 
+							MediaStore.Audio.Playlists.Members.ALBUM, 
+							MediaStore.Audio.Playlists.Members.ARTIST,
+							MediaStore.Audio.Playlists.Members.ALBUM_ID, 
+							MediaStore.Audio.Playlists.Members.ARTIST_ID, 
+							MediaStore.Audio.Playlists.Members.DURATION, 
+							MediaStore.Audio.Playlists.Members.TRACK, 
 	};
-
-	public static final String[] EMPTY_PLAYLIST_PROJECTION = {
-		MediaStore.Audio.Playlists.Members.AUDIO_ID,
-	};
-
-	public static final String[] FILLED_PLAYLIST_PROJECTION = {
-		MediaStore.Audio.Playlists.Members.AUDIO_ID,
-		MediaStore.Audio.Playlists.Members.DATA,
-		MediaStore.Audio.Playlists.Members.TITLE,
-		MediaStore.Audio.Playlists.Members.ALBUM,
-		MediaStore.Audio.Playlists.Members.ARTIST,
-		MediaStore.Audio.Playlists.Members.ALBUM_ID,
-		MediaStore.Audio.Playlists.Members.ARTIST_ID,
-		MediaStore.Audio.Playlists.Members.DURATION,
-		MediaStore.Audio.Playlists.Members.TRACK,
-	};
-
-
 
 	/**
 	 * If true, will not attempt to load any cover art in getCover()
@@ -142,15 +139,14 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * Initialize the song with the specified id. Call populate to fill fields
 	 * in the song.
 	 */
-	
+
 	public String downloadUrl;
-	
+
 	public Bitmap cover;
-	
+
 	private boolean hasCover = false;
-	
-	public Song(long id)
-	{
+
+	public Song(long id) {
 		this.id = id;
 	}
 
@@ -158,8 +154,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * Initialize the song with the specified id and flags. Call populate to
 	 * fill fields in the song.
 	 */
-	public Song(long id, int flags)
-	{
+	public Song(long id, int flags) {
 		this.id = id;
 		this.flags = flags;
 	}
@@ -167,23 +162,22 @@ public class Song implements Comparable<Song>, AbstractSong {
 	/**
 	 * Return true if this song was retrieved from randomSong().
 	 */
-	public boolean isRandom()
-	{
+	public boolean isRandom() {
 		return (flags & FLAG_RANDOM) != 0;
 	}
 
 	/**
 	 * Populate fields with data from the supplied cursor.
-	 *
-	 * @param cursor Cursor queried with FILLED_PROJECTION projection
+	 * 
+	 * @param cursor
+	 *            Cursor queried with FILLED_PROJECTION projection
 	 */
-	public void populate(Cursor cursor)
-	{
+	public void populate(Cursor cursor) {
 		id = cursor.getLong(0);
 		path = cursor.getString(1);
 		String zaycevTag = "(zaycev.net)";
 		title = cursor.getString(2);
-		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase())) title = title.replace(zaycevTag, "");
+		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase()))	title = title.replace(zaycevTag, "");
 		album = cursor.getString(3);
 		artist = cursor.getString(4);
 		albumId = cursor.getLong(5);
@@ -194,8 +188,9 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	/**
 	 * Get the id of the given song.
-	 *
-	 * @param song The Song to get the id from.
+	 * 
+	 * @param song
+	 *            The Song to get the id from.
 	 * @return The id, or 0 if the given song is null.
 	 */
 	@Override
@@ -205,15 +200,19 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	/**
 	 * Query the album art for this song.
-	 *
-	 * @param context A context to use.
+	 * 
+	 * @param context
+	 *            A context to use.
 	 * @return The album art or null if no album art could be found
 	 */
 	@Override
 	public Bitmap getCover(Context context) {
-		if (cover != null) return cover;
-		if (mDisableCoverArt || id == -1 || (flags & FLAG_NO_COVER) != 0) return null;
-		if (null == path) return null;
+		if (cover != null) {
+			return cover;
+		}
+		if (mDisableCoverArt || id == -1 || (flags & FLAG_NO_COVER) != 0 || null == path) {
+			return null;
+		}
 		File file = new File(path);
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
@@ -225,14 +224,13 @@ public class Song implements Comparable<Song>, AbstractSong {
 		if (cover == null) flags |= FLAG_NO_COVER;
 		return cover;
 	}
-	
+
 	public boolean hasCover() {
 		return cover != null;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return String.format("%d %d %s", id, albumId, path);
 	}
 
@@ -240,8 +238,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * Compares the album ids of the two songs; if equal, compares track order.
 	 */
 	@Override
-	public int compareTo(Song other)
-	{
+	public int compareTo(Song other) {
 		if (albumId == other.albumId)
 			return trackNumber - other.trackNumber;
 		if (albumId > other.albumId)
@@ -251,11 +248,15 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	@Override
 	public boolean equals(Object object) {
-		if (this == object)	return true;
-		if (null == object) return false;
-		if (this.getClass() != object.getClass()) return false;
+		if (this == object)
+			return true;
+		if (null == object)
+			return false;
+		if (this.getClass() != object.getClass())
+			return false;
 		Song another = (Song) object;
-		if (this.id != another.id) return false;
+		if (this.id != another.id)
+			return false;
 		return true;
 	}
 
@@ -263,26 +264,26 @@ public class Song implements Comparable<Song>, AbstractSong {
 	public String getTitle() {
 		return title;
 	}
-	
+
 	@Override
 	public boolean getDownloadUrl(DownloadUrlListener listener) {
 		return false;
 	}
-	
+
 	@Override
 	public String getArtist() {
 		return artist;
 	}
-	
+
 	public long getDuration() {
 		return duration;
 	}
-	
+
 	@Override
 	public String getPath() {
 		return path;
 	}
-	
+
 	@Override
 	public String getAlbum() {
 		return album;
@@ -292,7 +293,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 	public int describeContents() {
 		return 0;
 	}
-	
+
 	@Override
 	public void writeToParcel(Parcel parcel, int arg1) {
 		parcel.writeLong(id);
@@ -304,7 +305,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 		parcel.writeLong(artistId);
 		parcel.writeLong(duration);
 		parcel.writeInt(trackNumber);
-	
+
 	}
 
 	@Override
@@ -312,7 +313,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 		return super.hashCode();
 	}
 
-	public Song (Parcel parcel) {
+	public Song(Parcel parcel) {
 		id = parcel.readLong();
 		path = parcel.readString();
 		title = parcel.readString();
@@ -320,13 +321,17 @@ public class Song implements Comparable<Song>, AbstractSong {
 		albumId = parcel.readLong();
 		artist = parcel.readString();
 		artistId = parcel.readLong();
-		duration= parcel.readLong();
-		trackNumber= parcel.readInt();
+		duration = parcel.readLong();
+		trackNumber = parcel.readInt();
 	}
 
 	@Override
 	public void setAlbum(String album) {
 		this.album = album;
+	}
+
+	public void setCover(Bitmap cover) {
+		this.cover = cover;
 	}
 
 	@Override
@@ -343,7 +348,6 @@ public class Song implements Comparable<Song>, AbstractSong {
 		this.title = title;
 	}
 
-	
 	@Override
 	public Song cloneSong() throws CloneNotSupportedException {
 		return clone();
@@ -361,7 +365,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 		}
 		return this.hasCover;
 	}
-	
+
 	public void setHasCover(boolean hasCover) {
 		this.hasCover = hasCover;
 	}

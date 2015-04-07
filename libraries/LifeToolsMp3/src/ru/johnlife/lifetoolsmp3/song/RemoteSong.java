@@ -98,10 +98,9 @@ public class RemoteSong extends Song {
 	public String getUrl() {
 		if (null != downloadUrl && !downloadUrl.isEmpty()) {
 			return downloadUrl;
-		} else {
-			Log.e(getClass().getSimpleName(), "Call getDownloadUrl() first!");
-			return null;
 		}
+		Log.e(getClass().getSimpleName(), "Call getDownloadUrl() first!");
+		return null;
 	}
 	
 	@Override
@@ -110,7 +109,8 @@ public class RemoteSong extends Song {
 		if (null != downloadUrl && !downloadUrl.isEmpty() && null != downloadUrlListeners && downloadUrl.startsWith("http")) {
 			listener.success(downloadUrl);
 			return true;
-		} else return false;
+		}
+		return false;
 	}
 	
 	public void addListener(DownloadUrlListener listener) {
