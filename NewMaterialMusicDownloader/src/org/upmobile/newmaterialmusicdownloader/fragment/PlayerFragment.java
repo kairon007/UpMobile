@@ -455,6 +455,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			if (isDestroy) {
 				return;
 			}
+			download.setOnClickListener(PlayerFragment.this);
+			download.setIndeterminateProgressMode(false);
+			download.setProgress(0);
 			cancelProgressTask();
 			song = current;
 			getCover(song);
