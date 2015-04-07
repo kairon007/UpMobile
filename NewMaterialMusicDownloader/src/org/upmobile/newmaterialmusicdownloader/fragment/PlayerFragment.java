@@ -445,6 +445,24 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			playerProgress.setVisibility(View.GONE);
 			wait.setVisibility(View.VISIBLE);
 		}
+
+		@Override
+		public void onTrackTimeChanged(int time) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onBufferingUpdate(double percent) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onOverBuffer(boolean isOverBuffer) {
+			// TODO Auto-generated method stub
+			
+		}
 	};
 	
 	@Override

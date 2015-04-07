@@ -9,7 +9,6 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter.ViewHolder;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
@@ -73,7 +72,15 @@ public class LibraryAdapter extends BaseAbstractAdapter<MusicData> {
 		public void stopPressed() {
 			
 		}
-		
+
+		@Override
+		public void onTrackTimeChanged(int time) {}
+
+		@Override
+		public void onBufferingUpdate(double percent) {}
+
+		@Override
+		public void onOverBuffer(boolean isOverBuffer) {}
 	};
 
 	public LibraryAdapter(Context context, int resource) {

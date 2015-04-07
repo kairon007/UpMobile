@@ -725,4 +725,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		});
 	}
+
+	@Override
+	public void onTrackTimeChanged(int time) {}
+
+	@Override
+	public void onBufferingUpdate(double percent) {}
+
+	@Override
+	public void onOverBuffer(boolean isOverBuffer) {}
 }

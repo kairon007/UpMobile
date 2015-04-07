@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener.State;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -68,6 +70,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private static final int MSG_RESET = 6;
 	private static final int MSG_STOP = 7;
 	private static final int MSG_SHIFT = 8;
+	private static final int UPDATE_DELAY = 250;
 	
 	//multy-threading section
 	private static final Object LOCK = new Object();
@@ -88,6 +91,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private static PlaybackService instance;
 	private AbstractSong previousSong;
 	private AbstractSong playingSong;
+	private PlayerStateUpdater stateUpdater = new PlayerStateUpdater();
+	private double bufferingPercent;
 	private int mode;
 	
 	public interface OnStatePlayerListener {
@@ -101,6 +106,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		public void	pause(AbstractSong song);
 		public void stop (AbstractSong song);
 		public void stopPressed();
+		public void onTrackTimeChanged(int time);
+		public void onBufferingUpdate(double percent);
+		public void onOverBuffer(boolean isOverBuffer);	//TRUE - if overbuffered
 		public void update (AbstractSong song);
 		public void	error ();
 			
@@ -156,6 +164,26 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 	};
 	
+	private class PlayerStateUpdater extends Timer {
+		
+		public void startUpdating() {
+			scheduleAtFixedRate(new TimerTask() {
+				
+				@Override
+				public void run() {
+					if (!player.isPlaying() || null == playingSong) {
+						cancel();
+						return;
+					}
+					for (OnStatePlayerListener listener : stateListeners) {
+						listener.onTrackTimeChanged(player.getCurrentPosition());
+						listener.onOverBuffer(player.getCurrentPosition() > playingSong.getDuration() * bufferingPercent);
+					}
+				}
+			}, 0, UPDATE_DELAY);
+		}
+	}
+	
 	public static PlaybackService get(final Context context) {
 		if (instance == null) {
 			context.startService(new Intent(context, PlaybackService.class));					
@@ -192,6 +220,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
 		player.setOnPreparedListener(this);
+		player.setOnBufferingUpdateListener(bufferingUpdateListener);
 		looper = thread.getLooper();
 		handler = new Handler(looper, this);
 		instance = this;
@@ -501,6 +530,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					switch (state) {
 					case START:
 						stateListener.start(targetSong);
+						stateUpdater.startUpdating();
 						break;
 					case PLAY:
 						stateListener.play(targetSong);
@@ -824,6 +854,17 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener) {
 		player.setOnBufferingUpdateListener(listener);
 	}
+	
+	private OnBufferingUpdateListener bufferingUpdateListener = new OnBufferingUpdateListener() {
+		
+		@Override
+		public void onBufferingUpdate(MediaPlayer mp, int percent) {
+			bufferingPercent = (float)percent / 100.0;
+			for (OnStatePlayerListener listener : stateListeners) {
+				listener.onBufferingUpdate(bufferingPercent);
+			}
+		}
+	};
 
 	// it design for debug
 	private void printStateDebug() {

@@ -34,8 +34,6 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,7 +42,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
-import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -117,48 +114,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private int checkIdCover;
 	private int checkIdLyrics;
-	private int percent = 0;
+	private double percent = 0;
 
 	private boolean isDestroy;
-	private boolean isStopped;
-
-	private Runnable progressAction = new Runnable() {
-
-		@Override
-		public void run() {
-			try {
-				playerProgress.removeCallbacks(this);
-				if (player.isPrepared()) {
-					int current = player.getCurrentPosition();
-					playerProgress.setProgress(current);
-					if (song.getClass() != MusicData.class) {
-						if ((playerProgress.getMax() * percent / 100) > current) {
-							playerProgress.setSecondaryProgress(0);
-							playerProgress.setSecondaryProgress(playerProgress.getMax() * percent / 100);
-							playerProgress.setIndeterminate(false);
-						} else {
-							playerProgress.setIndeterminate(true);
-						}
-					} else {
-						playerProgress.setSecondaryProgress(0);
-					}
-					playerCurrTime.setText(Util.getFormatedStrDuration(current));
-				}
-				playerProgress.postDelayed(this, 1000);
-			} catch (Exception e) {
-				Log.d(getClass().getSimpleName(), e + "");
-			}
-		}
-
-	};
-
-	private OnBufferingUpdateListener bufferListener = new OnBufferingUpdateListener() {
-		
-		@Override
-		public void onBufferingUpdate(MediaPlayer mp, int percent) {
-			PlayerFragment.this.percent = percent;
-		}
-	};
 	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
@@ -182,9 +140,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		
 		@Override
-		public void stopPressed(){
-			isStopped = true;
-		}
+		public void stopPressed(){}
 
 		@Override
 		public void error() {
@@ -200,9 +156,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			changePlayPauseView(true);
 			getCover(song);
 			setElementsView(0);
+			playerProgress.setIndeterminate(false);
+			playerProgress.setMax((int)s.getDuration());
 			cancelProgressTask();
 			thatSongIsDownloaded();
-			isStopped = false;
 		}
 
 		@Override
@@ -217,6 +174,32 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setElementsView(0);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
+		}
+
+		@Override
+		public void onBufferingUpdate(double percent) {
+			PlayerFragment.this.percent = percent;
+		}
+
+		@Override
+		public void onOverBuffer(boolean isOverBuffer) {
+			playerProgress.setIndeterminate(isOverBuffer);
+		}
+
+		@Override
+		public void onTrackTimeChanged(final int time) {
+			getActivity().runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					playerProgress.setProgress(time);
+					if (time < playerProgress.getMax() * percent) {
+						playerProgress.setSecondaryProgress(0);
+						playerProgress.setSecondaryProgress((int)(playerProgress.getMax() * percent));
+					}
+					playerCurrTime.setText(Util.getFormatedStrDuration(time));
+				}
+			});
 		}
 	};
 	
@@ -234,7 +217,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		protected Void doInBackground(Long... params) {
 			if (isDestroy) return null;
-			DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 			int progress = 0;
 			do {		
 				if (isCancelled()) return null;
@@ -298,7 +281,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
 		player.setOnErrorListener(this);
-		player.setOnBufferingUpdateListener(bufferListener);
 		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
 			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
 			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
@@ -379,9 +361,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		closeEditViews();
 		switch (v.getId()) {
 		case R.id.playpause:
-			if (!player.isPrepared() && song.getClass() != MusicData.class) {
-				playerProgress.setIndeterminate(true);
-			}
 			play(0);
 			break;
 		case R.id.prev:
@@ -517,7 +496,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				if (fromUser) {
 					try {
 						playerProgress.setSecondaryProgress(0);
-						playerProgress.setSecondaryProgress(Math.max(progress, playerProgress.getMax() * percent / 100));
+						playerProgress.setSecondaryProgress(Math.max(progress, (int)(playerProgress.getMax() * percent)));
 						player.seekTo(progress);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -567,6 +546,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setClickablePlayerElement(false);
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
+		playerProgress.setProgress(1);
+		playerProgress.setIndeterminate(true);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();
@@ -576,7 +557,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void setElementsView(int progress) {
-		settingPlayerProgress();
 		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
 		tvArtist.requestLayout();
@@ -584,26 +564,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		tvTitle.requestLayout();
 		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
 		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
-	}
-
-	private void settingPlayerProgress() {
-		playerProgress.removeCallbacks(progressAction);
-		playerProgress.setProgress(player.isPrepared() ? player.getCurrentPosition() : 0);
-		playerProgress.setSecondaryProgress(player.isPrepared() ? percent : 0);
-		if (player.isPrepared()) {
-			playerProgress.setIndeterminate(false);
-			playerProgress.setEnabled(true);
-			playerProgress.setMax((int) song.getDuration());
-			playerProgress.post(progressAction);
-		} else {
-			percent = 0;
-			if (!isStopped) {
-				playerProgress.setIndeterminate(true);
-			} else {
-				playerProgress.setEnabled(false);
-				playerProgress.setIndeterminate(false);
-			}
-		}
 	}
 
 	private void setImageButton() {

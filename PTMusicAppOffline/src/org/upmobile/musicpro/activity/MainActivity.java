@@ -218,7 +218,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		public void stopPressed() {
 			
 		}
-		
+
+		@Override
+		public void onTrackTimeChanged(int time) {}
+
+		@Override
+		public void onBufferingUpdate(double percent) {}
+
+		@Override
+		public void onOverBuffer(boolean isOverBuffer) {}
 	};
 
 	@Override

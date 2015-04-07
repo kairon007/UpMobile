@@ -70,8 +70,8 @@
                         style="@style/TextViewAppearance.CustomMusicButtons"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="0dp"
+                        android:padding="0dp"
+                        android:gravity="center"
                         android:text="@string/font_edit"
                         android:textSize="16sp" />
 
@@ -124,8 +124,8 @@
                         style="@style/TextViewAppearance.CustomMusicButtons"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="0dp"
+                        android:padding="0dp"
+                        android:gravity="center"
                         android:text="@string/font_edit"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -182,14 +182,6 @@
                 android:indeterminate="true"
                 android:max="100"
                 android:progress="0" />
-
-            <!-- <SeekBar -->
-            <!-- android:id="@+id/progress_track" -->
-            <!-- style="@style/SeerkBar.Indeterminate" -->
-            <!-- android:layout_width="match_parent" -->
-            <!-- android:layout_height="match_parent" -->
-            <!-- android:layout_weight="1" -->
-            <!-- android:max="100" /> -->
         </LinearLayout>
     </LinearLayout>
 

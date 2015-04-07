@@ -148,6 +148,15 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 
 			@Override
 			public void error() {}
+
+			@Override
+			public void onTrackTimeChanged(int time) {}
+
+			@Override
+			public void onBufferingUpdate(double percent) {}
+
+			@Override
+			public void onOverBuffer(boolean isOverBuffer) {}
 			
 		});
 		service.setOnErrorListener(new OnErrorListener() {
@@ -221,30 +230,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	private void showMiniPlayer(boolean isShow, final boolean isShift) {
 		if (null == miniPlayer) return;
 		if (miniPlayer.getVisibility() == View.VISIBLE && isShift) {
-
-//			Animation slideLeft = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_left);
-//			slideLeft.setAnimationListener(new AnimationListener() {
-//				
-//				@Override
-//				public void onAnimationStart(Animation paramAnimation) {
-//					// TODO Auto-generated method stub
-//					
-//				}
-//				
-//				@Override
-//				public void onAnimationRepeat(Animation paramAnimation) {
-//					// TODO Auto-generated method stub
-//					
-//				}
-//				
-//				@Override
-//				public void onAnimationEnd(Animation paramAnimation) {
-//					// TODO Auto-generated method stub
-//					
-//				}
-//			});
-//			miniPlayer.setAnimation(slideLeft);
-//			miniPlayer.startAnimation(slideLeft);
 			customDownloadButton();
 			isClickOnDownload  = false;
 			startFakeAnimation();
