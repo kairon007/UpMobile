@@ -35,6 +35,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -111,6 +112,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
 	private SeekBar playerProgress;
+	private ImageView imageView;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
@@ -742,7 +744,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
-		ImageView imageView = new ImageView(getActivity());
+		imageView = new ImageView(getActivity());
 		imageView.setPadding(8, 8, 8, 8);
 		String cover =  getResources().getString(R.string.font_musics);
 		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
@@ -877,7 +879,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+		if (null != bitmap) {
+			setCoverToZoomView(bitmap);
+		}
 		super.onConfigurationChanged(newConfig);
-		setCoverToZoomView(song.getCover(getActivity()));
 	}
 }

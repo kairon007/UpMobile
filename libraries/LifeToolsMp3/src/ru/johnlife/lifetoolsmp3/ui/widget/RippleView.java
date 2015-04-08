@@ -244,15 +244,16 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			return super.onTouchEvent(event);
 		}
 		gestureDetector.onTouchEvent(event);
-		childView.onTouchEvent(event);
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
 			if (!isLongClick) {
 				sendClickEvent();
 			}
+			childView.setPressed(true);
 			isLongClick = false;
 			break;
 		case MotionEvent.ACTION_DOWN:
+			childView.onTouchEvent(event);
 			eventCanceled = false;
 			removeCallbacks(runnable);
 			if (isInScrollingContainer()) {
@@ -274,6 +275,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			childView.setPressed(true);
 			break;
 		case MotionEvent.ACTION_CANCEL:
+			childView.onTouchEvent(event);
 			eventCanceled = true;
 			animationRunning = false;
 			removeCallbacks(runnable);
@@ -328,6 +330,8 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			} else {
 				((AdapterView<?>) getParent()).performItemClick(this, position, id);
 			}
+		} else {
+			childView.performClick();
 		}
 	}
 
