@@ -25,6 +25,7 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
 import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView;
 import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView.OnScrollChangedListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
@@ -34,6 +35,8 @@ import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar.OnProgressChangeListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
+import ru.johnlife.lifetoolsmp3.ui.widget.smoothprogressbar.SmoothProgressBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.SimpleVisualizerView;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -75,10 +78,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-
-import com.csform.android.uiapptemplate.view.cb.CheckBox;
-import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
-import com.csform.android.uiapptemplate.view.spb.SmoothProgressBar;
 
 public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener{
 

@@ -12,6 +12,7 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, Constants {

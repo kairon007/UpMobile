@@ -58,20 +58,4 @@
     <color name="main_color_500_50_percent">#80ef4437</color>
     -->
 
-	<color name="checkbox_mark_color">#eeeeee</color>
-    <color name="cpb_grey">#ffdedede</color>
-    <color name="cpb_blue">#ff0099cc</color>
-    <color name="cpb_blue_dark">#ff00719b</color>
-    <color name="cpb_red">#ffff4444</color>
-    <color name="cpb_red_dark">#ffcd3a3a</color>
-    <color name="cpb_green">#ff99cc00</color>
-    <color name="cpb_green_dark">#ff6d9b00</color>
-    <color name="cpb_white">@android:color/white</color>
-    <color name="spb_default_color">#33b5e5</color>
-    
-    <color name="md_divider_black">#10000000</color>
-    <color name="md_divider_white">#10FFFFFF</color>
-    <color name="md_material_blue_600">#1E88E5</color>
-    <color name="md_material_blue_800">#1565C0</color>
-
 </resources>

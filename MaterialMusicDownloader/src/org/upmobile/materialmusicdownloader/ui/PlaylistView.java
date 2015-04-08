@@ -6,6 +6,9 @@ import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ButtonCallback;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.Theme;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,9 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.csform.android.uiapptemplate.R;
-import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
-import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ButtonCallback;
-import com.csform.android.uiapptemplate.view.dlg.Theme;
 
 public class PlaylistView extends BasePlaylistView{
 	
