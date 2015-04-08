@@ -20,6 +20,8 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -38,8 +40,6 @@ import android.widget.ImageView;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.font.MusicTextView;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
-import com.devspark.appmsg.AppMsg;
-import com.devspark.appmsg.AppMsg.Style;
 
 public class MainActivity extends UIMainActivity implements Constants, FolderSelectCallback {
 
@@ -169,8 +169,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	public void showMessage(String message) {
-		AppMsg.cancelAll(this);
-		AppMsg.makeText(this, message, new Style(3000, R.color.main_color_500)).show();
+		UndoBar undoBar = new UndoBar(this);
+		undoBar.clear();
+		undoBar.message(message);
+		undoBar.style(UndoBarController.MESSAGESTYLE);
+		undoBar.show(false);
 	}
 	
 	public void showMessage(int message) {
