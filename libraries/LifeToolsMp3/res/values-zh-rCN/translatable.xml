@@ -76,7 +76,7 @@
     <string name="playlist_name">播放列表名称</string>
     <string name="does_not_support_type">该播放器不支持此类型的音频文件</string>
     <string name="done">做完</string>
-    <string name="show_equalizer">显示均衡器</string>
+    <string name="show_equalizer">显示可视化</string>
     
         <string name="downloading">下载...</string>
     <string name="downloaded">下载</string>

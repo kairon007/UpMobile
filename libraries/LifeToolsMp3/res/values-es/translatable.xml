@@ -78,7 +78,7 @@
     <string name="playlist_name">Nombre de la lista</string>
 	<string name="does_not_support_type">El reproductor no admite este tipo de archivo de audio</string>
 	<string name="done">Listo</string>
-	<string name="show_equalizer">Mostrar ecualizador</string>
+	<string name="show_equalizer">Mostrar visualizador</string>
 	
 	<string name="downloading">Descarga de...</string>
     <string name="downloaded">Descargado</string>

@@ -78,7 +78,7 @@
     <string name="playlist_name">اسم قائمة التشغيل</string>
 	<string name="does_not_support_type">لاعب لا يدعم هذا النوع من الملفات الصوتية</string>
 	<string name="done">استعداد</string>
-	<string name="show_equalizer">مشاهدة التعادل</string>
+	<string name="show_equalizer">مشاهدة متخيل</string>
 	
 	<string name="downloading">جارى التحميل...</string>
     <string name="downloaded">تم تنزيلها</string>

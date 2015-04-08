@@ -103,10 +103,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private LyricsFetcher lyricsFetcher;
 	private TextView playerLyricsView;
 	
-	// visualizer sectoin
+	// visualizer section
 	private SimpleVisualizerView visualizerView;
-	private Visualizer mVisualizer;
+	private Visualizer visualizer;
 	private CheckBox cbShowVisualizer;
+	private boolean visualizerIsBroken = false;
 	
 	//custom check box
 	private CheckBox cbUseCover;
@@ -341,21 +342,21 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			undo.clear();
 			clearCover();
 		}
-		if(null != mVisualizer) {
-			mVisualizer.setEnabled(false);
-			mVisualizer.release();
-			mVisualizer = null;
+		if(null != visualizer) {
+			visualizer.setEnabled(false);
+			visualizer.release();
+			visualizer = null;
 		}
 		super.onPause();
 	}
 	
 	private void setupVisualizerFxAndUI(boolean isShowVisualizer) {
 		visualizerView.setVisibility(isShowVisualizer ? View.VISIBLE : View.INVISIBLE);
-		if (null == mVisualizer) {
+		if (null == visualizer) {
 			try {
-				mVisualizer = new Visualizer(player.getAudioSessionId());
-				mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
-				mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+				visualizer = new Visualizer(player.getAudioSessionId());
+				visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
+				visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
 
 					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
 					}
@@ -364,12 +365,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 						visualizerView.updateVisualizer(bytes);
 					}
 				}, Visualizer.getMaxCaptureRate() / 2, false, true);
-				mVisualizer.setEnabled(true);
+				visualizer.setEnabled(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		mVisualizer.setEnabled(isShowVisualizer);
+		visualizer.setEnabled(isShowVisualizer);
 	}
 	
 	private Runnable progressAction = new Runnable() {
@@ -415,13 +416,18 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		public void stopPressed(){}
 
 		@Override
-		public void error() {}
+		public void error() {
+			visualizerIsBroken = true;
+			visualizer.release();
+			visualizer = null;
+		}
 
 		@Override
 		public void start(AbstractSong s) {
 			song = s;
 			if (isDestroy) return;
 			((MainActivity) getActivity()).showPlayerElement(true);
+			if (visualizerIsBroken) setupVisualizerFxAndUI(cbShowVisualizer.isChecked());
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
 			play.toggle(true);
@@ -960,10 +966,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 							if (downloaded < BAD_SONG || downloaded != size) {
 								file.delete();
 								return FAILURE;
-							} else {
-								progress = 100;
-								publishProgress(100);
 							}
+							progress = 100;
+							publishProgress(100);
 							break;
 						}
 					}

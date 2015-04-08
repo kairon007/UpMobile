@@ -78,7 +78,7 @@
     <string name="playlist_name">Playlist jméno</string>
     <string name="does_not_support_type">Přehrávač nepodporuje tento typ zvukového souboru</string>
     <string name="done">Připravený</string>
-    <string name="show_equalizer">Show ekvalizér</string>
+    <string name="show_equalizer">Show visualizer</string>
     
         <string name="downloading">Stahování...</string>
     <string name="downloaded">Staženo</string>

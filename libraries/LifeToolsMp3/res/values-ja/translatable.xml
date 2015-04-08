@@ -76,7 +76,7 @@
     <string name="playlist_name">プレイリスト名</string>
     <string name="does_not_support_type">プレイヤーは、オーディオこの種類のファイルをサポートしていません</string>
     <string name="done">レディー</string>
-    <string name="show_equalizer">ショーイコライザー</string>
+    <string name="show_equalizer">ショービジュアライザ</string>
     
     <string name="downloading">ダウンロード...</string>
     <string name="downloaded">ダウンロード</string>

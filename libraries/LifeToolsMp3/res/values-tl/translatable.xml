@@ -76,7 +76,7 @@
     <string name="playlist_name">Playlist name</string>
     <string name="does_not_support_type">The player does not support this type of audio file</string>
     <string name="done">Nakahanda</string>
-    <string name="show_equalizer">Ipakita ang pangbalanse</string>
+    <string name="show_equalizer">Ipakita ang visualizer</string>
     
         <string name="downloading">Downloading...</string>
     <string name="downloaded">Downloaded</string>

@@ -67,6 +67,6 @@
     <string name="error_getting_url">Error getting url</string>
     <string name="does_not_support_type">The player does not support this type of audio file</string>
     <string name="done">Done</string>
-    <string name="show_equalizer">Show equalizer</string>
+    <string name="show_equalizer">Show visualizer</string>
 
 </resources>

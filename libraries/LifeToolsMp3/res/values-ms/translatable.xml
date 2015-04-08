@@ -76,7 +76,7 @@
     <string name="playlist_name">Nama senarai main</string>
     <string name="does_not_support_type">Pemain ini tidak menyokong jenis fail audio</string>
     <string name="done">Bersedia</string>
-    <string name="show_equalizer">Show penyamaan</string>
+    <string name="show_equalizer">Show visualizer</string>
     
         <string name="downloading">Memuat turun...</string>
     <string name="downloaded">Turun</string>

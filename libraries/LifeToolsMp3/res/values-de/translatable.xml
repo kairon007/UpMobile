@@ -78,7 +78,7 @@
     <string name="playlist_name">Playname</string>
 	<string name="does_not_support_type">De speler ondersteunt niet dit soort audiobestand</string>
 	<string name="done">Bereit</string>
-	<string name="show_equalizer">Equalizer anzeigen</string>
+	<string name="show_equalizer">Visualizer anzeigen</string>
 	
 	    <string name="downloading">Herunterladen...</string>
     <string name="downloaded">Heruntergeladen</string>

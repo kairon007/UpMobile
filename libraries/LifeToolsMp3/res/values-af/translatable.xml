@@ -78,7 +78,7 @@
     <string name="playlist_name">Playlist name</string>
     <string name="does_not_support_type">Die speler nie hierdie tipe van klank lêer ondersteun</string>
     <string name="done">Gereed</string>
-    <string name="show_equalizer">Wys gelykmaker</string>
+    <string name="show_equalizer">Wys visualizer</string>
     
     <string name="downloading">Aflaai...</string>
     <string name="downloaded">Afgelaai</string>

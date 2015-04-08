@@ -76,7 +76,7 @@
     <string name="playlist_name">Nazwa listy odtwarzania</string>
     <string name="does_not_support_type">Odtwarzacz nie obsługuje tego typu plików audio</string>
     <string name="done">Gotowy</string>
-    <string name="show_equalizer">Pokaż korektorring</string>
+    <string name="show_equalizer">Pokaż wizualizer</string>
     
     <string name="downloading">Ściąganie...</string>
     <string name="downloaded">Pobrano</string>

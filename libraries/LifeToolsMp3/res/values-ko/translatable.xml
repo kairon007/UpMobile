@@ -76,7 +76,7 @@
     <string name="playlist_name">재생 목록 이름</string>
     <string name="does_not_support_type">플레이어는 오디오 파일 형식을 지원하지 않습니다</string>
     <string name="done">준비된</string>
-    <string name="show_equalizer">보기 이퀄라이저</string>
+    <string name="show_equalizer">보기 비주얼</string>
     
     <string name="downloading">다운로드...</string>
     <string name="downloaded">다운로드</string>

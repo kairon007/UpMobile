@@ -252,7 +252,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 			invalidateCustomViewAssociations();
 		}
 		if (mBuilder.listCallbackMulti != null)
-			selectedIndicesList = new ArrayList<>();
+			selectedIndicesList = new ArrayList<Integer>();
 		boolean adapterProvided = mBuilder.adapter != null;
 		if (mBuilder.items != null && mBuilder.items.length > 0
 				|| adapterProvided) {
@@ -265,7 +265,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 				} else if (mBuilder.listCallbackMulti != null) {
 					listType = ListType.MULTI;
 					if (mBuilder.selectedIndices != null) {
-						selectedIndicesList = new ArrayList<>(
+						selectedIndicesList = new ArrayList<Integer>(
 								Arrays.asList(mBuilder.selectedIndices));
 					}
 				} else {
@@ -902,7 +902,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 	}
 
 	private void sendMultichoiceCallback() {
-		List<CharSequence> selectedTitles = new ArrayList<>();
+		List<CharSequence> selectedTitles = new ArrayList<CharSequence>();
 		for (Integer i : selectedIndicesList) {
 			selectedTitles.add(mBuilder.items[i]);
 		}

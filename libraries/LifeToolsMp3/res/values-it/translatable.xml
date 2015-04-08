@@ -77,7 +77,7 @@
     <string name="playlist_name">Nome playlist</string>
     <string name="does_not_support_type">Il lettore non supporta questo tipo di file audio</string>
     <string name="done">Pronto</string>
-    <string name="show_equalizer">Mostra equalizzatore</string>
+    <string name="show_equalizer">Mostra visualizer</string>
     
         <string name="downloading">Scaricare...</string>
     <string name="downloaded">Scaricato</string>

@@ -77,7 +77,7 @@
     <string name="playlist_name">Nome Playlist</string>
 	<string name="does_not_support_type">O jogador não suporta este tipo de arquivo de áudio</string>
 	<string name="done">Pronto</string>
-	<string name="show_equalizer">Mostrar equalizador</string>
+	<string name="show_equalizer">Mostrar visualizador</string>
 	
 	    <string name="downloading">Transferido...</string>
     <string name="downloaded">Transferido</string>

@@ -78,7 +78,7 @@
     <string name="playlist_name">نام لیست پخش</string>
     <string name="does_not_support_type">بهترین بازیکن این نوع فایل های صوتی را پشتیبانی نمی کند</string>
     <string name="done">اماده</string>
-    <string name="show_equalizer">نمایش اکولایزر</string>
+    <string name="show_equalizer">نمایش ویژوالایزر</string>
     
         <string name="downloading">دانلود...</string>
     <string name="downloaded">دانلود</string>

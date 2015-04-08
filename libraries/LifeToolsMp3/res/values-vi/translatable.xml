@@ -74,7 +74,7 @@
     <string name="playlist_name">Tên danh sách</string>
     <string name="does_not_support_type">Người chơi không hỗ trợ loại tập tin âm thanh</string>
     <string name="done">Làm xong</string>
-    <string name="show_equalizer">Hiện equalizer</string>
+    <string name="show_equalizer">Hiện visualizer</string>
     
         <string name="downloading">Tải về...</string>
     <string name="downloaded">Tải về</string>

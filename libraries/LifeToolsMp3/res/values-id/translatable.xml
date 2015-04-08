@@ -76,7 +76,7 @@
     <string name="playlist_name">Nama Playlist</string>
     <string name="does_not_support_type">Odtwarzacz nie obsługuje tego typu plików audio</string>
     <string name="done">Sudah Siap</string>
-    <string name="show_equalizer">Tampilkan equalizer</string>
+    <string name="show_equalizer">Tampilkan visualisator</string>
     
         <string name="downloading">Download...</string>
     <string name="downloaded">Download</string>

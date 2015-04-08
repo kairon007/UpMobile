@@ -76,7 +76,7 @@
     <string name="playlist_name">Numele Playlist</string>
     <string name="does_not_support_type">Jucatorul nu acceptă acest tip de fișier audio</string>
     <string name="done">Gata</string>
-    <string name="show_equalizer">Arată egalizator</string>
+    <string name="show_equalizer">Afișare Visualizer</string>
     
         <string name="downloading">Descărcarea...</string>
     <string name="downloaded">Descarcate</string>

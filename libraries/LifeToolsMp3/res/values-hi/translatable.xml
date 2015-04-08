@@ -76,7 +76,7 @@
     <string name="playlist_name">प्लेलिस्ट का नाम</string>
 	<string name="does_not_support_type">खिलाड़ी ऑडियो फ़ाइल के इस प्रकार का समर्थन नहीं करता</string>
 	<string name="done">रेडी</string>
-	<string name="show_equalizer">दिखाएँ तुल्यकारक</string>
+	<string name="show_equalizer">दिखाएँ Visualizer</string>
 	
 	    <string name="downloading">डाउनलोड कर रहा है...</string>
     <string name="downloaded">डाउनलोड किए गए</string>

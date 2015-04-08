@@ -78,7 +78,7 @@
     <string name="playlist_name">Назва плэйліста</string>
 	<string name="does_not_support_type">Плэер не падтрымлівае гэты тып аўдыёфайла</string>
 	<string name="done">Гатова</string>
-	<string name="show_equalizer">Паказаць эквалайзер</string>
+	<string name="show_equalizer">Паказаць візуалізатар</string>
 	
 	    <string name="downloading">Загрузка...</string>
     <string name="downloaded">Загружаны</string>
