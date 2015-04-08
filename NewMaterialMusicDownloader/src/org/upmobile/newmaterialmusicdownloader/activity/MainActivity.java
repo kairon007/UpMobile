@@ -288,6 +288,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		ManagerFragmentId.switchMode(flag);
 		drawerResult.removeAllItems();
 		if (flag || service.isPrepared()) {
+			currentFragmentId++;
 			drawerResult.addItems(new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey).withTextColor(R.color.material_primary_text),
 				new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey).withTextColor(R.color.material_primary_text),
 				new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey).withTextColor(R.color.material_primary_text),
@@ -296,6 +297,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				new SectionDrawerItem().withName(R.string.tab_download_location).withTextColor(R.color.material_primary_text),
 				new SecondaryDrawerItem().withName(getDirectory()).withIcon(R.drawable.ic_settings_applications_grey));
 		} else {
+			currentFragmentId--;
 			drawerResult.addItems(new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey).withTextColor(R.color.material_primary_text),
 				new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey).withTextColor(R.color.material_primary_text),
 				new PrimaryDrawerItem().withName(R.string.tab_library).withIcon(R.drawable.ic_my_library_music_grey).withTextColor(R.color.material_primary_text),
