@@ -42,12 +42,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.Toolbar.LayoutParams;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -74,12 +77,16 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		title = (TextView)findViewById(R.id.toolbar_title);
+		
 		toolbarShadow = (FrameLayout) findViewById(R.id.toolbar_shadow);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		ImageButton imageToggle = (ImageButton) toolbar.getChildAt(1);
+		int bottom = Util.dpToPx(this, 8);
+		imageToggle.setPadding(0, 0, 0, bottom);
+		title = (TextView)findViewById(R.id.toolbar_title);
 		changeFragment(ManagerFragmentId.searchFragment(), true);
 		drawerResult = new Drawer()
 			.withActivity(this)
