@@ -1063,25 +1063,24 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 				} finally {
 					a.recycle();
 				}
-//			} else {
-//				TypedArray a = context.getTheme().obtainStyledAttributes(
-//						new int[] { R.attr.colorAccent });
-//				try {
-//					this.accentColor = a.getColor(0, materialBlue);
-//					this.positiveColor = this.accentColor;
-//					this.negativeColor = this.accentColor;
-//					this.neutralColor = this.accentColor;
-//				} catch (Exception e) {
-//					this.accentColor = materialBlue;
-//					this.positiveColor = materialBlue;
-//					this.negativeColor = materialBlue;
-//					this.neutralColor = materialBlue;
-//				} finally {
-//					a.recycle();
-//				}
-//			}
-//			checkSingleton();
+			} else {
+				TypedArray a = context.getTheme().obtainStyledAttributes(
+						new int[] { R.attr.colorAccent });
+				try {
+					this.accentColor = a.getColor(0, materialBlue);
+					this.positiveColor = this.accentColor;
+					this.negativeColor = this.accentColor;
+					this.neutralColor = this.accentColor;
+				} catch (Exception e) {
+					this.accentColor = materialBlue;
+					this.positiveColor = materialBlue;
+					this.negativeColor = materialBlue;
+					this.neutralColor = materialBlue;
+				} finally {
+					a.recycle();
+				}
 			}
+			checkSingleton();
 		}
 
 		private void checkSingleton() {
