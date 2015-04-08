@@ -50,7 +50,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="72dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/top_shadow"
                     android:visibility="gone" >
