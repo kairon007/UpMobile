@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -342,6 +343,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	@Override
 	protected int getMiniPlayerDuplicateID() {
 		return R.id.mini_player_duplicate;
+	}
+	
+	public boolean isPlayerFragment() {
+		FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+		return backEntry.getName().equals(PlayerFragment.class.getSimpleName());
 	}
 	
 }

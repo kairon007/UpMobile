@@ -2,9 +2,9 @@ package org.upmobile.materialmusicdownloader;
 
 import java.io.File;
 
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -57,9 +57,10 @@ public class DownloadListener extends DownloadClickListener {
 
 					@Override
 					public void onUndo(Parcelable token) {
-						PlaybackService service = PlaybackService.get(context);
-						if (!service.getPlayingSong().equals(song)) {
-							service.play(song);
+						if (!((MainActivity) context).isPlayerFragment()) {
+							((BaseMiniPlayerActivity) context).startSong(song);
+						} else {
+							((BaseMiniPlayerActivity) context).startSong(song, false);
 						}
 					}
 				});

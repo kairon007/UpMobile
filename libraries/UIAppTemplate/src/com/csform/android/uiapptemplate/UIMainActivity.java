@@ -7,6 +7,7 @@ import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -68,35 +69,6 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-//        int color = getResources().getColor(R.color.main_color_for_search_fragment_text);
-//        String str = Integer.toHexString(color);
-//        String strColor =  "#"+str.substring(2);
-//        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
-//        ImageView searchIcon = (ImageView) searchView.findViewById(searchImgId);
-//        searchIcon.setImageBitmap(getSearchActinBarIcon());
-//        searchIcon.setBackgroundResource(R.drawable.spinner_selector);
-//        int searchCloseId = getResources().getIdentifier("android:id/search_close_btn", null, null);
-//        ImageView closeIcon = (ImageView) searchView.findViewById(searchCloseId);
-//        closeIcon.setImageBitmap(getCloseActinBarIcon());
-//        closeIcon.setBackgroundResource(R.drawable.spinner_selector);
-//        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
-//        TextView autoComplete =  (TextView) searchView.findViewById(queryTextViewId);
-//        autoComplete.setTextColor(color);
-//        try {
-//			Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
-//			SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
-//			stopHint.append(Html.fromHtml("<font color = " + strColor + ">" + getResources().getString(R.string.hint_main_search) + "</font>"));
-//			Drawable search_icon = new BitmapDrawable(getResources(),getSearchActinBarIcon());
-//			Method textSizeMethod = clazz.getMethod("getTextSize");
-//			Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
-//			int textSize = (int) (rawTextSize * 1.5);
-//			search_icon.setBounds(0, 0, textSize, textSize);
-//			stopHint.setSpan(new ImageSpan(search_icon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//			Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
-//			setHintMethod.invoke(autoComplete, stopHint);
-//		} catch (Exception e) {
-//			android.util.Log.d(getClass().getName() , "Appear problem: " + e);
-//		}
         searchView.setOnSearchClickListener(new OnClickListener() {
 			
         	@Override
@@ -248,7 +220,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	
 	protected String getPreviousFragmentName(int position) {
 		if (getFragmentManager().getBackStackEntryCount() < position) return getFragments().get(0).getClass().getSimpleName();
-		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
+		FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
 		String previousFragmentName = backEntry.getName();
 		return previousFragmentName;
 	}

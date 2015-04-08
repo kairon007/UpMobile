@@ -322,6 +322,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	}
 	
 	public void startSong(AbstractSong song) {
+		startSong(song, true);
+	}
+	
+	public void startSong(AbstractSong song, boolean show) {
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
@@ -332,7 +336,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		this.song = song;
 		boolean oldIsPrepared = isMiniPlayerPrepared;
 		isMiniPlayerPrepared = true;
-		showMiniPlayer(true, oldIsPrepared);
+		showMiniPlayer(show, oldIsPrepared);
 	}
 	
 	private void setData(final AbstractSong song) {
