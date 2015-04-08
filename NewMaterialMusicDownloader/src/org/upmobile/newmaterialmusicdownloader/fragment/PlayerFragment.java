@@ -736,8 +736,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void getCover(final AbstractSong s) {
 		setCheckBoxState(false);
-		setCoverToZoomView(null);
-		((View)cbUseCover.getParent()).setVisibility(View.GONE);
+		((View) cbUseCover.getParent()).setVisibility(View.GONE);
 		if (s.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
@@ -747,12 +746,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 						return;
 					}
 					if (null != bmp) {
-						((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
+						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
 						((RemoteSong) s).setHasCover(true);
 						setCoverToZoomView(bmp);
 						player.updatePictureNotification(bmp);
 						setCheckBoxState(true);
-					} 
+					} else {
+						setCoverToZoomView(null);
+					}
 				}
 			};
 			checkIdCover = readyListener.hashCode();
@@ -760,17 +761,19 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		} else {
 			Bitmap bitmap = ((MusicData) s).getCover(getActivity());
 			if (bitmap != null) {
-				((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
+				((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
-			} 
+			} else {
+				setCoverToZoomView(null);
+			}
 		}
 	}
 
 	private void clearCover() {
 		setCheckBoxState(false);
 		if (MusicData.class == song.getClass()) {
-			((View)cbUseCover.getParent()).setVisibility(View.GONE);
+			((View) cbUseCover.getParent()).setVisibility(View.GONE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();
 			RenameTask.deleteCoverFromFile(new File(song.getPath()));

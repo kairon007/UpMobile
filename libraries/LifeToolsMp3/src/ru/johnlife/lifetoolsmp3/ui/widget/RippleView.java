@@ -249,7 +249,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			if (!isLongClick) {
 				sendClickEvent();
 			}
-			childView.setPressed(true);
+			childView.setPressed(false);
 			isLongClick = false;
 			break;
 		case MotionEvent.ACTION_DOWN:
