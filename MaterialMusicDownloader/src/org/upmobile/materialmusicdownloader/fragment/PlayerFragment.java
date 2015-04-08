@@ -23,8 +23,10 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
@@ -67,8 +69,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
-import com.csform.android.uiapptemplate.view.cb.CheckBox;
-import com.csform.android.uiapptemplate.view.cpb.CircularProgressButton;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
 

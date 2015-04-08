@@ -14,29 +14,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:layout_marginTop="60dp" >
-
-            <com.csform.android.uiapptemplate.view.ProgressWheel
-                android:id="@+id/progress_bar_1"
-                style="@style/ProgressBarStyle.Main"
-                android:layout_marginRight="18dp" />
-
-            <com.csform.android.uiapptemplate.view.ProgressWheel
-                android:id="@+id/progress_bar_2"
-                style="@style/ProgressBarStyle.Reverse"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp" />
-
-            <com.csform.android.uiapptemplate.view.ProgressWheel
-                android:id="@+id/progress_bar_3"
-                style="@style/ProgressBarStyle.Accent"
-                android:layout_marginLeft="18dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
             android:layout_marginTop="30dp" >
 
             <com.csform.android.uiapptemplate.view.ProgressWheel
@@ -85,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp" >
 
-            <LinearLayout
+<!--             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="18dp"
@@ -107,8 +84,8 @@
                     android:id="@+id/circular_progress_bar_4"
                     style="@style/CircularProgressBarStyle.2" />
             </LinearLayout>
-
-            <LinearLayout
+ -->
+<!--             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
@@ -129,7 +106,7 @@
                 <com.csform.android.uiapptemplate.view.cpb.CircularProgressButton
                     android:id="@+id/circular_progress_bar_8"
                     style="@style/CircularProgressBarStyle.4" />
-            </LinearLayout>
+            </LinearLayout> -->
         </LinearLayout>
     </LinearLayout>
 

@@ -3,54 +3,10 @@
 
     <dimen name="drawer_width">300dp</dimen>
     <dimen name="ken_burns_header">250dp</dimen>
-    <dimen name="cpb_stroke_width">4dp</dimen>
     <dimen name="height_action_bar">56dp</dimen>
     <dimen name="margin_element">16dp</dimen>
     <dimen name="margin_left_text">72dp</dimen>
     <dimen name="item_height">72dp</dimen>
     <dimen name="message_height">48dp</dimen>
-    <dimen name="spb_default_stroke_separator_length">4dp</dimen>
-    <dimen name="spb_default_stroke_width">4dp</dimen>
-
-    <item name="spb_default_speed" format="float" type="string">1</item>
-
-    <dimen name="md_dialog_frame_margin">24dp</dimen>
-    <dimen name="md_title_frame_margin_bottom">16dp</dimen>
-    <dimen name="md_title_frame_margin_bottom_list">4dp</dimen>
-    <dimen name="md_button_min_width">42dp</dimen>
-    <dimen name="md_button_inset_vertical">6dp</dimen>
-    <dimen name="md_button_inset_horizontal">4dp</dimen>
-    <dimen name="md_button_textpadding_horizontal">1dp</dimen>
-    <dimen name="md_button_padding_horizontal">8dp</dimen>
-    <dimen name="md_button_padding_vertical">4dp</dimen>
-    <dimen name="md_button_padding_horizontal_internalexternal">32dp</dimen>
-    <dimen name="md_button_padding_frame_side">12dp</dimen>
-    <dimen name="md_neutral_button_margin">12dp</dimen>
-    <dimen name="md_content_vertical_padding">8dp</dimen>
-    <dimen name="md_button_frame_vertical_padding">8dp</dimen>
-    <dimen name="md_button_height">48dp</dimen>
-    <dimen name="md_title_textsize">20sp</dimen>
-    <dimen name="md_content_textsize">18sp</dimen>
-    <dimen name="md_button_textsize">14sp</dimen>
-    <dimen name="md_listitem_textsize">18sp</dimen>
-    <dimen name="md_listitem_height">52dp</dimen>
-    <dimen name="md_listitem_control_margin">16dp</dimen>
-    <dimen name="md_icon_margin">16dp</dimen>
-    <dimen name="md_icon_max_size">32dp</dimen>
-    <dimen name="md_listitem_margin_left">24dp</dimen>
-    <dimen name="md_action_corner_radius">2dp</dimen>
-    <dimen name="md_progressdialog_paddingwithtitle">4dp</dimen>
-    
-    <!-- CheckBox Default -->
-    <dimen name="checkbox_width">48dp</dimen>
-    <dimen name="checkbox_height">48dp</dimen>
-    <dimen name="checkbox_thumb_size">20dp</dimen>
-    <dimen name="checkbox_corner_radius">2dp</dimen>
-    <dimen name="checkbox_border_width">2dp</dimen>
-    <dimen name="checkbox_mark_width">2dp</dimen>
-    <dimen name="checkbox_ripple_radius">24dp</dimen>
-    <dimen name="checkbox_mark_left_right_padding">3dp</dimen>
-    <dimen name="checkbox_mark_top_padding">4dp</dimen>
-    <dimen name="checkbox_mark_bottom_padding">5dp</dimen>
 
 </resources>

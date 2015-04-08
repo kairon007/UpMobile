@@ -3,7 +3,8 @@
     <string name="app_name">LifeToolsMp3</string>
 
     <!-- string resources for editor dialog -->
-<!--     <string name="dialog_title">Edit MP3 Tags</string>
+    <!--
+         <string name="dialog_title">Edit MP3 Tags</string>
     <string name="title">Title:</string>
     <string name="artist">Artist:</string>
     <string name="album">Album:</string>
@@ -26,84 +27,88 @@
     Shown in the search box as a hint
     <string name="search_hint">Search Music</string>
     <string name="loading_song_details">Loading song details...</string>
-    <string name="please_wait">Please Wait...</string>
+    <string name="please_wait">Please Wait...</string>
     -->
-    
+
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="next">Next</string>
     <string name="close">Close</string>
     <string name="download_failed">Download is failed</string>
-	<string name="download_error">Please wait while song loads.</string>
-	<string name="download_canceled">Download is canceled</string>	
-	<string name="download_cached">The song is added to the cache.</string>
+    <string name="download_error">Please wait while song loads.</string>
+    <string name="download_canceled">Download is canceled</string>
+    <string name="download_cached">The song is added to the cache.</string>
     <string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
     <string name="no_wi_fi">No Wi-Fi connection</string>
-	<string name="expand">Expand</string>
-	<string name="new_folder_dialog_title">New folder name</string>
-	<string name="error_getting_url_songs">Error getting url songs.</string>
-	<string name="turn_on_dm">Please turn on Download Manager on your device to download the song.</string>
-	
+    <string name="expand">Expand</string>
+    <string name="new_folder_dialog_title">New folder name</string>
+    <string name="error_getting_url_songs">Error getting url songs.</string>
+    <string name="turn_on_dm">Please turn on Download Manager on your device to download the song.</string>
     <string name="zero">0</string>
     <string name="plus15">+15 dB</string>
     <string name="minus15">-15 dB</string>
-    
     <string name="h60hz">60Hz</string>
     <string name="h230hz">230Hz</string>
     <string name="h910hz">910Hz</string>
     <string name="h3d60hz">3.6Hz</string>
     <string name="h14d0hz">14.0Hz</string>
-    
     <string name="user">Custom</string>
     <string name="normal">Normal</string>
     <string name="hiphop">HipHop</string>
     <string name="rock">Rock</string>
     <string name="dance">Dance</string>
-    <string name="pop">Pop</string>    
+    <string name="pop">Pop</string>
     <string name="jazz">Jazz</string>
     <string name="metal">Metal</string>
     <string name="classical">Classical</string>
     <string name="flat">Flat</string>
     <string name="folk">Folk</string>
-    
     <string name="bass">Bass</string>
     <string name="virtualizer">Virtualizer</string>
+
     <string-array name="presets">
-		<item>Normal</item>
+        <item>Normal</item>
         <item>Classical</item>
         <item>Dance</item>
         <item>Flat</item>
         <item>Folk</item>
         <item>Metal</item>
-		<item>HipHop</item>
-	    <item>Jazz</item>
+        <item>HipHop</item>
+        <item>Jazz</item>
         <item>Pop</item>
         <item>Rock</item>
     </string-array>
-        <string name="bad_file">Bad file</string>
-        <string name="default_cover">default_cover</string>
-        <string name="file_already_exists">File with the same name already exists</string>
-        
-        
-        
-        
-	 <!-- ALL CHUPA BELOW THIS LINE  -->
+
+    <string name="bad_file">Bad file</string>
+    <string name="default_cover">default_cover</string>
+    <string name="file_already_exists">File with the same name already exists</string>
+
+    <!-- ALL CHUPA BELOW THIS LINE -->
     <string name="fragment_two">Downloads</string>
     <string name="fragment_one">Search</string>
-    
-    <!-- LeadBolt Settings -->
-    <string name="int_enabled">1</string> <!-- Set this to 1 if you want Interstitials enabled -->
-    <string name="intapp_id">794426111</string> <!-- Interestitial App Id -->
-    <string name="banner_id">232645341</string> <!--  Banner App id -->
-    <string name="ad_amount">3</string> <!-- How many searches & view songs before showing full screen ad. *NUMBERS ONLY, IF YOU WANT IT TO SHOW ALWAYS PUT 1* -->
-    
-    <!--  AUDIO SOURCE SETTINGS (1 for enabled, 0 for disabled) Try to keep about 3 enabled max -->
-    <string name="enabled_hulkshare">1</string> <!-- Medium Recommend -->
-    <string name="enabled_Zing">1</string> <!-- Highly Recommended -->
-    <string name="enabled_mp3skull">1</string> <!-- Low Recommend -->
 
-    <!--  Language Settings Below -->
-   
+    <!-- LeadBolt Settings -->
+    <string name="int_enabled">1</string>
+ <!-- Set this to 1 if you want Interstitials enabled -->
+    <string name="intapp_id">794426111</string>
+ <!-- Interestitial App Id -->
+    <string name="banner_id">232645341</string>
+ <!-- Banner App id -->
+    <string name="ad_amount">3</string>
+ <!-- How many searches & view songs before showing full screen ad. *NUMBERS ONLY, IF YOU WANT IT TO SHOW ALWAYS PUT 1* -->
+
+
+    <!-- AUDIO SOURCE SETTINGS (1 for enabled, 0 for disabled) Try to keep about 3 enabled max -->
+    <string name="enabled_hulkshare">1</string>
+ <!-- Medium Recommend -->
+    <string name="enabled_Zing">1</string>
+ <!-- Highly Recommended -->
+    <string name="enabled_mp3skull">1</string>
+ <!-- Low Recommend -->
+
+
+    <!-- Language Settings Below -->
+
     <string name="lyric_loading">Lyrics Loading</string>
     <string name="edittext_search_hint">Enter Song or Artist</string>
     <string name="checkout">Check Out This Song</string>
@@ -127,22 +132,24 @@
     <string name="totaldl">Total Downloads</string>
     <string name="clearall">Clear All</string>
     <string name="file_is_bad">bad_file</string>
-    
     <string name="downloads_empty">Downloads list is empty</string>
- 	<string name="library_empty">Libraries list is empty</string>
-    
-	<string name="duration">Duration:</string>
-	
-	<!-- undo bar -->
+    <string name="library_empty">Libraries list is empty</string>
+    <string name="duration">Duration:</string>
+
+    <!-- undo bar -->
     <string name="undo">Undo</string>
     <string name="retry">Retry</string>
     <string name="message_undo_bar">Cover has been removed</string>
     <string name="add_to_playlist">Add to Playlist</string>
     <string name="delete_item">Delete item</string>
-    
     <string name="ellipsis">\u2026</string>
-    
     <string name="downloading">Downloading...</string>
     <string name="downloaded">Downloaded</string>
-    
+
+    <!-- Navigation drawer items -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>

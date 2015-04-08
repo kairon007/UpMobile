@@ -9,6 +9,8 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.button.fab.FloatingActionButton;
 import ru.johnlife.lifetoolsmp3.ui.button.fab.ScrollDirectionListener;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ButtonCallback;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,9 +21,6 @@ import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.csform.android.uiapptemplate.view.dlg.MaterialDialog;
-import com.csform.android.uiapptemplate.view.dlg.MaterialDialog.ButtonCallback;
 
 public class PlaylistView extends BasePlaylistView {
 
