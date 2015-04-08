@@ -4,23 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentManager.BackStackEntry;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
-public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements View.OnClickListener, Constants {
+public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements Constants {
 
 	private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
@@ -74,15 +73,15 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         }
         findViewById(R.id.title_bar_left_menu).setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				InputMethodManager imm = (InputMethodManager)BaseClearActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			public void onClick(View view) {
+				Util.hideKeyboard(BaseClearActivity.this, view);
 				resideMenu.openMenu();
 			}
 		});
         findViewById(R.id.title_bar).setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(View view) {
+				Util.hideKeyboard(BaseClearActivity.this, view);
 				openMenu();
 			}
 		});
@@ -90,8 +89,8 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 
     @Override
     public void onClick(View view) {
-		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    	super.onClick(view);
+    	Util.hideKeyboard(this, view);
         for (int i = 0; i < menuItems.length; i++) {
         	if (view == menuItems[i]) {
         		if (menuItems[i].getType() == ResideMenuItem.Types.TYPE_SETTINGS) {

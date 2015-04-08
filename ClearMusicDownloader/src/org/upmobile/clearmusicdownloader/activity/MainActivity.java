@@ -13,10 +13,10 @@ import org.upmobile.clearmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -30,7 +30,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 
@@ -90,7 +89,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			@Override
 			public boolean onQueryTextSubmit(String q) {
 				query = q;
-				hideKeyboard();
+				Util.hideKeyboard(MainActivity.this, searchView);
 				String lastFragmentName = getLastFragmentName();
 				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
 					searchView.clearFocus();
@@ -141,12 +140,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 		String lastFragmentName = backEntry.getName();
 		return lastFragmentName;
-	}
-
-	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (null != searchView)
-			imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 	}
 
 	public String getQuery() {
