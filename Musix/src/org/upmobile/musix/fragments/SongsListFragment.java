@@ -566,4 +566,16 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		
 	}
 
+	@Override
+	public void onTrackTimeChanged(int time, boolean isOverBuffer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onBufferingUpdate(double percent) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

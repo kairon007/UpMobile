@@ -46,7 +46,7 @@
         <LinearLayout
             android:id="@+id/search_scroll"
             android:layout_width="match_parent"
-            android:layout_height="98dp"
+            android:layout_height="102dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:orientation="vertical"
@@ -56,7 +56,6 @@
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/main_color_500"
                 android:divider="@drawable/layout_divider"
                 android:orientation="vertical"
                 android:showDividers="end" >
@@ -65,6 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@drawable/layout_divider"
+                    android:background="@color/main_color_500"
                     android:dividerPadding="4dp"
                     android:orientation="horizontal"
                     android:paddingLeft="18dp"
@@ -159,6 +159,11 @@
 				        android:textSize="16sp" />
 				    
 				</FrameLayout>
+				
+				<FrameLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:background="@drawable/bottom_shadow_mini" />
 
             </LinearLayout>
         </LinearLayout>
