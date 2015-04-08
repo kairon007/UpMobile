@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -47,11 +48,13 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				
 				@Override
 				public void onNegative(MaterialDialog dialog) {
+					Util.hideKeyboard(getActivity(), dialog.getCustomView());
 					dialog.dismiss();
 				};
 				
 				@Override
 				public void onPositive(MaterialDialog dialog) {
+					Util.hideKeyboard(getActivity(), dialog.getCustomView());
 					EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 					String newDirName = input.getText().toString();
 					if (createSubDir(parentFolder.getAbsolutePath() + "/" + newDirName)) {
@@ -102,7 +105,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 
 	File[] listFiles() {
 		File[] contents = parentFolder.listFiles();
-		List<File> results = new ArrayList<>();
+		List<File> results = new ArrayList<File>();
 		for (File fi : contents) {
 			if (fi.isDirectory())
 				results.add(fi);
@@ -135,7 +138,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 	public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence s) {
 		if (canGoUp && i == 0) {
 			parentFolder = parentFolder.getParentFile();
-			canGoUp = parentFolder.getParent() != null;
+			canGoUp = !"/".equals(parentFolder.getParent());
 		} else {
 			parentFolder = parentContents[canGoUp ? i - 1 : i];
 			canGoUp = true;

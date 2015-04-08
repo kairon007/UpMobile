@@ -143,7 +143,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		if (position == currentPosition) {
+		if (position == currentPosition && (position != SETTINGS_FRAGMENT && position != 6)) {
 			return;
 		}
 		if (position == PLAYER_FRAGMENT) {
