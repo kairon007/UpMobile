@@ -288,8 +288,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		ManagerFragmentId.switchMode(flag);
 		drawerResult.removeAllItems();
 		if (flag || service.isPrepared()) {
-			if (ManagerFragmentId.playerFragment() < currentFragmentId) {
-				currentFragmentId++;
+			if (ManagerFragmentId.playerFragment() <= currentFragmentId) {
+				if (currentFragmentId < ManagerFragmentId.playlistFragment()) {
+					setCurrentFragmentId(++currentFragmentId);
+				}
 			}
 			drawerResult.addItems(new PrimaryDrawerItem().withName(R.string.tab_search).withIcon(R.drawable.ic_search_grey).withTextColor(R.color.material_primary_text),
 				new PrimaryDrawerItem().withName(R.string.tab_downloads).withIcon(R.drawable.ic_file_download_grey).withTextColor(R.color.material_primary_text),
