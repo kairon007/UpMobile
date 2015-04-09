@@ -243,6 +243,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			String cover = getString(R.string.font_musics);
 			bmp = getDefaultBitmapCover(64, 62, 60, cover);
 		}
+		service.updatePictureNotification(bmp);
 		((ImageView)findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
 	}
 	

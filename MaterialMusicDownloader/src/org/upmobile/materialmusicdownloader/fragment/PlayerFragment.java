@@ -723,6 +723,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 						((RemoteSong) song).setHasCover(true);
 						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
 						setCoverToZoomView(bmp);
+						player.updatePictureNotification(bmp);
 						setCheckBoxState(true);
 					}
 				}
