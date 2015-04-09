@@ -91,6 +91,7 @@
         <attr name="pauseBackground" format="color|reference" />
     </declare-styleable>
     <declare-styleable name="RippleView">
+        <attr name="rv_clickable" format="boolean" />
         <attr name="rv_alpha" format="integer" />
         <attr name="rv_framerate" format="integer" />
         <attr name="rv_rippleDuration" format="integer" />
