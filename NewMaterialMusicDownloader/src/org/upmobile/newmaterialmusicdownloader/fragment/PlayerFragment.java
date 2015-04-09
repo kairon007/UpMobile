@@ -95,9 +95,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private NotifyingScrollView scrollView;
 	private CircularProgressButton download;
-	private UndoBar undo;
 	private LinearLayout artistBox;
 	private LinearLayout titleBox;
+	
+	private UndoBar undo;
+	private int undoMessage = 0;
 
 	// lyric sections
 	private LyricsFetcher lyricsFetcher;
@@ -339,8 +341,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			lyricsFetcher.cancel();
 		}
 		if (!isUseAlbumCover && song.isHasCover()) {
+			undoMessage = MSG_UNDO_REMOVE;
 			undo.clear();
-			clearCover();
 		}
 		if(null != visualizer) {
 			visualizer.setEnabled(false);
@@ -486,6 +488,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			return;
 		}
 		if (isChecked) {
+			undoMessage = MSG_UNDO_NOTHING_DO;
 			undo.clear();
 		} else {
 			AdvancedUndoListener listener = new AdvancedUndoListener() {
@@ -504,6 +507,16 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 				@Override
 				public void onClear(@NonNull Parcelable[] token) {
+					switch (undoMessage) {
+					case MSG_UNDO_NOTHING_DO:
+
+						break;
+
+					case MSG_UNDO_REMOVE:
+						clearCover();
+						break;
+					}
+					undoMessage = 0;
 				}
 
 			};
@@ -524,11 +537,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			player.play(song);
 			return;
 		}
-		if (!isUseAlbumCover) {
-			if (null != undo) {
-				undo.clear();
-			}
-			clearCover();
+		if (!isUseAlbumCover && ((View) cbUseCover.getParent()).getVisibility() == View.VISIBLE) {
+			undoMessage = MSG_UNDO_REMOVE;
+			undo.clear();
 		}
 		player.stop();
 		setClickablePlayerElement(false);
@@ -784,7 +795,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((View) cbUseCover.getParent()).setVisibility(View.GONE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();
-			RenameTask.deleteCoverFromFile(new File(song.getPath()));
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					RenameTask.deleteCoverFromFile(new File(song.getPath()));
+				}
+				
+			}).start();
 		}
 	}
 
@@ -944,15 +962,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 						int downloaded = c.getInt(downloadedIndex);
 						switch (status) {
 						case DownloadManager.STATUS_FAILED:
-							return FAILURE;
 						case DownloadManager.ERROR_CANNOT_RESUME:
-							return FAILURE;
 						case DownloadManager.ERROR_FILE_ERROR:
-							return FAILURE;
 						case DownloadManager.ERROR_HTTP_DATA_ERROR:
-							return FAILURE;
 						case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
-							return FAILURE;
 						case DownloadManager.ERROR_UNKNOWN:
 							return FAILURE;
 						case DownloadManager.STATUS_RUNNING:
