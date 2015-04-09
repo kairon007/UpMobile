@@ -1,7 +1,6 @@
 package ru.johnlife.lifetoolsmp3.ui.widget;
 
 import ru.johnlife.lifetoolsmp3.R;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -40,6 +39,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
     private int rippleType;
     private int rippleZoomDuration;
     private float rippleZoomScale;
+    private boolean rippleClickable = true;
     
     private int timer = 0;
     private int timerEmpty = 0;
@@ -83,8 +83,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
     }
 
     private void init(final Context context, final AttributeSet attrs) {
-        if (isInEditMode())
-        	return;
+        if (isInEditMode()) return;
         final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RippleView);
         rippleColor = typedArray.getColor(R.styleable.RippleView_rv_color, Color.TRANSPARENT);
         rippleType = typedArray.getInt(R.styleable.RippleView_rv_type, 0);
@@ -94,6 +93,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
         ripplePadding = typedArray.getDimensionPixelSize(R.styleable.RippleView_rv_ripplePadding, 0);
         rippleZoomScale = typedArray.getFloat(R.styleable.RippleView_rv_zoomScale, 1.03f);
         rippleZoomDuration = typedArray.getInt(R.styleable.RippleView_rv_zoomDuration, 200);
+        rippleClickable = typedArray.getBoolean(R.styleable.RippleView_rv_clickable, rippleClickable);
         hasToZoom = typedArray.getBoolean(R.styleable.RippleView_rv_zoom, false);
         isCentered = typedArray.getBoolean(R.styleable.RippleView_rv_centered, false);
         typedArray.recycle();
@@ -263,13 +263,13 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 					
 					@Override
 					public void run() {
-						if (!eventCanceled) {
+						if (!eventCanceled && childView.isClickable() && rippleClickable) {
 							animateRipple(x, y);
 							eventCanceled = false;
 						}
 					}
 				}, ViewConfiguration.getTapTimeout());
-			} else {
+			} else if (childView.isClickable() && rippleClickable) {
 				animateRipple(event);
 			}
 			childView.setPressed(true);
@@ -285,12 +285,17 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		return true;
 	}
 	
-	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	private boolean isInScrollingContainer() {
 		ViewParent p = getParent();
 		while (p != null && p instanceof ViewGroup) {
-			if (((ViewGroup) p).shouldDelayChildPressedState()) {
-				return true;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+				if (((ViewGroup) p).shouldDelayChildPressedState()) {
+					return true;
+				}
+			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				if (((ViewGroup) p).isScrollContainer()) {
+					return true;
+				}
 			}
 			p = p.getParent();
 		}

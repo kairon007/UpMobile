@@ -418,8 +418,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		@Override
 		public void error() {
 			visualizerIsBroken = true;
-			visualizer.release();
-			visualizer = null;
+			if (null != visualizer) {
+				visualizer.release();
+				visualizer = null;
+			}
 		}
 
 		@Override
