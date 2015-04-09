@@ -179,6 +179,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	public void onClick(View view) {
 		int miniPlayerClickableID = getMiniPlayerClickableID();
 		int id = view.getId();
+		Util.hideKeyboard(this, view);
 		if (id == R.id.mini_player_play_pause) {
 			if (service.isPlaying()) {
 				service.pause();
