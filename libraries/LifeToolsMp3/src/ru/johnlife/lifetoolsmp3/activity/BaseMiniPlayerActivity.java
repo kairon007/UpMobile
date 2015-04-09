@@ -329,7 +329,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		if (null != service.getPlayingSong() && song.equals(this.song) && service.isPlaying()){
+		if (null != service.getPlayingSong() && song.equals(this.song)){
 			return;
 		}
 		service.play(song);
