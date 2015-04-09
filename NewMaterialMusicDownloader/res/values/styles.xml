@@ -24,6 +24,7 @@
         <item name="cpb_selectorError">?attr/cpbSelectorError</item>
         <item name="cpb_colorProgress">@android:color/transparent</item>
         <item name="cpb_colorIndicator">?attr/colorAccent</item>
+        <item name="cpb_colorIndicatorBackground">@color/main_color_grey_400</item>
         <item name="android:textColor">?attr/colorTextPrimary</item>
     </style>
 

@@ -170,5 +170,12 @@
     <style name="UBMessage" parent="UndoBarMessageMaterial" >
         <item name="android:maxLines">2</item>
     </style>
+    
+    <style name="CircularProgressBarStyle.Full" parent="@style/CircularProgressBarStyle">
+        <item name="cpb_selectorIdle">@drawable/cpb_idle_state_selector_full</item>
+        <item name="cpb_selectorComplete">@drawable/cpb_idle_state_selector_full</item>
+        <item name="cpb_selectorError">@drawable/cpb_idle_state_selector_full</item>
+        <item name="android:textColor">@drawable/selector_text_full</item>
+    </style>
 
 </resources>
