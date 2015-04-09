@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.graphics.drawable.GradientDrawable;
 import android.widget.TextView;
 
@@ -83,7 +84,8 @@ class MorphingAnimation {
         mPadding = padding;
     }
 
-    public void start() {
+    @SuppressLint("NewApi")
+	public void start(boolean immediatly) {
         ValueAnimator widthAnimation = ValueAnimator.ofInt(mFromWidth, mToWidth);
         final GradientDrawable gradientDrawable = mDrawable.getGradientDrawable();
         widthAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -120,7 +122,7 @@ class MorphingAnimation {
                 ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", mFromCornerRadius, mToCornerRadius);
 
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(mDuration);
+        animatorSet.setDuration(immediatly ? 0 : mDuration);
         animatorSet.playTogether(widthAnimation, bgColorAnimation, strokeColorAnimation, cornerAnimation);
         animatorSet.addListener(new Animator.AnimatorListener() {
             @Override
