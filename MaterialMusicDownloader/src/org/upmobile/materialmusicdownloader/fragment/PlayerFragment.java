@@ -173,6 +173,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			cancelProgressTask();
 			song = current;
 			showLyrics();
+			setCoverToZoomView(null);
 			setElementsView(0);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
@@ -717,10 +718,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover) return;
+					if (hashCode() != checkIdCover) return;
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
-						((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
+						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
 						setCoverToZoomView(bmp);
 						setCheckBoxState(true);
 					}

@@ -450,6 +450,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			cancelProgressTask();
 			song = current;
 			showLyrics();
+			setCoverToZoomView(null);
 			setElementsView(0);
 			playerProgress.setVisibility(View.GONE);
 			wait.setVisibility(View.VISIBLE);
@@ -509,9 +510,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				public void onClear(@NonNull Parcelable[] token) {
 					switch (undoMessage) {
 					case MSG_UNDO_NOTHING_DO:
-
 						break;
-
 					case MSG_UNDO_REMOVE:
 						clearCover();
 						break;
@@ -755,6 +754,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void getCover(final AbstractSong s) {
 		setCheckBoxState(false);
+		setCoverToZoomView(null);
 		((View) cbUseCover.getParent()).setVisibility(View.GONE);
 		if (s.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
@@ -770,8 +770,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 						setCoverToZoomView(bmp);
 						player.updatePictureNotification(bmp);
 						setCheckBoxState(true);
-					} else {
-						setCoverToZoomView(null);
 					}
 				}
 			};
@@ -783,8 +781,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
-			} else {
-				setCoverToZoomView(null);
 			}
 		}
 	}
