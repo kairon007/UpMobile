@@ -541,7 +541,11 @@ public abstract class OnlineSearchView extends View {
 		PopupMenu menu = new PopupMenu(getContext(), v);
 		final int position = (Integer) v.getTag();
 		menu.getMenuInflater().inflate(R.menu.search_menu, menu.getMenu());
-		
+		boolean isDownloaded = keeper.checkSongInfo( ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment()).getStatus() != SongInfo.NOT_DOWNLOAD;
+		if (isDownloaded) {
+			menu.getMenu().getItem(1).setVisible(false);
+			
+		}
 		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
 			@Override
@@ -550,6 +554,7 @@ public abstract class OnlineSearchView extends View {
 					click(null, position);
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
+					((BaseMiniPlayerActivity) getContext()).hideDownloadButton(true);
 					((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getDownloadUrl(new DownloadUrlListener() {
 						
 						@Override

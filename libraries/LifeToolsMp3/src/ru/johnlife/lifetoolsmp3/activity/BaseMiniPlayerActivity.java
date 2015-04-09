@@ -286,7 +286,11 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	private void customDownloadButton() {
 		SongInfo info = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		boolean isDownloaded = info.getStatus() != SongInfo.NOT_DOWNLOAD;
-		download.setVisibility(song.getClass() == MusicData.class || isDownloaded ? View.GONE : View.VISIBLE);
+		hideDownloadButton(song.getClass() == MusicData.class || isDownloaded);
+	}
+	
+	public void hideDownloadButton(boolean hide) {
+		download.setVisibility(hide ? View.GONE : View.VISIBLE);
 	}
 	
 	private void startFakeAnimation () {
