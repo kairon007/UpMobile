@@ -7,17 +7,21 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/scrollable_cover"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="?attr/colorTextSecondary"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/big_album" />
+        android:layout_height="wrap_content"
+        android:background="?attr/colorTextSecondary" >
+
+        <ImageView
+            android:id="@+id/scrollable_cover"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+			android:layout_gravity="center_horizontal"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/big_album" />
+    </FrameLayout>
 
     <ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView
         android:id="@+id/scroll_view"
