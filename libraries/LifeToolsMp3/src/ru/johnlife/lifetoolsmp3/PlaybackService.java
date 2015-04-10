@@ -659,16 +659,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		return check(SMODE_STOP);
 	}
 	
-//	public boolean isPlaying() {
-//		if (check(SMODE_PLAYING)) {
-//			return true;
-//		}
-//		if (check(SMODE_PAUSE)) {
-//			return false;
-//		}
-//		return false;
-//	}
-	
 	public boolean isPlaying() {
 		boolean result = false;
 		if (check(SMODE_PLAYING)) {
