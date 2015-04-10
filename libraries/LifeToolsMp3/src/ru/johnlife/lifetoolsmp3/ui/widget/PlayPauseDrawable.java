@@ -12,6 +12,7 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Property;
@@ -143,6 +144,12 @@ public class PlayPauseDrawable extends Drawable {
 	@Override
 	public void setColorFilter(ColorFilter cf) {
 		mPaint.setColorFilter(cf);
+		invalidateSelf();
+	}
+	
+	@Override
+	public void setColorFilter(int color, Mode mode) {
+		mPaint.setColor(color);
 		invalidateSelf();
 	}
 

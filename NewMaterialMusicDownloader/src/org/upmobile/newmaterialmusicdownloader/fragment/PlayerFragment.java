@@ -48,6 +48,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.audiofx.Visualizer;
 import android.os.AsyncTask;
@@ -625,7 +626,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		play.setClickable(isClickable);
 		stop.setClickable(isClickable);
 		if (!isClickable) {
+			stop.setColorFilter(Color.GRAY);
 			playerCurrTime.setTime("0:00");
+		} else {
+			stop.setColorFilter(primaryColor);
 		}
 	}
 

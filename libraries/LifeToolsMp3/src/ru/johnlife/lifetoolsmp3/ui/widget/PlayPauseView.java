@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -123,6 +124,22 @@ public class PlayPauseView extends View {
 	
 	public boolean isPlay() {
 		return mDrawable.isPlay();
+	}
+	
+	@Override
+	public void setClickable(boolean clickable) {
+		setColor(clickable);
+		super.setClickable(clickable);
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		setColor(enabled);
+		super.setEnabled(enabled);
+	}
+
+	private void setColor(boolean flag) {
+		mDrawable.setColorFilter(flag ? mColorButton : Color.GRAY, PorterDuff.Mode.MULTIPLY);
 	}
 
 	public void toggle(boolean isPlay) {
