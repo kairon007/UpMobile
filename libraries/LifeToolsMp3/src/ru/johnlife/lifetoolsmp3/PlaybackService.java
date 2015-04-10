@@ -247,7 +247,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void reset() {
-		playingSong = null;
 		handler.removeCallbacksAndMessages(null);
 		mode &= ~SMODE_PREPARED;
 		buildSendMessage(null, MSG_RESET, 0, 0);
@@ -398,9 +397,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 
 	public void play(AbstractSong song) {
-		if (arrayPlayback == null || arrayPlayback.indexOf(song) == -1) {
-			return;
-		}
+		if (arrayPlayback == null || arrayPlayback.indexOf(song) == -1) return;
 		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
 			previousSong = playingSong;
@@ -597,11 +594,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 
 	@Override
 	public void onCompletion(MediaPlayer paramMediaPlayer) {
-		if (enabledRepeat()) {
-			shift(0);
-		} else {
-			shift(1);
-		}
+		shift(enabledRepeat() ? 0 : 1);
 	}
 
 	@Override
@@ -620,8 +613,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public int getCurrentPosition() {
 		synchronized (LOCK) {
-			if (!check(SMODE_PREPARED))
-				return 0;
+			if (!check(SMODE_PREPARED)) return 0;
 			return player.getCurrentPosition();
 		}
 	}
@@ -666,6 +658,16 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public boolean isStoped() {
 		return check(SMODE_STOP);
 	}
+	
+//	public boolean isPlaying() {
+//		if (check(SMODE_PLAYING)) {
+//			return true;
+//		}
+//		if (check(SMODE_PAUSE)) {
+//			return false;
+//		}
+//		return false;
+//	}
 	
 	public boolean isPlaying() {
 		boolean result = false;
@@ -836,7 +838,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	    stopForeground(true);
 	}  
 	
-	public void  updatePictureNotification(Bitmap bmp) {
+	public void updatePictureNotification(Bitmap bmp) {
 		sendNotification(isPlaying(), bmp);
 	}
 	

@@ -179,7 +179,6 @@ public abstract class BasePlaylistView extends View {
 			}
 		});
 		((AnimatedExpandableListView) listView).setOnChildClickListener(new OnChildClickListener() {
-			
 
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -187,7 +186,6 @@ public abstract class BasePlaylistView extends View {
 				if (null != playbackService) {
 					MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, playlists.get(groupPosition).getId()).commit();
 					playbackService.setArrayPlayback(new ArrayList<AbstractSong>(playlists.get(groupPosition).getSongs()));
-					playbackService.play(playlists.get(groupPosition).getSongs().get(childPosition));
 					showPlayerFragment(playlists.get(groupPosition).getSongs().get(childPosition));
 					return true;
 				}

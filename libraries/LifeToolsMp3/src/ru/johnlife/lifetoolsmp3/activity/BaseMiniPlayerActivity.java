@@ -112,13 +112,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				}
 
 				@Override
-				public void stop(AbstractSong s) {
-					song = null;
-				}
+				public void stop(AbstractSong s) {}
 
 				@Override
 				public void stopPressed() {
-					song = null;
 					setPlayPauseMini(false);
 					isMiniPlayerPrepared = false;
 					showMiniPlayer(false);
@@ -345,7 +342,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		if (null != service.getPlayingSong() && song.equals(this.song)) return;
+		if (service.isPlaying() &&  (null != service && song.equals(service.getPlayingSong()))) return;
 		this.song = song;
 		service.play(song);
 		boolean oldIsPrepared = isMiniPlayerPrepared;
