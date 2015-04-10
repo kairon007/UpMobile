@@ -239,10 +239,12 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			startFakeAnimation();
 		}
 		if (isShow && isMiniPlayerPrepared) {
-			if (miniPlayer.getVisibility() == View.VISIBLE) return;
+			if (miniPlayer.getVisibility() == View.VISIBLE && !isAnimated) {
+				return;
+			}
 			Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_up);
 			slideUp.setAnimationListener(new AnimationListener() {
-				
+			
 				@Override
 				public void onAnimationStart(Animation animation) {
 					setData(song);
@@ -264,6 +266,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			parentMiniPlayer.setVisibility(View.VISIBLE);
 			parentMiniPlayer.setAnimation(slideUp);
 			parentMiniPlayer.startAnimation(slideUp);
+			isAnimated = true;
 		} else {
 			if (miniPlayer.getVisibility() == View.GONE) return;
 			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_down);
@@ -288,6 +291,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			View parentMiniPlayer = (View) miniPlayer.getParent();
 			parentMiniPlayer.setAnimation(slideDown);
 			parentMiniPlayer.startAnimation(slideDown);
+			isAnimated = true;
 		}
 	}
 
