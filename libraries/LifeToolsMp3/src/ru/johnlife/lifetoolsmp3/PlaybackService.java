@@ -247,6 +247,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void reset() {
+		playingSong = null;
 		handler.removeCallbacksAndMessages(null);
 		mode &= ~SMODE_PREPARED;
 		buildSendMessage(null, MSG_RESET, 0, 0);
@@ -633,10 +634,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public AbstractSong getPlayingSong() {
-		if (null != playingSong) {
-			return playingSong;
-		}
-		return null;
+		return null != playingSong ? playingSong : null;
 	}
 	
 	public int getPlayingPosition() {

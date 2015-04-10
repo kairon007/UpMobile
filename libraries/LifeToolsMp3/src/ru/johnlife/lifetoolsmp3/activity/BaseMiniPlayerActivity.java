@@ -67,7 +67,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	public interface DownloadPressListener {
 		public void downloadButtonPressed(RemoteSong song);
 	}
-	
+
 	@Override
 	protected void onStart() {
 		startService(new Intent(this, PlaybackService.class));
@@ -99,62 +99,69 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		service.addStatePlayerListener(new OnStatePlayerListener() {
-			
-			@Override
-			public void update(AbstractSong song) {
-				BaseMiniPlayerActivity.this.song = song;
-				if (miniPlayer.getVisibility() == View.GONE) {
-					setData(song);
-				} else {
-					showMiniPlayer(true, true);
+			service.addStatePlayerListener(new OnStatePlayerListener() {
+
+				@Override
+				public void update(AbstractSong song) {
+					BaseMiniPlayerActivity.this.song = song;
+					if (miniPlayer.getVisibility() == View.GONE) {
+						setData(song);
+					} else {
+						showMiniPlayer(true, true);
+					}
 				}
-			}
-			
-			@Override
-			public void stop(AbstractSong song) { }
-			
-			@Override
-			public void stopPressed() {
-				setPlayPauseMini(false);
-				isMiniPlayerPrepared = false;
-				showMiniPlayer(false);
-				showPlayerElement(false);
-			}
-			
-			@Override
-			public void start(AbstractSong song) {
-				isMiniPlayerPrepared = true;
-				refreshButton();
-				setPlayPauseMini(false);
-			}
 
-			@Override
-			public void play(AbstractSong song) {
-				refreshButton();
-				setPlayPauseMini(false);
-			}
-			
-			@Override
-			public void pause(AbstractSong song) {
-				refreshButton();
-				setPlayPauseMini(true);
-			}
+				@Override
+				public void stop(AbstractSong s) {
+					song = null;
+				}
 
-			private void refreshButton() {
-				showProgress(false);
-				playPause.setVisibility(View.VISIBLE);
-			}
+				@Override
+				public void stopPressed() {
+					song = null;
+					setPlayPauseMini(false);
+					isMiniPlayerPrepared = false;
+					showMiniPlayer(false);
+					showPlayerElement(false);
+				}
 
-			@Override
-			public void error() {}
+				@Override
+				public void start(AbstractSong s) {
+					song = s;
+					isMiniPlayerPrepared = true;
+					refreshButton();
+					setPlayPauseMini(false);
+				}
 
-			@Override
-			public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
+				@Override
+				public void play(AbstractSong song) {
+					refreshButton();
+					setPlayPauseMini(false);
+				}
 
-			@Override
-			public void onBufferingUpdate(double percent) {}
-		});
+				@Override
+				public void pause(AbstractSong song) {
+					refreshButton();
+					setPlayPauseMini(true);
+				}
+
+				private void refreshButton() {
+					showProgress(false);
+					playPause.setVisibility(View.VISIBLE);
+				}
+
+				@Override
+				public void error() {
+				}
+
+				@Override
+				public void onTrackTimeChanged(int time, boolean isOverBuffer) {
+				}
+
+				@Override
+				public void onBufferingUpdate(double percent) {
+				}
+			});
 		service.setOnErrorListener(new OnErrorListener() {
 			
 			@Override
@@ -203,7 +210,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	}
 	
 	protected void checkOnStart(final boolean showMiniPlayer) {
-		if (service.isPlaying() || service.isPaused()) {
+		if (null != service && (service.isPlaying() || service.isPaused())) {
 			runOnUiThread(new Runnable() {
 				
 				@Override
@@ -334,11 +341,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		if (null != service.getPlayingSong() && song.equals(this.song)){
-			return;
-		}
-		service.play(song);
+		if (null != service.getPlayingSong() && song.equals(this.song)) return;
 		this.song = song;
+		service.play(song);
 		boolean oldIsPrepared = isMiniPlayerPrepared;
 		isMiniPlayerPrepared = true;
 		showMiniPlayer(show, oldIsPrepared);

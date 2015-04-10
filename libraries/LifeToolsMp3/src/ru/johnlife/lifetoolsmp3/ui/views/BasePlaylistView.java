@@ -433,6 +433,7 @@ public abstract class BasePlaylistView extends View {
 		Cursor cursor = myQuery(getContext(), MediaStore.Audio.Playlists.Members.getContentUri(EXTERNAL, Long.valueOf(playlistID)), PROJECTION_MUSIC, null, null, null);
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			cursor.close();
 			return result;
 		}
 		MusicData d = new MusicData();
