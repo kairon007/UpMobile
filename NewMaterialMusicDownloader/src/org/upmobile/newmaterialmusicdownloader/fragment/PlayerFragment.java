@@ -29,6 +29,7 @@ import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
 import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView;
 import ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView.OnScrollChangedListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
+import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
@@ -316,6 +317,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (!stateVisualizer) {
 			setupVisualizerFxAndUI(stateVisualizer);
 		}
+		if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
+			((RippleView) download.getParent()).setVisibility(View.GONE);
+		} else {
+			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
+		}
 		showLyrics();
 		super.onResume();
 	}
@@ -439,6 +445,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();
+			if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
+				((RippleView) download.getParent()).setVisibility(View.GONE);
+			} else {
+				((RippleView) download.getParent()).setVisibility(View.VISIBLE);
+			}
 		}
 
 		@Override
@@ -633,6 +644,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void setDownloadButtonState(boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
+		((RippleView) download.getParent()).setEnabled(state);
 	}
 
 	private void openArtistField() {
@@ -934,6 +946,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 		@Override
 		protected void onPreExecute() {
+			((RippleView) download.getParent()).setEnabled(false);
 			download.setClickable(false);
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
@@ -1022,6 +1035,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			int progress = values[0];
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
+			download.setClickable(false);
+			((RippleView) download.getParent()).setEnabled(false);
 		}
 	}
 	

@@ -241,13 +241,18 @@ public class CircularProgressButton extends Button {
     }
 
     private void drawIndeterminateProgress(Canvas canvas) {
+    	int offset = (getWidth() - getHeight()) / 2;
+    	  int left = offset + mPaddingProgress;
+          int right = getWidth() - offset - mPaddingProgress;
+          int bottom = getHeight() - mPaddingProgress;
+          int top = mPaddingProgress;
+          if (null != mAnimatedDrawable) {
+	          if (mAnimatedDrawable.getBounds().left != left || mAnimatedDrawable.getBounds().right != right || mAnimatedDrawable.getBounds().bottom != bottom || mAnimatedDrawable.getBounds().top != top ) {
+	              mAnimatedDrawable.setBounds(left, top, right, bottom);
+	          }
+          }
         if (mAnimatedDrawable == null) {
-            int offset = (getWidth() - getHeight()) / 2;
             mAnimatedDrawable = new CircularAnimatedDrawable(mColorIndicator, mStrokeWidth);
-            int left = offset + mPaddingProgress;
-            int right = getWidth() - offset - mPaddingProgress;
-            int bottom = getHeight() - mPaddingProgress;
-            int top = mPaddingProgress;
             mAnimatedDrawable.setBounds(left, top, right, bottom);
             mAnimatedDrawable.setCallback(this);
             mAnimatedDrawable.start();

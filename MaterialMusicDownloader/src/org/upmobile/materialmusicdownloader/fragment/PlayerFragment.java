@@ -69,14 +69,16 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
+import com.csform.android.uiapptemplate.view.MaterialRippleLayout;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
+	private final int BAD_SONG = 2048; // 200kb
 	private AbstractSong song;
-	private AsyncTask<Long, Integer, Void> progressUpdater;
+	private AsyncTask<Long,Integer,String> progressUpdater;
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
@@ -162,6 +164,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			playerProgress.setMax((int)s.getDuration());
 			cancelProgressTask();
 			thatSongIsDownloaded();
+			if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
+				((MaterialRippleLayout) download.getParent()).setVisibility(View.GONE);
+			} else {
+				((MaterialRippleLayout) download.getParent()).setVisibility(View.VISIBLE);
+			}
 		}
 
 		@Override
@@ -202,10 +209,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	};
 	
-	private class ProgressUpdater extends AsyncTask<Long, Integer, Void> {
+	private class ProgressUpdater extends AsyncTask<Long, Integer, String> {
+
+		private static final String FAILURE = "failure";
 
 		@Override
 		protected void onPreExecute() {
+			((MaterialRippleLayout)download.getParent()).setEnabled(false);
 			download.setClickable(false);
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
@@ -214,25 +224,46 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		
 		@Override
-		protected Void doInBackground(Long... params) {
+		protected String doInBackground(Long... params) {
 			if (isDestroy) return null;
-			DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+			DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 			int progress = 0;
 			do {		
 				if (isCancelled()) return null;
 				if (params[0] != -1) {
 					Cursor c = manager.query(new DownloadManager.Query().setFilterById(params[0]));
 					if (c.moveToNext()) {
+						int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 						int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
 						int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 						int size = c.getInt(sizeIndex);
 						int downloaded = c.getInt(downloadedIndex);
-						if (size != -1 && size != 0) {
-							progress = downloaded * 100 / size;
-						} else {
-							progress = downloaded * 100 / DEFAULT_SONG;
+						switch (status) {
+						case DownloadManager.STATUS_FAILED:
+						case DownloadManager.ERROR_CANNOT_RESUME:
+						case DownloadManager.ERROR_FILE_ERROR:
+						case DownloadManager.ERROR_HTTP_DATA_ERROR:
+						case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+						case DownloadManager.ERROR_UNKNOWN:
+							return FAILURE;
+						case DownloadManager.STATUS_RUNNING:
+							if (size != -1 && size != 0) {
+								progress = downloaded * 100 / size;
+							} else {
+								progress = downloaded * 100 / DEFAULT_SONG;
+							}
+							publishProgress(progress);
+							break;
+						case DownloadManager.STATUS_SUCCESSFUL:
+							File file = new File(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+							if (downloaded < BAD_SONG || downloaded != size) {
+								file.delete();
+								return FAILURE;
+							}
+							progress = 100;
+							publishProgress(100);
+							break;
 						}
-						publishProgress(progress);
 					}
 					c.close();
 				}
@@ -246,8 +277,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 
 		@Override
-		protected void onPostExecute(Void params) {
-			download.setProgress(isCancelled() ? 0 : 100);
+		protected void onPostExecute(String params) {
+			if(FAILURE.equals(params)) {
+				((MainActivity) getActivity()).showMessage(R.string.download_failed);
+				download.setProgress(0);
+				download.setOnClickListener(PlayerFragment.this);
+				setDownloadButtonState(true);
+				this.cancel(true);
+			} else {
+				download.setProgress(isCancelled() ? 0 : 100);
+			}
 		}
 		
 		@Override
@@ -265,6 +304,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			int progress = values[0];
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
+			download.setClickable(false);
+			((MaterialRippleLayout)download.getParent()).setEnabled(false);
 		}
 	}
 
@@ -322,6 +363,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		((UIMainActivity) getActivity()).setSelectedItem(Constants.PLAYER_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
+		if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
+			((MaterialRippleLayout) download.getParent()).setVisibility(View.GONE);
+		} else {
+			((MaterialRippleLayout) download.getParent()).setVisibility(View.VISIBLE);
+		}
 		super.onResume();
 	}
 
@@ -599,6 +645,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setDownloadButtonState(boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
+		((MaterialRippleLayout) download.getParent()).setEnabled(state);
 	}
 
 	private void openArtistField() {
