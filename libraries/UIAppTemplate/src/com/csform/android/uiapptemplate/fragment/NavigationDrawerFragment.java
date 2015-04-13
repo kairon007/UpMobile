@@ -183,11 +183,11 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 	}
 
     private void selectItem(int position) {
-        previousSelectedPosition = mCurrentSelectedPosition;
     	mCurrentSelectedPosition = position;
     	if (null != mDrawerListView) {
-        	if (position != SETTINGS_FRAGMENT) {
+    		if (position != SETTINGS_FRAGMENT && position != 6) {
         		mDrawerListView.setItemChecked(position, true);
+                previousSelectedPosition = mCurrentSelectedPosition;
         	} else {
         		setSelectedItem(previousSelectedPosition);
         	}
