@@ -3,10 +3,14 @@ package ru.johnlife.lifetoolsmp3.ui.widget.visualizer;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.Util;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
@@ -39,11 +43,16 @@ public class SimpleVisualizerView extends View {
         init();
     }
 
+	@SuppressLint("NewApi")
 	private void init() {
 		mForePaint.setAntiAlias(true);
 		mForePaint.setColor(getResources().getColor(android.R.color.white));
 		mForePaint.setAlpha(20);
-		mForePaint.setStrokeWidth(10);
+		setLayerType(LAYER_TYPE_SOFTWARE, mForePaint);
+		mForePaint.setStyle(Style.STROKE);
+		int widthFill = Util.dpToPx(getContext(), 8);
+		int widthDash = Util.dpToPx(getContext(), 2);
+		mForePaint.setPathEffect(new DashPathEffect(new float[]{widthFill, widthDash}, 0));
 	}
 
 	public synchronized void updateVisualizer(byte[] bytes) {
@@ -72,6 +81,7 @@ public class SimpleVisualizerView extends View {
 	}
 
 	private void performDraw(Canvas canvas, Integer[] newValues) {
+		mForePaint.setStrokeWidth(mLinesStroke * 2);
 		values.add(newValues);
 		if (values.size() > frameLength) {
 			values.remove(0);
@@ -96,9 +106,8 @@ public class SimpleVisualizerView extends View {
 			Integer[] frameValues = values.get(i - 1);
 			for (int j = 0; j < frameValues.length; j++) {
 				int currentX = mRect.width() / mLinesCount * j + mRect.width() / mLinesCount / 2;
-				for (int k = 0; k < frameValues[j]; k += 12) {
-					canvas.drawLine(currentX - mLinesStroke, mRect.height() - k, currentX + mLinesStroke, mRect.height() - k, mForePaint);
-				}
+				int height = mRect.height() - frameValues[j];
+				canvas.drawLine(currentX, mRect.height() , currentX, height, mForePaint);
 			}
 		}
 	}
