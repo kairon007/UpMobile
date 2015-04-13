@@ -127,6 +127,16 @@
             android:src="@drawable/threedot"
             android:visibility="gone" />
     </LinearLayout>
+    
+    <View
+        android:id="@+id/playingIndicator"
+        android:layout_width="48dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_vertical"
+        android:longClickable="true"
+        android:scaleType="center"
+        android:visibility="gone"
+        android:src="@drawable/ic_close" />
 
     <ImageView
         android:id="@+id/btnDownload"

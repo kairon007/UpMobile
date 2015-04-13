@@ -11,6 +11,7 @@ import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -37,10 +38,6 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	
 	@Override
 	protected void click(final View view, int position) {
-		if (null == service) {
-			service = PlaybackService.get(getContext());
-			service.setOnErrorListener(this);
-		}
 		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 			for (AbstractSong abstractSong : getResultAdapter().getAll()) {
@@ -180,5 +177,68 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 		((TextView) v.findViewById(R.id.infoView)).setVisibility(View.VISIBLE);
 		((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloading);
 		((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
+	}
+	
+	OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+
+		@Override
+		public void start(AbstractSong song) {
+		}
+
+		@Override
+		public void play(AbstractSong song) {
+			setVisToLastClickedElements(true);
+			StateKeeper.getInstance().setPlayingSong(song);
+		}
+
+		@Override
+		public void pause(AbstractSong song) {
+			setVisToLastClickedElements(false);
+			StateKeeper.getInstance().setPlayingSong(null);
+		}
+
+		@Override
+		public void stop(AbstractSong song) {
+		}
+
+		@Override
+		public void stopPressed() {
+			setVisToLastClickedElements(false);
+			StateKeeper.getInstance().setPlayingSong(null);
+		}
+
+		@Override
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {
+		}
+
+		@Override
+		public void onBufferingUpdate(double percent) {
+		}
+
+		@Override
+		public void update(AbstractSong song) {
+		}
+
+		@Override
+		public void error() {
+			setVisToLastClickedElements(false);
+			StateKeeper.getInstance().setPlayingSong(null);
+		}
+		
+	};
+
+	public void onResume() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				if (null == service) {
+					service = PlaybackService.get(getContext());
+				}
+					service.setOnErrorListener(SearchView.this);
+					service.addStatePlayerListener(stateListener);
+				
+			}
+		}).start();
 	}
 }

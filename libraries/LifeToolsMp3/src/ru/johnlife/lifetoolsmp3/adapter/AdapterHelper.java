@@ -16,6 +16,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -39,7 +40,7 @@ public class AdapterHelper {
 		private TextView dowloadLabel;
 		private ImageView btnDownload;
 		private ImageView cover;
-		private View view, threeDot;
+		private View view, threeDot, playingIndicator;
 		private View left;
 		private TextView caption;
 		private boolean fullAction = true;
@@ -70,6 +71,7 @@ public class AdapterHelper {
 			left = (View) number.getParent();
 			threeDot = view.findViewById(R.id.threeDot);
 			dowloadLabel = (TextView) view.findViewById(R.id.infoView);
+			playingIndicator = (View) view.findViewById(R.id.playingIndicator);
 		}
 		
 		/**
@@ -91,6 +93,11 @@ public class AdapterHelper {
 			dowloadLabel.setVisibility(View.VISIBLE);
 			dowloadLabel.setTextColor(isDownloaded == 1 ? Color.RED : view.getResources().getColor(R.color.dark_green));
 			dowloadLabel.setText(isDownloaded == 1 ? R.string.downloading : R.string.downloaded);
+			return this;
+		}
+		
+		public ViewBuilder setCustomColor(int color) {
+			((ImageView) playingIndicator).setColorFilter(color);
 			return this;
 		}
 		
@@ -164,6 +171,12 @@ public class AdapterHelper {
 			setVisibility(titleLine, value);
 			titleLine.setText(value);
 			return this;
+		}
+		
+		public ViewBuilder showPlayingIndicator(boolean show) {
+			playingIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+			return this;
+			
 		}
 		
 		public ViewBuilder setNumber(String value, int stringArrayResourceId) {

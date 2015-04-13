@@ -3,7 +3,9 @@ package ru.johnlife.lifetoolsmp3.adapter;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -36,6 +38,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	
 	private final String PROJECT_PRIFICS = getDirectory().replace(Environment.getExternalStorageDirectory().toString(), "");
 	private final static String EXTERNAL = "external";
+	protected View lastClicked = null;
 	public final String[] PROJECTION_PLAYLIST = { 
 			MediaStore.Audio.Playlists._ID, 
 			MediaStore.Audio.Playlists.NAME, };
@@ -86,6 +89,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		protected TextView artist;
 		protected TextView duration;
 		protected View threeDot;
+		protected ViewGroup info;
 		
 		@Override
 		protected void hold(MusicData item, int position) {
@@ -97,7 +101,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 				
 				@Override
 				public void onClick(View v) {
-					showMenu(v);
+					showMenu(v, info);
 				}
 			});
 			Bitmap bitmap = item.getCover(getContext());
@@ -116,10 +120,11 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	
 	protected void initService() {
 		service = PlaybackService.get(getContext());
+		service.addStatePlayerListener(stateListener);
 	}
 	
 	@SuppressLint("NewApi")
-	public void showMenu(final View v) {
+	public void showMenu(final View v, final ViewGroup info) {
 		PopupMenu menu = new PopupMenu(getContext(), v);
 		menu.getMenuInflater().inflate(R.menu.library_menu, menu.getMenu());
 		menu.getMenu().getItem(2).setVisible(showDeleteItemMenu());
@@ -133,6 +138,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 						service.setArrayPlayback(list);
 					} 
 					startSong((AbstractSong) v.getTag());
+					info.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+					if (null != lastClicked) {
+						lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+					}
+					StateKeeper.getInstance().setPlayingSong((AbstractSong) v.getTag());
+					lastClicked = info;
 				}
 				if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
 					preparePlaylists(v);
@@ -238,6 +249,58 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			e.printStackTrace();
 		}
 	}
+	
+	OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+
+		@Override
+		public void start(AbstractSong song) {
+		}
+
+		@Override
+		public void play(AbstractSong song) {
+			if (null == lastClicked) return;
+			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+			StateKeeper.getInstance().setPlayingSong(song);
+		}
+
+		@Override
+		public void pause(AbstractSong song) {
+			if (null == lastClicked) return;
+			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+			StateKeeper.getInstance().setPlayingSong(null);
+		}
+
+		@Override
+		public void stop(AbstractSong song) {
+		}
+
+		@Override
+		public void stopPressed() {
+			if (null == lastClicked) return;
+			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+			StateKeeper.getInstance().setPlayingSong(null);
+		}
+
+		@Override
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {
+		}
+
+		@Override
+		public void onBufferingUpdate(double percent) {
+		}
+
+		@Override
+		public void update(AbstractSong song) {
+		}
+
+		@Override
+		public void error() {
+			if (null == lastClicked) return;
+			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+			StateKeeper.getInstance().setPlayingSong(null);
+		}
+		
+	};
 	
 	public void showMessage(Context context, String message) {
 		Toast.makeText(context, message ,Toast.LENGTH_SHORT).show();

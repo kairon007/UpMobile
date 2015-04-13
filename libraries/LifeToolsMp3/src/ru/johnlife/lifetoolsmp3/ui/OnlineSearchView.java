@@ -25,6 +25,7 @@ import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -127,6 +128,7 @@ public abstract class OnlineSearchView extends View {
 	private View emptyHeader;
 	private View progress;
 	private View viewItem;
+	private View lastClicked;
 	private FrameLayout footer;
 	private TextView message;
 	private TextView searchField;
@@ -161,9 +163,11 @@ public abstract class OnlineSearchView extends View {
 	protected boolean showDownloadButton() { return showFullElement() ? false : true; }
 	protected boolean isAppPT () { return false; }
 	protected boolean onlyOnWifi() { return true; }
+	protected boolean usePlayingIndicator() { return false; }
 	protected int getDropDownViewResource() { return 0;	}
 	protected int getAdapterBackground () { return 0; }
 	protected int  getIdCustomView() { return 0; }
+	protected int getCustomColor() {return 0;}
 	protected String getDirectory() { return null; }
 
 	public OnlineSearchView(LayoutInflater inflater) {
@@ -374,11 +378,19 @@ public abstract class OnlineSearchView extends View {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				try {
 					if (position == resultAdapter.getCount()) return; // progress click
+					keeper.setPlayingSong((AbstractSong) resultAdapter.getItem(position));
+					view.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+					if (null != lastClicked) {
+						lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+					}
+					lastClicked = view;
+					keeper.setLastClicked(lastClicked);
 					viewItem = view;
 					clickPosition = position;
 					getDownloadUrl(view, position);
 				} catch(Exception e) {
-					Log.e(getClass().getSimpleName(), e.getMessage());	
+//					Log.e(getClass().getSimpleName(), e.getMessage());	
+					e.printStackTrace();
 				}
 			}
 		});
@@ -551,6 +563,13 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.search_menu_play) {
+					keeper.setPlayingSong((AbstractSong) resultAdapter.getItem(position));
+					getViewByPosition(position).findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+					if (null != lastClicked) {
+						lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+					}
+					lastClicked = getViewByPosition(position);
+					keeper.setLastClicked(lastClicked);
 					click(null, position);
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
@@ -874,6 +893,7 @@ public abstract class OnlineSearchView extends View {
 					.setLine2(title)
 					.setDownloadLable(showDownloadLabel() ? keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment).getStatus() : -1)
 					.setId(position)
+					.showPlayingIndicator(getItem(position).equals(keeper.getPlayingSong()) ? true : false)
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
 					.setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong)song).isHasCoverFromSearch()) {
@@ -886,11 +906,21 @@ public abstract class OnlineSearchView extends View {
 					}
 				});
 			}
+			
+			if (getCustomColor() != 0) {
+				builder.setCustomColor(getCustomColor());
+			}
 			if (position == getCount() - 1) {
 				showRefreshProgress();
 				getNextResults(false);
 			}
 			View v = builder.build();
+			if (getItem(position).equals(keeper.getPlayingSong())) {
+				lastClicked = v;
+				android.util.Log.d("logd", "getView(): ---------------------------------------");
+				android.util.Log.d("logd", "getView(): " + lastClicked);
+				android.util.Log.d("logd", "getView(): ---------------------------------------");
+			}
 			v.findViewById(R.id.boxInfoItem).setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -1367,6 +1397,13 @@ public abstract class OnlineSearchView extends View {
 	
 	public void setMessage(String msg) {
 		message.setText(msg);
+	}
+	
+	public void setVisToLastClickedElements(boolean visible) {
+		android.util.Log.d("logd", "setVisToLAstClickedElements(): " + lastClicked + " - " + visible);
+		if (null != lastClicked) {
+			lastClicked.findViewById(R.id.playingIndicator).setVisibility(visible ? View.VISIBLE : View.GONE);
+		}
 	}
 
 	public static String getTitleSearchEngine2() {

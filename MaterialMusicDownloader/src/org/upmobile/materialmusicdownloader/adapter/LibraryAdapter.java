@@ -7,6 +7,7 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -26,7 +27,7 @@ import android.widget.TextView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, Constants {
-	
+
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
 		initService();
@@ -45,7 +46,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener {
 
 		private MusicData data;
-		private ViewGroup info;
 
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
@@ -61,6 +61,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			data = md;
 			super.hold(md, position);
 			setListener();
+			if (data.equals(StateKeeper.getInstance().getPlayingSong())) {
+				info.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+				lastClicked = info;
+			} else {
+				info.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+			}
 		}
 		
 		private void setListener() {
@@ -79,6 +85,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
 				((MainActivity)getContext()).setSelectedItem(LIBRARY_FRAGMENT);
+				if (null != lastClicked) {
+					lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+				}
+				info.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+				StateKeeper.getInstance().setPlayingSong(data);
+				lastClicked = info;
 				break;
 			}
 		}

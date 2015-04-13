@@ -7,6 +7,7 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -43,7 +44,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener {
 
 		private MusicData data;
-		private ViewGroup info;
+		private ImageView indicator;
 
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
@@ -52,6 +53,8 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			artist = (TextView) v.findViewById(R.id.artistLine);
 			duration = (TextView) v.findViewById(R.id.chunkTime);
 			threeDot = v.findViewById(R.id.threeDot);
+			indicator = (ImageView) info.findViewById(R.id.playingIndicator);
+			indicator.setColorFilter(getContext().getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimary)));
 		}
 
 		@Override
@@ -59,6 +62,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			data = md;
 			super.hold(md, position);
 			setListener();
+			if (data.equals(StateKeeper.getInstance().getPlayingSong())) {
+				indicator.setVisibility(View.VISIBLE);
+				lastClicked = info;
+			} else {
+				indicator.setVisibility(View.GONE);
+			}
 		}
 		
 		private void setListener() {
@@ -77,8 +86,15 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
 				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
+				if (null != lastClicked) {
+					lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+				}
+				indicator.setVisibility(View.VISIBLE);
+				StateKeeper.getInstance().setPlayingSong(data);
+				lastClicked = info;
 				break;
 			}
+			
 		}
 	}
 	
@@ -159,5 +175,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			.positiveText(R.string.add_to_playlist)
 			.show();
 	}
+	
+	
 
 }

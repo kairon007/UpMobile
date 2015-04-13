@@ -10,6 +10,7 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.engines.Engine;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -26,7 +27,9 @@ public class StateKeeper {
 	private ArrayList<Song> results = null;
 	private Player playerInstance;
 	private RemoteSong downloadSong;
+	private AbstractSong playingSong;
 	private View viewItem;
+	private View lastClicked;
 	private String[] titleArtistLyrics;
 	private String[] tempID3Fields;
 	private String songField;
@@ -242,6 +245,7 @@ public class StateKeeper {
 				}
 			}
 		}
+		
 	}
 	
 	public void initSongHolder(String folder) {
@@ -381,7 +385,23 @@ public class StateKeeper {
 	public ArrayList<Song> getResults() {
 		return results;
 	}
-	
+
+	public AbstractSong getPlayingSong() {
+		return playingSong;
+	}
+
+	public void setPlayingSong(AbstractSong playingSong) {
+		this.playingSong = playingSong;
+	}
+
+	public View getLastClicked() {
+		return lastClicked;
+	}
+
+	public void setLastClicked(View lastClicked) {
+		this.lastClicked = lastClicked;
+	}
+
 	public static class SongInfo {
 		
 		public static final int DOWNLOADED = 0;

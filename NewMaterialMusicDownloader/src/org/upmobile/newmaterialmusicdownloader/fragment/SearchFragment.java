@@ -30,6 +30,7 @@ public class SearchFragment extends Fragment implements Constants{
 		((MainActivity) getActivity()).setTitle(R.string.tab_search);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).showToolbarShadow(false);
+		searchView.onResume();
 		super.onResume();
 	}
 	
