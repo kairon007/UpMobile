@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -162,7 +163,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
 	}
 	
-	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+	OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
 		public void start(AbstractSong song) {
@@ -176,8 +177,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 
 		@Override
 		public void pause(AbstractSong song) {
-			setVisToLastClickedElements(false);
-			StateKeeper.getInstance().setPlayingSong(null);
 		}
 
 		@Override
@@ -206,6 +205,8 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		public void error() {
 			setVisToLastClickedElements(false);
 			StateKeeper.getInstance().setPlayingSong(null);
+			((BaseMiniPlayerActivity) getContext()).showMessage(R.string.error_getting_url);
+			((BaseMiniPlayerActivity) getContext()).showMiniPlayer(false);
 		}
 		
 	};
@@ -223,10 +224,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 				
 			}
 		}).start();
-	}
-	
-	public void onPause() {
-		service.removeStatePlayerListener(stateListener);
 	}
 	
 	@Override

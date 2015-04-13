@@ -1410,7 +1410,6 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public void setVisToLastClickedElements(boolean visible) {
-		android.util.Log.d("logd", "setVisToLAstClickedElements(): " + lastClicked + " - " + visible);
 		if (null != lastClicked) {
 			lastClicked.findViewById(R.id.playingIndicator).setVisibility(visible ? View.VISIBLE : View.GONE);
 		}

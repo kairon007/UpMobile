@@ -424,13 +424,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();
-      playerProgress.setIndeterminate(false);
+			playerProgress.setIndeterminate(false);
 			playerProgress.setMax((int)s.getDuration());
 			if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
 				((RippleView) download.getParent()).setVisibility(View.GONE);
 			} else {
 				((RippleView) download.getParent()).setVisibility(View.VISIBLE);
-			}
+			} 
+			StateKeeper.getInstance().setPlayingSong(song);
 		}
 
 		@Override

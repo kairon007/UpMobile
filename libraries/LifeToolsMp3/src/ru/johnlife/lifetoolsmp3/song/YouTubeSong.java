@@ -140,7 +140,8 @@ public class YouTubeSong extends SongWithCover {
 					.userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A")
 					.get();
 			String body = doc.body().text().toString();
-			if (body.contains("$$$ERROR$$$")) return null; //in this case the song could not be converted, and we simply remove it from issuance
+			if (body.contains("pushItemYTError();")) return null; //in this case the song could not be converted, and we simply remove it from issuance
+			if (body.contains("$$$ERROR$$$")) return null; // too bad song
 			body = body.replace("info = ", "").replace(";", "");
 //			body = body.substring(0, (body.indexOf("\"title\": \"")) + 10) + body.substring((body.indexOf("\"title\": \"") + 10), body.indexOf("\", \"h\"")).replace("\"", "") + body.substring(body.indexOf("\", \"h\""), body.indexOf("}")) + "}";
 			h = new JSONObject(body);

@@ -13,6 +13,7 @@ import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -193,8 +194,6 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 
 		@Override
 		public void pause(AbstractSong song) {
-			setVisToLastClickedElements(false);
-			StateKeeper.getInstance().setPlayingSong(null);
 		}
 
 		@Override
@@ -223,6 +222,8 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 		public void error() {
 			setVisToLastClickedElements(false);
 			StateKeeper.getInstance().setPlayingSong(null);
+			((BaseMiniPlayerActivity) getContext()).showMessage(R.string.error_getting_url);
+			((BaseMiniPlayerActivity) getContext()).showMiniPlayer(false);
 		}
 		
 	};
@@ -240,10 +241,6 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 				
 			}
 		}).start();
-	}
-	
-	public void onPause() {
-		service.removeStatePlayerListener(stateListener);
 	}
 	
 	@Override

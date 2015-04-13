@@ -169,6 +169,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			} else {
 				((MaterialRippleLayout) download.getParent()).setVisibility(View.VISIBLE);
 			}
+			StateKeeper.getInstance().setPlayingSong(song);
 		}
 
 		@Override

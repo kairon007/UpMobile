@@ -269,9 +269,9 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 		@Override
 		public void pause(AbstractSong song) {
-			if (null == lastClicked) return;
-			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-			StateKeeper.getInstance().setPlayingSong(null);
+//			if (null == lastClicked) return;
+//			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+//			StateKeeper.getInstance().setPlayingSong(null);
 		}
 
 		@Override
