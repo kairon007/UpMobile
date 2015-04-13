@@ -190,11 +190,16 @@ public abstract class OnlineSearchView extends View {
 		setMessage(getResources().getString(R.string.search_your_results_appear_here));
 		initBoxEngines();
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
-		keeper.initSongHolder(getDirectory());
 		if (showDownloadLabel()) {
 			((BaseMiniPlayerActivity) getContext()).setDownloadPressListener(downloadPressListener);
 		}
-		updateQuery();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				updateQuery();
+			}
+		}).start();
 	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -237,6 +242,7 @@ public abstract class OnlineSearchView extends View {
 				return;
 			}
 			if (key.contains(SPREF_CURRENT_ENGINES)) {
+				lastSearchString = "";
 				String value = sharedPreferences.getString(key, null);
 				initSearchEngines(getContext(), value);
 				String str = Util.removeSpecialCharacters(searchField.getText().toString());
@@ -416,7 +422,6 @@ public abstract class OnlineSearchView extends View {
 				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 				keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 				hideBaseProgress();
-				keeper.initSongHolder(getDirectory());
 			}
 		});
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
@@ -706,7 +711,7 @@ public abstract class OnlineSearchView extends View {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					lastSearchString = "";
+					lastSearchString = searchField.getText().toString();
 					keyEngines = adapter.getItem(position);
 					sPref = MusicApp.getSharedPreferences();
 					SharedPreferences.Editor editor = sPref.edit();
@@ -1320,6 +1325,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	public void setSearchField(String str) {
+		lastSearchString = str;
 		searchField.setText(str);
 	}
 	

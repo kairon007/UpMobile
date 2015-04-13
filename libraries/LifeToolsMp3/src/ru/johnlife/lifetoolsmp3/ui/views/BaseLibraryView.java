@@ -8,6 +8,7 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -117,11 +118,30 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		init(inflater);
 		if (null != listView) {
-			adapter.add(querySong());
+			updateAdapter();
 			listView.setEmptyView(emptyMessage);
 			listView.setAdapter(adapter);
 			animateListView(listView, adapter);
 		}
+	}
+	
+	private void updateAdapter() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				final ArrayList<MusicData> querySong = querySong();
+				adapter.setDoNotifyData(false);
+				adapter.add(querySong);
+				uiHandler.postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						adapter.notifyDataSetChanged();
+					}
+				}, 50);
+			}
+		}).start();
 	}
 
 	public View getView() {
