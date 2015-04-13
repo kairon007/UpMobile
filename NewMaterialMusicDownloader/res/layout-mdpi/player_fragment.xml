@@ -76,7 +76,8 @@
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:maxLines="2"
-                            android:text="@string/edit_mp3_use_album_cover" />
+                            android:text="@string/edit_mp3_use_album_cover"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -100,7 +101,8 @@
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:maxLines="2"
-                            android:text="@string/show_equalizer" />
+                            android:text="@string/show_equalizer"
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
 
