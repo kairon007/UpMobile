@@ -256,6 +256,7 @@ public class StateKeeper {
 		}
 		songHolder.clear();
 		File[] files = new File(folder).listFiles();
+		if (null == files) return;
 		for (int i = 0; i < files.length; i++) {
 			try {
 				MusicMetadataSet src_set = new MyID3().read(files[i]);
