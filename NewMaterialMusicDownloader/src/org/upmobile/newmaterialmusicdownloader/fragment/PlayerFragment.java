@@ -81,7 +81,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener{
+public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener {
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -469,16 +469,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 
 		@Override
-		public void onTrackTimeChanged(int time, boolean isOverBuffer) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
 
 		@Override
-		public void onBufferingUpdate(double percent) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void onBufferingUpdate(double percent) {}
 	};
 	
 	@Override
@@ -770,16 +764,20 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void getCover(final AbstractSong s) {
 		setCheckBoxState(false);
-		setCoverToZoomView(null);
+		Bitmap bitmap = s.getCover(getActivity());
+		if (s.isHasCover() && null != bitmap) {
+			setCoverToZoomView(bitmap);
+			setCheckBoxState(true);
+			((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+			return;
+		}
 		((View) cbUseCover.getParent()).setVisibility(View.GONE);
 		if (s.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover) {
-						return;
-					}
+					if (this.hashCode() != checkIdCover) return;
 					if (null != bmp) {
 						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
 						((RemoteSong) s).setHasCover(true);
@@ -791,13 +789,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			};
 			checkIdCover = readyListener.hashCode();
 			((RemoteSong) s).getCover(readyListener);
-		} else {
-			Bitmap bitmap = ((MusicData) s).getCover(getActivity());
-			if (bitmap != null) {
-				((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
-				setCoverToZoomView(bitmap);
-				setCheckBoxState(true);
-			}
 		}
 	}
 
