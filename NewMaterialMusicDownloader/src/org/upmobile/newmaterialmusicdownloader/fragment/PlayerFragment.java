@@ -351,7 +351,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			undoMessage = MSG_UNDO_REMOVE;
 			undo.clear();
 		}
-		if(null != visualizer) {
+		if (null != visualizer) {
 			visualizer.setEnabled(false);
 			visualizer.release();
 			visualizer = null;
@@ -361,7 +361,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	private void setupVisualizerFxAndUI(boolean isShowVisualizer) {
 		visualizerView.setVisibility(isShowVisualizer ? View.VISIBLE : View.INVISIBLE);
-		if (null == visualizer) {
+		if (null == visualizer && null != visualizerView && null != player) {
 			try {
 				visualizer = new Visualizer(player.getAudioSessionId());
 				visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
