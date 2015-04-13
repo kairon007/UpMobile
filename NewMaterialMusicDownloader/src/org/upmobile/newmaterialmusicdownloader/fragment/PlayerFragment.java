@@ -78,7 +78,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener{
+public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener {
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -730,41 +730,38 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void getCover(final AbstractSong s) {
 		setCheckBoxState(false);
-		setCoverToZoomView(null);
-		((View)cbUseCover.getParent()).setVisibility(View.GONE);
+		Bitmap bitmap = s.getCover(getActivity());
+		if (s.isHasCover() && null != bitmap) {
+			setCoverToZoomView(bitmap);
+			setCheckBoxState(true);
+			((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+			return;
+		}
+		((View) cbUseCover.getParent()).setVisibility(View.GONE);
 		if (s.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover) {
-						return;
-					}
+					if (this.hashCode() != checkIdCover) return;
 					if (null != bmp) {
-						((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
+						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
 						((RemoteSong) s).setHasCover(true);
 						setCoverToZoomView(bmp);
 						player.updatePictureNotification(bmp);
 						setCheckBoxState(true);
-					} 
+					}
 				}
 			};
 			checkIdCover = readyListener.hashCode();
 			((RemoteSong) s).getCover(readyListener);
-		} else {
-			Bitmap bitmap = ((MusicData) s).getCover(getActivity());
-			if (bitmap != null) {
-				((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
-				setCoverToZoomView(bitmap);
-				setCheckBoxState(true);
-			} 
 		}
 	}
 
 	private void clearCover() {
 		setCheckBoxState(false);
 		if (MusicData.class == song.getClass()) {
-			((View)cbUseCover.getParent()).setVisibility(View.GONE);
+			((View) cbUseCover.getParent()).setVisibility(View.GONE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();
 			new Thread(new Runnable() {
