@@ -70,8 +70,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	}
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
 		initMiniPlayer();
 		new Thread(new Runnable() {
 			
