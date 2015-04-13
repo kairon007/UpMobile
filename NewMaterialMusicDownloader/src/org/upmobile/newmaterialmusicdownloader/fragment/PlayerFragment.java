@@ -37,7 +37,6 @@ import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar.OnProgressChangeListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
-import ru.johnlife.lifetoolsmp3.ui.widget.smoothprogressbar.SmoothProgressBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.SimpleVisualizerView;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -48,7 +47,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.audiofx.Visualizer;
 import android.os.AsyncTask;
@@ -61,7 +59,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.graphics.Palette.PaletteAsyncListener;
 import android.text.Html;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -81,7 +78,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener {
+public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener{
 
 	private final int MESSAGE_DURATION = 5000;
 	private final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -123,7 +120,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private ImageView forward;
 	private ImageView shuffle;
 	private ImageView repeat;
-	private ImageView stop;
 
 	// info sections
 	private TextView tvTitle;
@@ -133,13 +129,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private DigitalClockView playerCurrTime;
 	private DigitalClockView playerTotalTime;
 	private DiscreteSeekBar playerProgress;
-	private SmoothProgressBar wait;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
+	private double percent = 0;
 	
 	private String lastArtist = "";
-	private String lastTitle = ""; 
+	private String lastTitle = "";
 	
 	private int primaryColor;
 
@@ -162,6 +158,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
 		changePlayPauseView(prepared && player.isPlaying());
+		playerProgress.setMax(prepared ? (int)song.getDuration() : 100);
 		contentView.findViewById(R.id.controlPane).measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		scrollView.recalculateCover(R.id.controlPane, R.id.visualizer);
 		return contentView;
@@ -175,7 +172,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		forward = (ImageView) contentView.findViewById(R.id.next);
 		shuffle = (ImageView) contentView.findViewById(R.id.shuffle);
 		repeat = (ImageView) contentView.findViewById(R.id.repeat);
-		stop = (ImageView) contentView.findViewById(R.id.stop);
 		download = (CircularProgressButton) contentView.findViewById(R.id.download);
 		playerProgress = (DiscreteSeekBar) contentView.findViewById(R.id.progress_track);
 		tvTitle = (TextView) contentView.findViewById(R.id.songName);
@@ -188,16 +184,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
-		wait = (SmoothProgressBar) contentView.findViewById(R.id.player_wait_song);
 		visualizerView = (SimpleVisualizerView) contentView.findViewById(R.id.visualizer);
 		cbShowVisualizer = (CheckBox) contentView.findViewById(R.id.cbShowEqualizer);
 		DFont font = new DFont(Util.dpToPx(getActivity(), 12), 2);
 		font.setColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondary)));
 		playerCurrTime.setFont(font);
 		playerTotalTime.setFont(font); 
-		playerProgress.setUseAnimateTextView(true);
 		undo = new UndoBar(getActivity());
-		stop.setColorFilter(primaryColor);
 		previous.setColorFilter(primaryColor);
 		forward.setColorFilter(primaryColor);
 		shuffle.setColorFilter(primaryColor);
@@ -206,7 +199,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void setListeners() {
 		play.setOnClickListener(this);
-		stop.setOnClickListener(this);
 		shuffle.setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
@@ -287,9 +279,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			drawableShuffle.setAlpha(player.offOnShuffle() ? 255 : 125);
 			shuffle.setImageDrawable(drawableShuffle);
 			break;
-		case R.id.stop:
-			player.stopPressed();
-			break;
 		case R.id.download:
 			download();
 			break;
@@ -324,6 +313,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
 		}
 		showLyrics();
+		playerProgress.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				playerProgress.setIndeterminate(!player.isPrepared());
+			}
+		}, 1000);
 		super.onResume();
 	}
 	
@@ -381,24 +377,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		visualizer.setEnabled(isShowVisualizer);
 	}
-	
-	private Runnable progressAction = new Runnable() {
-
-		@Override
-		public void run() {
-			try {
-				playerProgress.removeCallbacks(this);
-				if (player.isPrepared()) {
-					int current = player.getCurrentPosition();
-					playerProgress.setProgress(current);
-					playerCurrTime.setTime(Util.getFormatedStrDuration(current));
-				}
-				playerProgress.postDelayed(this, 1000);
-			} catch (Exception e) {
-				Log.d(getClass().getSimpleName(), e + "");
-			}
-		}
-	};
 
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
@@ -446,6 +424,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setElementsView(0);
 			cancelProgressTask();
 			thatSongIsDownloaded();
+      playerProgress.setIndeterminate(false);
+			playerProgress.setMax((int)s.getDuration());
 			if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
 				((RippleView) download.getParent()).setVisibility(View.GONE);
 			} else {
@@ -464,15 +444,28 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			showLyrics();
 			setCoverToZoomView(null);
 			setElementsView(0);
-			playerProgress.setVisibility(View.GONE);
-			wait.setVisibility(View.VISIBLE);
 		}
 
 		@Override
-		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
+		public void onTrackTimeChanged(final int time, final boolean isOverBuffer) {
+			getActivity().runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					playerProgress.setProgress(time);
+					if (time < playerProgress.getMax() * percent) {
+						playerProgress.setSecondaryProgress((int)(playerProgress.getMax() * percent));
+					}
+					playerCurrTime.setText(Util.getFormatedStrDuration(time));
+					playerProgress.setIndeterminate(isOverBuffer);
+				}
+			});
+		}
 
 		@Override
-		public void onBufferingUpdate(double percent) {}
+		public void onBufferingUpdate(double percent) {
+			PlayerFragment.this.percent = percent;
+		}
 	};
 	
 	@Override
@@ -550,6 +543,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		setClickablePlayerElement(false);
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
+		playerProgress.setProgress(0);
+		playerProgress.setIndeterminate(true);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();
@@ -565,36 +560,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void setElementsView(int progress) {
-		settingPlayerProgress();
 		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
 		playerTotalTime.setTime(Util.getFormatedStrDuration(song.getDuration()));
 		playerCurrTime.setTime(Util.getFormatedStrDuration(progress));
-	}
-
-	private void settingPlayerProgress() {
-		if (player.isPrepared()) {
-			playerProgress.setMax((int) song.getDuration());
-			playerProgress.setProgress(player.getCurrentPosition());
-			secondSetting(true);
-			playerProgress.post(progressAction);
-		} else {
-			playerProgress.setProgress(0);
-			secondSetting(false);
-		}
-	}
-
-	private void secondSetting(boolean b) {
-		playerProgress.setEnabled(b);
-		playerProgress.setClickable(b);
-		if (b || player.isStoped()) {
-			playerProgress.setVisibility(View.VISIBLE);
-			wait.setVisibility(View.GONE);
-		} else {
-			playerProgress.setVisibility(View.GONE);
-			wait.setVisibility(View.VISIBLE);
-		}
 	}
 
 	private void setImageButton() {
@@ -618,12 +588,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void setClickablePlayerElement(boolean isClickable) {
 		play.setClickable(isClickable);
-		stop.setClickable(isClickable);
 		if (!isClickable) {
-			stop.setColorFilter(Color.GRAY);
 			playerCurrTime.setTime("0:00");
-		} else {
-			stop.setColorFilter(primaryColor);
 		}
 	}
 
@@ -764,38 +730,41 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void getCover(final AbstractSong s) {
 		setCheckBoxState(false);
-		Bitmap bitmap = s.getCover(getActivity());
-		if (s.isHasCover() && null != bitmap) {
-			setCoverToZoomView(bitmap);
-			setCheckBoxState(true);
-			((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
-			return;
-		}
-		((View) cbUseCover.getParent()).setVisibility(View.GONE);
+		setCoverToZoomView(null);
+		((View)cbUseCover.getParent()).setVisibility(View.GONE);
 		if (s.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover) return;
+					if (this.hashCode() != checkIdCover) {
+						return;
+					}
 					if (null != bmp) {
-						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+						((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
 						((RemoteSong) s).setHasCover(true);
 						setCoverToZoomView(bmp);
 						player.updatePictureNotification(bmp);
 						setCheckBoxState(true);
-					}
+					} 
 				}
 			};
 			checkIdCover = readyListener.hashCode();
 			((RemoteSong) s).getCover(readyListener);
+		} else {
+			Bitmap bitmap = ((MusicData) s).getCover(getActivity());
+			if (bitmap != null) {
+				((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
+				setCoverToZoomView(bitmap);
+				setCheckBoxState(true);
+			} 
 		}
 	}
 
 	private void clearCover() {
 		setCheckBoxState(false);
 		if (MusicData.class == song.getClass()) {
-			((View) cbUseCover.getParent()).setVisibility(View.GONE);
+			((View)cbUseCover.getParent()).setVisibility(View.GONE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();
 			new Thread(new Runnable() {
@@ -1040,5 +1009,4 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		scrollView.recalculateCover(R.id.controlPane, R.id.visualizer);
 		super.onConfigurationChanged(newConfig);
 	}
-
 }

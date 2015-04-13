@@ -1,10 +1,6 @@
 package ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal;
 
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
-import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal.compat.SeekBarCompat;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal.drawable.MarkerDrawable;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal.drawable.ThumbDrawable;
@@ -12,6 +8,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
@@ -19,8 +16,8 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -33,20 +30,15 @@ import android.widget.TextView;
  *
  * @hide
  */
-public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationListener {
+public class Marker extends FrameLayout implements MarkerDrawable.MarkerAnimationListener {
 	private static final int PADDING_DP = 4;
 	private static final int ELEVATION_DP = 8;
-	private static final int SEPARATION_DP = 30;
 	// The TextView to show the info
 	private TextView mNumber;
-	private DigitalClockView number;
-	// The max width of this View
-	private int mWidth;
-	// some distance between the thumb and our bubble marker.
-	// This will be added to our measured height
-	private int mSeparation;
+	private ProgressBar indeterminateView;
+	private View contentView;
 	MarkerDrawable mMarkerDrawable;
-	private boolean useAnimate = false;
+	private boolean isIndeterminate = false;
 
 	public Marker(Context context) {
 		this(context, null);
@@ -66,33 +58,29 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar, R.attr.discreteSeekBarStyle, R.style.DefaultSeekBar);
 
 		int padding = (int) (PADDING_DP * displayMetrics.density) * 2;
-		int textAppearanceId = a.getResourceId(R.styleable.DiscreteSeekBar_dsb_indicatorTextAppearance, R.style.DefaultIndicatorTextAppearance);
-		mNumber = new TextView(context);
-		// Add some padding to this textView so the bubble has some space to
-		// breath
-		mNumber.setPadding(padding, 0, padding, 0);
-		mNumber.setTextAppearance(context, textAppearanceId);
+		contentView = inflate(context, R.layout.marker, this);
+		mNumber = (TextView)contentView.findViewById(R.id.simple_text);
 		mNumber.setGravity(Gravity.CENTER);
 		mNumber.setText(maxValue);
+		mNumber.setTextColor(Color.WHITE);
 		mNumber.setMaxLines(1);
+		mNumber.setPadding(padding, 0, padding, padding * 3);
 		mNumber.setSingleLine(true);
 		SeekBarCompat.setTextDirection(mNumber, TEXT_DIRECTION_LOCALE);
-		mNumber.setVisibility(View.INVISIBLE);
-
+		// Add indeterminate indicator
+		indeterminateView = (ProgressBar)contentView.findViewById(R.id.marker_indeterminate);
+		indeterminateView.setPadding(padding, 0, padding, padding * 3);
+		indeterminateView.setVisibility(View.INVISIBLE);
 		// add some padding for the elevation shadow not to be clipped
 		// I'm sure there are better ways of doing this...
 		setPadding(padding, padding, padding, padding);
-
 		resetSizes(maxValue);
-
-		mSeparation = (int) (SEPARATION_DP * displayMetrics.density);
 		int thumbSize = (int) (ThumbDrawable.DEFAULT_SIZE_DP * displayMetrics.density);
 		ColorStateList color = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_indicatorColor);
 		mMarkerDrawable = new MarkerDrawable(color, thumbSize);
 		mMarkerDrawable.setCallback(this);
 		mMarkerDrawable.setMarkerListener(this);
 		mMarkerDrawable.setExternalOffset(padding);
-
 		// Elevation for anroid 5+
 		float elevation = a.getDimension(R.styleable.DiscreteSeekBar_dsb_indicatorElevation, ELEVATION_DP * displayMetrics.density);
 		ViewCompat.setElevation(this, elevation);
@@ -106,11 +94,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 		// Account for negative numbers... is there any proper way of getting
 		// the biggest string between our range????
-		if (useAnimate) {
-			number.setText(":0000");
-		} else {
-			mNumber.setText("-" + maxValue);
-		}
+		mNumber.setText("-" + maxValue);
 		// Do a first forced measure call for the TextView (with the biggest
 		// text content),
 		// to calculate the max width and use always the same.
@@ -118,17 +102,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 		// content changes
 		int wSpec = MeasureSpec.makeMeasureSpec(displayMetrics.widthPixels, MeasureSpec.AT_MOST);
 		int hSpec = MeasureSpec.makeMeasureSpec(displayMetrics.heightPixels, MeasureSpec.AT_MOST);
-		if (useAnimate) {
-			number.measure(wSpec, hSpec);
-			mWidth = Math.max(number.getMeasuredWidth(), number.getMeasuredHeight());
-			removeAllViews();
-			addView(number);
-		} else {
-			mNumber.measure(wSpec, hSpec);
-			mWidth = Math.max(mNumber.getMeasuredWidth(), mNumber.getMeasuredHeight());
-			removeView(mNumber);
-			addView(mNumber, new FrameLayout.LayoutParams(mWidth, mWidth, Gravity.LEFT | Gravity.TOP));
-		}
+		contentView.measure(wSpec, hSpec);
 	}
 
 	@Override
@@ -138,32 +112,12 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		measureChildren(widthMeasureSpec, heightMeasureSpec);
-		int widthSize = mWidth + getPaddingLeft() + getPaddingRight();
-		int heightSize = mWidth + getPaddingTop() + getPaddingBottom();
-		// This diff is the basic calculation of the difference between
-		// a square side size and its diagonal
-		// this helps us account for the visual offset created by MarkerDrawable
-		// when leaving one of the corners un-rounded
-		int diff = (int) ((1.41f * mWidth) - mWidth) / 2;
-		setMeasuredDimension(widthSize, heightSize + diff + mSeparation);
-	}
-
-	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		super.onLayout(changed, l, t, r, b);
 		int left = getPaddingLeft();
 		int top = getPaddingTop();
 		int right = getWidth() - getPaddingRight();
 		int bottom = getHeight() - getPaddingBottom();
-		// the TetView is always layout at the top
-		if (useAnimate) {
-			number.layout(left, top, left + mWidth, top + mWidth);
-		} else {
-			mNumber.layout(left, top, left + mWidth, top + mWidth);
-		}
-		// the MarkerDrawable uses the whole view, it will adapt itself...
-		// or it seems so...
 		mMarkerDrawable.setBounds(left, top, right, bottom);
 	}
 
@@ -184,20 +138,11 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 	}
 
 	public void setValue(CharSequence value) {
-		if (useAnimate) {
-			number.setText(value.toString());
-		} else {
-			mNumber.setText(value);
-		}
-
+		mNumber.setText(value);
 	}
 
 	public CharSequence getValue() {
-		if (useAnimate) {
-			return number.getText();
-		} else {
-			return mNumber.getText();
-		}
+		return mNumber.getText();
 	}
 
 	public void animateOpen() {
@@ -207,20 +152,20 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
 	public void animateClose() {
 		mMarkerDrawable.stop();
-		if (useAnimate) {
-			number.setVisibility(View.INVISIBLE);
-		} else {
+		if (!isIndeterminate) {
 			mNumber.setVisibility(View.INVISIBLE);
+		} else {
+			indeterminateView.setVisibility(View.INVISIBLE);
 		}
 		mMarkerDrawable.animateToNormal();
 	}
 
 	@Override
 	public void onOpeningComplete() {
-		if (useAnimate) {
-			number.setVisibility(View.VISIBLE);
-		} else {
+		if (!isIndeterminate) {
 			mNumber.setVisibility(View.VISIBLE);
+		} else {
+			indeterminateView.setVisibility(View.VISIBLE);
 		}
 		if (getParent() instanceof MarkerDrawable.MarkerAnimationListener) {
 			((MarkerDrawable.MarkerAnimationListener) getParent()).onOpeningComplete();
@@ -243,15 +188,10 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 	public void setColors(int startColor, int endColor) {
 		mMarkerDrawable.setColors(startColor, endColor);
 	}
-
-	public void setUseAnimateTextView(boolean flag) {
-		this.useAnimate = flag;
-		number = new DigitalClockView(getContext());
-		number.setPadding(Util.dpToPx(getContext(), 6), Util.dpToPx(getContext(), 14), Util.dpToPx(getContext(), 4), 0);
-		number.setText("00:00");
-		number.setVisibility(View.INVISIBLE);
-		DFont font = new DFont(Util.dpToPx(getContext(), 12), (int) getResources().getDisplayMetrics().density);
-		number.setFont(font);
-		resetSizes("");
+	
+	public void setIndeterminate(boolean isIndeterminate) {
+		this.isIndeterminate = isIndeterminate;
+		mNumber.setVisibility(isIndeterminate ? View.INVISIBLE : View.VISIBLE);
+		indeterminateView.setVisibility(isIndeterminate ? View.VISIBLE : View.INVISIBLE);
 	}
 }

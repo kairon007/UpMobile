@@ -44,7 +44,7 @@ public class PopupIndicator {
     Point screenSize = new Point();
 
     public PopupIndicator(Context context, AttributeSet attrs, int defStyleAttr, String maxValue) {
-        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    	mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mPopupView = new Floater(context, attrs, defStyleAttr, maxValue);
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         screenSize.set(displayMetrics.widthPixels, displayMetrics.heightPixels);
@@ -75,8 +75,8 @@ public class PopupIndicator {
         mPopupView.mMarker.setValue(value);
     }
     
-    public void setUseAnimateTextView (boolean flag) {
-    	mPopupView.mMarker.setUseAnimateTextView(flag);
+    public void setIndeterminate(boolean isIndeterminate) {
+    	mPopupView.mMarker.setIndeterminate(isIndeterminate);
     }
 
     public boolean isShowing() {
@@ -88,7 +88,6 @@ public class PopupIndicator {
             mPopupView.mMarker.animateOpen();
             return;
         }
-
         IBinder windowToken = parent.getWindowToken();
         if (windowToken != null) {
             WindowManager.LayoutParams p = createPopupLayout(windowToken);
@@ -165,7 +164,6 @@ public class PopupIndicator {
         p.token = token;
         p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
         p.setTitle("DiscreteSeekBar Indicator:" + Integer.toHexString(hashCode()));
-
         return p;
     }
 

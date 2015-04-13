@@ -246,24 +246,9 @@
                                 android:id="@+id/progress_track"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                app:dsb_indeterminate_color="?attr/colorPrimary"
                                 app:dsb_indicatorColor="?attr/colorPrimary"
                                 app:dsb_progressColor="?attr/colorPrimary" />
-
-                            <ru.johnlife.lifetoolsmp3.ui.widget.smoothprogressbar.SmoothProgressBar
-                                android:id="@+id/player_wait_song"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:indeterminate="true"
-                                app:spb_color="?attr/colorAccent"
-                                app:spb_mirror_mode="false"
-                                app:spb_progressiveStart_activated="false"
-                                app:spb_progressiveStart_speed="1.5"
-                                app:spb_progressiveStop_speed="3.4"
-                                app:spb_reversed="false"
-                                app:spb_sections_count="4"
-                                app:spb_speed="2.0"
-                                app:spb_stroke_separator_length="4dp"
-                                app:spb_stroke_width="4dp" />
                         </FrameLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -282,8 +267,8 @@
 
                         <ImageView
                             android:id="@+id/shuffle"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_shuffle_grey" />
                     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
@@ -297,8 +282,8 @@
 
                         <ImageView
                             android:id="@+id/prev"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_fast_rewind_grey" />
                     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
@@ -312,8 +297,8 @@
 
                         <ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView
                             android:id="@+id/playpause"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:layout_gravity="center_horizontal|center_vertical"
                             app:colorButton="?attr/colorPrimary"
                             app:mainColor="@android:color/transparent"
@@ -329,24 +314,9 @@
                         android:layout_weight="1" >
 
                         <ImageView
-                            android:id="@+id/stop"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_stop_grey" />
-                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
-
-                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
-                        style="@style/RippleStyleCircle"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1" >
-
-                        <ImageView
                             android:id="@+id/next"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_fast_forward_grey" />
                     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
@@ -360,8 +330,8 @@
 
                         <ImageView
                             android:id="@+id/repeat"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_repeat_grey" />
                     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>

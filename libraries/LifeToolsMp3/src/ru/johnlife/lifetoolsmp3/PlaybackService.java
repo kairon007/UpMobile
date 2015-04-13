@@ -165,18 +165,28 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	private class PlayerStateUpdater extends Timer {
 		
+		private final int MAX_NOTUPDATE_COUNT = 1000 / UPDATE_DELAY + 1;
+		private int notUpdateCount = 0;
+		private int lastTime = 0;
+		
 		public void startUpdating() {
 			scheduleAtFixedRate(new TimerTask() {
 				
 				@Override
 				public void run() {
 					synchronized (LOCK) {
-						if (!player.isPlaying() || null == playingSong) {
-							cancel();
-							return;
-						}
-						for (OnStatePlayerListener listener : stateListeners) {
-							listener.onTrackTimeChanged(player.getCurrentPosition(), player.getCurrentPosition() > playingSong.getDuration() * bufferingPercent);
+					if (!player.isPlaying() || null == playingSong) {
+						cancel();
+						return;
+					}
+					if (lastTime == player.getCurrentPosition()) {
+						notUpdateCount++;
+					} else {
+						notUpdateCount = 0;
+					}
+					lastTime = player.getCurrentPosition();
+					for (OnStatePlayerListener listener : stateListeners) {
+						listener.onTrackTimeChanged(player.getCurrentPosition(), notUpdateCount > MAX_NOTUPDATE_COUNT);
 						}
 					}
 				}

@@ -51,7 +51,7 @@ public class DiscreteSeekBar extends View {
         public void onStartTrackingTouch(DiscreteSeekBar seekBar);
         public void onStopTrackingTouch(DiscreteSeekBar seekBar);
     }
-
+    
     /**
      * Interface to transform the current internal value of this DiscreteSeekBar to anther one for the visualization.
      * <p/>
@@ -115,6 +115,7 @@ public class DiscreteSeekBar extends View {
     private ThumbDrawable mThumb;
     private Drawable mTrack;
     private Drawable mScrubber;
+    private Drawable secondaryScrubber;
     private Drawable mRipple;
 
     private int mTrackHeight;
@@ -124,6 +125,7 @@ public class DiscreteSeekBar extends View {
     private int mMax;
     private int mMin;
     private int mValue;
+    private int secondaryProgress;
     private int mKeyProgressIncrement = 1;
     private boolean mMirrorForRtl = false;
     private boolean mAllowTrackClick = true;
@@ -168,7 +170,6 @@ public class DiscreteSeekBar extends View {
         //Extra pixels for a touch area of 48dp
         int touchBounds = (int) (density * 32);
         mAddedTouchBounds = (touchBounds - thumbSize) / 2;
-
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar, R.attr.discreteSeekBarStyle, defStyle);
 
@@ -216,6 +217,7 @@ public class DiscreteSeekBar extends View {
         ColorStateList trackColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_trackColor);
         ColorStateList progressColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_progressColor);
         ColorStateList rippleColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_rippleColor);
+        ColorStateList indeterminateColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_indeterminate_color);
         boolean editMode = isInEditMode();
         if (editMode && rippleColor == null) {
             rippleColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{Color.DKGRAY});
@@ -225,6 +227,9 @@ public class DiscreteSeekBar extends View {
         }
         if (editMode && progressColor == null) {
             progressColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{0xff009688});
+        }
+        if (editMode && indeterminateColor == null) {
+        	indeterminateColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{Color.YELLOW});
         }
         mRipple = SeekBarCompat.getRipple(rippleColor);
         if (isLollipopOrGreater) {
@@ -241,12 +246,14 @@ public class DiscreteSeekBar extends View {
         shapeDrawable = new TrackRectDrawable(progressColor);
         mScrubber = shapeDrawable;
         mScrubber.setCallback(this);
+        
+        secondaryScrubber = new TrackRectDrawable(progressColor);
+        secondaryScrubber.setCallback(this);
 
         ThumbDrawable thumbDrawable = new ThumbDrawable(progressColor, thumbSize);
         mThumb = thumbDrawable;
         mThumb.setCallback(this);
         mThumb.setBounds(0, 0, mThumb.getIntrinsicWidth(), mThumb.getIntrinsicHeight());
-
 
         if (!editMode) {
             mIndicator = new PopupIndicator(context, attrs, defStyle, convertValueToMessage(mMax));
@@ -255,11 +262,16 @@ public class DiscreteSeekBar extends View {
         a.recycle();
 
         setNumericTransformer(new DefaultNumericTransformer());
-
     }
     
-    public void setUseAnimateTextView (boolean flag) {
-    	mIndicator.setUseAnimateTextView(flag);
+    public void setIndeterminate(boolean isIndeterminate) {
+    	mIndicator.setIndeterminate(isIndeterminate);
+    	if (mIndicator.isShowing() == isIndeterminate) return;
+    	if (isIndeterminate) {
+    		showFloater();
+    	} else {
+    		hideFloater();
+    	}
     }
 
     /**
@@ -386,6 +398,20 @@ public class DiscreteSeekBar extends View {
         }
     }
 
+    public void setSecondaryProgress(int progress) {
+    	int start = getPaddingLeft() + mAddedTouchBounds;
+    	int end = getWidth() - getPaddingRight() - mAddedTouchBounds;
+    	int length = end - start;
+    	float fillPercent = (float)(progress) / (float)(getMax());
+    	int secondaryLength = (int)(length * fillPercent);
+    	secondaryScrubber.getBounds().left = start;
+    	secondaryScrubber.getBounds().right = start + secondaryLength;
+    	if (secondaryProgress != progress) {
+        	invalidate();
+    	}
+    	secondaryProgress = progress;
+    }
+    
     /**
      * Get the current progress
      *
@@ -479,8 +505,7 @@ public class DiscreteSeekBar extends View {
             mKeyProgressIncrement = Math.max(1, Math.round((float) range / 20));
         }
     }
-
-
+    
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -523,7 +548,8 @@ public class DiscreteSeekBar extends View {
         int scrubberHeight = Math.max(mScrubberHeight / 2, 2);
         mScrubber.setBounds(paddingLeft + halfThumb, bottom - halfThumb - scrubberHeight,
                 paddingLeft + halfThumb, bottom - halfThumb + scrubberHeight);
-
+        secondaryScrubber.setBounds(paddingLeft + halfThumb, bottom - halfThumb - scrubberHeight,
+                paddingLeft + halfThumb, bottom - halfThumb + scrubberHeight);
         //Update the thumb position after size changed
         updateThumbPosFromCurrentProgress();
     }
@@ -536,9 +562,10 @@ public class DiscreteSeekBar extends View {
         super.onDraw(canvas);
         mTrack.draw(canvas);
         mScrubber.draw(canvas);
+        secondaryScrubber.draw(canvas);
         mThumb.draw(canvas);
     }
-
+    
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
@@ -883,7 +910,7 @@ public class DiscreteSeekBar extends View {
             notifyBubble(true);
         }
     }
-
+    
     private void hideFloater() {
         removeCallbacks(mShowIndicatorRunnable);
         if (!isInEditMode()) {
@@ -904,7 +931,7 @@ public class DiscreteSeekBar extends View {
         }
 
     };
-
+    
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();

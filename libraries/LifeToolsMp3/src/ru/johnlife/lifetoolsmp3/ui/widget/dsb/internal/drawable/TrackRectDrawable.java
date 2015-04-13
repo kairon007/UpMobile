@@ -20,5 +20,4 @@ public class TrackRectDrawable extends StateDrawable {
     void doDraw(Canvas canvas, Paint paint) {
         canvas.drawRect(getBounds(), paint);
     }
-
 }
