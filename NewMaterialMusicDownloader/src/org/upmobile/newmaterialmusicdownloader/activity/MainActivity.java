@@ -79,13 +79,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		super.onCreate(savedInstanceState);
 		toolbarShadow = (FrameLayout) findViewById(R.id.toolbar_shadow);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+		setSupportActionBar(toolbar); 	
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		ImageButton imageToggle = (ImageButton) toolbar.getChildAt(1);
-		int bottom = Util.dpToPx(this, 8);
-		imageToggle.setPadding(0, 0, 0, bottom);
-		title = (TextView)findViewById(R.id.toolbar_title);
+		title = (TextView) findViewById(R.id.toolbar_title);
 		changeFragment(ManagerFragmentId.searchFragment(), true);
 		drawerResult = new Drawer()
 			.withActivity(this)
