@@ -37,6 +37,7 @@ public class SearchFragment extends Fragment implements Constants{
 	@Override
 	public void onPause() {
 		searchView.saveState();
+		searchView.onPause();
 		super.onPause();
 	}
 }

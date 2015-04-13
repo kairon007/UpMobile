@@ -34,6 +34,7 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment, Co
 	@Override
 	public void onPause() {
 		searchView.saveState();
+		searchView.onPause();
 		super.onPause();
 	}
 	

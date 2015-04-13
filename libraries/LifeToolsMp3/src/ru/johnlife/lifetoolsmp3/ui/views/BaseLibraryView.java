@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -85,6 +85,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	protected abstract int getLayoutId();
 	
 	public void onPause() {
+		((BaseLibraryAdapter) adapter).resetListener();
 		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sPrefListener);
 		if (null != checkRemovedFiles) {
 			checkRemovedFiles.cancel(true);

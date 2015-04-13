@@ -170,13 +170,14 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				
 				@Override
 				public void run() {
-					if (!player.isPlaying() || null == playingSong) {
-						cancel();
-						return;
-					}
-					for (OnStatePlayerListener listener : stateListeners) {
-						listener.onTrackTimeChanged(player.getCurrentPosition(), 
-								player.getCurrentPosition() > playingSong.getDuration() * bufferingPercent);
+					synchronized (LOCK) {
+						if (!player.isPlaying() || null == playingSong) {
+							cancel();
+							return;
+						}
+						for (OnStatePlayerListener listener : stateListeners) {
+							listener.onTrackTimeChanged(player.getCurrentPosition(), player.getCurrentPosition() > playingSong.getDuration() * bufferingPercent);
+						}
 					}
 				}
 			}, 0, UPDATE_DELAY);
@@ -294,10 +295,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	@Override
 	public boolean handleMessage(Message msg) {
-		switch (msg.what) {
-		case MSG_START:
-			synchronized (LOCK) {
-				AbstractSong s = (AbstractSong) msg.obj;
+		synchronized (LOCK) {
+			switch (msg.what) {
+			case MSG_START:
+				AbstractSong songStart = (AbstractSong) msg.obj;
 				if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
 					player.reset();
 					offMode(SMODE_PREPARED);
@@ -306,79 +307,79 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					mode &= ~SMODE_GET_URL;
 				}
 				try {
-					Uri uri = Uri.parse(s.getClass() == MusicData.class ? s.getPath() : s.getComment());
+					Uri uri = Uri.parse(songStart.getClass() == MusicData.class ? songStart.getPath() : songStart.getComment());
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
-					sendNotification(true, s.getCover(this));
+					sendNotification(true, songStart.getCover(this));
 				} catch (Exception e) {
 					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
-					if(e.toString().contains("setDataSourceFD failed") && null !=errorListener) {
+					if (e.toString().contains("setDataSourceFD failed") && null != errorListener) {
 						errorListener.error(getString(R.string.does_not_support_type));
 					}
 				}
-			}
-			break;
-		case MSG_PLAY:
-			if (check(SMODE_PREPARED)) {
-				AbstractSong s = (AbstractSong) msg.obj;
-				helper(State.PLAY, s);
-				player.start();
-				onMode(SMODE_PLAYING);
-				sendNotification(true, s.getCover(this));
-			}
-			break;
-		case MSG_PAUSE:
-			if (check(SMODE_PREPARED)) {
-				AbstractSong s = (AbstractSong) msg.obj;
-				helper(State.PAUSE, s);
-				player.pause();
-				mode |= SMODE_PAUSE;
-				sendNotification(false, s.getCover(this));
-			}
-			break;
-		case MSG_SEEK_TO:
-			if(check(SMODE_PREPARED)){
-				player.seekTo(msg.arg1);
-			}
-			break;
-		case MSG_ERROR:
-			offMode(SMODE_PREPARED);
-			helper(State.ERROR, (AbstractSong) msg.obj);
-			player.release();
-			player = new MediaPlayer();
-			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			player.setOnCompletionListener(this);
-			player.setOnErrorListener(this);
-			player.setOnPreparedListener(this);
-			break;
-		case MSG_RESET:
-			offMode(SMODE_PREPARED);
-			player.reset();
-			removeNotification();
-			break;
-		case MSG_STOP:
-			if (check(SMODE_PREPARED)) {
-				player.pause();
-				player.seekTo(0);
+				break;
+			case MSG_PLAY:
+				if (check(SMODE_PREPARED)) {
+					AbstractSong songPlay = (AbstractSong) msg.obj;
+					helper(State.PLAY, songPlay);
+					player.start();
+					onMode(SMODE_PLAYING);
+					sendNotification(true, songPlay.getCover(this));
+				}
+				break;
+			case MSG_PAUSE:
+				if (check(SMODE_PREPARED)) {
+					AbstractSong songPasue = (AbstractSong) msg.obj;
+					helper(State.PAUSE, songPasue);
+					player.pause();
+					mode |= SMODE_PAUSE;
+					sendNotification(false, songPasue.getCover(this));
+				}
+				break;
+			case MSG_SEEK_TO:
+				if (check(SMODE_PREPARED)) {
+					player.seekTo(msg.arg1);
+				}
+				break;
+			case MSG_ERROR:
+				offMode(SMODE_PREPARED);
+				helper(State.ERROR, (AbstractSong) msg.obj);
+				player.release();
+				player = new MediaPlayer();
+				player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+				player.setOnCompletionListener(this);
+				player.setOnErrorListener(this);
+				player.setOnPreparedListener(this);
+				break;
+			case MSG_RESET:
+				offMode(SMODE_PREPARED);
+				player.reset();
 				removeNotification();
-			}
-			break;
-		case MSG_SHIFT:
-			AbstractSong s = (AbstractSong) msg.obj;
-			helper(State.UPDATE, s);
-			if (enabledRepeat()) {
-				buildSendMessage(s, MSG_START, 0, 0);
+				break;
+			case MSG_STOP:
+				if (check(SMODE_PREPARED)) {
+					player.pause();
+					player.seekTo(0);
+					removeNotification();
+				}
+				break;
+			case MSG_SHIFT:
+				AbstractSong songShift = (AbstractSong) msg.obj;
+				helper(State.UPDATE, songShift);
+				if (enabledRepeat()) {
+					buildSendMessage(songShift, MSG_START, 0, 0);
+					break;
+				}
+				play(songShift.getClass() != MusicData.class);
+				sendNotification(true, songShift.getCover(this));
+				break;
+			default:
+				Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
 				break;
 			}
-			play(s.getClass() != MusicData.class);
-			sendNotification(true, s.getCover(this));
-			break;
-		default:
-			Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
-			break;
+			return false;
 		}
-		return true;
 	}
 	
 	public void shift(int delta) {
@@ -713,9 +714,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public int getAudioSessionId() {
-		if (null != player) {
-			return player.getAudioSessionId();
-		} 
+		synchronized (LOCK) {
+			if (null != player) {
+				return player.getAudioSessionId();
+			}
+		}
 		return 0;
 	} 
 	
@@ -841,7 +844,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener) {
-		player.setOnBufferingUpdateListener(listener);
+		synchronized (LOCK) {
+			player.setOnBufferingUpdateListener(listener);
+		}
 	}
 	
 	private OnBufferingUpdateListener bufferingUpdateListener = new OnBufferingUpdateListener() {

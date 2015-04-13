@@ -242,6 +242,10 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 		}).start();
 	}
 	
+	public void onPause() {
+		service.removeStatePlayerListener(stateListener);
+	}
+	
 	@Override
 	protected boolean usePlayingIndicator() {
 		return true;

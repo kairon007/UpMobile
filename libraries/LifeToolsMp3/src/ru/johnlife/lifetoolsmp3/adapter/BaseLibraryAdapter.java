@@ -123,6 +123,10 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		service.addStatePlayerListener(stateListener);
 	}
 	
+	public void resetListener() {
+		service.removeStatePlayerListener(stateListener);
+	}
+	
 	@SuppressLint("NewApi")
 	public void showMenu(final View v, final ViewGroup info) {
 		PopupMenu menu = new PopupMenu(getContext(), v);
@@ -250,7 +254,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		}
 	}
 	
-	OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
 		public void start(AbstractSong song) {

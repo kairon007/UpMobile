@@ -162,7 +162,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
 	}
 	
-	OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
 		public void start(AbstractSong song) {
@@ -223,6 +223,10 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 				
 			}
 		}).start();
+	}
+	
+	public void onPause() {
+		service.removeStatePlayerListener(stateListener);
 	}
 	
 	@Override
