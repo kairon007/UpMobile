@@ -72,6 +72,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		initMiniPlayer();
 		new Thread(new Runnable() {
 			
 			@Override
@@ -84,7 +85,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	@Override
 	protected void onStart() {
 		startService(new Intent(this, PlaybackService.class));
-		initMiniPlayer();
+		setImageDownloadButton();
 		new Thread(new Runnable() {
 			
 			@Override
@@ -104,7 +105,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		download = findViewById(R.id.mini_player_download);
 		miniPlayer = findViewById(getMiniPlayerID());
 		fakeView = findViewById(getFakeViewID());
-		setImageDownloadButton();
 	}
 	
 	private void setListeners() {
