@@ -130,6 +130,7 @@ public class DiscreteSeekBar extends View {
     private boolean mMirrorForRtl = false;
     private boolean mAllowTrackClick = true;
     private boolean mTimeFormatt = false;
+    private boolean isIndeterminate = false;
     //We use our own Formatter to avoid creating new instances on every progress change
     Formatter mFormatter;
     private String mIndicatorFormatter;
@@ -266,12 +267,13 @@ public class DiscreteSeekBar extends View {
     
     public void setIndeterminate(boolean isIndeterminate) {
     	mIndicator.setIndeterminate(isIndeterminate);
-    	if (mIndicator.isShowing() == isIndeterminate) return;
+    	if (this.isIndeterminate == isIndeterminate) return;
     	if (isIndeterminate) {
     		showFloater();
     	} else {
     		hideFloater();
     	}
+    	this.isIndeterminate = isIndeterminate;
     }
 
     /**
