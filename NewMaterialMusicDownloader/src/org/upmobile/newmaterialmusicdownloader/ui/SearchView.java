@@ -224,4 +224,9 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			}
 		}).start();
 	}
+	
+	@Override
+	protected boolean usePlayingIndicator() {
+		return true;
+	}
 }

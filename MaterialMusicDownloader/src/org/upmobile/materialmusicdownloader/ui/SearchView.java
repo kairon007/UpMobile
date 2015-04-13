@@ -241,4 +241,9 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 			}
 		}).start();
 	}
+	
+	@Override
+	protected boolean usePlayingIndicator() {
+		return true;
+	}
 }

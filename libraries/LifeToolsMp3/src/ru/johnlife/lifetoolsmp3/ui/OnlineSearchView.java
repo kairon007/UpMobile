@@ -379,12 +379,13 @@ public abstract class OnlineSearchView extends View {
 				try {
 					if (position == resultAdapter.getCount()) return; // progress click
 					keeper.setPlayingSong((AbstractSong) resultAdapter.getItem(position));
-					view.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
-					if (null != lastClicked) {
-						lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+					if (usePlayingIndicator()) {
+						view.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+						if (null != lastClicked) {
+							lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+						}
+						lastClicked = view;
 					}
-					lastClicked = view;
-					keeper.setLastClicked(lastClicked);
 					viewItem = view;
 					clickPosition = position;
 					getDownloadUrl(view, position);
@@ -569,7 +570,13 @@ public abstract class OnlineSearchView extends View {
 						lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
 					}
 					lastClicked = getViewByPosition(position);
-					keeper.setLastClicked(lastClicked);
+					if (usePlayingIndicator()) {
+						view.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+						if (null != lastClicked) {
+							lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
+						}
+						lastClicked = view;
+					}
 					click(null, position);
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
@@ -881,7 +888,7 @@ public abstract class OnlineSearchView extends View {
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			Song song = (Song) getItem(position);
-			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()), getIdCustomView());
+			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()), getIdCustomView(), usePlayingIndicator());
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
 			String comment = song.getComment();
@@ -917,9 +924,6 @@ public abstract class OnlineSearchView extends View {
 			View v = builder.build();
 			if (getItem(position).equals(keeper.getPlayingSong())) {
 				lastClicked = v;
-				android.util.Log.d("logd", "getView(): ---------------------------------------");
-				android.util.Log.d("logd", "getView(): " + lastClicked);
-				android.util.Log.d("logd", "getView(): ---------------------------------------");
 			}
 			v.findViewById(R.id.boxInfoItem).setOnClickListener(new OnClickListener() {
 

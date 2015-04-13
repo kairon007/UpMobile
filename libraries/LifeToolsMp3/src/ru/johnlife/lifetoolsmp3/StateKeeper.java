@@ -29,7 +29,6 @@ public class StateKeeper {
 	private RemoteSong downloadSong;
 	private AbstractSong playingSong;
 	private View viewItem;
-	private View lastClicked;
 	private String[] titleArtistLyrics;
 	private String[] tempID3Fields;
 	private String songField;
@@ -392,14 +391,6 @@ public class StateKeeper {
 
 	public void setPlayingSong(AbstractSong playingSong) {
 		this.playingSong = playingSong;
-	}
-
-	public View getLastClicked() {
-		return lastClicked;
-	}
-
-	public void setLastClicked(View lastClicked) {
-		this.lastClicked = lastClicked;
 	}
 
 	public static class SongInfo {

@@ -45,8 +45,10 @@ public class AdapterHelper {
 		private TextView caption;
 		private boolean fullAction = true;
 		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
+		private boolean useIndicator;
 		
-		private ViewBuilder(View view, boolean whiteTheme, boolean isCustomView) {
+		private ViewBuilder(View view, boolean whiteTheme, boolean isCustomView, boolean useIndicator) {
+			this.useIndicator = useIndicator;
 			view.setTag(this);
 			this.view = view;
 			view.setLongClickable(true);
@@ -71,6 +73,7 @@ public class AdapterHelper {
 			left = (View) number.getParent();
 			threeDot = view.findViewById(R.id.threeDot);
 			dowloadLabel = (TextView) view.findViewById(R.id.infoView);
+			if (!useIndicator) return;
 			playingIndicator = (View) view.findViewById(R.id.playingIndicator);
 		}
 		
@@ -174,6 +177,7 @@ public class AdapterHelper {
 		}
 		
 		public ViewBuilder showPlayingIndicator(boolean show) {
+			if (!useIndicator) return this;
 			playingIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
 			return this;
 			
@@ -297,7 +301,7 @@ public class AdapterHelper {
 		}
 	}
 
-	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater, boolean whiteTheme, int idCustomView) {
+	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater, boolean whiteTheme, int idCustomView, boolean useIndicator) {
 		View target = convertView;
 		ViewBuilder builder;
 		if (null == target) {
@@ -313,12 +317,12 @@ public class AdapterHelper {
 					target = inflater.inflate(R.layout.row_online_search, null);
 				}
 			}
-			builder = new ViewBuilder(target, whiteTheme, isCustomView);
+			builder = new ViewBuilder(target, whiteTheme, isCustomView, useIndicator);
 		} else {
 			try {
 				builder = (ViewBuilder) target.getTag();
 			} catch (Exception e) {
-				return getViewBuilder(null, inflater, whiteTheme, idCustomView); // something wrong with the supplied view - create new one
+				return getViewBuilder(null, inflater, whiteTheme, idCustomView, useIndicator); // something wrong with the supplied view - create new one
 			}
 		}
 		return builder;
