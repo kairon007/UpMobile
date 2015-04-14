@@ -13,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 public class LibraryView extends BaseLibraryView implements Constants {
+
+	private ImageView progress;
 
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
@@ -73,5 +77,17 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	@Override
 	public void onPause() {
 		super.onPause();
+	}
+	
+	@Override
+	protected void hideProgress(View v) {
+		v.findViewById(R.id.progress).clearAnimation();
+		v.findViewById(R.id.progress).setVisibility(View.GONE);
+	}
+	
+	@Override
+	protected void showProgress(View v) {
+		v.findViewById(R.id.progress).setVisibility(View.VISIBLE);
+		v.findViewById(R.id.progress).startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.rotate));
 	}
 }

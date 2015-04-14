@@ -15,13 +15,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:fontFamily="sans-serif-thin"
         android:text="@string/library_empty"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:visibility="gone" />
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
-        android:id="@+id/progress"
-        style="@style/ProgressBar"
-        android:visibility="gone" />
+	<ImageView 
+	    android:id="@id/progress"
+	    android:layout_width="48dp"
+	    android:layout_height="48dp"
+	    android:visibility="gone"
+	    android:layout_gravity="center"
+	    android:src="@drawable/loader"/>
 
 </FrameLayout>

@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingRight="8dp"
+    android:orientation="vertical"
     android:paddingLeft="8dp"
-    android:orientation="vertical" >
+    android:paddingRight="8dp" >
 
     <ListView
         android:id="@+id/listView"
@@ -18,8 +18,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/library_empty"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

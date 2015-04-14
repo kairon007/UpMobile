@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -120,13 +121,13 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		init(inflater);
 		if (null != listView) {
 			updateAdapter();
-			listView.setEmptyView(emptyMessage);
 			listView.setAdapter(adapter);
 			animateListView(listView, adapter);
 		}
 	}
 	
 	private void updateAdapter() {
+		showProgress(view);
 		new Thread(new Runnable() {
 			
 			@Override
@@ -138,11 +139,22 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 					
 					@Override
 					public void run() {
+						hideProgress(view);
 						adapter.notifyDataSetChanged();
+						listView.setEmptyView(emptyMessage);
 					}
-				}, 50);
+
+				}, 100);
 			}
 		}).start();
+	}
+	
+	protected void showProgress(View v) {
+		v.findViewById(R.id.progress).setVisibility(View.VISIBLE);
+	}
+	
+	protected void hideProgress(View v) {
+		v.findViewById(R.id.progress).setVisibility(View.GONE);
 	}
 
 	public View getView() {
