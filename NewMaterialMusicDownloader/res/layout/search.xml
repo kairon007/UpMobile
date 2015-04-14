@@ -56,20 +56,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1" >
 
-                    <EditText
-                        android:id="@+id/text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:drawableRight="@drawable/fake_image"
-                        android:hint="@string/hint_main_search"
-                        android:imeOptions="actionSearch"
-                        android:lines="1"
-                        android:singleLine="true"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white"
-                        android:fontFamily="sans-serif"
-                        android:textStyle="bold" />
-
                     <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="48dp"
@@ -87,6 +73,23 @@
                             android:scaleType="centerInside"
                             android:src="@drawable/ic_close_white" />
                     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+
+                    <EditText
+                        android:id="@+id/text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:drawableRight="@drawable/fake_image"
+                        android:ems="10"
+                        android:fontFamily="sans-serif"
+                        android:hint="@string/hint_main_search"
+                        android:imeOptions="actionSearch"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white"
+                        android:textStyle="bold" >
+                    </EditText>
+
                 </FrameLayout>
 
                 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView

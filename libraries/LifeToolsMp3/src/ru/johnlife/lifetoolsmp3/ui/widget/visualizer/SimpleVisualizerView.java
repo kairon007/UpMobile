@@ -12,6 +12,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -80,6 +81,7 @@ public class SimpleVisualizerView extends View {
 		mForePaint.setAlpha(alpha);
 	}
 
+	@SuppressLint("NewApi")
 	private void performDraw(Canvas canvas, Integer[] newValues) {
 		mForePaint.setStrokeWidth(mLinesStroke * 2);
 		values.add(newValues);
@@ -93,15 +95,15 @@ public class SimpleVisualizerView extends View {
 				} else {
 					mForePaint.setColor(Color.WHITE);
 				}
-				setAlpha(150);
+				setAlpha(100);
 			} else {
 				if (accent != -1) {
 					mForePaint.setColor(accent);
 				} else {
 					mForePaint.setColor(Color.WHITE);
 				}
-				float alpha = (float) i / (float) frameLength;
-				setAlpha((int) (alpha * 75));
+				float alpha = ((float) i / (float) frameLength) * 100;
+				setAlpha((int) alpha);
 			}
 			Integer[] frameValues = values.get(i - 1);
 			for (int j = 0; j < frameValues.length; j++) {
@@ -109,7 +111,7 @@ public class SimpleVisualizerView extends View {
 				int height = mRect.height() - frameValues[j];
 				canvas.drawLine(currentX, mRect.height() , currentX, height, mForePaint);
 			}
-		}
+		}	
 	}
 	
 	@Override

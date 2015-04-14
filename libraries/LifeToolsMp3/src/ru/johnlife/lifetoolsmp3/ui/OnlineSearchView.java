@@ -350,6 +350,7 @@ public abstract class OnlineSearchView extends View {
 			view.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
 			int color = getContext().getResources().getColor(android.R.color.black);
 			searchField.setTextColor(color);
+			searchField.clearFocus();
 			message.setTextColor(color);
 			if (null != spEnginesChoiserLayout) {
 				spEnginesChoiserLayout.setBackgroundResource(R.drawable.spinner_background);

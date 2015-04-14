@@ -219,15 +219,17 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 				if (null == service) {
 					service = PlaybackService.get(getContext());
 				}
-					service.setOnErrorListener(SearchView.this);
-					service.addStatePlayerListener(stateListener);
-				
+				service.setOnErrorListener(SearchView.this);
+				service.addStatePlayerListener(stateListener);
+
 			}
 		}).start();
 	}
 	
 	public void onPause() {
-		service.removeStatePlayerListener(stateListener);
+		if (null != service) {
+			service.removeStatePlayerListener(stateListener);
+		}
 	}
 	
 	@Override
