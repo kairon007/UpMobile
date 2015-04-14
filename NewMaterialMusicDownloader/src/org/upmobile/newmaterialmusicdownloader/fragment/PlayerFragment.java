@@ -320,6 +320,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				playerProgress.setIndeterminate(!player.isPrepared());
 			}
 		}, 1000);
+		cancelProgressTask();
+		thatSongIsDownloaded();
 		super.onResume();
 	}
 	
@@ -423,14 +425,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			getCover(song);
 			setElementsView(0);
 			cancelProgressTask();
-			thatSongIsDownloaded();
 			playerProgress.setIndeterminate(false);
 			playerProgress.setMax((int)s.getDuration());
-			if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
-				((RippleView) download.getParent()).setVisibility(View.GONE);
-			} else {
-				((RippleView) download.getParent()).setVisibility(View.VISIBLE);
-			} 
 			StateKeeper.getInstance().setPlayingSong(song);
 		}
 
@@ -440,7 +436,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setOnClickListener(PlayerFragment.this);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
-			cancelProgressTask();
 			song = current;
 			showLyrics();
 			setCoverToZoomView(null);
@@ -547,12 +542,20 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		playerProgress.setProgress(0);
 		playerProgress.setIndeterminate(true);
 		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
+		thatSongIsDownloaded();
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();
 			download.setProgress(0);
 			download.setOnClickListener(this);
 		}
+		if (StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment()).getStatus() == SongInfo.DOWNLOADED) {
+			((RippleView) download.getParent()).setVisibility(View.GONE);
+		} else {
+			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
+		}
+		cancelProgressTask();
+		thatSongIsDownloaded();
 	}
 
 	private void cancelProgressTask() {
@@ -875,6 +878,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 	
 	private void thatSongIsDownloaded() {
+		if (player.getPlayingSong().getClass() == MusicData.class) return;
 		player.getPlayingSong().getDownloadUrl(new DownloadUrlListener() {
 
 			@Override
@@ -884,9 +888,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 				if (running != null) {
 					while (running.moveToNext()) {
-						if (null != url && null != downloadListener && url.equals(running.getString(running.getColumnIndex(DownloadManager.COLUMN_URI)))) {
+						if (null != url && url.equals(running.getString(running.getColumnIndex(DownloadManager.COLUMN_URI)))) {
+							long id = running.getLong(running.getColumnIndex(DownloadManager.COLUMN_ID));
 							progressUpdater = new ProgressUpdater();
-							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
+							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
 						} else {
 							download.setProgress(0);
 							download.setOnClickListener(PlayerFragment.this);
