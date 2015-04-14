@@ -386,10 +386,10 @@ public abstract class OnlineSearchView extends View {
 					if (position == resultAdapter.getCount()) return; // progress click
 					keeper.setPlayingSong((AbstractSong) resultAdapter.getItem(position));
 					if (usePlayingIndicator()) {
-						view.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
 						if (null != lastClicked) {
 							lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
 						}
+						view.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
 						lastClicked = view;
 					}
 					viewItem = view;
@@ -570,17 +570,12 @@ public abstract class OnlineSearchView extends View {
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.search_menu_play) {
 					keeper.setPlayingSong((AbstractSong) resultAdapter.getItem(position));
-					getViewByPosition(position).findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
-					if (null != lastClicked) {
-						lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-					}
-					lastClicked = getViewByPosition(position);
 					if (usePlayingIndicator()) {
-						view.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
 						if (null != lastClicked) {
 							lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
 						}
-						lastClicked = view;
+						getViewByPosition(position).findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+						lastClicked = getViewByPosition(position);
 					}
 					click(null, position);
 				}

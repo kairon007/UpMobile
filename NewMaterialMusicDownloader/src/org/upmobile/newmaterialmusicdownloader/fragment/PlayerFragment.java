@@ -546,6 +546,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
 		playerProgress.setIndeterminate(true);
+		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();

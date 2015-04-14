@@ -596,6 +596,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(1);
 		playerProgress.setIndeterminate(true);
+		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();
