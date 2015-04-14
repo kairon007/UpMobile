@@ -316,6 +316,7 @@ public abstract class OnlineSearchView extends View {
 			} else {
 				hideBaseProgress();
 				for (Song song : songsList) {
+					if (resultAdapter.contains(song)) return;
 					resultAdapter.add(song);
 				}
 			}
