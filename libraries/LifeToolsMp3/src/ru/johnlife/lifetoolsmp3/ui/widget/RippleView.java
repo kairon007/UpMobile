@@ -112,6 +112,9 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		if (!animationRunning)
 			return;
 		if (rippleDuration <= timer * rippleFrameRate) {
+			if (!isLongClick && !eventCanceled) {
+				sendClickEvent();
+			}
 			animationRunning = false;
 			timer = 0;
 			durationEmpty = -1;
@@ -240,16 +243,11 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 
 	@Override
 	public boolean onTouchEvent(@NonNull MotionEvent event) {
-		if (!isEnabled() || !childView.isEnabled()) {
-			return super.onTouchEvent(event);
-		}
+		if (!isEnabled() || !childView.isEnabled()) return super.onTouchEvent(event);
 		gestureDetector.onTouchEvent(event);
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
 			childView.onTouchEvent(event);
-			if (!isLongClick && !eventCanceled) {
-				sendClickEvent();
-			}
 			isLongClick = false;
 			break;
 		case MotionEvent.ACTION_DOWN:
@@ -274,7 +272,6 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			}
 			childView.setPressed(true);
 			break;
-		case MotionEvent.ACTION_MOVE:
 		case MotionEvent.ACTION_CANCEL:
 			childView.onTouchEvent(event);
 			eventCanceled = true;
