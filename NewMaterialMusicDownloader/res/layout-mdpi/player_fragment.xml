@@ -63,6 +63,31 @@
                         android:orientation="horizontal" >
 
                         <ru.johnlife.lifetoolsmp3.ui.widget.CheckBox
+                            android:id="@+id/cbShowEqualizer"
+                            style="@style/CheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:minHeight="48dp" />
+
+                        <TextView
+                            style="@style/TextStyleLine2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:maxLines="2"
+                            android:text="@string/show_equalizer"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="48dp"
+                        android:orientation="horizontal" >
+
+                        <ru.johnlife.lifetoolsmp3.ui.widget.CheckBox
                             android:id="@+id/cbUseCover"
                             style="@style/CheckBox"
                             android:layout_width="wrap_content"
@@ -80,30 +105,6 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="48dp"
-                        android:orientation="horizontal" >
-
-                        <ru.johnlife.lifetoolsmp3.ui.widget.CheckBox
-                            android:id="@+id/cbShowEqualizer"
-                            style="@style/CheckBox"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:minHeight="48dp" />
-
-                        <TextView
-                            style="@style/TextStyleLine2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:maxLines="2"
-                            android:text="@string/show_equalizer"
-                            android:textSize="12sp" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -269,8 +270,8 @@
 
                         <ImageView
                             android:id="@+id/shuffle"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_shuffle_grey" />
                     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
@@ -332,8 +333,8 @@
 
                         <ImageView
                             android:id="@+id/repeat"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_repeat_grey" />
                     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>

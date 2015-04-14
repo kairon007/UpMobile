@@ -540,6 +540,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
+		playerProgress.setSecondaryProgress(0);
 		playerProgress.setIndeterminate(true);
 		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
 		thatSongIsDownloaded();
@@ -742,7 +743,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
 			return;
 		}
-		((View) cbUseCover.getParent()).setVisibility(View.GONE);
+		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 		if (s.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
@@ -766,7 +767,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void clearCover() {
 		setCheckBoxState(false);
 		if (MusicData.class == song.getClass()) {
-			((View) cbUseCover.getParent()).setVisibility(View.GONE);
+			((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();
 			new Thread(new Runnable() {
