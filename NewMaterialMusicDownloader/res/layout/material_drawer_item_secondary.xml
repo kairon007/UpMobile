@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/material_drawer_item_secondary"
+        android:clickable="true"
         android:paddingEnd="@dimen/material_drawer_vertical_padding"
         android:paddingLeft="@dimen/material_drawer_vertical_padding"
         android:paddingRight="@dimen/material_drawer_vertical_padding"
