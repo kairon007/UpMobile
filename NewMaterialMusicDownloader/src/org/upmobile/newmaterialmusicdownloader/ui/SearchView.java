@@ -226,6 +226,11 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		}).start();
 	}
 	
+	@Override
+	protected void showShadow(boolean visible) {
+		((MainActivity) getContext()).showToolbarShadow(visible);
+	}
+	
 	public void onPause() {
 		if (null != service) {
 			service.removeStatePlayerListener(stateListener);

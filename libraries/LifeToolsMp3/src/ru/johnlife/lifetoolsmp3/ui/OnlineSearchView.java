@@ -169,6 +169,7 @@ public abstract class OnlineSearchView extends View {
 	protected int  getIdCustomView() { return 0; }
 	protected int getCustomColor() {return 0;}
 	protected String getDirectory() { return null; }
+	protected void showShadow (boolean visible) { }
 
 	public OnlineSearchView(LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -373,12 +374,18 @@ public abstract class OnlineSearchView extends View {
 				int resultScroll = spEnginesChoiserScroll.getScrollY() + scrollBy;
 				if (resultScroll < 0) {
 					spEnginesChoiserScroll.scrollTo(0, 0);
+					showShadow(false);
 				} else if (resultScroll > maxScroll) {
+					showShadow(true);
 					spEnginesChoiserScroll.scrollTo(0, maxScroll);
 				} else {
 					spEnginesChoiserScroll.scrollBy(0, scrollBy);
+					if (0 != scrollBy) {
+						showShadow(false);
+					}
 				}
 			}
+			
 		});
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
