@@ -89,7 +89,6 @@
                         android:textColorHint="@android:color/white"
                         android:textStyle="bold" >
                     </EditText>
-
                 </FrameLayout>
 
                 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
@@ -121,8 +120,10 @@
                 android:id="@+id/choise_engines"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginRight="@dimen/material_edges_padding"
+                android:dropDownVerticalOffset="-48dip"
                 android:gravity="top"
+                android:overlapAnchor="false"
+                android:popupBackground="@android:drawable/dialog_holo_dark_frame"
                 android:paddingLeft="@dimen/material_edges_padding"
                 android:paddingRight="@dimen/material_edges_padding" />
         </LinearLayout>

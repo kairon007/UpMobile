@@ -66,18 +66,18 @@
         <item name="rv_color">?attr/colorPrimary</item>
         <item name="rv_type">rectangle</item>
     </style>
-    
+
     <style name="RippleStyleShortPress" parent="RippleStyle">
         <item name="rv_rippleDuration">250</item>
         <item name="rv_color">?attr/colorPrimary</item>
         <item name="rv_type">rectangle</item>
-    </style>	
+    </style>
 
     <style name="RippleStyleCircle" parent="RippleStyle">
         <item name="rv_color">?attr/colorPrimary</item>
         <item name="rv_type">doubleRipple</item>
     </style>
-    
+
     <style name="UBDivider" parent="UndoBarDividerClassic" />
 
     <style name="UBContainer" parent="UndoBarMaterial" />
@@ -86,7 +86,7 @@
         <item name="android:textColor">?attr/colorAccent</item>
     </style>
 
-    <style name="UBMessage" parent="UndoBarMessageMaterial" >
+    <style name="UBMessage" parent="UndoBarMessageMaterial">
         <item name="android:maxLines">2</item>
     </style>
 
