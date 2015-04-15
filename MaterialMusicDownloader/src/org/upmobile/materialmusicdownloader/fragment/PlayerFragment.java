@@ -163,6 +163,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			playerProgress.setIndeterminate(false);
 			playerProgress.setMax((int)s.getDuration());
 			StateKeeper.getInstance().setPlayingSong(song);
+			song.getSpecial().setChecked(true);
 		}
 
 		@Override
@@ -491,6 +492,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerProgress.setProgress(1);
 		playerProgress.setIndeterminate(true);
 		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
+		player.getPlayingSong().getSpecial().setChecked(true);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();

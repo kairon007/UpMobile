@@ -62,10 +62,11 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			data = md;
 			setListener();
 			if (data.equals(StateKeeper.getInstance().getPlayingSong())) {
+				StateKeeper.getInstance().setPlayingSong(data);
 				data.getSpecial().setChecked(true);
 			}
 			info.findViewById(R.id.playingIndicator).setVisibility(data.getSpecial().getIsChecked() ? View.VISIBLE : View.GONE);
-			super.hold(md, position);
+			super.hold(data, position);
 		}
 		
 		private void setListener() {
@@ -82,8 +83,8 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 					service.setArrayPlayback(list);
 				}
 				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
-				data.getSpecial().setChecked(true);
 				StateKeeper.getInstance().setPlayingSong(data);
+				data.getSpecial().setChecked(true);
 				notifyDataSetChanged();
 				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
