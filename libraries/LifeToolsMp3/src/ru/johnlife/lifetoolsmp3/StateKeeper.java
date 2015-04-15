@@ -195,6 +195,7 @@ public class StateKeeper {
 	
 	public void saveStateAdapter(OnlineSearchView view) {
 		searchView = null;
+		view.unregisterObserver();
 		songField = view.getSearchField().getText().toString();
 		results = view.getResultAdapter().getAll();
 		if (results != null && !results.isEmpty()) listViewPosition = view.getListViewPosition();
@@ -297,9 +298,7 @@ public class StateKeeper {
 	
 	public void removeSongInfo(String url) {
 		songHolder.remove(url);
-		android.util.Log.d("logks", "nnnn" + notifyLable);
 		if (null != searchView && notifyLable) {
-			android.util.Log.d("logks", "!!!");
 			searchView.notifyAdapter();
 		}
 	}
@@ -419,14 +418,6 @@ public class StateKeeper {
 		this.playingSong = playingSong;
 	}
 	
-	public OnlineSearchView getSearchView() {
-		return searchView;
-	}
-
-	public void setSearchView(OnlineSearchView searchView) {
-		this.searchView = searchView;
-	}
-
 	public static class SongInfo {
 		
 		public static final int DOWNLOADED = 0;

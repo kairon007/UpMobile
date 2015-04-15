@@ -182,6 +182,7 @@ public abstract class OnlineSearchView extends View {
 		sPref = MusicApp.getSharedPreferences();
 		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
 		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
+		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
 		if (searchField.getWidth() - view.findViewById(R.id.clear).getWidth() < width) {
 			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
@@ -189,7 +190,6 @@ public abstract class OnlineSearchView extends View {
 		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) search(searchField.getText().toString());
 		setMessage(getResources().getString(R.string.search_your_results_appear_here));
 		initBoxEngines();
-		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		if (showDownloadLabel()) {
 			((BaseMiniPlayerActivity) getContext()).setDownloadPressListener(downloadPressListener);
 		}
@@ -200,7 +200,6 @@ public abstract class OnlineSearchView extends View {
 				updateQuery();
 			}
 		}).start();
-		keeper.setSearchView(this);
 	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -234,7 +233,7 @@ public abstract class OnlineSearchView extends View {
 	};
 
 	
-	OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
+	private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -494,6 +493,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void updateLables() {
+		android.util.Log.d("logks", "OnlineSearchView, updateLables: oops");
 		ArrayList<MusicData> newLibraryList = querySong();
 		ArrayList<MusicData> buferList = libraryList;
 		if (buferList.size() == newLibraryList.size()) {
@@ -619,10 +619,9 @@ public abstract class OnlineSearchView extends View {
 
 	    if (pos < firstListItemPosition || pos > lastListItemPosition ) {
 	        return listView.getAdapter().getView(pos, null, listView);
-	    } else {
-	        final int childIndex = pos - firstListItemPosition;
-	        return listView.getChildAt(childIndex);
 	    }
+		final int childIndex = pos - firstListItemPosition;
+		return listView.getChildAt(childIndex);
 	}
 
 	public void initSearchEngines(Context context, String valueEngines) {
@@ -649,11 +648,6 @@ public abstract class OnlineSearchView extends View {
 			engineArray = getSettings().getSearchEnginesArray7(context);
 		} else if (keyEngines.equals(getTitleSearchEngine8())) {
 			engineArray = getSettings().getSearchEnginesArray8(context);
-		}
-
-		for (int i = 0; i < engineArray.length; i++) {
-			for (int j = 0; j < engineArray[i].length; j++) {
-			}
 		}
 		engines = new ArrayList<Engine>(engineArray.length);
 		for (int i = 0; i < engineArray.length; i++) {
@@ -1344,6 +1338,11 @@ public abstract class OnlineSearchView extends View {
 		isRestored = true;
 	}
 	
+	public void unregisterObserver() {
+		getContext().getContentResolver().unregisterContentObserver(observer);
+		sPref.unregisterOnSharedPreferenceChangeListener(sPrefListener);
+	}
+
 	public RemoteSong getDownloadSong() {
 		return downloadSong;
 	}
