@@ -665,6 +665,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void getCover(final AbstractSong song) {
+		cbUseCover.setOnCheckedChangeListener(null);
 		setCheckBoxState(false);
 		if (song.isHasCover()) {
 			Bitmap bitmap = song.getCover(getActivity());
@@ -695,6 +696,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			checkIdCover = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);
 		}
+		cbUseCover.setOnCheckedChangeListener(this);
 	}
 
 	/**
