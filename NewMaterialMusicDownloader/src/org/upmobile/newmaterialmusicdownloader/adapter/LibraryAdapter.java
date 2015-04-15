@@ -60,14 +60,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		@Override
 		protected void hold(MusicData md, int position) {
 			data = md;
-			super.hold(md, position);
 			setListener();
 			if (data.equals(StateKeeper.getInstance().getPlayingSong())) {
-				indicator.setVisibility(View.VISIBLE);
-				lastClicked = info;
-			} else {
-				indicator.setVisibility(View.GONE);
+				data.getSpecial().setChecked(true);
 			}
+			info.findViewById(R.id.playingIndicator).setVisibility(data.getSpecial().getIsChecked() ? View.VISIBLE : View.GONE);
+			super.hold(md, position);
 		}
 		
 		private void setListener() {
@@ -84,14 +82,11 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 					service.setArrayPlayback(list);
 				}
 				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
+				data.getSpecial().setChecked(true);
+				StateKeeper.getInstance().setPlayingSong(data);
+				notifyDataSetChanged();
 				((MainActivity) getContext()).showPlayerElement(true);
 				((MainActivity) getContext()).startSong(data);
-				if (null != lastClicked) {
-					lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-				}
-				indicator.setVisibility(View.VISIBLE);
-				StateKeeper.getInstance().setPlayingSong(data);
-				lastClicked = info;
 				break;
 			}
 			

@@ -391,6 +391,9 @@ public class StateKeeper {
 	}
 
 	public void setPlayingSong(AbstractSong playingSong) {
+		if (null != this.playingSong) {
+			this.playingSong.getSpecial().setChecked(false);
+		}
 		this.playingSong = playingSong;
 	}
 

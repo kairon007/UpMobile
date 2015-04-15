@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.ExpandableAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -188,7 +187,6 @@ public abstract class BasePlaylistView extends View {
 					MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, playlists.get(groupPosition).getId()).commit();
 					playbackService.setArrayPlayback(new ArrayList<AbstractSong>(playlists.get(groupPosition).getSongs()));
 					showPlayerFragment(playlists.get(groupPosition).getSongs().get(childPosition));
-					StateKeeper.getInstance().setPlayingSong(playlists.get(groupPosition).getSongs().get(childPosition));
 					return true;
 				}
 				return false;

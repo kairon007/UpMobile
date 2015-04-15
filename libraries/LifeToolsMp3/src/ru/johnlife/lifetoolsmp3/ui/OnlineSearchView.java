@@ -128,7 +128,6 @@ public abstract class OnlineSearchView extends View {
 	private View emptyHeader;
 	private View progress;
 	private View viewItem;
-	private View lastClicked;
 	private FrameLayout footer;
 	private TextView message;
 	private TextView searchField;
@@ -317,8 +316,9 @@ public abstract class OnlineSearchView extends View {
 			} else {
 				hideBaseProgress();
 				for (Song song : songsList) {
-					if (resultAdapter.contains(song)) return;
-					resultAdapter.add(song);
+					if (!resultAdapter.contains(song)) {
+						resultAdapter.add(song);
+					}
 				}
 			}
 		}
@@ -393,14 +393,12 @@ public abstract class OnlineSearchView extends View {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				try {
 					if (position == resultAdapter.getCount()) return; // progress click
-					keeper.setPlayingSong((AbstractSong) resultAdapter.getItem(position));
-					if (usePlayingIndicator()) {
-						if (null != lastClicked) {
-							lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-						}
-						view.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
-						lastClicked = view;
+					if (null != keeper.getPlayingSong()) {
+						keeper.getPlayingSong().getSpecial().setChecked(false);
 					}
+					keeper.setPlayingSong(((AbstractSong) resultAdapter.getItem(position)));
+					((AbstractSong) resultAdapter.getItem(position)).getSpecial().setChecked(true);
+					getResultAdapter().notifyDataSetChanged();
 					viewItem = view;
 					clickPosition = position;
 					getDownloadUrl(view, position);
@@ -578,14 +576,9 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.search_menu_play) {
-					keeper.setPlayingSong((AbstractSong) resultAdapter.getItem(position));
-					if (usePlayingIndicator()) {
-						if (null != lastClicked) {
-							lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-						}
-						getViewByPosition(position).findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
-						lastClicked = getViewByPosition(position);
-					}
+					((AbstractSong) resultAdapter.getItem(position)).getSpecial().setChecked(true);
+					keeper.setPlayingSong(((AbstractSong) resultAdapter.getItem(position)));
+					getResultAdapter().notifyDataSetChanged();
 					click(null, position);
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
@@ -901,6 +894,9 @@ public abstract class OnlineSearchView extends View {
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
 			String comment = song.getComment();
+			if (((RemoteSong) song).equals(StateKeeper.getInstance().getPlayingSong())) {
+				song.getSpecial().setChecked(true);
+			}
 			song.setTitle(title);
 			song.setArtist(artist);
 			builder.setLine1(artist, Util.getFormatedStrDuration(song.getDuration()))
@@ -909,7 +905,7 @@ public abstract class OnlineSearchView extends View {
 					.setLine2(title)
 					.setDownloadLable(showDownloadLabel() ? keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment).getStatus() : -1)
 					.setId(position)
-					.showPlayingIndicator(getItem(position).equals(keeper.getPlayingSong()) ? true : false)
+					.showPlayingIndicator(((AbstractSong) getItem(position)).getSpecial().getIsChecked())
 					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
 					.setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong)song).isHasCoverFromSearch()) {
@@ -931,9 +927,6 @@ public abstract class OnlineSearchView extends View {
 				getNextResults(false);
 			}
 			View v = builder.build();
-			if (getItem(position).equals(keeper.getPlayingSong())) {
-				lastClicked = v;
-			}
 			v.findViewById(R.id.boxInfoItem).setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -1413,12 +1406,6 @@ public abstract class OnlineSearchView extends View {
 		message.setText(msg);
 	}
 	
-	public void setVisToLastClickedElements(boolean visible) {
-		if (null != lastClicked) {
-			lastClicked.findViewById(R.id.playingIndicator).setVisibility(visible ? View.VISIBLE : View.GONE);
-		}
-	}
-
 	public static String getTitleSearchEngine2() {
 		SharedPreferences prefs = MusicApp.getSharedPreferences();
 		return prefs.getString("search_engines_title_2", "Search Engine 2");

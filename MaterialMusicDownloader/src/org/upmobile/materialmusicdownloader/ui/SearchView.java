@@ -13,7 +13,6 @@ import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -184,47 +183,40 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 
 		@Override
 		public void start(AbstractSong song) {
-		}
-
-		@Override
-		public void play(AbstractSong song) {
-			setVisToLastClickedElements(true);
+			song.getSpecial().setChecked(true);
 			StateKeeper.getInstance().setPlayingSong(song);
+			notifyAdapter();
 		}
 
 		@Override
-		public void pause(AbstractSong song) {
-		}
+		public void play(AbstractSong song) {}
+
+		@Override
+		public void pause(AbstractSong song) {}
 
 		@Override
 		public void stop(AbstractSong song) {
+			song.getSpecial().setChecked(false);
 		}
 
 		@Override
-		public void stopPressed() {
-			setVisToLastClickedElements(false);
-			StateKeeper.getInstance().setPlayingSong(null);
-		}
+		public void stopPressed() {}
 
 		@Override
-		public void onTrackTimeChanged(int time, boolean isOverBuffer) {
-		}
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
 
 		@Override
-		public void onBufferingUpdate(double percent) {
-		}
+		public void onBufferingUpdate(double percent) {}
 
 		@Override
 		public void update(AbstractSong song) {
+			song.getSpecial().setChecked(true);
+			StateKeeper.getInstance().setPlayingSong(song);
+			notifyAdapter();
 		}
 
 		@Override
-		public void error() {
-			setVisToLastClickedElements(false);
-			StateKeeper.getInstance().setPlayingSong(null);
-			((BaseMiniPlayerActivity) getContext()).showMessage(R.string.error_getting_url);
-			((BaseMiniPlayerActivity) getContext()).showMiniPlayer(false);
-		}
+		public void error() {}
 		
 	};
 
@@ -238,7 +230,6 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 				}
 				service.setOnErrorListener(SearchView.this);
 				service.addStatePlayerListener(stateListener);
-
 			}
 		}).start();
 	}

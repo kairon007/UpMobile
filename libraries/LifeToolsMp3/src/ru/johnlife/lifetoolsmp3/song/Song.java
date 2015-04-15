@@ -141,7 +141,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 */
 
 	public String downloadUrl;
-
+	private AbstractSpecial special;
 	public Bitmap cover;
 
 	private boolean hasCover = false;
@@ -373,5 +373,13 @@ public class Song implements Comparable<Song>, AbstractSong {
 	@Override
 	public String getComment() {
 		return downloadUrl;
+	}
+
+	@Override
+	public AbstractSpecial getSpecial() {
+		if (null == special) {
+			special = new AbstractSpecial();
+		}
+		return special;
 	}
 }

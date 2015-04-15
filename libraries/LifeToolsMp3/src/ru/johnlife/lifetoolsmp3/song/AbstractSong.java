@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
 
-public interface AbstractSong extends Parcelable, Cloneable{
+public interface AbstractSong extends Parcelable, Cloneable {
 	
 	public String getPath();
 
@@ -37,4 +37,5 @@ public interface AbstractSong extends Parcelable, Cloneable{
 	
 	public AbstractSong cloneSong() throws CloneNotSupportedException;
 
+	public AbstractSpecial getSpecial();
 }

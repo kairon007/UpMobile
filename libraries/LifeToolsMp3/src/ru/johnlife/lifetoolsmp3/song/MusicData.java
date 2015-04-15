@@ -42,6 +42,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	private long id;
 	private long duration;
 	private int progress;
+	private AbstractSpecial special;
 
 	public MusicData() {
 
@@ -298,4 +299,11 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		cover = null;
 	}
 
+	@Override
+	public AbstractSpecial getSpecial() {
+		if (null == special) {
+			special = new AbstractSpecial();
+		}
+		return special;
+	}
 }

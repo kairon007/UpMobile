@@ -38,7 +38,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	
 	private final String PROJECT_PRIFICS = getDirectory().replace(Environment.getExternalStorageDirectory().toString(), "");
 	private final static String EXTERNAL = "external";
-	protected View lastClicked = null;
 	public final String[] PROJECTION_PLAYLIST = { 
 			MediaStore.Audio.Playlists._ID, 
 			MediaStore.Audio.Playlists.NAME, };
@@ -141,13 +140,10 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
 					} 
-					startSong((AbstractSong) v.getTag());
-					info.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
-					if (null != lastClicked) {
-						lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-					}
+					((AbstractSong) v.getTag()).getSpecial().setChecked(true);
 					StateKeeper.getInstance().setPlayingSong((AbstractSong) v.getTag());
-					lastClicked = info;
+					notifyDataSetChanged();
+					startSong((AbstractSong) v.getTag());
 				}
 				if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
 					preparePlaylists(v);
@@ -258,51 +254,41 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 		@Override
 		public void start(AbstractSong song) {
-		}
-
-		@Override
-		public void play(AbstractSong song) {
-			if (null == lastClicked) return;
-			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.VISIBLE);
+			song.getSpecial().setChecked(true);
 			StateKeeper.getInstance().setPlayingSong(song);
+			notifyDataSetChanged();
 		}
 
 		@Override
-		public void pause(AbstractSong song) {
-//			if (null == lastClicked) return;
-//			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-//			StateKeeper.getInstance().setPlayingSong(null);
-		}
+		public void play(AbstractSong song) {}
+
+		@Override
+		public void pause(AbstractSong song) {}
 
 		@Override
 		public void stop(AbstractSong song) {
+			song.getSpecial().setChecked(false);
+			notifyDataSetChanged();
 		}
 
 		@Override
-		public void stopPressed() {
-			if (null == lastClicked) return;
-			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-			StateKeeper.getInstance().setPlayingSong(null);
-		}
+		public void stopPressed() {}
 
 		@Override
-		public void onTrackTimeChanged(int time, boolean isOverBuffer) {
-		}
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
 
 		@Override
-		public void onBufferingUpdate(double percent) {
-		}
+		public void onBufferingUpdate(double percent) {}
 
 		@Override
 		public void update(AbstractSong song) {
+			song.getSpecial().setChecked(true);
+			StateKeeper.getInstance().setPlayingSong(song);
+			notifyDataSetChanged();
 		}
 
 		@Override
-		public void error() {
-			if (null == lastClicked) return;
-			lastClicked.findViewById(R.id.playingIndicator).setVisibility(View.GONE);
-			StateKeeper.getInstance().setPlayingSong(null);
-		}
+		public void error() {}
 		
 	};
 	
