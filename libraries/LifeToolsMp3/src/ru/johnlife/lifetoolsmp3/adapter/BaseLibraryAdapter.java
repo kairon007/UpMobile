@@ -267,12 +267,13 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 		@Override
 		public void stop(AbstractSong song) {
-			song.getSpecial().setChecked(false);
-			notifyDataSetChanged();
 		}
 
 		@Override
-		public void stopPressed() {}
+		public void stopPressed() {
+			StateKeeper.getInstance().setPlayingSong(null);
+			notifyDataSetChanged();
+		}
 
 		@Override
 		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}

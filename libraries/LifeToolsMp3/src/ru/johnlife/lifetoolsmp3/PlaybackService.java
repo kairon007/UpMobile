@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -482,7 +483,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
 			}
-			Collections.shuffle(arrayPlayback);
+			long seed = System.nanoTime();
+			Collections.shuffle(arrayPlayback, new Random(seed));
 		} else {
 			arrayPlayback = new ArrayList<AbstractSong>(arrayPlaybackOriginal);
 		}

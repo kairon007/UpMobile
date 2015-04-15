@@ -179,12 +179,13 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		public void pause(AbstractSong song) {}
 
 		@Override
-		public void stop(AbstractSong song) {
-			song.getSpecial().setChecked(false);
-		}
+		public void stop(AbstractSong song) {}
 
 		@Override
-		public void stopPressed() {}
+		public void stopPressed() {
+			StateKeeper.getInstance().setPlayingSong(null);
+			notifyAdapter();
+		}
 
 		@Override
 		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
