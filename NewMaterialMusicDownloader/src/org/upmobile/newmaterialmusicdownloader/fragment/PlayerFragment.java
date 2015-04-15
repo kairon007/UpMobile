@@ -737,12 +737,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void getCover(final AbstractSong s) {
 		setCheckBoxState(false);
-		Bitmap bitmap = s.getCover(getActivity());
-		if (s.isHasCover() && null != bitmap) {
-			setCoverToZoomView(bitmap);
-			setCheckBoxState(true);
-			((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
-			return;
+		if (s.isHasCover()) {
+			Bitmap bitmap = s.getCover(getActivity());
+			if (null != bitmap) {
+				setCoverToZoomView(bitmap);
+				setCheckBoxState(true);
+				((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+				return;
+			}
 		}
 		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 		if (s.getClass() != MusicData.class) {

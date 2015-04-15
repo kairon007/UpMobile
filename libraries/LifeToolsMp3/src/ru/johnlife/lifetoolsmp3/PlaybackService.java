@@ -789,9 +789,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		Bitmap cover = playingSong.getCover(this);
 		if (null != updateCover) {
 			cover = updateCover;
-			if (playingSong.getClass() != MusicData.class) {
-				((RemoteSong) playingSong).setCover(cover);
-			}
 		} else if (null == cover) {
 			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.icon);
 		}

@@ -663,8 +663,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void getCover(final AbstractSong song) {
 		setCheckBoxState(false);
-		setCoverToZoomView(null);
-		((View) cbUseCover.getParent()).setVisibility(View.GONE);
+		if (song.isHasCover()) {
+			Bitmap bitmap = song.getCover(getActivity());
+			if (null != bitmap) {
+				setCoverToZoomView(bitmap);
+				setCheckBoxState(true);
+				((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+				return;
+			}
+		}
+		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
@@ -682,13 +690,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			};
 			checkIdCover = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);
-		} else {
-			Bitmap bitmap = ((MusicData) song).getCover(getActivity());
-			if (bitmap != null) {
-				((View)cbUseCover.getParent()).setVisibility(View.VISIBLE);
-				setCoverToZoomView(bitmap);
-				setCheckBoxState(true);
-			}
 		}
 	}
 
