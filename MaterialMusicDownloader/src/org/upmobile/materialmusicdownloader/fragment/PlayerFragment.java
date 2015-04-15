@@ -262,6 +262,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		} else {
 			((MaterialRippleLayout) download.getParent()).setVisibility(View.VISIBLE);
 		}
+		setCheckBoxState(true);
+		cbUseCover.setOnCheckedChangeListener(this);
 		cancelProgressTask();
 		thatSongIsDownloaded();
 		super.onResume();
@@ -285,6 +287,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
 		}
+		cbUseCover.setOnCheckedChangeListener(null);
 		if (!isUseAlbumCover && song.isHasCover()) {
 			undo.clear();
 			clearCover();
@@ -379,7 +382,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void clearCover() {
-		setCheckBoxState(false);
 		if (MusicData.class == song.getClass()) {
 			((View)cbUseCover.getParent()).setVisibility(View.GONE);
 			setCoverToZoomView(null);
@@ -423,7 +425,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		download.setOnClickListener(this);
 		artistBox.setOnClickListener(this);
 		titleBox.setOnClickListener(this);
-		cbUseCover.setOnCheckedChangeListener(this);
 		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
@@ -485,6 +486,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 			clearCover();
 		}
+		cbUseCover.setOnCheckedChangeListener(null);
 		player.stop();
 		setClickablePlayerElement(false);
 		player.shift(delta);
@@ -506,6 +508,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		cancelProgressTask();
 		thatSongIsDownloaded();
+		cbUseCover.setOnCheckedChangeListener(this);
 	}
 
 	private void setElementsView(int progress) {
@@ -672,13 +675,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				return;
 			}
 		}
-		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
+		((View) cbUseCover.getParent()).setVisibility(View.GONE);
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (hashCode() != checkIdCover) return;
+					if (hashCode() != checkIdCover)
+						return;
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
@@ -718,11 +722,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setCheckBoxState(boolean state) {
 		if (isAdded()) {
 			isUseAlbumCover = state;
-			cbUseCover.setOnCheckedChangeListener(null);
 			cbUseCover.setChecked(state);
 			cbUseCover.setClickable(state);
 			cbUseCover.setEnabled(state);
-			cbUseCover.setOnCheckedChangeListener(this);
 		}
 	}
 
