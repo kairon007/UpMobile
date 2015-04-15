@@ -100,6 +100,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	}
 	
 	public void deleteSong(MusicData song) {
+		if (null == song) return;
 		remove(song);
 		service.remove(song);
 		song.reset(getContext());
@@ -172,6 +173,4 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			.show();
 	}
 	
-	
-
 }
