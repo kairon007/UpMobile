@@ -3,9 +3,7 @@ package org.upmobile.newmaterialmusicdownloader.ui;
 import org.upmobile.newmaterialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
-import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
-
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -16,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 public class LibraryView extends BaseLibraryView {
 
@@ -54,7 +55,12 @@ public class LibraryView extends BaseLibraryView {
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	            for (int position : reverseSortedPositions) {
-	            	((LibraryAdapter)adapter).deleteSong((MusicData)adapter.getItem(position)); 
+	            	MusicData data = ((MusicData) adapter.getItem(position));
+	            	((LibraryAdapter)adapter).deleteSong(data); 
+	            	String str =  data.getComment();
+	            	if (null != str) {
+						StateKeeper.getInstance().removeSongInfo(data.getComment());
+					}
 	            }
 	        }
 	    });

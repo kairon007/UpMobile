@@ -20,9 +20,12 @@ import android.view.View;
 
 public class StateKeeper {
 	
+	private TreeMap<String, SongInfo> songHolder = new TreeMap<String, SongInfo>();
+	private boolean notifyLable = true; 
+	
 	private Object tag;
 	private static StateKeeper instance = null;
-	private TreeMap<String, SongInfo> songHolder = new TreeMap<String, SongInfo>();
+	private OnlineSearchView searchView;
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
 	private Player playerInstance;
@@ -190,21 +193,24 @@ public class StateKeeper {
 		return result;
 	}
 	
-	public void saveStateAdapter(OnlineSearchView searchView) {
-		songField = searchView.getSearchField().getText().toString();
-		results = searchView.getResultAdapter().getAll();
-		if (results != null && !results.isEmpty()) listViewPosition = searchView.getListViewPosition();
-		else message = searchView.getMessage();
-		if (searchView != null) taskIterator = searchView.getTaskIterator();
+	public void saveStateAdapter(OnlineSearchView view) {
+		searchView = null;
+		songField = view.getSearchField().getText().toString();
+		results = view.getResultAdapter().getAll();
+		if (results != null && !results.isEmpty()) listViewPosition = view.getListViewPosition();
+		else message = view.getMessage();
+		if (view != null) taskIterator = view.getTaskIterator();
 		if (generalFlags == 0 || generalFlags == 2048) return;
-		if (viewItem == null) viewItem = searchView.getViewItem();
+		if (viewItem == null) viewItem = view.getViewItem();
 		if (checkState(STREAM_DIALOG)) {
-			if (downloadSong == null) downloadSong = searchView.getDownloadSong();
-			playerInstance = searchView.getPlayer();
-		} else if (checkState(PROGRESS_DIALOG)) setClickPosition(searchView.getClickPosition());
+			if (downloadSong == null) downloadSong = view.getDownloadSong();
+			playerInstance = view.getPlayer();
+		} else if (checkState(PROGRESS_DIALOG)) setClickPosition(view.getClickPosition());
 	}
 
 	public void restoreState(OnlineSearchView view) {
+		searchView = view;
+		notifyLable = true;
 		if (null != songField && !Util.removeSpecialCharacters(songField).equals("")) {
 			view.setSearchField(songField);
 		}
@@ -256,7 +262,8 @@ public class StateKeeper {
 		}
 		songHolder.clear();
 		File[] files = new File(folder).listFiles();
-		if (null == files) return;
+		if (null == files)
+			return;
 		for (int i = 0; i < files.length; i++) {
 			try {
 				MusicMetadataSet src_set = new MyID3().read(files[i]);
@@ -274,12 +281,27 @@ public class StateKeeper {
 		}
 	}
 	
-	public void putSongInfo(String url, SongInfo info) {
-		songHolder.put(url.contains("youtube-mp3.org") ? url.substring(0, url.indexOf("ts_create")) : url, info);
+	public void notifyLable(boolean needNotify) {
+		notifyLable = needNotify;
+		if (null != searchView && needNotify) {
+			searchView.notifyAdapter();
+		}
 	}
 	
-	public void removeSongInfo (String url) {
+	public void putSongInfo(String url, SongInfo info) {
+		songHolder.put(url.contains("youtube-mp3.org") ? url.substring(0, url.indexOf("ts_create")) : url, info);
+		if (null != searchView && notifyLable) {
+			searchView.notifyAdapter();
+		}
+	}
+	
+	public void removeSongInfo(String url) {
 		songHolder.remove(url);
+		android.util.Log.d("logks", "nnnn" + notifyLable);
+		if (null != searchView && notifyLable) {
+			android.util.Log.d("logks", "!!!");
+			searchView.notifyAdapter();
+		}
 	}
 	
 	public SongInfo checkSongInfo(String url) {
@@ -395,6 +417,14 @@ public class StateKeeper {
 			this.playingSong.getSpecial().setChecked(false);
 		}
 		this.playingSong = playingSong;
+	}
+	
+	public OnlineSearchView getSearchView() {
+		return searchView;
+	}
+
+	public void setSearchView(OnlineSearchView searchView) {
+		this.searchView = searchView;
 	}
 
 	public static class SongInfo {

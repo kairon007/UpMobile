@@ -200,6 +200,7 @@ public abstract class OnlineSearchView extends View {
 				updateQuery();
 			}
 		}).start();
+		keeper.setSearchView(this);
 	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -494,63 +495,57 @@ public abstract class OnlineSearchView extends View {
 	
 	private void updateLables() {
 		ArrayList<MusicData> newLibraryList = querySong();
-		if (libraryList.size() == newLibraryList.size()) {
+		ArrayList<MusicData> buferList = libraryList;
+		if (buferList.size() == newLibraryList.size()) {
 			return;
-		} else if (libraryList.size() > newLibraryList.size()) {
-			libraryList.removeAll(newLibraryList);
-			removeLables(libraryList);
+		} else if (buferList.size() > newLibraryList.size()) {
+			buferList.removeAll(newLibraryList);
+			removeLables(buferList);
 		} else {
-			newLibraryList.removeAll(libraryList);
+			newLibraryList.removeAll(buferList);
 			addLables(newLibraryList);
 		}
 	}
 	
+	private Runnable updater = new Runnable() {
+		
+		@Override
+		public void run() {
+			keeper.notifyLable(true);
+		}
+	};
+	
 	private void addLables(ArrayList<MusicData> list) {
+		keeper.notifyLable(false);
+		boolean isUpdated = false;
 		for (MusicData musicData : list) {
+			libraryList.add(musicData);
 			String comment = musicData.getComment();
-			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http") ) {
-					View v = getViewByPosition(getResultAdapter().getPosition(keeper.checkSongInfo(comment).getRemoteSong()));
-					setLableDownloaded(v);
-					keeper.removeSongInfo(comment);
-					keeper.putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADED, -1));
+			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http")) {
+				keeper.removeSongInfo(comment);
+				keeper.putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADED, -1));
+				isUpdated = true;
 			}
 		}
-	}
-
-	private void setLableDownloaded(final View v) {
-		((Activity) getContext()).runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				if (null == ((TextView) v.findViewById(R.id.infoView))) return;
-				((TextView) v.findViewById(R.id.infoView)).setVisibility(View.VISIBLE);
-				((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloaded);
-				((TextView) v.findViewById(R.id.infoView)).setTextColor(getResources().getColor(R.color.dark_green));
-			}
-		});
+		if (isUpdated) {
+			((Activity) getContext()).runOnUiThread(updater);
+		}
 	}
 
 	private void removeLables(ArrayList<MusicData> list) {
+		keeper.notifyLable(false);
+		boolean isUpdated = false;
 		for (MusicData musicData : list) {
-			if (null != musicData.getComment() && keeper.checkSongInfo(musicData.getComment()).getRemoteSong() != null && musicData.getComment().contains("http") ) {
-				View v = getViewByPosition(getResultAdapter().getPosition(keeper.checkSongInfo(musicData.getComment()).getRemoteSong()));
-				removeDownloadedLable(v);
+			libraryList.remove(musicData);
+			String comment = musicData.getComment();
+			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http")) {
 				keeper.removeSongInfo(musicData.getComment());
+				isUpdated = true;
 			}
 		}
-		updateQuery();
-		keeper.initSongHolder(getDirectory());
-	}
-	
-	private void removeDownloadedLable(final View v) {
-		((Activity) getContext()).runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				if (null == ((TextView) v.findViewById(R.id.infoView))) return;
-				((TextView) v.findViewById(R.id.infoView)).findViewById(R.id.infoView).setVisibility(View.GONE);
-			}
-		});
+		if (isUpdated) {
+			((Activity) getContext()).runOnUiThread(updater);
+		}
 	}
 
 	public int getScrollListView() {
