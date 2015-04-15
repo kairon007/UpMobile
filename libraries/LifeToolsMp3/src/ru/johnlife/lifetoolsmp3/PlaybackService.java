@@ -45,7 +45,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-public class PlaybackService  extends Service implements Constants, OnCompletionListener, OnErrorListener, OnPreparedListener, Handler.Callback {
+public class PlaybackService  extends Service implements Constants, OnCompletionListener, 
+	OnErrorListener, OnPreparedListener, Handler.Callback {
 	
 	//constants section
 	private static final int SMODE_GET_URL = 0x00000001;
@@ -601,7 +602,34 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 
 	@Override
 	public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
-		buildSendMessage(playingSong, MSG_ERROR, what, extra);
+		switch (what) { // TO logs we should be aware of
+		case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+			Log.e(getClass().getSimpleName(), "Unknown media playback error");
+			break;
+		case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+			Log.e(getClass().getSimpleName(), "Server connection died");
+		default:
+			Log.e(getClass().getSimpleName(), "Generic audio playback error");
+			break;
+		}
+		switch (extra) { // To logs we should be aware of
+		case MediaPlayer.MEDIA_ERROR_IO:
+			buildSendMessage(playingSong, MSG_ERROR, what, extra);
+			Log.e(getClass().getSimpleName(), "IO media error");
+			break;
+		case MediaPlayer.MEDIA_ERROR_MALFORMED:
+			Log.e(getClass().getSimpleName(), "Media error, malformed");
+			break;
+		case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+			Log.e(getClass().getSimpleName(), "Unsupported media content");
+			break;
+		case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+			Log.e(getClass().getSimpleName(), "Media timeout error");
+			break;
+		default:
+			Log.e(getClass().getSimpleName(), "Unknown playback error");
+			break;
+		}
 		return true;
 	}
 
