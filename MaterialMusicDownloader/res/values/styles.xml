@@ -181,7 +181,7 @@
     <style name="RippleStyle">
         <item name="rv_rippleDuration">150</item>
         <item name="rv_alpha">200</item>
-<!--         <item name="rv_alphaVisible">true</item> -->
+        <!-- <item name="rv_alphaVisible">true</item> -->
         <item name="rv_color">?attr/colorPrimaryDark</item>
     </style>
 
@@ -201,6 +201,14 @@
 
     <style name="RippleStyleCircle" parent="RippleStyle">
         <item name="rv_type">doubleRipple</item>
+    </style>
+
+    <style name="FloatingEditText">
+        <item name="floating_et_color">@color/main_color_for_text</item>
+        <item name="floating_et_highlighted_color">?attr/colorAccent</item>
+        <item name="floating_et_error_color">@android:color/holo_red_light</item>
+        <item name="floating_et_char_count">30</item>
+        <item name="floating_et_show_count">true</item>
     </style>
 
 </resources>
