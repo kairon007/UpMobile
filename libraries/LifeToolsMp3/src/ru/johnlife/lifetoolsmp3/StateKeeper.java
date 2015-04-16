@@ -43,6 +43,7 @@ public class StateKeeper {
 	private int clickPosition;
 	private int currentPlayersId;
 	private int tempID3UseCover;
+	private int libaryFirstPosition;
 	/**
 	 * The class flags hold various states.
 	 */
@@ -418,6 +419,14 @@ public class StateKeeper {
 		this.playingSong = playingSong;
 	}
 	
+	public int getLibaryFirstPosition() {
+		return libaryFirstPosition;
+	}
+
+	public void setLibaryFirstPosition(int libaryFirstPosition) {
+		this.libaryFirstPosition = libaryFirstPosition;
+	}
+
 	public static class SongInfo {
 		
 		public static final int DOWNLOADED = 0;

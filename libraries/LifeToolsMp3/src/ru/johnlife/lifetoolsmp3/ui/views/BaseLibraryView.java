@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -62,7 +63,10 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	};
 	
 	private void fillAdapter(ArrayList<MusicData> list) {
-		if (list.isEmpty()) return;
+		if (list.isEmpty()) {
+			adapter.clear();
+			return;
+		}
 		Message msg = new Message();
 		msg.what = MSG_FILL_ADAPTER;
 		msg.obj = list;
@@ -92,6 +96,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			checkRemovedFiles.cancel(true);
 			checkRemovedFiles = null;
 		}
+		StateKeeper.getInstance().setLibaryFirstPosition(listView.getFirstVisiblePosition());
 	}
 	
 	public void onResume() {
@@ -140,6 +145,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 					@Override
 					public void run() {
 						hideProgress(view);
+						listView.setSelection(StateKeeper.getInstance().getLibaryFirstPosition());
 						adapter.notifyDataSetChanged();
 						listView.setEmptyView(emptyMessage);
 					}
