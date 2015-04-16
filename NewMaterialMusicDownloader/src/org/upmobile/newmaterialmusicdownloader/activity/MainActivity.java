@@ -375,9 +375,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			message.show(false);
 			return;
 		}
-		floatBtnContainer = (View) findViewById(R.id.floatingButton).getParent();
+		View floatBtn = findViewById(R.id.floatingButton);
 		View miniplayer = findViewById(getMiniPlayerID());
-		if (null != floatBtnContainer && miniplayer.getVisibility() != View.VISIBLE) {
+		if (null != floatBtn && miniplayer.getVisibility() != View.VISIBLE) {
+			floatBtnContainer = (View) floatBtn.getParent();
 			message.listener(new UndoBarController.AdvancedUndoListener() {
 
 				@Override
@@ -486,15 +487,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				Util.dpToPx(this, (height / 3 - 2)), 
 				Util.dpToPx(this, (height - 1)), 
 				Util.dpToPx(this, (height / 3 - 2)), 
-				Util.dpToPx(this, (height / 8 * 4) ),
-				Util.dpToPx(this, (height / 8 * 6)) };
+				Util.dpToPx(this, (height / 8 * 4)),
+				Util.dpToPx(this, (height / 8 * 6))};
 		int verticesColors[] = { 
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
-				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)) };
+				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary))};
 		canvas.drawVertices(Canvas.VertexMode.TRIANGLES, verts.length, verts, 0, null, 0, verticesColors, 0, null, 0, 0, paint);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		paint.setStrokeWidth(Util.dpToPx(this, height / 8));
