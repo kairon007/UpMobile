@@ -1,5 +1,6 @@
 package ru.johnlife.lifetoolsmp3.engines.lyric;
 
+import java.io.EOFException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +22,7 @@ public class LyricsFetcher {
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
 	private static final String AZLYRICS_URL = "http://www.azlyrics.com/";
 	private static final String TAG = "AZLyricsViewer:LyricsFetcher";
+	private static final String ANONIMIZER = "http://cameleo.ru/r";
 	private static final boolean DEBUG = false;
 
 	public interface OnLyricsFetchedListener {
@@ -31,12 +33,33 @@ public class LyricsFetcher {
 
 		@Override
 		protected String doInBackground(String... arg0) {
+			Response defaut = null;
+			Response anonimizer = null;
+			String url = arg0[0];
 			try { 
-				Response defaut = Jsoup.connect(AZLYRICS_URL).userAgent(USER_AGENT).timeout(10000).followRedirects(true).ignoreHttpErrors(true).execute();
-				Response res = Jsoup.connect(arg0[0])
+				try {
+					defaut = Jsoup.connect(AZLYRICS_URL).userAgent(USER_AGENT)
+							.timeout(10000)
+							.followRedirects(true)
+							.ignoreContentType(true)
+							.ignoreHttpErrors(true)
+							.method(Method.GET)
+							.execute();
+				} catch (EOFException e) {
+					anonimizer = Jsoup.connect(ANONIMIZER).userAgent(USER_AGENT)
+							.timeout(10000)
+							.data("url", AZLYRICS_URL)
+							.followRedirects(true)
+							.ignoreContentType(true)
+							.ignoreHttpErrors(true)
+							.method(Method.GET)
+							.execute();
+					url = url.replace(AZLYRICS_URL, anonimizer.url().toString());
+				}
+				Response res = Jsoup.connect(url)
 						.userAgent(USER_AGENT)
 						.followRedirects(true)
-						.cookies(defaut.cookies())
+						.cookies(defaut == null ? anonimizer.cookies() : defaut.cookies())
 						.header("Connection", "close")
 						.timeout(10000)
 						.ignoreHttpErrors(true)
