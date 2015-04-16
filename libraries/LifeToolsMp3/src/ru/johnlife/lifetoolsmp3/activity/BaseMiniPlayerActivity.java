@@ -70,6 +70,12 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	}
 	
 	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		StateKeeper.getInstance().initSongHolder(getDirectory());
+	}
+	
+	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		initMiniPlayer();

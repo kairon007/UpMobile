@@ -16,6 +16,7 @@ import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog;
 import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -260,13 +261,27 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 	
 	@Override
-	public void onFolderSelection(File folder) {
+	public void onFolderSelection(final File folder) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor editor = sp.edit();
 		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
 		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
 		editor.commit();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						StateKeeper.getInstance().notifyLable(true);
+					}
+				});
+			}
+		}).start();
 	}
 
 	public void setDraverEnabled(boolean isVisibleDraver) {

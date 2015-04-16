@@ -258,7 +258,7 @@ public abstract class OnlineSearchView extends View {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			if (showDownloadLabel()) {
+			if (showDownloadLabel() ) {
 				updateLables();
 			}
 		}
@@ -403,7 +403,6 @@ public abstract class OnlineSearchView extends View {
 					clickPosition = position;
 					getDownloadUrl(view, position);
 				} catch(Exception e) {
-//					Log.e(getClass().getSimpleName(), e.getMessage());	
 					e.printStackTrace();
 				}
 			}
@@ -493,16 +492,15 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void updateLables() {
-		android.util.Log.d("logks", "OnlineSearchView, updateLables: oops");
 		ArrayList<MusicData> newLibraryList = querySong();
-		ArrayList<MusicData> buferList = libraryList;
-		if (buferList.size() == newLibraryList.size()) {
+		ArrayList<MusicData> bufferList = new ArrayList<>(libraryList);
+		if (bufferList.size() == newLibraryList.size()) {
 			return;
-		} else if (buferList.size() > newLibraryList.size()) {
-			buferList.removeAll(newLibraryList);
-			removeLables(buferList);
-		} else {
-			newLibraryList.removeAll(buferList);
+		} else if (newLibraryList.size() < bufferList.size()) {
+			bufferList.removeAll(newLibraryList);
+			removeLables(bufferList);
+		} else  if (bufferList.size() < newLibraryList.size()) {
+			newLibraryList.removeAll(bufferList);
 			addLables(newLibraryList);
 		}
 	}
@@ -519,9 +517,9 @@ public abstract class OnlineSearchView extends View {
 		keeper.notifyLable(false);
 		boolean isUpdated = false;
 		for (MusicData musicData : list) {
-			libraryList.add(musicData);
 			String comment = musicData.getComment();
 			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http")) {
+				libraryList.add(musicData);
 				keeper.removeSongInfo(comment);
 				keeper.putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADED, -1));
 				isUpdated = true;
@@ -536,9 +534,9 @@ public abstract class OnlineSearchView extends View {
 		keeper.notifyLable(false);
 		boolean isUpdated = false;
 		for (MusicData musicData : list) {
-			libraryList.remove(musicData);
 			String comment = musicData.getComment();
 			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http")) {
+				libraryList.remove(musicData);
 				keeper.removeSongInfo(musicData.getComment());
 				isUpdated = true;
 			}
@@ -972,7 +970,6 @@ public abstract class OnlineSearchView extends View {
 		String searchString = searchField.getText().toString();
 		if (searchString.equals(lastSearchString) && message.getVisibility() != View.VISIBLE) return;
 		lastSearchString = searchString;
-		keeper.initSongHolder(getDirectory());
 		if (isOffline(getContext())) {
 			message.setText(R.string.search_message_no_internet);
 			resultAdapter.clear();

@@ -124,6 +124,15 @@ public class DownloadListener extends DownloadClickListener {
 	@Override
 	protected void notifyAboutFailed(long downloadId) {
 		super.notifyAboutFailed(downloadId);
+		if (null != context) {
+			((Activity) context).runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					StateKeeper.getInstance().removeSongInfo(song.getUrl());
+				}
+			});
+		}
 	}
 
 	@Override

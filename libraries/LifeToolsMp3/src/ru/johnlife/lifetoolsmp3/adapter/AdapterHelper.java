@@ -40,7 +40,7 @@ public class AdapterHelper {
 		private TextView dowloadLabel;
 		private ImageView btnDownload;
 		private ImageView cover;
-		private View view, threeDot, playingIndicator;
+		private View view, playingIndicator;
 		private View left;
 		private TextView caption;
 		private boolean fullAction = true;
@@ -71,10 +71,9 @@ public class AdapterHelper {
 			btnDownload = (ImageView)view.findViewById(R.id.btnDownload);
 			cover = (ImageView)view.findViewById(R.id.cover);
 			left = (View) number.getParent();
-			threeDot = view.findViewById(R.id.threeDot);
 			dowloadLabel = (TextView) view.findViewById(R.id.infoView);
 			if (!useIndicator) return;
-			playingIndicator = (View) view.findViewById(R.id.playingIndicator);
+			playingIndicator = view.findViewById(R.id.playingIndicator);
 		}
 		
 		/**

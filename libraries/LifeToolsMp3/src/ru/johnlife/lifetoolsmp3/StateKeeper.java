@@ -285,23 +285,23 @@ public class StateKeeper {
 	
 	public void notifyLable(boolean needNotify) {
 		notifyLable = needNotify;
-		if (null != searchView && needNotify) {
+		notifyLable();
+	}
+	
+	private void notifyLable() {
+		if (null != searchView && notifyLable) {
 			searchView.notifyAdapter();
-		}
+		} 
 	}
 	
 	public void putSongInfo(String url, SongInfo info) {
 		songHolder.put(url.contains("youtube-mp3.org") ? url.substring(0, url.indexOf("ts_create")) : url, info);
-		if (null != searchView && notifyLable) {
-			searchView.notifyAdapter();
-		}
+		notifyLable();
 	}
 	
 	public void removeSongInfo(String url) {
 		songHolder.remove(url);
-		if (null != searchView && notifyLable) {
-			searchView.notifyAdapter();
-		}
+		notifyLable();
 	}
 	
 	public SongInfo checkSongInfo(String url) {
