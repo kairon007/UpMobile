@@ -6,6 +6,7 @@
         <attr name="miniPlayerPause" format="reference" />
         <attr name="miniPlayerDownload" format="reference" />
     </declare-styleable>
+    
     <declare-styleable name="Undobar">
         <attr name="undoBarStyle" format="reference" />
         <attr name="inAnimation" format="reference" />
@@ -18,7 +19,6 @@
 
     <!-- CircularImageView for custom shape -->
     <declare-styleable name="CircularImageView">
-
         <!-- Specifies whether or not to draw a circular border around the image. -->
         <attr name="border" format="boolean"></attr>
         <!-- Specifies the color of the border draw around the image. (if enabled) -->
@@ -36,6 +36,7 @@
         <!-- Specifies whether or not to draw a shadow around your circular image. -->
         <attr name="shadow" format="boolean"></attr>
     </declare-styleable>
+    
     <declare-styleable name="CustomCircularImageViewTheme">
         <attr name="circularImageViewStyle" format="reference" />
     </declare-styleable>
@@ -59,6 +60,7 @@
         <attr name="dsb_indeterminate" format="boolean" />
         <attr name="dsb_indeterminate_color" format="color|reference" />
     </declare-styleable>
+    
     <declare-styleable name="ProgressWheel">
         <attr name="matProg_progressIndeterminate" format="boolean" />
         <attr name="matProg_barColor" format="color|reference" />
@@ -71,6 +73,7 @@
         <attr name="matProg_barWidth" format="dimension" />
         <attr name="matProg_linearProgress" format="boolean" />
     </declare-styleable>
+    
     <declare-styleable name="FloatingEditText">
         <attr name="floating_et_hint_scale" format="float" />
         <attr name="floating_et_color" format="color" />
@@ -83,6 +86,7 @@
         <attr name="floating_et_left_padding" format="dimension" />
         <attr name="floating_et_right_padding" format="dimension" />
     </declare-styleable>
+    
     <declare-styleable name="PlayPauseButton">
         <attr name="pauseBarWidth" format="integer" />
         <attr name="pauseBarHeight" format="integer" />
@@ -92,6 +96,7 @@
         <attr name="playBackground" format="color|reference" />
         <attr name="pauseBackground" format="color|reference" />
     </declare-styleable>
+    
     <declare-styleable name="RippleView">
         <attr name="rv_clickable" format="boolean" />
         <attr name="rv_alpha" format="integer" />
@@ -108,7 +113,9 @@
         <attr name="rv_ripplePadding" format="dimension" />
         <attr name="rv_zoom" format="boolean" />
         <attr name="rv_zoomScale" format="float" />
+        <attr name="rv_alphaVisible" format="boolean" />
     </declare-styleable>
+    
     <declare-styleable name="FloatingActionButton">
         <attr name="fab_colorPressed" format="color|reference" />
         <attr name="fab_colorNormal" format="color|reference" />
@@ -120,7 +127,7 @@
             <enum name="mini" value="1" />
         </attr>
     </declare-styleable>
-
+    
     <declare-styleable name="RobotoTextView">
         <attr name="typeface" format="enum">
             <enum name="robotoBlack" value="0" />
@@ -141,6 +148,7 @@
             <enum name="robotoThinItalic" value="15" />
         </attr>
     </declare-styleable>
+    
     <declare-styleable name="CircularProgressButton">
         <attr name="cpb_selectorIdle" format="reference" />
         <attr name="cpb_selectorComplete" format="reference" />
@@ -157,6 +165,7 @@
         <attr name="cpb_cornerRadius" format="dimension" />
         <attr name="cpb_paddingProgress" format="dimension" />
     </declare-styleable>
+    
     <declare-styleable name="ProgressWheel1">
         <attr name="text" format="string" />
         <attr name="textColor" format="color" />
@@ -174,8 +183,8 @@
         <attr name="contourSize" format="dimension" />
         <attr name="isSpinning" format="boolean" />
     </declare-styleable>
+    
     <declare-styleable name="MaterialDialog">
-
         <!-- These top three attributes are not accessible to library users -->
         <attr name="md_divider" format="color" />
         <!-- Accessible global theming attributes -->
