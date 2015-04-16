@@ -26,6 +26,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
+import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
@@ -71,7 +72,6 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
-import com.csform.android.uiapptemplate.view.MaterialRippleLayout;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
@@ -215,7 +215,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
 			download.setClickable(false);
-			((MaterialRippleLayout) download.getParent()).setEnabled(false);
+			((RippleView) download.getParent()).setEnabled(false);
 		}
 
 		@Override
@@ -241,7 +241,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		public void onPreExecute() {
 			canceled = false;
-			((MaterialRippleLayout) download.getParent()).setEnabled(false);
+			((RippleView) download.getParent()).setEnabled(false);
 			download.setClickable(false);
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
@@ -305,9 +305,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
-			((MaterialRippleLayout) download.getParent()).setVisibility(View.GONE);
+			((RippleView) download.getParent()).setVisibility(View.GONE);
 		} else {
-			((MaterialRippleLayout) download.getParent()).setVisibility(View.VISIBLE);
+			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
 		}
 		setCheckBoxState(true);
 		cbUseCover.setOnCheckedChangeListener(this);
@@ -549,9 +549,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setOnClickListener(this);
 		}
 		if (StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment()).getStatus() == SongInfo.DOWNLOADED) {
-			((MaterialRippleLayout) download.getParent()).setVisibility(View.GONE);
+			((RippleView) download.getParent()).setVisibility(View.GONE);
 		} else {
-			((MaterialRippleLayout) download.getParent()).setVisibility(View.VISIBLE);
+			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
 		}
 		cancelProgressTask();
 		thatSongIsDownloaded();
@@ -600,7 +600,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setDownloadButtonState(boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
-		((MaterialRippleLayout) download.getParent()).setEnabled(state);
+		((RippleView) download.getParent()).setEnabled(state);
 	}
 
 	private void openArtistField() {
@@ -729,8 +729,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (hashCode() != checkIdCover)
-						return;
+					if (hashCode() != checkIdCover) return;
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);

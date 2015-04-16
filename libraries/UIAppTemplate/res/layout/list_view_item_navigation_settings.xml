@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.csform.android.uiapptemplate.view.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/RippleStyle"
+    style="@style/RippleStyleRectangle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_background_empty"
-    android:paddingRight="4dp"
-    android:paddingLeft="4dp" >
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:orientation="vertical"
@@ -53,11 +54,11 @@
             android:maxLines="2"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@drawable/selector_text_empty" />
-        
-            <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/main_color_grey_500" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/main_color_grey_500" />
     </LinearLayout>
 
-</com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+</ru.johnlife.lifetoolsmp3.ui.widget.RippleView>

@@ -29,6 +29,8 @@ import android.widget.ListView;
 
 public class RippleView extends FrameLayout implements OnGestureListener {
 
+	private static boolean click = false;
+	
     private int width;
     private int height;
     private int rippleFrameRate = 10;
@@ -36,10 +38,11 @@ public class RippleView extends FrameLayout implements OnGestureListener {
     private int rippleAlpha = 90;
     private int rippleColor = Color.WHITE;
     private int ripplePadding = 0;
-    private int rippleType;
-    private int rippleZoomDuration;
-    private float rippleZoomScale;
+    private int rippleType = 0;
+    private int rippleZoomDuration = 200;
+    private float rippleZoomScale = 1.03f;
     private boolean rippleClickable = true;
+    private boolean rippleAlphaVisible = true;
     
     private int timer = 0;
     private int timerEmpty = 0;
@@ -86,13 +89,14 @@ public class RippleView extends FrameLayout implements OnGestureListener {
         if (isInEditMode()) return;
         final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RippleView);
         rippleColor = typedArray.getColor(R.styleable.RippleView_rv_color, Color.TRANSPARENT);
-        rippleType = typedArray.getInt(R.styleable.RippleView_rv_type, 0);
+        rippleType = typedArray.getInt(R.styleable.RippleView_rv_type, rippleType);
         rippleDuration = typedArray.getInteger(R.styleable.RippleView_rv_rippleDuration, rippleDuration);
         rippleFrameRate = typedArray.getInteger(R.styleable.RippleView_rv_framerate, rippleFrameRate);
         rippleAlpha = typedArray.getInteger(R.styleable.RippleView_rv_alpha, rippleAlpha);
-        ripplePadding = typedArray.getDimensionPixelSize(R.styleable.RippleView_rv_ripplePadding, 0);
-        rippleZoomScale = typedArray.getFloat(R.styleable.RippleView_rv_zoomScale, 1.03f);
-        rippleZoomDuration = typedArray.getInt(R.styleable.RippleView_rv_zoomDuration, 200);
+        rippleAlphaVisible = typedArray.getBoolean(R.styleable.RippleView_rv_alphaVisible, rippleAlphaVisible);
+        ripplePadding = typedArray.getDimensionPixelSize(R.styleable.RippleView_rv_ripplePadding, ripplePadding);
+        rippleZoomScale = typedArray.getFloat(R.styleable.RippleView_rv_zoomScale, rippleZoomScale);
+        rippleZoomDuration = typedArray.getInt(R.styleable.RippleView_rv_zoomDuration, rippleZoomDuration);
         rippleClickable = typedArray.getBoolean(R.styleable.RippleView_rv_clickable, rippleClickable);
         hasToZoom = typedArray.getBoolean(R.styleable.RippleView_rv_zoom, false);
         isCentered = typedArray.getBoolean(R.styleable.RippleView_rv_centered, false);
@@ -109,12 +113,12 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 	@Override
 	public void draw(@NonNull Canvas canvas) {
 		super.draw(canvas);
-		if (!animationRunning)
-			return;
+		if (!animationRunning) return;
+		if (timer == 0)
+			canvas.save();
 		if (rippleDuration <= timer * rippleFrameRate) {
-			if (!isLongClick && !eventCanceled) {
+			if (!isLongClick && !eventCanceled)
 				sendClickEvent();
-			}
 			animationRunning = false;
 			timer = 0;
 			durationEmpty = -1;
@@ -125,14 +129,10 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		} else {
 			canvasHandler.postDelayed(runnable, rippleFrameRate);
 		}
-		if (rippleDuration > timer * rippleFrameRate) {
+		if (rippleDuration > timer * rippleFrameRate)
 			canvasHandler.postDelayed(runnable, rippleFrameRate);
-		}
-		if (timer == 0) {
-			canvas.save();
-		}
 		canvas.drawCircle(x, y, (radiusMax * (((float) timer * rippleFrameRate) / rippleDuration)), paint);
-		if (rippleType == 1 && originBitmap != null	&& (((float) timer * rippleFrameRate) / rippleDuration) > 0.4f) {
+		if (rippleType == 1 && originBitmap != null && (((float) timer * rippleFrameRate) / rippleDuration) > 0.4f) {
 			if (durationEmpty == -1)
 				durationEmpty = rippleDuration - timer * rippleFrameRate;
 			timerEmpty++;
@@ -141,13 +141,14 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			tmpBitmap.recycle();
 		}
 		paint.setColor(rippleColor);
-		if (rippleType == 1) {
-			if ((((float) timer * rippleFrameRate) / rippleDuration) > 0.6f)
-				paint.setAlpha((int) (rippleAlpha - ((rippleAlpha) * (((float) timerEmpty * rippleFrameRate) / (durationEmpty)))));
+		if (rippleAlphaVisible)
+			if (rippleType == 1)
+				if ((((float) timer * rippleFrameRate) / rippleDuration) > 0.6f)
+					paint.setAlpha((int) (rippleAlpha - ((rippleAlpha) * (((float) timerEmpty * rippleFrameRate) / (durationEmpty)))));
+				else
+					paint.setAlpha(rippleAlpha);
 			else
-				paint.setAlpha(rippleAlpha);
-		} else
-			paint.setAlpha((int) (rippleAlpha - ((rippleAlpha) * (((float) timer * rippleFrameRate) / rippleDuration))));
+				paint.setAlpha((int) (rippleAlpha - ((rippleAlpha) * (((float) timer * rippleFrameRate) / rippleDuration))));
 		timer++;
 	}
 
@@ -249,10 +250,13 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		case MotionEvent.ACTION_UP:
 			childView.onTouchEvent(event);
 			isLongClick = false;
+			click = false;
 			break;
 		case MotionEvent.ACTION_DOWN:
+			if (click) return true;
 			childView.onTouchEvent(event);
 			eventCanceled = false;
+			click = true;
 			removeCallbacks(runnable);
 			if (isInScrollingContainer()) {
 				final float x = event.getX();
@@ -270,14 +274,13 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			} else if (childView.isClickable() && rippleClickable) {
 				animateRipple(event);
 			}
-			childView.setPressed(true);
 			break;
 		case MotionEvent.ACTION_CANCEL:
 			childView.onTouchEvent(event);
 			eventCanceled = true;
 			animationRunning = false;
+			click = false;
 			removeCallbacks(runnable);
-			childView.setPressed(false);
 			break;
 		}
 		return true;

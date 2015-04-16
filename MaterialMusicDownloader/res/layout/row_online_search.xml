@@ -7,12 +7,11 @@
     android:paddingLeft="4dp"
     android:paddingRight="4dp" >
 
-    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-        style="@style/RippleStyle"
+    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+        style="@style/RippleStyleRectangle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:clickable="true" >
+        android:layout_weight="1" >
 
         <LinearLayout
             android:id="@+id/boxInfoItem"
@@ -118,8 +117,8 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                style="@style/RippleStyle"
+            <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                style="@style/RippleStyleCircle"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical" >
@@ -135,9 +134,9 @@
                     android:padding="4dp"
                     android:text="@string/three_dot"
                     android:textSize="32sp" />
-            </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+            </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
         </LinearLayout>
-    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
     <FrameLayout
         android:layout_width="wrap_content"
