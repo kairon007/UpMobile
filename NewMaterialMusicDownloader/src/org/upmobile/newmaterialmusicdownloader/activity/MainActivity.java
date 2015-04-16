@@ -65,6 +65,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private View floatBtnContainer;
 	private FrameLayout toolbarShadow;
 	private TextView title;
+	private Toolbar toolbar;
 	private int currentFragmentId = -1;
 	private int lastCheckPosition = 0;
 	private boolean isVisibleSearchView = false;
@@ -75,7 +76,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		setContentView(R.layout.activity_main);
 		super.onCreate(savedInstanceState);
 		toolbarShadow = (FrameLayout) findViewById(R.id.toolbar_shadow);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar); 	
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -529,7 +530,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void setToolbarAlpha(int alpha) {
-		findViewById(R.id.toolbar).getBackground().setAlpha(alpha);
+		toolbar.getBackground().setAlpha(alpha);
+		toolbarShadow.setAlpha((float) alpha / 255);
 		title.setAlpha((float) alpha / 255);
 	}
 }

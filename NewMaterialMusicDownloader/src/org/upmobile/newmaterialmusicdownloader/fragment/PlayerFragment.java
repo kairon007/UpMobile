@@ -348,7 +348,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setToolbarOverlay(true);
 		((MainActivity) getActivity()).setToolbarAlpha(scrollView.getToolbarAlpha());
-		((MainActivity) getActivity()).showToolbarShadow(false);
+		((MainActivity) getActivity()).showToolbarShadow(true);
 		SharedPreferences sp = NewMaterialApp.getSharedPreferences();
 		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, false);
 		cbShowVisualizer.setChecked(stateVisualizer);
