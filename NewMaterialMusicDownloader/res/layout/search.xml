@@ -120,6 +120,7 @@
                 android:id="@+id/choise_engines"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:layout_marginRight="8dp"
                 android:dropDownVerticalOffset="-48dip"
                 android:gravity="top"
                 android:overlapAnchor="false"
