@@ -352,7 +352,6 @@ public abstract class OnlineSearchView extends View {
 			view.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
 			int color = getContext().getResources().getColor(android.R.color.black);
 			searchField.setTextColor(color);
-			searchField.clearFocus();
 			message.setTextColor(color);
 			if (null != spEnginesChoiserLayout) {
 				spEnginesChoiserLayout.setBackgroundResource(R.drawable.spinner_background);
@@ -444,12 +443,12 @@ public abstract class OnlineSearchView extends View {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN && v.getId() != R.id.text) {
 					Util.hideKeyboard(getContext(), v);
-					view.findViewById(R.id.text).setFocusable(false);
+					searchField.setFocusable(false);
 				}
 				return v.performClick();
 			}
 		});
-		view.findViewById(R.id.text).setOnTouchListener(new OnTouchListener() {
+		searchField.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -470,6 +469,7 @@ public abstract class OnlineSearchView extends View {
 		} else {
 			hideBaseProgress();
 		}
+		searchField.setFocusable(false);
 		return view;
 	} 
 	
