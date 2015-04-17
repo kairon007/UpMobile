@@ -114,9 +114,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView playerTotalTime;
 	private SeekBar playerProgress;
 	private ImageView imageView;
+	private Bitmap defaultCover;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
+	private int minHeight;
 	private double percent = 0;
 
 	private boolean isDestroy;
@@ -272,6 +274,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		} else {
 			song = player.getPlayingSong();
 		}
+		initCover();
 		setCoverToZoomView(null);
 		getCover(song);
 		setImageButton();
@@ -288,6 +291,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		scrollView.setContentContainerView(contentView);
 		return scrollView;
+	}
+	
+	private void initCover() {
+		String cover =  getResources().getString(R.string.font_musics);
+		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
+		int width = display.getWidth(); 
+		int height = display.getHeight();
+		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 16));
+		minHeight = (coverHeight > width )? width : coverHeight;
+		imageView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		imageView.setPadding(0, 8, 0, 8);
+		defaultCover = ((MainActivity) getActivity()).getDefaultBitmapCover(minHeight, minHeight, minHeight - 16, cover);
 	}
 	
 	@Override
@@ -458,6 +473,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		undo = new UndoBar(getActivity());
+		imageView = new ImageView(getActivity());
 	}
 
 	private void setListeners() {
@@ -754,19 +770,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
-		imageView = new ImageView(getActivity());
-		imageView.setPadding(8, 8, 8, 8);
-		String cover =  getResources().getString(R.string.font_musics);
-		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
-		int width = display.getWidth(); 
-		int height = display.getHeight();
-		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 72));
-		int minHeight = (coverHeight > width )? width : coverHeight;
-		imageView.setImageBitmap(null == bitmap ? ((MainActivity) getActivity()).getDefaultBitmapCover(minHeight, minHeight, minHeight - 32, cover) : bitmap);
-		imageView.setMinimumHeight(minHeight);
-		imageView.setMinimumWidth(minHeight);
-		imageView.setMaxHeight(minHeight + Util.dpToPx(getActivity(), 8)); 
-		imageView.setMaxWidth(minHeight + Util.dpToPx(getActivity(), 8));
+		imageView.setImageBitmap(Bitmap.createScaledBitmap(null == bitmap ? defaultCover : bitmap, minHeight, minHeight, false));
 		scrollView.setZoomView(imageView);
 	}
 	
