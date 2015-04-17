@@ -720,6 +720,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
 				((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+				cbUseCover.setOnCheckedChangeListener(this);
 				return;
 			}
 		}
@@ -729,7 +730,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (hashCode() != checkIdCover) return;
+					if (hashCode() != checkIdCover) {
+						cbUseCover.setOnCheckedChangeListener(PlayerFragment.this);
+						return;
+					}
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
