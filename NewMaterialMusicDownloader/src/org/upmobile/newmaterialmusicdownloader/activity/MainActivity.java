@@ -1,6 +1,7 @@
 package org.upmobile.newmaterialmusicdownloader.activity;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.DownloadListener;
@@ -272,7 +273,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 			@Override
 			public void run() {
+				StateKeeper.getInstance().notifyLable(false);
 				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
+				ArrayList<String> list = getDownloadingUrl();
+				for (String string : list) {
+					StateKeeper.getInstance().putSongInfo(string, StateKeeper.DOWNLOADING);
+				}
 				runOnUiThread(new Runnable() {
 
 					@Override

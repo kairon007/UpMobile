@@ -269,12 +269,17 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		editor.commit();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
+				StateKeeper.getInstance().notifyLable(false);
 				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
+				ArrayList<String> list = getDownloadingUrl();
+				for (String string : list) {
+					StateKeeper.getInstance().putSongInfo(string, StateKeeper.DOWNLOADING);
+				}
 				runOnUiThread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						StateKeeper.getInstance().notifyLable(true);

@@ -2,6 +2,7 @@ package ru.johnlife.lifetoolsmp3.ui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import org.json.JSONArray;
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity.DownloadPressListener;
@@ -493,16 +493,31 @@ public abstract class OnlineSearchView extends View {
 	
 	private void updateLables() {
 		ArrayList<MusicData> newLibraryList = querySong();
-		ArrayList<MusicData> bufferList = new ArrayList<>(libraryList);
-		if (bufferList.size() == newLibraryList.size()) {
+		ArrayList<MusicData> diffrentObjs;
+		if (libraryList.size() == newLibraryList.size()) {
 			return;
-		} else if (newLibraryList.size() < bufferList.size()) {
-			bufferList.removeAll(newLibraryList);
-			removeLables(bufferList);
-		} else  if (bufferList.size() < newLibraryList.size()) {
-			newLibraryList.removeAll(bufferList);
-			addLables(newLibraryList);
+		} else if (newLibraryList.size() < libraryList.size()) {
+			diffrentObjs = compareArrays(libraryList, newLibraryList);
+			if (diffrentObjs.isEmpty()) return;
+			removeLables(diffrentObjs);
+		} else  if (libraryList.size() < newLibraryList.size()) {
+			diffrentObjs = compareArrays(newLibraryList, libraryList);
+			if (diffrentObjs.isEmpty()) return;
+			addLables(diffrentObjs);
 		}
+	}
+	
+	public static ArrayList<MusicData> compareArrays(ArrayList<MusicData> bigger, ArrayList<MusicData> small) {
+		ArrayList<MusicData> result = new ArrayList<>();
+		Collections.sort(bigger);
+		Collections.sort(small);
+		int rest = bigger.size() - small.size();
+		if (rest <= 0) return result;
+		int lastElement = bigger.size() - 1;
+		for (int i = 0; i < rest; i++) {
+			result.add(bigger.get(lastElement - i));
+		}
+		return result;
 	}
 	
 	private Runnable updater = new Runnable() {
@@ -518,10 +533,10 @@ public abstract class OnlineSearchView extends View {
 		boolean isUpdated = false;
 		for (MusicData musicData : list) {
 			String comment = musicData.getComment();
-			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http")) {
+			if (null != comment && comment.contains("http")) {
 				libraryList.add(musicData);
 				keeper.removeSongInfo(comment);
-				keeper.putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADED, -1));
+				keeper.putSongInfo(comment, StateKeeper.DOWNLOADED);
 				isUpdated = true;
 			}
 		}
@@ -535,7 +550,7 @@ public abstract class OnlineSearchView extends View {
 		boolean isUpdated = false;
 		for (MusicData musicData : list) {
 			String comment = musicData.getComment();
-			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http")) {
+			if (null != comment && comment.contains("http")) {
 				libraryList.remove(musicData);
 				keeper.removeSongInfo(musicData.getComment());
 				isUpdated = true;
@@ -559,7 +574,7 @@ public abstract class OnlineSearchView extends View {
 		PopupMenu menu = new PopupMenu(getContext(), v);
 		final int position = (Integer) v.getTag();
 		menu.getMenuInflater().inflate(R.menu.search_menu, menu.getMenu());
-		boolean isDownloaded = keeper.checkSongInfo( ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment()).getStatus() != SongInfo.NOT_DOWNLOAD;
+		boolean isDownloaded = StateKeeper.NOT_DOWNLOAD != keeper.checkSongInfo(((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment());
 		if (isDownloaded) {
 			menu.getMenu().getItem(1).setVisible(false);
 			
@@ -584,9 +599,9 @@ public abstract class OnlineSearchView extends View {
 							View viewByPosition = getViewByPosition(getResultAdapter().getPosition(((RemoteSong) getResultAdapter().getItem((Integer) v.getTag()))));
 							download(viewByPosition,((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())) , position);
 							String comment = ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment();
-							keeper.putSongInfo(comment, new SongInfo(1, ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag()))));
+							keeper.putSongInfo(comment, StateKeeper.DOWNLOADING);
 						}
-
+						
 						@Override
 						public void error(String error) {
 						}
@@ -886,17 +901,19 @@ public abstract class OnlineSearchView extends View {
 			}
 			song.setTitle(title);
 			song.setArtist(artist);
+			int lableStatus = keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment);
 			builder.setLine1(artist, Util.getFormatedStrDuration(song.getDuration()))
-					.setLongClickable(false)
-					.setExpandable(false)
-					.setLine2(title)
-					.setDownloadLable(showDownloadLabel() ? keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment).getStatus() : -1)
-					.setId(position)
-					.showPlayingIndicator(((AbstractSong) getItem(position)).getSpecial().getIsChecked())
-					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
-					.setButtonVisible(showDownloadButton() ? true : false);
+				   .setLongClickable(false)
+				   .setExpandable(false)
+				   .setLine2(title)
+				   .setDownloadLable(showDownloadLabel() ? lableStatus : -1)
+				   .setId(position)
+				   .showPlayingIndicator(((AbstractSong) getItem(position)).getSpecial().getIsChecked())
+				   .setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
+				   .setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong)song).isHasCoverFromSearch()) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
+					
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {

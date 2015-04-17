@@ -1,11 +1,14 @@
 package ru.johnlife.lifetoolsmp3.activity;
 
+import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -15,7 +18,10 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import android.annotation.TargetApi;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -316,8 +322,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	}
 
 	private void customDownloadButton() {
-		SongInfo info = StateKeeper.getInstance().checkSongInfo(song.getComment());
-		boolean isDownloaded = info.getStatus() != SongInfo.NOT_DOWNLOAD;
+		boolean isDownloaded = StateKeeper.NOT_DOWNLOAD != StateKeeper.getInstance().checkSongInfo(song.getComment());
 		hideDownloadButton(song.getClass() == MusicData.class || isDownloaded);
 	}
 	
@@ -422,7 +427,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				((RemoteSong) song).setDownloadUrl(url);
 				download(((RemoteSong) song));
 				String comment = ((RemoteSong) song).getUrl();
-				StateKeeper.getInstance().putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADING, (RemoteSong) song));
+				StateKeeper.getInstance().putSongInfo(comment, StateKeeper.DOWNLOADING);
 				if (null != downloadPressListener) {
 					downloadPressListener.downloadButtonPressed((RemoteSong) song);
 				}
@@ -482,6 +487,50 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	public void miniPlayerDownloadVisible(boolean flag) {
 		download.setVisibility(flag ? View.VISIBLE : View.GONE);
 		isClickOnDownload = !flag;
+	}
+	
+	protected ArrayList<String> getDownloadingUrl() {
+		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+		ArrayList<String> list = new ArrayList<String>();
+		if (null != manager) {
+			Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
+			if (pending != null) {
+				updateList(pending, list);
+				pending.close();
+			}
+			Cursor paused = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PAUSED));
+			if (paused != null) {
+				updateList(paused, list);
+				paused.close();
+			}
+			Cursor waitingNetwork = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_WAITING_FOR_NETWORK));
+			if (waitingNetwork != null) {
+				updateList(waitingNetwork, list);
+				waitingNetwork.close();
+			}
+			Cursor unknown = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_UNKNOWN));
+			if (unknown != null) {
+				updateList(unknown, list);
+				unknown.close();
+			}
+			Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
+			if (running != null) {
+				updateList(running, list);
+				running.close();
+			}
+		}
+		return list;
+	}
+
+	private void updateList(Cursor c, ArrayList<String> result) {
+		while (c.moveToNext()) {
+			String url = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
+			if (c.getString(8).contains(getDirectory())) {
+				if (!result.contains(url)) {
+					result.add(url);
+				}
+			}
+		}
 	}
 	
 }

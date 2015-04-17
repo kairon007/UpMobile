@@ -17,7 +17,6 @@ import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -355,7 +354,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (!stateVisualizer) {
 			setupVisualizerFxAndUI(stateVisualizer);
 		}
-		if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
+		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
 			((RippleView) download.getParent()).setVisibility(View.GONE);
 		} else {
 			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
@@ -598,7 +597,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setProgress(0);
 			download.setOnClickListener(this);
 		}
-		if (StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment()).getStatus() == SongInfo.DOWNLOADED) {
+		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
 			((RippleView) download.getParent()).setVisibility(View.GONE);
 		} else {
 			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
@@ -892,7 +891,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
-				StateKeeper.getInstance().putSongInfo(url, new SongInfo(SongInfo.DOWNLOADING, ((RemoteSong) song)));
+				StateKeeper.getInstance().putSongInfo(url, StateKeeper.DOWNLOADING);
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 					@Override
