@@ -28,6 +28,7 @@ import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RenameTask;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
@@ -151,55 +152,54 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			});
 			manager.execute();
 			return;
-		} else {
-			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()){
-				//new download task for device with below 11 
-				String fileUri = musicDir.getAbsolutePath() + "/" + sb;
-				DownloadSongTask task = new DownloadSongTask(song, useAlbumCover, url, fileUri, id);
-				task.start();
-				return;
-			} 
-			final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-				url = url.replaceFirst("https", "http");
-			}
-			Uri uri = Uri.parse(url);
-			DownloadManager.Request request = new DownloadManager.Request(uri).addRequestHeader("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
-			if (headers != null && !headers.isEmpty()) {
-				for (int i = 0; i < headers.size(); i++) {
-					request.addRequestHeader(headers.get(i)[0], headers.get(i)[1]);
-				}
-			}
-			request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(sb);
-			try {
-				request.setTitle(songArtist);
-				request.setDescription(songTitle);
-				request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
-			} catch (Exception e) {
-				Log.e(getClass().getSimpleName(), e.getMessage());
-				showMessage(context, e.getMessage());
-				return;
-			}
-			try {
-				currentDownloadId = manager.enqueue(request);
-			} catch (IllegalArgumentException e) {
-				showMessage(context, R.string.turn_on_dm);
-				return;
-			}
-			boolean isUpdated = continueDownload(id, currentDownloadId);
-			if (!isUpdated) {
-				song.setDownloaderListener(notifyStartDownload(currentDownloadId));
-			}
-			((Activity) context).runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					showMessage(context,  context.getString(R.string.download_started) + " "+sb);
-				}
-			});
-			UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover, cacheItem);
-			new Timer().schedule(progressUpdateTask, 2000, 3000);
 		}
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()){
+			//new download task for device with below 11 
+			String fileUri = musicDir.getAbsolutePath() + "/" + sb;
+			DownloadSongTask task = new DownloadSongTask(song, useAlbumCover, url, fileUri, id);
+			task.start();
+			return;
+		} 
+		final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+			url = url.replaceFirst("https", "http");
+		}
+		Uri uri = Uri.parse(url);
+		DownloadManager.Request request = new DownloadManager.Request(uri).addRequestHeader("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
+		if (headers != null && !headers.isEmpty()) {
+			for (int i = 0; i < headers.size(); i++) {
+				request.addRequestHeader(headers.get(i)[0], headers.get(i)[1]);
+			}
+		}
+		request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(sb);
+		try {
+			request.setTitle(songArtist);
+			request.setDescription(songTitle);
+			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
+			showMessage(context, e.getMessage());
+			return;
+		}
+		try {
+			currentDownloadId = manager.enqueue(request);
+		} catch (IllegalArgumentException e) {
+			showMessage(context, R.string.turn_on_dm);
+			return;
+		}
+		boolean isUpdated = continueDownload(id, currentDownloadId);
+		if (!isUpdated) {
+			song.setDownloaderListener(notifyStartDownload(currentDownloadId));
+		}
+		((Activity) context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				showMessage(context,  context.getString(R.string.download_started) + " "+sb);
+			}
+		});
+		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover, cacheItem);
+		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
 
 	public void showMessage(Context context, String message) {
@@ -247,9 +247,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	    NetworkInfo.DetailedState state = netInfo.getDetailedState();
 	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 	    	return state.equals(NetworkInfo.DetailedState.VERIFYING_POOR_LINK);
-	    } else {
-	    	return state.equals(NetworkInfo.State.DISCONNECTING) || state.equals(NetworkInfo.State.DISCONNECTED);
-		}
+	    }
+		return state.equals(NetworkInfo.State.DISCONNECTING) || state.equals(NetworkInfo.State.DISCONNECTED);
 	}
 
 	protected void notifyAboutFailed(long downloadId) {

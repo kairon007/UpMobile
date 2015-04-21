@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -62,7 +63,10 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	};
 	
 	private void fillAdapter(ArrayList<MusicData> list) {
-		if (list.isEmpty()) return;
+		if (list.isEmpty()) {
+			adapter.clear();
+			return;
+		}
 		Message msg = new Message();
 		msg.what = MSG_FILL_ADAPTER;
 		msg.obj = list;
@@ -92,6 +96,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			checkRemovedFiles.cancel(true);
 			checkRemovedFiles = null;
 		}
+		StateKeeper.getInstance().setLibaryFirstPosition(listView.getFirstVisiblePosition());
 	}
 	
 	public void onResume() {
@@ -130,17 +135,21 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		showProgress(view);
 		new Thread(new Runnable() {
 			
+			private ArrayList<MusicData> querySong;
+
 			@Override
 			public void run() {
-				final ArrayList<MusicData> querySong = querySong();
-				adapter.setDoNotifyData(false);
-				adapter.add(querySong);
+				querySong = querySong();
 				uiHandler.postDelayed(new Runnable() {
 					
 					@Override
 					public void run() {
+						adapter.add(querySong);
 						hideProgress(view);
-						adapter.notifyDataSetChanged();
+						int firstPosition = StateKeeper.getInstance().getLibaryFirstPosition();
+						if (firstPosition != 0 && firstPosition < adapter.getCount()) {
+							listView.setSelection(firstPosition);
+						}
 						listView.setEmptyView(emptyMessage);
 					}
 
@@ -190,8 +199,9 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private void init(LayoutInflater inflater) {
 		view = (ViewGroup) inflater.inflate(getLayoutId(), null);
 		listView = getListView(view);
+		emptyMessage = getMessageView(view);			
 		adapter = getAdapter();
-		emptyMessage = getMessageView(view);
+		listView.setAdapter(adapter);
 		specialInit(view);
 	}
 	
@@ -224,9 +234,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		if (msg.what == MSG_FILL_ADAPTER) {
 			ArrayList<MusicData> list = ((ArrayList<MusicData>) msg.obj);
 			if (adapter.isEmpty()) {
-				adapter = getAdapter();
 				adapter.add(list);
-				listView.setAdapter(adapter);
 			} else {
 				adapter.setDoNotifyData(false);
 				adapter.clear();

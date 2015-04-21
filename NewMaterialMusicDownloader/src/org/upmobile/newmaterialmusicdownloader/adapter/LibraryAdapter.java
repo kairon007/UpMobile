@@ -64,6 +64,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			if (data.equals(StateKeeper.getInstance().getPlayingSong())) {
 				StateKeeper.getInstance().setPlayingSong(data);
 				data.getSpecial().setChecked(true);
+			} else if (null != StateKeeper.getInstance().getPlayingSong() && data.getPath().equals(StateKeeper.getInstance().getPlayingSong().getPath())) {
+				StateKeeper.getInstance().setPlayingSong(data);
+				data.getSpecial().setChecked(true);
 			}
 			info.findViewById(R.id.playingIndicator).setVisibility(data.getSpecial().getIsChecked() ? View.VISIBLE : View.GONE);
 			super.hold(data, position);

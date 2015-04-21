@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarStyle;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -28,6 +29,7 @@ public class DownloadListener extends DownloadClickListener {
 	private String songArtist;
 	private String songTitle;
 	private OnCancelDownload cancelDownload;
+	private UndoBar undoBar;
 	
 	public interface OnCancelDownload {
 		public void onCancel();
@@ -77,7 +79,8 @@ public class DownloadListener extends DownloadClickListener {
 	
 	@Override
 	public void showMessage(final Context context, String message) {
-		UndoBar undoBar = new UndoBar(((Activity) context));
+		UndoBarController.clear((MainActivity) context);
+		undoBar = new UndoBar(((Activity) context));
 		undoBar.message(message);
 		undoBar.duration(MESSAGE_DURATION);
 		undoBar.listener(new UndoListener() {
@@ -123,6 +126,15 @@ public class DownloadListener extends DownloadClickListener {
 	@Override
 	protected void notifyAboutFailed(long downloadId) {
 		super.notifyAboutFailed(downloadId);
+		if (null != context) {
+			((Activity) context).runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					StateKeeper.getInstance().removeSongInfo(song.getUrl());
+				}
+			});
+		}
 	}
 
 	@Override

@@ -55,7 +55,7 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 				String fromWhereToGetThePic = getTheLinkToPicture(arrayString4);
 				if (fromWhereToGetThePic == null) return null;
 				return getTHEdamnURL(fromWhereToGetThePic, "large");
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				Log.e(getClass().getName(), "Error downloading the cover", e);
 				return null;
 			}

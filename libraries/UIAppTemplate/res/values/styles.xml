@@ -14,7 +14,7 @@
         <item name="android:icon">@drawable/actionbar_icon_placeholder_compat</item>
         <item name="android:dropDownListViewStyle">@style/ListView.DropDown</item>
     </style>
-    
+
     <style name="ListView.DropDown" parent="@android:style/Widget.Holo.Light.ListView">
         <item name="android:listSelector">@drawable/light_spinner_selector</item>
     </style>
@@ -24,7 +24,7 @@
         <item name="colorPrimary">@color/main_color_500</item>
         <item name="colorPrimaryDark">@color/main_color_700</item>
     </style>
-    
+
     <style name="Spinner.Material" parent="@android:Widget.Material.Spinner">
         <item name="android:background">@drawable/spinner_selector</item>
         <item name="android:clickable">true</item>
@@ -32,22 +32,21 @@
         <item name="android:dropDownWidth">wrap_content</item>
         <item name="android:gravity">start|center_vertical</item>
     </style>
-    
+
     <style name="AppTheme.Title" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
     <!-- Default application theme ends here -->
 
-
-	<style name="EditTextAppearance.Line.Inverse" parent="@android:Widget.EditText">
+    <style name="EditTextAppearance.Line.Inverse" parent="@android:Widget.EditText">
         <item name="android:background">@drawable/inverse_underline_edit_text</item>
         <item name="android:textColor">@color/main_color_for_text</item>
         <item name="android:textColorHint">@color/main_color_for_text</item>
     </style>
-    
-	<style name="EditTextAppearance.Headline" parent="@android:style/Widget.EditText">
-         <item name="android:background">@drawable/inverse_underline_edit_text</item>
+
+    <style name="EditTextAppearance.Headline" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/inverse_underline_edit_text</item>
         <item name="android:textSize">24sp</item>
     </style>
 
@@ -166,6 +165,13 @@
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@color/main_color_for_search_fragment_text</item>
+    </style>
+
+    <style name="RippleStyleRectangle" parent="RippleStyle">
+        <item name="rv_rippleDuration">150</item>
+        <item name="rv_alpha">160</item>
+        <item name="rv_color">?attr/colorPrimary</item>
+        <item name="rv_type">rectangle</item>
     </style>
 
 </resources>

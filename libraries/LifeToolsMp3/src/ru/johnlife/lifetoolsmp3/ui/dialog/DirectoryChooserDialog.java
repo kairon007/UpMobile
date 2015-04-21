@@ -137,6 +137,7 @@ public class DirectoryChooserDialog {
 				if (m_chosenDirectoryListener != null) {
 					m_chosenDirectoryListener.onChosenDir(m_dir);
 				}
+				StateKeeper.getInstance().setLibaryFirstPosition(0);
 				keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
 			}
 		}).setNegativeButton(android.R.string.cancel, new OnClickListener() {

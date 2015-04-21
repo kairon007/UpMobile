@@ -33,7 +33,7 @@
                 android:id="@+id/progress"
                 style="@style/ProgressBar"
                 android:visibility="gone" />
-            
+
             <ImageView
                 android:id="@+id/loader_image"
                 android:layout_width="72dp"
@@ -63,8 +63,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@drawable/layout_divider"
                     android:background="@color/main_color_500"
+                    android:divider="@drawable/layout_divider"
                     android:dividerPadding="4dp"
                     android:orientation="horizontal"
                     android:paddingLeft="18dp"
@@ -87,12 +87,12 @@
                             android:paddingRight="56dp"
                             android:singleLine="true" />
 
-                        <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                            style="@style/RippleStyle"
+                        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                            style="@style/RippleStyleCircle"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_gravity="center_vertical|right"
-                            app:rippleColor="@color/main_color_for_search_fragment_text" >
+                            app:rv_color="@color/main_color_for_search_fragment_text" >
 
                             <com.csform.android.uiapptemplate.font.MusicTextView
                                 android:id="@+id/clear"
@@ -103,16 +103,15 @@
                                 android:padding="4dp"
                                 android:text="@string/font_cancel"
                                 android:textSize="16sp" />
-
-                        </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
                     </FrameLayout>
 
-                    <com.csform.android.uiapptemplate.view.MaterialRippleLayout
-                        style="@style/RippleStyle"
+                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                        style="@style/RippleStyleCircle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center_vertical|end"
-                        app:rippleColor="@color/main_color_for_search_fragment_text" >
+                        app:rv_color="@color/main_color_for_search_fragment_text" >
 
                         <com.csform.android.uiapptemplate.font.MusicTextView
                             android:id="@+id/search"
@@ -123,7 +122,7 @@
                             android:padding="4dp"
                             android:text="@string/font_search_online"
                             android:textSize="32sp" />
-                    </com.csform.android.uiapptemplate.view.MaterialRippleLayout>
+                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
                     <ImageButton
                         android:id="@+id/downloads"
@@ -134,37 +133,37 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-				<FrameLayout
-				    android:layout_width="match_parent"
-				    android:layout_height="48dp"
-				    android:paddingLeft="16dp"
-				    android:background="@color/main_color_500"
-				    android:paddingRight="16dp" >
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@color/main_color_500"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp" >
 
-				    <Spinner
-				        android:id="@+id/choise_engines"
-				        style="@style/Spinner.Material"
-				        android:layout_width="match_parent"
-				        android:layout_height="match_parent" />
-				    
-				    <com.csform.android.uiapptemplate.font.MusicTextView
-				        style="@style/TextViewAppearance.CustomMusicButtons.Colored"
-				        android:layout_width="wrap_content"
-				        android:layout_height="match_parent"
-				        android:layout_gravity="end"
-				        android:gravity="center_vertical|end"
-				        android:paddingRight="8dp"
-				        android:text="@string/font_drop_down"
-				        android:textColor="@color/main_color_accent"
-				        android:textSize="16sp" />
-				    
-				</FrameLayout>
-				
-				<FrameLayout
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:background="@drawable/bottom_shadow_mini" />
+                    <Spinner
+                        android:id="@+id/choise_engines"
+                        style="@style/Spinner.Material"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:dropDownVerticalOffset="-48dip"
+                        android:overlapAnchor="false" />
 
+                    <com.csform.android.uiapptemplate.font.MusicTextView
+                        style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:gravity="center_vertical|end"
+                        android:paddingRight="8dp"
+                        android:text="@string/font_drop_down"
+                        android:textColor="@color/main_color_accent"
+                        android:textSize="16sp" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bottom_shadow_mini" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

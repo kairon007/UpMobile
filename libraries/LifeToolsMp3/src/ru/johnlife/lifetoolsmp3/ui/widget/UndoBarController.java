@@ -718,7 +718,7 @@ public class UndoBarController extends LinearLayout {
 		/**
          * Hide all undo bar immediately
          */
-        @SuppressWarnings("deprecation")
+        @Deprecated
         public void clear() {
             UndoBarController.clear(activity);
         }

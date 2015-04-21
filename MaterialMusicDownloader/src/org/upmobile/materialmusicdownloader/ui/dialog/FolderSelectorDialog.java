@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ButtonCallback;
@@ -34,6 +35,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		public void onPositive(MaterialDialog materialDialog) {
 			materialDialog.dismiss();
 			mCallback.onFolderSelection(parentFolder);
+			StateKeeper.getInstance().setLibaryFirstPosition(0);
 		}
 
 		@Override
@@ -54,6 +56,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				
 				@Override
 				public void onPositive(MaterialDialog dialog) {
+					StateKeeper.getInstance().setLibaryFirstPosition(0);
 					Util.hideKeyboard(getActivity(), dialog.getCustomView());
 					EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 					String newDirName = input.getText().toString();

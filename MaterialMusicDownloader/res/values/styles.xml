@@ -148,7 +148,7 @@
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="searchIcon">@drawable/ic_search_ab</item>
     </style>
-    
+
     <style name="ProgressBar">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">48dp</item>
@@ -158,7 +158,7 @@
         <item name="matProg_barSpinCycleTime">2000</item>
         <item name="matProg_barColor">@color/main_color_accent</item>
     </style>
-    
+
     <style name="UBDivider" parent="UndoBarDividerClassic" />
 
     <style name="UBContainer" parent="UndoBarMaterial" />
@@ -167,15 +167,48 @@
         <item name="android:textColor">?attr/colorAccent</item>
     </style>
 
-    <style name="UBMessage" parent="UndoBarMessageMaterial" >
+    <style name="UBMessage" parent="UndoBarMessageMaterial">
         <item name="android:maxLines">2</item>
     </style>
-    
+
     <style name="CircularProgressBarStyle.Full" parent="@style/CircularProgressBarStyle">
         <item name="cpb_selectorIdle">@drawable/cpb_idle_state_selector_full</item>
         <item name="cpb_selectorComplete">@drawable/cpb_idle_state_selector_full</item>
         <item name="cpb_selectorError">@drawable/cpb_idle_state_selector_full</item>
         <item name="android:textColor">@drawable/selector_text_full</item>
+    </style>
+
+    <style name="RippleStyle">
+        <item name="rv_rippleDuration">150</item>
+        <item name="rv_alpha">200</item>
+        <!-- <item name="rv_alphaVisible">true</item> -->
+        <item name="rv_color">?attr/colorPrimaryDark</item>
+    </style>
+
+    <style name="RippleStyleRectangle" parent="RippleStyle">
+        <item name="rv_type">rectangle</item>
+    </style>
+
+    <style name="RippleStyleLongPress" parent="RippleStyle">
+        <item name="rv_rippleDuration">800</item>
+        <item name="rv_type">rectangle</item>
+    </style>
+
+    <style name="RippleStyleShortPress" parent="RippleStyle">
+        <item name="rv_rippleDuration">250</item>
+        <item name="rv_type">rectangle</item>
+    </style>
+
+    <style name="RippleStyleCircle" parent="RippleStyle">
+        <item name="rv_type">doubleRipple</item>
+    </style>
+
+    <style name="FloatingEditText">
+        <item name="floating_et_color">@color/main_color_for_text</item>
+        <item name="floating_et_highlighted_color">?attr/colorAccent</item>
+        <item name="floating_et_error_color">@android:color/holo_red_light</item>
+        <item name="floating_et_char_count">30</item>
+        <item name="floating_et_show_count">true</item>
     </style>
 
 </resources>

@@ -16,11 +16,16 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
+import android.app.DownloadManager;
+import android.database.Cursor;
 import android.view.View;
 
 public class StateKeeper {
 	
-	private TreeMap<String, SongInfo> songHolder = new TreeMap<String, SongInfo>();
+	public static final int DOWNLOADED = 0;
+	public static final int DOWNLOADING = 1;
+	public static final int NOT_DOWNLOAD = -1;
+	private TreeMap<String, Integer> songHolder = new TreeMap<String, Integer>();
 	private boolean notifyLable = true; 
 	
 	private Object tag;
@@ -43,6 +48,7 @@ public class StateKeeper {
 	private int clickPosition;
 	private int currentPlayersId;
 	private int tempID3UseCover;
+	private int libaryFirstPosition;
 	/**
 	 * The class flags hold various states.
 	 */
@@ -263,8 +269,7 @@ public class StateKeeper {
 		}
 		songHolder.clear();
 		File[] files = new File(folder).listFiles();
-		if (null == files)
-			return;
+		if (null == files) return;
 		for (int i = 0; i < files.length; i++) {
 			try {
 				MusicMetadataSet src_set = new MyID3().read(files[i]);
@@ -274,7 +279,7 @@ public class StateKeeper {
 					if (null == comment) {
 						comment = metadata.hashCode() + "";
 					}
-					songHolder.put(comment, new SongInfo(SongInfo.DOWNLOADED, -1));
+					songHolder.put(comment, DOWNLOADED);
 				}
 			} catch (Exception e) {
 				android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
@@ -284,33 +289,29 @@ public class StateKeeper {
 	
 	public void notifyLable(boolean needNotify) {
 		notifyLable = needNotify;
-		if (null != searchView && needNotify) {
-			searchView.notifyAdapter();
-		}
+		notifyLable();
 	}
 	
-	public void putSongInfo(String url, SongInfo info) {
-		songHolder.put(url.contains("youtube-mp3.org") ? url.substring(0, url.indexOf("ts_create")) : url, info);
+	private void notifyLable() {
 		if (null != searchView && notifyLable) {
 			searchView.notifyAdapter();
-		}
+		} 
+	}
+	
+	public void putSongInfo(String url, int status) {
+		String key =  url.contains("youtube-mp3.org") ? url.substring(0, url.indexOf("ts_create")) : url;
+		songHolder.put(key, status);
+		notifyLable();
 	}
 	
 	public void removeSongInfo(String url) {
 		songHolder.remove(url);
-		if (null != searchView && notifyLable) {
-			searchView.notifyAdapter();
-		}
+		notifyLable();
 	}
 	
-	public SongInfo checkSongInfo(String url) {
-		SongInfo info;
-		if (null == url || null == songHolder.get(url)) {
-			info = new SongInfo(SongInfo.NOT_DOWNLOAD, -1);
-			return info;
-		}
-		info = songHolder.get(url);
-		return info;
+	public int checkSongInfo(String url) {
+		if (null == url || !songHolder.containsKey(url)) return NOT_DOWNLOAD;
+		return songHolder.get(url);
 	}
 	
 	public int getTempID3UseCover() {
@@ -418,66 +419,12 @@ public class StateKeeper {
 		this.playingSong = playingSong;
 	}
 	
-	public static class SongInfo {
-		
-		public static final int DOWNLOADED = 0;
-		public static final int DOWNLOADING = 1;
-		public static final int NOT_DOWNLOAD = -1;
+	public int getLibaryFirstPosition() {
+		return libaryFirstPosition;
+	}
 
-		private int status;
-		private int position;
-		private MusicData musicData;
-		private RemoteSong remoteSong;
-
-		public SongInfo() {
-		}
-
-		public SongInfo(int status, int position) {
-			this.status = status;
-			this.position = position;
-		}
-		public SongInfo(int status, MusicData musicData) {
-			this.status = status;
-			this.setMusicData(musicData);
-		}
-		
-		public SongInfo(int status, RemoteSong remoteSong) {
-			this.status = status;
-			this.setRemoteSong(remoteSong);
-		}
-
-		public int getStatus() {
-			return status;
-		}
-
-		public void setStatus(int status) {
-			this.status = status;
-		}
-
-		public int getPosition() {
-			return position;
-		}
-
-		public void setPosition(int position) {
-			this.position = position;
-		}
-
-		public MusicData getMusicData() {
-			return musicData;
-		}
-
-		public void setMusicData(MusicData musicData) {
-			this.musicData = musicData;
-		}
-
-		public RemoteSong getRemoteSong() {
-			return remoteSong;
-		}
-
-		public void setRemoteSong(RemoteSong remoteSong) {
-			this.remoteSong = remoteSong;
-		}
-
+	public void setLibaryFirstPosition(int libaryFirstPosition) {
+		this.libaryFirstPosition = libaryFirstPosition;
 	}
 	
 }

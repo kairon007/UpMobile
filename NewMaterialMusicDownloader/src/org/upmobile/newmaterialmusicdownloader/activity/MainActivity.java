@@ -1,6 +1,7 @@
 package org.upmobile.newmaterialmusicdownloader.activity;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.DownloadListener;
@@ -16,6 +17,7 @@ import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog;
 import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -65,6 +67,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private View floatBtnContainer;
 	private FrameLayout toolbarShadow;
 	private TextView title;
+	private Toolbar toolbar;
 	private int currentFragmentId = -1;
 	private int lastCheckPosition = 0;
 	private boolean isVisibleSearchView = false;
@@ -75,7 +78,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		setContentView(R.layout.activity_main);
 		super.onCreate(savedInstanceState);
 		toolbarShadow = (FrameLayout) findViewById(R.id.toolbar_shadow);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar); 	
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -259,13 +262,32 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 	
 	@Override
-	public void onFolderSelection(File folder) {
+	public void onFolderSelection(final File folder) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor editor = sp.edit();
 		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
 		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
 		editor.commit();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				StateKeeper.getInstance().notifyLable(false);
+				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
+				ArrayList<String> list = getDownloadingUrl();
+				for (String string : list) {
+					StateKeeper.getInstance().putSongInfo(string, StateKeeper.DOWNLOADING);
+				}
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						StateKeeper.getInstance().notifyLable(true);
+					}
+				});
+			}
+		}).start();
 	}
 
 	public void setDraverEnabled(boolean isVisibleDraver) {
@@ -374,9 +396,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			message.show(false);
 			return;
 		}
-		floatBtnContainer = (View) findViewById(R.id.floatingButton).getParent();
+		View floatBtn = findViewById(R.id.floatingButton);
 		View miniplayer = findViewById(getMiniPlayerID());
-		if (null != floatBtnContainer && miniplayer.getVisibility() != View.VISIBLE) {
+		if (null != floatBtn && miniplayer.getVisibility() != View.VISIBLE) {
+			floatBtnContainer = (View) floatBtn.getParent();
 			message.listener(new UndoBarController.AdvancedUndoListener() {
 
 				@Override
@@ -485,15 +508,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				Util.dpToPx(this, (height / 3 - 2)), 
 				Util.dpToPx(this, (height - 1)), 
 				Util.dpToPx(this, (height / 3 - 2)), 
-				Util.dpToPx(this, (height / 8 * 4) ),
-				Util.dpToPx(this, (height / 8 * 6)) };
+				Util.dpToPx(this, (height / 8 * 4)),
+				Util.dpToPx(this, (height / 8 * 6))};
 		int verticesColors[] = { 
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
-				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)) };
+				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary))};
 		canvas.drawVertices(Canvas.VertexMode.TRIANGLES, verts.length, verts, 0, null, 0, verticesColors, 0, null, 0, 0, paint);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		paint.setStrokeWidth(Util.dpToPx(this, height / 8));
@@ -529,7 +552,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void setToolbarAlpha(int alpha) {
-		findViewById(R.id.toolbar).getBackground().setAlpha(alpha);
+		toolbar.getBackground().setAlpha(alpha);
+		toolbarShadow.setAlpha((float) alpha / 255);
 		title.setAlpha((float) alpha / 255);
 	}
 }

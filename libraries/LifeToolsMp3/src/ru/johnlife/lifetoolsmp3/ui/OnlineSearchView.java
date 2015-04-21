@@ -2,6 +2,7 @@ package ru.johnlife.lifetoolsmp3.ui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import org.json.JSONArray;
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity.DownloadPressListener;
@@ -258,7 +258,7 @@ public abstract class OnlineSearchView extends View {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			if (showDownloadLabel()) {
+			if (showDownloadLabel() ) {
 				updateLables();
 			}
 		}
@@ -352,7 +352,6 @@ public abstract class OnlineSearchView extends View {
 			view.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
 			int color = getContext().getResources().getColor(android.R.color.black);
 			searchField.setTextColor(color);
-			searchField.clearFocus();
 			message.setTextColor(color);
 			if (null != spEnginesChoiserLayout) {
 				spEnginesChoiserLayout.setBackgroundResource(R.drawable.spinner_background);
@@ -403,7 +402,6 @@ public abstract class OnlineSearchView extends View {
 					clickPosition = position;
 					getDownloadUrl(view, position);
 				} catch(Exception e) {
-//					Log.e(getClass().getSimpleName(), e.getMessage());	
 					e.printStackTrace();
 				}
 			}
@@ -445,12 +443,12 @@ public abstract class OnlineSearchView extends View {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN && v.getId() != R.id.text) {
 					Util.hideKeyboard(getContext(), v);
-					view.findViewById(R.id.text).setFocusable(false);
+					searchField.setFocusable(false);
 				}
 				return v.performClick();
 			}
 		});
-		view.findViewById(R.id.text).setOnTouchListener(new OnTouchListener() {
+		searchField.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -471,6 +469,7 @@ public abstract class OnlineSearchView extends View {
 		} else {
 			hideBaseProgress();
 		}
+		searchField.setFocusable(false);
 		return view;
 	} 
 	
@@ -493,18 +492,32 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	private void updateLables() {
-		android.util.Log.d("logks", "OnlineSearchView, updateLables: oops");
 		ArrayList<MusicData> newLibraryList = querySong();
-		ArrayList<MusicData> buferList = libraryList;
-		if (buferList.size() == newLibraryList.size()) {
+		ArrayList<MusicData> diffrentObjs;
+		if (libraryList.size() == newLibraryList.size()) {
 			return;
-		} else if (buferList.size() > newLibraryList.size()) {
-			buferList.removeAll(newLibraryList);
-			removeLables(buferList);
-		} else {
-			newLibraryList.removeAll(buferList);
-			addLables(newLibraryList);
+		} else if (newLibraryList.size() < libraryList.size()) {
+			diffrentObjs = compareArrays(libraryList, newLibraryList);
+			if (diffrentObjs.isEmpty()) return;
+			removeLables(diffrentObjs);
+		} else  if (libraryList.size() < newLibraryList.size()) {
+			diffrentObjs = compareArrays(newLibraryList, libraryList);
+			if (diffrentObjs.isEmpty()) return;
+			addLables(diffrentObjs);
 		}
+	}
+	
+	public static ArrayList<MusicData> compareArrays(ArrayList<MusicData> bigger, ArrayList<MusicData> small) {
+		ArrayList<MusicData> result = new ArrayList<>();
+		Collections.sort(bigger);
+		Collections.sort(small);
+		int rest = bigger.size() - small.size();
+		if (rest <= 0) return result;
+		int lastElement = bigger.size() - 1;
+		for (int i = 0; i < rest; i++) {
+			result.add(bigger.get(lastElement - i));
+		}
+		return result;
 	}
 	
 	private Runnable updater = new Runnable() {
@@ -519,11 +532,11 @@ public abstract class OnlineSearchView extends View {
 		keeper.notifyLable(false);
 		boolean isUpdated = false;
 		for (MusicData musicData : list) {
-			libraryList.add(musicData);
 			String comment = musicData.getComment();
-			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http")) {
+			if (null != comment && comment.contains("http")) {
+				libraryList.add(musicData);
 				keeper.removeSongInfo(comment);
-				keeper.putSongInfo(comment, new SongInfo(SongInfo.DOWNLOADED, -1));
+				keeper.putSongInfo(comment, StateKeeper.DOWNLOADED);
 				isUpdated = true;
 			}
 		}
@@ -536,9 +549,9 @@ public abstract class OnlineSearchView extends View {
 		keeper.notifyLable(false);
 		boolean isUpdated = false;
 		for (MusicData musicData : list) {
-			libraryList.remove(musicData);
 			String comment = musicData.getComment();
-			if (null != comment && keeper.checkSongInfo(comment).getRemoteSong() != null && comment.contains("http")) {
+			if (null != comment && comment.contains("http")) {
+				libraryList.remove(musicData);
 				keeper.removeSongInfo(musicData.getComment());
 				isUpdated = true;
 			}
@@ -561,7 +574,7 @@ public abstract class OnlineSearchView extends View {
 		PopupMenu menu = new PopupMenu(getContext(), v);
 		final int position = (Integer) v.getTag();
 		menu.getMenuInflater().inflate(R.menu.search_menu, menu.getMenu());
-		boolean isDownloaded = keeper.checkSongInfo( ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment()).getStatus() != SongInfo.NOT_DOWNLOAD;
+		boolean isDownloaded = StateKeeper.NOT_DOWNLOAD != keeper.checkSongInfo(((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment());
 		if (isDownloaded) {
 			menu.getMenu().getItem(1).setVisible(false);
 			
@@ -586,9 +599,9 @@ public abstract class OnlineSearchView extends View {
 							View viewByPosition = getViewByPosition(getResultAdapter().getPosition(((RemoteSong) getResultAdapter().getItem((Integer) v.getTag()))));
 							download(viewByPosition,((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())) , position);
 							String comment = ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment();
-							keeper.putSongInfo(comment, new SongInfo(1, ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag()))));
+							keeper.putSongInfo(comment, StateKeeper.DOWNLOADING);
 						}
-
+						
 						@Override
 						public void error(String error) {
 						}
@@ -888,17 +901,19 @@ public abstract class OnlineSearchView extends View {
 			}
 			song.setTitle(title);
 			song.setArtist(artist);
+			int lableStatus = keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment);
 			builder.setLine1(artist, Util.getFormatedStrDuration(song.getDuration()))
-					.setLongClickable(false)
-					.setExpandable(false)
-					.setLine2(title)
-					.setDownloadLable(showDownloadLabel() ? keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment).getStatus() : -1)
-					.setId(position)
-					.showPlayingIndicator(((AbstractSong) getItem(position)).getSpecial().getIsChecked())
-					.setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
-					.setButtonVisible(showDownloadButton() ? true : false);
+				   .setLongClickable(false)
+				   .setExpandable(false)
+				   .setLine2(title)
+				   .setDownloadLable(showDownloadLabel() ? lableStatus : -1)
+				   .setId(position)
+				   .showPlayingIndicator(((AbstractSong) getItem(position)).getSpecial().getIsChecked())
+				   .setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
+				   .setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong)song).isHasCoverFromSearch()) {
 				((RemoteSong) song).getSmallCover(false, new OnBitmapReadyListener() {
+					
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {
@@ -972,7 +987,6 @@ public abstract class OnlineSearchView extends View {
 		String searchString = searchField.getText().toString();
 		if (searchString.equals(lastSearchString) && message.getVisibility() != View.VISIBLE) return;
 		lastSearchString = searchString;
-		keeper.initSongHolder(getDirectory());
 		if (isOffline(getContext())) {
 			message.setText(R.string.search_message_no_internet);
 			resultAdapter.clear();

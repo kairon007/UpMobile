@@ -15,7 +15,6 @@ import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.StateKeeper.SongInfo;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -26,6 +25,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
+import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
@@ -71,7 +71,6 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
-import com.csform.android.uiapptemplate.view.MaterialRippleLayout;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
@@ -115,9 +114,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView playerTotalTime;
 	private SeekBar playerProgress;
 	private ImageView imageView;
+	private Bitmap defaultCover;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
+	private int minHeight;
 	private double percent = 0;
 
 	private boolean isDestroy;
@@ -215,7 +216,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
 			download.setClickable(false);
-			((MaterialRippleLayout) download.getParent()).setEnabled(false);
+			((RippleView) download.getParent()).setEnabled(false);
 		}
 
 		@Override
@@ -241,7 +242,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		public void onPreExecute() {
 			canceled = false;
-			((MaterialRippleLayout) download.getParent()).setEnabled(false);
+			((RippleView) download.getParent()).setEnabled(false);
 			download.setClickable(false);
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
@@ -273,6 +274,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		} else {
 			song = player.getPlayingSong();
 		}
+		initCover();
 		setCoverToZoomView(null);
 		getCover(song);
 		setImageButton();
@@ -291,6 +293,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		return scrollView;
 	}
 	
+	private void initCover() {
+		String cover =  getResources().getString(R.string.font_musics);
+		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
+		int width = display.getWidth(); 
+		int height = display.getHeight();
+		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 16));
+		minHeight = (coverHeight > width )? width : coverHeight;
+		imageView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		imageView.setPadding(0, 8, 0, 8);
+		defaultCover = ((MainActivity) getActivity()).getDefaultBitmapCover(minHeight, minHeight, minHeight - 16, cover);
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		getActivity().onBackPressed();
@@ -304,10 +318,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		((UIMainActivity) getActivity()).setSelectedItem(Constants.PLAYER_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
-		if (StateKeeper.getInstance().checkSongInfo(song.getComment()).getStatus() == SongInfo.DOWNLOADED) {
-			((MaterialRippleLayout) download.getParent()).setVisibility(View.GONE);
+		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
+			((RippleView) download.getParent()).setVisibility(View.GONE);
 		} else {
-			((MaterialRippleLayout) download.getParent()).setVisibility(View.VISIBLE);
+			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
 		}
 		setCheckBoxState(true);
 		cbUseCover.setOnCheckedChangeListener(this);
@@ -459,6 +473,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
 		undo = new UndoBar(getActivity());
+		imageView = new ImageView(getActivity());
 	}
 
 	private void setListeners() {
@@ -548,10 +563,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setProgress(0);
 			download.setOnClickListener(this);
 		}
-		if (StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment()).getStatus() == SongInfo.DOWNLOADED) {
-			((MaterialRippleLayout) download.getParent()).setVisibility(View.GONE);
+		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
+			((RippleView) download.getParent()).setVisibility(View.GONE);
 		} else {
-			((MaterialRippleLayout) download.getParent()).setVisibility(View.VISIBLE);
+			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
 		}
 		cancelProgressTask();
 		thatSongIsDownloaded();
@@ -600,7 +615,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setDownloadButtonState(boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
-		((MaterialRippleLayout) download.getParent()).setEnabled(state);
+		((RippleView) download.getParent()).setEnabled(state);
 	}
 
 	private void openArtistField() {
@@ -720,6 +735,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
 				((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+				cbUseCover.setOnCheckedChangeListener(this);
 				return;
 			}
 		}
@@ -729,8 +745,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (hashCode() != checkIdCover)
+					if (hashCode() != checkIdCover) {
+						cbUseCover.setOnCheckedChangeListener(PlayerFragment.this);
 						return;
+					}
 					if (null != bmp) {
 						((RemoteSong) song).setHasCover(true);
 						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
@@ -752,19 +770,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
-		imageView = new ImageView(getActivity());
-		imageView.setPadding(8, 8, 8, 8);
-		String cover =  getResources().getString(R.string.font_musics);
-		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
-		int width = display.getWidth(); 
-		int height = display.getHeight();
-		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 72));
-		int minHeight = (coverHeight > width )? width : coverHeight;
-		imageView.setImageBitmap(null == bitmap ? ((MainActivity) getActivity()).getDefaultBitmapCover(minHeight, minHeight, minHeight - 32, cover) : bitmap);
-		imageView.setMinimumHeight(minHeight);
-		imageView.setMinimumWidth(minHeight);
-		imageView.setMaxHeight(minHeight + Util.dpToPx(getActivity(), 8)); 
-		imageView.setMaxWidth(minHeight + Util.dpToPx(getActivity(), 8));
+		imageView.setImageBitmap(Bitmap.createScaledBitmap(null == bitmap ? defaultCover : bitmap, minHeight, minHeight, false));
 		scrollView.setZoomView(imageView);
 	}
 	
@@ -798,7 +804,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
-				StateKeeper.getInstance().putSongInfo(url, new SongInfo(SongInfo.DOWNLOADING, ((RemoteSong) song)));
+				StateKeeper.getInstance().putSongInfo(url, StateKeeper.DOWNLOADING);
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 					@Override

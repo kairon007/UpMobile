@@ -16,6 +16,7 @@ import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog;
 import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -260,13 +261,32 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	@Override
-	public void onFolderSelection(File folder) {
+	public void onFolderSelection(final File folder) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor editor = sp.edit();
 		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
 		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
 		editor.commit();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				StateKeeper.getInstance().notifyLable(false);
+				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
+				ArrayList<String> list = getDownloadingUrl();
+				for (String string : list) {
+					StateKeeper.getInstance().putSongInfo(string, StateKeeper.DOWNLOADING);
+				}
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						StateKeeper.getInstance().notifyLable(true);
+					}
+				});
+			}
+		}).start();
 	}
 	
 	@Override
