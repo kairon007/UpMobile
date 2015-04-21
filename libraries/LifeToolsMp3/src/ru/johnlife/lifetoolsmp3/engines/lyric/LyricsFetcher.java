@@ -10,6 +10,7 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -66,8 +67,10 @@ public class LyricsFetcher {
 						.method(Method.GET)
 						.execute();
 				Document document = res.parse();
-				Element div = document.getElementsByAttributeValue("style", "margin-left:10px;margin-right:10px;").first();
-				String response = div.toString();
+				StringBuilder builder = new StringBuilder();
+				builder.append(document.select("div.row"));
+				String response = builder.toString();
+				if (response.isEmpty() || !response.contains("start of lyrics")) return null;
 				Pattern p = Pattern.compile("<!-- start of lyrics -->(.*)<!-- end of lyrics -->", Pattern.DOTALL);
 				Matcher matcher = p.matcher(response);
 				if (matcher.find()) {
