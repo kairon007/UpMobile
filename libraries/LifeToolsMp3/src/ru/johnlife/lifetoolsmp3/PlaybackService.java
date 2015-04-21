@@ -178,7 +178,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				public void run() {
 					synchronized (LOCK) {
 					if (!player.isPlaying() || null == playingSong) {
-						cancel();
 						return;
 					}
 					if (lastTime == player.getCurrentPosition()) {
