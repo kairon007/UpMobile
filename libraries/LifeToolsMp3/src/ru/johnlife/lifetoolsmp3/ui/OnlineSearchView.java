@@ -9,6 +9,7 @@ import java.util.List;
 import org.json.JSONArray;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -315,11 +316,18 @@ public abstract class OnlineSearchView extends View {
 				}
 			} else {
 				hideBaseProgress();
-				for (Song song : songsList) {
-					if (!resultAdapter.contains(song)) {
-						resultAdapter.add(song);
+				ArrayList<AbstractSong> songs = new ArrayList<AbstractSong>();
+				try {
+					for (Song song : songsList) {
+						if (!resultAdapter.contains(song)) {
+							resultAdapter.add(song);
+							songs.add(song.cloneSong());
+						}
 					}
+				} catch (Exception e) {
+					android.util.Log.d("logks", "in " + getClass().getName() + " appear problem: " + e);
 				}
+				PlaybackService.get(getContext()).setArrayPlayback(songs);
 			}
 		}
 	};

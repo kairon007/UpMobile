@@ -87,6 +87,10 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	public void saveState() {
 		StateKeeper.getInstance().saveStateAdapter(this);
 	}
+	
+	public void restoreState() {
+		StateKeeper.getInstance().setSearchView(this);
+	}
 
 	@Override
 	public boolean isWhiteTheme(Context context) {

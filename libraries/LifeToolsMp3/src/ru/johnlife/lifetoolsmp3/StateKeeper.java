@@ -427,4 +427,8 @@ public class StateKeeper {
 		this.libaryFirstPosition = libaryFirstPosition;
 	}
 	
+	public void setSearchView(OnlineSearchView searchView) {
+		this.searchView = searchView;
+	}
+	
 }

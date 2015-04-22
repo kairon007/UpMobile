@@ -209,6 +209,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		playerProgress.setMax(prepared ? (int)song.getDuration() : 100);
 		contentView.findViewById(R.id.controlPane).measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		scrollView.recalculateCover(R.id.controlPane, R.id.visualizer);
+		playerProgress.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				playerProgress.setIndeterminate(!player.isPrepared());
+			}
+		}, 1000);
 		return contentView;
 	}
 	
@@ -360,13 +367,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
 		}
 		showLyrics();
-		playerProgress.postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				playerProgress.setIndeterminate(!player.isPrepared());
-			}
-		}, 1000);
 		cancelProgressTask();
 		thatSongIsDownloaded();
 		super.onResume();
