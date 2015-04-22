@@ -1,14 +1,17 @@
 package org.upmobile.newmaterialmusicdownloader;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController;
@@ -60,12 +63,22 @@ public class DownloadListener extends DownloadClickListener {
 
 					@Override
 					public void onUndo(Parcelable token) {
+						PlaybackService service = PlaybackService.get(context);
+						if (PlaybackService.SMODE_SONG_FROM_LIBRARY == service.sourceSong()) {
+							service.reset();
+							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
+							list.add(song);
+							service.setArrayPlayback(list);
+							service.play(song);	
+							return;
+						}
 						if (ManagerFragmentId.playerFragment() != ((MainActivity) context).getCurrentFragmentId()) {
 							((BaseMiniPlayerActivity) context).startSong(song);
 						} else {
 							((BaseMiniPlayerActivity) context).startSong(song, false);
 						}
 					}
+					
 				});
 				undoBar.style(new UndoBarStyle(R.drawable.ic_play, R.string.play));
 				undoBar.show(false);

@@ -64,6 +64,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private static final int SMODE_CALL_RINGING = 0x00000200;
 	private static final int SMODE_NOTIFICATION = 0x00000400;
 	private static final int SMODE_STOP = 0x00000800;
+	public static final int SMODE_SONG_FROM_LIBRARY = 0x00001000;
+	public static final int SMODE_SONG_FROM_INTERNER = 0x00002000;
+	public static final int SMODE_HAS_NOT_SONG = 0x00004000;
+	private static final int SONG_SOURCE_MASKS = 0x00007000;
 	private static final int MSG_START = 1;
 	private static final int MSG_PLAY = 2;
 	private static final int MSG_PAUSE = 3;
@@ -236,6 +240,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		handler = new Handler(looper, this);
 		instance = this;
 		showNotification(true);
+		onMode(SMODE_HAS_NOT_SONG, SONG_SOURCE_MASKS);
 		synchronized (WAIT) {
 			WAIT.notifyAll();
 		}
@@ -322,7 +327,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
-					sendNotification(true, songStart.getCover(this));
 				} catch (Exception e) {
 					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
 					if (e.toString().contains("setDataSourceFD failed") && null != errorListener) {
@@ -586,6 +590,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 	}
 	
+	private void onMode(int flag, int masks) {
+		mode = (mode &~ masks) | (flag & masks);
+	}
+	
 	private boolean check(int flag) {
 		return (mode & flag) == flag;
 	}
@@ -644,6 +652,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			onMode(SMODE_PLAYING);
 			helper(State.START, playingSong);
 			mp.start();
+			sendNotification(true, playingSong.getCover(this));
 			if ((mode & SMODE_UNPLUG_HEADPHONES) == SMODE_UNPLUG_HEADPHONES) {
 				buildSendMessage(playingSong, MSG_PAUSE, 0, 0);
 				mode &= ~SMODE_UNPLUG_HEADPHONES;
@@ -732,8 +741,25 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		return result;
 	}
 	
+	/**
+	 * use constants from ServicePlayback
+	 * 
+	 * @return source of playing song and song from arrayPlayBack. Values can be
+	 *         three options - SMODE_SONG_FROM_LIBRARY, SMODE_SONG_FROM_INTERNER
+	 *         and SMODE_HAS_NOT_SONG (when arrayPlayback is empty)
+	 */
+	public int sourceSong() {
+		return SONG_SOURCE_MASKS & mode;
+	}
+	
 	public void setArrayPlayback(ArrayList<AbstractSong> arrayPlayback) {
 		this.arrayPlayback = arrayPlayback;
+		Class clazz = arrayPlayback.get(0).getClass();
+		if (null != arrayPlayback && !arrayPlayback.isEmpty()) {
+			onMode(clazz == MusicData.class ? SMODE_SONG_FROM_LIBRARY : SMODE_SONG_FROM_INTERNER, SONG_SOURCE_MASKS);
+		} else {
+			onMode(SMODE_HAS_NOT_SONG, SONG_SOURCE_MASKS);
+		}
 	}
 	
 	public void addStatePlayerListener(OnStatePlayerListener stateListener) {
@@ -899,6 +925,15 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	// it design for debug
 	private void printStateDebug() {
 		StringBuilder builder = new StringBuilder();
+		if (check(SMODE_HAS_NOT_SONG)) {
+			builder.append("| SMODE_HAS_NOT_SONG");
+		}
+		if (check(SMODE_SONG_FROM_INTERNER)) {
+			builder.append("| SMODE_SONG_FROM_INTERNER");
+		}
+		if (check(SMODE_SONG_FROM_LIBRARY)) {
+			builder.append("| SMODE_SONG_FROM_LIBRARY");
+		}
 		if (check(SMODE_GET_URL)) {
 			builder.append("| SMODE_GET_URL");
 		}

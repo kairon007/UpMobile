@@ -31,6 +31,7 @@ public class SearchFragment extends Fragment implements Constants{
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).showToolbarShadow(false);
 		searchView.onResume();
+		searchView.restoreState();
 		super.onResume();
 	}
 	
