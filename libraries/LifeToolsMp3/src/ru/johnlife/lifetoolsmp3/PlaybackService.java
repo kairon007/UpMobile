@@ -177,21 +177,23 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		
 		public void startUpdating() {
 			scheduleAtFixedRate(new TimerTask() {
-				
+
 				@Override
 				public void run() {
 					synchronized (LOCK) {
-					if (!player.isPlaying() || null == playingSong) {
-						return;
-					}
-					if (lastTime == player.getCurrentPosition()) {
-						notUpdateCount++;
-					} else {
-						notUpdateCount = 0;
-					}
-					lastTime = player.getCurrentPosition();
-					for (OnStatePlayerListener listener : stateListeners) {
-						listener.onTrackTimeChanged(player.getCurrentPosition(), notUpdateCount > MAX_NOTUPDATE_COUNT);
+						if (!player.isPlaying() || null == playingSong) {
+							return;
+						}
+						if (lastTime == player.getCurrentPosition()) {
+							notUpdateCount++;
+						} else {
+							notUpdateCount = 0;
+						}
+						lastTime = player.getCurrentPosition();
+						synchronized (WAIT) {
+							for (OnStatePlayerListener listener : stateListeners) {
+								listener.onTrackTimeChanged(player.getCurrentPosition(), notUpdateCount > MAX_NOTUPDATE_COUNT);
+							}
 						}
 					}
 				}
@@ -763,7 +765,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void addStatePlayerListener(OnStatePlayerListener stateListener) {
-		this.stateListeners.add(stateListener);
+			synchronized (WAIT) {
+				this.stateListeners.add(stateListener);
+			}
 	}
 	
 	public void removeStatePlayerListener(OnStatePlayerListener stateListener) {
