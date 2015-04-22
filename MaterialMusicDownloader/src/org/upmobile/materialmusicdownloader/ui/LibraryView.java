@@ -6,6 +6,7 @@ import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
@@ -55,17 +56,25 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	@Override
 	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
 		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+			
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	            for (int position : reverseSortedPositions) {
 	            	MusicData data = ((MusicData) adapter.getItem(position));
-	            	((LibraryAdapter)adapter).deleteSong(data); 
-	            	String str =  data.getComment();
-	            	if (null != str) {
-						StateKeeper.getInstance().removeSongInfo(data.getComment());
-					}
+	            	isUserDeleted = true;
+	            	PlaybackService.get(getContext()).remove(data);
+	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
+	            	adapter.remove(data);
+	            	data.reset(getContext());
+	            	if (adapter.isEmpty()) {
+	        			((MainActivity) getContext()).showPlayerElement(false);
+	        			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
+	        			emptyMsg.setVisibility(View.VISIBLE);
+	        			emptyMsg.setText(R.string.library_empty);
+	        		}
 	            }
 	        }
+	        
 	    });
 		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
 		((DynamicListView)listView).setAdapter(swipeUndoAdapter);

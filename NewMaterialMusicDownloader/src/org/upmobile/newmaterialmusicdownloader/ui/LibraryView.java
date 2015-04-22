@@ -1,8 +1,11 @@
 package org.upmobile.newmaterialmusicdownloader.ui;
 
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
@@ -54,13 +57,19 @@ public class LibraryView extends BaseLibraryView {
 		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
-	            for (int position : reverseSortedPositions) {
+	        	for (int position : reverseSortedPositions) {
 	            	MusicData data = ((MusicData) adapter.getItem(position));
-	            	((LibraryAdapter)adapter).deleteSong(data); 
-	            	String str =  data.getComment();
-	            	if (null != str) {
-						StateKeeper.getInstance().removeSongInfo(data.getComment());
-					}
+	            	isUserDeleted = true;
+	            	PlaybackService.get(getContext()).remove(data);
+	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
+	            	adapter.remove(data);
+	            	data.reset(getContext());
+	            	if (adapter.isEmpty()) {
+	        			((MainActivity) getContext()).showPlayerElement(false);
+	        			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
+	        			emptyMsg.setVisibility(View.VISIBLE);
+	        			emptyMsg.setText(R.string.library_empty);
+	        		}
 	            }
 	        }
 	    });

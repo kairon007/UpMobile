@@ -106,19 +106,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		return 0;
 	}
 	
-	public void deleteSong(MusicData song) {
-		if (null == song) return;
-		remove(song);
-		service.remove(song);
-		song.reset(getContext());
-		if (isEmpty()) {
-			((MainActivity) getContext()).showPlayerElement(false);
-			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
-			emptyMsg.setVisibility(View.VISIBLE);
-			emptyMsg.setText(R.string.library_empty);
-		}
-	}
-
 	@Override
 	public View getUndoView(int paramInt, View paramView, ViewGroup paramViewGroup) {
 		View view = paramView;

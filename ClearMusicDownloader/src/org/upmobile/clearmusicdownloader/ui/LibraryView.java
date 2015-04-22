@@ -2,9 +2,12 @@ package org.upmobile.clearmusicdownloader.ui;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -14,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,8 +24,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 public class LibraryView extends BaseLibraryView implements Constants {
-
-	private ImageView progress;
 
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
@@ -57,12 +57,25 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	@Override
 	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
 		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
-	        @Override
+	        
+			@Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	            for (int position : reverseSortedPositions) {
-	            	((LibraryAdapter)adapter).deleteSong((MusicData)adapter.getItem(position)); 
+	            	MusicData data = ((MusicData) adapter.getItem(position));
+	            	isUserDeleted = true;
+	            	PlaybackService.get(getContext()).remove(data);
+	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
+	            	adapter.remove(data);
+	            	data.reset(getContext());
+	            	if (adapter.isEmpty()) {
+	        			((MainActivity) getContext()).showPlayerElement();
+	        			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
+	        			emptyMsg.setVisibility(View.VISIBLE);
+	        			emptyMsg.setText(R.string.library_empty);
+	        		}
 	            }
 	        }
+			
 	    });
 		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
 		((DynamicListView)listView).setAdapter(swipeUndoAdapter);

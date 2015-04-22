@@ -45,17 +45,26 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private Handler uiHandler;
 	private String filterQuery = "";
 	private CheckRemovedFiles checkRemovedFiles;
+	protected boolean isUserDeleted = false;
 	private ContentObserver observer = new ContentObserver(null) {
 
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
+			if (isUserDeleted) {
+				isUserDeleted = false;
+				return;
+			}
 			fillAdapter(querySong());
 		}
 
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
+			if (isUserDeleted) {
+				isUserDeleted = false;
+				return;
+			}
 			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
 				fillAdapter(querySong());
 			}

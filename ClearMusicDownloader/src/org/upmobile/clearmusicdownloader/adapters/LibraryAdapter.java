@@ -82,18 +82,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	protected int getDefaultCover() {
 		return R.drawable.def_cover_circle;
 	}
-	
-	public void deleteSong(MusicData song) {
-		remove(song);
-		service.remove(song);
-		song.reset(getContext());
-		if (isEmpty()) {
-			((MainActivity) getContext()).showPlayerElement();
-			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
-			emptyMsg.setVisibility(View.VISIBLE);
-			emptyMsg.setText(R.string.library_empty);
-		}
-	}
 
 	@Override
 	public View getUndoView(int paramInt, View paramView, ViewGroup paramViewGroup) {

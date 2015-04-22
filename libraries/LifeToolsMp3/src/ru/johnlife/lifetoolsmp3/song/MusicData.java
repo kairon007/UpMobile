@@ -18,6 +18,7 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.MediaColumns;
+import android.widget.ProgressBar;
 
 public class MusicData implements Comparable<MusicData>, AbstractSong {
 
@@ -27,8 +28,10 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 				MediaColumns.TITLE, 
 				AudioColumns.ARTIST,
 				AudioColumns.DURATION, 
-				AudioColumns.ALBUM, };
+				AudioColumns.ALBUM,
+	};
 
+	public static final String EMPTY_COMMENT = "in_data_comment_is_empty";
 	public static final int MODE_VISIBLITY = 0x00000001;
 	public static final int MODE_PLAYING = 0x00000002;
 	private Bitmap cover;
@@ -153,7 +156,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
 			return null;
 		}
-		return comment;
+		return null != comment ? comment : EMPTY_COMMENT;
 	}
 	
 	@Override
