@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ripple"
     style="@style/RippleStyleRectangle"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/material_drawer_item_primary" >
+    android:layout_height="@dimen/material_drawer_item_primary"
+    android:paddingEnd="@dimen/material_drawer_vertical_padding"
+    android:paddingLeft="@dimen/material_drawer_vertical_padding"
+    android:paddingRight="@dimen/material_drawer_vertical_padding"
+    android:paddingStart="@dimen/material_drawer_vertical_padding" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/material_drawer_item_primary"
-        android:clickable="true"
-        android:paddingEnd="@dimen/material_drawer_vertical_padding"
-        android:paddingLeft="@dimen/material_drawer_vertical_padding"
-        android:paddingRight="@dimen/material_drawer_vertical_padding"
-        android:paddingStart="@dimen/material_drawer_vertical_padding" >
+        android:layout_height="match_parent"
+        android:clickable="true" >
+        
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?attr/colorPrimary"
+        android:visibility="gone" />
 
         <ImageView
             android:id="@+id/icon"
@@ -26,7 +35,7 @@
             android:paddingTop="@dimen/material_drawer_item_primary_icon_padding" />
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toEndOf="@id/icon"
@@ -34,22 +43,10 @@
             android:layout_toRightOf="@id/icon"
             android:layout_toStartOf="@+id/badge"
             android:fontFamily="sans-serif-medium"
-            android:gravity="center_vertical|start"
+            android:gravity="center_vertical"
             android:lines="1"
             android:singleLine="true"
             android:textDirection="anyRtl"
-            android:textSize="@dimen/material_drawer_item_primary_text" />
-
-        <TextView
-            android:id="@+id/badge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:fontFamily="sans-serif"
-            android:gravity="center_vertical|end"
-            android:lines="1"
-            android:singleLine="true"
             android:textSize="@dimen/material_drawer_item_primary_text" />
     </RelativeLayout>
 

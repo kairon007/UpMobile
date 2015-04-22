@@ -1,13 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="MyActionBarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-    </style>
-
+    
     <style name="TextStyleLine1">
         <item name="android:textColor">?attr/colorTextPrimary</item>
         <item name="android:textSize">@dimen/material_title</item>

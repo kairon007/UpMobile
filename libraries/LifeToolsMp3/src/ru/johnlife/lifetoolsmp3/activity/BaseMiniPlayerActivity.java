@@ -3,10 +3,8 @@ package ru.johnlife.lifetoolsmp3.activity;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -282,7 +280,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
-					fakeView.setVisibility(View.VISIBLE);
+					if (null != fakeView)
+						fakeView.setVisibility(View.VISIBLE);
 					customDownloadButton();
 					isClickOnDownload  = false;
 				}
@@ -300,7 +299,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				
 				@Override
 				public void onAnimationStart(Animation animation) {
-					fakeView.setVisibility(View.GONE);
+					if (null != fakeView)
+						fakeView.setVisibility(View.GONE);
 					((View)miniPlayer.getParent()).setVisibility(View.GONE);
 				}
 				

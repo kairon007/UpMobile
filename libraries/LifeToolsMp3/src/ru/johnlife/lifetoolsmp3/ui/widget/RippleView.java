@@ -351,6 +351,18 @@ public class RippleView extends FrameLayout implements OnGestureListener {
         canvas.drawBitmap(originBitmap, rect, rect, paint);
         return output;
     }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+    	super.setEnabled(enabled);
+    	rippleClickable = enabled;
+    }
+    
+    @Override
+    public void setClickable(boolean clickable) {
+    	super.setClickable(clickable);
+    	rippleClickable = clickable;
+    }
 	
 	public void setRippleColor(int rippleColor) {
 		this.rippleColor = rippleColor;

@@ -2,73 +2,77 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <View
-        android:id="@+id/fake_view"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone" />
+        android:layout_height="match_parent" >
 
-    <FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/fake_view"
-        android:layout_below="@+id/fake_toolbar" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/top_shadow"
-        android:visibility="gone" >
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/toolbar" />
 
-        <include
-            android:id="@+id/mini_player"
-            layout="@layout/mini_player"
-            android:visibility="gone" />
+            <View
+                android:id="@+id/toolbar_shadow"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/toolbar_shadow" />
 
-        <include
-            android:id="@+id/mini_player_duplicate"
-            layout="@layout/mini_player"
-            android:visibility="gone" />
-    </RelativeLayout>
+            <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-    <View
-        android:id="@+id/fake_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/toolbar" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:background="@drawable/top_shadow"
+                android:visibility="gone" >
 
-    <FrameLayout
-        android:id="@+id/toolbar_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/bottom_shadow" />
+                <include
+                    android:id="@+id/mini_player"
+                    layout="@layout/mini_player"
+                    android:visibility="gone" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/material_action_bar_hight"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+                <include
+                    android:id="@+id/mini_player_duplicate"
+                    layout="@layout/mini_player"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/toolbar_title"
-            style="@style/ToolbarTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:text="@string/app_name"
-            android:textColor="@android:color/white" />
-    </android.support.v7.widget.Toolbar>
+        <fragment
+            android:id="@+id/fragment_navigation_drawer"
+            android:name="org.upmobile.newmaterialmusicdownloader.fragment.FragmentDrawer"
+            android:layout_width="@dimen/nav_drawer_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:layout="@layout/fragment_navigation_drawer"
+            tools:layout="@layout/fragment_navigation_drawer" />
+    </android.support.v4.widget.DrawerLayout>
+
+    <!-- <View -->
+    <!-- android:id="@+id/fake_view" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="64dp" -->
+    <!-- android:layout_alignParentBottom="true" -->
+    <!-- android:visibility="gone" /> -->
+
+
+    <!-- <View -->
+    <!-- android:id="@+id/fake_toolbar" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_alignBottom="@+id/toolbar" /> -->
 
 </RelativeLayout>
