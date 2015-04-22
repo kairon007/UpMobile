@@ -5,6 +5,7 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.adapters.DownloadsAdapter;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter.CanNotifyListener;
@@ -42,7 +43,9 @@ public class DownloadsView extends BaseDownloadsView implements Constants {
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	            for (int position : reverseSortedPositions) {
-	            	((DownloadsAdapter)adapter).removeItem((MusicData)adapter.getItem(position)); 
+	            	MusicData data = (MusicData) adapter.getItem(position);
+	            	StateKeeper.getInstance().removeSongInfo(data.getDownloadUrl());
+	            	((DownloadsAdapter)adapter).removeItem(data); 
 	            }
 	        }
 	    });

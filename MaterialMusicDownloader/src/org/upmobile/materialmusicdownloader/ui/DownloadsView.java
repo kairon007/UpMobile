@@ -42,7 +42,7 @@ public class DownloadsView extends BaseDownloadsView implements Constants {
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	            for (int position : reverseSortedPositions) {
-	            	((DownloadsAdapter)adapter).removeItem((MusicData)adapter.getItem(position)); 
+	            	((DownloadsAdapter)adapter).removeItem((MusicData)adapter.getItem(position));
 	            }
 	        }
 	    });
