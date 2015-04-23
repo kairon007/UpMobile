@@ -15,7 +15,8 @@ public class TestApp {
 			}
 			isWork = true;
 			start = time = System.currentTimeMillis();
-			android.util.Log.d("logks", "_|START TEST|_start = " + start);
+			String strThread =  Thread.currentThread().getName();
+			android.util.Log.d("logks", "_|START TEST|_start = " + start + ", thread name - \"" + strThread + "\"");
 		}
 	}
 
@@ -26,7 +27,8 @@ public class TestApp {
 				isWork = false;
 				stop = System.currentTimeMillis();
 				long total = stop - start;
-				android.util.Log.d("logks", "_|STOP TEST|_stop = " + stop + ", total time = " + total);
+				String strThread =  Thread.currentThread().getName();
+				android.util.Log.d("logks", "_|STOP TEST|_stop = " + stop + ", total time = " + total + ", thread name - \"" + strThread + "\"");
 				android.util.Log.d("logks", "______________________________________________");
 				stop = start = 0;
 			}
@@ -37,7 +39,8 @@ public class TestApp {
 		synchronized (lock) {
 			if (isWork) {
 				long temp = System.currentTimeMillis();
-				android.util.Log.d("logks", "_|TEST|_check time = " + (temp - time) + " in " + place);
+				String strThread =  Thread.currentThread().getName();
+				android.util.Log.d("logks", "_|TEST|_check time = " + (temp - time) + " in " + place + ", thread name - \"" + strThread + "\"");
 				time = temp;
 			}
 		}

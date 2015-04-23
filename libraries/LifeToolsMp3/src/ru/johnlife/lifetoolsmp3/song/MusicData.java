@@ -156,7 +156,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
 			return null;
 		}
-		return null != comment ? comment : EMPTY_COMMENT;
+		return null != comment && !comment.isEmpty() ? comment : EMPTY_COMMENT;
 	}
 	
 	@Override

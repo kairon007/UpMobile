@@ -224,18 +224,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			canceled = true;
 			download.setOnClickListener(PlayerFragment.this);
 			download.setIndeterminateProgressMode(false);
-			download.setProgress(0);
+			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
 		}
 
 		@Override
 		public void onPostExecute(String params) {
 			if (FAILURE.equals(params)) {
 				((MainActivity) getActivity()).showMessage(R.string.download_failed);
-				download.setProgress(0);
+				download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
 				download.setOnClickListener(PlayerFragment.this);
 				setDownloadButtonState(true);
 			} else {
-				download.setProgress(canceled ? 0 : 100);
+				download.setProgress(canceled ? CircularProgressButton.IDLE_STATE_PROGRESS : CircularProgressButton.SUCCESS_STATE_PROGRESS);
 			}
 		}
 
@@ -246,7 +246,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setClickable(false);
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
-			download.setProgress(50);
+			download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
 		}
 
 	};
@@ -314,13 +314,20 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public void onResume() {
-		thatSongIsDownloaded();
 		((UIMainActivity) getActivity()).setSelectedItem(Constants.PLAYER_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity) getActivity()).invalidateOptionsMenu();
-		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		if (StateKeeper.DOWNLOADED == state) {
 			((RippleView) download.getParent()).setVisibility(View.GONE);
 		} else {
+			if (StateKeeper.DOWNLOADING == state) {
+				((RippleView) download.getParent()).setEnabled(false);
+				download.setClickable(false);
+				download.setOnClickListener(null);
+				download.setIndeterminateProgressMode(true);
+				download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
+			}
 			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
 		}
 		setCheckBoxState(true);
@@ -560,7 +567,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();
-			download.setProgress(0);
+			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
 			download.setOnClickListener(this);
 		}
 		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
@@ -791,7 +798,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		if (downloadListener.getSongID() == -1) {
 			download.setIndeterminateProgressMode(true);
-			download.setProgress(50);
+			download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
 		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
@@ -845,7 +852,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 							progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
 							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
 						} else {
-							download.setProgress(0);
+							download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
 							download.setOnClickListener(PlayerFragment.this);
 							setDownloadButtonState(true);
 						}
@@ -883,7 +890,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			public void run() {
 				((MainActivity) getActivity()).showMessage(error);
 				player.stopPressed();
-				download.setProgress(0);
+				download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
 				download.setIndeterminateProgressMode(false);
 				download.setOnClickListener(PlayerFragment.this);
 				setDownloadButtonState(true);
