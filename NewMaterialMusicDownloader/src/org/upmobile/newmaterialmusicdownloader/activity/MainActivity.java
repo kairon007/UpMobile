@@ -88,7 +88,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		});
         changeFragment(ManagerFragmentId.searchFragment(), true);
 	}
-
 	@Override
 	protected void onStart() {
 		startService(new Intent(this, PlaybackService.class));
@@ -101,7 +100,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			showPlayerElement(true);
 		} else if (PlaybackService.hasInstance()) {
 			service = PlaybackService.get(this);
-			showPlayerElement(service.isPrepared());
 		}
 		super.onResume();
 	}
@@ -155,7 +153,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		if (null != player && player.isVisible()) {
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
-			//TODO Change title
 			isOpenFromDraver = true;
 			setPlayerFragmentVisible(false);
 		} else {
@@ -169,12 +166,21 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			}
 		}
 	}
+	
+	@Override
+	public void setTitle(int titleId) {
+		setTitle(getString(titleId));
+	}
+	
+	@Override
+	public void setTitle(CharSequence title) {
+		getSupportActionBar().setTitle(title);
+	}
 
 	public void changeFragment(int fragmentId, boolean fromDraver) {
 		if (currentFragmentId == fragmentId) return;
 		isOpenFromDraver = fromDraver;
 		Fragment selectedFragment = null;
-		String title = "";
 		if (ManagerFragmentId.playerFragment() != fragmentId) {
 			setPlayerFragmentVisible(false);
 			showMiniPlayer(true);
@@ -182,19 +188,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		boolean isAnimate = false;
 		if (fragmentId == ManagerFragmentId.searchFragment()) {
 			selectedFragment = new SearchFragment();
-			title = getString(R.string.tab_search);
 		} else if (fragmentId == ManagerFragmentId.downloadFragment()) {
 			selectedFragment = new DownloadsFragment();
-			title = getString(R.string.tab_downloads);
 		} else if (fragmentId == ManagerFragmentId.playlistFragment()) {
 			selectedFragment = new PlaylistFragment();
-			title = getString(R.string.tab_playlist);
 		} else if (fragmentId == ManagerFragmentId.libraryFragment()) {
 			selectedFragment = new LibraryFragment();
-			title = getString(R.string.tab_library);
 		} else if (fragmentId == ManagerFragmentId.playerFragment()) {
 			selectedFragment = new PlayerFragment();
-			title = getString(R.string.tab_now_plaing);
 			isAnimate = true;
 		} else if (fragmentId == ManagerFragmentId.settingFragment()) {
 			new FolderSelectorDialog().show(this);
@@ -209,7 +210,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				showMiniPlayer(false);
 			}
 			transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-			getSupportActionBar().setTitle(title);
 		}
 	}
 	
@@ -220,7 +220,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
 		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
 		editor.commit();
-		showPlayerElement(PlaybackService.get(this).isPlaying());
 		new Thread(new Runnable() {
 
 			@Override
