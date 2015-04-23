@@ -45,11 +45,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			service.setArrayPlayback(list);
 		} 
 		((MainActivity) getContext()).showPlayerElement(true);
-		try {
-			((MainActivity) getContext()).startSong(((Song)getResultAdapter().getItem(position)).cloneSong());
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		((MainActivity) getContext()).startSong(service.getArrayPlayback().get(position));
 		super.click(view, position);
 	}
 

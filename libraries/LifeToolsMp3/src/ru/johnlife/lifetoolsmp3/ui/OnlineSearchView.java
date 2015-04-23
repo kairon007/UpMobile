@@ -400,11 +400,11 @@ public abstract class OnlineSearchView extends View {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				try {
 					if (position == resultAdapter.getCount()) return; // progress click
-					if (null != keeper.getPlayingSong()) {
-						keeper.getPlayingSong().getSpecial().setChecked(false);
-					}
-					keeper.setPlayingSong(((AbstractSong) resultAdapter.getItem(position)));
+//					if (null != keeper.getPlayingSong()) {
+//						keeper.getPlayingSong().getSpecial().setChecked(false);
+//					}
 					((AbstractSong) resultAdapter.getItem(position)).getSpecial().setChecked(true);
+					keeper.setPlayingSong(((AbstractSong) resultAdapter.getItem(position)));
 					getResultAdapter().notifyDataSetChanged();
 					viewItem = view;
 					clickPosition = position;
@@ -904,9 +904,12 @@ public abstract class OnlineSearchView extends View {
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
 			String comment = song.getComment();
-			if (((RemoteSong) song).equals(StateKeeper.getInstance().getPlayingSong())) {
-				song.getSpecial().setChecked(true);
-			}
+			song.getSpecial().setChecked(((RemoteSong) song).equals(StateKeeper.getInstance().getPlayingSong()));
+//			if (((RemoteSong) song).equals(StateKeeper.getInstance().getPlayingSong())) {
+//				song.getSpecial().setChecked(true);
+//			} else {
+//				song.getSpecial().setChecked(false);
+//			}
 			song.setTitle(title);
 			song.setArtist(artist);
 			int lableStatus = keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment);
@@ -916,7 +919,7 @@ public abstract class OnlineSearchView extends View {
 				   .setLine2(title)
 				   .setDownloadLable(showDownloadLabel() ? lableStatus : -1)
 				   .setId(position)
-				   .showPlayingIndicator(((AbstractSong) getItem(position)).getSpecial().getIsChecked())
+				   .showPlayingIndicator(((AbstractSong) song).getSpecial().getIsChecked())
 				   .setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
 				   .setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong)song).isHasCoverFromSearch()) {
