@@ -765,13 +765,15 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void addStatePlayerListener(OnStatePlayerListener stateListener) {
-			synchronized (WAIT) {
-				this.stateListeners.add(stateListener);
-			}
+		synchronized (WAIT) {
+			this.stateListeners.add(stateListener);
+		}
 	}
 	
 	public void removeStatePlayerListener(OnStatePlayerListener stateListener) {
-		this.stateListeners.remove(stateListener);
+		synchronized (WAIT) {
+			this.stateListeners.remove(stateListener);
+		}
 	}
 	
 	public void setDestroyListener(OnPlaybackServiceDestroyListener destroyListener) {
