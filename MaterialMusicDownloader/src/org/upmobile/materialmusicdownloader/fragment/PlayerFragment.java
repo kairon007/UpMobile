@@ -222,6 +222,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		public void onCancelled() {
 			canceled = true;
+			((RippleView) download.getParent()).setEnabled(true);
 			download.setOnClickListener(PlayerFragment.this);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);

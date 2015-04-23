@@ -82,8 +82,6 @@ import android.widget.TextView.OnEditorActionListener;
 public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener {
 
 	private final int MESSAGE_DURATION = 5000;
-	private final int DEFAULT_SONG = 7340032; // 7 Mb
-	private final int BAD_SONG = 2048; // 200kb
 	private AbstractSong song;
 	private AsyncTask<Long,Integer,String> progressUpdater;
 	private AsyncTask<Bitmap, Void, Palette> paletteGenerator;
@@ -161,6 +159,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		public void onCancelled() {
 			canceled = true;
 			download.setOnClickListener(PlayerFragment.this);
+			((RippleView) download.getParent()).setEnabled(true);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
 		}
