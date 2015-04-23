@@ -643,7 +643,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			checkIdCover  = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);
 		} else {
-			final Bitmap bitmap = ((MusicData) song).getCover(getActivity());
+			final Bitmap bitmap = ((MusicData) song).getCover();
 			if (bitmap != null) {
 				playerCover.post(new Runnable() {
 					

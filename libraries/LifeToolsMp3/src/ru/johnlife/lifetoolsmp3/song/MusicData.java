@@ -130,7 +130,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	}
 
 	@Override
-	public Bitmap getCover(Context context) {
+	public Bitmap getCover() {
 		if (cover != null) return cover;
 		File file = new File(path);
 		try {

@@ -404,7 +404,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			checkIdCover  = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);		
 		} else {
-			setCover(song.getCover(this));
+			setCover(song.getCover());
 		}
 	}
 	

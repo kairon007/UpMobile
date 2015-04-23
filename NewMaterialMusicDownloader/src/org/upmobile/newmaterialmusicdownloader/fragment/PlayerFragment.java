@@ -538,7 +538,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 				@Override
 				public void onUndo(@Nullable Parcelable token) {
-					setCoverToZoomView(song.getCover(getActivity()));
+					setCoverToZoomView(song.getCover());
 					cbUseCover.setChecked(true);
 					isUseAlbumCover = true;
 				}
@@ -784,7 +784,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void getCover(final AbstractSong s) {
 		setCheckBoxState(false);
 		if (s.isHasCover()) {
-			Bitmap bitmap = s.getCover(getActivity());
+			Bitmap bitmap = s.getCover();
 			if (null != bitmap) {
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);

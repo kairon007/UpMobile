@@ -420,7 +420,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 				@Override
 				public void onUndo(@Nullable Parcelable token) {
-					setCoverToZoomView(song.getCover(getActivity()));
+					setCoverToZoomView(song.getCover());
 					cbUseCover.setChecked(true);
 					isUseAlbumCover = true;
 				}
@@ -730,7 +730,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		cbUseCover.setOnCheckedChangeListener(null);
 		setCheckBoxState(false);
 		if (song.isHasCover()) {
-			Bitmap bitmap = song.getCover(getActivity());
+			Bitmap bitmap = song.getCover();
 			if (null != bitmap) {
 				setCoverToZoomView(bitmap);
 				setCheckBoxState(true);
@@ -765,8 +765,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	/**
-	 * @param bitmap
-	 *            - set to image view, if bitmap == null then use default cover
+	 * @param bitmap - set to image view, if bitmap == null then use default cover
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;

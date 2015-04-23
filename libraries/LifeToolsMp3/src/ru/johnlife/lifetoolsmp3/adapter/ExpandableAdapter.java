@@ -66,7 +66,7 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 		holder.title.setText(item.getTitle());
 		holder.artist.setText(item.getArtist());
 		holder.duaration.setText(Util.getFormatedStrDuration(item.getDuration()));
-		Bitmap bitmap = item.getCover(inflater.getContext());
+		Bitmap bitmap = item.getCover();
 		if (null != bitmap) {
 			((ImageView) holder.cover).setImageBitmap(bitmap);
 		} else {

@@ -206,7 +206,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * @return The album art or null if no album art could be found
 	 */
 	@Override
-	public Bitmap getCover(Context context) {
+	public Bitmap getCover() {
 		if (cover != null) {
 			return cover;
 		}

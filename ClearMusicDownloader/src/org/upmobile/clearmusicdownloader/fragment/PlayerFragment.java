@@ -420,7 +420,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 				@Override
 				public void onUndo(@Nullable Parcelable token) {
-					playerCover.setImageBitmap(song.getCover(getActivity()));
+					playerCover.setImageBitmap(song.getCover());
 					isUseAlbumCover = true;
 					setCheckBoxState(true);
 				}
@@ -760,7 +760,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			checkIdCover = idBmpListener.hashCode();
 			((RemoteSong) song).getCover(idBmpListener);
 		} else {
-			Bitmap bitmap = ((MusicData) song).getCover(getActivity());
+			Bitmap bitmap = ((MusicData) song).getCover();
 			if (bitmap != null) {
 				playerCover.setImageBitmap(bitmap);
 				setCheckBoxState(true);

@@ -103,7 +103,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 					showMenu(v, info);
 				}
 			});
-			Bitmap bitmap = item.getCover(getContext());
+			Bitmap bitmap = item.getCover();
 			if (null != bitmap) {
 				cover.setImageBitmap(bitmap);
 			} else {

@@ -342,7 +342,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					helper(State.PLAY, songPlay);
 					player.start();
 					onMode(SMODE_PLAYING);
-					sendNotification(true, songPlay.getCover(this));
+					sendNotification(true, songPlay.getCover());
 				}
 				break;
 			case MSG_PAUSE:
@@ -351,7 +351,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					helper(State.PAUSE, songPasue);
 					player.pause();
 					mode |= SMODE_PAUSE;
-					sendNotification(false, songPasue.getCover(this));
+					sendNotification(false, songPasue.getCover());
 				}
 				break;
 			case MSG_SEEK_TO:
@@ -389,7 +389,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					break;
 				}
 				play(songShift.getClass() != MusicData.class);
-				sendNotification(true, songShift.getCover(this));
+				sendNotification(true, songShift.getCover());
 				break;
 			default:
 				Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
@@ -654,7 +654,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			onMode(SMODE_PLAYING);
 			helper(State.START, playingSong);
 			mp.start();
-			sendNotification(true, playingSong.getCover(this));
+			sendNotification(true, playingSong.getCover());
 			if ((mode & SMODE_UNPLUG_HEADPHONES) == SMODE_UNPLUG_HEADPHONES) {
 				buildSendMessage(playingSong, MSG_PAUSE, 0, 0);
 				mode &= ~SMODE_UNPLUG_HEADPHONES;
@@ -815,7 +815,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	@SuppressLint("NewApi")
 	private void sendNotification(boolean playing, Bitmap updateCover) {
 		if (!check(SMODE_NOTIFICATION)) return;
-		Bitmap cover = playingSong.getCover(this);
+		Bitmap cover = playingSong.getCover();
 		if (null != updateCover) {
 			cover = updateCover;
 		} else if (null == cover) {
