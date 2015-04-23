@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -321,11 +322,13 @@ public abstract class BasePlaylistView extends View {
 					} else {
 						removeFromPlaylist(getContext().getContentResolver(), data.getId(), musicData.getId());
 						playlists.get(playlists.indexOf(data)).getSongs().remove(musicData);
+						playbackService.remove(musicData);
 					}
 					updateAdapter();
 				}
 				return false;
 			}
+			
 		});
 		menu.show();
 	}
@@ -341,7 +344,7 @@ public abstract class BasePlaylistView extends View {
 	private void deletePlaylist(ContentResolver resolver, long playlistId) {
 		try {
 			String playlistid = String.valueOf(playlistId);
-			String where = MediaStore.Audio.Playlists._ID + "=?";
+			String where = BaseColumns._ID + "=?";
 			String[] whereVal = { playlistid };
 			resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, where, whereVal);
 		} catch (Exception e) {
