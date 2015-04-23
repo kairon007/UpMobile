@@ -71,7 +71,9 @@ public class LyricsFetcher {
 				builder.append(document.select("div.row"));
 				String response = builder.toString();
 				if (response.isEmpty() || !response.contains("start of lyrics")) return null;
-				Pattern p = Pattern.compile("<!-- start of lyrics -->(.*)<!-- end of lyrics -->", Pattern.DOTALL);
+				String start = "<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->";
+				String end = "<!-- MxM banner -->";
+				Pattern p = Pattern.compile(start+ "(.*)" + end, Pattern.DOTALL);
 				Matcher matcher = p.matcher(response);
 				if (matcher.find()) {
 					String htmlLyrics = matcher.group(1);
