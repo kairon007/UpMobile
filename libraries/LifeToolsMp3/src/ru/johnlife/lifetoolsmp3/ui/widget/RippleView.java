@@ -56,6 +56,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
     private boolean isLongClick;
     private boolean animationRunning;
     private boolean eventCanceled;
+    private boolean singleTap;
     
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Bitmap originBitmap;
@@ -117,8 +118,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		if (timer == 0)
 			canvas.save();
 		if (rippleDuration <= timer * rippleFrameRate) {
-			if (!isLongClick && !eventCanceled)
-				sendClickEvent();
+			if (!eventCanceled && singleTap) sendClickEvent();
 			animationRunning = false;
 			timer = 0;
 			durationEmpty = -1;
@@ -174,6 +174,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 	
 	@Override
 	public boolean onSingleTapUp(MotionEvent event) {
+		singleTap = true;
 		return true;
 	}
 
@@ -184,6 +185,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 
 	@Override
 	public void onLongPress(MotionEvent event) {
+		singleTap = false;
 		isLongClick = true;
 		sendClickEvent();
 	}
