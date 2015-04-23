@@ -18,7 +18,7 @@
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="?attr/colorPrimary"
         android:visibility="gone" />
 
@@ -45,6 +45,7 @@
             android:fontFamily="sans-serif-medium"
             android:gravity="center_vertical"
             android:lines="1"
+            android:textColor="?attr/colorTextSecondary"
             android:singleLine="true"
             android:textDirection="anyRtl"
             android:textSize="@dimen/material_drawer_item_primary_text" />

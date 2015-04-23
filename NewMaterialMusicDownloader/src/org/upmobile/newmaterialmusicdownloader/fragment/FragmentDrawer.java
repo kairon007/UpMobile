@@ -55,7 +55,7 @@ public class FragmentDrawer extends Fragment {
             public void onClick(View view, int position) {
 				if ((position + 1) > ManagerFragmentId.playlistFragment() && (position + 1) < ManagerFragmentId.settingFragment()) return;
             	if ((position + 1) != ManagerFragmentId.settingFragment()){
-            		setItemChecked(selectedView, view);
+            		setItemChecked(view);
             		selectedView = view;
             	}
                 drawerListener.onDrawerItemSelected(view, position);
@@ -165,16 +165,17 @@ public class FragmentDrawer extends Fragment {
 		if (!flag) {
 			adapter.delete(3);
 		} else {
+			if (adapter.getItemCount() > 6) return;
 			adapter.add(3, new NavDrawerItem(R.drawable.ic_headset_grey , getResources().getString(R.string.tab_now_plaing), NavDrawerItem.Type.Primary));
 		}
 	}
 	
-	public void setItemChecked(View previous, View next){
-		if (null != previous) {
-			previous.setBackgroundColor(Color.TRANSPARENT);
-			((TextView) previous.findViewById(R.id.title)).setTextColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextPrimary));
+	public void setItemChecked(View view){
+		if (null != selectedView) {
+			selectedView.setBackgroundColor(Color.TRANSPARENT);
+			((TextView) selectedView.findViewById(R.id.title)).setTextColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondary));
 		}
-		View selectView = recyclerView.findChildViewUnder(next.getX(), next.getY());
+		View selectView = recyclerView.findChildViewUnder(view.getX(), view.getY());
 		selectView.setBackgroundColor(getResources().getColor(R.color.selected_item));
 		((TextView) selectView.findViewById(R.id.title)).setTextColor(getResources().getColor(android.R.color.holo_blue_light));
 	}

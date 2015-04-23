@@ -399,8 +399,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	protected int getFakeViewID() {
-		//return R.id.fake_view;
-		return 0;
+		return R.id.fake_view;
 	}
 
 	@Override
@@ -476,7 +475,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 	
 	public void setToolbarOverlay(boolean isOverlay) {
-//		findViewById(R.id.fake_toolbar).setVisibility(isOverlay ? View.GONE : View.VISIBLE);
+		findViewById(R.id.fake_toolbar).setVisibility(isOverlay ? View.GONE : View.VISIBLE);
 		if(!isOverlay) {
 			setToolbarAlpha(255);
 		}
