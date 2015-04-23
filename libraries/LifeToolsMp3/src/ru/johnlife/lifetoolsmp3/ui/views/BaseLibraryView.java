@@ -45,7 +45,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private Handler uiHandler;
 	private String filterQuery = "";
 	private CheckRemovedFiles checkRemovedFiles;
-	protected boolean isUserDeleted = false;
 	private ContentObserver observer = new ContentObserver(null) {
 
 		@Override
@@ -82,7 +81,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		uiHandler.sendMessage(msg);
 	};
 	
-	OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
+	private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -92,11 +91,13 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		}
 	};
 	
+	protected boolean isUserDeleted = false;
 	protected abstract BaseAbstractAdapter<MusicData> getAdapter();
 	protected abstract ListView getListView(View view);
 	public abstract TextView getMessageView(View view);
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
+	protected void specialInit(View view) {}
 	
 	public void onPause() {
 		((BaseLibraryAdapter) adapter).resetListener();
@@ -118,8 +119,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			checkRemovedFiles.execute();
 		}
 	}
-	
-	protected void specialInit(View view) { }
 	
 	private PlaybackService getService() {
 		if (PlaybackService.hasInstance()) {
@@ -218,6 +217,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		ArrayList<MusicData> result = new ArrayList<MusicData>();
 		Cursor cursor = buildQuery(getContext().getContentResolver(), getFolderPath());
 		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+			cursor.close();
 			return result;
 		}
 		MusicData d = new MusicData();
@@ -250,7 +250,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 				adapter.add(list);
 				adapter.notifyDataSetChanged();
 			}
-		} 
+		}
 		return true;
 	}
 
