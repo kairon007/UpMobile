@@ -154,8 +154,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		if (null != player && player.isVisible()) {
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
-			//TODO how check previous Fragment? :(
-			drawerFragment.setItemChecked(getCurrentFragmentId() - 1);
 			isOpenFromDraver = true;
 			setPlayerFragmentVisible(false);
 		} else {
