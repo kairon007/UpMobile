@@ -22,13 +22,11 @@
 
 package org.kreed.vanilla;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.UnknownFormatConversionException;
 
 import junit.framework.Assert;
 
-import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
@@ -53,14 +51,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.PaintDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -81,6 +76,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -341,11 +337,11 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		ViewPager pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(pagerAdapter);
 		mViewPager = pager;
-
 		SharedPreferences settings = PlaybackService.getSettings(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			pager.setOnPageChangeListener(pagerAdapter);
-			View controls = getLayoutInflater().inflate(R.layout.actionbar_controls, null);
+//			View controls = getLayoutInflater().inflate(R.layout.actionbar_controls, null);
+			View controls = findViewById(R.id.LinearLayout1);
 			mTitle = (TextView) controls.findViewById(R.id.title);
 			mArtist = (TextView) controls.findViewById(R.id.artist);
 			mAlbum = (TextView) controls.findViewById(R.id.album);
@@ -1307,12 +1303,15 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		}
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			MenuItem controls = menu.add(null);
-			CompatHoneycomb.setActionView(controls, mActionControls);
-			CompatHoneycomb.setShowAsAction(controls, MenuItem.SHOW_AS_ACTION_ALWAYS);
+//			MenuItem controls = menu.add(null);
+//			controls.setActionView(mActionControls);
+//			controls.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//			CompatHoneycomb.setActionView(controls, mActionControls);
+//			CompatHoneycomb.setShowAsAction(controls, MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} else {
 			menu.add(0, MENU_PLAYBACK, 0, R.string.playback_view).setIcon(R.drawable.ic_menu_gallery);
 		}
