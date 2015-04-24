@@ -56,7 +56,6 @@ public class FragmentDrawer extends Fragment {
 				if ((position + 1) > ManagerFragmentId.playlistFragment() && (position + 1) < ManagerFragmentId.settingFragment()) return;
             	if ((position + 1) != ManagerFragmentId.settingFragment()){
             		setItemChecked(view);
-
             	}
                 drawerListener.onDrawerItemSelected(view, position);
                 mDrawerLayout.closeDrawer(containerView);
@@ -76,18 +75,21 @@ public class FragmentDrawer extends Fragment {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 getActivity().invalidateOptionsMenu();
+                Util.hideKeyboard(getActivity(), drawerView);
             }
  
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 getActivity().invalidateOptionsMenu();
+                Util.hideKeyboard(getActivity(), drawerView);
             }
  
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
                 toolbar.setAlpha(1 - slideOffset / 2);
+                Util.hideKeyboard(getActivity(), drawerView);
             }
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
