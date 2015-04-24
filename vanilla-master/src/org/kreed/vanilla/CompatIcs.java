@@ -93,7 +93,7 @@ public class CompatIcs {
 			editor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.artist);
 			editor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, song.album);
 			editor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, song.title);
-			Bitmap bitmap = song.getCover(context);
+			Bitmap bitmap = song.getCover();
 			if (bitmap != null) {
 				// Create a copy of the cover art, since RemoteControlClient likes
 				// to recycle what we give it.

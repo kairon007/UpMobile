@@ -1717,7 +1717,7 @@ public final class PlaybackService extends Service
 
 		RemoteViews views = new RemoteViews(getPackageName(), R.layout.notification);
 
-		Bitmap cover = song.getCover(this);
+		Bitmap cover = song.getCover();
 		if (cover == null) {
 			views.setImageViewResource(R.id.cover, R.drawable.fallback_cover);
 		} else {

@@ -1511,7 +1511,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 					// mAlbum.setText(album);
 					cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata);
 				} catch (Exception exception) {
-					cover = song.getCover(this);
+					cover = song.getCover();
 				}
 			}
 
