@@ -170,11 +170,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	};
 	
 	private class PlayerStateUpdater extends Timer {
-		
+
 		private final int MAX_NOTUPDATE_COUNT = 1000 / UPDATE_DELAY + 1;
 		private int notUpdateCount = 0;
 		private int lastTime = 0;
-		
+
 		public void startUpdating() {
 			scheduleAtFixedRate(new TimerTask() {
 
@@ -272,9 +272,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void remove(AbstractSong song) {
-		if (null == arrayPlayback || arrayPlayback.isEmpty()) {
-			return;
-		}
+		if (null == arrayPlayback || arrayPlayback.isEmpty()) return;
 		if (song.equals(playingSong)) {
 			int pos = arrayPlayback.indexOf(playingSong);
 			arrayPlayback.remove(song);
@@ -389,7 +387,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					break;
 				}
 				play(songShift.getClass() != MusicData.class);
-				sendNotification(true, songShift.getCover());
 				break;
 			default:
 				Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
@@ -457,10 +454,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public void stop() {
-		synchronized (LOCK) {
-			reset();
-			onMode(SMODE_STOP);
-		}
+		reset();
+		onMode(SMODE_STOP);
 		helper(State.STOP, previousSong == null ? playingSong : previousSong);
 		removeNotification();
 	}
@@ -669,23 +664,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 	}
 	
-	public int getDuration() {
-		if (!check(SMODE_PREPARED)) return 0;
-		synchronized (LOCK) {
-			return player.getDuration();
-		}
-	}
-	
 	public AbstractSong getPlayingSong() {
 		return null != playingSong ? playingSong : null;
 	}
 	
-	public int getPlayingPosition() {
-		synchronized (LOCK) {
-			return arrayPlayback.indexOf(playingSong);
-		}
-	}
-
 	public boolean enabledShuffle() {
 		return check(SMODE_SHUFFLE);
 	}

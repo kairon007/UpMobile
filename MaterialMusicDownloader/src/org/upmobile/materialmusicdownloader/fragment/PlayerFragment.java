@@ -195,7 +195,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					playerProgress.setProgress(time);
 					if (time < playerProgress.getMax() * percent) {
 						playerProgress.setSecondaryProgress(0);
-						playerProgress.setSecondaryProgress((int)(playerProgress.getMax() * percent));
+						playerProgress.setSecondaryProgress((int) (playerProgress.getMax() * percent));
 					}
 					playerCurrTime.setText(Util.getFormatedStrDuration(time));
 					playerProgress.setIndeterminate(isOverBuffer);
@@ -550,14 +550,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			player.play(song);
 			return;
 		}
-		if (!isUseAlbumCover) {
+		if (!isUseAlbumCover && song.isHasCover()) {
 			if (null != undo) {
 				undo.clear();
 			}
 			clearCover();
 		}
 		cbUseCover.setOnCheckedChangeListener(null);
-		player.stop();
 		setClickablePlayerElement(false);
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
