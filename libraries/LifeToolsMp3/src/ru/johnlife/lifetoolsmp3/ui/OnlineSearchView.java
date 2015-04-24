@@ -2,7 +2,6 @@ package ru.johnlife.lifetoolsmp3.ui;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,7 +50,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -61,7 +59,6 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.telephony.PhoneStateListener;
@@ -291,7 +288,12 @@ public abstract class OnlineSearchView extends View {
 				} catch (Exception e) {
 					android.util.Log.d("logks", "in " + getClass().getName() + " appear problem: " + e);
 				}
-				PlaybackService.get(getContext()).setArrayPlayback(songs);
+				if (!getContext().getPackageName().equals("org.kreed.vanilla") 
+						&& !getContext().getPackageName().equals("org.kreed.musicdownloader")
+						&& !getContext().getPackageName().equals("com.simpleandroid.music")
+						&& !getContext().getPackageName().equals("mp3.music.player.us")) {
+					PlaybackService.get(getContext()).setArrayPlayback(songs);	
+				}
 			}
 		}
 	};
@@ -404,7 +406,6 @@ public abstract class OnlineSearchView extends View {
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				android.util.Log.d("logks", "MAP - " + StateKeeper.getInstance().songHolder.toString());
 				Util.hideKeyboard(getContext(), v);
 				ImageLoader.getInstance().stop();
 				trySearch();
