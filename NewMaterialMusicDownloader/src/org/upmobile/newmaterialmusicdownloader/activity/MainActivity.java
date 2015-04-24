@@ -88,6 +88,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		});
         changeFragment(ManagerFragmentId.searchFragment(), true);
 	}
+	
 	@Override
 	protected void onStart() {
 		startService(new Intent(this, PlaybackService.class));
@@ -153,10 +154,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		if (null != player && player.isVisible()) {
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
+			//TODO how check previous Fragment? :(
+			drawerFragment.setItemChecked(getCurrentFragmentId() - 1);
 			isOpenFromDraver = true;
 			setPlayerFragmentVisible(false);
 		} else {
-			if (ManagerFragmentId.playerFragment() == currentFragmentId) {
+			if (ManagerFragmentId.playerFragment() == getCurrentFragmentId()) {
 				service.stopPressed();
 				finish();
 			} else if (null != service && isMiniPlayerPrepared()) {
@@ -178,7 +181,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void changeFragment(int fragmentId, boolean fromDraver) {
-		if (currentFragmentId == fragmentId) return;
+		if (getCurrentFragmentId() == fragmentId) return;
 		isOpenFromDraver = fromDraver;
 		Fragment selectedFragment = null;
 		if (ManagerFragmentId.playerFragment() != fragmentId) {
@@ -197,8 +200,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else if (fragmentId == ManagerFragmentId.playerFragment()) {
 			selectedFragment = new PlayerFragment();
 			isAnimate = true;
-		} else if (fragmentId == ManagerFragmentId.settingFragment()) {
-			new FolderSelectorDialog().show(this);
 		} else {
 			selectedFragment = new SearchFragment();
 		}
@@ -248,6 +249,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void setCurrentFragmentId(int currentFragmentId) {
 		this.currentFragmentId = currentFragmentId;
+		if (null != drawerFragment) {
+			drawerFragment.setItemChecked(currentFragmentId);	
+		}
 	}
 	
 	public int getCurrentFragmentId() {
@@ -487,7 +491,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	public void onDrawerItemSelected(View view, int position) {
-		changeFragment(position + 1, true);
+		int fragmentId = ++position;
+		if (fragmentId ==  ManagerFragmentId.settingFragment()) {
+			new FolderSelectorDialog().show(this);
+			return;
+		}
+		changeFragment(fragmentId, true);
 	}
 	
 	public List<NavDrawerItem> getData() {

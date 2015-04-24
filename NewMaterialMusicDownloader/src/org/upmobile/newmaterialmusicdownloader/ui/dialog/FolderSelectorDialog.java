@@ -145,8 +145,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 	
 	@Override
 	public void onDismiss(DialogInterface dialog) {
-		int id = ((MainActivity) getActivity()).getCurrentFragmentId();
-		((MainActivity) getActivity()).setCurrentFragmentId(id);
+		((MainActivity) getActivity()).setCurrentFragmentId(((MainActivity) getActivity()).getCurrentFragmentId());
 		super.onDismiss(dialog);
 	}
 	
