@@ -20,7 +20,6 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.mp3.MP3File;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.DownloadCache;
@@ -28,6 +27,7 @@ import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
 import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.RenameTask;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
@@ -55,6 +55,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AudioColumns;
+import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -197,6 +199,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				showMessage(context,  context.getString(R.string.download_started) + " "+sb);
 			}
 		});
+		StateKeeper.getInstance().putSongInfo(song.getUrl(), StateKeeper.DOWNLOADING);
 		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover, cacheItem);
 		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
@@ -251,6 +254,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	protected void notifyAboutFailed(long downloadId) {
+		StateKeeper.getInstance().removeSongInfo(song.getUrl());
 		((Activity)context).runOnUiThread(new Runnable() {
 
 			@Override
@@ -299,6 +303,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	private void insertToMediaStore(final RemoteSong song, final String pathToFile) {
+		StateKeeper.getInstance().putSongInfo(song.getUrl(), StateKeeper.DOWNLOADED);
 		ContentResolver resolver = context.getContentResolver();
 		int seconds = 0;
 		long ms = 0;
@@ -311,13 +316,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			e.printStackTrace();
 		}
 		ContentValues songValues = new ContentValues();
-		songValues.put(MediaStore.Audio.Media.DATA, pathToFile);
-		songValues.put(MediaStore.Audio.Media.ALBUM, song.getAlbum());
-		songValues.put(MediaStore.Audio.Media.ARTIST, song.getArtist());
-		songValues.put(MediaStore.Audio.Media.TITLE, song.getTitle());
-		songValues.put(MediaStore.Audio.Media.DURATION, ms);
-		songValues.put(MediaStore.Audio.Media.IS_MUSIC, 1);
-		DeleteMP3FromMediaStore(context, pathToFile);
+		songValues.put(MediaColumns.DATA, pathToFile);
+		songValues.put(AudioColumns.ALBUM, song.getAlbum());
+		songValues.put(AudioColumns.ARTIST, song.getArtist());
+		songValues.put(MediaColumns.TITLE, song.getTitle());
+		songValues.put(AudioColumns.DURATION, ms);
+		songValues.put(AudioColumns.IS_MUSIC, 1);
+		deleteMP3FromMediaStore(pathToFile);
 		Uri uri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues);
 		if (null == uri) {
 			Log.d(getClass().getSimpleName(), "Insert into MediaStore was failed");
@@ -326,7 +331,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(musicFile)));
 	}
 	
-	public void DeleteMP3FromMediaStore(Context context, String path) {
+	public void deleteMP3FromMediaStore(String path) {
 		Uri rootUri = MediaStore.Audio.Media.getContentUriForPath(path);
 		context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[] {path});
 	}
@@ -421,20 +426,10 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 				switch (status) {
 				case DownloadManager.ERROR_CANNOT_RESUME:
-					failed(c, artist, title);
-					return;
 				case DownloadManager.ERROR_FILE_ERROR:
-					failed(c, artist, title);
-					return;
 				case DownloadManager.ERROR_HTTP_DATA_ERROR:
-					failed(c, artist, title);
-					return;
 				case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
-					failed(c, artist, title);
-					return;
 				case DownloadManager.ERROR_UNKNOWN:
-					failed(c, artist, title);
-					return;
 				case DownloadManager.STATUS_FAILED:
 					failed(c, artist, title);
 					return;
@@ -488,7 +483,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 						setFileUri(currentDownloadId, src.getAbsolutePath());
 						prepare(src, song, path);
-						DownloadCache.getInstanse().remove(song);
+						DownloadCache.getInstanse().remove(artist, title);
 						if (null != infolistener) {
 							infolistener.success(song.getUrl());
 						}

@@ -165,7 +165,8 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	
 	@Override
 	protected void download(final View v, RemoteSong song, final int position) {
-		downloadListener = new DownloadListener(getContext(), song, 0);
+		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
+		downloadListener = new DownloadListener(getContext(), song, id);
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);

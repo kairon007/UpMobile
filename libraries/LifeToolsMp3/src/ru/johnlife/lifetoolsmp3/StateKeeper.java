@@ -18,6 +18,8 @@ import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.app.DownloadManager;
 import android.database.Cursor;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 public class StateKeeper {
@@ -294,8 +296,14 @@ public class StateKeeper {
 	
 	private void notifyLable() {
 		if (null != searchView && notifyLable) {
-			searchView.notifyAdapter();
-		} 
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				
+				@Override
+				public void run() {
+					searchView.notifyAdapter();
+				}
+			});
+		}
 	}
 	
 	public void putSongInfo(String url, int status) {

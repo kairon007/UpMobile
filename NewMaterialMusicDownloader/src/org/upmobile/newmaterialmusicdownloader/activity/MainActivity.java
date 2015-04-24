@@ -225,10 +225,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			public void run() {
 				StateKeeper.getInstance().notifyLable(false);
 				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
-				ArrayList<String> list = getDownloadingUrl();
-				for (String string : list) {
-					StateKeeper.getInstance().putSongInfo(string, StateKeeper.DOWNLOADING);
-				}
+				checkDownloadingUrl();
 				runOnUiThread(new Runnable() {
 
 					@Override

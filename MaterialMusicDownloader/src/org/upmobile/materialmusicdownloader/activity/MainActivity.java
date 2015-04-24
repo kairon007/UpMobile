@@ -274,17 +274,8 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			public void run() {
 				StateKeeper.getInstance().notifyLable(false);
 				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
-				ArrayList<String> list = getDownloadingUrl();
-				for (String string : list) {
-					StateKeeper.getInstance().putSongInfo(string, StateKeeper.DOWNLOADING);
-				}
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						StateKeeper.getInstance().notifyLable(true);
-					}
-				});
+				checkDownloadingUrl();
+				StateKeeper.getInstance().notifyLable(true);
 			}
 		}).start();
 	}
@@ -358,7 +349,8 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	
 	@Override
 	protected void download(RemoteSong song) {
-		DownloadListener downloadListener = new DownloadListener(this, song, 0);
+		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
+		DownloadListener downloadListener = new DownloadListener(this, song, id);
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);

@@ -94,6 +94,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 
 	@Override
 	protected void onStart() {
+		checkDownloadingUrl();
 		startService(new Intent(this, PlaybackService.class));
 		setImageDownloadButton();
 		new Thread(new Runnable() {
@@ -426,8 +427,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			public void success(String url) {
 				((RemoteSong) song).setDownloadUrl(url);
 				download(((RemoteSong) song));
-				String comment = ((RemoteSong) song).getUrl();
-				StateKeeper.getInstance().putSongInfo(comment, StateKeeper.DOWNLOADING);
 				if (null != downloadPressListener) {
 					downloadPressListener.downloadButtonPressed((RemoteSong) song);
 				}
@@ -489,48 +488,40 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		isClickOnDownload = !flag;
 	}
 	
-	protected ArrayList<String> getDownloadingUrl() {
+	protected void checkDownloadingUrl() {
 		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-		ArrayList<String> list = new ArrayList<String>();
 		if (null != manager) {
 			Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
 			if (pending != null) {
-				updateList(pending, list);
-				pending.close();
+				updateList(pending);
 			}
 			Cursor paused = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PAUSED));
 			if (paused != null) {
-				updateList(paused, list);
-				paused.close();
+				updateList(paused);
 			}
 			Cursor waitingNetwork = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_WAITING_FOR_NETWORK));
 			if (waitingNetwork != null) {
-				updateList(waitingNetwork, list);
-				waitingNetwork.close();
+				updateList(waitingNetwork);
 			}
 			Cursor unknown = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_UNKNOWN));
 			if (unknown != null) {
-				updateList(unknown, list);
-				unknown.close();
+				updateList(unknown);
 			}
 			Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 			if (running != null) {
-				updateList(running, list);
-				running.close();
+				updateList(running);
 			}
 		}
-		return list;
 	}
 
-	private void updateList(Cursor c, ArrayList<String> result) {
+	private void updateList(Cursor c) {
 		while (c.moveToNext()) {
 			String url = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
 			if (c.getString(8).contains(getDirectory())) {
-				if (!result.contains(url)) {
-					result.add(url);
-				}
+				StateKeeper.getInstance().putSongInfo(url, StateKeeper.DOWNLOADING);
 			}
 		}
+		c.close();
 	}
 	
 }

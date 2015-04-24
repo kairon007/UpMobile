@@ -690,7 +690,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
-				StateKeeper.getInstance().putSongInfo(url, StateKeeper.DOWNLOADING);
 				Runnable callbackRun = new Runnable() {
 
 					@Override

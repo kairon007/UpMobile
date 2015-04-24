@@ -890,7 +890,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 					return;
 				}
 				((RemoteSong) song).setDownloadUrl(url);
-				StateKeeper.getInstance().putSongInfo(url, StateKeeper.DOWNLOADING);
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 					@Override

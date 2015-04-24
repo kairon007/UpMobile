@@ -108,13 +108,11 @@ public abstract class OnlineSearchView extends View {
 	protected ProgressDialog progressSecond;	// For PtMusicAppOffline
 
 	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
-	private final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 	private int clickPosition;
 	private boolean isRestored = false;
 	private String extraSearch = null;
 	private String keyEngines;
 	private ArrayAdapter<String> adapter;
-	private ArrayList<MusicData> libraryList;
 	private Iterator<Engine> taskIterator;
 	private SharedPreferences sPref;
 	private StateKeeper keeper;
@@ -183,7 +181,6 @@ public abstract class OnlineSearchView extends View {
 		sPref = MusicApp.getSharedPreferences();
 		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
 		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
-		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
 		if (searchField.getWidth() - view.findViewById(R.id.clear).getWidth() < width) {
 			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
@@ -194,13 +191,6 @@ public abstract class OnlineSearchView extends View {
 		if (showDownloadLabel()) {
 			((BaseMiniPlayerActivity) getContext()).setDownloadPressListener(downloadPressListener);
 		}
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				updateQuery();
-			}
-		}).start();
 	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -238,10 +228,6 @@ public abstract class OnlineSearchView extends View {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-			if (key.contains(PREF_DIRECTORY_PREFIX)) {
-				updateQuery();
-				return;
-			}
 			if (key.contains(SPREF_CURRENT_ENGINES)) {
 				lastSearchString = "";
 				String value = sharedPreferences.getString(key, null);
@@ -249,28 +235,6 @@ public abstract class OnlineSearchView extends View {
 				String str = Util.removeSpecialCharacters(searchField.getText().toString());
 				if (!resultAdapter.isEmpty() && !str.equals("")) {
 					trySearch();
-				}
-			}
-		}
-	};
-	
-	private ContentObserver observer = new ContentObserver(null) {
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-			if (showDownloadLabel() ) {
-				updateLables();
-			}
-		}
-
-		@SuppressLint("NewApi")
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
-				if (showDownloadLabel()) {
-					updateLables();
 				}
 			}
 		}
@@ -440,6 +404,7 @@ public abstract class OnlineSearchView extends View {
 		view.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				android.util.Log.d("logks", "MAP - " + StateKeeper.getInstance().songHolder.toString());
 				Util.hideKeyboard(getContext(), v);
 				ImageLoader.getInstance().stop();
 				trySearch();
@@ -494,81 +459,6 @@ public abstract class OnlineSearchView extends View {
 		specialInit(view);
 	}
 	
-	public void updateQuery() {
-		if(!showDownloadLabel()) return;
-		libraryList = querySong();
-	}
-	
-	private void updateLables() {
-		ArrayList<MusicData> newLibraryList = querySong();
-		ArrayList<MusicData> diffrentObjs;
-		if (libraryList.size() == newLibraryList.size()) {
-			return;
-		} else if (newLibraryList.size() < libraryList.size()) {
-			diffrentObjs = compareArrays(libraryList, newLibraryList);
-			if (diffrentObjs.isEmpty()) return;
-			removeLables(diffrentObjs);
-		} else  if (libraryList.size() < newLibraryList.size()) {
-			diffrentObjs = compareArrays(newLibraryList, libraryList);
-			if (diffrentObjs.isEmpty()) return;
-			addLables(diffrentObjs);
-		}
-	}
-	
-	public static ArrayList<MusicData> compareArrays(ArrayList<MusicData> bigger, ArrayList<MusicData> small) {
-		ArrayList<MusicData> result = new ArrayList<>();
-		Collections.sort(bigger);
-		Collections.sort(small);
-		int rest = bigger.size() - small.size();
-		if (rest <= 0) return result;
-		int lastElement = bigger.size() - 1;
-		for (int i = 0; i < rest; i++) {
-			result.add(bigger.get(lastElement - i));
-		}
-		return result;
-	}
-	
-	private Runnable updater = new Runnable() {
-		
-		@Override
-		public void run() {
-			keeper.notifyLable(true);
-		}
-	};
-	
-	private void addLables(ArrayList<MusicData> list) {
-		keeper.notifyLable(false);
-		boolean isUpdated = false;
-		for (MusicData musicData : list) {
-			String comment = musicData.getComment();
-			if (null != comment && comment.contains("http")) {
-				libraryList.add(musicData);
-				keeper.removeSongInfo(comment);
-				keeper.putSongInfo(comment, StateKeeper.DOWNLOADED);
-				isUpdated = true;
-			}
-		}
-		if (isUpdated) {
-			((Activity) getContext()).runOnUiThread(updater);
-		}
-	}
-
-	private void removeLables(ArrayList<MusicData> list) {
-		keeper.notifyLable(false);
-		boolean isUpdated = false;
-		for (MusicData musicData : list) {
-			String comment = musicData.getComment();
-			if (null != comment && comment.contains("http")) {
-				libraryList.remove(musicData);
-				keeper.removeSongInfo(musicData.getComment());
-				isUpdated = true;
-			}
-		}
-		if (isUpdated) {
-			((Activity) getContext()).runOnUiThread(updater);
-		}
-	}
-
 	public int getScrollListView() {
 	    View c = listView.getChildAt(1);
 	    if (c == null) return 0;
@@ -606,8 +496,6 @@ public abstract class OnlineSearchView extends View {
 							((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).setDownloadUrl(url);
 							View viewByPosition = getViewByPosition(getResultAdapter().getPosition(((RemoteSong) getResultAdapter().getItem((Integer) v.getTag()))));
 							download(viewByPosition,((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())) , position);
-							String comment = ((RemoteSong) getResultAdapter().getItem((Integer) v.getTag())).getComment();
-							keeper.putSongInfo(comment, StateKeeper.DOWNLOADING);
 						}
 						
 						@Override
@@ -846,25 +734,6 @@ public abstract class OnlineSearchView extends View {
 	
 	public Bitmap getDeafultBitmapCover() {
 		return ((BitmapDrawable) getResources().getDrawable(defaultCover())).getBitmap();
-	}
-	
-	protected ArrayList<MusicData> querySong() {
-		ArrayList<MusicData> result = new ArrayList<MusicData>();
-		Cursor cursor = buildQuery(getContext().getContentResolver(), getDirectory());
-		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
-			cursor.close();
-			return result;
-		}
-		MusicData d = new MusicData();
-		d.populate(cursor);
-		result.add(d);
-		while (cursor.moveToNext()) {
-			MusicData data = new MusicData();
-			data.populate(cursor);
-			result.add(data);
-		}
-		cursor.close();
-		return result;
 	}
 	
 	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
@@ -1364,7 +1233,6 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	public void unregisterObserver() {
-		getContext().getContentResolver().unregisterContentObserver(observer);
 		sPref.unregisterOnSharedPreferenceChangeListener(sPrefListener);
 	}
 
