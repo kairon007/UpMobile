@@ -3,6 +3,8 @@ package ru.johnlife.lifetoolsmp3;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+
 public class DownloadCache {
 	
 	private final int CACHE_CAPACITY = 12;
@@ -36,7 +38,7 @@ public class DownloadCache {
 		cache.add(item);
 		return isCached;
 	}
-	
+
 	private boolean remove(Item item) {
 		int position = cache.indexOf(item);
 		if (position < 0 || position >= cache.size()) {
@@ -55,12 +57,16 @@ public class DownloadCache {
 		return cached;
 	}
 	
-	public synchronized boolean remove(String artist, String title) {
+	public boolean remove(AbstractSong song) {
+		return remove(song.getArtist(), song.getTitle());	
+	}
+	
+	public boolean remove(String artist, String title) {
 		Item deleteItem = null;
 		for (Item item : cache) {
 			if (item.getArtist().equals(artist) && item.getTitle().equals(title)) {
-			    randomId = random.nextInt(9999);
-			    deleteItem = new Item(randomId, artist, title, false);
+				randomId = random.nextInt(9999);
+				deleteItem = new Item(randomId, artist, title, false);
 			}
 		}
 		if (null != deleteItem) {

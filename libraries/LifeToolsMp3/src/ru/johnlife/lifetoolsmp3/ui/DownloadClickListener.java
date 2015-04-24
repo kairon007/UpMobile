@@ -488,7 +488,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						}
 						setFileUri(currentDownloadId, src.getAbsolutePath());
 						prepare(src, song, path);
-						DownloadCache.getInstanse().remove(artist, title);
+						DownloadCache.getInstanse().remove(song);
 						if (null != infolistener) {
 							infolistener.success(song.getUrl());
 						}

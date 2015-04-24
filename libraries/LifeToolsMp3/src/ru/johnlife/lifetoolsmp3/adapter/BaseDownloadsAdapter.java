@@ -65,7 +65,7 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 	}
 	
 	protected void removeItem(MusicData item) {
-		DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
+		DownloadCache.getInstanse().remove(item);
 		StateKeeper.getInstance().removeSongInfo(item.getDownloadUrl());
 		remove(item);
 	}

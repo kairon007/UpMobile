@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -102,6 +103,7 @@ public class DownloadListener extends DownloadClickListener {
 				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 				manager.remove(currentDownloadId);
 				StateKeeper.getInstance().removeSongInfo(song.getUrl());
+				DownloadCache.getInstanse().remove(song);
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();
 				}

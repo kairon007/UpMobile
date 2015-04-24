@@ -186,7 +186,7 @@ public abstract class BaseDownloadsView extends View{
 
 					@Override
 					public void run() {
-						DownloadCache.getInstanse().remove(musicData.getArtist(), musicData.getTitle());
+						DownloadCache.getInstanse().remove(musicData);
 						StateKeeper.getInstance().removeSongInfo(musicData.getDownloadUrl());
 						adapter.remove(musicData);
 					}
