@@ -885,6 +885,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		sendNotification(isPlaying(), bmp);
 	}
 	
+	public int getDuration() {
+		if (!check(SMODE_PREPARED)) return 0;
+		synchronized (LOCK) {
+			return player.getDuration();
+		}
+	}
+	
 	public void showNotification(boolean flag) {
 		if (flag) {
 			onMode(SMODE_NOTIFICATION);
