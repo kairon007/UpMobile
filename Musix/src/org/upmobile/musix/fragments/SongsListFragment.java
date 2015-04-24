@@ -424,7 +424,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	}
 	
 	private void setPlayerCover() {
-		Bitmap albumArt = musicService.getPlayingSong().getCover(mContext);
+		Bitmap albumArt = musicService.getPlayingSong().getCover();
 		if (albumArt != null) {
 			playingAlbumCover.setImageBitmap(albumArt);
 		} else {

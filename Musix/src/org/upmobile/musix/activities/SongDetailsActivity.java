@@ -53,7 +53,7 @@ public class SongDetailsActivity extends ActionBarActivity {
 			txtArtistName.setText(artistName);
 			txtAlbumName.setText("Album: " + albumTitle);
 			getSupportActionBar().setTitle(title);
-			Bitmap bitmapAlbumArt = song.getCover(this);
+			Bitmap bitmapAlbumArt = song.getCover();
 			if (bitmapAlbumArt != null) {
 				albumCover.setImageBitmap(bitmapAlbumArt);
 			}

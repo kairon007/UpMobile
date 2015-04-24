@@ -85,7 +85,7 @@ public class SongListAdapter extends BaseAdapter {
         viewHolder.txtSongTitle.setTypeface(typefaceHelper.getRobotoLight());
         viewHolder.txtArtistName.setTypeface(typefaceHelper.getRobotoLight());
         viewHolder.albumCover.setImageResource(R.drawable.ic_launcher);
-		WeakReference<Bitmap> bitmap = new WeakReference<Bitmap>(song.getCover(row.getContext()));
+		WeakReference<Bitmap> bitmap = new WeakReference<Bitmap>(song.getCover());
 		if (null != bitmap && null != bitmap.get()) {
 			viewHolder.albumCover.setImageBitmap(bitmap.get());
 		} 
