@@ -301,7 +301,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@android:color/transparent"
             android:minHeight="48dp"
             android:text="@string/download_dialog_download" />
     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
