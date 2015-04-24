@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Tiada sambungan internet.\nAnda boleh cuba lagi kemudian.</string>
     <string name="download_finished">Muat lengkap untuk </string>
     <string name="download_started">Loading mula </string>
+    <string name="download_cached">Lagu ditambah ke cache.</string>
     <string name="download_dialog_download_location">Muat Turun Lokasi</string>
     <string name="download_dialog_download">Muat Turun</string>
     <string name="download_dialog_cancel">Batal</string>

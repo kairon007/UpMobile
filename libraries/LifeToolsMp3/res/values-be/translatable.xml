@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Няма падлучэнне да інтэрнэту.\nВы можаце паўтарыць спробу пазней.</string>
     <string name="download_finished">Загрузка завершана для </string>
     <string name="download_started">Загрузка пачата для </string>
+    <string name="download_cached">Песня дададзена ў кэш.</string>
     <string name="download_dialog_download_location">Тэчка для скачвання</string>
     <string name="download_dialog_download">Скачаць</string>
     <string name="download_dialog_cancel">Адмена</string>

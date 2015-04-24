@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Hiçbir internet bağlantısı.\nDaha sonra yeniden deneyebilirsiniz.</string>
     <string name="download_finished">Komple indirin </string>
     <string name="download_started">Yükleniyor başladı </string>
+    <string name="download_cached">Şarkı önbellek eklenir.</string>
     <string name="download_dialog_download_location">İndirme Konumu</string>
     <string name="download_dialog_download">İndir</string>
     <string name="download_dialog_cancel">İptal</string>

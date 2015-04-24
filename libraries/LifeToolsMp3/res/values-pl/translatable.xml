@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Brak połączenia z Internetem.\nMożesz spróbować później.</string>
     <string name="download_finished">Pobierz kompletny dla </string>
     <string name="download_started">Ładowanie zaczęła </string>
+    <string name="download_cached">Utwór zostanie dodany do pamięci podręcznej.</string>
     <string name="download_dialog_download_location">Lokalizacja pobierania</string>
     <string name="download_dialog_download">Pobierz</string>
     <string name="download_dialog_cancel">Anuluj</string>

@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Keine Internetverbindung.\nSie können später erneut versuchen.</string>
     <string name="download_finished">Komplett für herunterladen </string>
     <string name="download_started">Laden begonnen </string>
+    <string name="download_cached">Der Song wird in den Cache aufgenommen.</string>
     <string name="download_dialog_download_location">Download-Ort</string>
     <string name="download_dialog_download">Download</string>
     <string name="download_dialog_cancel">Abbrechen</string>

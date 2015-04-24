@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Geen internet verbinding.\nU kunt later opnieuw proberen.</string>
     <string name="download_finished">Compleet voor downloaden </string>
     <string name="download_started">Loading begon </string>
+    <string name="download_cached">Het nummer wordt toegevoegd aan de cache.</string>
     <string name="download_dialog_download_location">Downloadlocatie</string>
     <string name="download_dialog_download">Download</string>
     <string name="download_dialog_cancel">Annuleren</string>

@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Geen internet konneksie.\nJy kan later weer probeer.</string>
     <string name="download_finished">Laai volledige vir </string>
     <string name="download_started">Laai begin </string>
+    <string name="download_cached">Die lied is bygevoeg na die kas.</string>
     <string name="download_dialog_download_location">Aflaaiplek</string>
     <string name="download_dialog_download">Laai af</string>
     <string name="download_dialog_cancel">Kanselleer</string>

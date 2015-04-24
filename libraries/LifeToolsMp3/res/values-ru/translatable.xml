@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Нет подключения к интернету.\nВы можете повторить попытку позже.</string>
     <string name="download_finished">Загрузка завершена для </string>
     <string name="download_started">Загрузка начата для </string>
+    <string name="download_cached">Песня добавлена в кэш.</string>
     <string name="download_dialog_download_location">Папка для скачивания</string>
     <string name="download_dialog_download">Скачать</string>
     <string name="download_dialog_cancel">Отмена</string>

@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Không có kết nối internet.\nBạn có thể thử lại sau.</string>
     <string name="download_finished">Tải về đầy đủ cho </string>
     <string name="download_started">Đang tải bắt đầu </string>
+    <string name="download_cached">Bài hát được thêm vào bộ nhớ đệm.</string>
     <string name="download_dialog_download_location">Vị trí Tải xuống</string>
     <string name="download_dialog_download">Tải xuống</string>
     <string name="download_dialog_cancel">Hủy</string>

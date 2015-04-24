@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Walang koneksyon sa internet.\nMaaari mong subukang muli sa ibang pagkakataon.</string>
     <string name="download_finished">Kumpleto na para i-download </string>
     <string name="download_started">Nilo-load ang nagsimulang </string>
+    <string name="download_cached">Ang kanta ay idinagdag sa cache.</string>
     <string name="download_dialog_download_location">Lokasyon ng Download</string>
     <string name="download_dialog_download">I-download</string>
     <string name="download_dialog_cancel">Kanselahin</string>

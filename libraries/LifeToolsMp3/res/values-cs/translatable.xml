@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Žádné připojení k internetu.\nMůžete zkusit znovu později.</string>
     <string name="download_finished">Stahování dokončeno pro </string>
     <string name="download_started">Loading začal </string>
+    <string name="download_cached">Píseň je přidán do mezipaměti.</string>
     <string name="download_dialog_download_location">Místo ke stažení</string>
     <string name="download_dialog_download">Stáhnout</string>
     <string name="download_dialog_cancel">Zrušit</string>

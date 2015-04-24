@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Nu există conexiune la internet.\nPuteți încerca mai târziu.</string>
     <string name="download_finished">Descarcati complet pentru </string>
     <string name="download_started">Se incarca început să </string>
+    <string name="download_cached">Piesa este adăugat la cache.</string>
     <string name="download_dialog_download_location">Locația descărcării</string>
     <string name="download_dialog_download">Descărcare</string>
     <string name="download_dialog_cancel">Anulare</string>

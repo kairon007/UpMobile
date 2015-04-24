@@ -34,6 +34,7 @@
     <string name="search_please_enter_query">Please enter a query</string>
     <string name="download_finished">Download is finished</string>
     <string name="download_started">Download is started for </string>
+    <string name="download_cached">The song is added to the cache.</string>
     <string name="download_dialog_download_location">Download Location</string>
     <string name="download_dialog_download">Download</string>
     <string name="download_dialog_cancel">Cancel</string>

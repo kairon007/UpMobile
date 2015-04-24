@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">沒有互聯網連接。\n您可以稍後重試。</string>
     <string name="download_finished">下載完整的 </string>
     <string name="download_started">裝載開始 </string>
+    <string name="download_cached">歌曲被添加到高速緩存。</string>
     <string name="download_dialog_download_location">下載位置</string>
     <string name="download_dialog_download">下載</string>
     <string name="download_dialog_cancel">取消</string>

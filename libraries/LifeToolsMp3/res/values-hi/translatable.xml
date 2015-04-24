@@ -33,8 +33,9 @@
     <string name="search_try_different_query">कोई अन्य प्रश्न पूछें</string>
     <string name="search_please_enter_query">कृपया कोई प्रश्न दर्ज करें</string>
     <string name="search_message_no_internet">कोई इंटरनेट कनेक्शन नहीं।\nआप बाद में पुन: प्रयास कर सकते हैं।</string>
-    <string name="download_finished">के लिए पूर्ण डाउनलोड </string>
-    <string name="download_started">लोड हो रहा है शुरू कर दिया </string>
+    <string name="download_finished">के लिए पूर्ण डाउनलोड  </string>
+    <string name="download_started">लोड हो रहा है शुरू कर दिया  </string>
+    <string name="download_cached">गीत कैश करने के लिए जोड़ा गया है।</string>
     <string name="download_dialog_download_location">डाउनलोड स्थान</string>
     <string name="download_dialog_download">डाउनलोड करें</string>
     <string name="download_dialog_cancel">रद्द करें</string>

@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">Tidak ada koneksi internet.\nAnda dapat mencoba lagi nanti.</string>
     <string name="download_finished">Download selesai untuk </string>
     <string name="download_started">Memuat mulai </string>
+    <string name="download_cached">Lagu tersebut akan ditambahkan ke cache.</string>
     <string name="download_dialog_download_location">Lokasi Pengunduhan</string>
     <string name="download_dialog_download">Unduh</string>
     <string name="download_dialog_cancel">Batal</string>

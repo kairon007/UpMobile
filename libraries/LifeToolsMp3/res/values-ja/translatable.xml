@@ -35,6 +35,7 @@
     <string name="search_message_no_internet">いいえ、インターネット接続が。\n後で再試行できます。</string>
     <string name="download_finished">のための完全なダウンロード </string>
     <string name="download_started">ローディング中に開始した </string>
+    <string name="download_cached">歌はキャッシュに追加されます。</string>
     <string name="download_dialog_download_location">ダウンロードロケーション</string>
     <string name="download_dialog_download">ダウンロード</string>
     <string name="download_dialog_cancel">キャンセル</string>
