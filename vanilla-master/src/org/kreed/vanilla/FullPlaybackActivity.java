@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
@@ -139,7 +140,6 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	private String mFormat;
 	private TextView mFormatView;
 	private TextView mLyricsView;
-	private FrameLayout mLyricsConteiner;
 	private ImageView mLyricsHider;
 	private boolean isLyricsShow = false;
 	private boolean newIntent = false;
@@ -290,6 +290,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			progressLyric.setVisibility(View.GONE);
 			mLyricsView.setVisibility(View.VISIBLE);
 			mLyricsView.setText(Html.fromHtml(icicle.getString(EXTRA_LIRYCS_TEXT)));
+		} else {
+			loadLyrics(PlaybackService.get(this).getSong(0));
 		}
 	}
 
@@ -523,7 +525,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			updateQueuePosition();
 		}
 		mCurrentSong = song;
-		loadLyrics(song);
+//		loadLyrics(song);
 		updateElapsedTime();
 		if (mExtraInfoVisible) {
 			mHandler.sendEmptyMessage(MSG_LOAD_EXTRA_INFO);
@@ -623,15 +625,19 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			startActivity(intent);
 			break;
 		case R.id.menu_lyrics:
-				CharSequence nLyrics = mLyricsView.getText();
-				if (nLyrics == "")
-					loadLyrics(mCurrentSong);
-				else
-					mLyricsView.setText("");
-				if (mLyricsConteiner.getVisibility() == View.GONE) {
+				switch (mLyricsConteiner.getVisibility()) {
+				case View.GONE:
 					mLyricsConteiner.setVisibility(View.VISIBLE);
 					mLyricsView.setVisibility(View.VISIBLE);
 					loadLyrics(mCurrentSong);
+					break;
+
+				case View.VISIBLE:
+					mLyricsConteiner.setVisibility(View.GONE);
+					mLyricsView.setText("");
+					break;
+				default:
+					break;
 				}
 			break;
 		default:

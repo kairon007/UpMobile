@@ -46,6 +46,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -83,6 +84,7 @@ public abstract class PlaybackActivity extends Activity
 	protected ImageButton mPlayPauseButton;
 	protected ImageButton mShuffleButton;
 	protected ImageButton mEndButton;
+	protected FrameLayout mLyricsConteiner;
 
 	protected int mState;
 	private long mLastStateEvent;
@@ -197,12 +199,14 @@ public abstract class PlaybackActivity extends Activity
 		switch (view.getId()) {
 		case R.id.next:
 			shiftCurrentSong(SongTimeline.SHIFT_NEXT_SONG);
+			lyrConfig();
 			break;
 		case R.id.play_pause:
 			playPause();
 			break;
 		case R.id.previous:
 			shiftCurrentSong(SongTimeline.SHIFT_PREVIOUS_SONG);
+			lyrConfig();
 			break;
 		case R.id.end_action:
 			cycleFinishAction();
@@ -210,6 +214,21 @@ public abstract class PlaybackActivity extends Activity
 		case R.id.shuffle:
 			cycleShuffle();
 			break;
+		}
+	}
+
+
+	private void lyrConfig() {
+		if ((PlaybackService.get(this).getSong(0)) != null) {
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+			isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
+			if (mLyricsView != null && Nulldroid_Settings.ENABLE_LYRICS && isLyricsShow == true && mLyricsView.getVisibility() == View.VISIBLE) {
+				loaderLyrics((PlaybackService.get(this).getSong(0)));
+			}/* else if (mLyricsView != null) {
+				mLyricsView.setText("");
+			}*/ else {
+					mLyricsConteiner.setVisibility(View.GONE);
+				}
 		}
 	}
 
@@ -278,15 +297,6 @@ public abstract class PlaybackActivity extends Activity
 	{
 		if (mCoverView != null)
 			mCoverView.querySongs(PlaybackService.get(this));
-		if (song != null) {
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-			isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-			if (mLyricsView != null && Nulldroid_Settings.ENABLE_LYRICS && isLyricsShow == true && mLyricsView.getVisibility() == View.VISIBLE) {
-				loaderLyrics(song);
-			}/* else if (mLyricsView != null) {
-				mLyricsView.setText("");
-			}*/
-		}
 	}
 
 	public void loaderLyrics(final Song song) {
