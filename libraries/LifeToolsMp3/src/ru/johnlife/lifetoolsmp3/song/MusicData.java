@@ -6,6 +6,7 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
+import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.ContentResolver;
@@ -95,21 +96,15 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	}
 
 	public void reset(final Context context) {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				ContentResolver resolver = context.getContentResolver();
-				String where = MediaStore.Audio.Media._ID + "=" + id;
-				resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, where, null);
-				File file = new File(path);
-				if (file.exists()) {
-					file.delete();
-				} else {
-					android.util.Log.i(getClass().getCanonicalName(), "Attention! File " + artist + " - " + title + ".mp3 " + " doesn't exist");	
-				}
-			}
-		}).start();
+		ContentResolver resolver = context.getContentResolver();
+		String where = BaseColumns._ID + "=" + id;
+		resolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, where, null);
+		File file = new File(path);
+		if (file.exists()) {
+			file.delete();
+		} else {
+			android.util.Log.i("logks", "Attention! File " + artist + " - " + title + ".mp3 " + " doesn't exist");
+		}
 	}
 
 	@Override
@@ -154,7 +149,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 			comment = metadata.getComment();
 		} catch (Exception e) {
 			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
-			return null;
 		}
 		return null != comment && !comment.isEmpty() ? comment : EMPTY_COMMENT;
 	}

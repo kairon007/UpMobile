@@ -34,11 +34,12 @@ public class LibraryFragment extends Fragment implements Constants {
 	
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setCurrentFragmentId(ManagerFragmentId.libraryFragment());
-		((MainActivity) getActivity()).setDraverEnabled(true);
-		((MainActivity) getActivity()).setTitle(R.string.tab_library);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
-		((MainActivity) getActivity()).showToolbarShadow(true);
+		MainActivity act = (MainActivity) getActivity();
+		act.setCurrentFragmentId(ManagerFragmentId.libraryFragment());
+		act.setDraverEnabled(true);
+		act.setTitle(R.string.tab_library);
+		act.invalidateOptionsMenu();
+		act.showToolbarShadow(true);
 		libraryView.onResume();
 		super.onResume();
 	}

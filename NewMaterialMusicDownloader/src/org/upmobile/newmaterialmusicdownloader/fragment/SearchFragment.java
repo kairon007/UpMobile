@@ -25,11 +25,12 @@ public class SearchFragment extends Fragment implements Constants{
 
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setCurrentFragmentId(ManagerFragmentId.searchFragment());
-		((MainActivity) getActivity()).setDraverEnabled(true);
-		((MainActivity) getActivity()).setTitle(R.string.tab_search);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
-		((MainActivity) getActivity()).showToolbarShadow(false);
+		MainActivity act = (MainActivity) getActivity();
+		act.setCurrentFragmentId(ManagerFragmentId.searchFragment());
+		act.setDraverEnabled(true);
+		act.setTitle(R.string.tab_search);
+		act.invalidateOptionsMenu();
+		act.showToolbarShadow(false);
 		searchView.onResume();
 		searchView.restoreState();
 		super.onResume();

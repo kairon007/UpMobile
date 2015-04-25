@@ -55,6 +55,7 @@ public class LibraryView extends BaseLibraryView {
 	@Override
 	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
 		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+				
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	        	for (int position : reverseSortedPositions) {
@@ -78,8 +79,4 @@ public class LibraryView extends BaseLibraryView {
 		((DynamicListView)listView).enableSimpleSwipeUndo();
 	}
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
 }

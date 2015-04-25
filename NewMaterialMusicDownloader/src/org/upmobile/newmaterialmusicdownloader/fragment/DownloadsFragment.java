@@ -31,11 +31,12 @@ public class DownloadsFragment extends Fragment implements Constants{
 	@Override
 	public void onResume() {
 		downloadsView.onResume();
-		((MainActivity) getActivity()).setCurrentFragmentId(ManagerFragmentId.downloadFragment());
-		((MainActivity) getActivity()).setDraverEnabled(true);
-		((MainActivity) getActivity()).setTitle(R.string.tab_downloads);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
-		((MainActivity) getActivity()).showToolbarShadow(true);
+		MainActivity act = (MainActivity) getActivity();
+		act.setCurrentFragmentId(ManagerFragmentId.downloadFragment());
+		act.setDraverEnabled(true);
+		act.setTitle(R.string.tab_downloads);
+		act.invalidateOptionsMenu();
+		act.showToolbarShadow(true);
 		super.onResume();
 	}
 

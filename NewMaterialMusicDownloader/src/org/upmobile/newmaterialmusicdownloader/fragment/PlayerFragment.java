@@ -347,13 +347,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setCurrentFragmentId(ManagerFragmentId.playerFragment());
-		((MainActivity) getActivity()).setDraverEnabled(false);
-		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
-		((MainActivity) getActivity()).setToolbarOverlay(true);
-		((MainActivity) getActivity()).setToolbarAlpha(scrollView.getToolbarAlpha());
-		((MainActivity) getActivity()).showToolbarShadow(true);
+		MainActivity act = (MainActivity) getActivity();
+		act.setCurrentFragmentId(ManagerFragmentId.playerFragment());
+		act.setDraverEnabled(false);
+		act.setTitle(R.string.tab_now_plaing);
+		act.invalidateOptionsMenu();
+		act.setToolbarOverlay(true);
+		act.setToolbarAlpha(scrollView.getToolbarAlpha());
+		act.showToolbarShadow(true);
 		SharedPreferences sp = NewMaterialApp.getSharedPreferences();
 		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, false);
 		cbShowVisualizer.setChecked(stateVisualizer);

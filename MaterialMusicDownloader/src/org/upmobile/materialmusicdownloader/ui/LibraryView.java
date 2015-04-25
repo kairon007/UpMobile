@@ -61,12 +61,11 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	            for (int position : reverseSortedPositions) {
 	            	MusicData data = ((MusicData) adapter.getItem(position));
-	            	if (data == null) return;
-	            	data.reset(getContext());
 	            	isUserDeleted = true;
 	            	PlaybackService.get(getContext()).remove(data);
 	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
 	            	adapter.remove(data);
+	            	data.reset(getContext());
 	            	if (adapter.isEmpty()) {
 	        			((MainActivity) getContext()).showPlayerElement(false);
 	        			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);

@@ -34,11 +34,12 @@ public class PlaylistFragment extends Fragment implements Constants{
 	
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setCurrentFragmentId(ManagerFragmentId.playlistFragment());
-		((MainActivity) getActivity()).setDraverEnabled(true);
-		((MainActivity) getActivity()).setTitle(R.string.tab_playlist);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
-		((MainActivity) getActivity()).showToolbarShadow(true);
+		MainActivity act = (MainActivity) getActivity();
+		act.setCurrentFragmentId(ManagerFragmentId.playlistFragment());
+		act.setDraverEnabled(true);
+		act.setTitle(R.string.tab_playlist);
+		act.invalidateOptionsMenu();
+		act.showToolbarShadow(true);
 		playlistView.onResume();
 		super.onResume();
 	}

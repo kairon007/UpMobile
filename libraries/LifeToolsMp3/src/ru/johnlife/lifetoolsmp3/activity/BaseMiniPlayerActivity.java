@@ -1,7 +1,5 @@
 package ru.johnlife.lifetoolsmp3.activity;
 
-import java.util.ArrayList;
-
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
