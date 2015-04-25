@@ -258,7 +258,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		registerForContextMenu(mEndButton);
 
 		setControlsVisible(settings.getBoolean(PrefKeys.VISIBLE_CONTROLS, true));
-		setExtraInfoVisible(settings.getBoolean(PrefKeys.VISIBLE_EXTRA_INFO, false));
+//		setExtraInfoVisible(settings.getBoolean(PrefKeys.VISIBLE_EXTRA_INFO, false));
+		setExtraInfoVisible(false);
 		setDuration(0);
 		
 
@@ -860,9 +861,9 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		case MSG_UPDATE_PROGRESS:
 			updateElapsedTime();
 			break;
-		case MSG_LOAD_EXTRA_INFO:
-			loadExtraInfo();
-			break;
+//		case MSG_LOAD_EXTRA_INFO:
+//			loadExtraInfo();
+//			break;
 		case MSG_COMMIT_INFO: {
 			mGenreView.setText(mGenre);
 			mTrackView.setText(mTrack);
@@ -933,10 +934,10 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		case R.id.cover_view:
 			performAction(mCoverLongPressAction);
 			break;
-		case R.id.info_table:
-			setExtraInfoVisible(!mExtraInfoVisible);
-			mHandler.sendEmptyMessage(MSG_SAVE_CONTROLS);
-			break;
+//		case R.id.info_table:
+//			setExtraInfoVisible(!mExtraInfoVisible);
+//			mHandler.sendEmptyMessage(MSG_SAVE_CONTROLS);
+//			break;
 		default:
 			return false;
 		}
