@@ -127,6 +127,7 @@ THE SOFTWARE.
         <activity
             android:windowSoftInputMode="stateHidden"
             android:name="PlaylistActivity"
+            android:configChanges="screenSize|orientation"
             android:launchMode="singleTask" />
         <activity
             android:windowSoftInputMode="stateHidden"
