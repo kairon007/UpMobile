@@ -182,7 +182,7 @@ public class FragmentDrawer extends Fragment {
 	public void setItemChecked(View view){
 		if (null != selectedView) {
 			selectedView.setBackgroundColor(Color.TRANSPARENT);
-			((TextView) selectedView.findViewById(R.id.title)).setTextColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondary));
+			((TextView) selectedView.findViewById(R.id.title)).setTextColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondary)));
 		}
 		selectedView = view;
 		View selectView = recyclerView.findChildViewUnder(view.getX(), view.getY());
