@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.DownloadListener;
 import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
@@ -19,6 +20,8 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -390,6 +393,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	@Override
 	protected int getMiniPlayerDuplicateID() {
 		return R.id.mini_player_duplicate;
+	}
+	
+	@Override
+	protected DownloadClickListener createDownloadListener(RemoteSong song) {
+		return new DownloadListener(this, song, 0);
 	}
 
 }

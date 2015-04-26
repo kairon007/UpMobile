@@ -52,6 +52,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	private boolean isPlayerFragmentVisible = false;
 	private boolean isAnimated = false;
 	private boolean isClickOnDownload = false;
+	private boolean methodIsCalled = false;
 	
 	private int checkIdCover;
 	private DownloadClickListener downloadListener;
@@ -75,6 +76,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		StateKeeper.getInstance().initSongHolder(getDirectory());
+		checkDownloadingUrl(true);
+		methodIsCalled = true;
 	}
 	
 	@Override
@@ -89,10 +92,18 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			}
 		}).start();
 	}
-
+	
+	@Override
+	protected void onDestroy() {
+		service.stopSelf();
+		super.onDestroy();
+	}
+	
 	@Override
 	protected void onStart() {
-		checkDownloadingUrl();
+		if (!methodIsCalled) {
+			checkDownloadingUrl(false);
+		}
 		startService(new Intent(this, PlaybackService.class));
 		setImageDownloadButton();
 		new Thread(new Runnable() {
@@ -103,6 +114,12 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			}
 		}).start();
 		super.onStart();
+	}
+	
+	@Override
+	protected void onPause() {
+		methodIsCalled = false;
+		super.onPause();
 	}
 	
 	private void initMiniPlayer() {
@@ -486,40 +503,55 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		isClickOnDownload = !flag;
 	}
 	
-	protected void checkDownloadingUrl() {
+	protected void checkDownloadingUrl(boolean expandAction) {
 		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 		if (null != manager) {
 			Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
 			if (pending != null) {
-				updateList(pending);
+				updateList(pending, expandAction);
 			}
 			Cursor paused = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PAUSED));
 			if (paused != null) {
-				updateList(paused);
+				updateList(paused, expandAction);
 			}
 			Cursor waitingNetwork = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_WAITING_FOR_NETWORK));
 			if (waitingNetwork != null) {
-				updateList(waitingNetwork);
+				updateList(waitingNetwork, expandAction);
 			}
 			Cursor unknown = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_UNKNOWN));
 			if (unknown != null) {
-				updateList(unknown);
+				updateList(unknown, expandAction);
 			}
 			Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 			if (running != null) {
-				updateList(running);
+				updateList(running, expandAction);
 			}
 		}
 	}
 
-	private void updateList(Cursor c) {
+	private void updateList(Cursor c, boolean expandAction) {
+		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 		while (c.moveToNext()) {
 			String url = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
 			if (c.getString(8).contains(getDirectory())) {
 				StateKeeper.getInstance().putSongInfo(url, StateKeeper.DOWNLOADING);
+				if (expandAction) {
+					String strTitle =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
+					String strArtist =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
+					int id = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID));
+					RemoteSong checkSong = new RemoteSong(url);
+					checkSong.setTitle(strTitle);
+					checkSong.setArtist(strArtist);
+					DownloadClickListener listener = createDownloadListener(checkSong);
+					listener.createUpdater(manager, id);
+				}
 			}
 		}
 		c.close();
+	}
+	
+	protected DownloadClickListener createDownloadListener (RemoteSong song) {
+		return new DownloadClickListener(this, song, 0);
 	}
 	
 }

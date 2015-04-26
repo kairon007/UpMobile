@@ -25,6 +25,7 @@ import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView;
 import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController;
@@ -94,7 +95,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		startService(new Intent(this, PlaybackService.class));
 		super.onStart();
 	}
-
+	
 	@Override
 	protected void onResume() {
 		if (null != service && service.isPlaying()) {
@@ -225,7 +226,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			public void run() {
 				StateKeeper.getInstance().notifyLable(false);
 				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
-				checkDownloadingUrl();
+				checkDownloadingUrl(false);
 				runOnUiThread(new Runnable() {
 
 					@Override
@@ -470,6 +471,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
+	}
+	
+	@Override
+	protected DownloadClickListener createDownloadListener(RemoteSong song) {
+		return new DownloadListener(this, song, 0);	
 	}
 	
 	public void setToolbarOverlay(boolean isOverlay) {

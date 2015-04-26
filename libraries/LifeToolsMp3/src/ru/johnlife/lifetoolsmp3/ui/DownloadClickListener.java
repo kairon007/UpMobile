@@ -65,48 +65,75 @@ import android.widget.Toast;
 public class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
 
 	private ArrayList<String[]> headers = new ArrayList<String[]>();
-	private DownloadCache.Item cacheItem;
+
 	private Context context;
-	protected RemoteSong song;
+	private InfoListener infolistener;
+
+	private DownloadCache.Item cacheItem;
+	protected RemoteSong downloadingSong;
 	protected Bitmap cover;
+
 	protected Long currentDownloadId = (long) 0;
 	private Integer songId;
 	private String downloadPath = null;
+
 	private int id;
 	private long progress = 0;
 	private boolean useAlbumCover = true;
-	private InfoListener infolistener;
 	protected boolean interrupted = false;
-	
+
 	private CanceledCallback cancelDownload = new CanceledCallback() {
+		
 		@Override
 		public void cancel() {
 			interrupted = true;
 		}
+		
 	};
+	
+	public interface CoverReadyListener {
+		void onCoverReady(Bitmap cover);
+	}
+
+	public interface CanceledCallback {
+		public void cancel();
+	}
+	
+	public interface InfoListener {
+		public void success(String str);
+		public void erorr(String str);
+	}
 
 	public DownloadClickListener(Context context, RemoteSong song, int id) {
 		this.context = context;
-		this.song = song;
+		downloadingSong = song;
 		this.id = id;
-		initSong();
+		songId = downloadingSong instanceof GrooveSong ? ((GrooveSong) downloadingSong).getSongId() : -1;
+		headers = downloadingSong.getHeaders();
+		downloadingSong.getCover(this);
 	}
-	
-	private void initSong() {
-		songId = song instanceof GrooveSong ? ((GrooveSong) song).getSongId() : -1;
-		headers = song.getHeaders();
-		song.getCover(this);
+
+	public void createUpdater(DownloadManager manager, long id) {
+		currentDownloadId = id;
+		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(downloadingSong, manager, useAlbumCover, null);
+		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
-	
+
+	// if change title or artist of song, then this method call before
+	// downloadSong()
+	public void setSong(RemoteSong song) {
+		downloadingSong = song;
+	}
+
 	@SuppressLint("NewApi")
 	public void downloadSong(boolean fromCallback) {
-		String url = song.getUrl();
+		String url = downloadingSong.getUrl();
 		if (url == null || url.isEmpty()) {
 			showMessage(context, R.string.download_error);
 			return;
 		}
-		String songArtist = song.getArtist().trim();
-		String songTitle = song.getTitle().trim();
+		String songArtist = downloadingSong.getArtist().trim();
+		String songTitle = downloadingSong.getTitle().trim();
 		final File musicDir = new File(downloadPath == null ? getDirectory() : downloadPath);
 		if (!musicDir.exists()) {
 			musicDir.mkdirs();
@@ -114,15 +141,15 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		boolean isCached = false;
 		if (!fromCallback) {
 			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, new DownloadCacheCallback() {
-				
+
 				@Override
 				public void callback(Item item) {
 					cacheItem = item;
 					Runnable callbackRun = new Runnable() {
-						
+
 						@Override
 						public void run() {
-							downloadSong(true);			
+							downloadSong(true);
 						}
 					};
 					new Handler(Looper.getMainLooper()).post(callbackRun);
@@ -139,14 +166,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
 		if (songId != -1) {
 			DownloadGrooveshark manager = new DownloadGrooveshark(songId, musicDir.getAbsolutePath(), sb, context, new InfoListener() {
-				
+
 				@Override
 				public void success(String str) {
-					setMetadataToFile(musicDir.getAbsolutePath()  + "/" + sb, new File(musicDir.getAbsolutePath()  + "/" + sb), useAlbumCover);
-					insertToMediaStore(song, musicDir.getAbsolutePath()  + "/" + sb);
+					setMetadataToFile(musicDir.getAbsolutePath() + "/" + sb, new File(musicDir.getAbsolutePath() + "/" + sb), useAlbumCover, downloadingSong);
+					insertToMediaStore(downloadingSong, musicDir.getAbsolutePath() + "/" + sb);
 					showMessage(context, R.string.download_finished);
 				}
-				
+
 				@Override
 				public void erorr(String str) {
 				}
@@ -154,13 +181,13 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			manager.execute();
 			return;
 		}
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()){
-			//new download task for device with below 11 
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !isFullAction()) {
+			// new download task for device with below 11
 			String fileUri = musicDir.getAbsolutePath() + "/" + sb;
-			DownloadSongTask task = new DownloadSongTask(song, useAlbumCover, url, fileUri, id);
+			DownloadSongTask task = new DownloadSongTask(downloadingSong, useAlbumCover, url, fileUri, id);
 			task.start();
 			return;
-		} 
+		}
 		final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 			url = url.replaceFirst("https", "http");
@@ -190,24 +217,24 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		boolean isUpdated = continueDownload(id, currentDownloadId);
 		if (!isUpdated) {
-			song.setDownloaderListener(notifyStartDownload(currentDownloadId));
+			downloadingSong.setDownloaderListener(notifyStartDownload(currentDownloadId));
 		}
 		((Activity) context).runOnUiThread(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				showMessage(context,  context.getString(R.string.download_started) + " "+sb);
+				showMessage(context, context.getString(R.string.download_started) + " " + sb);
 			}
 		});
-		StateKeeper.getInstance().putSongInfo(song.getUrl(), StateKeeper.DOWNLOADING);
-		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(song, manager, useAlbumCover, cacheItem);
+		StateKeeper.getInstance().putSongInfo(downloadingSong.getUrl(), StateKeeper.DOWNLOADING);
+		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(downloadingSong, manager, useAlbumCover, cacheItem);
 		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
 
 	public void showMessage(Context context, String message) {
-		Toast.makeText(context, message ,Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	public void showMessage(Context context, int message) {
 		showMessage(context, context.getString(message));
 	}
@@ -217,57 +244,80 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		downloadSong(false);
 	}
 
-	protected void setFileUri(long downloadId, String uri) {
-		
+	@Override
+	public void onBitmapReady(Bitmap bmp) {
+		this.cover = bmp;
 	}
-	
-	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {
-		
-	}
-	
-	protected void removeFromDownloads(final long downloadId) {
-		
-	}
- 
-	public CoverReadyListener notifyStartDownload(long downloadId) {
-		return null;
-	}
-	
-	protected void setCanceledListener(long downloadId, CanceledCallback callback) {
-		
-	}
-	
-	protected boolean continueDownload(long lastID, long newId) {
-		return false;
-	}
-	
+
 	@SuppressLint("NewApi")
 	public boolean isBadInet() {
-	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-	    if (netInfo == null) return true;
-	    NetworkInfo.DetailedState state = netInfo.getDetailedState();
-	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-	    	return state.equals(NetworkInfo.DetailedState.VERIFYING_POOR_LINK);
-	    }
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo == null)
+			return true;
+		NetworkInfo.DetailedState state = netInfo.getDetailedState();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			return state.equals(NetworkInfo.DetailedState.VERIFYING_POOR_LINK);
+		}
 		return state.equals(NetworkInfo.State.DISCONNECTING) || state.equals(NetworkInfo.State.DISCONNECTED);
-	}
-
-	protected void notifyAboutFailed(long downloadId) {
-		StateKeeper.getInstance().removeSongInfo(song.getUrl());
-		((Activity)context).runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				String failedSong = context.getResources().getString(R.string.download_failed);
-				String title = song.getArtist() + " - " + song.getTitle();
-				showMessage(context, failedSong + " - " + title);
-			}
-		});
 	}
 
 	public void setUseAlbumCover(boolean useAlbumCover) {
 		this.useAlbumCover = useAlbumCover;
+	}
+
+	public void setDownloadPath(String path) {
+		downloadPath = path;
+	}
+
+	public Integer getSongID() {
+		return songId;
+	}
+
+	public void setInfolistener(InfoListener infolistener) {
+		this.infolistener = infolistener;
+	}
+
+	public void deleteMP3FromMediaStore(String path) {
+		Uri rootUri = MediaStore.Audio.Media.getContentUriForPath(path);
+		context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[] { path });
+	}
+
+	public CoverReadyListener notifyStartDownload(long downloadId) {
+		return null;
+	}
+
+	protected void setFileUri(long downloadId, String uri) {
+
+	}
+
+	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {
+
+	}
+
+	protected void removeFromDownloads(final long downloadId) {
+
+	}
+
+	protected void setCanceledListener(long downloadId, CanceledCallback callback) {
+
+	}
+
+	protected boolean continueDownload(long lastID, long newId) {
+		return false;
+	}
+
+	protected void notifyAboutFailed(long downloadId, final RemoteSong s) {
+		StateKeeper.getInstance().removeSongInfo(s.getUrl());
+		((Activity) context).runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				String failedSong = context.getResources().getString(R.string.download_failed);
+				String title = s.getArtist() + " - " + s.getTitle();
+				showMessage(context, failedSong + " - " + title);
+			}
+		});
 	}
 
 	protected String getDirectory() {
@@ -283,23 +333,18 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			} else
 				return sharedDownloadPath;
 		}
-		return downloadPath;	
+		return downloadPath;
+	}
+	
+	protected Context getContext() {
+		return context;
 	}
 
-	protected void prepare(final File src, RemoteSong song, String path) {}
+	protected void prepare(final File src, RemoteSong song, String path) {
+	}
 
 	protected boolean isFullAction() {
 		return true;
-	}
-
-	@Override
-	public void onBitmapReady(Bitmap bmp) {
-		this.cover = bmp;
-	}
-	
-	//if change title or artist of song, then this method call before downloadSong()
-	public void setSong(RemoteSong song) {
-		this.song = song;
 	}
 
 	private void insertToMediaStore(final RemoteSong song, final String pathToFile) {
@@ -330,13 +375,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(musicFile)));
 	}
-	
-	public void deleteMP3FromMediaStore(String path) {
-		Uri rootUri = MediaStore.Audio.Media.getContentUriForPath(path);
-		context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[] {path});
-	}
 
-	private boolean setMetadataToFile(String path, File src, boolean useCover) {
+	private boolean setMetadataToFile(String path, File src, boolean useCover, RemoteSong song) {
 		MusicMetadataSet src_set = null;
 		try {
 			src_set = new MyID3().read(src);
@@ -347,21 +387,21 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			insertToMediaStore(song, path);
 			return false;
 		}
-		
-//		try {
-//			MP3File mp3File = (MP3File) AudioFileIO.read(src);
-//			if (mp3File.hasID3v1Tag()) {
-//				mp3File.delete(mp3File.getID3v1Tag());
-//			}
-//			if (mp3File.hasID3v2Tag()) {
-//				mp3File.delete(mp3File.getID3v2Tag());
-//				mp3File.delete(mp3File.getID3v2TagAsv24());
-//			}
-//			mp3File = (MP3File) AudioFileIO.read(src);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
+
+		// try {
+		// MP3File mp3File = (MP3File) AudioFileIO.read(src);
+		// if (mp3File.hasID3v1Tag()) {
+		// mp3File.delete(mp3File.getID3v1Tag());
+		// }
+		// if (mp3File.hasID3v2Tag()) {
+		// mp3File.delete(mp3File.getID3v2Tag());
+		// mp3File.delete(mp3File.getID3v2TagAsv24());
+		// }
+		// mp3File = (MP3File) AudioFileIO.read(src);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+
 		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 		metadata.clear();
 		metadata.setSongTitle(song.getTitle().trim());
@@ -388,17 +428,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		return true;
 	}
-	
-	public interface CoverReadyListener {
-		
-		void onCoverReady(Bitmap cover);
-	}
-	
-	public interface CanceledCallback {
-			
-		public void cancel();	
-	}
-	
+
 	private final class UpdateTimerTask extends TimerTask {
 
 		private static final int DEFAULT_SONG = 7340032; // 7 Mb
@@ -408,7 +438,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private File src;
 		private DownloadManager manager;
 		private boolean useCover;
-		private int counter = 0;  
+		private int counter = 0;
 
 		public UpdateTimerTask(RemoteSong song, DownloadManager manager, boolean useCover, Item item) {
 			this.song = song;
@@ -416,7 +446,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			this.useCover = useCover;
 			this.item = item;
 		}
-		
+
 		@Override
 		public void run() {
 			Cursor c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
@@ -456,7 +486,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				case DownloadManager.STATUS_SUCCESSFUL:
 					if (c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR) > BAD_SONG) {
 						new File(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).delete();
-						notifyAboutFailed(currentDownloadId);
+						notifyAboutFailed(currentDownloadId, song);
 						removeFromDownloads(currentDownloadId);
 						this.cancel();
 					} else {
@@ -468,7 +498,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						} else if (columnIndex != -1) {
 							columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
 						}
-						if (columnIndex == -1) return;
+						if (columnIndex == -1)
+							return;
 						String path = c.getString(columnIndex);
 						c.close();
 						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -478,7 +509,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							}
 						}
 						src = new File(path);
-						if (setMetadataToFile(path, src, useCover)) {
+						if (setMetadataToFile(path, src, useCover, song)) {
 							insertToMediaStore(song, path);
 						}
 						setFileUri(currentDownloadId, src.getAbsolutePath());
@@ -501,7 +532,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				counter = 0;
 			}
 			if (counter > 100) {
-				notifyAboutFailed(currentDownloadId);
+				notifyAboutFailed(currentDownloadId, song);
 				DownloadCache.getInstanse().remove(artist, title);
 				manager.remove(currentDownloadId);
 				this.cancel();
@@ -509,7 +540,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 
 		private void failed(Cursor c, final String artist, final String title) {
-			notifyAboutFailed(currentDownloadId);
+			notifyAboutFailed(currentDownloadId, song);
 			c.close();
 			DownloadCache.getInstanse().remove(artist, title);
 			if (null != infolistener) {
@@ -523,7 +554,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			return s.substring(index - 1);
 		}
 	}
-	
+
 	private class DownloadSongTask extends Thread {
 
 		private final String DOWNLOAD_ID_GINGERBREAD = "downloads_id_gingerbread";
@@ -552,7 +583,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			editor.putInt(DOWNLOAD_KEY_GINGERBREAD, i);
 			editor.commit();
 		}
-		
+
 		private void sendNotification(int progress, boolean isStop) {
 			RemoteViews notificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
 			notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -561,7 +592,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			final String title = song.getTitle().trim();
 			if (!isStop) {
 				notification = new Notification(android.R.drawable.stat_sys_download, notificationTitle, Calendar.getInstance().getTimeInMillis());
-			} else if (progress < 100 && isStop && !interrupted){
+			} else if (progress < 100 && isStop && !interrupted) {
 				String message = context.getString(R.string.download_failed);
 				DownloadCache.getInstanse().remove(artist, title);
 				notification = new Notification(android.R.drawable.stat_notify_error, message, Calendar.getInstance().getTimeInMillis());
@@ -601,7 +632,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				connection = u.openConnection();
 			} catch (Exception e) {
 				sendNotification(0, true);
-				notifyAboutFailed(idDownload);
+				notifyAboutFailed(idDownload, song);
 				return;
 			}
 			int size = 0;
@@ -609,7 +640,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			int current = 0;
 			try {
 				file = new File(filePath);
-				if (!file.exists()){
+				if (!file.exists()) {
 					file.createNewFile();
 				}
 				output = new FileOutputStream(file);
@@ -624,7 +655,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						output.close();
 						input.close();
 						buffer.close();
-						if (file.delete()){
+						if (file.delete()) {
 							sendNotification(0, true);
 						}
 						return;
@@ -645,8 +676,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						i = 0;
 					}
 				}
-				if (!setMetadataToFile(file.getAbsolutePath(), file, useCover)) {
-					notifyAboutFailed(idDownload);
+				if (!setMetadataToFile(file.getAbsolutePath(), file, useCover, song)) {
+					notifyAboutFailed(idDownload, song);
 					sendNotification(0, true);
 					output.close();
 					input.close();
@@ -654,7 +685,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 					return;
 				}
 			} catch (Exception e) {
-				notifyAboutFailed(idDownload);
+				notifyAboutFailed(idDownload, song);
 				sendNotification(0, true);
 				return;
 			} finally {
@@ -671,25 +702,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			insertToMediaStore(song, file.getAbsolutePath());
 			return;
 		}
-		
-	}
 
-	public void setDownloadPath(String path) {
-		downloadPath = path;
-	}
-	
-	public interface InfoListener {
-		public void success(String str);
-		
-		public void erorr(String str);
-	}
-	
-	public Integer getSongID() {
-		return songId;
-	}
-
-	public void setInfolistener(InfoListener infolistener) {
-		this.infolistener = infolistener;
 	}
 
 }

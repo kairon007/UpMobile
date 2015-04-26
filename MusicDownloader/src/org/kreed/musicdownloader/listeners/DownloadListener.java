@@ -20,7 +20,6 @@ import android.widget.Toast;
 public class DownloadListener extends DownloadClickListener {
 
 	private DownloadsTab downloadsTab;
-	private Context context;
 	private String songArtist;
 	private String songTitle;
 	private String duration;
@@ -30,19 +29,19 @@ public class DownloadListener extends DownloadClickListener {
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
 		duration = Util.getFormatedStrDuration(song.getDuration());
-		this.context = context;
 		downloadsTab = DownloadsTab.getInstance();
 	}
 
 	@Override
 	protected void prepare(File src, RemoteSong song, String pathToFile) {
+		Context context = getContext();
 		String chuck = context.getString(R.string.download_finished);
 		final String message = chuck + " " + songArtist + " - " + songTitle;
 		((Activity) context).runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
-				Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
 			}
 		});
 		MusicData data = new MusicData();
@@ -74,6 +73,7 @@ public class DownloadListener extends DownloadClickListener {
 		downloadItem.setDownloadProgress(0);
 		downloadsTab.insertData(downloadItem);
 		return new CoverReadyListener() {
+			
 			@Override
 			public void onCoverReady(Bitmap cover) {
 				downloadItem.setSongBitmap(cover);
@@ -87,8 +87,8 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	protected void notifyAboutFailed(long downloadId) {
-		super.notifyAboutFailed(downloadId);
+	protected void notifyAboutFailed(long downloadId, RemoteSong song) {
+		super.notifyAboutFailed(downloadId, song);
 		downloadsTab.deleteItem(downloadId);
 	}
 

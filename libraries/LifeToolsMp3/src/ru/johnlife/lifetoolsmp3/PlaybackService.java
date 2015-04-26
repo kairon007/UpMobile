@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
@@ -100,6 +101,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private PlayerStateUpdater stateUpdater = new PlayerStateUpdater();
 	private double bufferingPercent;
 	private int mode;
+	private boolean isDestroyed = false;
 	
 	public interface OnStatePlayerListener {
 		
@@ -181,7 +183,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				@Override
 				public void run() {
 					synchronized (LOCK) {
-						if (!player.isPlaying() || null == playingSong) {
+						if (isDestroyed  || !player.isPlaying() || null == playingSong) {
 							return;
 						}
 						if (lastTime == player.getCurrentPosition()) {
@@ -250,6 +252,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	@Override
 	public void onDestroy() {
+		isDestroyed = true;
 		unregisterReceiver(headsetReceiver);
 		if (null != destroyListener) {
 			destroyListener.playbackServiceIsDestroyed();
@@ -728,7 +731,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	/**
 	 * use constants from ServicePlayback
 	 * 
-	 * @return source of playing song and song from arrayPlayBack. Values can be
+	 * @return indicate source of playing song and song from arrayPlayBack. Values can be
 	 *         three options - SMODE_SONG_FROM_LIBRARY, SMODE_SONG_FROM_INTERNER
 	 *         and SMODE_HAS_NOT_SONG (when arrayPlayback is empty)
 	 */

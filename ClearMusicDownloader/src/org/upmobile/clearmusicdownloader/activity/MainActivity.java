@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
+import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
@@ -15,6 +16,8 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
 import android.content.SharedPreferences;
@@ -331,6 +334,11 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	@Override
 	protected int getMiniPlayerDuplicateID() {
 		return R.id.mini_player_duplicate;
+	}
+	
+	@Override
+	protected DownloadClickListener createDownloadListener(RemoteSong song) {
+		return new DownloadListener(this, song, 0);
 	}
 	
 }

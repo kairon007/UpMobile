@@ -102,8 +102,8 @@ public class DownloadListener extends DownloadClickListener {
 			public void onUndo(Parcelable token) {
 				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 				manager.remove(currentDownloadId);
-				StateKeeper.getInstance().removeSongInfo(song.getUrl());
-				DownloadCache.getInstanse().remove(song);
+				StateKeeper.getInstance().removeSongInfo(downloadingSong.getUrl());
+				DownloadCache.getInstanse().remove(downloadingSong);
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();
 				}
@@ -116,52 +116,6 @@ public class DownloadListener extends DownloadClickListener {
 	@Override
 	protected String getDirectory() {
 		return MaterialMusicDownloaderApp.getDirectory();
-	}
-	
-	@Override
-	protected void setCanceledListener(long id, CanceledCallback callback) {
-	} 
-	
-	@Override
-	public CoverReadyListener notifyStartDownload(long downloadId) {
-		return new CoverReadyListener() {
-			
-			@Override
-			public void onCoverReady(Bitmap cover) {
-			}
-		};
-	}
-	
-	@Override
-	protected boolean continueDownload(long lastID, long newID) {
-		return false;
-	}
-	
-	@Override
-	protected void notifyAboutFailed(long downloadId) {
-		super.notifyAboutFailed(downloadId);
-		if (null != context) {
-			((Activity) context).runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					StateKeeper.getInstance().removeSongInfo(song.getUrl());
-				}
-			});
-		}
-	}
-
-	@Override
-	protected void notifyDuringDownload(final long downloadId, final long currentProgress) {
-	}
-
-	@Override
-	protected void setFileUri(long downloadId, String uri) {
-	}
-	
-	@Override
-	protected boolean isFullAction() {
-		return false;
 	}
 	
 	public long getDownloadId() {

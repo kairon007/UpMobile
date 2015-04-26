@@ -21,6 +21,7 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import android.app.Fragment;
@@ -274,7 +275,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			public void run() {
 				StateKeeper.getInstance().notifyLable(false);
 				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
-				checkDownloadingUrl();
+				checkDownloadingUrl(false);
 				StateKeeper.getInstance().notifyLable(true);
 			}
 		}).start();
@@ -364,6 +365,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	public boolean isPlayerFragment() {
 		FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 		return backEntry.getName().equals(PlayerFragment.class.getSimpleName());
+	}
+	
+	@Override
+	protected DownloadClickListener createDownloadListener(RemoteSong song) {
+		return new DownloadListener(this, song, 0);
 	}
 	
 }
