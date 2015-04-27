@@ -7,6 +7,7 @@ import java.util.List;
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.DownloadListener;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
+import org.upmobile.newmaterialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
@@ -187,7 +188,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			setPlayerFragmentVisible(false);
 			showMiniPlayer(true);
 		}
-		boolean isAnimate = false;
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (fragmentId == ManagerFragmentId.searchFragment()) {
 			selectedFragment = new SearchFragment();
 		} else if (fragmentId == ManagerFragmentId.downloadFragment()) {
@@ -198,17 +199,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			selectedFragment = new LibraryFragment();
 		} else if (fragmentId == ManagerFragmentId.playerFragment()) {
 			selectedFragment = new PlayerFragment();
-			isAnimate = true;
+			showMiniPlayer(false);
+			if (Nulldroid_Settings.ENABLE_ANIMATIONS) {
+				transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
+			}
 		} else {
 			selectedFragment = new SearchFragment();
 		}
 		if (null != selectedFragment) {
 			setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			if (isAnimate) {
-				transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
-				showMiniPlayer(false);
-			}
 			transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 		}
 	}
@@ -374,6 +373,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
 		String previousFragmentName = backEntry.getName();
 		return previousFragmentName;
+	}
+	
+	@Override
+	protected boolean isAnimationEnabled() {
+		return Nulldroid_Settings.ENABLE_ANIMATIONS;
 	}
 
 	@Override

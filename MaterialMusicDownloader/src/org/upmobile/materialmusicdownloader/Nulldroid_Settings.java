@@ -1308,6 +1308,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	public static boolean ENABLE_EQUALIZER = true;
 	public static boolean ENABLE_GENRES_TAB_BY_DEFAULT = true;
 	public static boolean ENABLE_FILES_TAB_BY_DEFAULT = true;
+	public static boolean ENABLE_ANIMATIONS = true;
 	public static final boolean ENABLE_MUSICBRAINZ_ALBUM_COVERS = true;
 
 	@Override

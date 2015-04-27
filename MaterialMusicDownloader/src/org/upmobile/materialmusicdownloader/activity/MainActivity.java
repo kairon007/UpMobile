@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
+import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
@@ -217,6 +218,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			}
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
+	}
+	
+	@Override
+	protected boolean isAnimationEnabled() {
+		return Nulldroid_Settings.ENABLE_ANIMATIONS;
 	}
 
 	@Override

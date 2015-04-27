@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
+import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
@@ -326,6 +327,11 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		}
 	}
 
+	@Override
+	protected boolean isAnimationEnabled() {
+		return Nulldroid_Settings.ENABLE_ANIMATIONS;
+	}
+	
 	@Override
 	protected String getDirectory() {
 		return ClearMusicDownloaderApp.getDirectory();

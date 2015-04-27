@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DownloadListener;
 import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
+import org.upmobile.newmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
@@ -258,7 +259,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		setSearchViewVisibility(targetFragment.getClass().getSimpleName());
 		currentTag = targetFragment.getClass().getSimpleName();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		if (isAnimate) {
+		if (isAnimate && Nulldroid_Settings.ENABLE_ANIMATIONS) {
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
 		}
 		transaction.replace(R.id.content_frame, targetFragment, currentTag)
@@ -379,6 +380,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	    	Log.e(Util.class.getSimpleName(), e.getMessage());
 	        return false;
 	    }
+	}
+	
+	@Override
+	protected boolean isAnimationEnabled() {
+		return Nulldroid_Settings.ENABLE_ANIMATIONS;
 	}
 
 	@Override

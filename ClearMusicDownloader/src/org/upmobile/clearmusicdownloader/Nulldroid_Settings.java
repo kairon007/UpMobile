@@ -1304,6 +1304,7 @@ public class Nulldroid_Settings implements BaseSettings {
 	public static String LAST_SUPER_BLACKLISTED_IP_TIME_KEY = "LAST_SUPER_BLACKLISTED_IP_TIME_KEY";
 	
 	public static boolean ENABLE_LYRICS = true;
+	public static boolean ENABLE_ANIMATIONS = true;
 	public static boolean SHOW_BANNER_ON_TOP = false;
 	public static boolean ENABLE_EQUALIZER = true;
 	public static boolean ENABLE_GENRES_TAB_BY_DEFAULT = true;

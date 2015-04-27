@@ -65,6 +65,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	protected abstract int getFakeViewID();
 	protected abstract void showPlayerFragment();
 	protected abstract void showPlayerElement(boolean flag);
+	protected abstract boolean isAnimationEnabled();
 	protected void lockListViewAnimation() {}
 	protected void setImageDownloadButton() {}
 	
@@ -237,7 +238,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			}
 		} else if (id == miniPlayerClickableID) {
 			ViewGroup parent = (ViewGroup) view.getParent();
-			if (isAnimated || isPlayerFragmentVisible || (parent.getAnimation() != null && parent.getAnimation().hasStarted())) {
+			if (isAnimationEnabled() && (isAnimated || isPlayerFragmentVisible || (parent.getAnimation() != null && parent.getAnimation().hasStarted())))	{
 				return;
 			}
 			isAnimated = true;
@@ -282,6 +283,16 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			if (miniPlayer.getVisibility() == View.VISIBLE && !isAnimated) {
 				return;
 			}
+			if (!isAnimationEnabled()) {
+				miniPlayer.setVisibility(View.VISIBLE);
+				View parentMiniPlayer = (View) miniPlayer.getParent();
+				parentMiniPlayer.setVisibility(View.VISIBLE);
+				setData(song);
+				if (null != fakeView) fakeView.setVisibility(View.VISIBLE);
+				customDownloadButton();
+				isClickOnDownload  = false;
+				return;
+			}
 			Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_up);
 			slideUp.setAnimationListener(new AnimationListener() {
 			
@@ -296,8 +307,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
-					if (null != fakeView)
-						fakeView.setVisibility(View.VISIBLE);
+					if (null != fakeView) fakeView.setVisibility(View.VISIBLE);
 					customDownloadButton();
 					isClickOnDownload  = false;
 				}
@@ -310,6 +320,14 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			isAnimated = true;
 		} else {
 			if (miniPlayer.getVisibility() == View.GONE) return;
+			if (!isAnimationEnabled()) {
+				if (null != fakeView)
+					fakeView.setVisibility(View.GONE);
+				((View)miniPlayer.getParent()).setVisibility(View.GONE);
+				miniPlayer.setVisibility(View.GONE);
+				((View)miniPlayer.getParent()).setVisibility(View.GONE);
+				return;
+			}
 			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_down);
 			slideDown.setAnimationListener(new AnimationListener() {
 				
@@ -347,6 +365,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	}
 	
 	private void startFakeAnimation () {
+		if (!isAnimationEnabled()) {
+			setData(song);
+			return;
+		}
 		final View fakeMiniPlayer = findViewById(getMiniPlayerDuplicateID());
 		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_artist)).setText(artist.getText());
 		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_title)).setText(title.getText());

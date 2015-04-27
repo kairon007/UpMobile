@@ -201,7 +201,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 			((Fragment)baseMaterialFragment).onResume();
 		}
 		FragmentTransaction tr = getFragmentManager().beginTransaction();
-		if (isAnimate) {
+		if (isAnimate && isAnimationEnabled()) {
 			tr.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
 		}
 		tr.replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName())

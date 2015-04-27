@@ -668,7 +668,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public AbstractSong getPlayingSong() {
-		return null != playingSong ? playingSong : null;
+		return playingSong;
 	}
 	
 	public boolean enabledShuffle() {
