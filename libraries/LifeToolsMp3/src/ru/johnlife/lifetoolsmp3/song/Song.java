@@ -216,7 +216,15 @@ public class Song implements Comparable<Song>, AbstractSong {
 		File file = new File(path);
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
+			if  (null == src_set) {
+				flags |= FLAG_NO_COVER;
+				return cover;
+			}
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+			if  (null == metadata) {
+				flags |= FLAG_NO_COVER;
+				return cover;
+			}
 			cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata);
 		} catch (Exception e) {
 			e.printStackTrace();
