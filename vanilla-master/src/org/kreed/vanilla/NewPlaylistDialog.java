@@ -22,6 +22,7 @@
 
 package org.kreed.vanilla;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -159,13 +160,14 @@ public class NewPlaylistDialog extends Dialog implements TextWatcher, View.OnCli
 		return mAccepted;
 	}
 
-	public void onClick(View view)
-	{
+	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.create:
+			Util.hideKeyboard(getContext(), view);
 			mAccepted = true;
 			// fall through
 		case R.id.cancel:
+			Util.hideKeyboard(getContext(), view);
 			dismiss();
 			break;
 		}
