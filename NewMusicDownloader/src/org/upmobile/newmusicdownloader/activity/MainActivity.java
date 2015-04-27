@@ -124,7 +124,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		if (query.isEmpty()) {
 			String fragmentName = getPreviousFragmentName(1);
 			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-			if (LibraryFragment.class == fragment.getClass() && fragment.isVisible()) {
+			if (null == fragment) {
+			} else if (LibraryFragment.class == fragment.getClass() && fragment.isVisible()) {
 				((LibraryFragment) fragment).clearFilter();
 			} else if (PlaylistFragment.class == fragment.getClass() && fragment.isVisible()) {
 				((PlaylistFragment) fragment).clearFilter();
