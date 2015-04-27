@@ -38,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -108,10 +109,11 @@ public class PlaylistAdapter extends CursorAdapter implements Handler.Callback, 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor)
 	{
-		TextView textView = (TextView)view;
+		TextView textView = (TextView) view.findViewById(R.id.nameView);
+		ImageView grabberView = (ImageView) view.findViewById(R.id.grabberView);
+		grabberView.setImageDrawable(mEditable ? mExpander : null);
 		textView.setText(cursor.getString(1));
-		textView.setCompoundDrawablesWithIntrinsicBounds(mEditable ? mExpander : null, null, null, null);
-		textView.setTag(cursor.getLong(3));
+		view.setTag(cursor.getLong(3));
 	}
 
 	/**

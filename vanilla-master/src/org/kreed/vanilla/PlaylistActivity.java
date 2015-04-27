@@ -261,7 +261,7 @@ public class PlaylistActivity extends Activity
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
 	{
 		if (!mEditing && mDefaultAction != LibraryActivity.ACTION_DO_NOTHING) {
-			performAction(mDefaultAction, position, (Long)view.getTag());
+			performAction(mDefaultAction, position, (Long) view.getTag());
 		}
 	}
 

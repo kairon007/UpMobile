@@ -16,6 +16,7 @@
 
 package org.kreed.vanilla;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -68,7 +69,7 @@ public class DragListView extends ListView implements Handler.Callback {
 	/**
 	 * Height of each row in dip.
 	 */
-	public static final int ROW_HEIGHT = 44;
+	public static final int ROW_HEIGHT = 48;
 	/**
 	 * Padding for each row in dip.
 	 */
@@ -143,8 +144,10 @@ public class DragListView extends ListView implements Handler.Callback {
 		super(context, attrs);
 
 		float density = context.getResources().getDisplayMetrics().density;
-		mPadding = (int)(PADDING * density);
-		mRowHeight = (int)(ROW_HEIGHT * density);
+//		mPadding = (int)(PADDING * density);
+//		mRowHeight = (int)(ROW_HEIGHT * density);
+		mPadding = Util.dpToPx(context, 0);
+		mRowHeight =  Util.dpToPx(context, ROW_HEIGHT);
 	}
 
 	/**
@@ -186,7 +189,8 @@ public class DragListView extends ListView implements Handler.Callback {
 
 				int x = (int)ev.getX();
 				// The left quarter of the item is the grabber for dragging the item
-				if (x < getWidth() / 4) {
+//				if (x <= getWidth() / 4) {
+				if (x <= Util.dpToPx(getContext(), 48)) {
 					int item = pointToPosition(x, (int)ev.getY());
 					if (item != AdapterView.INVALID_POSITION && item >= getHeaderViewsCount()) {
 						startDragging(item, ev);
@@ -368,7 +372,7 @@ public class DragListView extends ListView implements Handler.Callback {
 		mWindowParams.y = y - mDragPointY + mYOffset;
 
 		mWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-		mWindowParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+		mWindowParams.width = WindowManager.LayoutParams.WRAP_CONTENT; 
 		mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 				| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
