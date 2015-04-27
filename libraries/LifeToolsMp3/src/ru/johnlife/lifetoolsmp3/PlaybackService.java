@@ -13,7 +13,6 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
@@ -77,7 +76,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private static final int MSG_RESET = 6;
 	private static final int MSG_STOP = 7;
 	private static final int MSG_SHIFT = 8;
-	private static final int UPDATE_DELAY = 250;
+	private static final int UPDATE_DELAY = 500;
 	
 	//multy-threading section
 	private static final Object LOCK = new Object();
@@ -900,12 +899,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			onMode(SMODE_NOTIFICATION);
 		} else {
 			offMode(SMODE_NOTIFICATION);
-		}
-	}
-	
-	public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener) {
-		synchronized (LOCK) {
-			player.setOnBufferingUpdateListener(listener);
 		}
 	}
 	
