@@ -156,10 +156,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
-		if (!showDownloadLabel()) return;
-		((TextView) v.findViewById(R.id.infoView)).findViewById(R.id.infoView).setVisibility(View.VISIBLE);
-		((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloading);
-		((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
 	}
 	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
