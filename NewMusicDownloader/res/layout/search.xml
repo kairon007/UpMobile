@@ -121,9 +121,11 @@
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="@drawable/selectable_item_bg"
+                    android:background="@drawable/spinner_selector"
                     android:popupBackground="?attr/searchBackgroundColor"
-                    android:spinnerMode="dropdown" />
+                    android:spinnerMode="dropdown"
+                    android:dropDownVerticalOffset="-48dip"
+                    android:overlapAnchor="false" />
             </LinearLayout>
 
             <View
