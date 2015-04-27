@@ -11,9 +11,9 @@
         style="@style/RippleStyleRectangle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp"
         android:clickable="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:paddingTop="1dp" >
 
         <LinearLayout
@@ -50,7 +50,7 @@
                     android:ellipsize="end"
                     android:ems="16"
                     android:fontFamily="sans-serif"
-                    android:lines="1"
+                    android:singleLine="true"
                     android:textStyle="bold" />
 
                 <TextView
@@ -58,16 +58,18 @@
                     style="@style/TextStyleLine2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif"
+                    android:singleLine="true"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="8dp"
-                android:layout_gravity="center_vertical" >
+                android:layout_gravity="center_vertical"
+                android:paddingRight="8dp" >
 
                 <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
                     style="@style/RippleStyleCircle"

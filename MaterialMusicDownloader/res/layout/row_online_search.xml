@@ -30,47 +30,34 @@
                 android:background="@android:color/transparent" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="horizontal" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical" >
+                    android:gravity="center_vertical" >
 
-                    <LinearLayout
+                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                        android:id="@+id/titleLine"
+                        style="@style/TextViewAppearance.Body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:singleLine="true"
+                        android:ellipsize="end" />
 
-                        <com.csform.android.uiapptemplate.font.RobotoTextView
-                            android:id="@+id/titleLine"
-                            style="@style/TextViewAppearance.Body"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:ems="16"
-                            android:lines="1" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <com.csform.android.uiapptemplate.font.RobotoTextView
+                        android:id="@+id/artistLine"
+                        style="@style/CaptionLineGray"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
-
-                        <com.csform.android.uiapptemplate.font.RobotoTextView
-                            android:id="@+id/artistLine"
-                            style="@style/CaptionLineGray"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ellipsize="end" />
-                    </LinearLayout>
-                </LinearLayout>
+                        android:layout_below="@+id/titleLine"
+                        android:singleLine="true"
+                        android:ellipsize="end" />
+                </RelativeLayout>
 
                 <com.csform.android.uiapptemplate.font.MusicTextView
                     android:id="@+id/playingIndicator"
@@ -82,9 +69,9 @@
                     android:clickable="true"
                     android:gravity="center"
                     android:padding="4dp"
-                    android:visibility="gone"
                     android:text="@string/font_beat"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -97,9 +84,9 @@
                         android:id="@+id/chunkTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0:00"
                         android:gravity="right"
                         android:paddingRight="8dp"
+                        android:singleLine="true"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@color/main_color_grey_500" />
 
@@ -107,7 +94,7 @@
                         android:id="@+id/infoView"
                         style="@style/CaptionLineGray"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="right"
                         android:singleLine="true"

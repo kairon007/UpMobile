@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    
+    <dimen name="nav_drawer_width">260dp</dimen>
     <dimen name="drawer_width">300dp</dimen>
     <dimen name="ken_burns_header">250dp</dimen>
     <dimen name="height_action_bar">56dp</dimen>
@@ -8,5 +9,19 @@
     <dimen name="margin_left_text">72dp</dimen>
     <dimen name="item_height">72dp</dimen>
     <dimen name="message_height">48dp</dimen>
+
+    <!-- General padding value -->
+    <dimen name="material_drawer_padding">8dp</dimen>
+    <!-- General profileIcon margins for the drawer item -->
+    <dimen name="material_drawer_item_padding">8dp</dimen>
+    <!-- General vertical padding values -->
+    <dimen name="material_drawer_vertical_padding">16dp</dimen>
+
+    <!-- Definition for the primary item -->
+    <dimen name="material_drawer_item_primary">48dp</dimen>
+    <dimen name="material_drawer_item_primary_icon_padding">12dp</dimen>
+    <dimen name="material_drawer_item_primary_icon_padding_right">24dp</dimen>
+    <dimen name="material_drawer_item_primary_text">14sp</dimen>
+
 
 </resources>

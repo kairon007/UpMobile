@@ -370,7 +370,7 @@
                         style="@style/TextStyleLine2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:gravity="center_horizontal"
                         android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>

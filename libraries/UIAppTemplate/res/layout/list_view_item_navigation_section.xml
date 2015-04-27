@@ -3,14 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_color_grey_500"
-    android:orientation="horizontal"
-    android:paddingLeft="4dp" >
+    android:paddingEnd="@dimen/material_drawer_vertical_padding"
+    android:paddingLeft="@dimen/material_drawer_vertical_padding"
+    android:paddingRight="@dimen/material_drawer_vertical_padding"
+    android:paddingStart="@dimen/material_drawer_vertical_padding" >
 
     <TextView
         android:id="@+id/section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Section"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textColor="@android:color/white" />
 
 </LinearLayout>
