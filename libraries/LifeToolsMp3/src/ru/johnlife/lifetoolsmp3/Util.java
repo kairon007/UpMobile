@@ -209,12 +209,11 @@ public final class Util {
 	    return dp;
 	}
 	
-	public static Bitmap textViewToBitmap(View v, int width, int height){
-		Bitmap bmp = null;
-		bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+	public static Bitmap textViewToBitmap(View view, int width, int height){
+		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 	    Canvas c = new Canvas(bmp);
-	    v.layout(0, 0, width, height);
-	    v.draw(c);
+	    view.layout(0, 0, width, height);
+	    view.draw(c);
 		return bmp;
 	}
 	

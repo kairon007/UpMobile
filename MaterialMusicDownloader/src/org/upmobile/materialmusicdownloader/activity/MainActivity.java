@@ -196,26 +196,20 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		textPaint.getTextBounds(image, 0, image.length(), bounds);
 		int height = bounds.height();
 		int width = bounds.width();
-		boolean defaultIsLarger = true;
-		while (height < property && width < property) {
-			defaultIsLarger = false;
-			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, textCover.getTextSize()) + 1f);
+		if (height < property && width < property) {
+			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, property) + 1f);
 			bounds = new Rect();
 			textPaint = textCover.getPaint();
 			textPaint.getTextBounds(image, 0, image.length(), bounds);
 			height = bounds.height();
 			width = bounds.width();
-		}
-		if (defaultIsLarger) {
-			while (height > property && width > property) {
-				defaultIsLarger = false;
-				textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, textCover.getTextSize()) - 1f);
-				bounds = new Rect();
-				textPaint = textCover.getPaint();
-				textPaint.getTextBounds(image, 0, image.length(), bounds);
-				height = bounds.height();
-				width = bounds.width();
-			}
+		} else {
+			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, property) - 1f);
+			bounds = new Rect();
+			textPaint = textCover.getPaint();
+			textPaint.getTextBounds(image, 0, image.length(), bounds);
+			height = bounds.height();
+			width = bounds.width();
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
 	}

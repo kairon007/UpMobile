@@ -148,8 +148,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		public void stopPressed(){}
 
 		@Override
-		public void error() {
-		}
+		public void error() {}
 
 		@Override
 		public void start(AbstractSong s) {
@@ -296,11 +295,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	private void initCover() {
 		String cover =  getResources().getString(R.string.font_musics);
-		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
-		int width = display.getWidth(); 
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
 		int height = display.getHeight();
 		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 16));
-		minHeight = (coverHeight > width )? width : coverHeight;
+		minHeight = (coverHeight > width) ? width : coverHeight;
 		imageView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		imageView.setPadding(0, 8, 0, 8);
 		defaultCover = ((MainActivity) getActivity()).getDefaultBitmapCover(minHeight, minHeight, minHeight - 16, cover);
@@ -583,9 +582,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setElementsView(int progress) {
 		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
-		tvArtist.requestLayout();
 		tvTitle.setText(song.getTitle());
-		tvTitle.requestLayout();
 		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
 		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
 	}
