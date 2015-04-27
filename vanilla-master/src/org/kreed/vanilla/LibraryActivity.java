@@ -599,15 +599,17 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
 			mTextFilter.setText("");
-			//onBackPressed();
-			
-            try {
-            	Nulldroid_Advertisement.exit(this);
-            } catch(Exception e) {
-            	
-            }
-
-			
+			Limiter limiter = mPagerAdapter.getCurrentLimiter();
+			int len = -1;
+			if (null != limiter) {
+				len = limiter.names.length; 
+			}
+			if (len > 0) { 
+				changeLimiter(len - 1);
+			} else {
+				Nulldroid_Advertisement.exit(this);
+				finish();
+			}
 			break;
 		case KeyEvent.KEYCODE_SEARCH:
 			setSearchBoxVisible(!mSearchBoxVisible);
@@ -779,17 +781,14 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	 */
 	public void updateLimiterViews() {
 		mLimiterViews.removeAllViews();
-
 		Limiter limiterData = mPagerAdapter.getCurrentLimiter();
 		if (limiterData != null) {
 			String[] limiter = limiterData.names;
-
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			params.leftMargin = 5;
 			for (int i = 0; i != limiter.length; ++i) {
 				PaintDrawable background = new PaintDrawable(Color.GRAY);
 				background.setCornerRadius(5);
-
 				TextView view = new TextView(this);
 				view.setSingleLine();
 				view.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -802,7 +801,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				view.setOnClickListener(this);
 				mLimiterViews.addView(view);
 			}
-
 			mLimiterScroller.setVisibility(View.VISIBLE);
 		} else {
 			mLimiterScroller.setVisibility(View.GONE);
@@ -826,27 +824,29 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			setState(PlaybackService.get(this).setFinishAction(SongTimeline.FINISH_RANDOM));
 		} else if (view.getTag() != null) {
 			// a limiter view was clicked
-			int i = (Integer) view.getTag();
-
-			Limiter limiter = mPagerAdapter.getCurrentLimiter();
-			int type = limiter.type;
-			if (i == 1 && type == MediaUtils.TYPE_ALBUM) {
-				setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
-			} else if (i > 0) {
-				Assert.assertEquals(MediaUtils.TYPE_FILE, limiter.type);
-				File file = (File) limiter.data;
-				int diff = limiter.names.length - i;
-				while (--diff != -1) {
-					file = file.getParentFile();
-				}
-				mPagerAdapter.setLimiter(FileSystemAdapter.buildLimiter(file));
-			} else {
-				mPagerAdapter.clearLimiter(type);
-			}
-			updateLimiterViews();
+			changeLimiter((Integer) view.getTag());
 		} else {
 			super.onClick(view);
 		}
+	}
+	
+	private void changeLimiter(int position) {
+		Limiter limiter = mPagerAdapter.getCurrentLimiter();
+		int type = limiter.type;
+		if (position == 1 && type == MediaUtils.TYPE_ALBUM) {
+			setLimiter(MediaUtils.TYPE_ARTIST, limiter.data.toString());
+		} else if (position > 0) {
+			Assert.assertEquals(MediaUtils.TYPE_FILE, limiter.type);
+			File file = (File) limiter.data;
+			int diff = limiter.names.length - position;
+			while (--diff != -1) {
+				file = file.getParentFile();
+			}
+			mPagerAdapter.setLimiter(FileSystemAdapter.buildLimiter(file));
+		} else {
+			mPagerAdapter.clearLimiter(type);
+		}
+		updateLimiterViews();
 	}
 
 	/**
