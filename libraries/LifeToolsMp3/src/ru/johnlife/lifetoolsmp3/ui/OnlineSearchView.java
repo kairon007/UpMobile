@@ -27,7 +27,6 @@ import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -40,7 +39,6 @@ import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -50,7 +48,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -60,7 +57,6 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Html;
@@ -737,12 +733,6 @@ public abstract class OnlineSearchView extends View {
 		return ((BitmapDrawable) getResources().getDrawable(defaultCover())).getBitmap();
 	}
 	
-	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
-		String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + "" + "%'";
-		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
-		return cursor;
-	}
-	
 	public class SongSearchAdapter extends BaseAbstractAdapter<Song> {
 
 		private LayoutInflater inflater;
@@ -1331,51 +1321,53 @@ public abstract class OnlineSearchView extends View {
 	
 	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
 		if (searchEngineName != null) {
-			if (searchEngineName.equals("SearchMyFreeMp3")) {
+			if (searchEngineName.equals("SearchVmusice")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchVmusice.class;
+			} else if (searchEngineName.equals("SearchZvukoff")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchZvukoff.class;
+			} else if (searchEngineName.equals("SearchPleer")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
+			} else if (searchEngineName.equals("SearchPleerV2")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchPleerV2.class;
+			} else if (searchEngineName.equals("SearchZvukoff")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchZvukoff.class;
+			} else if (searchEngineName.equals("SearchSoArdIyyin")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin.class;
+			} else if (searchEngineName.equals("SearchMyFreeMp3")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3.class;
-			} else if (searchEngineName.equals("SearchGrooveshark")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark.class;
-			} else if (searchEngineName.equals("SearchZaycev")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchZaycev.class;
-			} else if (searchEngineName.equals("SearchZaycevScrape")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchZaycevScrape.class;
-			} else if (searchEngineName.equals("SearchHulkShare")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchHulkShare.class;
 			} else if (searchEngineName.equals("SearchPleer")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
 			} else if (searchEngineName.equals("SearchPoisk")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchPoisk.class;
-			} else if (searchEngineName.equals("SearchSogou")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSogou.class;
+			} else if (searchEngineName.equals("SearchHulkShare")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchHulkShare.class;
+			} else if (searchEngineName.equals("SearchMp3skull")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchMp3skull.class;
+			} else if (searchEngineName.equals("SearchGrooveshark")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark.class;
 			} else if (searchEngineName.equals("SearchTing")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchTing.class;
-			} else if (searchEngineName.equals("SearchVmusice")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchVmusice.class;
-			} else if (searchEngineName.equals("SearchNothing")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchNothing.class;
-			} else if (searchEngineName.equals("SearchSoundCloud")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud.class;
-			} else if (searchEngineName.equals("SearchYouTube")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchYouTube.class;
-			} else if (searchEngineName.equals("SearchYouTubeMusic")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic.class;
-			} else if (searchEngineName.equals("SearchGear")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchGear.class;
-			} else if (searchEngineName.equals("SearchSoArdIyyin")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin.class;
 			} else if (searchEngineName.equals("SearchJamendo")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchJamendo.class;
-			} else if (searchEngineName.equals("SearchZvukoff")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchZvukoff.class;
-			} else if (searchEngineName.equals("SearchGoearV2")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchGoearV2.class;
+			} else if (searchEngineName.equals("SearchYouTube")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchYouTube.class;
 			} else if (searchEngineName.equals("SearchVK")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchVK.class;
-			} else if (searchEngineName.equals("SearchKugou")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchKugou.class; 
 			} else if (searchEngineName.equals("SearchTaringaMp3")) {
 				return ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3.class;
-			}
+			} else if (searchEngineName.equals("SearchKugou")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchKugou.class;
+			} else if (searchEngineName.equals("SearchGoearV2")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchGoearV2.class;
+			} else if (searchEngineName.equals("SearchSogou")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSogou.class;
+			} else if (searchEngineName.equals("SearchYouTubeMusic")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic.class; 
+			} else if (searchEngineName.equals("SearchSoundCloud")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud.class;
+			} else if (searchEngineName.equals("SearchMp3World")) {
+				return ru.johnlife.lifetoolsmp3.engines.SearchMp3World.class;
+			} 
 		}
 		return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
 	}

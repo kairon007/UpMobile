@@ -77,7 +77,7 @@ public class RemoteSong extends Song {
 	
 	protected RemoteSong(long id) {
 		super(id);
-		downloadUrl = null;
+		downloadUrl = "-1";
 	}
 
 	public RemoteSong setSongTitle(String songTitle) {

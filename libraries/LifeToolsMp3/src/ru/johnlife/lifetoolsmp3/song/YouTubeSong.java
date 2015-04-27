@@ -22,7 +22,7 @@ public class YouTubeSong extends SongWithCover {
 	private static final String TS_CREATE = "ts_create";
 	private static final String STATUS = "status";
 	private static final String H2 = "h2";
-	private Timer timer = new Timer();
+	private Timer timer;
 	private static String USER_AGENT = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.12 (KHTML, like Gecko) Maxthon/3.0 Chrome/26.0.1410.43 Safari/535.12";
 	private static String YOUTUBE_MP3_URL = "http://www.youtube-mp3.org";
 	private static String YOUTUBE_MP3_REF = "http://www.youtube-mp3.org/?c";
@@ -47,10 +47,16 @@ public class YouTubeSong extends SongWithCover {
 		@Override
 		public void run() {
 			String result = getUrlTask(watchId);
-			if (!PENDING.equals(result) && result.startsWith("http")) {
+			if (null != result && !PENDING.equals(result) && result.startsWith("http")) {
 				downloadUrl = result;
 				for (DownloadUrlListener listener : downloadUrlListeners) {
 					listener.success(downloadUrl);
+				}
+				downloadUrlListeners.clear();
+				this.cancel();
+			} else if (null == result){
+				for (DownloadUrlListener listener : downloadUrlListeners) {
+					listener.error(ERROR_GETTING_URL);
 				}
 				downloadUrlListeners.clear();
 				this.cancel();
@@ -78,6 +84,7 @@ public class YouTubeSong extends SongWithCover {
 	}
 	
 	private void getDownloadUrl(final String watchId) {
+		timer = new Timer();
 		pushItemResponse = null;
 		getUrl = new AsyncTask<Void, Void, String>() {
 			@Override
@@ -107,6 +114,7 @@ public class YouTubeSong extends SongWithCover {
 					timer.schedule(new Updater(), 5000, 3000);
 					return watchId;
 				} catch (Exception e) {
+					android.util.Log.d("logd", "doInBackground: ");
 					Log.e(getClass().getSimpleName(), "Something went wrong :( " + e.getMessage());
 					onPostExecute(ERROR_GETTING_URL);
 				}

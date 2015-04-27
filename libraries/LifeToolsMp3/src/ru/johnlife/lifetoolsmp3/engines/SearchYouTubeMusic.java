@@ -27,7 +27,7 @@ public class SearchYouTubeMusic extends SearchWithPages {
 			JSONObject parent = new JSONObject((Jsoup.connect(strLink).ignoreContentType(true).followRedirects(true).get()).body().text());
 			JSONObject data = parent.getJSONObject("data");
 			JSONArray items = data.getJSONArray("items");
-			for(int i = 0; i< items.length(); i++) {
+			for(int i = 1; i< items.length(); i++) {
 				if (items.getJSONObject(i) != null) {
 						JSONObject item = items.getJSONObject(i);
 						int duartion = item.getInt("duration");
@@ -38,7 +38,7 @@ public class SearchYouTubeMusic extends SearchWithPages {
 							JSONObject thumbnailsObject = item.getJSONObject("thumbnail");
 							int pictureArrayLength = thumbnailsObject.length();
 							String imageUrl = thumbnailsObject.getString(resolution[pictureArrayLength - 1]);
-							addSong(new YouTubeSong(YouTubeSong.getUrlTask(watchId), imageUrl).setArtistName(author.replace("-", "")).setSongTitle(title).setDuration((long)(duartion * 1000)));
+							addSong(new YouTubeSong(watchId, imageUrl).setArtistName(author.replace("-", "")).setSongTitle(title).setDuration((long)(duartion * 1000)));
 					}
 				}
 			}

@@ -8,9 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.SongZaycev;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class SearchZaycev extends SearchWithPages {
 
@@ -53,7 +52,7 @@ public class SearchZaycev extends SearchWithPages {
 				String songArtist = songObject.getString("artistName");
 				String songDuration = songObject.getString("duration");
 				int songId = songObject.getInt("id");
-				addSong(new RemoteSong(getDownloadUrl(songId)).setSongTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
+				addSong(new SongZaycev(songId + "").setSongTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -130,7 +129,7 @@ public class SearchZaycev extends SearchWithPages {
 		return "";
 	}
 
-	public String getDownloadUrl(int songId) {
+	public static String getDownloadUrl(int songId) {
 		try {
 			//	String link = "http://zaycev.net/external/download?id=" 
 			//			+ songId + "&access_token=" + getAccessToken();
@@ -143,6 +142,7 @@ public class SearchZaycev extends SearchWithPages {
 				response = new JSONObject(handleLink(link));
 			}
 			String downloadUrl = response.getString("url");
+			android.util.Log.d("logd", "getDownloadUrl: " + downloadUrl);
 			return downloadUrl;
 		} catch (Exception e) {
 			e.printStackTrace();

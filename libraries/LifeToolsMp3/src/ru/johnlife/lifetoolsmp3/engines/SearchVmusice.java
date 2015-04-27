@@ -41,8 +41,6 @@ public class SearchVmusice extends BaseSearchTask {
 					String duration = songItem.select("em").text();
 					String downloadUrl = songItem.select("a.download").first().attr("href");
 					String playUrl = songItem.select("a").attr("data-url");
-					Log.d("tag play", playUrl);
-					Log.d("tag download - 2", songItem.select("x-play play").text());
 					ArrayList<String[]> headers = new ArrayList<String[]>();
 			    	headers.add(new String[] {"Referer",VMUSIC_URL_REF});
 			    	headers.add(new String[] {"Range", "bytes=0-"});

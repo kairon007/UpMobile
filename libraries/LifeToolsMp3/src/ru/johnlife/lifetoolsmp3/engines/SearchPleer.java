@@ -4,15 +4,12 @@ import java.net.URLEncoder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Connection.Method;
-import org.jsoup.Jsoup;
 
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.SongPleer;
 import android.util.Log;
 
 public class SearchPleer extends SearchWithPages {
 	
-	private final String GET_URL_LINK = "http://pleer.com/site_api/files/get_url";
 	private final int COUNT_SONGS_ON_PAGE = 30;
 	private final String PLEER_URL = "http://pleer.com/browser-extension/search?limit=";
 	
@@ -41,23 +38,11 @@ public class SearchPleer extends SearchWithPages {
 						/*
 						 * Temporarily fix, until the player fix your API
 						 */
-						String downloadUrl =  new JSONObject(Jsoup.connect(GET_URL_LINK)
-								.data("action", "download")
-								.data("id", jsonSong.getString("id"))
-								.method(Method.POST)
-								.ignoreContentType(true)
-								.followRedirects(true)
-								.ignoreHttpErrors(true)
-								.userAgent(getRandomUserAgent())
-								.execute()
-								.parse()
-								.body()
-								.text())
-								.getString("track_link");
+						String id = jsonSong.getString("id");
 						/*
 						 * end
 						 */
-						RemoteSong song = new RemoteSong(downloadUrl);
+						SongPleer song = new SongPleer(id);
 						String songTitle = jsonSong.getString("track");
 						song.setSongTitle(songTitle);
 						song.setArtistName(jsonSong.getString("artist"));
