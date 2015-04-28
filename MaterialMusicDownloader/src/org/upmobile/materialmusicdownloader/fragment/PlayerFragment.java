@@ -454,7 +454,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void clearCover() {
 		if (MusicData.class == song.getClass()) {
-			((View)cbUseCover.getParent()).setVisibility(View.GONE);
+			((View)cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();
 			RenameTask.deleteCoverFromFile(new File(song.getPath()));
@@ -743,7 +743,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				return;
 			}
 		}
-		((View) cbUseCover.getParent()).setVisibility(View.GONE);
+		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 
