@@ -5,15 +5,18 @@ import ru.johnlife.lifetoolsmp3.StateKeeper;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
-public class MP3Editor {
+public class MP3Editor implements OnEditorActionListener {
 
 	private Context context;
 	private View view;
@@ -29,12 +32,23 @@ public class MP3Editor {
 	private String oldAlbumTitle;
 	public static final String UNKNOWN = "unknown";
 	private boolean isWhiteTheme;
+	private OnActionEndListener actionEndListener;
+	
+	public static interface OnActionEndListener {
+		public void donePressed();
+	}
 
 	public MP3Editor(Context context, boolean isWhiteTheme) {
 		this.context = context;
 		this.isWhiteTheme = isWhiteTheme;
 	}
-
+	
+	public MP3Editor(Context context, boolean isWhiteTheme, OnActionEndListener actionEndListener) {
+		this.context = context;
+		this.isWhiteTheme = isWhiteTheme;
+		this.actionEndListener = actionEndListener;
+	}
+	
 	public View getView() {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.view = inflater.inflate(R.layout.editor_dialog, null);
@@ -61,6 +75,7 @@ public class MP3Editor {
 		etAlbumTitle.addTextChangedListener(watcher);
 		etSongTitle.addTextChangedListener(watcher);
 		etArtistName.addTextChangedListener(watcher);
+		etAlbumTitle.setOnEditorActionListener(this);
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -237,5 +252,23 @@ public class MP3Editor {
 	public void enableChekBox() {
 		checkBox.setClickable(true);
 		checkBox.setEnabled(true);
+	}
+
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		if(actionId == EditorInfo.IME_ACTION_DONE) {
+			if (null != actionEndListener) {
+				actionEndListener.donePressed();
+			}
+        }
+		return false;
+	}
+
+	public OnActionEndListener getActionEndListener() {
+		return actionEndListener;
+	}
+
+	public void setActionEndListener(OnActionEndListener actionEndListener) {
+		this.actionEndListener = actionEndListener;
 	}
 }

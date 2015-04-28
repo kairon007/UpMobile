@@ -53,6 +53,7 @@
                 android:layout_gravity="bottom"
                 android:inputType="textNoSuggestions"
                 android:textCursorDrawable="@null"
+                android:imeOptions="actionNext"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
@@ -72,6 +73,7 @@
                 android:layout_gravity="bottom"
                 android:inputType="textNoSuggestions"
                 android:textCursorDrawable="@null"
+                android:imeOptions="actionNext"
                 android:textSize="@dimen/dialog_default_text_size" />
 
             <TextView
@@ -89,6 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
+                android:imeOptions="actionDone"
                 android:inputType="textNoSuggestions"
                 android:textCursorDrawable="@null"
                 android:textSize="@dimen/dialog_default_text_size" />

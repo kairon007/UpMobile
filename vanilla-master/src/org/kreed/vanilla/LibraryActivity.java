@@ -38,6 +38,7 @@ import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor.OnActionEndListener;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -76,7 +77,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -1173,10 +1174,19 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@SuppressLint("NewApi") 
 	private void createEditID3Dialog(int type, final long id) {
+		alertDialog = null;
 		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 		final File file = PlaybackService.get(this).getFilePath(type, id);
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
-		editor = new MP3Editor(this, isWhiteTheme);
+		editor = new MP3Editor(this, isWhiteTheme, new OnActionEndListener() {
+			
+			@Override
+			public void donePressed() {
+				done(id, file);
+				alertDialog.cancel();
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			}
+		});
 		if (keeper.getTempID3Fields() == null) {
 			String[] filds = new String[3];
 			MusicMetadata metadata = null;
@@ -1213,38 +1223,9 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				final String artistName = editor.getNewArtistName();
-				final String albumTitle = editor.getNewAlbumTitle();
-				final String songTitle = editor.getNewSongTitle();
-				if(!keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION)) {
-					releaseID3Dialog();
-					return;
-				} 
-				final String newFileName = file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3";
-				if (new File(newFileName).exists()) {
-					Toast toast = Toast.makeText(editor.getView().getContext(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
-					toast.show();
-					releaseID3Dialog();
-					return;
-				}
-				renameTask = new RenameTask(file, LibraryActivity.this, new RenameTaskSuccessListener() {
-					
-					@Override
-					public void success(String path) {
-						if (null != renameTask) {
-							renameTask.cancelProgress();
-							updatePlayer(id, artistName, albumTitle, songTitle, path);
-						}
-					}
-
-					@Override
-					public void error() {
-					}
-				}, artistName, songTitle, albumTitle);
-				releaseID3Dialog();
-				renameTask.start(true, false);
+				done(id, file);
+				alertDialog.cancel();
 			}
-
 		});
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
@@ -1275,8 +1256,41 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 				}
 			});
 		}
-		AlertDialog alertDialog = builder.create();
+		alertDialog = builder.create();
 		alertDialog.show();
+	}
+	
+	private void done(final long id, final File file) {
+		final String artistName = editor.getNewArtistName();
+		final String albumTitle = editor.getNewAlbumTitle();
+		final String songTitle = editor.getNewSongTitle();
+		if(!keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION)) {
+			releaseID3Dialog();
+			return;
+		} 
+		final String newFileName = file.getParentFile() + "/" + artistName + " - " + songTitle + ".mp3";
+		if (new File(newFileName).exists()) {
+			Toast toast = Toast.makeText(editor.getView().getContext(), R.string.file_with_the_same_name_already_exists, Toast.LENGTH_SHORT);
+			toast.show();
+			releaseID3Dialog();
+			return;
+		}
+		renameTask = new RenameTask(file, LibraryActivity.this, new RenameTaskSuccessListener() {
+			
+			@Override
+			public void success(String path) {
+				if (null != renameTask) {
+					renameTask.cancelProgress();
+					updatePlayer(id, artistName, albumTitle, songTitle, path);
+				}
+			}
+
+			@Override
+			public void error() {
+			}
+		}, artistName, songTitle, albumTitle);
+		releaseID3Dialog();
+		renameTask.start(true, false);
 	}
 
 	private void releaseID3Dialog() {
@@ -1406,6 +1420,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	 * Save the current page, passed in arg1, to SharedPreferences.
 	 */
 	private static final int MSG_SAVE_PAGE = 16;
+	private AlertDialog alertDialog;
 
 	@Override
 	public boolean handleMessage(Message message) {
