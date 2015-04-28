@@ -13,7 +13,6 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -65,7 +64,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private static final int SMODE_NOTIFICATION = 0x00000400;
 	private static final int SMODE_STOP = 0x00000800;
 	public static final int SMODE_SONG_FROM_LIBRARY = 0x00001000;
-	public static final int SMODE_SONG_FROM_INTERNER = 0x00002000;
+	public static final int SMODE_SONG_FROM_INTERNET = 0x00002000;
 	public static final int SMODE_HAS_NOT_SONG = 0x00004000;
 	private static final int SONG_SOURCE_MASKS = 0x00007000;
 	private static final int MSG_START = 1;
@@ -414,6 +413,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 
 	public void play(AbstractSong song) {
+		if ((song instanceof MusicData && check(SMODE_SONG_FROM_INTERNET))
+				|| (song instanceof RemoteSong && check(SMODE_SONG_FROM_LIBRARY))) {
+			sendPlaySong(song);
+		}
 		if (arrayPlayback == null || arrayPlayback.indexOf(song) == -1) return;
 		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
@@ -427,21 +430,25 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 		playingSong = arrayPlayback.get(position);
 		if (check(SMODE_PREPARED)) {
-			int msg;
-			if (check(SMODE_PAUSE)) {
-				msg = MSG_PLAY;
-				onMode(SMODE_PLAYING);
-			} else {
-				msg = MSG_PAUSE;
-				onMode(SMODE_PAUSE);
-			}
-			buildSendMessage(playingSong, msg, 0, 0);
+			sendPlaySong(playingSong);
 		} else {
 			play(playingSong.getClass() != MusicData.class);
-			if (null != previousSong && playingSong != previousSong) {
+			if (null != previousSong && previousSong != playingSong) {
 				helper(State.STOP, previousSong);
 			}
 		}
+	}
+	
+	private void sendPlaySong(AbstractSong song) {
+		int msg;
+		if (check(SMODE_PAUSE)) {
+			msg = MSG_PLAY;
+			onMode(SMODE_PLAYING);
+		} else {
+			msg = MSG_PAUSE;
+			onMode(SMODE_PAUSE);
+		}
+		buildSendMessage(song, msg, 0, 0);
 	}
 	
 	public void play() {
@@ -706,7 +713,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public boolean hasArray() {
-		return arrayPlayback != null && !arrayPlayback.isEmpty();
+		return null != arrayPlayback && !arrayPlayback.isEmpty();
 	}
 	
 	public ArrayList<AbstractSong> getArrayPlayback() {
@@ -718,10 +725,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public <T> boolean isCorrectlyState(Class<T> calledClass, int transferSize) {
 		boolean result = true;
-		if (arrayPlayback == null || transferSize != arrayPlayback.size()) {
+		if (null == arrayPlayback || transferSize != arrayPlayback.size()) {
 			result = false;
 		}
-		if (playingSong != null && playingSong.getClass() != calledClass) {
+		if (null != playingSong && playingSong.getClass() != calledClass) {
 			result = false;
 		}
 		return result;
@@ -742,7 +749,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		this.arrayPlayback = arrayPlayback;
 		Class clazz = arrayPlayback.get(0).getClass();
 		if (null != arrayPlayback && !arrayPlayback.isEmpty()) {
-			onMode(clazz == MusicData.class ? SMODE_SONG_FROM_LIBRARY : SMODE_SONG_FROM_INTERNER, SONG_SOURCE_MASKS);
+			onMode(clazz == MusicData.class ? SMODE_SONG_FROM_LIBRARY : SMODE_SONG_FROM_INTERNET, SONG_SOURCE_MASKS);
 		} else {
 			onMode(SMODE_HAS_NOT_SONG, SONG_SOURCE_MASKS);
 		}
@@ -798,7 +805,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		return null;
 	}
 	
-	@SuppressLint("NewApi")
 	private void sendNotification(boolean playing, Bitmap updateCover) {
 		if (!check(SMODE_NOTIFICATION)) return;
 		Bitmap cover = playingSong.getCover();
@@ -919,7 +925,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (check(SMODE_HAS_NOT_SONG)) {
 			builder.append("| SMODE_HAS_NOT_SONG");
 		}
-		if (check(SMODE_SONG_FROM_INTERNER)) {
+		if (check(SMODE_SONG_FROM_INTERNET)) {
 			builder.append("| SMODE_SONG_FROM_INTERNER");
 		}
 		if (check(SMODE_SONG_FROM_LIBRARY)) {
@@ -952,6 +958,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (check(SMODE_STOP)) {
 			builder.append("| SMODE_STOP");
 		}
-		android.util.Log.d("logks", builder.toString());
+		android.util.Log.d("logks","!!! " + builder.toString());
 	}
 }
