@@ -22,12 +22,11 @@ import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarStyle;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Parcelable;
 
 public class DownloadListener extends DownloadClickListener {
 
-	private final int MESSAGE_DURATION = 5000;
+	private static final int MESSAGE_DURATION = 5000;
 	
 	private String songArtist;
 	private String songTitle;
@@ -50,13 +49,11 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected void prepare(File src, final RemoteSong song, String pathToFile) {
-		android.util.Log.d("logks", "DownloadListener, prepare:");
 		((Activity) getContext()).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				android.util.Log.d("logks", "showMessage");
-				String chuck = getContext().getString(R.string.download_finished);
-				String message = chuck + " " + songArtist + " - " + songTitle;
+				StringBuilder chuck = new StringBuilder(getContext().getString(R.string.download_finished));
+				StringBuilder message = new StringBuilder(chuck).append(" ").append(songArtist).append(" - ").append(songTitle);
 				UndoBar undoBar = new UndoBar(((Activity) getContext()));
 				undoBar.message(message);
 				undoBar.duration(MESSAGE_DURATION);
@@ -77,13 +74,13 @@ public class DownloadListener extends DownloadClickListener {
 						if (ManagerFragmentId.playerFragment() != ((MainActivity) context).getCurrentFragmentId()) {
 							((BaseMiniPlayerActivity) context).startSong(song);
 						} else {
-							((BaseMiniPlayerActivity) context).startSong(song, false);
+							((BaseMiniPlayerActivity) context).startSong(song, Boolean.FALSE);
 						}
 					}
 					
 				});
 				undoBar.style(new UndoBarStyle(R.drawable.ic_play, R.string.play));
-				undoBar.show(false);
+				undoBar.show(Boolean.FALSE);
 			}
 		});
 	}
@@ -113,7 +110,7 @@ public class DownloadListener extends DownloadClickListener {
 				((BaseMiniPlayerActivity) context).miniPlayerDownloadVisible(true);
 			}
 		});
-		undoBar.show(false);
+		undoBar.show(Boolean.FALSE);
 	}
 	
 	@Override

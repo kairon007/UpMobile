@@ -63,10 +63,10 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			setListener();
 			if (data.equals(StateKeeper.getInstance().getPlayingSong())) {
 				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(true);
+				data.getSpecial().setChecked(Boolean.TRUE);
 			} else if (null != StateKeeper.getInstance().getPlayingSong() && data.getPath().equals(StateKeeper.getInstance().getPlayingSong().getPath())) {
 				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(true);
+				data.getSpecial().setChecked(Boolean.TRUE);
 			}
 			info.findViewById(R.id.playingIndicator).setVisibility(data.getSpecial().getIsChecked() ? View.VISIBLE : View.GONE);
 			super.hold(data, position);
@@ -87,10 +87,11 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				}
 				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
 				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(true);
+				data.getSpecial().setChecked(Boolean.TRUE);
 				notifyDataSetChanged();
-				((MainActivity) getContext()).showPlayerElement(true);
-				((MainActivity) getContext()).startSong(data);
+				MainActivity activity = (MainActivity) getContext();
+				activity.showPlayerElement(Boolean.TRUE);
+				activity.startSong(data);
 				break;
 			}
 			
@@ -106,7 +107,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	public View getUndoView(int paramInt, View paramView, ViewGroup paramViewGroup) {
 		View view = paramView;
 		if (view == null) {
-			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view, paramViewGroup, false);
+			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view, paramViewGroup, Boolean.FALSE);
 		}
 		return view;
 	}
@@ -139,8 +140,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 	@Override
 	protected void startSong(AbstractSong abstractSong) {
-		((MainActivity) getContext()).showPlayerElement(true);
-		((MainActivity) getContext()).startSong(abstractSong);
+		MainActivity activity = (MainActivity) getContext();
+		activity.showPlayerElement(Boolean.TRUE);
+		activity.startSong(abstractSong);
 	}
 	
 	@Override

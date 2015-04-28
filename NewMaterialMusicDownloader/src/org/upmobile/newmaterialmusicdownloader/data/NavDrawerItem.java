@@ -10,8 +10,7 @@ public class NavDrawerItem {
 	private String title;
 	private Type type;
 
-	public NavDrawerItem() {
-	}
+	public NavDrawerItem() {}
 
 	public NavDrawerItem(String title, Type type) {
 		this(0, title, type);

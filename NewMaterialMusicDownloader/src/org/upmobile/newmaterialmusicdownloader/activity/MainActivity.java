@@ -56,15 +56,15 @@ import android.widget.ImageView;
 
 public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback, FragmentDrawerListener {
 
+	private Integer currentFragmentId = Integer.valueOf(-1);
+	private Integer lastCheckPosition = Integer.valueOf(0);
+	private Boolean isVisibleSearchView = Boolean.FALSE;
+	private Boolean isOpenFromDraver = Boolean.FALSE;
 	private SearchView searchView;
 	private View floatBtnContainer;
 	private Toolbar toolbar;
 	private View toolbarShadow;
-	private int currentFragmentId = -1;
-	private int lastCheckPosition = 0;
-	private boolean isVisibleSearchView = false;
 	private FragmentDrawer drawerFragment;
-	private boolean isOpenFromDraver = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -183,12 +183,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	public void changeFragment(int fragmentId, boolean fromDraver) {
 		if (getCurrentFragmentId() == fragmentId) return;
 		isOpenFromDraver = fromDraver;
-		Fragment selectedFragment = null;
 		if (ManagerFragmentId.playerFragment() != fragmentId) {
 			setPlayerFragmentVisible(false);
 			showMiniPlayer(true);
 		}
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		Fragment selectedFragment = null;
 		if (fragmentId == ManagerFragmentId.searchFragment()) {
 			selectedFragment = new SearchFragment();
 		} else if (fragmentId == ManagerFragmentId.downloadFragment()) {
@@ -294,7 +294,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void onQueryTextChangeAct(String newText) {
-		if ("".equals(newText)) {
+		if (newText.isEmpty()) {
 			String fragmentName = getPreviousFragmentName(1);
 			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
 			if (LibraryFragment.class == fragment.getClass()) {
@@ -465,7 +465,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 	
 	@Override
-	protected void checkOnStart(boolean showMiniPlayer) {
+	protected void checkOnStart(final boolean showMiniPlayer) {
 		super.checkOnStart(ManagerFragmentId.playerFragment() != currentFragmentId);
 	}
 	
@@ -496,7 +496,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	public void onDrawerItemSelected(View view, int position) {
-		int fragmentId = ++position;
+		final int fragmentId = ++position;
 		if (fragmentId ==  ManagerFragmentId.settingFragment()) {
 			new FolderSelectorDialog().show(this);
 			return;

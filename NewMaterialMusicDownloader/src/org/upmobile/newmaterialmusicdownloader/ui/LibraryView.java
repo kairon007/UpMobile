@@ -29,22 +29,22 @@ public class LibraryView extends BaseLibraryView {
 
 	@Override
 	protected BaseAbstractAdapter<MusicData> getAdapter() {
-		return new LibraryAdapter(getContext(), org.upmobile.newmaterialmusicdownloader.R.layout.row_online_search);
+		return new LibraryAdapter(getContext(), R.layout.row_online_search);
 	}
 
 	@Override
 	protected ListView getListView(View view) {
-		return (ListView) view.findViewById(org.upmobile.newmaterialmusicdownloader.R.id.list);
+		return (ListView) view.findViewById(R.id.list);
 	}
 
 	@Override
 	protected int getLayoutId() {
-		return org.upmobile.newmaterialmusicdownloader.R.layout.fragment_list_transition;
+		return R.layout.fragment_list_transition;
 	}
 
 	@Override
 	public TextView getMessageView(View view) {
-		return (TextView) view.findViewById(org.upmobile.newmaterialmusicdownloader.R.id.message_listview);
+		return (TextView) view.findViewById(R.id.message_listview);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class LibraryView extends BaseLibraryView {
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	        	for (int position : reverseSortedPositions) {
 	            	MusicData data = ((MusicData) adapter.getItem(position));
-	            	isUserDeleted = true;
+	            	isUserDeleted = Boolean.TRUE;
 	            	PlaybackService.get(getContext()).remove(data);
 	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
 	            	adapter.remove(data);

@@ -43,16 +43,16 @@ public class FragmentDrawer extends Fragment {
  
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, Boolean.FALSE);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
         adapter = new NavigationDrawerAdapter(getActivity(), ((MainActivity) getActivity()).getData());
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(Boolean.TRUE);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
         	
             @Override
-            public void onClick(View view, int position) {
+            public void onClick(View view, final int position) {
 				if ((position + 1) > ManagerFragmentId.playlistFragment() && (position + 1) < ManagerFragmentId.settingFragment()) return;
             	if ((position + 1) != ManagerFragmentId.settingFragment()){
             		setItemChecked(view);
@@ -123,7 +123,7 @@ public class FragmentDrawer extends Fragment {
                 @Override
                 public void onLongPress(MotionEvent event) {
                     View child = recyclerView.findChildViewUnder(event.getX(), event.getY());
-                    if (child != null && clickListener != null) {
+                    if (null != child && null != clickListener) {
                     	child.onTouchEvent(event);
                         clickListener.onLongClick(child, recyclerView.getChildPosition(child));
                     }
@@ -135,7 +135,7 @@ public class FragmentDrawer extends Fragment {
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent event) {
             View child = rv.findChildViewUnder(event.getX(), event.getY());
-            if (child != null && clickListener != null && gestureDetector.onTouchEvent(event)) {
+            if (null != child && null != clickListener && gestureDetector.onTouchEvent(event)) {
             	child.onTouchEvent(event);
                 clickListener.onClick(child, rv.getChildPosition(child));
             }
@@ -163,7 +163,7 @@ public class FragmentDrawer extends Fragment {
     	return mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
     
-	public void showPlayerElement(boolean flag) {
+	public void showPlayerElement(final boolean flag) {
 		if (!flag) {
 			adapter.delete(3);
 		} else {

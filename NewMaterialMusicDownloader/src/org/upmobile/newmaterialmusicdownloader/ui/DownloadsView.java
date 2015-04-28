@@ -49,7 +49,7 @@ public class DownloadsView extends BaseDownloadsView {
 		swipeUndoAdapter.setCanNotifyListener(new CanNotifyListener() {
 			
 			@Override
-			public void canNotify(boolean isCan) {
+			public void canNotify(final boolean isCan) {
 				((DownloadsAdapter)adapter).setCanNotify(isCan);
 			}
 		});

@@ -22,9 +22,9 @@ public class PlaylistFragment extends Fragment implements Constants{
 		return playlistView.getView();
 	}
 	
-	public void setFilter(String filter) {
+	public void setFilter(final String filter) {
 		playlistView.applyFilter(filter);
-		playlistView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);
+		playlistView.getMessageView(getView()).setText(new StringBuilder(getString(R.string.search_no_results_for)).append(" ").append(filter));
 	}
 	
 	public void clearFilter() {

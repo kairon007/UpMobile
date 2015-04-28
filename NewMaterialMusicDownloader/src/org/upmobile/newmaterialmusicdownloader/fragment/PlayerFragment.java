@@ -81,7 +81,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener {
 
-	private final int MESSAGE_DURATION = 5000;
+	private static final int MESSAGE_DURATION = 5000;
 	private AbstractSong song;
 	private AsyncTask<Long,Integer,String> progressUpdater;
 	private AsyncTask<Bitmap, Void, Palette> paletteGenerator;
@@ -97,7 +97,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private LinearLayout titleBox;
 	
 	private UndoBar undo;
-	private int undoMessage = 0;
+	private Integer undoMessage = Integer.valueOf(0);
 
 	// lyric sections
 	private LyricsFetcher lyricsFetcher;
@@ -107,11 +107,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private SimpleVisualizerView visualizerView;
 	private Visualizer visualizer;
 	private CheckBox cbShowVisualizer;
-	private boolean visualizerIsBroken = false;
+	private Boolean visualizerIsBroken = Boolean.FALSE;
 	
 	//custom check box
 	private CheckBox cbUseCover;
-	private boolean isUseAlbumCover = false;
+	private Boolean isUseAlbumCover = Boolean.FALSE;
 
 	// playback sections
 	private PlayPauseView play;
@@ -133,8 +133,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private int checkIdLyrics;
 	private double percent = 0;
 	
-	private String lastArtist = "";
-	private String lastTitle = "";
+	private String lastArtist = EMPTY_STRING;
+	private String lastTitle = EMPTY_STRING;
 	
 	private int primaryColor;
 
@@ -143,16 +143,16 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private ProgressUpdaterListener progressListener = new ProgressUpdaterListener() {
 
 		private static final String FAILURE = "failure";
-		boolean canceled = false;
+		Boolean canceled = Boolean.FALSE;
 
 		@Override
 		public void onProgressUpdate(Integer... values) {
 			if (canceled) return;
 			int progress = values[0];
-			download.setIndeterminateProgressMode(false);
+			download.setIndeterminateProgressMode(Boolean.FALSE);
 			download.setProgress(progress > 0 ? progress : 1);
-			download.setClickable(false);
-			((RippleView) download.getParent()).setEnabled(false);
+			download.setClickable(Boolean.FALSE);
+			((RippleView) download.getParent()).setEnabled(Boolean.FALSE);
 		}
 
 		@Override
@@ -160,7 +160,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			canceled = true;
 			download.setOnClickListener(PlayerFragment.this);
 			((RippleView) download.getParent()).setEnabled(true);
-			download.setIndeterminateProgressMode(false);
+			download.setIndeterminateProgressMode(Boolean.FALSE);
 			download.setProgress(0);
 		}
 
@@ -178,9 +178,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 		@Override
 		public void onPreExecute() {
-			canceled = false;
-			((RippleView) download.getParent()).setEnabled(false);
-			download.setClickable(false);
+			canceled = Boolean.FALSE;
+			((RippleView) download.getParent()).setEnabled(Boolean.FALSE);
+			download.setClickable(Boolean.FALSE);
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
 			download.setProgress(50);
@@ -191,7 +191,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		contentView = inflater.inflate(R.layout.player_fragment, container, false);
+		contentView = inflater.inflate(R.layout.player_fragment, container, Boolean.FALSE);
 		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		init();
 		setListeners();
@@ -349,14 +349,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	public void onResume() {
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.playerFragment());
-		act.setDraverEnabled(false);
+		act.setDraverEnabled(Boolean.FALSE);
 		act.setTitle(R.string.tab_now_plaing);
 		act.invalidateOptionsMenu();
-		act.setToolbarOverlay(true);
+		act.setToolbarOverlay(Boolean.TRUE);
 		act.setToolbarAlpha(scrollView.getToolbarAlpha());
-		act.showToolbarShadow(true);
+		act.showToolbarShadow(Boolean.TRUE);
 		SharedPreferences sp = NewMaterialApp.getSharedPreferences();
-		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, false);
+		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, Boolean.FALSE);
 		cbShowVisualizer.setChecked(stateVisualizer);
 		if (!stateVisualizer) {
 			setupVisualizerFxAndUI(stateVisualizer);
@@ -380,7 +380,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	@Override
 	public void onDestroyView() {
-		((MainActivity) getActivity()).setToolbarOverlay(false);
+		((MainActivity) getActivity()).setToolbarOverlay(Boolean.FALSE);
 		player.removeStatePlayerListener(stateListener);
 		isDestroy = true;
 		cancelProgressTask();
@@ -397,7 +397,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			undo.clear();
 		}
 		if (null != visualizer) {
-			visualizer.setEnabled(false);
+			visualizer.setEnabled(Boolean.FALSE);
 			visualizer.release();
 			visualizer = null;
 		}
@@ -412,13 +412,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
 				visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
 
-					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-					}
+					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {}
 
 					public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
 						visualizerView.updateVisualizer(bytes);
 					}
-				}, Visualizer.getMaxCaptureRate() / 2, false, true);
+				}, Visualizer.getMaxCaptureRate() / 2, Boolean.FALSE, Boolean.TRUE);
 				visualizer.setEnabled(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -430,19 +429,19 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
-		public void pause(AbstractSong song) {
+		public void pause(final AbstractSong song) {
 			if (isDestroy) return;
 			changePlayPauseView(false);
 		}
 
 		@Override
-		public void play(AbstractSong song) {
+		public void play(final AbstractSong song) {
 			if (isDestroy) return;
 			changePlayPauseView(true);
 		}
 
 		@Override
-		public void stop(AbstractSong s) {
+		public void stop(final AbstractSong s) {
 			if (isDestroy) return;
 			changePlayPauseView(false);
 			setElementsView(0);
@@ -453,7 +452,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 		@Override
 		public void error() {
-			visualizerIsBroken = true;
+			visualizerIsBroken = Boolean.TRUE;
 			if (null != visualizer) {
 				visualizer.release();
 				visualizer = null;
@@ -461,7 +460,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 
 		@Override
-		public void start(AbstractSong s) {
+		public void start(final AbstractSong s) {
 			song = s;
 			if (isDestroy) return;
 			((MainActivity) getActivity()).showPlayerElement(true);
@@ -471,8 +470,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			play.toggle(true);
 			getCover(song);
 			setElementsView(0);
-			playerProgress.setIndeterminate(false);
-			playerProgress.setMax((int)s.getDuration());
+			playerProgress.setIndeterminate(Boolean.FALSE);
+			playerProgress.setMax((int) s.getDuration());
 			StateKeeper.getInstance().setPlayingSong(song);
 			song.getSpecial().setChecked(true);
 		}
@@ -481,7 +480,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		public void update(AbstractSong current) {
 			if (isDestroy) return;
 			download.setOnClickListener(PlayerFragment.this);
-			download.setIndeterminateProgressMode(false);
+			download.setIndeterminateProgressMode(Boolean.FALSE);
 			download.setProgress(0);
 			song = current;
 			showLyrics();
@@ -512,7 +511,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	};
 	
 	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+	public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
 		closeEditViews();
 		Util.hideKeyboard(getActivity(), buttonView);
 		if (buttonView.getId() == R.id.cbShowEqualizer) {
@@ -522,14 +521,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setupVisualizerFxAndUI(isChecked);
 			return;
 		}
-		if (!buttonView.isEnabled()) {
-			return;
-		}
+		if (!buttonView.isEnabled()) return;
 		isUseAlbumCover = isChecked;
 		cbUseCover.setChecked(isChecked);
-		if (song.getClass() != MusicData.class) {
-			return;
-		}
+		if (song.getClass() != MusicData.class) return;
 		if (isChecked) {
 			undoMessage = MSG_UNDO_NOTHING_DO;
 			undo.clear();
@@ -573,7 +568,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 *            - delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 -
 	 *            current song
 	 */
-	private void play(int delta) throws IllegalArgumentException {
+	private void play(final int delta) throws IllegalArgumentException {
 		if (delta == 0) {
 			player.play(song);
 			return;
@@ -639,7 +634,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 	}
 
-	private void setClickablePlayerElement(boolean isClickable) {
+	private void setClickablePlayerElement(final boolean isClickable) {
 		play.setClickable(isClickable);
 		if (!isClickable) {
 			playerCurrTime.setTime("0:00");
@@ -651,14 +646,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 *            - If "true", the button changes the picture to "play", if
 	 *            "false" changes to "pause"
 	 */
-	private void changePlayPauseView(boolean isPlaying) {
-		if (play.isPlay() != isPlaying) {
-			return;
-		}
+	private void changePlayPauseView(final boolean isPlaying) {
+		if (play.isPlay() != isPlaying) return;
 		play.toggle(isPlaying);
 	}
 
-	private void setDownloadButtonState(boolean state) {
+	private void setDownloadButtonState(final boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
 		((RippleView) download.getParent()).setEnabled(state);
@@ -698,7 +691,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void closeEditViews() {
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
-			boolean isSameWord = false;
+			Boolean isSameWord = Boolean.FALSE;
 			Util.hideKeyboard(getActivity(), contentView);
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
 				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
@@ -709,7 +702,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				song.setArtist(artist);
 				tvArtist.setText(artist);
 			} else {
-				isSameWord = true;
+				isSameWord = Boolean.TRUE;
 			}
 			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
@@ -725,7 +718,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void saveTags() {
 		File f = new File(song.getPath());
-		if (new File(f.getParentFile() + "/" + song.getArtist() + " - " + song.getTitle() + ".mp3").exists()) {
+		StringBuilder path = new StringBuilder(f.getParentFile().toString()).append("/").append(song.getArtist()).append(" - ").append(song.getTitle()).append(".mp3");
+		if (new File(path.toString()).exists()) {
 			((MainActivity) getActivity()).showMessage(R.string.file_already_exists);
 			return;
 		}
@@ -744,7 +738,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 		};
 		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
-		renameTask.start(true, false);
+		renameTask.start(Boolean.TRUE, Boolean.FALSE);
 	}
 
 	private void showLyrics() {
@@ -756,7 +750,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		lastTitle = song.getTitle();
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
-			playerLyricsView.setText("");
+			playerLyricsView.setText(EMPTY_STRING);
 		}
 		lyricsFetcher = new LyricsFetcher(getActivity());
 		lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
@@ -772,7 +766,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				if (foundLyrics) {
 					playerLyricsView.setText(Html.fromHtml(lyrics));
 				} else {
-					String songName = song.getArtist() + " - " + song.getTitle();
+					StringBuilder songName = new StringBuilder(song.getArtist()).append(" - ").append(song.getTitle());
 					playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
 				}
 			}
@@ -837,7 +831,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
 		if (null != paletteGenerator) {
-			paletteGenerator.cancel(true);
+			paletteGenerator.cancel(Boolean.TRUE);
 		}
 		visualizerView.setUpVizualizerColor(-1, -1);
 		if (null != bitmap) {
@@ -860,7 +854,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 	}
 	
-	private void setCheckBoxState(boolean state) {
+	private void setCheckBoxState(final boolean state) {
 		if (isAdded()) {
 			isUseAlbumCover = state;
 			cbUseCover.setOnCheckedChangeListener(null);
@@ -887,9 +881,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 			@Override
 			public void success(String url) {
-				if (!url.startsWith("http")) {
-					return;
-				}
+				if (!url.startsWith("http")) return;
 				((RemoteSong) song).setDownloadUrl(url);
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
 
@@ -952,8 +944,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			}
 
 			@Override
-			public void error(String error) {
-			}
+			public void error(String error) {}
 		});
 	}
 	

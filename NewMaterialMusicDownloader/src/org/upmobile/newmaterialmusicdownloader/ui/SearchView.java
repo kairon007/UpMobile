@@ -19,10 +19,8 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
 
@@ -90,17 +88,17 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 
 	@Override
 	public boolean isWhiteTheme(Context context) {
-		return false;
+		return Boolean.FALSE;
 	}
 	
 	@Override
 	protected boolean showFullElement() {
-		return false;
+		return Boolean.FALSE;
 	}
 	
 	@Override
 	protected boolean showDownloadButton() {
-		return false;
+		return Boolean.FALSE;
 	}
 	
 	@Override
@@ -110,7 +108,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	public boolean isUseDefaultSpinner() {
-		return true;
+		return Boolean.TRUE;
 	}
 	
 	@Override
@@ -142,7 +140,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	protected boolean showDownloadLabel() {
-		return true;
+		return Boolean.TRUE;
 	}
 	
 	@Override
@@ -154,15 +152,15 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	protected void download(final View v, RemoteSong song, final int position) {
 		downloadListener = new DownloadListener(getContext(), song, 0);
 		downloadListener.setDownloadPath(getDirectory());
-		downloadListener.setUseAlbumCover(true);
-		downloadListener.downloadSong(false);
+		downloadListener.setUseAlbumCover(Boolean.TRUE);
+		downloadListener.downloadSong(Boolean.FALSE);
 	}
 	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
 		public void start(AbstractSong song) {
-			song.getSpecial().setChecked(true);
+			song.getSpecial().setChecked(Boolean.TRUE);
 			StateKeeper.getInstance().setPlayingSong(song);
 			notifyAdapter();
 		}
@@ -189,8 +187,8 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		public void onBufferingUpdate(double percent) {}
 
 		@Override
-		public void update(AbstractSong song) {
-			song.getSpecial().setChecked(true);
+		public void update(final AbstractSong song) {
+			song.getSpecial().setChecked(Boolean.TRUE);
 			StateKeeper.getInstance().setPlayingSong(song);
 			notifyAdapter();
 		}
@@ -216,7 +214,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	}
 	
 	@Override
-	protected void showShadow(boolean visible) {
+	protected void showShadow(final boolean visible) {
 		((MainActivity) getContext()).showToolbarShadow(visible);
 	}
 	
@@ -228,6 +226,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	protected boolean usePlayingIndicator() {
-		return true;
+		return Boolean.TRUE;
 	}
 }

@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.ViewHolder> {
 
-	List<NavDrawerItem> data = Collections.emptyList();
+	private List<NavDrawerItem> data = Collections.emptyList();
 	private LayoutInflater inflater;
 
 	public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {

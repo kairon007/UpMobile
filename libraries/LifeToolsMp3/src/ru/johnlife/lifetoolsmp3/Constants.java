@@ -24,4 +24,6 @@ public interface Constants {
 	public static final String PREF_LAST_PLAYLIST_ID = "pref.last.played.playlist.id";
 	public static final String EXTRA_DATA = "extra.data.to.service.helper";
 	
+	public static final String EMPTY_STRING = "";
+	
 }

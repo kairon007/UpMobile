@@ -29,27 +29,27 @@ import android.widget.ListView;
 
 public class RippleView extends FrameLayout implements OnGestureListener {
 
-	private static boolean click = false;
+	private static boolean click = Boolean.FALSE;
 	
     private int width;
     private int height;
-    private int rippleFrameRate = 10;
-    private int rippleDuration = 400;
-    private int rippleAlpha = 90;
+    private Integer rippleFrameRate = Integer.valueOf(10);
+    private Integer rippleDuration = Integer.valueOf(400);
+    private Integer rippleAlpha = Integer.valueOf(90);
     private int rippleColor = Color.WHITE;
-    private int ripplePadding = 0;
-    private int rippleType = 0;
-    private int rippleZoomDuration = 200;
+    private Integer ripplePadding = Integer.valueOf(0);
+    private Integer rippleType = Integer.valueOf(0);
+    private Integer rippleZoomDuration = Integer.valueOf(200);
     private float rippleZoomScale = 1.03f;
-    private boolean rippleClickable = true;
-    private boolean rippleAlphaVisible = true;
+    private Boolean rippleClickable = Boolean.TRUE;
+    private Boolean rippleAlphaVisible = Boolean.TRUE;
     
-    private int timer = 0;
-    private int timerEmpty = 0;
-    private int durationEmpty = -1;
-    private float x = -1;
-    private float y = -1;
-    private float radiusMax = 0;
+    private Integer timer = Integer.valueOf(0);
+    private Integer timerEmpty = Integer.valueOf(0);
+    private Integer durationEmpty = Integer.valueOf(-1);
+    private float x = Float.NEGATIVE_INFINITY;
+    private float y = Float.NEGATIVE_INFINITY;
+    private float radiusMax = Float.NaN;
     
     private boolean hasToZoom;
     private boolean isCentered;
@@ -99,16 +99,16 @@ public class RippleView extends FrameLayout implements OnGestureListener {
         rippleZoomScale = typedArray.getFloat(R.styleable.RippleView_rv_zoomScale, rippleZoomScale);
         rippleZoomDuration = typedArray.getInt(R.styleable.RippleView_rv_zoomDuration, rippleZoomDuration);
         rippleClickable = typedArray.getBoolean(R.styleable.RippleView_rv_clickable, rippleClickable);
-        hasToZoom = typedArray.getBoolean(R.styleable.RippleView_rv_zoom, false);
-        isCentered = typedArray.getBoolean(R.styleable.RippleView_rv_centered, false);
+        hasToZoom = typedArray.getBoolean(R.styleable.RippleView_rv_zoom, Boolean.FALSE);
+        isCentered = typedArray.getBoolean(R.styleable.RippleView_rv_centered, Boolean.FALSE);
         typedArray.recycle();
         canvasHandler = new Handler();
         gestureDetector = new GestureDetector(context, this);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(rippleColor);
         paint.setAlpha(rippleAlpha);
-        setWillNotDraw(false);
-		setClickable(true);
+        setWillNotDraw(Boolean.FALSE);
+		setClickable(Boolean.TRUE);
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			canvas.save();
 		if (rippleDuration <= timer * rippleFrameRate) {
 			if (!eventCanceled && singleTap) sendClickEvent();
-			animationRunning = false;
+			animationRunning = Boolean.FALSE;
 			timer = 0;
 			durationEmpty = -1;
 			timerEmpty = 0;
@@ -174,19 +174,19 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 	
 	@Override
 	public boolean onSingleTapUp(MotionEvent event) {
-		singleTap = true;
-		return true;
+		singleTap = Boolean.TRUE;
+		return Boolean.TRUE;
 	}
 
 	@Override
 	public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) {
-		return false;
+		return Boolean.FALSE;
 	}
 
 	@Override
 	public void onLongPress(MotionEvent event) {
-		singleTap = false;
-		isLongClick = true;
+		singleTap = Boolean.FALSE;
+		isLongClick = Boolean.TRUE;
 		sendClickEvent();
 	}
 
@@ -221,7 +221,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
                 this.y = y;
             }
             animationRunning = true;
-            if (rippleType == 1 && originBitmap == null)
+            if (rippleType == 1 && null == originBitmap)
                 originBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             invalidate();
         }
@@ -245,20 +245,20 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 	}
 
 	@Override
-	public boolean onTouchEvent(@NonNull MotionEvent event) {
+	public boolean onTouchEvent(@NonNull final MotionEvent event) {
 		if (!isEnabled() || !childView.isEnabled()) return super.onTouchEvent(event);
 		gestureDetector.onTouchEvent(event);
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
 			childView.onTouchEvent(event);
-			isLongClick = false;
-			click = false;
+			isLongClick = Boolean.FALSE;
+			click = Boolean.FALSE;
 			break;
 		case MotionEvent.ACTION_DOWN:
-			if (click) return true;
+			if (click) return Boolean.TRUE;
 			childView.onTouchEvent(event);
-			eventCanceled = false;
-			click = true;
+			eventCanceled = Boolean.FALSE;
+			click = Boolean.TRUE;
 			removeCallbacks(runnable);
 			if (isInScrollingContainer()) {
 				final float x = event.getX();
@@ -269,7 +269,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 					public void run() {
 						if (!eventCanceled && childView.isClickable() && rippleClickable) {
 							animateRipple(x, y);
-							eventCanceled = false;
+							eventCanceled = Boolean.FALSE;
 						}
 					}
 				}, ViewConfiguration.getTapTimeout());
@@ -279,13 +279,13 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			break;
 		case MotionEvent.ACTION_CANCEL:
 			childView.onTouchEvent(event);
-			eventCanceled = true;
-			animationRunning = false;
-			click = false;
+			eventCanceled = Boolean.TRUE;
+			animationRunning = Boolean.FALSE;
+			click = Boolean.FALSE;
 			removeCallbacks(runnable);
 			break;
 		}
-		return true;
+		return Boolean.TRUE;
 	}
 	
 	private boolean isInScrollingContainer() {
@@ -293,24 +293,24 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		while (p != null && p instanceof ViewGroup) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
 				if (((ViewGroup) p).shouldDelayChildPressedState()) {
-					return true;
+					return Boolean.TRUE;
 				}
 			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 				if (((ViewGroup) p).isScrollContainer()) {
-					return true;
+					return Boolean.TRUE;
 				}
 			}
 			p = p.getParent();
 		}
-		return false;
+		return Boolean.FALSE;
 	}
 
 	@Override
-	public boolean onInterceptTouchEvent(MotionEvent event) {
+	public boolean onInterceptTouchEvent(final MotionEvent event) {
 		return !findClickableViewInChild(childView, (int) event.getX(), (int) event.getY());
 	}
 	
-	private boolean findClickableViewInChild(View view, int x, int y) {
+	private boolean findClickableViewInChild(View view, final int x, final int y) {
 		if (view instanceof ViewGroup) {
 			ViewGroup viewGroup = (ViewGroup) view;
 			for (int i = 0; i < viewGroup.getChildCount(); i++) {
@@ -355,18 +355,18 @@ public class RippleView extends FrameLayout implements OnGestureListener {
     }
     
     @Override
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
     	super.setEnabled(enabled);
     	rippleClickable = enabled;
     }
     
     @Override
-    public void setClickable(boolean clickable) {
+    public void setClickable(final boolean clickable) {
     	super.setClickable(clickable);
     	rippleClickable = clickable;
     }
 	
-	public void setRippleColor(int rippleColor) {
+	public void setRippleColor(final int rippleColor) {
 		this.rippleColor = rippleColor;
 	}
 

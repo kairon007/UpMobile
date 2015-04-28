@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 public class DownloadsFragment extends Fragment implements Constants{
 	
-	DownloadsView downloadsView;
+	private DownloadsView downloadsView;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
