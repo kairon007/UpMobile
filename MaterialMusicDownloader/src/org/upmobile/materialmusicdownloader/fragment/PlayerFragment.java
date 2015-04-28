@@ -7,6 +7,7 @@ import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.DownloadListener.OnCancelDownload;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.ui.TrueSeekBar;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -35,10 +36,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -112,7 +110,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private EditText etArtist;
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
-	private SeekBar playerProgress;
+	private TrueSeekBar playerProgress;
 	private ImageView imageView;
 	private Bitmap defaultCover;
 
@@ -160,7 +158,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			changePlayPauseView(true);
 			getCover(song);
 			setElementsView(0);
-			playerProgress.setIndeterminate(false);
 			playerProgress.setMax((int)s.getDuration());
 			StateKeeper.getInstance().setPlayingSong(song);
 			song.getSpecial().setChecked(true);
@@ -172,6 +169,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setOnClickListener(PlayerFragment.this);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
+			playerProgress.setProgress(0);
+			playerProgress.setSecondaryProgress(1);
+			playerProgress.setSecondaryProgress(0);
 			song = current;
 			showLyrics();
 			setCoverToZoomView(null);
@@ -263,7 +263,21 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
 		player.setOnErrorListener(this);
-		song = player.getPlayingSong();
+    song = player.getPlayingSong();
+		playerProgress.setIndeterminate(!player.isPrepared());
+		playerProgress.setSecondaryProgress(1);
+		playerProgress.setSecondaryProgress(0);
+		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
+			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
+				player.play();
+			} else {
+				player.play(song);
+			}
+			((MainActivity) getActivity()).setDrawerEnabled(false);
+		} else {
+			song = player.getPlayingSong();
+		}
 		initCover();
 		setCoverToZoomView(null);
 		getCover(song);
@@ -274,7 +288,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setClickablePlayerElement(prepared);
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
-			playerProgress.setIndeterminate(false);
 			playerProgress.setMax((int)song.getDuration());
 		} else {
 			changePlayPauseView(prepared);
@@ -441,7 +454,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void clearCover() {
 		if (MusicData.class == song.getClass()) {
-			((View)cbUseCover.getParent()).setVisibility(View.GONE);
+			((View)cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();
 			RenameTask.deleteCoverFromFile(new File(song.getPath()));
@@ -455,10 +468,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		shuffle = (TextView) contentView.findViewById(R.id.shuffle);
 		repeat = (TextView) contentView.findViewById(R.id.repeat);
 		download = (CircularProgressButton) contentView.findViewById(R.id.download);
-		playerProgress = (SeekBar) contentView.findViewById(R.id.progress_track);
-		int colorAccent = getActivity().getResources().getColor(R.color.material_accent);
-		Drawable drawable = playerProgress.getIndeterminateDrawable();
-		drawable.setColorFilter(new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
+		playerProgress = (TrueSeekBar) contentView.findViewById(R.id.progress_track);
 		tvTitle = (TextView) contentView.findViewById(R.id.songName);
 		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
 		tvArtist = (TextView) contentView.findViewById(R.id.artistName);
@@ -549,7 +559,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setClickablePlayerElement(false);
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
-		playerProgress.setProgress(1);
+		playerProgress.setProgress(0);
 		playerProgress.setIndeterminate(true);
 		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
 		player.getPlayingSong().getSpecial().setChecked(true);
@@ -733,7 +743,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				return;
 			}
 		}
-		((View) cbUseCover.getParent()).setVisibility(View.GONE);
+		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 

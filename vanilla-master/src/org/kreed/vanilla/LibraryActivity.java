@@ -71,6 +71,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -785,19 +786,19 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		Limiter limiterData = mPagerAdapter.getCurrentLimiter();
 		if (limiterData != null) {
 			String[] limiter = limiterData.names;
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			params.leftMargin = 5;
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			for (int i = 0; i != limiter.length; ++i) {
 				PaintDrawable background = new PaintDrawable(Color.GRAY);
-				background.setCornerRadius(5);
 				TextView view = new TextView(this);
 				view.setSingleLine();
+				view.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+				view.setGravity(Gravity.CENTER_VERTICAL);
 				view.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-				view.setText(limiter[i] + " | X");
+				view.setText(limiter[i].trim() + " \\");
 				view.setTextColor(Color.WHITE);
 				view.setBackgroundDrawable(background);
 				view.setLayoutParams(params);
-				view.setPadding(5, 2, 5, 2);
+				view.setPadding(12, 0, 12, 0);
 				view.setTag(i);
 				view.setOnClickListener(this);
 				mLimiterViews.addView(view);
