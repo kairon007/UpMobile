@@ -84,6 +84,24 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	}
 	
+	@Override
+	protected void onStart() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				checkOnStart(true);
+			}
+		}).start();
+		super.onStart();
+	}
+	
+	@Override
+	protected void checkOnStart(boolean showMiniPlayer) {
+		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
+		super.checkOnStart(null == player || !player.isVisible());
+	}
+	
 	private void initSearchView() {
 		searchView = (SearchView) findViewById(R.id.ab_search);
 		AutoCompleteTextView mQueryTextView = (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
