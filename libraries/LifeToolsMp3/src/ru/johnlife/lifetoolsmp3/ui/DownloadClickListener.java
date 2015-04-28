@@ -31,6 +31,7 @@ import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
@@ -238,8 +239,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			public void run() {
 				showMessage(context, context.getString(R.string.download_started) + " " + sb);
 			}
+			
 		});
-		StateKeeper.getInstance().putSongInfo(downloadingSong.getUrl(), StateKeeper.DOWNLOADING);
+		StateKeeper.getInstance().putSongInfo(downloadingSong.getUrl(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(downloadingSong, manager, useAlbumCover, cacheItem);
 		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
@@ -361,7 +363,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	private void insertToMediaStore(final RemoteSong song, final String pathToFile) {
-		StateKeeper.getInstance().putSongInfo(song.getUrl(), StateKeeper.DOWNLOADED);
+		StateKeeper.getInstance().putSongInfo(song.getUrl(), pathToFile, StateKeeper.DOWNLOADED);
 		ContentResolver resolver = context.getContentResolver();
 		int seconds = 0;
 		long ms = 0;

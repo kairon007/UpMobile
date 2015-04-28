@@ -27,7 +27,7 @@ public class StateKeeper {
 	public static final int DOWNLOADED = 0;
 	public static final int DOWNLOADING = 1;
 	public static final int NOT_DOWNLOAD = -1;
-	private TreeMap<String, Integer> songHolder = new TreeMap<String, Integer>();
+	private TreeMap<String, SongInfo> songHolder = new TreeMap<String, SongInfo>();
 	private boolean notifyLable = true; 
 	
 	private Object tag;
@@ -281,7 +281,8 @@ public class StateKeeper {
 					if (null == comment) {
 						comment = metadata.hashCode() + "";
 					}
-					songHolder.put(comment, DOWNLOADED);
+					SongInfo info = new SongInfo(files[i].getAbsolutePath(), DOWNLOADED);
+					songHolder.put(comment, info);
 				}
 			} catch (Exception e) {
 				android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
@@ -306,9 +307,10 @@ public class StateKeeper {
 		}
 	}
 	
-	public void putSongInfo(String url, int status) {
+	public void putSongInfo(String url, String path, int status) {
 		String key =  url.contains("youtube-mp3.org") ? url.substring(0, url.indexOf("ts_create")) : url;
-		songHolder.put(key, status);
+		SongInfo info = new SongInfo(path, status);
+		songHolder.put(key, info);
 		notifyLable();
 	}
 	
@@ -319,7 +321,11 @@ public class StateKeeper {
 	
 	public int checkSongInfo(String url) {
 		if (null == url || !songHolder.containsKey(url)) return NOT_DOWNLOAD;
-		return songHolder.get(url);
+		return songHolder.get(url).status;
+	}
+	
+	public String getSongPath(String key) {
+		return songHolder.get(key).path;
 	}
 	
 	public int getTempID3UseCover() {
@@ -437,6 +443,18 @@ public class StateKeeper {
 	
 	public void setSearchView(OnlineSearchView searchView) {
 		this.searchView = searchView;
+	}
+	
+	private class SongInfo {
+		
+		private String path;
+		private int status;
+		
+		public SongInfo(String path, int status) {
+			this.path = path;
+			this.status = status;
+		}
+		
 	}
 	
 }

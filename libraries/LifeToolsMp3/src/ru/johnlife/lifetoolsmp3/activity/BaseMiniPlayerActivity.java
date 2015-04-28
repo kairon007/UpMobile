@@ -568,7 +568,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			String url = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
 			String path =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
 			if (path.contains(getDirectory())) {
-				StateKeeper.getInstance().putSongInfo(url, StateKeeper.DOWNLOADING);
+				StateKeeper.getInstance().putSongInfo(url, AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 				if (expandAction) {
 					String strTitle =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
 					String strArtist =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));

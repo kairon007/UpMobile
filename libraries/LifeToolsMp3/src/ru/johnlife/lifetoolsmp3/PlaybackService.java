@@ -323,7 +323,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					mode &= ~SMODE_GET_URL;
 				}
 				try {
-					Uri uri = Uri.parse(songStart.getClass() == MusicData.class ? songStart.getPath() : songStart.getComment());
+					Uri uri = Uri.parse(songStart.getClass() == MusicData.class ? songStart.getPath() : null == songStart.getPath() ? songStart.getComment() : songStart.getPath());
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
@@ -506,7 +506,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	private void play(boolean fromInternet) {
-		if (fromInternet) {
+		if (fromInternet && null == playingSong.getPath()) {
 			onMode(SMODE_GET_URL);
 			((RemoteSong) playingSong).getDownloadUrl(new DownloadUrlListener() {
 

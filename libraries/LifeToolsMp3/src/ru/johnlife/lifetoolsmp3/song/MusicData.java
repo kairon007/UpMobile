@@ -30,7 +30,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 				AudioColumns.ALBUM,
 	};
 
-	public static final String EMPTY_COMMENT = "in_data_comment_is_empty";
 	public static final int MODE_VISIBLITY = 0x00000001;
 	public static final int MODE_PLAYING = 0x00000002;
 	private Bitmap cover;

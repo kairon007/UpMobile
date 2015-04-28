@@ -11,6 +11,7 @@ import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity.DownloadPressListener;
@@ -27,6 +28,7 @@ import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -400,6 +402,7 @@ public abstract class OnlineSearchView extends View {
 				ImageLoader.getInstance().stop();
 				trySearch();
 			}
+
 		});
 		view.findViewById(R.id.touch_interceptor).setOnTouchListener(new OnTouchListener() {
 			
@@ -763,6 +766,9 @@ public abstract class OnlineSearchView extends View {
 			song.setTitle(title);
 			song.setArtist(artist);
 			int lableStatus = keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment);
+			if (lableStatus == StateKeeper.DOWNLOADED) {
+				song.setPath(keeper.getSongPath(comment));
+			}
 			builder.setLine1(artist, Util.getFormatedStrDuration(song.getDuration()))
 				   .setLongClickable(false)
 				   .setExpandable(false)

@@ -7,6 +7,9 @@ import android.os.Parcelable;
 
 public interface AbstractSong extends Parcelable, Cloneable {
 	
+	public static final String EMPTY_COMMENT = "in_data_comment_is_empty";
+	public static final String EMPTY_PATH = "comment_does_not_get_path";
+	
 	public String getPath();
 
 	public String getTitle();
