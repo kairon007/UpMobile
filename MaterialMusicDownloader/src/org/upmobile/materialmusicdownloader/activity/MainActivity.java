@@ -129,6 +129,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		if (null != player && player.isVisible()) {
 			if (isDraverClose) {
 				service.stopPressed();
+				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			} else {
 				showMiniPlayer(true);
@@ -151,6 +152,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 				service.stopPressed();
 				showPlayerElement(false);
 			} else {
+				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			}
 		}

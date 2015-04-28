@@ -27,6 +27,7 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -292,6 +293,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 				service.stopPressed();
 				showPlayerElement(false);
 			} else {
+				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			}
 		}

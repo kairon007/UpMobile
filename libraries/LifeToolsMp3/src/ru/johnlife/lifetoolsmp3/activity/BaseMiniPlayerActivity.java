@@ -51,12 +51,12 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	private View miniPlayer;
 	private View fakeView;
 	protected View progress;
-	private boolean isMiniPlayerPrepared = false;
+	private boolean isMiniPlayerPrepared = Boolean.FALSE;
 	
-	private boolean isPlayerFragmentVisible = false;
-	private boolean isAnimated = false;
-	private boolean isClickOnDownload = false;
-	private boolean methodIsCalled = false;
+	private boolean isPlayerFragmentVisible = Boolean.FALSE;
+	private boolean isAnimated = Boolean.FALSE;
+	private boolean isClickOnDownload = Boolean.FALSE;
+	private boolean methodIsCalled = Boolean.FALSE;
 	
 	private int checkIdCover;
 	private DownloadClickListener downloadListener;
@@ -106,7 +106,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			trasferData.putParcelableArrayListExtra(Constants.EXTRA_DATA, downloadedSongs);
 			startService(trasferData);
 		}
-		service.stopSelf();
 		super.onDestroy();
 	}
 	

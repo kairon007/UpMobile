@@ -161,10 +161,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else {
 			if (ManagerFragmentId.playerFragment() == getCurrentFragmentId()) {
 				service.stopPressed();
+				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			} else if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
 			} else {
+				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			}
 		}

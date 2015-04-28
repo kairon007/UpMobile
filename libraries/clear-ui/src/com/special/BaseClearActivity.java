@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentManager.BackStackEntry;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -166,6 +168,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			if (isMiniPlayerPrepared()) {
 				stopChildsServices();
 			} else {
+				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			}
 		}
