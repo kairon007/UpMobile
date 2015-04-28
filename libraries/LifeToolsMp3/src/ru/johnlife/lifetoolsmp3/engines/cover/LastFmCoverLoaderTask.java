@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import android.os.AsyncTask;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -107,7 +108,15 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 		
 		@Override
 		protected void onPostExecute(String result) {
-			ImageLoader.getInstance().loadImage(result, LastFmCoverLoaderTask.this);
+			if (null == result) {
+				for (OnBitmapReadyListener listener : listeners) {
+					if (null != listener) {
+						listener.onBitmapReady(null);
+					}
+				}
+			} else {
+				ImageLoader.getInstance().loadImage(result, LastFmCoverLoaderTask.this);
+			}
 		}
 	}
 }

@@ -512,10 +512,6 @@ public abstract class OnlineSearchView extends View {
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
-		if (!showDownloadLabel()) return;
-		v.findViewById(R.id.infoView).setVisibility(View.VISIBLE);
-		((TextView) v.findViewById(R.id.infoView)).setText(R.string.downloading);
-		((TextView) v.findViewById(R.id.infoView)).setTextColor(Color.RED);
 	}
 	
 	public View getViewByPosition(int pos) {

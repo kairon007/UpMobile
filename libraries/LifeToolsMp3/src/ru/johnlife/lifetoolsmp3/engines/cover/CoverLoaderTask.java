@@ -33,6 +33,11 @@ public class CoverLoaderTask implements ImageLoadingListener {
 	public void execute() {
 		try {
 			if (coverUrl == null || coverUrl.equals("NOT_FOUND") || "".equals(coverUrl)) {
+				for (OnBitmapReadyListener listener : listeners) {
+					if (null != listener) {
+						listener.onBitmapReady(null);
+					}
+				}
 				Log.e(getClass().getSimpleName(), "Error, cover not found from engines");
 				return;
 			}

@@ -14,6 +14,14 @@ public class SoundCloudCoverLoaderTask extends CoverLoaderTask {
 
 	@Override
 	public void execute() {
-		ImageLoader.getInstance().loadImage(urlImage, this);
+		if (null == urlImage) {
+			for (OnBitmapReadyListener listener : listeners) {
+				if (null != listener) {
+					listener.onBitmapReady(null);
+				}
+			}
+		} else {
+			ImageLoader.getInstance().loadImage(urlImage, this);
+		}
 	}
 }

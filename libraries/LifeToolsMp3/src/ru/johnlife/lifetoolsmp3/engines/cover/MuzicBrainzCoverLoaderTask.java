@@ -14,6 +14,7 @@ import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -63,7 +64,15 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 		
 		@Override
 		protected void onPostExecute(String result) {
-			ImageLoader.getInstance().loadImage(result, MuzicBrainzCoverLoaderTask.this);
+			if (null == result) {
+				for (OnBitmapReadyListener listener : listeners) {
+					if (null != listener) {
+						listener.onBitmapReady(null);
+					}
+				}
+			} else {
+				ImageLoader.getInstance().loadImage(result, MuzicBrainzCoverLoaderTask.this);
+			}
 		}
 	}
 
