@@ -39,7 +39,7 @@ public class SearchPleerV2 extends SearchWithPages {
 				addSong(new PleerV2Song(strId).setDuration(duration).setSongTitle(title).setArtistName(artist));
 			}
 		} catch (Exception e) {
-			android.util.Log.d(getClass().getSimpleName(), e.getMessage());
+			android.util.Log.d(getClass().getSimpleName(), e +"");
 		}
 		return null;
 	}
