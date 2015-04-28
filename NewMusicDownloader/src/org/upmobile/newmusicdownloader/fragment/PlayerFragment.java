@@ -128,6 +128,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			changePlayPauseView(prepared);
 		}
+		if (song.getClass() == MusicData.class) {
+			btnDownload.setVisibility(View.GONE);
+		} else {
+			btnDownload.setVisibility(View.VISIBLE);
+		}
 		return parentView;
 	}
 
@@ -243,6 +248,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		((MainActivity) getActivity()).setSelectedItem(Constants.PLAYER_FRAGMENT);
 		((MainActivity) getActivity()).invalidateOptionsMenu();
 		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
+			btnDownload.setVisibility(View.GONE);
+		}
 //		getView().setFocusableInTouchMode(true);
 //		getView().requestFocus();
 //		getView().setOnKeyListener(new View.OnKeyListener() {
@@ -339,11 +348,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void setElementsView(int progress) {
-		if (song.getClass() == MusicData.class) {
-			btnDownload.setVisibility(View.GONE);
-		} else {
-			btnDownload.setVisibility(View.VISIBLE);
-		}
 		playerProgress.removeCallbacks(progressAction);
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());
@@ -619,6 +623,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
 		}
+		int state = StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
+		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
+			btnDownload.setVisibility(View.GONE);
+		} else {
+			btnDownload.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void getCover(final AbstractSong song) {
@@ -679,6 +689,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.search_message_no_internet, Toast.LENGTH_SHORT).show();
 			return;
 		}
+		btnDownload.setVisibility(View.GONE);
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
@@ -689,7 +700,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					toast.show();
 					return;
 				}
-				((RemoteSong) song).setDownloadUrl(url);
+				((RemoteSong) song).setDownloadUrl(url); 
 				Runnable callbackRun = new Runnable() {
 
 					@Override

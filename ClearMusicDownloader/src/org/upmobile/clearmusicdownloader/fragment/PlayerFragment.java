@@ -262,6 +262,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		super.onResume();
 		((MainActivity) getActivity()).showMiniPlayer(false);
 		setKeyListener();
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
+			download.setVisibility(View.GONE);
+		} 
 	}
 
 	private void setKeyListener() {
@@ -739,6 +743,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		default:
 			throw new IllegalArgumentException("Delta must be -1 < delta < 1");
 		}
+		int state = StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
+		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
+			download.setVisibility(View.GONE);
+		} else {
+			download.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	private void getCover(final AbstractSong song) {
@@ -784,6 +794,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.search_message_no_internet, Toast.LENGTH_SHORT).show();
 			return;
 		}
+		download.setVisibility(View.GONE);
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
