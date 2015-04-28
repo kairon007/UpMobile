@@ -1,5 +1,9 @@
 package ru.johnlife.lifetoolsmp3.activity;
 
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.HelperService;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -96,6 +100,12 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	
 	@Override
 	protected void onDestroy() {
+		ArrayList<RemoteSong> downloadedSongs = checkDownloadingUrl(true);
+		if (!downloadedSongs.isEmpty()) {
+			Intent trasferData = new Intent(this, HelperService.class);
+			trasferData.putParcelableArrayListExtra(Constants.EXTRA_DATA, downloadedSongs);
+			startService(trasferData);
+		}
 		service.stopSelf();
 		super.onDestroy();
 	}
@@ -251,7 +261,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			service = PlaybackService.get(this);
 		} else return;
 		if ((service.isPlaying() || service.isPaused())) {
-			
 			runOnUiThread(new Runnable() {
 				
 				@Override
@@ -525,37 +534,40 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		isClickOnDownload = !flag;
 	}
 	
-	protected void checkDownloadingUrl(boolean expandAction) {
+	protected ArrayList<RemoteSong> checkDownloadingUrl(boolean expandAction) {
+		ArrayList<RemoteSong> result = new ArrayList<RemoteSong>();
 		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 		if (null != manager) {
 			Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
 			if (pending != null) {
-				updateList(pending, expandAction);
+				updateList(pending, result, expandAction);
 			}
 			Cursor paused = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PAUSED));
 			if (paused != null) {
-				updateList(paused, expandAction);
+				updateList(paused, result, expandAction);
 			}
 			Cursor waitingNetwork = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_WAITING_FOR_NETWORK));
 			if (waitingNetwork != null) {
-				updateList(waitingNetwork, expandAction);
+				updateList(waitingNetwork, result, expandAction);
 			}
 			Cursor unknown = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_UNKNOWN));
 			if (unknown != null) {
-				updateList(unknown, expandAction);
+				updateList(unknown, result, expandAction);
 			}
 			Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 			if (running != null) {
-				updateList(running, expandAction);
+				updateList(running, result, expandAction);
 			}
 		}
+		return result;
 	}
 
-	private void updateList(Cursor c, boolean expandAction) {
-		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+	private void updateList(Cursor c, ArrayList<RemoteSong> result, boolean expandAction) {
+		DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 		while (c.moveToNext()) {
 			String url = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
-			if (c.getString(8).contains(getDirectory())) {
+			String path =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+			if (path.contains(getDirectory())) {
 				StateKeeper.getInstance().putSongInfo(url, StateKeeper.DOWNLOADING);
 				if (expandAction) {
 					String strTitle =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
@@ -564,8 +576,13 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 					RemoteSong checkSong = new RemoteSong(url);
 					checkSong.setTitle(strTitle);
 					checkSong.setArtist(strArtist);
+					checkSong.setPath(path);
+					checkSong.id = id;
 					DownloadClickListener listener = createDownloadListener(checkSong);
 					listener.createUpdater(manager, id);
+					if (!result.contains(checkSong)) {
+						result.add(checkSong);
+					}
 				}
 			}
 		}

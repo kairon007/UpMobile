@@ -67,6 +67,8 @@
             </intent-filter>
         </service>
         
+        <service android:name="ru.johnlife.lifetoolsmp3.HelperService"/>
+        
         <!-- MOBILECORE -->
 
         <service

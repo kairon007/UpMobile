@@ -103,6 +103,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		public void success(String str);
 		public void erorr(String str);
 	}
+	
+	private DownloadClickListener() {
+	}
 
 	public DownloadClickListener(Context context, RemoteSong song, int id) {
 		this.context = context;
@@ -111,6 +114,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		songId = downloadingSong instanceof GrooveSong ? ((GrooveSong) downloadingSong).getSongId() : -1;
 		headers = downloadingSong.getHeaders();
 		downloadingSong.getCover(this);
+	}
+	
+	public static void writeDownloadSong (RemoteSong song, Context context) {
+		DownloadClickListener listener = new DownloadClickListener();
+		String path =  song.getPath();
+		listener.context = context;
+		File src = new File(path);
+		if (listener.setMetadataToFile(src, false, song)) {
+			listener.insertToMediaStore(song, path);
+		}
 	}
 
 	public void createUpdater(DownloadManager manager, long id) {
@@ -169,7 +182,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 				@Override
 				public void success(String str) {
-					setMetadataToFile(musicDir.getAbsolutePath() + "/" + sb, new File(musicDir.getAbsolutePath() + "/" + sb), useAlbumCover, downloadingSong);
+					setMetadataToFile(new File(musicDir.getAbsolutePath() + "/" + sb), useAlbumCover, downloadingSong);
 					insertToMediaStore(downloadingSong, musicDir.getAbsolutePath() + "/" + sb);
 					showMessage(context, R.string.download_finished);
 				}
@@ -376,7 +389,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(musicFile)));
 	}
 
-	private boolean setMetadataToFile(String path, File src, boolean useCover, RemoteSong song) {
+	private boolean setMetadataToFile(File src, boolean useCover, RemoteSong song) {
 		MusicMetadataSet src_set = null;
 		try {
 			src_set = new MyID3().read(src);
@@ -384,7 +397,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
 		}
 		if (null == src_set) {
-			insertToMediaStore(song, path);
+			insertToMediaStore(song, src.getAbsolutePath());
 			return false;
 		}
 
@@ -509,7 +522,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							}
 						}
 						src = new File(path);
-						if (setMetadataToFile(path, src, useCover, song)) {
+						if (setMetadataToFile(src, useCover, song)) {
 							insertToMediaStore(song, path);
 						}
 						setFileUri(currentDownloadId, src.getAbsolutePath());
@@ -676,7 +689,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 						i = 0;
 					}
 				}
-				if (!setMetadataToFile(file.getAbsolutePath(), file, useCover, song)) {
+				if (!setMetadataToFile(file, useCover, song)) {
 					notifyAboutFailed(idDownload, song);
 					sendNotification(0, true);
 					output.close();

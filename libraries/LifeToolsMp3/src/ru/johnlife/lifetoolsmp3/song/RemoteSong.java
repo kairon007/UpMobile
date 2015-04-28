@@ -222,6 +222,7 @@ public class RemoteSong extends Song {
 		parcel.writeLong(artistId);
 		parcel.writeLong(duration);
 		parcel.writeInt(trackNumber);
+		parcel.writeString(downloadUrl);
 	
 	}
 

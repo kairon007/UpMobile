@@ -313,6 +313,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 		parcel.writeLong(artistId);
 		parcel.writeLong(duration);
 		parcel.writeInt(trackNumber);
+		parcel.writeString(downloadUrl);
 
 	}
 
@@ -331,6 +332,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 		artistId = parcel.readLong();
 		duration = parcel.readLong();
 		trackNumber = parcel.readInt();
+		downloadUrl = parcel.readString();
 	}
 
 	@Override
@@ -344,6 +346,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	@Override
 	public void setPath(String path) {
+		this.path = path;
 	}
 
 	@Override

@@ -52,14 +52,16 @@
             </intent-filter>
         </activity>
 
-        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService" >
+        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService">
             <intent-filter>
                 <action android:name="playbackservice.action.main" />
                 <action android:name="playbackservice.action.prev" />
                 <action android:name="playbackservice.action.play" />
-                <action android:name="playbackservice.action.next" />
+                <action android:name="playbackservice.action.next" />	
             </intent-filter>
         </service>
+        
+        <service android:name="ru.johnlife.lifetoolsmp3.HelperService"/>
     </application>
 
 </manifest>
