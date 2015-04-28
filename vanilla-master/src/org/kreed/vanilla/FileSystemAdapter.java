@@ -309,11 +309,18 @@ public class FileSystemAdapter
 	{
 		int id = view.getId();
 		boolean arrowClicked = id == R.id.btnDownload;
-		if (arrowClicked)
-			view = (View)view.getParent();
-		Intent intent = createData(view);
 		if (arrowClicked) {
-			mActivity.onItemExpanded(intent);
+			view = (View)view.getParent();
+		}
+		Intent intent = createData(view);
+		ViewBuilder holder = (ViewBuilder)view.getTag();
+		File file = mFiles[(int) holder.getId()];
+		if (arrowClicked) {
+			if  (file.isDirectory()) {
+				mActivity.onItemExpanded(intent); 
+			} else {
+				mActivity.openContextMenu(view);
+			}
 		} else {
 			mActivity.onItemClicked(intent);
 		}
