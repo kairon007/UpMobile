@@ -263,17 +263,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		player = PlaybackService.get(getActivity());
 		player.addStatePlayerListener(stateListener);
 		player.setOnErrorListener(this);
-		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
-			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
-				player.play();
-			} else {
-				player.play(song);
-			}
-			((MainActivity) getActivity()).setDrawerEnabled(false);
-		} else {
-			song = player.getPlayingSong();
-		}
+		song = player.getPlayingSong();
 		initCover();
 		setCoverToZoomView(null);
 		getCover(song);
