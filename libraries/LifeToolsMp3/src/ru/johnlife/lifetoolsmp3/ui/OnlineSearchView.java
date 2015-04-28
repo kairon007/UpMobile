@@ -284,12 +284,6 @@ public abstract class OnlineSearchView extends View {
 				} catch (Exception e) {
 					android.util.Log.d("logks", "in " + getClass().getName() + " appear problem: " + e);
 				}
-				if (!getContext().getPackageName().equals("org.kreed.vanilla") 
-						&& !getContext().getPackageName().equals("org.kreed.musicdownloader")
-						&& !getContext().getPackageName().equals("com.simpleandroid.music")
-						&& !getContext().getPackageName().equals("mp3.music.player.us")) {
-					PlaybackService.get(getContext()).setArrayPlayback(songs);	
-				}
 			}
 		}
 	};
