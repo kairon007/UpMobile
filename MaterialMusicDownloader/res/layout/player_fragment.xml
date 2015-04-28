@@ -164,13 +164,12 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="end" />
 
-            <SeekBar
+            <org.upmobile.materialmusicdownloader.ui.TrueSeekBar
                 android:paddingTop="20dp"
                 android:id="@+id/progress_track"
                 style="@style/SeerkBar.Indeterminate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"
                 android:layout_alignParentBottom="true"
                 android:max="100"
                 android:progress="0" />
