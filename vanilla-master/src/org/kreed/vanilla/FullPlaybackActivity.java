@@ -921,7 +921,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		} else if (view == mCoverView) {
 			performAction(mCoverPressAction);
 		} else if (view.getId() == R.id.info_table) {
-			openLibrary(mCurrentSong);
+//			openLibrary(mCurrentSong);
 		} else {
 			super.onClick(view);
 		}
