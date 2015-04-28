@@ -87,6 +87,7 @@
                     android:fontFamily="sans-serif-light"
                     android:inputType="textNoSuggestions"
                     android:singleLine="true"
+                    android:imeOptions="actionDone"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/textsize_xlarge"
                     android:visibility="gone" />
@@ -138,6 +139,7 @@
                     android:fontFamily="sans-serif-light"
                     android:inputType="textNoSuggestions"
                     android:singleLine="true"
+                    android:imeOptions="actionDone"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/textsize_medium_small"
                     android:visibility="gone" >

@@ -65,6 +65,7 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.nineoldandroids.animation.Animator;
@@ -73,7 +74,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.special.utils.UIParallaxScroll;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener, PlaybackService.OnErrorListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
 
 	private final int MESSAGE_DURATION = 5000;
     public static final int DURATION = 500; // in ms
@@ -220,6 +221,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
+			android.util.Log.d("logd", "onCreateView: " + song + " - " + player +  " - " + player.getPlayingSong());
 			if (song.equals(player.getPlayingSong()) && player.isPlaying()) {
 				player.play();
 			} else if (!song.equals(player.getPlayingSong())){
@@ -302,6 +304,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			clearCover();
 		}
 		super.onPause();
+	}
+	
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		editTag();
+		return true;
 	}
 
 	private void setClickablePlayerElement(boolean isClickable) {
@@ -407,6 +415,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				}
 			}
 		});
+		playerEtTitle.setOnEditorActionListener(this);
+		playerEtArtist.setOnEditorActionListener(this);
 	}
 	
 	@Override
