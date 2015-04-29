@@ -3,20 +3,23 @@ package ru.johnlife.lifetoolsmp3;
 public class TestApp {
 
 	private static Object lock = new Object();
-	private static boolean isWork = false;
-	private static long start = 0;
-	private static long stop = 0;
-	private static long time = 0;
+	private static boolean isWork = Boolean.FALSE;
+	private static long start = 0L;
+	private static long stop = 0L;
+	private static long time = 0L;
+	
+	private static String method = "";
 
-	public static void start() {
+	public static void start(String m) {
 		synchronized (lock) {
 			if (isWork) {
 				stop();
 			}
-			isWork = true;
+			method = m;
+			isWork = Boolean.TRUE;
 			start = time = System.currentTimeMillis();
 			String strThread =  Thread.currentThread().getName();
-			android.util.Log.d("logks", "_|START TEST|_start = " + start + ", thread name - \"" + strThread + "\"");
+			android.util.Log.d("logks", "_|START TEST|_start = " + start + ", in method = |" + method + "|, thread name - \"" + strThread + "\"");
 		}
 	}
 
@@ -28,7 +31,7 @@ public class TestApp {
 				stop = System.currentTimeMillis();
 				long total = stop - start;
 				String strThread =  Thread.currentThread().getName();
-				android.util.Log.d("logks", "_|STOP TEST|_stop = " + stop + ", total time = " + total + ", thread name - \"" + strThread + "\"");
+				android.util.Log.d("logks", "_|STOP TEST|_stop = " + stop + ", total time = " + total + ", in method = |" + method + "| thread name - \"" + strThread + "\"");
 				android.util.Log.d("logks", "______________________________________________");
 				stop = start = 0;
 			}

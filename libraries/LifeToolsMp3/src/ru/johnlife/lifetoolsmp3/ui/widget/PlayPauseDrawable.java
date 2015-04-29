@@ -118,7 +118,7 @@ public class PlayPauseDrawable extends Drawable {
 		return anim;
 	}
 	
-	public void setIsPlay(boolean isPlay) {
+	public void setIsPlay(final boolean isPlay) {
 		mIsPlay = isPlay;
 	}
 	
@@ -126,7 +126,7 @@ public class PlayPauseDrawable extends Drawable {
 		return mIsPlay;
 	}
 
-	private void setProgress(float progress) {
+	private void setProgress(final float progress) {
 		mProgress = progress;
 		invalidateSelf();
 	}
@@ -136,7 +136,7 @@ public class PlayPauseDrawable extends Drawable {
 	}
 
 	@Override
-	public void setAlpha(int alpha) {
+	public void setAlpha(final int alpha) {
 		mPaint.setAlpha(alpha);
 		invalidateSelf();
 	}
@@ -148,7 +148,7 @@ public class PlayPauseDrawable extends Drawable {
 	}
 	
 	@Override
-	public void setColorFilter(int color, Mode mode) {
+	public void setColorFilter(final int color, Mode mode) {
 		mPaint.setColor(color);
 		invalidateSelf();
 	}
@@ -161,7 +161,7 @@ public class PlayPauseDrawable extends Drawable {
 	/**
 	 * Linear interpolate between a and b with parameter t.
 	 */
-	private static float lerp(float a, float b, float t) {
+	private static float lerp(final float a, final float b, final float t) {
 		return a + (b - a) * t;
 	}
 }

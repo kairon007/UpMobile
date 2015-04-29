@@ -37,11 +37,11 @@ public class PlayPauseView extends View {
 	};
 	
 	private static final int DEFAULT_COLOR = Color.BLACK;
-	private static final int DEFAULT_WIDTH = 10;
-	private static final int DEFAULT_HEIGHT = 24;
-	private static final int DEFAULT_DISTANCE = 8;
-	private static final int DEFAULT_COLOR_BUTTON = Color.WHITE;
-	private static final long PLAY_PAUSE_ANIMATION_DURATION = 200;
+	private static final Integer DEFAULT_WIDTH = Integer.valueOf(10);
+	private static final Integer DEFAULT_HEIGHT = Integer.valueOf(24);
+	private static final Integer DEFAULT_DISTANCE = Integer.valueOf(8);
+	private static final Integer DEFAULT_COLOR_BUTTON = Color.WHITE;
+	private static final long PLAY_PAUSE_ANIMATION_DURATION = 200L;
 	private final PlayPauseDrawable mDrawable;
 	private final Paint mPaint = new Paint();
 	private final int mColorButton;
@@ -57,14 +57,14 @@ public class PlayPauseView extends View {
 	
 	public PlayPauseView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		setWillNotDraw(false);
+		setWillNotDraw(Boolean.FALSE);
 		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.PlayPauseButton);
 		mBackgroundColor = attributes.getColor(R.styleable.PlayPauseButton_mainColor, DEFAULT_COLOR);
 		mPauseBarWidth = Util.dpToPx(context, (int) attributes.getInteger(R.styleable.PlayPauseButton_pauseBarWidth, DEFAULT_WIDTH));
 		mPauseBarHeight = Util.dpToPx(context, (int) attributes.getInteger(R.styleable.PlayPauseButton_pauseBarHeight, DEFAULT_HEIGHT));
 		mPauseBarDistance = Util.dpToPx(context, (int) attributes.getInteger(R.styleable.PlayPauseButton_pauseBarDistance, DEFAULT_DISTANCE));
 		mColorButton = attributes.getColor(R.styleable.PlayPauseButton_colorButton, DEFAULT_COLOR_BUTTON);
-		mPaint.setAntiAlias(true);
+		mPaint.setAntiAlias(Boolean.TRUE);
 		mPaint.setStyle(Paint.Style.FILL);
 		mDrawable = new PlayPauseDrawable(context, mColorButton, mPauseBarWidth, mPauseBarHeight, mPauseBarDistance);
 		mDrawable.setCallback(this);
@@ -95,7 +95,7 @@ public class PlayPauseView extends View {
 					outline.setOval(0, 0, view.getWidth(), view.getHeight());
 				}
 			});
-			setClipToOutline(true);
+			setClipToOutline(Boolean.TRUE);
 		}
 	}
 
@@ -127,22 +127,22 @@ public class PlayPauseView extends View {
 	}
 	
 	@Override
-	public void setClickable(boolean clickable) {
+	public void setClickable(final boolean clickable) {
 		setColor(clickable);
 		super.setClickable(clickable);
 	}
 
 	@Override
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(final boolean enabled) {
 		setColor(enabled);
 		super.setEnabled(enabled);
 	}
 
-	private void setColor(boolean flag) {
+	private void setColor(final boolean flag) {
 		mDrawable.setColorFilter(flag ? mColorButton : Color.GRAY, PorterDuff.Mode.MULTIPLY);
 	}
 
-	public void toggle(boolean isPlay) {
+	public void toggle(final boolean isPlay) {
 		if (null != mAnimatorSet) {
 			mAnimatorSet.cancel();
 		}

@@ -110,7 +110,13 @@ public class RippleView extends FrameLayout implements OnGestureListener {
         setWillNotDraw(Boolean.FALSE);
 		setClickable(Boolean.TRUE);
 	}
-
+    
+    @Override
+    protected void onDetachedFromWindow() {
+    	super.onDetachedFromWindow();
+    	animationRunning = Boolean.FALSE;
+    }
+    
 	@Override
 	public void draw(@NonNull Canvas canvas) {
 		super.draw(canvas);
@@ -124,7 +130,6 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 			durationEmpty = -1;
 			timerEmpty = 0;
 			canvas.restore();
-			invalidate();
 			return;
 		} else {
 			canvasHandler.postDelayed(runnable, rippleFrameRate);
@@ -165,7 +170,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 
 	@Override
 	public boolean onDown(MotionEvent event) {
-		return false;
+		return Boolean.FALSE;
 	}
 
 	@Override
