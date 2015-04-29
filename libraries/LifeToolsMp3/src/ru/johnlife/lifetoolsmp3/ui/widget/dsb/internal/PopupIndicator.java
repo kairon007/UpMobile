@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal.compat.SeekBarCompat;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.internal.drawable.MarkerDrawable;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -77,6 +78,10 @@ public class PopupIndicator {
     
     public void setIndeterminate(boolean isIndeterminate) {
     	mPopupView.mMarker.setIndeterminate(isIndeterminate);
+    }
+    
+    public void setIndeterminateColor(ColorStateList color) {
+    	mPopupView.mMarker.setIndeterminateColor(color);
     }
 
     public boolean isShowing() {

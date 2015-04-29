@@ -249,7 +249,7 @@
                                 android:id="@+id/progress_track"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:dsb_indeterminate_color="?attr/colorPrimary"
+                                app:dsb_indeterminate_color="?attr/colorAccent"
                                 app:dsb_indicatorColor="?attr/colorPrimary"
                                 app:dsb_progressColor="?attr/colorPrimary" />
                         </FrameLayout>

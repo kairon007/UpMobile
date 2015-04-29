@@ -9,6 +9,8 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
@@ -17,7 +19,6 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -35,7 +36,7 @@ public class Marker extends FrameLayout implements MarkerDrawable.MarkerAnimatio
 	private static final int ELEVATION_DP = 8;
 	// The TextView to show the info
 	private TextView mNumber;
-	private ProgressBar indeterminateView;
+	private View indeterminateView;
 	private View contentView;
 	MarkerDrawable mMarkerDrawable;
 	private boolean isIndeterminate = false;
@@ -64,23 +65,19 @@ public class Marker extends FrameLayout implements MarkerDrawable.MarkerAnimatio
 		mNumber.setText(maxValue);
 		mNumber.setTextColor(Color.WHITE);
 		mNumber.setMaxLines(1);
-		mNumber.setPadding(padding, 0, padding, padding * 3);
+		mNumber.setPadding(padding, 0, padding, padding * 2);
 		mNumber.setSingleLine(true);
 		SeekBarCompat.setTextDirection(mNumber, TEXT_DIRECTION_LOCALE);
 		// Add indeterminate indicator
-		indeterminateView = (ProgressBar)contentView.findViewById(R.id.marker_indeterminate);
-		indeterminateView.setPadding(padding, 0, padding, padding * 3);
+		indeterminateView = contentView.findViewById(R.id.marker_indeterminate);
+//		indeterminateView.setPadding(padding, 0, padding, padding * 8);
 		indeterminateView.setVisibility(View.INVISIBLE);
-		// add some padding for the elevation shadow not to be clipped
-		// I'm sure there are better ways of doing this...
-		setPadding(padding, padding, padding, padding);
 		resetSizes(maxValue);
 		int thumbSize = (int) (ThumbDrawable.DEFAULT_SIZE_DP * displayMetrics.density);
 		ColorStateList color = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_indicatorColor);
 		mMarkerDrawable = new MarkerDrawable(color, thumbSize);
 		mMarkerDrawable.setCallback(this);
 		mMarkerDrawable.setMarkerListener(this);
-		mMarkerDrawable.setExternalOffset(padding);
 		// Elevation for anroid 5+
 		float elevation = a.getDimension(R.styleable.DiscreteSeekBar_dsb_indicatorElevation, ELEVATION_DP * displayMetrics.density);
 		ViewCompat.setElevation(this, elevation);
@@ -152,11 +149,8 @@ public class Marker extends FrameLayout implements MarkerDrawable.MarkerAnimatio
 
 	public void animateClose() {
 		mMarkerDrawable.stop();
-		if (!isIndeterminate) {
-			mNumber.setVisibility(View.INVISIBLE);
-		} else {
-			indeterminateView.setVisibility(View.INVISIBLE);
-		}
+		mNumber.setVisibility(View.INVISIBLE);
+		indeterminateView.setVisibility(View.INVISIBLE);
 		mMarkerDrawable.animateToNormal();
 	}
 
@@ -191,7 +185,17 @@ public class Marker extends FrameLayout implements MarkerDrawable.MarkerAnimatio
 	
 	public void setIndeterminate(boolean isIndeterminate) {
 		this.isIndeterminate = isIndeterminate;
-		mNumber.setVisibility(isIndeterminate ? View.INVISIBLE : View.VISIBLE);
-		indeterminateView.setVisibility(isIndeterminate ? View.VISIBLE : View.INVISIBLE);
+		if (isIndeterminate) {
+			mNumber.setVisibility(View.INVISIBLE);
+		} else {
+			indeterminateView.setVisibility(View.INVISIBLE);
+		}
+	}
+	
+	public void setIndeterminateColor(ColorStateList colorState) {
+		int color = colorState.getDefaultColor();
+		Drawable indeterminateDrawable = indeterminateView.getBackground();
+		indeterminateDrawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP));
+		indeterminateView.setBackground(indeterminateDrawable);
 	}
 }

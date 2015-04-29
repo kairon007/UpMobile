@@ -26,15 +26,11 @@ public class TrueSeekBar extends SeekBar {
 	@Override
 	public synchronized void setIndeterminate(boolean indeterminate) {
 		if (isIndeterminate() == indeterminate) return;
-//		if (indeterminate) {
-			int colorAccent = getContext().getResources().getColor(R.color.material_accent);
-			Drawable drawable = getContext().getResources().getDrawable(R.drawable.progress_indeterminate_horizontal_holo);
-			drawable.setColorFilter(new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
-			setIndeterminateDrawable(drawable);
-//		} else {
-			setProgressDrawable(getContext().getResources().getDrawable(R.drawable.seekbar));
-//		}
+		int colorAccent = getContext().getResources().getColor(R.color.material_accent);
+		Drawable drawable = getContext().getResources().getDrawable(R.drawable.progress_indeterminate_horizontal_holo);
+		drawable.setColorFilter(new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
+		setIndeterminateDrawable(drawable);
+		setProgressDrawable(getContext().getResources().getDrawable(R.drawable.seekbar));
 		super.setIndeterminate(indeterminate);
-		android.util.Log.d("logd", "setIndeterminate() = " + indeterminate);
 	}
 }

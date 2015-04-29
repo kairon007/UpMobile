@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_width="56dp"
+    android:layout_height="72dp" >
 
-    <ProgressBar
+    <View
         android:id="@+id/marker_indeterminate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignBottom="@+id/simple_text"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:background="@drawable/threedot_indeterminate" />
 
     <TextView
         android:id="@+id/simple_text"
@@ -19,13 +20,5 @@
         android:layout_centerVertical="true"
         android:text="00:00"
         android:textSize="16sp" />
-
-    <!-- HACK! -->
-    <ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView
-        android:id="@+id/anim_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
 
 </RelativeLayout>

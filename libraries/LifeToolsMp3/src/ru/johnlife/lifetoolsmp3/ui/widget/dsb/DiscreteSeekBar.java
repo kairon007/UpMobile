@@ -239,7 +239,6 @@ public class DiscreteSeekBar extends View {
             mRipple.setCallback(this);
         }
 
-
         TrackRectDrawable shapeDrawable = new TrackRectDrawable(trackColor);
         mTrack = shapeDrawable;
         mTrack.setCallback(this);
@@ -261,6 +260,7 @@ public class DiscreteSeekBar extends View {
             mIndicator.setListener(mFloaterListener);
         }
         a.recycle();
+        setIndeterminateColor(indeterminateColor);
 
         setNumericTransformer(new DefaultNumericTransformer());
     }
@@ -274,6 +274,10 @@ public class DiscreteSeekBar extends View {
     		hideFloater();
     	}
     	this.isIndeterminate = isIndeterminate;
+    }
+    
+    public void setIndeterminateColor(ColorStateList color) {
+    	mIndicator.setIndeterminateColor(color);
     }
 
     /**
@@ -888,7 +892,8 @@ public class DiscreteSeekBar extends View {
 
     @Override
     protected boolean verifyDrawable(Drawable who) {
-        return who == mThumb || who == mTrack || who == mScrubber || who == mRipple || super.verifyDrawable(who);
+        return who == mThumb || who == mTrack || who == mScrubber || who == mRipple || 
+        		who == secondaryScrubber || super.verifyDrawable(who);
     }
 
     private void attemptClaimDrag() {
