@@ -61,6 +61,69 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	private int checkIdCover;
 	private DownloadClickListener downloadListener;
 	private DownloadPressListener downloadPressListener;
+	
+	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
+
+		@Override
+		public void update(AbstractSong song) {
+			BaseMiniPlayerActivity.this.song = song;
+			if (miniPlayer.getVisibility() == View.GONE) {
+				setData(song);
+			} else {
+				showMiniPlayer(true, true);
+			}
+		}
+
+		@Override
+		public void stop(AbstractSong s) {
+		}
+
+		@Override
+		public void stopPressed() {
+			setPlayPauseMini(false);
+			isMiniPlayerPrepared = false;
+			showMiniPlayer(false);
+			showPlayerElement(false);
+		}
+
+		@Override
+		public void start(AbstractSong s) {
+			song = s;
+			isMiniPlayerPrepared = true;
+			refreshButton();
+			setPlayPauseMini(false);
+		}
+
+		@Override
+		public void play(AbstractSong song) {
+			refreshButton();
+			setPlayPauseMini(false);
+		}
+
+		@Override
+		public void pause(AbstractSong song) {
+			refreshButton();
+			setPlayPauseMini(true);
+		}
+
+		private void refreshButton() {
+			showProgress(false);
+			playPause.setVisibility(View.VISIBLE);
+		}
+
+		@Override
+		public void error() {
+		}
+
+		@Override
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {
+		}
+
+		@Override
+		public void onBufferingUpdate(double percent) {
+		}
+	};
+	
 
 	protected abstract String getDirectory();
 	protected abstract int getMiniPlayerID();
@@ -93,6 +156,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			
 			@Override
 			public void run() {
+				android.util.Log.d("logks", "BaseMiniPlayerActivity.onPostCreate");
 				setListeners();
 			}
 		}).start();
@@ -129,6 +193,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	@Override
 	protected void onPause() {
 		methodIsCalled = false;
+		service.removeStatePlayerListener(stateListener);
 		super.onPause();
 	}
 	
@@ -143,71 +208,11 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		fakeView = findViewById(getFakeViewID());
 	}
 	
-	private void setListeners() {
+	protected void setListeners() {
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		service.addStatePlayerListener(new OnStatePlayerListener() {
-
-			@Override
-			public void update(AbstractSong song) {
-				BaseMiniPlayerActivity.this.song = song;
-				if (miniPlayer.getVisibility() == View.GONE) {
-					setData(song);
-				} else {
-					showMiniPlayer(true, true);
-				}
-			}
-
-			@Override
-			public void stop(AbstractSong s) {
-			}
-
-			@Override
-			public void stopPressed() {
-				setPlayPauseMini(false);
-				isMiniPlayerPrepared = false;
-				showMiniPlayer(false);
-				showPlayerElement(false);
-			}
-
-			@Override
-			public void start(AbstractSong s) {
-				song = s;
-				isMiniPlayerPrepared = true;
-				refreshButton();
-				setPlayPauseMini(false);
-			}
-
-			@Override
-			public void play(AbstractSong song) {
-				refreshButton();
-				setPlayPauseMini(false);
-			}
-
-			@Override
-			public void pause(AbstractSong song) {
-				refreshButton();
-				setPlayPauseMini(true);
-			}
-
-			private void refreshButton() {
-				showProgress(false);
-				playPause.setVisibility(View.VISIBLE);
-			}
-
-			@Override
-			public void error() {
-			}
-
-			@Override
-			public void onTrackTimeChanged(int time, boolean isOverBuffer) {
-			}
-
-			@Override
-			public void onBufferingUpdate(double percent) {
-			}
-		});
+		service.addStatePlayerListener(stateListener);
 		service.setOnErrorListener(new OnErrorListener() {
 
 			@Override
