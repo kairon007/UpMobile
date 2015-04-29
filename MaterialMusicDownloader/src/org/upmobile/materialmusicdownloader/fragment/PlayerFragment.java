@@ -73,7 +73,7 @@ import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
 
-	private final int MESSAGE_DURATION = 5000;
+	private static final int MESSAGE_DURATION = 5000;
 	private AbstractSong song;
 	private AsyncTask<Long,Integer,String> progressUpdater;
 	private RenameTask renameTask;
@@ -84,6 +84,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private View contentView;
 
 	private CircularProgressButton download;
+	private RippleView ciRippleView;
 	private UndoBar undo;
 	private LinearLayout artistBox;
 	private LinearLayout titleBox;
@@ -94,7 +95,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	//custom check box
 	private CheckBox cbUseCover;
-	private boolean isUseAlbumCover = false;
+	private Boolean isUseAlbumCover = Boolean.FALSE;
 
 	// playback sections
 	private TextView play;
@@ -181,7 +182,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 
 		@Override
-		public void onBufferingUpdate(double percent) {
+		public void onBufferingUpdate(final double percent) {
 			PlayerFragment.this.percent = percent;
 		}
 
@@ -206,7 +207,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private ProgressUpdaterListener progressListener = new ProgressUpdaterListener() {
 
 		private static final String FAILURE = "failure";
-		boolean canceled = false;
+		Boolean canceled = Boolean.FALSE;
 
 		@Override
 		public void onProgressUpdate(Integer... values) {
@@ -215,7 +216,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
 			download.setClickable(false);
-			((RippleView) download.getParent()).setEnabled(false);
+			ciRippleView.setEnabled(false);
 		}
 
 		@Override
@@ -224,7 +225,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
 			download.setOnClickListener(PlayerFragment.this);
 			setDownloadButtonState(true);
-			((RippleView) download.getParent()).setEnabled(true);
+			ciRippleView.setEnabled(true);
 		}
 
 		@Override
@@ -242,7 +243,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		public void onPreExecute() {
 			canceled = false;
-			((RippleView) download.getParent()).setEnabled(false);
+			ciRippleView.setEnabled(false);
 			download.setClickable(false);
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
@@ -253,45 +254,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-		isDestroy = false;
-		setHasOptionsMenu(true);
-		scrollView = new PullToZoomScrollView(getActivity());
-		contentView = inflater.inflate(R.layout.player_fragment, container, false);
+		contentView = inflater.inflate(R.layout.player_fragment, container, Boolean.FALSE);
 		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-		init();
-		setListeners();
+		isDestroy = Boolean.FALSE;
+		scrollView = new PullToZoomScrollView(getActivity());
 		player = PlaybackService.get(getActivity());
-		player.addStatePlayerListener(stateListener);
-		player.setOnErrorListener(this);
-    song = player.getPlayingSong();
-		playerProgress.setIndeterminate(!player.isPrepared());
-		playerProgress.setSecondaryProgress(1);
-		playerProgress.setSecondaryProgress(0);
-		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
-			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			if (song.equals(player.getPlayingSong()) && player.isPrepared()) {
-				player.play();
-			} else {
-				player.play(song);
-			}
-			((MainActivity) getActivity()).setDrawerEnabled(false);
-		} else {
-			song = player.getPlayingSong();
-		}
-		initCover();
-		setCoverToZoomView(null);
-		getCover(song);
-		setImageButton();
-		showLyrics();
-		setElementsView(player.getCurrentPosition());
-		boolean prepared = player.isPrepared();
-		setClickablePlayerElement(prepared);
-		if (prepared) {
-			changePlayPauseView(!player.isPlaying());
-			playerProgress.setMax((int)song.getDuration());
-		} else {
-			changePlayPauseView(prepared);
-		}
+		song = player.getPlayingSong();
+		init(contentView);
+		setListeners();
 		scrollView.setContentContainerView(contentView);
 		return scrollView;
 	}
@@ -311,18 +281,19 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		getActivity().onBackPressed();
-		((MainActivity)getActivity()).setDrawerEnabled(true);
+		((MainActivity) getActivity()).setDrawerEnabled(true);
 		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override
 	public void onResume() {
-		((UIMainActivity) getActivity()).setSelectedItem(Constants.PLAYER_FRAGMENT);
-		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
-		((UIMainActivity) getActivity()).invalidateOptionsMenu();
+		UIMainActivity activity = ((UIMainActivity) getActivity());
+		activity.setSelectedItem(Constants.PLAYER_FRAGMENT);
+		activity.setTitle(getDrawerTitle());
+		setHasOptionsMenu(Boolean.TRUE);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (StateKeeper.DOWNLOADED == state) {
-			((RippleView) download.getParent()).setVisibility(View.GONE);
+			ciRippleView.setVisibility(View.GONE);
 		} else {
 			if (StateKeeper.DOWNLOADING == state) {
 				((RippleView) download.getParent()).setEnabled(false);
@@ -331,7 +302,24 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				download.setIndeterminateProgressMode(true);
 				download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
 			}
-			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
+			ciRippleView.setVisibility(View.VISIBLE);
+		}
+		playerProgress.setIndeterminate(!player.isPrepared());
+//		playerProgress.setSecondaryProgress(1); // WTF?
+		playerProgress.setSecondaryProgress(0);
+		initCover();
+		setCoverToZoomView(null);
+		getCover(song);
+		setImageButton();
+		showLyrics();
+		setElementsView(player.getCurrentPosition());
+		boolean prepared = player.isPrepared();
+		setClickablePlayerElement(prepared);
+		if (prepared) {
+			changePlayPauseView(!player.isPlaying());
+			playerProgress.setMax((int) song.getDuration());
+		} else {
+			changePlayPauseView(prepared);
 		}
 		setCheckBoxState(true);
 		cbUseCover.setOnCheckedChangeListener(this);
@@ -369,7 +357,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public void onDestroy() {
 		isDestroy = true;
-		((MainActivity)getActivity()).setDrawerEnabled(true);
+		((MainActivity) getActivity()).setDrawerEnabled(true);
 		super.onDestroy();
 	}
 
@@ -413,16 +401,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 	
 	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		if (!buttonView.isEnabled()) {
-			return;
-		}
+	public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+		if (!buttonView.isEnabled()) return;
 		isUseAlbumCover = isChecked;
 		cbUseCover.setChecked(isChecked);
 		closeEditViews();
-		if (song.getClass() != MusicData.class) {
-			return;
-		}
+		if (song.getClass() != MusicData.class) return;
 		if (isChecked) {
 			undo.clear();
 		} else {
@@ -461,26 +445,28 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
-	private void init() {
-		play = (TextView) contentView.findViewById(R.id.playpause);
-		previous = (TextView) contentView.findViewById(R.id.prev);
-		forward = (TextView) contentView.findViewById(R.id.next);
-		shuffle = (TextView) contentView.findViewById(R.id.shuffle);
-		repeat = (TextView) contentView.findViewById(R.id.repeat);
-		download = (CircularProgressButton) contentView.findViewById(R.id.download);
-		playerProgress = (TrueSeekBar) contentView.findViewById(R.id.progress_track);
-		tvTitle = (TextView) contentView.findViewById(R.id.songName);
-		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
-		tvArtist = (TextView) contentView.findViewById(R.id.artistName);
-		etArtist = (EditText) contentView.findViewById(R.id.artistNameEdit);
-		playerCurrTime = (TextView) contentView.findViewById(R.id.trackTime);
-		playerTotalTime = (TextView) contentView.findViewById(R.id.trackTotalTime);
-		playerLyricsView = (TextView) contentView.findViewById(R.id.lyrics_text);
-		cbUseCover = (CheckBox) contentView.findViewById(R.id.cbUseCover);
-		artistBox = (LinearLayout) contentView.findViewById(R.id.artistNameBox);
-		titleBox = (LinearLayout) contentView.findViewById(R.id.songNameBox);
+	private void init(final View view) {
+		play = (TextView) view.findViewById(R.id.playpause);
+		previous = (TextView) view.findViewById(R.id.prev);
+		forward = (TextView) view.findViewById(R.id.next);
+		shuffle = (TextView) view.findViewById(R.id.shuffle);
+		repeat = (TextView) view.findViewById(R.id.repeat);
+		download = (CircularProgressButton) view.findViewById(R.id.download);
+		ciRippleView = (RippleView) view.findViewById(R.id.circularRipple);
+		playerProgress = (TrueSeekBar) view.findViewById(R.id.progress_track);
+		tvTitle = (TextView) view.findViewById(R.id.songName);
+		etTitle = (EditText) view.findViewById(R.id.songNameEdit);
+		tvArtist = (TextView) view.findViewById(R.id.artistName);
+		etArtist = (EditText) view.findViewById(R.id.artistNameEdit);
+		playerCurrTime = (TextView) view.findViewById(R.id.trackTime);
+		playerTotalTime = (TextView) view.findViewById(R.id.trackTotalTime);
+		playerLyricsView = (TextView) view.findViewById(R.id.lyrics_text);
+		cbUseCover = (CheckBox) view.findViewById(R.id.cbUseCover);
+		artistBox = (LinearLayout) view.findViewById(R.id.artistNameBox);
+		titleBox = (LinearLayout) view.findViewById(R.id.songNameBox);
 		undo = new UndoBar(getActivity());
 		imageView = new ImageView(getActivity());
+		System.out.println("!!! ImageView="+imageView);
 	}
 
 	private void setListeners() {
@@ -497,12 +483,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-			}
+			public void onStopTrackingTouch(SeekBar seekBar) {}
 
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
+			public void onStartTrackingTouch(SeekBar seekBar) {}
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -529,6 +513,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		});
 		etArtist.setOnEditorActionListener(this);
 		etTitle.setOnEditorActionListener(this);
+		player.addStatePlayerListener(stateListener);
+		player.setOnErrorListener(this);
 	}
 	
 	@Override
@@ -560,9 +546,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
-		playerProgress.setIndeterminate(true);
+		playerProgress.setIndeterminate(Boolean.TRUE);
 		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
-		player.getPlayingSong().getSpecial().setChecked(true);
+		player.getPlayingSong().getSpecial().setChecked(Boolean.TRUE);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();
@@ -570,9 +556,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setOnClickListener(this);
 		}
 		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
-			((RippleView) download.getParent()).setVisibility(View.GONE);
+			ciRippleView.setVisibility(View.GONE);
 		} else {
-			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
+			ciRippleView.setVisibility(View.VISIBLE);
 		}
 		cancelProgressTask();
 		thatSongIsDownloaded();
@@ -588,16 +574,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void setImageButton() {
-		if (!player.enabledRepeat()) {
-			repeat.setAlpha((float) 0.5);
-		} else {
-			repeat.setAlpha(1);
-		}
-		if (player.enabledShuffle()) {
-			shuffle.setAlpha(1);
-		} else {
-			shuffle.setAlpha((float) 0.5);
-		}
+		repeat.setAlpha(player.enabledRepeat() ? 1 : (float) 0.5);
+		shuffle.setAlpha(player.enabledShuffle() ? 1 : (float) 0.5);
 	}
 
 	private void setClickablePlayerElement(boolean isClickable) {
@@ -619,7 +597,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setDownloadButtonState(boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
-		((RippleView) download.getParent()).setEnabled(state);
+		ciRippleView.setEnabled(state);
 	}
 
 	private void openArtistField() {
@@ -773,6 +751,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
+		System.out.println("!!! setCoverToZoomView defaultCover="+defaultCover);
 		imageView.setImageBitmap(Bitmap.createScaledBitmap(null == bitmap ? defaultCover : bitmap, minHeight, minHeight, false));
 		scrollView.setZoomView(imageView);
 	}

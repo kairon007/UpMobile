@@ -87,9 +87,10 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				StateKeeper.getInstance().setPlayingSong(data);
 				data.getSpecial().setChecked(true);
 				notifyDataSetChanged();
-				((MainActivity) getContext()).showPlayerElement(true);
-				((MainActivity) getContext()).startSong(data);
-				((MainActivity)getContext()).setSelectedItem(LIBRARY_FRAGMENT);
+				MainActivity activity = ((MainActivity) getContext());
+				activity.showPlayerElement(true);
+				activity.startSong(data);
+				activity.setSelectedItem(LIBRARY_FRAGMENT);
 				break;
 			}
 		}
@@ -122,7 +123,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 	@Override
 	protected boolean showDeleteItemMenu() {
-		return false;
+		return Boolean.FALSE;
 	}
 
 	@Override

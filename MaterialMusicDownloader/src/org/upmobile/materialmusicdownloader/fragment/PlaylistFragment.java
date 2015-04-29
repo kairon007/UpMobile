@@ -28,7 +28,6 @@ public class PlaylistFragment extends Fragment implements BaseMaterialFragment, 
 		((UIMainActivity) getActivity()).setSelectedItem(PLAYLIST_FRAGMENT);
 		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
 		((UIMainActivity)getActivity()).setDrawerEnabled(true);
-		((UIMainActivity) getActivity()).invalidateOptionsMenu();
 		super.onResume();
 	}
 
