@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -108,14 +109,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
         paint.setColor(rippleColor);
         paint.setAlpha(rippleAlpha);
         setWillNotDraw(Boolean.FALSE);
-		setClickable(Boolean.TRUE);
 	}
-    
-    @Override
-    protected void onDetachedFromWindow() {
-    	super.onDetachedFromWindow();
-    	animationRunning = Boolean.FALSE;
-    }
     
 	@Override
 	public void draw(@NonNull Canvas canvas) {
@@ -174,8 +168,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 	}
 
 	@Override
-	public void onShowPress(MotionEvent event) { }
-
+	public void onShowPress(MotionEvent event) {}
 	
 	@Override
 	public boolean onSingleTapUp(MotionEvent event) {
@@ -197,7 +190,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 
 	@Override
 	public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-		return false;
+		return Boolean.FALSE;
 	}
     
     public void animateRipple(MotionEvent event) {
@@ -275,10 +268,12 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 						if (!eventCanceled && childView.isClickable() && rippleClickable) {
 							animateRipple(x, y);
 							eventCanceled = Boolean.FALSE;
+							Log.d("logba", "RippleView onTouchEvent: postDelay getTapTimeout");
 						}
 					}
 				}, ViewConfiguration.getTapTimeout());
 			} else if (childView.isClickable() && rippleClickable) {
+				Log.d("logba", "RippleView onTouchEvent: animateRipple");
 				animateRipple(event);
 			}
 			break;
