@@ -143,6 +143,7 @@
                                     android:layout_gravity="end|top"
                                     android:layout_weight="0"
                                     android:paddingLeft="4dp"
+                                    android:alpha="0.5"
                                     android:src="@drawable/ic_mode_edit_grey" />
                             </LinearLayout>
                         </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
@@ -193,6 +194,7 @@
                                     android:layout_gravity="end|top"
                                     android:layout_weight="0"
                                     android:paddingLeft="4dp"
+                                    android:alpha="0.5"
                                     android:src="@drawable/ic_mode_edit_grey" />
                             </LinearLayout>
                         </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
