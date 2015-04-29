@@ -305,7 +305,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			ciRippleView.setVisibility(View.VISIBLE);
 		}
 		playerProgress.setIndeterminate(!player.isPrepared());
-//		playerProgress.setSecondaryProgress(1); // WTF?
+		playerProgress.setSecondaryProgress(1);
 		playerProgress.setSecondaryProgress(0);
 		initCover();
 		setCoverToZoomView(null);
