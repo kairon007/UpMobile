@@ -156,7 +156,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			
 			@Override
 			public void run() {
-				android.util.Log.d("logks", "BaseMiniPlayerActivity.onPostCreate");
 				setListeners();
 			}
 		}).start();

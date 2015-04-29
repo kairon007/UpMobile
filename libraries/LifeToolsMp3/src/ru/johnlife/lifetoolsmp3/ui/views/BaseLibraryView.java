@@ -118,6 +118,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		} else {
 			checkRemovedFiles.execute();
 		}
+		updateAdapter();
 	}
 	
 	private PlaybackService getService() {
@@ -133,14 +134,13 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		init(inflater);
 		if (null != listView) {
-			updateAdapter();
+			showProgress(view);
 			listView.setAdapter(adapter);
 			animateListView(listView, adapter);
 		}
 	}
 	
 	private void updateAdapter() {
-		showProgress(view);
 		new Thread(new Runnable() {
 			
 			private ArrayList<MusicData> querySong;
@@ -161,7 +161,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 						listView.setEmptyView(emptyMessage);
 					}
 
-				}, 100);
+				}, 1000);
 			}
 		}).start();
 	}
