@@ -1,4 +1,4 @@
-package org.upmobile.newmaterialmusicdownloader.fragment;
+package org.upmobile.newmaterialmusicdownloader.drawer;
 
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
