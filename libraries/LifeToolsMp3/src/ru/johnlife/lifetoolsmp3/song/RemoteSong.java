@@ -72,12 +72,12 @@ public class RemoteSong extends Song {
 	
 	public RemoteSong(String downloadUrl) {
 		super(downloadUrl.hashCode());
-		this.downloadUrl = downloadUrl;
+		this.downloadUrl = comment = downloadUrl;
 	}
 	
 	protected RemoteSong(long id) {
 		super(id);
-		downloadUrl = "-1";
+		downloadUrl = comment = "-1";
 	}
 
 	public RemoteSong setSongTitle(String songTitle) {
@@ -223,7 +223,7 @@ public class RemoteSong extends Song {
 		parcel.writeLong(duration);
 		parcel.writeInt(trackNumber);
 		parcel.writeString(downloadUrl);
-	
+		parcel.writeString(comment);
 	}
 
 	public RemoteSong (Parcel parcel) {
