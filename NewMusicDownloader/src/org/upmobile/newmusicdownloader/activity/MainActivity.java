@@ -54,6 +54,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	private final String APP_THEME_WHITE_BLACK_ACTION_BAR = "AppThemeWhite.BlackActionBar";
 	private final String APP_THEME_WHITE = "AppThemeWhite";
 	private final String APP_THEME = "AppTheme";
+	private final String APP_THEME_WHITE_BLACK_ACTION_BAR_NO_FONTS = "AppThemeWhite.BlackActionBar.NoFonts";
+	private final String APP_THEME_WHITE_NO_FONTS = "AppThemeWhite.NoFonts";
+	private final String APP_THEME_NO_FONTS = "AppTheme.NoFonts";
 	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
@@ -365,7 +368,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		    try {
 		        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
 		        int themeResId = packageInfo.applicationInfo.theme;
-		        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE) || context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR);
+		        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE) 
+		        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR)
+		        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR_NO_FONTS)
+		        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_NO_FONTS);
 		    } catch (Exception e) {
 		    	Log.e(Util.class.getSimpleName(), e.getMessage());
 		        return false;
@@ -377,7 +383,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	    try {
 	        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
 	        int themeResId = packageInfo.applicationInfo.theme;
-	        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME) || context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR);
+	        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME) 
+	        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR)
+	        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR_NO_FONTS)
+	        		||context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_NO_FONTS) ;
 	    } catch (Exception e) {
 	    	Log.e(Util.class.getSimpleName(), e.getMessage());
 	        return false;

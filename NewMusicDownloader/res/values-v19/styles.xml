@@ -21,6 +21,12 @@
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
+    
+        <style name="AppBaseTheme.NoFonts" parent="Theme.AppCompat"></style>
+
+    <style name="AppBaseTheme.DarkActionBar.NoFonts" parent="Theme.AppCompat.Light.DarkActionBar"></style>
+
+    <style name="AppBaseTheme.Light.NoFonts" parent="Theme.AppCompat.Light"></style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-thin</item>

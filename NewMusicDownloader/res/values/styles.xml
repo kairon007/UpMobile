@@ -5,12 +5,18 @@
         <item name="android:textColor">#ffacacac</item>
         <item name="android:textSize">25sp</item>
     </style>
-
+    
     <style name="AppBaseTheme" parent="Theme.AppCompat" />
 
     <style name="AppBaseTheme.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar" />
 
     <style name="AppBaseTheme.Light" parent="Theme.AppCompat.Light"></style>
+
+    <style name="AppBaseTheme.NoFonts" parent="Theme.AppCompat" />
+
+    <style name="AppBaseTheme.DarkActionBar.NoFonts" parent="Theme.AppCompat.Light.DarkActionBar" />
+
+    <style name="AppBaseTheme.Light.NoFonts" parent="Theme.AppCompat.Light"></style>
 
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
@@ -70,6 +76,92 @@
     </style>
 
     <style name="AppThemeWhite.BlackActionBar" parent="AppBaseTheme.DarkActionBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarStyle">@style/MyActionBar.Black</item>
+        <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
+        <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
+        <item name="editIndicator">@drawable/ic_player_edit_black</item>
+        <item name="textViewColor">@android:color/white</item>
+        <item name="driverBackgroundColor">@color/background_driver_light</item>
+        <item name="searchBackgroundColor">@color/default_black_color</item>
+        <item name="mainBackground">@android:color/white</item>
+        <item name="sectionBackground">@color/light_grey</item>
+        <item name="blackWhite">@android:color/black</item>
+        <item name="groupIndicator">@drawable/ic_keyboard_arrow_down_black_18dp</item>
+        <item name="mediaPlay">@drawable/ic_media_play_light</item>
+        <item name="mediaPause">@drawable/ic_media_pause_light</item>
+        <item name="mediaNext">@drawable/ic_media_next_light</item>
+        <item name="mediaPrevious">@drawable/ic_media_previous_light</item>
+        <item name="mediaShuffle">@drawable/ic_media_shuffle_light</item>
+        <item name="mediaRepeat">@drawable/ic_media_repeat_light</item>
+        <item name="mediaShuffleOn">@drawable/ic_media_shuffle_on_light</item>
+        <item name="mediaRepeatOn">@drawable/ic_media_repeat_on_light</item>
+        <item name="mediaStop">@drawable/ic_media_stop_light</item>
+        <item name="actionVolume">@drawable/ic_action_volume_light</item>
+        <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
+        <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
+        <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
+        <item name="searchShadow">@drawable/shadow</item>
+    </style>
+    
+    <style name="AppTheme.NoFonts" parent="AppBaseTheme.NoFonts">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
+        <item name="lyricsIndicator">@drawable/ic_player_lyrics</item>
+        <item name="editIndicator">@drawable/ic_player_edit</item>
+        <item name="textViewColor">@android:color/white</item>
+        <item name="driverBackgroundColor">@color/background_driver_dark</item>
+        <item name="searchBackgroundColor">@color/default_black_color</item>
+        <item name="mainBackground">@android:color/transparent</item>
+        <item name="sectionBackground">@android:color/black</item>
+        <item name="blackWhite">@android:color/white</item>
+        <item name="groupIndicator">@drawable/ic_keyboard_arrow_down_white_18dp</item>
+        <item name="mediaPlay">@drawable/ic_media_play</item>
+        <item name="mediaPause">@drawable/ic_media_pause</item>
+        <item name="mediaNext">@drawable/ic_media_next</item>
+        <item name="mediaPrevious">@drawable/ic_media_previous</item>
+        <item name="mediaShuffle">@drawable/ic_media_shuffle</item>
+        <item name="mediaRepeat">@drawable/ic_media_repeat</item>
+        <item name="mediaShuffleOn">@drawable/ic_media_shuffle_on</item>
+        <item name="mediaRepeatOn">@drawable/ic_media_repeat_on</item>
+        <item name="mediaStop">@drawable/ic_media_stop</item>
+        <item name="actionVolume">@drawable/ic_action_volume</item>
+        <item name="miniPlayerPlay">@drawable/mini_player_play</item>
+        <item name="miniPlayerPause">@drawable/mini_player_pause</item>
+        <item name="miniPlayerDownload">@drawable/mini_player_download</item>
+        <item name="searchShadow">@drawable/shadow</item>
+    </style>
+
+    <style name="AppThemeWhite.NoFonts" parent="AppBaseTheme.Light.NoFonts">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarStyle">@style/MyActionBar.White</item>
+        <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
+        <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
+        <item name="editIndicator">@drawable/ic_player_edit_black</item>
+        <item name="textViewColor">@android:color/black</item>
+        <item name="driverBackgroundColor">@color/background_driver_light</item>
+        <item name="searchBackgroundColor">@color/light_grey</item>
+        <item name="mainBackground">@android:color/white</item>
+        <item name="sectionBackground">@color/light_grey</item>
+        <item name="blackWhite">@android:color/black</item>
+        <item name="groupIndicator">@drawable/ic_keyboard_arrow_down_black_18dp</item>
+        <item name="mediaPlay">@drawable/ic_media_play_light</item>
+        <item name="mediaPause">@drawable/ic_media_pause_light</item>
+        <item name="mediaNext">@drawable/ic_media_next_light</item>
+        <item name="mediaPrevious">@drawable/ic_media_previous_light</item>
+        <item name="mediaShuffle">@drawable/ic_media_shuffle_light</item>
+        <item name="mediaRepeat">@drawable/ic_media_repeat_light</item>
+        <item name="mediaShuffleOn">@drawable/ic_media_shuffle_on_light</item>
+        <item name="mediaRepeatOn">@drawable/ic_media_repeat_on_light</item>
+        <item name="mediaStop">@drawable/ic_media_stop_light</item>
+        <item name="actionVolume">@drawable/ic_action_volume_light</item>
+        <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
+        <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
+        <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
+        <item name="searchShadow">@drawable/shadow_light</item>
+    </style>
+
+    <style name="AppThemeWhite.BlackActionBar.NoFonts" parent="AppBaseTheme.DarkActionBar.NoFonts">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionBarStyle">@style/MyActionBar.Black</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
