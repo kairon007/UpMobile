@@ -16,6 +16,7 @@ import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -29,6 +30,7 @@ import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
 import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.ThemeSingleton;
 import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -293,7 +295,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setHasOptionsMenu(Boolean.TRUE);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (StateKeeper.DOWNLOADED == state) {
-			ciRippleView.setVisibility(View.GONE);
+			setVisibilityRipple(true);
 		} else {
 			if (StateKeeper.DOWNLOADING == state) {
 				((RippleView) download.getParent()).setEnabled(false);
@@ -302,7 +304,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				download.setIndeterminateProgressMode(true);
 				download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
 			}
-			ciRippleView.setVisibility(View.VISIBLE);
+			setVisibilityRipple(false);
 		}
 		playerProgress.setIndeterminate(!player.isPrepared());
 		playerProgress.setSecondaryProgress(1);
@@ -523,6 +525,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 *            current song
 	 */
 	private void play(int delta) throws IllegalArgumentException {
+		TestApp.start("Play");
 		if (delta == 0) {
 			player.play(song);
 			return;
@@ -533,9 +536,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 			clearCover();
 		}
+		player.shift(delta);
 		cbUseCover.setOnCheckedChangeListener(null);
 		setClickablePlayerElement(false);
-		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
 		playerProgress.setIndeterminate(Boolean.TRUE);
@@ -543,18 +546,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		player.getPlayingSong().getSpecial().setChecked(Boolean.TRUE);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
-			cancelProgressTask();
 			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
 			download.setOnClickListener(this);
 		}
-		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
-			ciRippleView.setVisibility(View.GONE);
-		} else {
-			ciRippleView.setVisibility(View.VISIBLE);
-		}
+		setVisibilityRipple(StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment()));
 		cancelProgressTask();
 		thatSongIsDownloaded();
 		cbUseCover.setOnCheckedChangeListener(this);
+		TestApp.stop();
 	}
 
 	private void setElementsView(int progress) {
@@ -871,6 +870,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setCoverToZoomView(bitmap);
 		}
 		super.onConfigurationChanged(newConfig);
+	}
+	
+	private void setVisibilityRipple(boolean visible) {
+			ciRippleView.setVisibility(!visible ? View.VISIBLE : View.GONE);
 	}
 	
 }
