@@ -23,13 +23,13 @@
 package ru.johnlife.lifetoolsmp3.song;
 
 import java.io.File;
+import java.util.Locale;
 
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Parcel;
@@ -75,14 +75,14 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	public static final String[] FILLED_PLAYLIST_PROJECTION = { 
 							MediaStore.Audio.Playlists.Members.AUDIO_ID, 
-							MediaStore.Audio.Playlists.Members.DATA, 
-							MediaStore.Audio.Playlists.Members.TITLE, 
-							MediaStore.Audio.Playlists.Members.ALBUM, 
-							MediaStore.Audio.Playlists.Members.ARTIST,
-							MediaStore.Audio.Playlists.Members.ALBUM_ID, 
-							MediaStore.Audio.Playlists.Members.ARTIST_ID, 
-							MediaStore.Audio.Playlists.Members.DURATION, 
-							MediaStore.Audio.Playlists.Members.TRACK, 
+							MediaColumns.DATA, 
+							MediaColumns.TITLE, 
+							AudioColumns.ALBUM, 
+							AudioColumns.ARTIST,
+							AudioColumns.ALBUM_ID, 
+							AudioColumns.ARTIST_ID, 
+							AudioColumns.DURATION, 
+							AudioColumns.TRACK, 
 	};
 
 	/**
@@ -139,8 +139,10 @@ public class Song implements Comparable<Song>, AbstractSong {
 	 * Initialize the song with the specified id. Call populate to fill fields
 	 * in the song.
 	 */
+	
+	protected String comment;
 
-	public String downloadUrl;
+	protected String downloadUrl;
 	private AbstractSpecial special;
 	public Bitmap cover;
 
@@ -177,7 +179,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 		path = cursor.getString(1);
 		String zaycevTag = "(zaycev.net)";
 		title = cursor.getString(2);
-		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase()))	title = title.replace(zaycevTag, "");
+		if (title != null && title.toUpperCase(Locale.getDefault()).contains(zaycevTag.toUpperCase()))	title = title.replace(zaycevTag, "");
 		album = cursor.getString(3);
 		artist = cursor.getString(4);
 		albumId = cursor.getLong(5);
@@ -239,7 +241,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	@Override
 	public String toString() {
-		return String.format("%d %d %s", id, albumId, path);
+		return String.format(Locale.getDefault(), "%d %d %s", id, albumId, path);
 	}
 
 	/**
@@ -267,6 +269,10 @@ public class Song implements Comparable<Song>, AbstractSong {
 			return false;
 		return true;
 	}
+	
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
 	@Override
 	public String getTitle() {
@@ -276,6 +282,11 @@ public class Song implements Comparable<Song>, AbstractSong {
 	@Override
 	public boolean getDownloadUrl(DownloadUrlListener listener) {
 		return false;
+	}
+	
+	@Override
+	public String getDownloadUrl() {
+		return downloadUrl;
 	}
 
 	@Override
@@ -296,7 +307,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 	public String getAlbum() {
 		return album;
 	}
-
+	
 	@Override
 	public int describeContents() {
 		return 0;
@@ -314,7 +325,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 		parcel.writeLong(duration);
 		parcel.writeInt(trackNumber);
 		parcel.writeString(downloadUrl);
-
+		parcel.writeString(comment);
 	}
 
 	@Override
@@ -333,6 +344,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 		duration = parcel.readLong();
 		trackNumber = parcel.readInt();
 		downloadUrl = parcel.readString();
+		comment = parcel.readString();
 	}
 
 	@Override
@@ -383,7 +395,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	@Override
 	public String getComment() {
-		return downloadUrl;
+		return comment;
 	}
 
 	@Override

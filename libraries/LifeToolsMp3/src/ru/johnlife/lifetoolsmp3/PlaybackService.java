@@ -323,7 +323,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					mode &= ~SMODE_GET_URL;
 				}
 				try {
-					Uri uri = Uri.parse(songStart.getClass() == MusicData.class ? "file://" + songStart.getPath() : null == songStart.getPath() ? songStart.getComment() : songStart.getPath());
+					Uri uri = Uri.parse(songStart.getClass() == MusicData.class ? "file://" + songStart.getPath() : null == songStart.getPath() ? songStart.getDownloadUrl() : songStart.getPath());
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();

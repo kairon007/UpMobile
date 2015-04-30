@@ -569,17 +569,19 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 		while (c.moveToNext()) {
 			String url = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
-			String path =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-			if (path.contains(getDirectory())) {
-				StateKeeper.getInstance().putSongInfo(url, AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
+			String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+			if (null != path && path.contains(getDirectory())) {
+				String strComment = c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+				StateKeeper.getInstance().putSongInfo(strComment, AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 				if (expandAction) {
-					String strTitle =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
-					String strArtist =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
+					String strTitle = c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
+					String strArtist = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
 					int id = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID));
 					RemoteSong checkSong = new RemoteSong(url);
 					checkSong.setTitle(strTitle);
 					checkSong.setArtist(strArtist);
 					checkSong.setPath(path);
+					checkSong.setComment(strComment);
 					checkSong.id = id;
 					DownloadClickListener listener = createDownloadListener(checkSong);
 					listener.createUpdater(manager, id);

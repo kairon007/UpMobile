@@ -765,7 +765,7 @@ public abstract class OnlineSearchView extends View {
 //			}
 			song.setTitle(title);
 			song.setArtist(artist);
-			int lableStatus = keeper.checkSongInfo(comment.contains("youtube-mp3.org") ? comment.substring(0, comment.indexOf("ts_create")) : comment);
+			int lableStatus = keeper.checkSongInfo(comment);
 			if (lableStatus == StateKeeper.DOWNLOADED) {
 				song.setPath(keeper.getSongPath(comment));
 			}

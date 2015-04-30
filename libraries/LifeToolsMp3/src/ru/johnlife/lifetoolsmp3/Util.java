@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -60,9 +58,9 @@ public final class Util {
 			int h = min / 60;
 			min = min % 60;
 			if (h>0) {
-				return String.format("%d:%02d:%02d", h, min, sec);
+				return String.format(Locale.getDefault(), "%d:%02d:%02d", h, min, sec);
 			}
-			return String.format("%d:%02d", min, sec);
+			return String.format(Locale.getDefault(), "%d:%02d", min, sec);
 	}
 	
 	public static Bitmap resizeToSmall(Bitmap original) {

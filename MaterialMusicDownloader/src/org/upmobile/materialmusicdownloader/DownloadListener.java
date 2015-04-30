@@ -15,14 +15,13 @@ import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoListener;
-import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarStyle;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Parcelable;
 
 public class DownloadListener extends DownloadClickListener {
@@ -64,13 +63,11 @@ public class DownloadListener extends DownloadClickListener {
 					@Override
 					public void onUndo(Parcelable token) {
 						PlaybackService service = PlaybackService.get(context);
-						if (PlaybackService.SMODE_SONG_FROM_LIBRARY == service.sourceSong()) {
+						if (!service.hasArray() || PlaybackService.SMODE_SONG_FROM_LIBRARY == service.sourceSong()) {
 							service.reset();
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 							list.add(song);
 							service.setArrayPlayback(list);
-							service.play(song);	
-							return;
 						}
 						if (!((MainActivity) context).isPlayerFragment()) {
 							((BaseMiniPlayerActivity) context).startSong(song);
@@ -102,7 +99,7 @@ public class DownloadListener extends DownloadClickListener {
 			public void onUndo(Parcelable token) {
 				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 				manager.remove(currentDownloadId);
-				StateKeeper.getInstance().removeSongInfo(downloadingSong.getUrl());
+				StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
 				DownloadCache.getInstanse().remove(downloadingSong);
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();

@@ -23,10 +23,15 @@ public class HelperService extends IntentService implements Constants {
 	public HelperService(String name) {
 		super(name);
 	}
+	
+	@Override
+	public void onCreate() {
+		startForeground(7958453, new Notification());
+		super.onCreate();
+	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		startForeground(7958, new Notification());
 		songs = intent.getParcelableArrayListExtra(EXTRA_DATA);
 		DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 		int count = songs.size();
@@ -44,9 +49,8 @@ public class HelperService extends IntentService implements Constants {
 				}
 			}
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(3500);
 			} catch (InterruptedException e) {
-				android.util.Log.d("logks", "EXEPTION - " + e.getLocalizedMessage());
 				e.printStackTrace();
 			}
 		}

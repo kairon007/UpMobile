@@ -38,7 +38,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	private String artist;
 	private String album;
 	private String comment;
-	private String downloadUrl;
 	private int mode;
 	private long id;
 	private long duration;
@@ -49,13 +48,12 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 
 	}
 
-	public MusicData(String title, String artist, long id, long duration, String downloadUrl) {
+	public MusicData(String title, String artist, long id, long duration, String comment) {
 		this.title = title;
 		this.artist = artist;
 		this.id = id;
 		this.duration = duration;
-		this.setDownloadUrl(downloadUrl);
-		
+		this.comment = comment;
 	}
 
 	private MusicData(Parcel parcel) {
@@ -150,6 +148,10 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		return null != comment && !comment.isEmpty() ? comment : EMPTY_COMMENT;
 	}
 	
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
 	@Override
 	public int hashCode() {
 		return (int) id;
@@ -215,14 +217,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 
 	public void setProgress(int progress) {
 		this.progress = progress;
-	}
-	
-	public String getDownloadUrl() {
-		return downloadUrl;
-	}
-
-	public void setDownloadUrl(String downloadUrl) {
-		this.downloadUrl = downloadUrl;
 	}
 	
 	@Override
@@ -298,5 +292,10 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 			special = new AbstractSpecial();
 		}
 		return special;
+	}
+
+	@Override
+	public String getDownloadUrl() {
+		return null;
 	}
 }

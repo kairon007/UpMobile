@@ -216,8 +216,9 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(sb);
 		try {
 			request.setTitle(songArtist);
-			request.setDescription(songTitle);
 			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
+			request.setMimeType(downloadingSong.getComment());
+			request.setDescription(songTitle);
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
 			showMessage(context, e.getMessage());
@@ -241,7 +242,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			
 		});
-		StateKeeper.getInstance().putSongInfo(downloadingSong.getUrl(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
+		StateKeeper.getInstance().putSongInfo(downloadingSong.getComment(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(downloadingSong, manager, useAlbumCover, cacheItem);
 		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
@@ -276,7 +277,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		return state.equals(NetworkInfo.State.DISCONNECTING) || state.equals(NetworkInfo.State.DISCONNECTED);
 	}
-
+	
 	public void setUseAlbumCover(boolean useAlbumCover) {
 		this.useAlbumCover = useAlbumCover;
 	}
@@ -323,7 +324,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	protected void notifyAboutFailed(long downloadId, final RemoteSong s) {
-		StateKeeper.getInstance().removeSongInfo(s.getUrl());
+		StateKeeper.getInstance().removeSongInfo(s.getComment());
 		((Activity) context).runOnUiThread(new Runnable() {
 
 			@Override
@@ -363,7 +364,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	}
 
 	private void insertToMediaStore(final RemoteSong song, final String pathToFile) {
-		StateKeeper.getInstance().putSongInfo(song.getUrl(), pathToFile, StateKeeper.DOWNLOADED);
+		StateKeeper.getInstance().putSongInfo(song.getComment(), pathToFile, StateKeeper.DOWNLOADED);
 		ContentResolver resolver = context.getContentResolver();
 		int seconds = 0;
 		long ms = 0;
@@ -421,7 +422,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		metadata.clear();
 		metadata.setSongTitle(song.getTitle().trim());
 		metadata.setArtist(song.getArtist().trim());
-		metadata.setComment(song.getUrl().contains("youtube-mp3.org") ? song.getUrl().substring(0, song.getUrl().indexOf("ts_create")) : song.getUrl());
+		metadata.setComment(song.getComment());
 		if (null != cover && useCover) {
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);

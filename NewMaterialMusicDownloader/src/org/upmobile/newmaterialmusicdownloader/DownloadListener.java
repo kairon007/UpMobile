@@ -63,13 +63,11 @@ public class DownloadListener extends DownloadClickListener {
 					public void onUndo(Parcelable token) {
 						Context context = getContext();
 						PlaybackService service = PlaybackService.get(context);
-						if (PlaybackService.SMODE_SONG_FROM_LIBRARY == service.sourceSong()) {
+						if (!service.hasArray() || PlaybackService.SMODE_SONG_FROM_LIBRARY == service.sourceSong()) {
 							service.reset();
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 							list.add(song);
 							service.setArrayPlayback(list);
-							service.play(song);	
-							return;
 						}
 						if (ManagerFragmentId.playerFragment() != ((MainActivity) context).getCurrentFragmentId()) {
 							((BaseMiniPlayerActivity) context).startSong(song);
@@ -102,7 +100,7 @@ public class DownloadListener extends DownloadClickListener {
 			public void onUndo(Parcelable token) {
 				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 				manager.remove(currentDownloadId);
-				StateKeeper.getInstance().removeSongInfo(downloadingSong.getUrl());
+				StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
 				DownloadCache.getInstanse().remove(downloadingSong);
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();

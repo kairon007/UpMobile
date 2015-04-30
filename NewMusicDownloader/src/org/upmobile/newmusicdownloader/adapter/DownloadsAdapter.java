@@ -59,7 +59,6 @@ public class DownloadsAdapter extends BaseDownloadsAdapter {
 		super.removeItem(item);
 		if (item.getId() == -1)	return;
 		DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-		StateKeeper.getInstance().removeSongInfo(item.getComment());
 		try {
 			manager.remove(item.getId());
 		} catch (UnsupportedOperationException e) {

@@ -9,7 +9,6 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.widget.Toast;
 
 public class DownloadListener extends DownloadClickListener {

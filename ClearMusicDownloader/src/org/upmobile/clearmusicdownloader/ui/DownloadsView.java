@@ -44,7 +44,7 @@ public class DownloadsView extends BaseDownloadsView implements Constants {
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	            for (int position : reverseSortedPositions) {
 	            	MusicData data = (MusicData) adapter.getItem(position);
-	            	StateKeeper.getInstance().removeSongInfo(data.getDownloadUrl());
+	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
 	            	((DownloadsAdapter)adapter).removeItem(data); 
 	            }
 	        }

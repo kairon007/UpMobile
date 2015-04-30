@@ -90,27 +90,22 @@ public abstract class BaseDownloadsView extends View{
 					Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));
 					if (pending!=null) {
 						updateList(pending, list);
-						pending.close();
 					}
 					Cursor paused = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PAUSED));
 					if (paused != null) {
 						updateList(paused, list);
-						paused.close();
 					}
 					Cursor waitingNetwork = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_WAITING_FOR_NETWORK));
 					if (waitingNetwork != null) {
 						updateList(waitingNetwork, list);
-						waitingNetwork.close();
 					}
 					Cursor unknown = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.PAUSED_UNKNOWN));
 					if (unknown != null) {
 						updateList(unknown, list);
-						unknown.close();
 					}
 					Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 					if (running != null) {
 						updateList(running, list);
-						running.close();
 					}
 				}
 			} catch (Exception e) {
@@ -126,7 +121,13 @@ public abstract class BaseDownloadsView extends View{
 
 	private ArrayList<MusicData> updateList(Cursor c, ArrayList<MusicData> result) {
 		while (c.moveToNext()) {
-			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252, c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI)));
+			MusicData song = new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), 
+													   c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), 
+													   c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 
+													   25252, 
+													   c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE)));
+			String comment =  c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+			song.setComment(comment);
 			if (c.getString(8).contains(getDirectory())) {
 				if (!result.contains(song)){
 					result.add(song);
@@ -140,6 +141,7 @@ public abstract class BaseDownloadsView extends View{
 				result.add(song);
 			}
 		}
+		c.close();
 		return result;
 	}
 
@@ -158,7 +160,11 @@ public abstract class BaseDownloadsView extends View{
 		while (c.moveToNext()) {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252, c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI))));
+					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), 
+														 c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), 
+														 c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 
+														 25252, 
+														 c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE))));
 					break;
 				}
 			}
@@ -171,7 +177,11 @@ public abstract class BaseDownloadsView extends View{
 		while (c.moveToNext()) {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				if (((MusicData) adapter.getItem(i)).getId() == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_ID))) {
-					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 25252, c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI))));
+					removeItem(new MusicData(c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION)).trim(), 
+														 c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE)).trim(), 
+														 c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)), 
+														 25252, 
+														 c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE))));
 					break;
 				}
 			}
@@ -187,7 +197,7 @@ public abstract class BaseDownloadsView extends View{
 					@Override
 					public void run() {
 						DownloadCache.getInstanse().remove(musicData);
-						StateKeeper.getInstance().removeSongInfo(musicData.getDownloadUrl());
+						StateKeeper.getInstance().removeSongInfo(musicData.getComment());
 						adapter.remove(musicData);
 					}
 				});

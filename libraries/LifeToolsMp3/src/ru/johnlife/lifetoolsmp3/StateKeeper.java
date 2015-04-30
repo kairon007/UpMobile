@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.TreeMap;
 
 import org.cmc.music.metadata.MusicMetadata;
@@ -11,13 +12,10 @@ import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
-import android.app.DownloadManager;
-import android.database.Cursor;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -277,7 +275,7 @@ public class StateKeeper {
 				MusicMetadataSet src_set = new MyID3().read(files[i]);
 				if (null != src_set) {
 					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-					String comment = metadata.getComment();
+					String comment = metadata.getComment().toLowerCase(Locale.getDefault());
 					if (null == comment) {
 						comment = metadata.hashCode() + "";
 					}
@@ -307,25 +305,25 @@ public class StateKeeper {
 		}
 	}
 	
-	public void putSongInfo(String url, String path, int status) {
-		String key =  url.contains("youtube-mp3.org") ? url.substring(0, url.indexOf("ts_create")) : url;
+	public void putSongInfo(String comment, String path, int status) {
 		SongInfo info = new SongInfo(path, status);
-		songHolder.put(key, info);
+		songHolder.put(comment.toLowerCase(Locale.getDefault()), info);
 		notifyLable();
 	}
 	
-	public void removeSongInfo(String url) {
-		songHolder.remove(url);
+	public void removeSongInfo(String comment) {
+		songHolder.remove(comment.toLowerCase(Locale.getDefault()));
 		notifyLable();
 	}
 	
-	public int checkSongInfo(String url) {
-		if (null == url || !songHolder.containsKey(url)) return NOT_DOWNLOAD;
-		return songHolder.get(url).status;
+	public int checkSongInfo(String comment) {
+		String key =  comment.toLowerCase(Locale.getDefault());
+		if (null == key || !songHolder.containsKey(key)) return NOT_DOWNLOAD;
+		return songHolder.get(key).status;
 	}
 	
 	public String getSongPath(String key) {
-		return songHolder.get(key).path;
+		return songHolder.get(key.toLowerCase(Locale.getDefault())).path;
 	}
 	
 	public int getTempID3UseCover() {
