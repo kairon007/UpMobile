@@ -99,7 +99,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private PlayerStateUpdater stateUpdater = new PlayerStateUpdater();
 	private double bufferingPercent;
 	private int mode;
-	private boolean isDestroyed = false;
+	private boolean isDestroyed = Boolean.FALSE;
 	
 	public interface OnStatePlayerListener {
 		
@@ -323,7 +323,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					mode &= ~SMODE_GET_URL;
 				}
 				try {
-					Uri uri = Uri.parse(songStart.getClass() == MusicData.class ? songStart.getPath() : null == songStart.getPath() ? songStart.getComment() : songStart.getPath());
+					Uri uri = Uri.parse(songStart.getClass() == MusicData.class ? "file://" + songStart.getPath() : null == songStart.getPath() ? songStart.getComment() : songStart.getPath());
 					player.setDataSource(this, uri);
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
@@ -407,7 +407,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 		previousSong = playingSong;
 		playingSong = arrayPlayback.get(position);
-		handler.removeMessages(0);
+		handler.removeCallbacksAndMessages(null);
 		buildSendMessage(playingSong, MSG_SHIFT, position, 0);
 	}
 
@@ -537,9 +537,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	private void helper(final State state, final AbstractSong targetSong) {
-		if (stateListeners == null) {
-			return;
-		}
+		if (stateListeners == null) return;
 		Handler h = new Handler(getMainLooper());
 		for (final OnStatePlayerListener stateListener : stateListeners) {
 			h.post(new Runnable() {
@@ -957,6 +955,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (check(SMODE_STOP)) {
 			builder.append("| SMODE_STOP");
 		}
-		android.util.Log.d("logks","!!! " + builder.toString());
+		android.util.Log.d("logks", builder.toString());
 	}
 }

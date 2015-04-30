@@ -196,6 +196,6 @@ public class Marker extends FrameLayout implements MarkerDrawable.MarkerAnimatio
 		int color = colorState.getDefaultColor();
 		Drawable indeterminateDrawable = indeterminateView.getBackground();
 		indeterminateDrawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP));
-		indeterminateView.setBackground(indeterminateDrawable);
+		indeterminateView.setBackgroundDrawable(indeterminateDrawable);
 	}
 }

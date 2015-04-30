@@ -174,9 +174,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			playerProgress.setSecondaryProgress(1);
 			playerProgress.setSecondaryProgress(0);
 			song = current;
-			showLyrics();
-			setCoverToZoomView(null);
 			setElementsView(0);
+			setCoverToZoomView(null);
+			showLyrics();
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 		}
@@ -375,18 +375,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			play(1);
 			break;
 		case R.id.repeat:
-			if (!player.offOnRepeat()) {
-				repeat.setAlpha((float) 0.5);
-			} else {
-				repeat.setAlpha(1);
-			}
+			repeat.setAlpha(player.offOnRepeat() ? 1 : (float) 0.5);
 			break;
 		case R.id.shuffle:
-			if (player.offOnShuffle()) {
-				shuffle.setAlpha(1);
-			} else {
-				shuffle.setAlpha((float) 0.5);
-			}
+			shuffle.setAlpha(player.offOnShuffle() ? 1 : (float) 0.5);
 			break;
 		case R.id.download:
 			download();
@@ -751,7 +743,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
-		System.out.println("!!! setCoverToZoomView defaultCover="+defaultCover);
 		imageView.setImageBitmap(Bitmap.createScaledBitmap(null == bitmap ? defaultCover : bitmap, minHeight, minHeight, false));
 		scrollView.setZoomView(imageView);
 	}
