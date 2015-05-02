@@ -625,7 +625,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void closeEditViews() {
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
-			Util.hideKeyboard(getActivity(), contentView);
+			Util.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
+			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
+			etArtist.setVisibility(View.GONE);
+			etTitle.setVisibility(View.GONE);
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
 				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
 				song.setTitle(title);
@@ -634,11 +638,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				String artist = Util.removeSpecialCharacters(etArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etArtist.getText().toString());
 				song.setArtist(artist);
 				tvArtist.setText(artist);
-			}
-			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
-			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
-			etArtist.setVisibility(View.GONE);
-			etTitle.setVisibility(View.GONE);
+			} else return;
 			if (song.getClass() != MusicData.class) {
 				player.update(song.getTitle(), song.getArtist(), null);
 			} else {

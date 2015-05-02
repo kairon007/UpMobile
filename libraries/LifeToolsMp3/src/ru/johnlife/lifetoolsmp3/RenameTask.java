@@ -14,6 +14,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AudioColumns;
+import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -121,10 +123,10 @@ public class RenameTask {
 							if (file.getPath().equals(c.getString(1))) {
 								int id = c.getInt(0);
 								ContentValues songValues = new ContentValues();
-								songValues.put(MediaStore.Audio.Media.DATA, newFile.getPath());
-								songValues.put(MediaStore.Audio.Media.ALBUM, album);
-								songValues.put(MediaStore.Audio.Media.ARTIST, artist);
-								songValues.put(MediaStore.Audio.Media.TITLE, title);
+								songValues.put(MediaColumns.DATA, newFile.getPath());
+								songValues.put(AudioColumns.ALBUM, album);
+								songValues.put(AudioColumns.ARTIST, artist);
+								songValues.put(MediaColumns.TITLE, title);
 								String where = MediaStore.Audio.Media._ID + "=" + id;
 								resolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues, where, null);
 								break;
