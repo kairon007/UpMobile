@@ -160,6 +160,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setClickablePlayerElement(true);
 		changePlayPauseView(!player.isPlaying());
 		setElementsView(0);
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
+			btnDownload.setVisibility(View.GONE);
+		} else if (song.getClass() != MusicData.class) {
+			btnDownload.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	@Override
@@ -623,12 +629,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
 		}
-		int state = StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
-		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
-			btnDownload.setVisibility(View.GONE);
-		} else {
-			btnDownload.setVisibility(View.VISIBLE);
-		}
 	}
 
 	private void getCover(final AbstractSong song) {
@@ -638,7 +638,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover)return;
+					if (this.hashCode() != checkIdCover) return;
 					if (null != bmp) {
 						checkBoxState(true);
 						((RemoteSong) song).setHasCover(true);
