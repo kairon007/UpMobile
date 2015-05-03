@@ -67,6 +67,7 @@ public class LibraryView extends BaseLibraryView {
 	            	data.reset(getContext());
 	            	if (adapter.isEmpty()) {
 	        			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
+	        			if (null == emptyMsg) return;
 	        			emptyMsg.setVisibility(View.VISIBLE);
 	        			emptyMsg.setText(R.string.library_empty);
 	        		}
