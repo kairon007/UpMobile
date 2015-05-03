@@ -137,8 +137,8 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	@Override
 	public String getComment() {
 		if (null != comment && !comment.isEmpty()) return comment;
-		File file = new File(path);
 		try {
+			File file = new File(path);
 			MusicMetadataSet src_set = new MyID3().read(file);
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			comment = metadata.getComment();

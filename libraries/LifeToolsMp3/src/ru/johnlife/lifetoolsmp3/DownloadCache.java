@@ -7,7 +7,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 
 public class DownloadCache {
 	
-	private final int CACHE_CAPACITY = 12;
+	private final int CACHE_CAPACITY = 3;
 
 	private static DownloadCache instanse = null;
 	private ArrayList<Item> cache = new ArrayList<Item>();

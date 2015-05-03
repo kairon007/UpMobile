@@ -40,7 +40,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	@Override
 	public void onDismiss(View view, int position) {
-		if (null != listener) {
+		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
 		stopTimer(position);
@@ -49,7 +49,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	@Override
 	public void onDismiss(ViewGroup listView, int[] reverseSortedPositions) {
-		if (null != listener) {
+		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
 		for (int position : reverseSortedPositions) {
@@ -60,7 +60,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	@Override
 	public void onUndo(View view, int position) {
-		if (null != listener) {
+		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
 		stopTimer(position);
@@ -89,6 +89,10 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 				break;
 			}
 		}
+	}
+	
+	private boolean hasUndoViews() {
+		return timers.size() > 0;
 	}
 	
 	private class DissmissTimer extends Timer {

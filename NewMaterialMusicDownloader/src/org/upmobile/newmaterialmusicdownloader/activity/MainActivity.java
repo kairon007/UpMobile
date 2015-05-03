@@ -72,7 +72,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		setContentView(R.layout.activity_main);
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbarShadow = findViewById(R.id.toolbar_shadow);
-		setSupportActionBar(toolbar); 	
+		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
