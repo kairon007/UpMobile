@@ -440,15 +440,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
 					if (this.hashCode() != checkIdCover) return;
-					if (null != bmp) {
-						((RemoteSong) song).setCover(bmp);
-						((RemoteSong) song).setHasCover(true);
-						setCover(bmp);
-					} else {
-						((RemoteSong) song).setCover(null);
-						((RemoteSong) song).setHasCover(false);
-						setCover(null);
-					}
+					((RemoteSong) song).setCover(bmp);
+					((RemoteSong) song).setHasCover(null != bmp);
+					setCover(bmp);
 				}
 			};
 			checkIdCover  = readyListener.hashCode();

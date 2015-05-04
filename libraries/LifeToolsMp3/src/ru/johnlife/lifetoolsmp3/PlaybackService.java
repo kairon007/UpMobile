@@ -664,8 +664,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public int getCurrentPosition() {
+		if (!check(SMODE_PREPARED)) return 0;
 		synchronized (LOCK) {
-			if (!check(SMODE_PREPARED)) return 0;
 			return player.getCurrentPosition();
 		}
 	}

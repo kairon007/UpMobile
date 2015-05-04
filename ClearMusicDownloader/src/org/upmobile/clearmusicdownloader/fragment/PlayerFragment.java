@@ -73,8 +73,10 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.special.utils.UIParallaxScroll;
+import com.special.utils.UIParallaxScroll.OnScrollChangedListener;
 
-public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
+public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener, 
+	PlaybackService.OnErrorListener, OnEditorActionListener, Constants {
 
 	private final int MESSAGE_DURATION = 5000;
     public static final int DURATION = 500; // in ms
@@ -130,8 +132,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private float scale_height;
 	private float ratio;
     private boolean isDestroy;
-    private boolean isUseAlbumCover = true;
-    private boolean isNeedCalculateCover = true;
+    private boolean isUseAlbumCover = Boolean.TRUE;
+    private boolean isNeedCalculateCover = Boolean.TRUE;
     
     private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
@@ -183,6 +185,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			if (isDestroy) return;
 			song = s;
 			setElementsView(0);
+			getCover(song);
 			setClickablePlayerElement(false);
 		}
 
@@ -196,36 +199,27 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-		isDestroy = false;
 		parentView = inflater.inflate(R.layout.player, container, false);
-		((MainActivity) getActivity()).hideTopFrame();
-		((MainActivity) getActivity()).showPlayerElement();
-		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(mOnScrollChangedListener);
-		init();
-		setListener();
+		isDestroy = Boolean.FALSE;
 		player = PlaybackService.get(getActivity());
-		player.addStatePlayerListener(stateListener);
-		player.setOnErrorListener(this);
+		init(parentView);
+		setListener();
 		downloadButtonState(!player.isGettingURl());
 		playerTitleBar.getBackground().setAlpha(0);
 		playerTitleBarArtis.setVisibility(View.INVISIBLE);
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
-		playerCover.bringToFront();	
-		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerProgress);
-		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtTitle);
-		((MainActivity) getActivity()).getResideMenu().addIgnoredView(playerEtArtist);
+		playerCover.bringToFront();
 		isUseAlbumCover = ((MainActivity) getActivity()).stateCoverHelper();
-		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
-			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
+		if (null != getArguments() && getArguments().containsKey(KEY_SELECTED_SONG)) {
+			song = getArguments().getParcelable(KEY_SELECTED_SONG);
 			top = getArguments().getInt(PACKAGE + ".top");
 			left = getArguments().getInt(PACKAGE + ".left");
 			width = getArguments().getInt(PACKAGE + ".width");
 			height = getArguments().getInt(PACKAGE + ".height");
-			android.util.Log.d("logd", "onCreateView: " + song + " - " + player +  " - " + player.getPlayingSong());
 			if (song.equals(player.getPlayingSong()) && player.isPlaying()) {
 				player.play();
 			} else if (!song.equals(player.getPlayingSong())){
-				play(0);
+				player.pause();
 			}
 		} else {
 			song = player.getPlayingSong();
@@ -236,13 +230,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
 		} else {
-			changePlayPauseView(false);
+			changePlayPauseView(Boolean.FALSE);
 		}
 		downloadButtonState(!player.isGettingURl());
-		getCover(song);
-		showLyrics();
-		startImageAnimation(playerCover);
-		setElementsView(player.getCurrentPosition());
 		return parentView;
 	}
 	
@@ -262,8 +252,18 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onResume() {
 		super.onResume();
-		((MainActivity) getActivity()).showMiniPlayer(false);
+		MainActivity activity = ((MainActivity) getActivity());
+		activity.hideTopFrame();
+		activity.showPlayerElement();
+		activity.getResideMenu().addIgnoredView(playerProgress);
+		activity.getResideMenu().addIgnoredView(playerEtTitle);
+		activity.getResideMenu().addIgnoredView(playerEtArtist);
+		activity.showMiniPlayer(Boolean.FALSE);
 		setKeyListener();
+		showLyrics();
+		getCover(song);
+		startImageAnimation(playerCover);
+		setElementsView(player.getCurrentPosition());
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
 			download.setVisibility(View.GONE);
@@ -281,9 +281,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					if (!closeEditViews()) {
 						onBackPress();
 					}
-					return true;
+					return Boolean.TRUE;
 				}
-				return false;
+				return Boolean.FALSE;
 			}
 		});
 	}
@@ -309,7 +309,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		editTag();
-		return true;
+		return Boolean.TRUE;
 	}
 
 	private void setClickablePlayerElement(boolean isClickable) {
@@ -333,35 +333,31 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 * @param isPlaying - If "true", the button changes the picture to "play", if "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
-		if (isPlaying) {
-			play.setImageResource(R.drawable.play);
-		} else {
-			play.setImageResource(R.drawable.pause);
-		}
+		play.setImageResource(isPlaying ? R.drawable.play : R.drawable.pause);
 	}
 	
-	private void init() {
-		play = (ImageButton) parentView.findViewById(R.id.player_play);
-		previous = (ImageButton) parentView.findViewById(R.id.player_previous);
-		forward = (ImageButton) parentView.findViewById(R.id.player_forward);
-		download = (Button) parentView.findViewById(R.id.player_download);
-		lyricsLoader= (ImageView) parentView.findViewById(R.id.lyrics_load_image);
-		playerTitleBarBack = (Button) parentView.findViewById(R.id.title_bar_left_menu);
-		playerProgress = (SeekBar) parentView.findViewById(R.id.player_progress);
-		playerTvTitle = (TextView) parentView.findViewById(R.id.player_title);
-		playerEtTitle = (EditText) parentView.findViewById(R.id.player_title_edit_view);
-		playerBtnTitle = (FrameLayout) parentView.findViewById(R.id.player_edit_title);
-		playerTvArtist = (TextView) parentView.findViewById(R.id.player_artist);
-		playerEtArtist = (EditText) parentView.findViewById(R.id.player_artist_edit_view);
-		playerBtnArtist = (FrameLayout) parentView.findViewById(R.id.player_edit_artist);
-		playerCurrTime = (TextView) parentView.findViewById(R.id.player_current_time);
-		playerTotalTime = (TextView) parentView.findViewById(R.id.player_total_time);
-	    playerTitleBar = (FrameLayout) parentView.findViewById(R.id.layout_top);   
-	    playerTitleBarArtis = (TextView) parentView.findViewById(R.id.titleBarArtist);
-	    playerTitleBarTitle = (TextView) parentView.findViewById(R.id.titleBarTitle);
-		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
-		playerCover = (ImageView) parentView.findViewById(R.id.player_cover);
-		useCover = (CheckBox) parentView.findViewById(R.id.use_cover);
+	private void init(final View view) {
+		play = (ImageButton) view.findViewById(R.id.player_play);
+		previous = (ImageButton) view.findViewById(R.id.player_previous);
+		forward = (ImageButton) view.findViewById(R.id.player_forward);
+		download = (Button) view.findViewById(R.id.player_download);
+		lyricsLoader= (ImageView) view.findViewById(R.id.lyrics_load_image);
+		playerTitleBarBack = (Button) view.findViewById(R.id.title_bar_left_menu);
+		playerProgress = (SeekBar) view.findViewById(R.id.player_progress);
+		playerTvTitle = (TextView) view.findViewById(R.id.player_title);
+		playerEtTitle = (EditText) view.findViewById(R.id.player_title_edit_view);
+		playerBtnTitle = (FrameLayout) view.findViewById(R.id.player_edit_title);
+		playerTvArtist = (TextView) view.findViewById(R.id.player_artist);
+		playerEtArtist = (EditText) view.findViewById(R.id.player_artist_edit_view);
+		playerBtnArtist = (FrameLayout) view.findViewById(R.id.player_edit_artist);
+		playerCurrTime = (TextView) view.findViewById(R.id.player_current_time);
+		playerTotalTime = (TextView) view.findViewById(R.id.player_total_time);
+	    playerTitleBar = (FrameLayout) view.findViewById(R.id.layout_top);   
+	    playerTitleBarArtis = (TextView) view.findViewById(R.id.titleBarArtist);
+	    playerTitleBarTitle = (TextView) view.findViewById(R.id.titleBarTitle);
+		playerLyricsView = (TextView) view.findViewById(R.id.player_lyrics_view);
+		playerCover = (ImageView) view.findViewById(R.id.player_cover);
+		useCover = (CheckBox) view.findViewById(R.id.use_cover);
 		undo = new UndoBar(getActivity());
 	}
 
@@ -381,9 +377,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
 					closeEditViews();
-					return true;
+					return Boolean.TRUE;
 				}
-				return false;
+				return Boolean.FALSE;
 			}
 		});
 		playerEtTitle.setOnKeyListener(new OnKeyListener() {
@@ -392,9 +388,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
 					closeEditViews();
-					return true;
+					return Boolean.TRUE;
 				}
-				return false;
+				return Boolean.FALSE;
 			}
 		});
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnTouchListener(new OnTouchListener() {
@@ -402,7 +398,31 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				editTag();
-				return false;
+				return Boolean.FALSE;
+			}
+		});
+		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(new OnScrollChangedListener() {
+			
+			@Override
+			public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
+	        	final float headerHeight = ViewHelper.getY(parentView.findViewById(R.id.player_artist_frame)) - (playerTitleBar.getHeight() - parentView.findViewById(R.id.player_artist_frame).getHeight());
+	            ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
+	            final int newAlpha = (int) (ratio * 255);
+	            playerTitleBar.getBackground().setAlpha(newAlpha);
+	            Animation animationFadeIn = AnimationUtils.loadAnimation(getActivity(),R.anim.fadein);
+	            Animation animationFadeOut = AnimationUtils.loadAnimation(getActivity(),R.anim.fadeout);
+	            if (newAlpha == 255 && playerTitleBarArtis.getVisibility() != View.VISIBLE && !animationFadeIn.hasStarted()){
+	            	playerTitleBarArtis.setVisibility(View.VISIBLE);
+	            	playerTitleBarTitle.setVisibility(View.VISIBLE);
+	            	playerTitleBarArtis.startAnimation(animationFadeIn);
+	            	playerTitleBarTitle.startAnimation(animationFadeIn);
+	            } else if (newAlpha < 255 && !animationFadeOut.hasStarted() && playerTitleBarArtis.getVisibility() != View.INVISIBLE)  { 	
+	            	playerTitleBarArtis.startAnimation(animationFadeOut);
+	            	playerTitleBarArtis.setVisibility(View.INVISIBLE);
+	            	playerTitleBarTitle.startAnimation(animationFadeOut);
+	            	playerTitleBarTitle.setVisibility(View.INVISIBLE);
+	            }
+	            moveCover(ratio);
 			}
 		});
 		parentView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
@@ -417,6 +437,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		});
 		playerEtTitle.setOnEditorActionListener(this);
 		playerEtArtist.setOnEditorActionListener(this);
+		player.addStatePlayerListener(stateListener);
+		player.setOnErrorListener(this);
 	}
 	
 	@Override
@@ -457,7 +479,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private boolean closeEditViews() {
-		hideKeyboard();
+		Util.hideKeyboard(getActivity(), parentView);
 		if (playerEtArtist.getVisibility() == View.VISIBLE || playerEtTitle.getVisibility() == View.VISIBLE) {
 			playerTvArtist.setVisibility(View.VISIBLE);
 			playerTvTitle.setVisibility(View.VISIBLE);
@@ -477,12 +499,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			((MusicData) song).clearCover();
 			RenameTask.deleteCoverFromFile(new File(song.getPath()));
 		}
-	}
-	
-	private void hideKeyboard() {
-		View hideView = parentView.findViewById(R.id.scroller);
-		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(hideView.getWindowToken(), 0);
 	}
 	
 	private void setElementsView(int progress) {
@@ -591,7 +607,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         	playerTvArtist.setVisibility(View.VISIBLE);
 			playerEtArtist.setVisibility(View.GONE);
 			playerBtnArtist.setVisibility(View.VISIBLE);
-			hideKeyboard();
+			Util.hideKeyboard(getActivity(), parentView);
 			artist = Util.removeSpecialCharacters(playerEtArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerEtArtist.getText().toString());
 			if (!artist.equals(song.getArtist())){
 				if (checkUnique(song.getTitle(),artist)) {
@@ -606,7 +622,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         	playerTvTitle.setVisibility(View.VISIBLE);
 			playerEtTitle.setVisibility(View.GONE);
 			playerBtnTitle.setVisibility(View.VISIBLE);
-			hideKeyboard();
+			Util.hideKeyboard(getActivity(), parentView);
 			title = Util.removeSpecialCharacters(playerEtTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerEtTitle.getText().toString());
 			if (!title.equals(song.getTitle())){ 
 				if (checkUnique(title, song.getArtist())) {
@@ -742,12 +758,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			break;
 		case 1:
 			player.shift(1);
-			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
 			break;
 		case -1:
 			player.shift(-1);
-			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
 			break;
 		default:
@@ -762,29 +776,31 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void getCover(final AbstractSong song) {
-		playerCover.setImageResource(R.drawable.def_cover_circle_web);
 		setCheckBoxState(false);
+		if (song.isHasCover()) {
+			Bitmap bitmap = song.getCover();
+			if (null != bitmap) {
+				setCheckBoxState(true);
+				playerCover.setImageBitmap(bitmap);
+				return;
+			}
+		}
+		playerCover.setImageResource(R.drawable.def_cover_circle_web);
+		useCover.setVisibility(View.INVISIBLE);
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener idBmpListener = new OnBitmapReadyListener() {
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if(this.hashCode() != checkIdCover) return;
-					if (null != bmp) {
-						((RemoteSong) song).setHasCover(true);
-						playerCover.setImageBitmap(bmp);
-						setCheckBoxState(true);
-					}
+					if (hashCode() != checkIdCover || null == bmp) return;
+					((RemoteSong) song).setHasCover(true);
+					playerCover.setImageBitmap(bmp);
+					player.updatePictureNotification(bmp);
+					setCheckBoxState(true);
 				}
 			};
 			checkIdCover = idBmpListener.hashCode();
 			((RemoteSong) song).getCover(idBmpListener);
-		} else {
-			Bitmap bitmap = ((MusicData) song).getCover();
-			if (bitmap != null) {
-				playerCover.setImageBitmap(bitmap);
-				setCheckBoxState(true);
-			}
 		}
 	}
 	
@@ -921,30 +937,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         bg_anim.setDuration(DURATION);
         bg_anim.start();
     }
-    
-    private UIParallaxScroll.OnScrollChangedListener mOnScrollChangedListener = new UIParallaxScroll.OnScrollChangedListener() {
-
-		public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
-        	final float headerHeight = ViewHelper.getY(parentView.findViewById(R.id.player_artist_frame)) - (playerTitleBar.getHeight() - parentView.findViewById(R.id.player_artist_frame).getHeight());
-            ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
-            final int newAlpha = (int) (ratio * 255);
-            playerTitleBar.getBackground().setAlpha(newAlpha);
-            Animation animationFadeIn = AnimationUtils.loadAnimation(getActivity(),R.anim.fadein);
-            Animation animationFadeOut = AnimationUtils.loadAnimation(getActivity(),R.anim.fadeout);
-            if (newAlpha == 255 && playerTitleBarArtis.getVisibility() != View.VISIBLE && !animationFadeIn.hasStarted()){
-            	playerTitleBarArtis.setVisibility(View.VISIBLE);
-            	playerTitleBarTitle.setVisibility(View.VISIBLE);
-            	playerTitleBarArtis.startAnimation(animationFadeIn);
-            	playerTitleBarTitle.startAnimation(animationFadeIn);
-            } else if (newAlpha < 255 && !animationFadeOut.hasStarted() && playerTitleBarArtis.getVisibility() != View.INVISIBLE)  { 	
-            	playerTitleBarArtis.startAnimation(animationFadeOut);
-            	playerTitleBarArtis.setVisibility(View.INVISIBLE);
-            	playerTitleBarTitle.startAnimation(animationFadeOut);
-            	playerTitleBarTitle.setVisibility(View.INVISIBLE);
-            }
-            moveCover(ratio);
-        }
-    };
     
 	private void moveCover(final float ratio) {
 		if (isNeedCalculateCover) {

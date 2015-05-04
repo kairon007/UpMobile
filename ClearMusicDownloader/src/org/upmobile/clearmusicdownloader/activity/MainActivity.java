@@ -48,7 +48,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	private SearchView searchView;
 	private String[] titles;
 	private String query;
-	private boolean useCoverHelper = true;
+	private boolean useCoverHelper = Boolean.TRUE;
 	private String folder_path = ClearMusicDownloaderApp.getDirectory();
 	private FileObserver fileObserver = new FileObserver(folder_path) {
 
@@ -318,6 +318,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		if (null == bmp) {
 			bmp = BitmapFactory.decodeResource(getResources(), R.drawable.def_cover_circle);
 		}
+		service.updatePictureNotification(bmp);
 		((ImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
 	}
 
