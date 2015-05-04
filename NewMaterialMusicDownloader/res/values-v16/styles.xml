@@ -10,21 +10,11 @@
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
         <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
         <item name="android:ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
-        <item name="android:textViewStyle">@style/TextViewStyle</item>
-        <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
 
-    <style name="TextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">sans-serif-thin</item>
-    </style>
-    
     <style name="ToolbarTitle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">22sp</item>
-    </style>
-
-    <style name="EditTextStyle" parent="@style/Widget.AppCompat.EditText">
-        <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
 </resources>

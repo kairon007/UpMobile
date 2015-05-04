@@ -31,7 +31,10 @@
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_default</item>
     </style>
 
-    <style name="MaterialAppTheme" parent="@style/MaterialAppThemeNoFonts"></style>
+    <style name="MaterialAppTheme" parent="@style/MaterialAppThemeNoFonts">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
 
     <style name="MaterialAppTheme.BlackNoFonts" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_black</item>
@@ -50,7 +53,10 @@
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_black</item>
     </style>
 
-    <style name="MaterialAppTheme.Black" parent="@style/MaterialAppTheme.BlackNoFonts"></style>
+    <style name="MaterialAppTheme.Black" parent="@style/MaterialAppTheme.BlackNoFonts">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
 
     <style name="MaterialAppTheme.BrownNoFonts" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_brown</item>
@@ -70,7 +76,10 @@
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_brown</item>
     </style>
 
-    <style name="MaterialAppTheme.Brown" parent="@style/MaterialAppTheme.BrownNoFonts"></style>
+    <style name="MaterialAppTheme.Brown" parent="@style/MaterialAppTheme.BrownNoFonts">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
 
     <style name="MaterialAppTheme.DeepOrangeNoFonts" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_orange</item>
@@ -89,7 +98,10 @@
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_orange</item>
     </style>
 
-    <style name="MaterialAppTheme.DeepOrange" parent="@style/MaterialAppTheme.DeepOrangeNoFonts"></style>
+    <style name="MaterialAppTheme.DeepOrange" parent="@style/MaterialAppTheme.DeepOrangeNoFonts">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
 
     <style name="MaterialAppTheme.GreenNoFonts" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_green</item>
@@ -108,6 +120,17 @@
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_green</item>
     </style>
 
-    <style name="MaterialAppTheme.Green" parent="@style/MaterialAppTheme.GreenNoFonts"></style>
+    <style name="MaterialAppTheme.Green" parent="@style/MaterialAppTheme.GreenNoFonts">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
+
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="EditTextStyle" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
 
 </resources>
