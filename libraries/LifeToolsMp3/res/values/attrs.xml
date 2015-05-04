@@ -147,6 +147,7 @@
             <enum name="robotoThin" value="14" />
             <enum name="robotoThinItalic" value="15" />
         </attr>
+        <attr name="useRoboto" format="boolean"/>
     </declare-styleable>
     
     <declare-styleable name="CircularProgressButton">

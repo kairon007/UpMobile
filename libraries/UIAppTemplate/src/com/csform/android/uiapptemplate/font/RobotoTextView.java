@@ -30,14 +30,19 @@ public class RobotoTextView extends TextView {
 	
 	private void parseAttributes(AttributeSet attrs) {
 		int typeface;
+		boolean useRoboto = false;
 		if (attrs == null) { //Not created from xml
 			typeface = Roboto.ROBOTO_REGULAR;
+			useRoboto = true;
 		} else {
 		    TypedArray values = getContext().obtainStyledAttributes(attrs, R.styleable.RobotoTextView);
 		    typeface = values.getInt(R.styleable.RobotoTextView_typeface, Roboto.ROBOTO_REGULAR);
+		    useRoboto = values.getBoolean(R.styleable.RobotoTextView_useRoboto, false);
 		    values.recycle();
+		} 
+		if (useRoboto) {
+			setTypeface(getRoboto(typeface));
 		}
-	    setTypeface(getRoboto(typeface));
 	}
 	
 	public void setRobotoTypeface(int typeface) {
