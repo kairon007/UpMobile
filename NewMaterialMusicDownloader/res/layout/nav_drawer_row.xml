@@ -36,16 +36,14 @@
 
         <TextView
             android:id="@+id/title"
+            style="@style/TextStyleLine2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toEndOf="@id/icon"
             android:layout_toRightOf="@id/icon"
-            android:fontFamily="sans-serif-medium"
             android:gravity="center_vertical"
             android:lines="1"
-            android:singleLine="true"
-            android:textColor="?attr/colorTextSecondary"
-            android:textSize="@dimen/material_drawer_item_primary_text" />
+            android:singleLine="true" />
     </RelativeLayout>
 
 </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
