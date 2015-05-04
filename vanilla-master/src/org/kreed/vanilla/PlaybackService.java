@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -36,7 +37,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +45,8 @@ import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -66,6 +68,7 @@ import android.os.Process;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -535,7 +538,6 @@ public final class PlaybackService extends Service
 				stopForeground(true); // sometimes required to clear notification
 				mNotificationManager.cancel(NOTIFICATION_ID);
 			}
-
 			MediaButtonReceiver.registerMediaButton(this);
 		}
 
@@ -1681,27 +1683,26 @@ public final class PlaybackService extends Service
 	 *
 	 * @param prefs Where to load the action preference from.
 	 */
-	public PendingIntent createNotificationAction(SharedPreferences prefs)
-	{
+	public PendingIntent createNotificationAction(SharedPreferences prefs) {
+		Intent intent = null;
 		switch (Integer.parseInt(prefs.getString(PrefKeys.NOTIFICATION_ACTION, "0"))) {
-		case NOT_ACTION_NEXT_SONG: {
-			Intent intent = new Intent(this, PlaybackService.class);
+		case NOT_ACTION_NEXT_SONG:
+			intent = new Intent(this, PlaybackService.class);
 			intent.setAction(PlaybackService.ACTION_NEXT_SONG_AUTOPLAY);
 			return PendingIntent.getService(this, 0, intent, 0);
-		}
-		case NOT_ACTION_MINI_ACTIVITY: {
-			Intent intent = new Intent(this, MiniPlaybackActivity.class);
-			return PendingIntent.getActivity(this, 0, intent, 0);
+		case NOT_ACTION_MINI_ACTIVITY:
+			intent = new Intent(this, MiniPlaybackActivity.class);
+			break;
+		case NOT_ACTION_MAIN_ACTIVITY: {
+			intent = new Intent(this, LibraryActivity.class);
+			intent.setAction(Intent.ACTION_MAIN);
+			break;
 		}
 		default:
 			Log.w("VanillaMusic", "Unknown value for notification_action. Defaulting to 0.");
 			// fall through
-		case NOT_ACTION_MAIN_ACTIVITY: {
-			Intent intent = new Intent(this, LibraryActivity.class);
-			intent.setAction(Intent.ACTION_MAIN);
-			return PendingIntent.getActivity(this, 0, intent, 0);
 		}
-		}
+		return PendingIntent.getActivity(this, 0, intent, 0);
 	}
 
 	/**
@@ -1711,56 +1712,91 @@ public final class PlaybackService extends Service
 	 * @param song The Song to display information about.
 	 * @param state The state. Determines whether to show paused or playing icon.
 	 */
-	public Notification createNotification(Song song, int state)
-	{
+	public Notification createNotification(Song song, int state) {
 		boolean playing = (state & FLAG_PLAYING) != 0;
-
-		RemoteViews views = new RemoteViews(getPackageName(), R.layout.notification);
-
 		Bitmap cover = song.getCover();
 		if (cover == null) {
-			views.setImageViewResource(R.id.cover, R.drawable.fallback_cover);
-		} else {
-			views.setImageViewBitmap(R.id.cover, cover);
+			System.out.println("!!! cover == null");
+			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.fallback_cover);
 		}
+		float size = Util.dpToPx(this, 64);
+		cover = Util.resizeBitmap(cover, size, size);
+		Intent playIntent = new Intent(this, PlaybackService.class);
+		playIntent.setAction(ACTION_TOGGLE_PLAYBACK_NOTIFICATION);
+		PendingIntent pplayIntent = PendingIntent.getService(this, 0, playIntent, 0);
 
-		String title = song.title;
+		Intent nextIntent = new Intent(this, PlaybackService.class);
+		nextIntent.setAction(ACTION_NEXT_SONG);
+		PendingIntent pnextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			int playButton = playing ? R.drawable.notification_pause : R.drawable.notification_play;
-			views.setImageViewResource(R.id.play_pause, playButton);
-
-			ComponentName service = new ComponentName(this, PlaybackService.class);
-
-			Intent playPause = new Intent(PlaybackService.ACTION_TOGGLE_PLAYBACK_NOTIFICATION);
-			playPause.setComponent(service);
-			views.setOnClickPendingIntent(R.id.play_pause, PendingIntent.getService(this, 0, playPause, 0));
-
-			Intent next = new Intent(PlaybackService.ACTION_NEXT_SONG);
-			next.setComponent(service);
-			views.setOnClickPendingIntent(R.id.next, PendingIntent.getService(this, 0, next, 0));
-
-			Intent close = new Intent(PlaybackService.ACTION_CLOSE_NOTIFICATION);
-			close.setComponent(service);
-			views.setOnClickPendingIntent(R.id.close, PendingIntent.getService(this, 0, close, 0));
-		} else if (!playing) {
-			title = getResources().getString(R.string.notification_title_paused, song.title);
+		Intent closeIntent = new Intent(this, PlaybackService.class);
+		closeIntent.setAction(ACTION_CLOSE_NOTIFICATION);
+		PendingIntent pcloseIntent = PendingIntent.getService(this, 0, closeIntent, 0);
+		int drawable = playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play;
+		String stateStr = (playing) ? getString(R.string.pause) : getString(R.string.play);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			return new NotificationCompat.Builder(this)
+					.setOngoing(true)
+					.setPriority(NotificationCompat.PRIORITY_MAX)
+					.setVisibility(Notification.VISIBILITY_PUBLIC)
+					.setSmallIcon(R.drawable.icon)
+					.setLargeIcon(cover)
+					.setContentTitle(song.title)
+					.setContentText(song.artist)
+					.setContentIntent(mNotificationAction)
+					.setWhen(System.currentTimeMillis()).build();
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+			RemoteViews views = new RemoteViews(getPackageName(), R.layout.notification);
+			views.setTextViewText(R.id.artist, song.artist);
+			views.setTextViewText(R.id.title, song.title);
+			views.setImageViewResource(R.id.play_pause, drawable);
+			views.setOnClickPendingIntent(R.id.play_pause, pplayIntent);
+			views.setOnClickPendingIntent(R.id.next, pnextIntent);
+			views.setOnClickPendingIntent(R.id.close, pcloseIntent);
+			if (mInvertNotification) {
+				views.setTextColor(R.id.title, Color.WHITE);
+				views.setTextColor(R.id.artist, Color.WHITE);
+			}
+			return new NotificationCompat.Builder(this)
+					.setOngoing(true)
+					.setPriority(NotificationCompat.PRIORITY_MAX)
+					.setVisibility(Notification.VISIBILITY_PUBLIC)
+					.setSmallIcon(R.drawable.icon)
+					.setLargeIcon(cover)
+					.setContentIntent(mNotificationAction)
+					.setContent(views)
+					.setWhen(System.currentTimeMillis()).build();
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			return new NotificationCompat.Builder(this)
+					.setOngoing(true)
+					.setPriority(NotificationCompat.PRIORITY_MAX)
+					.setVisibility(Notification.VISIBILITY_PUBLIC)
+					.setOngoing(true)
+					.setSmallIcon(R.drawable.icon)
+					.setLargeIcon(cover)
+					.setContentTitle(song.title)
+					.setContentText(song.artist)
+					.setContentIntent(mNotificationAction)
+					.addAction(drawable, stateStr, pplayIntent)
+					.addAction(android.R.drawable.ic_media_next, getString(R.string.next), pnextIntent)
+					.addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.close), pcloseIntent).build();
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			drawable = (playing) ? R.drawable.ic_pause : R.drawable.ic_play;
+			return new Notification.Builder(this)
+					.setOngoing(true)
+					.setPriority(NotificationCompat.PRIORITY_MAX)
+					.setVisibility(Notification.VISIBILITY_PUBLIC)
+					.setSmallIcon(R.drawable.icon)
+					.addAction(drawable, stateStr, pplayIntent)
+					.addAction(R.drawable.ic_next, getString(R.string.next), pnextIntent)
+					.addAction(R.drawable.ic_close, getString(R.string.close), pcloseIntent)
+					.setStyle(new Notification.MediaStyle().setShowActionsInCompactView(2))
+					.setContentTitle(song.title).setContentText(song.artist)
+					.setContentIntent(mNotificationAction)
+					.setLargeIcon(cover)
+					.build();
 		}
-
-		views.setTextViewText(R.id.title, title);
-		views.setTextViewText(R.id.artist, song.artist);
-
-		if (mInvertNotification) {
-			views.setTextColor(R.id.title, 0xffffffff);
-			views.setTextColor(R.id.artist, 0xffffffff);
-		}
-
-		Notification notification = new Notification();
-		notification.contentView = views;
-		notification.icon = R.drawable.status_icon;
-		notification.flags |= Notification.FLAG_ONGOING_EVENT;
-		notification.contentIntent = mNotificationAction;
-		return notification;
+		return null;
 	}
 
 	public void onAudioFocusChange(int type)
@@ -1828,8 +1864,7 @@ public final class PlaybackService extends Service
 	 * updated by the broadcast if not passed here; passing it just makes the
 	 * update immediate.
 	 */
-	public void performAction(Action action, PlaybackActivity receiver)
-	{
+	public void performAction(Action action, PlaybackActivity receiver) {
 		switch (action) {
 		case Nothing:
 			break;
