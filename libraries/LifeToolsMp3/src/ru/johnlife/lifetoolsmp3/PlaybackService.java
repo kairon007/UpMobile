@@ -417,10 +417,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 
 	public void play(AbstractSong song) {
-		if ((song instanceof MusicData && check(SMODE_SONG_FROM_INTERNET))
-				|| (song instanceof RemoteSong && check(SMODE_SONG_FROM_LIBRARY))) {
-			sendPlaySong(song);
-		}
 		if (arrayPlayback == null || arrayPlayback.indexOf(song) == -1) return;
 		int position = arrayPlayback.indexOf(song);
 		if (null != playingSong) {
@@ -434,25 +430,21 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 		playingSong = arrayPlayback.get(position);
 		if (check(SMODE_PREPARED)) {
-			sendPlaySong(playingSong);
+			int msg;
+			if (check(SMODE_PAUSE)) {
+				msg = MSG_PLAY;
+				onMode(SMODE_PLAYING);
+			} else {
+				msg = MSG_PAUSE;
+				onMode(SMODE_PAUSE);
+			}
+			buildSendMessage(playingSong, msg, 0, 0);
 		} else {
 			play(playingSong.getClass() != MusicData.class);
 			if (null != previousSong && previousSong != playingSong) {
 				helper(State.STOP, previousSong);
 			}
 		}
-	}
-	
-	private void sendPlaySong(AbstractSong song) {
-		int msg;
-		if (check(SMODE_PAUSE)) {
-			msg = MSG_PLAY;
-			onMode(SMODE_PLAYING);
-		} else {
-			msg = MSG_PAUSE;
-			onMode(SMODE_PAUSE);
-		}
-		buildSendMessage(song, msg, 0, 0);
 	}
 	
 	public void play() {
