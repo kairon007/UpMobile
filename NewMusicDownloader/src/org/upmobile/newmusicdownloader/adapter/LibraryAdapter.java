@@ -35,8 +35,6 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 
 	private class LibraryViewHolder extends BaseLibraryViewHolder{
 
-		private ViewGroup info;
-
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
 			cover = (ImageView) v.findViewById(R.id.cover);
@@ -56,11 +54,8 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 					if (!service.isCorrectlyState(MusicData.class, getCount())) {
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
-					}
-					if (service.isPrepared() && service.getPlayingSong().equals(data)) {
-						return;
-					}
-					((MainActivity) getContext()).showPlayerElement(true);
+					} 
+					if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
 					((MainActivity)getContext()).startSong(data);
 				}
 			});
@@ -81,8 +76,9 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 	@Override
 	protected void remove() {
 		if (isEmpty()) {
-			((MainActivity) getContext()).showPlayerElement(false);
-			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
+			MainActivity act =  (MainActivity) getContext(); 
+			act.showPlayerElement(false);
+			TextView emptyMsg = (TextView) act.findViewById(R.id.message_listview);
 			emptyMsg.setVisibility(View.VISIBLE);
 			emptyMsg.setText(R.string.library_empty);
 		}

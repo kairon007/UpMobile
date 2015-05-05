@@ -144,11 +144,9 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 					StateKeeper.getInstance().setPlayingSong((AbstractSong) v.getTag());
 					notifyDataSetChanged();
 					startSong((AbstractSong) v.getTag());
-				}
-				if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
+				} else if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
 					preparePlaylists(v);
-				}
-				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
+				} else if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
 					remove((MusicData) v.getTag());
 					service.remove((AbstractSong) v.getTag());
 					((MusicData) v.getTag()).reset(getContext());
@@ -170,7 +168,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			showMessage(getContext(), R.string.playlists_are_missing);
 		} else {
 			showPlaylistsDialog(playlistDatas, v, data);
-		}
+		} 
 	}
 	
 	protected void showPlaylistsDialog(final ArrayList<PlaylistData> playlistDatas, final View v, String[] data) {

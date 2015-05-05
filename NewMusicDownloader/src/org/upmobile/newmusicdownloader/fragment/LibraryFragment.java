@@ -23,10 +23,11 @@ public class LibraryFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).invalidateOptionsMenu();
-		((MainActivity) getActivity()).setSelectedItem(Constants.LIBRARY_FRAGMENT);
-		((MainActivity)	getActivity()).setCurrentTag(getClass().getSimpleName());
-		((MainActivity) getActivity()).setTitle(R.string.tab_library);
+		MainActivity activity = (MainActivity) getActivity();
+		activity.invalidateOptionsMenu();
+		activity.setSelectedItem(Constants.LIBRARY_FRAGMENT);
+		activity.setCurrentTag(getClass().getSimpleName());
+		activity.setTitle(R.string.tab_library);
 		libraryView.onResume();
 		super.onResume();
 	}

@@ -323,8 +323,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					mode &= ~SMODE_GET_URL;
 				}
 				try {
-					Uri uri = Uri.parse(songStart.getClass() == MusicData.class ? "file://" + songStart.getPath() : null == songStart.getPath() ? songStart.getDownloadUrl() : songStart.getPath());
-					player.setDataSource(this, uri);
+					String path =  songStart.getPath();
+					if (sourceSong() == SMODE_SONG_FROM_LIBRARY || null != path) {
+						player.setDataSource(path);
+					} else {
+						Uri uri = Uri.parse(songStart.getDownloadUrl());
+						player.setDataSource(this, uri);
+					}
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
 				} catch (Exception e) {
@@ -735,7 +740,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	 * use constants from ServicePlayback
 	 * 
 	 * @return indicate source of playing song and song from arrayPlayBack. Values can be
-	 *         three options - SMODE_SONG_FROM_LIBRARY, SMODE_SONG_FROM_INTERNER
+	 *         three options - SMODE_SONG_FROM_LIBRARY, SMODE_SONG_FROM_INTERNET
 	 *         and SMODE_HAS_NOT_SONG (when arrayPlayback is empty)
 	 */
 	public int sourceSong() {

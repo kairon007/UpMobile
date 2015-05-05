@@ -197,13 +197,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void setImageButton() {
-		if(!player.enabledRepeat()) {
-			repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
-		} else {
+		if(player.enabledRepeat()) {
 			repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeatOn));
+		} else {
+			repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
 		}
 		if (player.enabledShuffle()) {
-			shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffle));
+			shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffleOn));
 		} else {
 			shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffle));
 		}
@@ -264,6 +264,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onDestroy() {
 		isDestroy = true;
 		((MainActivity) getActivity()).setDrawerEnabled(true);
+		player.removeStatePlayerListener(this);
 		super.onDestroy();
 	}
 
@@ -375,10 +376,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			hideOpenViews();
 			break;
 		case R.id.repeat:
-			if (!player.offOnRepeat()){
-				repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
-			} else {
+			if (player.offOnRepeat()){
 				repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeatOn));
+			} else {
+				repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
 			}
 			break;
 		case R.id.shuffle:
