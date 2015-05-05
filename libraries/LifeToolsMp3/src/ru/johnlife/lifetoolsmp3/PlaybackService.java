@@ -256,6 +256,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 		handler.removeCallbacksAndMessages(null);
 		player.release();
+		instance = null;
 		looper.quit();
 		removeNotification();
 		super.onDestroy();
