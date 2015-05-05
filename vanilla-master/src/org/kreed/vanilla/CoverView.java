@@ -345,7 +345,7 @@ public final class CoverView extends View implements Handler.Callback {
 			}
 
 			int delta = width - scrollX;
-			mScroller.startScroll(scrollX, 0, delta, 0, (int)(Math.abs(delta) * 2 / sDensity));
+			mScroller.startScroll(scrollX, 0, delta, 0, 500); // (int)(Math.abs(delta) * 2 / sDensity) - older delta
 			mUiHandler.sendEmptyMessage(MSG_SCROLL);
 
 			if (mVelocityTracker != null) {
