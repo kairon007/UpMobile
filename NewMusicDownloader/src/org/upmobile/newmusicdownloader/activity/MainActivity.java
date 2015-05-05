@@ -353,13 +353,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	protected void showPlayerFragment() {
 		showMiniPlayer(false);
 		Fragment fragment = new PlayerFragment();
-    	Bundle args = new Bundle();
-    	if (null != service.getPlayingSong()) {
-			args.putParcelable(Constants.KEY_SELECTED_SONG, service.getPlayingSong());
-		} else {
-			args = null;
-		}
-    	fragment.setArguments(args);
     	changeFragment(fragment, true);
 	}
 	
@@ -386,7 +379,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME) 
 	        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR)
 	        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR_NO_FONTS)
-	        		||context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_NO_FONTS) ;
+	        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_NO_FONTS) ;
 	    } catch (Exception e) {
 	    	Log.e(Util.class.getSimpleName(), e.getMessage());
 	        return false;

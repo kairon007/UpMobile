@@ -40,7 +40,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -89,50 +88,30 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private EditText playerTagsArtist;
 	private int checkIdCover;
     private boolean isDestroy;
-    private boolean isUseAlbumCover = true;
+    private boolean isUseAlbumCover = Boolean.TRUE;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-		isDestroy = false;
-		setHasOptionsMenu(true);
-		parentView = inflater.inflate(R.layout.player_fragment, container, false);
-		init();
+		parentView = inflater.inflate(R.layout.player_fragment, container, Boolean.FALSE);
+		player = PlaybackService.get(getActivity());
+		isDestroy = Boolean.FALSE;
+		setHasOptionsMenu(Boolean.TRUE);
+		init(parentView);
 		playerProgress.setVisibility(View.INVISIBLE);
 		filter = new IntentFilter();
 		filter.addAction(ANDROID_MEDIA_VOLUME_CHANGED_ACTION);
 		audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 		volume.setMax(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 		volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-		player = PlaybackService.get(getActivity());
-		player.setOnErrorListener(this);
-		player.addStatePlayerListener(this);
-		if (null != getArguments() && getArguments().containsKey(Constants.KEY_SELECTED_SONG)) {
-			song = getArguments().getParcelable(Constants.KEY_SELECTED_SONG);
-			if (song.equals(player.getPlayingSong()) && player.isPlaying()) {
-				player.play();
-			} else if (!song.equals(player.getPlayingSong())){
-				player.play(song);
-			}
-			((MainActivity) getActivity()).setDrawerEnabled(false);
-		} else {
-			song = player.getPlayingSong();
-		}
+		song = player.getPlayingSong();
 		setImageButton();
 		getCover(song);
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
 		downloadButtonState(!player.isGettingURl());
-		if (prepared) {
-			changePlayPauseView(!player.isPlaying());
-		} else {
-			changePlayPauseView(prepared);
-		}
-		if (song.getClass() == MusicData.class) {
-			btnDownload.setVisibility(View.GONE);
-		} else {
-			btnDownload.setVisibility(View.VISIBLE);
-		}
+		changePlayPauseView(prepared ? !player.isPlaying() : prepared);
+		btnDownload.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		return parentView;
 	}
 
@@ -204,6 +183,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (isDestroy) return;
 		song = current;
 		setElementsView(0);
+		getCover(current);
 		setClickablePlayerElement(false);
 		playerProgress.setVisibility(View.INVISIBLE);
 		wait.setVisibility(View.VISIBLE);
@@ -250,10 +230,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onResume() {
 		super.onResume();
-		getActivity().registerReceiver(volumeReceiver, filter); 
-		((MainActivity) getActivity()).setSelectedItem(Constants.PLAYER_FRAGMENT);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
-		((MainActivity) getActivity()).setTitle(R.string.tab_now_plaing);
+		MainActivity activity = ((MainActivity) getActivity());
+		activity.registerReceiver(volumeReceiver, filter); 
+		activity.setSelectedItem(Constants.PLAYER_FRAGMENT);
+		activity.invalidateOptionsMenu();
+		activity.setTitle(R.string.tab_now_plaing);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
 			btnDownload.setVisibility(View.GONE);
@@ -282,7 +263,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onDestroy() {
 		isDestroy = true;
-		((MainActivity)getActivity()).setDrawerEnabled(true);
+		((MainActivity) getActivity()).setDrawerEnabled(true);
 		super.onDestroy();
 	}
 
@@ -306,38 +287,34 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 * @param isPlaying - If "true", the button changes the picture to "play", if "false" changes to "pause"
 	 */
 	private void changePlayPauseView(boolean isPlaying) {
-		if (isPlaying) {
-			play.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaPlay));
-		} else {
-			play.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaPause));
-		}
+		play.setImageResource(getResIdFromAttribute(getActivity(), isPlaying ? R.attr.mediaPlay : R.attr.mediaPause));
 	}
 	
-	private void init() {
-		play = (ImageButton) parentView.findViewById(R.id.playpause);
-		wait = parentView.findViewById(R.id.player_wait_song);
-		previous = (ImageButton) parentView.findViewById(R.id.prev);
-		forward = (ImageButton) parentView.findViewById(R.id.next);
-		shuffle = (ImageButton) parentView.findViewById(R.id.shuffle);
-		repeat = (ImageButton) parentView.findViewById(R.id.repeat);
-		stop = (ImageButton) parentView.findViewById(R.id.stop);
-		btnDownload = (Button) parentView.findViewById(R.id.btn_download);
-		showLyrics = (ImageButton) parentView.findViewById(R.id.player_lyrics);
-		editTag = (ImageButton) parentView.findViewById(R.id.player_edit_tags);
-		volume = (SeekBar) parentView.findViewById(R.id.progress_volume);
-		playerProgress = (SeekBar) parentView.findViewById(R.id.progress_track);
-		playerTitle = (TextView) parentView.findViewById(R.id.songName);
-		playerArtist = (TextView) parentView.findViewById(R.id.artistName);
-		playerCurrTime = (TextView) parentView.findViewById(R.id.trackTime);
-		playerTotalTime = (TextView) parentView.findViewById(R.id.trackTotalTime);
-		playerLyricsView = (TextView) parentView.findViewById(R.id.player_lyrics_view);
-		playerSaveTags = (Button) parentView.findViewById(R.id.player_save_tags);
-		playerCancelTags = (Button) parentView.findViewById(R.id.player_cancel_tags);
-		playerCover = (ImageView) parentView.findViewById(R.id.albumCover);
-		playerTagsArtist = (EditText) parentView.findViewById(R.id.editTextArtist);
-		playerTagsTitle = (EditText) parentView.findViewById(R.id.editTextTitle);
-		playerTagsAlbum = (EditText) parentView.findViewById(R.id.editTextAlbum);
-		playerTagsCheckBox = (CheckBox) parentView.findViewById(R.id.isUseCover);
+	private void init(final View view) {
+		play = (ImageButton) view.findViewById(R.id.playpause);
+		wait = view.findViewById(R.id.player_wait_song);
+		previous = (ImageButton) view.findViewById(R.id.prev);
+		forward = (ImageButton) view.findViewById(R.id.next);
+		shuffle = (ImageButton) view.findViewById(R.id.shuffle);
+		repeat = (ImageButton) view.findViewById(R.id.repeat);
+		stop = (ImageButton) view.findViewById(R.id.stop);
+		btnDownload = (Button) view.findViewById(R.id.btn_download);
+		showLyrics = (ImageButton) view.findViewById(R.id.player_lyrics);
+		editTag = (ImageButton) view.findViewById(R.id.player_edit_tags);
+		volume = (SeekBar) view.findViewById(R.id.progress_volume);
+		playerProgress = (SeekBar) view.findViewById(R.id.progress_track);
+		playerTitle = (TextView) view.findViewById(R.id.songName);
+		playerArtist = (TextView) view.findViewById(R.id.artistName);
+		playerCurrTime = (TextView) view.findViewById(R.id.trackTime);
+		playerTotalTime = (TextView) view.findViewById(R.id.trackTotalTime);
+		playerLyricsView = (TextView) view.findViewById(R.id.player_lyrics_view);
+		playerSaveTags = (Button) view.findViewById(R.id.player_save_tags);
+		playerCancelTags = (Button) view.findViewById(R.id.player_cancel_tags);
+		playerCover = (ImageView) view.findViewById(R.id.albumCover);
+		playerTagsArtist = (EditText) view.findViewById(R.id.editTextArtist);
+		playerTagsTitle = (EditText) view.findViewById(R.id.editTextTitle);
+		playerTagsAlbum = (EditText) view.findViewById(R.id.editTextAlbum);
+		playerTagsCheckBox = (CheckBox) view.findViewById(R.id.isUseCover);
 		playerProgress.setOnSeekBarChangeListener(this);
 		volume.setOnSeekBarChangeListener(this);
 		play.setOnClickListener(this);
@@ -351,6 +328,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		showLyrics.setOnClickListener(this);
 		playerCancelTags.setOnClickListener(this);
 		playerSaveTags.setOnClickListener(this);
+		player.setOnErrorListener(this);
+		player.addStatePlayerListener(this);
 	}
 	
 	private void setElementsView(int progress) {
@@ -421,7 +400,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.player_save_tags:
 			saveTags();
 		case R.id.player_cancel_tags:
-			hideKeyboard();
+			Util.hideKeyboard(getActivity(), v);
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
@@ -523,7 +502,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void showEditTagDialog() {
 		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
-			hideKeyboard();
+			Util.hideKeyboard(getActivity(), parentView);
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
@@ -535,15 +514,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerTagsAlbum.setText(song.getAlbum());
 		}
 	}
-
-	private void hideKeyboard() {
-		View hideVeiw = parentView.findViewById(R.id.player_edit_tag_dialog);
-		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(hideVeiw.getWindowToken(), 0);
-	}
 	
 	private void saveTags() {
-		hideKeyboard();
+		Util.hideKeyboard(getActivity(), parentView);
 		boolean manipulate = manipulateText();
 		isUseAlbumCover = playerTagsCheckBox.isChecked();
 		if (!manipulate && playerTagsCheckBox.isChecked()) {
@@ -622,52 +595,48 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerCover.invalidate();
 		if (delta > 0) {
 			player.shift(1);
-			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
 		} else if (delta < 0) {
 			player.shift(-1);
-			getCover(player.getPlayingSong());
 			downloadButtonState(!player.isGettingURl());
 		}
 	}
 
 	private void getCover(final AbstractSong song) {
+		checkBoxState(false);
+		if (song.isHasCover()) {
+			final Bitmap bitmap = song.getCover();
+			if (null != bitmap) {
+				playerCover.post(new Runnable() {
+
+					@Override
+					public void run() {
+						checkBoxState(true);
+						playerCover.setImageBitmap(bitmap);
+					}
+				});
+				return;
+			}
+		}
 		if (song.getClass() != MusicData.class) {
 			playerCover.setImageResource(R.drawable.no_cover_art_big);
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
-					if (this.hashCode() != checkIdCover) return;
+					if (hashCode() != checkIdCover || null == bmp) return;
 					if (null != bmp) {
 						checkBoxState(true);
-						((RemoteSong) song).setHasCover(true);
-						playerCover.setImageResource(0);
+						RemoteSong ssong = ((RemoteSong) song);
+						ssong.setHasCover(true);
+						ssong.setCover(bmp);
 						playerCover.setImageBitmap(bmp);
-					} else {
-						playerCover.setImageResource(R.drawable.no_cover_art_big);
-						checkBoxState(false);
+						player.updatePictureNotification(bmp);
 					}
 				}
 			};
 			checkIdCover  = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);
-		} else {
-			final Bitmap bitmap = ((MusicData) song).getCover();
-			if (bitmap != null) {
-				playerCover.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						playerCover.setImageResource(0);
-						checkBoxState(true);
-						playerCover.setImageBitmap(bitmap);
-					}
-				});
-			} else {
-				playerCover.setImageResource(R.drawable.no_cover_art_big);
-				checkBoxState(false);
-			}
 		}
 	}
 	
@@ -718,10 +687,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	@Override
-	public void stopPressed() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void stopPressed() {}
 	
 	@Override
 	public void error(final String error) {

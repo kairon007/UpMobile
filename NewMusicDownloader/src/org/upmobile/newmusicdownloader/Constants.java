@@ -6,9 +6,6 @@ import android.os.Environment;
 
 public interface Constants extends ru.johnlife.lifetoolsmp3.Constants {
 	
-	public static final String KEY_SELECTED_SONG = "key.selected.song";
-	public static final String KEY_SELECTED_POSITION = "key.selected.position";
-	
 	public static final String PREF_DIRECTORY_PREFIX = "newmusicdownloader.pref.directory.prefix";
 	public static final String PREF_DIRECTORY = "newmusicdownloader.pref.directory";
 	
