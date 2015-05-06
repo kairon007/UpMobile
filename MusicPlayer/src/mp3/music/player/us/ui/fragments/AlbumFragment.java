@@ -12,6 +12,24 @@
 package mp3.music.player.us.ui.fragments;
 
 import static mp3.music.player.us.utils.PreferenceUtils.ALBUM_LAYOUT;
+
+import java.util.List;
+
+import mp3.music.player.us.Config;
+import mp3.music.player.us.MusicStateListener;
+import mp3.music.player.us.R;
+import mp3.music.player.us.adapters.AlbumAdapter;
+import mp3.music.player.us.loaders.AlbumLoader;
+import mp3.music.player.us.menu.CreateNewPlaylist;
+import mp3.music.player.us.menu.DeleteDialog;
+import mp3.music.player.us.menu.FragmentMenuItems;
+import mp3.music.player.us.model.Album;
+import mp3.music.player.us.recycler.RecycleHolder;
+import mp3.music.player.us.ui.activities.BaseActivity;
+import mp3.music.player.us.utils.ApolloUtils;
+import mp3.music.player.us.utils.MusicUtils;
+import mp3.music.player.us.utils.NavUtils;
+import mp3.music.player.us.utils.PreferenceUtils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -37,26 +55,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.devspark.appmsg.AppMsg;
-
-import mp3.music.player.us.Config;
-import mp3.music.player.us.MusicStateListener;
-import mp3.music.player.us.R;
-import mp3.music.player.us.adapters.AlbumAdapter;
-import mp3.music.player.us.loaders.AlbumLoader;
-import mp3.music.player.us.menu.CreateNewPlaylist;
-import mp3.music.player.us.menu.DeleteDialog;
-import mp3.music.player.us.menu.FragmentMenuItems;
-import mp3.music.player.us.model.Album;
-import mp3.music.player.us.recycler.RecycleHolder;
-import mp3.music.player.us.ui.activities.BaseActivity;
-import mp3.music.player.us.utils.ApolloUtils;
-import mp3.music.player.us.utils.MusicUtils;
-import mp3.music.player.us.utils.NavUtils;
-import mp3.music.player.us.utils.PreferenceUtils;
-
-import com.viewpagerindicator.TitlePageIndicator;
-
-import java.util.List;
 
 /**
  * This class is used to display all of the albums on a user's device.

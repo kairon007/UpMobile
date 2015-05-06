@@ -11,10 +11,10 @@
 
 package mp3.music.player.us.widgets.theme;
 
+import mp3.music.player.us.utils.ThemeUtils;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import mp3.music.player.us.utils.ThemeUtils;
 import com.viewpagerindicator.TitlePageIndicator;
 
 /**

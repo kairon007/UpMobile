@@ -49,7 +49,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.viewpagerindicator.TitlePageIndicator;
 
 /**
  * This class is used to display all of the songs on a user's device.

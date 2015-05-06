@@ -11,6 +11,23 @@
 
 package mp3.music.player.us.ui.fragments;
 
+import java.util.List;
+
+import mp3.music.player.us.R;
+import mp3.music.player.us.adapters.SongAdapter;
+import mp3.music.player.us.dragdrop.DragSortListView;
+import mp3.music.player.us.dragdrop.DragSortListView.DragScrollProfile;
+import mp3.music.player.us.dragdrop.DragSortListView.DropListener;
+import mp3.music.player.us.dragdrop.DragSortListView.RemoveListener;
+import mp3.music.player.us.loaders.NowPlayingCursor;
+import mp3.music.player.us.loaders.QueueLoader;
+import mp3.music.player.us.menu.CreateNewPlaylist;
+import mp3.music.player.us.menu.FragmentMenuItems;
+import mp3.music.player.us.model.Song;
+import mp3.music.player.us.provider.FavoritesStore;
+import mp3.music.player.us.recycler.RecycleHolder;
+import mp3.music.player.us.utils.MusicUtils;
+import mp3.music.player.us.utils.NavUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -29,24 +46,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuInflater;
-import mp3.music.player.us.R;
-import mp3.music.player.us.adapters.SongAdapter;
-import mp3.music.player.us.dragdrop.DragSortListView;
-import mp3.music.player.us.dragdrop.DragSortListView.DragScrollProfile;
-import mp3.music.player.us.dragdrop.DragSortListView.DropListener;
-import mp3.music.player.us.dragdrop.DragSortListView.RemoveListener;
-import mp3.music.player.us.loaders.NowPlayingCursor;
-import mp3.music.player.us.loaders.QueueLoader;
-import mp3.music.player.us.menu.CreateNewPlaylist;
-import mp3.music.player.us.menu.FragmentMenuItems;
-import mp3.music.player.us.model.Song;
-import mp3.music.player.us.provider.FavoritesStore;
-import mp3.music.player.us.recycler.RecycleHolder;
-import mp3.music.player.us.utils.MusicUtils;
-import mp3.music.player.us.utils.NavUtils;
-import com.viewpagerindicator.TitlePageIndicator;
-
-import java.util.List;
 
 /**
  * This class is used to display all of the songs in the queue.

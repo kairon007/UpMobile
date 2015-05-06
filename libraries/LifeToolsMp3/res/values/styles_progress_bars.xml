@@ -11,7 +11,7 @@
         <item name="contourColor">@android:color/transparent</item>
         <item name="contourSize">0dp</item>
         <item name="delayMillis">0</item>
-        <item name="radius">0dp</item>
+        <item name="pw_radius">0dp</item>
         <item name="rimWidth">8dp</item>
         <item name="spinSpeed">1dp</item>
         <item name="isSpinning">false</item>

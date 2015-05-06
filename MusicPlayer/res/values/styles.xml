@@ -18,8 +18,6 @@
 
     <!-- Main Holo -->
     <style name="Apollo.Theme.Dark" parent="Theme.Sherlock">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="windowContentOverlay">@null</item>
     </style>
 
     <!-- Main Holo light -->
