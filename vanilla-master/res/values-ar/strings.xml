@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Dir picker -->
+    <string name="cancel_label">إلغاء الأمر</string>
+    <string name="confirm_label">تأكيد</string>
+    <string name="selected_folder_label">المجلد المحدد:</string>
+    <string name="create_folder_label">إنشاء مجلد</string>
+    <string name="create_folder_msg">إنشاء مجلد جديد باسم "% 1$ s"؟</string>
+    <string name="create_folder_success">إنشاء مجلد جديد</string>
+    <string name="create_folder_error_no_write_access">لا يمكن الكتابة إلى هذا المجلد</string>
+    <string name="create_folder_error_already_exists">يوجد بالفعل مجلد</string>
+    <string name="create_folder_error">لا يمكن إنشاء المجلد</string>
+    <string name="up_label">حتى</string>
+    <!--  -->
+    <string name="menu_equalizer">التعادل</string>
+    <string name="remove_album_cover">إزالة غلاف الألبوم</string>
+    <string name="remove_album_cover_title">إزالة غلاف الألبوم</string>
+    <string name="remove_album_cover_complete">هل تريد إزالة الغطاء؟</string>
+    <string name="disclaimer">جميع نتائج البحث تأتي من Jamendo.com API. [جمندو] هو أكبر موقع للموسيقى الحرة المتروكة التي يمكن تحميلها قانونا.</string>
+    <string name="action_settings">إعدادات</string>
+    <string name="not_selected_song">أغنية غير محددة</string>
+    <string name="file_with_the_same_name_already_exists">يوجد بالفعل ملف بنفس الاسم</string>
+    <!-- translatable -->
+    <string name="app_name">Vanilla Music</string>
+    <!-- Playback Activity (main screen) -->
+    <string name="no_songs">لا الأغاني الموجودة على الجهاز الخاص بك.</string>
+    <string name="empty_queue">لا توجد أغاني مختارة. اختيار بعض من المكتبة أو الدخول في وضع عشوائي بالتنصت على هذه الرسالة.</string>
+    <string name="settings">إعدادات</string>
+    <string name="library">مكتبة</string>
+    <string name="no_shuffle">لا المراوغة</string>
+    <string name="shuffle_songs">خلط الأغاني</string>
+    <string name="shuffle_albums">ألبومات المراوغة</string>
+    <string name="no_repeat">لا يوجد تكرار</string>
+    <string name="repeat">كرر</string>
+    <string name="repeat_current_song">كرر الأغنية الحالية</string>
+    <string name="stop_current_song">وقف بعد الأغنية الحالية</string>
+    <string name="random">عشوائية</string>
+    <string name="random_enabling">تمكين عشوائي</string>
+    <string name="song_load_failed">فشل في تحميل أغنية % s. قد يكون معطوباً أو مفقوداً.</string>
+    <string name="queue_cleared">مسح قائمة انتظار.</string>
+    <string name="cover_art">تغطية الفن</string>
+    <string name="close_notification">وثيقة الإخطار</string>
+    <string name="_genre">النوع</string>
+    <string name="_track">المسار</string>
+    <string name="_composer">ملحن</string>
+    <string name="_format">تنسيق</string>
+    <string name="_title">العنوان</string>
+    <string name="_artist">الفنان</string>
+    <string name="_album">ألبوم</string>
+    <string name="_year">السنة</string>
+    <!-- New Playlist Dialog -->
+    <string name="choose_playlist_name">اختر اسم قائمة التشغيل</string>
+    <string name="create">إنشاء</string>
+    <string name="overwrite">الكتابة فوق</string>
+    <string name="cancel">إلغاء الأمر</string>
+    <string name="delete_playlist">حذف قائمة التشغيل % s؟</string>
+    <!-- Library -->
+    <string name="enqueue">Enqueue</string>
+    <string name="play">اللعب</string>
+    <string name="edit">تحرير</string>
+    <string name="rename">إعادة تسمية</string>
+    <string name="add_to_playlist">إضافة إلى قائمة التشغيل...</string>
+    <string name="new_playlist">قائمة تشغيل جديدة...</string>
+    <string name="expand">قم بتوسيع</string>
+    <string name="delete">حذف</string>
+    <string name="playback_view">التشغيل الآن</string>
+    <string name="sort_by">فرز حسب</string>
+    <string name="search">البحث</string>
+    <string name="done">عمله</string>
+    <string name="remove">إزالة</string>
+    <string name="clear_search">مسح البحث</string>
+    <string name="play_or_enqueue">Enqueue إذا لعب؛ اللعب في حالة الإيقاف المؤقت</string>
+
+    <string name="deleted">حذف % s.</string>
+
+
+    <string name="delete_file_failed">فشل في حذف % s.</string>
+    <string name="artists">الفنانين</string>
+    <string name="albums">ألبومات</string>
+    <string name="songs">مكتبة</string>
+    <string name="playlists">قوائم التشغيل</string>
+    <string name="genres">الأنواع</string>
+    <string name="files">الملفات</string>
+    <string name="none">لا شيء</string>
+    <string name="unknown">المجهول</string>
+    <string name="play_all">تشغيل كافة</string>
+    <string name="enqueue_all">Enqueue كل</string>
+    <string name="all_songs">جميع أغاني</string>
+    <string name="more_from_artist">أكثر من الفنان</string>
+    <string name="more_from_album">أكثر من ألبوم</string>
+    <string name="name">الاسم</string>
+    <string name="number_of_tracks">عدد من المسارات</string>
+    <string name="year">السنة</string>
+    <string name="date_added">تاريخ الإضافة</string>
+    <string name="artist_album">الفنان، الألبوم</string>
+    <string name="artist_album_track">الفنان، الألبوم، رقم المسار</string>
+    <string name="artist_album_title">الفنان، الألبوم، والعنوان</string>
+    <string name="artist_year">الفنان، والسنة</string>
+    <string name="ascending">ترتيب تصاعدي</string>
+    <string name="descending">تنازلي</string>
+    <!-- Notification -->
+    <string name="notification_title_paused">% s (مؤقتاً)</string>
+    <!-- Preferences -->
+
+    <string name="audio">الصوت</string>
+    <string name="volume_title">وحدة التخزين</string>
+    <string name="media_button_title">ضوابط سماعات الرأس/بلوتوث</string>
+    <string name="media_button_summary">وهذا مطلوب أيضا للضوابط lockscreen ICS.</string>
+    <string name="media_button_beep_title">سماعة التحكم صوت تنبيه</string>
+    <string name="media_button_beep_summary">انقر نقراً مزدوجاً فوق صوتية بعد تخطي مسار مع عنصر تحكم سماعات رأس.</string>
+    <string name="headset_only_title">الإخراج الخارجية فقط</string>
+    <string name="headset_only_summary">يمنع تشغيل من خلال سماعات داخلية الموسيقى.</string>
+    <string name="headset_pause_title">وقفه عند غير موصول</string>
+    <string name="headset_pause_summary">وقفه عند إلغاء توصيل سماعات الرأس.</string>
+    <string name="headset_play_title">اللعب عند توصيله</string>
+    <string name="headset_play_summary">اللعب عندما تكون سماعات الرأس تلبيتها، توصيله (يعمل فقط عندما تكون الخدمة قيد التشغيل.)</string>
+    <string name="notifications">الإخطارات</string>
+    <string name="notification_mode_title">وضع إعلام</string>
+    <string name="notification_action_title">إجراءات الإخطار</string>
+    <string name="notification_invert_color_title">عكس لون إعلام</string>
+    <string name="notification_invert_color_summary">استخدام نص أبيض بدلاً من نص أسود</string>
+    <string name="playback_screen">قراءة الشاشة</string>
+    <string name="playback_on_startup_title">فتح عند بدء التشغيل</string>
+    <string name="playback_on_startup_summary">عرض فتح التشغيل عند بدء التشغيل</string>
+    <string name="display_mode_title">وضع العرض</string>
+    <string name="swipe_up_action_title">انتقد العمل</string>
+    <string name="swipe_down_action_title">مرر لأسفل العمل</string>
+    <string name="cover_press_action_title">تغطية عمل برنامج المشورة التقنية</string>
+    <string name="cover_longpress_action_title">تغطية عمل صحفي طويل</string>
+    <string name="library_screen">مكتبة الشاشة</string>
+    <string name="controls_in_selector_title">عناصر التحكم الموجودة في المكتبة</string>
+    <string name="controls_in_selector_summary">إظهار عناصر التحكم قيد التشغيل حاليا الأغنية ووسائط الإعلام في عرض مكتبة</string>
+    <string name="default_action_title">الإجراء الافتراضي</string>
+    <string name="default_playlist_action_title">الإجراء الافتراضي قائمة التشغيل</string>
+    <string name="accelerometer_shake">اهتزاز التسارع</string>
+    <string name="enable_shake_title">تمكين يهز التسارع</string>
+    <string name="enable_shake_summary">النشطة فقط عند تشغيل الموسيقى. لا تعمل عند إيقاف تشغيل الشاشة على بعض الأجهزة.</string>
+    <string name="shake_action_title">اهتز العمل</string>
+    <string name="shake_threshold_title">اهتز عتبة القوة</string>
+    <string name="misc_features">ميزات متنوعة</string>
+    <string name="disable_lockscreen_title">تعطيل Lockscreen</string>
+    <string name="disable_lockscreen_summary">الحيلولة دون تفعيل عند في مكتبة أو تشغيل الشاشة في lockscreen</string>
+    <string name="use_idle_timeout_title">تمكين مهلة الخمول</string>
+    <string name="use_idle_timeout_summary">عندما نشطة، سيتم إيقاف تشغيل بعد فترة معينة من عدم النشاط</string>
+    <string name="idle_timeout_title">مهلة الخمول</string>
+    <string name="disable_cover_art_title">تعطيل تغطية الفن</string>
+    <string name="disable_cover_art_summary">تجنب تحميل تغطية الفن في أي مكان في التطبيق</string>
+    <string name="double_tap_title">ضعف الاستفادة من القطعة</string>
+    <string name="double_tap_summary">سيتم فتح مزدوج--التنصت على القطعة 1 × 1 اللاعب. حدوث تأخير 400ms قبل القطعة يستجيب للإجراءات.</string>
+    <string name="scrobble_title">استخدام سكروبليدرويد API</string>
+    <string name="scrobble_summary">سكروبلي إلى فم من خلال سكروبليدرويد أو بسيطة فم Scrobbler</string>
+    <string name="stock_broadcast_title">تحاكي البرامج الإذاعية الأسهم</string>
+    <string name="stock_broadcast_summary">إرسال البرامج الإذاعية محاكاة تلك المرسلة من مشغل الموسيقى الأسهم العمل مع الطرف 3rd lockscreen الضوابط، القطع، إلخ.</string>
+    <string name="media_scan">تحديث المكتبة</string>
+    <string name="tap_to_scan">انقر لمسح التخزين الخارجي للموسيقى</string>
+    <string name="scan_in_progress">المسح الضوئي في التقدم...</string>
+    <string name="finished_scanning">الانتهاء من المسح الضوئي. اضغط لإتمام عملية المسح مرة أخرى.</string>
+    <string name="about">حول</string>
+    <string name="tabs">ترتيب الجدولة</string>
+    <string name="customize_tab_order">ضبط النظام وبروز علامات التبويب المكتبة</string>
+    <string name="restore_default">استعادة الافتراضي</string>
+    <string name="lyric_checkbox">تحميل كلمات تلقائياً</string>
+    <string name="lyric_summary">عرض كلمات الأغاني</string>
+    <!-- The following are for the list preferences -->
+    <string name="last_used_action">آخر استخدام للعمل</string>
+    <string name="never_show">ابدأ من إظهار</string>
+    <string name="show_when_playing">وتظهر عند تشغيل (افتراضي)</string>
+    <string name="always_show">تظهر دائماً</string>
+    <string name="open_main_activity">مكتبة مفتوحة (الافتراضي)</string>
+    <string name="open_mini_popup">المنبثقة مصغرة مفتوحة</string>
+    <string name="skip_to_next_song">انتقل إلى الأغنية التالية</string>
+    <string name="info_on_cover">معلومات عن تغطية الفن</string>
+    <string name="info_below_cover">معلومات تحت غطاء الفن</string>
+    <string name="fixed_info">معلومات ثابتة في أعلى</string>
+    <string name="do_nothing">لا تفعل شيئا</string>
+    <string name="open_library">فتح مكتبة</string>
+    <string name="play_pause">تشغيل/إيقاف مؤقت</string>
+    <string name="next_song">الأغنية التالية</string>
+    <string name="previous_song">الأغنية السابقة</string>
+    <string name="next_album">الألبوم القادم</string>
+    <string name="previous_album">الألبوم السابق</string>
+    <string name="cycle_repeat_mode">وضع دورة التكرار</string>
+    <string name="cycle_shuffle_mode">دورة وضع المراوغة</string>
+    <string name="enqueue_current_album">ألبوم Enqueue</string>
+    <string name="enqueue_current_artist">الفنان Enqueue</string>
+    <string name="enqueue_current_genre">النوع Enqueue</string>
+    <string name="clear_queue">قائمة انتظار واضحة</string>
+    <string name="toggle_controls">تبديل عناصر التحكم</string>
+    <string name="downloads">التنزيلات</string>
+    <string name="download_error">الرجاء الانتظار أثناء تحميل أغنية.</string>
+    <string name="search_message_no_internet">لا يوجد اتصال إنترنت. \nYou يمكن إعادة المحاولة في وقت لاحق.</string>
+    <string name="fileName_unknown_mp3">غير معروف</string>
+
+    <string-array name="tracks">تراكستراكتراكس</string-array>
+    <string-array name="songs">سونجسونجسونجس</string-array>
+
+    <string name="show_position_tab">التبديل بين إظهار علامة التبويب</string>
+    <string name="customize_show_position_tab">Swich عرض علامات التبويب في الأعلى أو أسفل</string>
+    <string name="show_top">أعلى</string>
+    <string name="show_bottom">أسفل</string>
+    <string name="lyric_no_internet">لا يمكن أن يكون لا اتصال إنترنت. \nLyrics التحميل.</string>
+    <!-- end of translatable -->
+
+</resources>

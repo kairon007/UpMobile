@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Dir picker -->
+    <string name="cancel_label">Отмена</string>
+    <string name="confirm_label">Подтвердите</string>
+    <string name="selected_folder_label">Выбранная папка:</string>
+    <string name="create_folder_label">Создать папку</string>
+    <string name="create_folder_msg">Создать новую папку с именем «%1$ s»?</string>
+    <string name="create_folder_success">Создана новая папка</string>
+    <string name="create_folder_error_no_write_access">Не удается записать в эту папку</string>
+    <string name="create_folder_error_already_exists">Папка уже существует</string>
+    <string name="create_folder_error">Не удалось создать папку</string>
+    <string name="up_label">Вверх</string>
+    <!--  -->
+    <string name="menu_equalizer">Эквалайзер</string>
+    <string name="remove_album_cover">Удалить обложку</string>
+    <string name="remove_album_cover_title">Удалить обложку</string>
+    <string name="remove_album_cover_complete">Вы хотите удалить обложку?</string>
+    <string name="disclaimer">Все результаты поиска из Jamendo.com API. Jamendo-это крупнейший сайт для бесплатной музыки Copyleft, которые могут быть загружены легально.</string>
+    <string name="hello_world">Всем привет!</string>
+    <string name="action_settings">Параметры</string>
+    <string name="not_selected_song">Не выбрана песня</string>
+    <string name="file_with_the_same_name_already_exists">Файл с тем же именем уже существует</string>
+    <!-- translatable -->
+    <string name="app_name">Ванильная музыка</string>
+    <!-- Playback Activity (main screen) -->
+    <string name="no_songs">На устройстве не найдено песен.</string>
+    <string name="empty_queue">Песни не выбраны. Выбрать некоторые из библиотеки или выбрать случайный режим, нажав это сообщение.</string>
+    <string name="settings">Параметры</string>
+    <string name="library">Библиотека</string>
+    <string name="no_shuffle">Не перемешивать</string>
+    <string name="shuffle_songs">Перемешать песни</string>
+    <string name="shuffle_albums">Перемешать альбомы</string>
+    <string name="no_repeat">Не повторять</string>
+    <string name="repeat">Повторять</string>
+    <string name="repeat_current_song">Повторить текущую песню</string>
+    <string name="stop_current_song">Остановить по окончанию проигрывания песни</string>
+    <string name="random">Случайная</string>
+    <string name="random_enabling">Случайное воиспроизведение включено</string>
+    <string name="song_load_failed">Не удалось загрузить песню %s. Она может быть поврежден или отсутствует.</string>
+    <string name="queue_cleared">Очередь очищена.</string>
+    <string name="cover_art">Обложки</string>
+    <string name="close_notification">Закрыть уведомление</string>
+    <string name="_genre">Жанр</string>
+    <string name="_track">Трек</string>
+    <string name="_composer">Композитор</string>
+    <string name="_format">Формат</string>
+    <string name="_title">Название</string>
+    <string name="_artist">Художник</string>
+    <string name="_album">Альбом</string>
+    <string name="_year">Год</string>
+    <!-- New Playlist Dialog -->
+    <string name="choose_playlist_name">Выберите плейлист</string>
+    <string name="create">Создать</string>
+    <string name="overwrite">Перезапись</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete_playlist">Удалить плейлист %s?</string>
+    <!-- Library -->
+    <string name="enqueue">Поставить в очередь</string>
+    <string name="play">Играть</string>
+    <string name="edit">Редактировать</string>
+    <string name="rename">Переименовать</string>
+    <string name="add_to_playlist">Добавьте в список воспроизведения...</string>
+    <string name="new_playlist">Новый плейлист...</string>
+    <string name="expand">Развернуть</string>
+    <string name="delete">Удалить</string>
+    <string name="playback_view">Сейчас играет</string>
+    <string name="sort_by">Сортировать по</string>
+    <string name="search">Поиск</string>
+    <string name="done">Готово</string>
+    <string name="remove">Удалить</string>
+    <string name="clear_search">Очистить поиск</string>
+    <string name="play_or_enqueue">Поставить в очередь если играет; Играть если приостановлено</string>
+    <string name="deleted">%s удален.</string>
+    <string name="delete_file_failed">Не удалось удалить %s.</string>
+    <string name="artists">Художники</string>
+    <string name="albums">Альбомы</string>
+    <string name="songs">Библиотека</string>
+    <string name="playlists">Списки воспроизведения</string>
+    <string name="genres">Жанры</string>
+    <string name="files">Файлы</string>
+    <string name="none">Нет</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="play_all">Играть все</string>
+    <string name="enqueue_all">Поставить все в очередь</string>
+    <string name="all_songs">Все песни</string>
+    <string name="more_from_artist">Еще с этим артистом</string>
+    <string name="more_from_album">Еще с этого альбома</string>
+    <string name="name">Имя</string>
+    <string name="number_of_tracks">Количество треков</string>
+    <string name="year">Год</string>
+    <string name="date_added">Дата добавления</string>
+    <string name="artist_album">Исполнитель, альбом</string>
+    <string name="artist_album_track">Исполнитель, альбом, номер дорожки</string>
+    <string name="artist_album_title">Исполнитель, альбом, название</string>
+    <string name="artist_year">Артист, год</string>
+    <string name="ascending">По возрастанию</string>
+    <string name="descending">По убыванию</string>
+    <!-- Notification -->
+    <string name="notification_title_paused">%s (приостановлено)</string>
+    <!-- Preferences -->
+    <string name="audio">Аудио</string>
+    <string name="volume_title">Звук</string>
+    <string name="media_button_title">Элементы управления гарнитуры/Bluetooth</string>
+    <string name="media_button_summary">Это также необходимо для ICS lockscreen элементов управления.</string>
+    <string name="media_button_beep_title">Сигнал при управлении с гарнитуры</string>
+    <string name="media_button_beep_summary">Звуковой сигнал после пропуска дорожки при управлении с гарнитуры.</string>
+    <string name="headset_only_title">Только внешний вывод</string>
+    <string name="headset_only_summary">Музыка не будет воспроизводиться через встроенные динамики.</string>
+    <string name="headset_pause_title">На паузу при отключении наушников</string>
+    <string name="headset_pause_summary">Пауза, когда наушники отключены.</string>
+    <string name="headset_play_title">Играть при подключении</string>
+    <string name="headset_play_summary">Начинать проигрывать при подключении наушников (работает только при запущеном сервисе.)</string>
+    <string name="notifications">Уведомления</string>
+    <string name="notification_mode_title">Уведомления</string>
+    <string name="notification_action_title">Действия уведомления</string>
+    <string name="notification_invert_color_title">Инвертировать цвета уведомления</string>
+    <string name="notification_invert_color_summary">Вместо черного текста использовать белый текст</string>
+    <string name="playback_screen">Экран воспроизведения</string>
+    <string name="playback_on_startup_title">Открыть при запуске</string>
+    <string name="playback_on_startup_summary">Открывать вкладку плеера при запуске</string>
+    <string name="display_mode_title">Режим отображения</string>
+    <string name="swipe_up_action_title">Провести пальцем вверх</string>
+    <string name="swipe_down_action_title">Быстро проведите пальцем вниз действий</string>
+    <string name="cover_press_action_title">Охватывать действия крана</string>
+    <string name="cover_longpress_action_title">Охватывать действия, длительно нажмите</string>
+    <string name="library_screen">Экран Библиотека</string>
+    <string name="controls_in_selector_title">Элементы управления в библиотеке</string>
+    <string name="controls_in_selector_summary">Показать в настоящее время играет песня и СМИ управления в представлении библиотеки</string>
+    <string name="default_action_title">Действия по умолчанию</string>
+    <string name="default_playlist_action_title">По умолчанию список воспроизведения действий</string>
+    <string name="accelerometer_shake">Встряхивание</string>
+    <string name="enable_shake_title">Включить акселерометр</string>
+    <string name="enable_shake_summary">Только когда играет музыка. Не работает, когда экран выключен на некоторых устройствах.</string>
+    <string name="shake_action_title">Действия при встряхивании</string>
+    <string name="shake_threshold_title">Сила встряхивания</string>
+    <string name="misc_features">Прочие функции</string>
+    <string name="disable_lockscreen_title">Отключить экран блокировки</string>
+    <string name="disable_lockscreen_summary">Запретить блокировку экрана на вкладке библиотека или плеер</string>
+    <string name="use_idle_timeout_title">Включить время ожидания простоя</string>
+    <string name="use_idle_timeout_summary">Если включено, воспроизведение будет остановлено после определенного периода бездействия</string>
+    <string name="idle_timeout_title">Таймаут простоя</string>
+    <string name="disable_cover_art_title">Отключить обложки</string>
+    <string name="disable_cover_art_summary">Не загружать обложки для песен</string>
+    <string name="double_tap_title">Двойной клик на виджет</string>
+    <string name="double_tap_summary">Двойной клик на  1 x 1 виджет откроет плеер. Приводит к задержке 400ms перед тем как виджет ответит на действия.</string>
+    <string name="scrobble_title">Использовать ScrobbleDroid API</string>
+    <string name="scrobble_summary">Scrobble Last.FM через ScrobbleDroid или простой скробблер Last.FM</string>
+    <string name="stock_broadcast_title">Эмулировать встроенное вещание</string>
+      <string name="stock_broadcast_summary">Отправлять широковещательные сообщения, эмулируя встроенный плеер, для работы с экраном блокировки, виджетами и т.д.</string>
+    <string name="media_scan">Обновление библиотеки</string>
+    <string name="tap_to_scan">Нажмите для сканирования хранилища музыки</string>
+    <string name="scan_in_progress">Сканирование продолжается...</string>
+    <string name="finished_scanning">Сканирование завершено. Нажмите для повторного сканирования.</string>
+    <string name="about">О приложении</string>
+    <string name="tabs">Последовательность вкладок</string>
+    <string name="customize_tab_order">Настроить порядок и видимость вкладок библиотеки</string>
+    <string name="restore_default">Восстановить по умолчанию</string>
+    <string name="lyric_checkbox">Автоматически загружать тексты песен</string>
+    <string name="lyric_summary">просмотреть текст песни</string>
+    <!-- The following are for the list preferences -->
+    <string name="last_used_action">Последние использованые действия</string>
+    <string name="never_show">Никогда не показывать</string>
+    <string name="show_when_playing">Показывать при проигрывании (по умолчанию)</string>
+    <string name="always_show">Всегда показывать</string>
+    <string name="open_main_activity">Открывать библиотеку (по умолчанию)</string>
+    <string name="open_mini_popup">Открыть мини всплывающее окно</string>
+    <string name="skip_to_next_song">Перейти к следующей песне</string>
+    <string name="info_on_cover">Подробная информация на обложке</string>
+    <string name="info_below_cover">Информация ниже обложки</string>
+    <string name="fixed_info">Информация всегда вверху</string>
+    <string name="do_nothing">Ничего не делать</string>
+    <string name="open_library">Открытая библиотека</string>
+    <string name="play_pause">Воспроизведение/пауза</string>
+    <string name="next_song">Следующая песня</string>
+    <string name="previous_song">Предыдущая песня</string>
+    <string name="next_album">Следующий альбом</string>
+    <string name="previous_album">Предыдущий альбом</string>
+    <string name="cycle_repeat_mode">Режим повтора</string>
+    <string name="cycle_shuffle_mode">Режим воспроизведения в случайном порядке</string>
+    <string name="enqueue_current_album">Поставить в очередь альбом</string>
+    <string name="enqueue_current_artist">Поставить в очередь артиста</string>
+    <string name="enqueue_current_genre">Поставить в очередь жанр</string>
+    <string name="clear_queue">Очистить очередь</string>
+    <string name="toggle_controls">Меню настроек</string>
+    <string name="downloads">Скачиваний</string>
+    <string name="download_error">Пожалуйста, подождите, пока загружается песня.</string>
+    <string name="search_message_no_internet">Без Интернет подключения. \nВы можете повторить попытку позже.</string>
+    <string name="fileName_unknown_mp3">Неизвестный</string>
+
+    <string-array name="tracks">
+        <item>треки</item>
+        <item>трек</item>
+        <item>треки</item>
+    </string-array>
+    <string-array name="songs">
+        <item>песни</item>
+        <item>песня</item>
+        <item>песни</item>
+    </string-array>
+
+    <string name="show_position_tab">Отображение вкладок</string>
+    <string name="customize_show_position_tab">Показывать вкладки внизу или вверху</string>
+    <string name="show_top">Вверху</string>
+    <string name="show_bottom">Снизу</string>
+    <string name="lyric_no_internet">Отсутсвует интернет соединение. \nЛирики не могут быть загружены.</string>
+
+    <plurals name="playing">
+        <item quantity="one">играет %d песня.</item>
+        <item quantity="other">%d песен играет.</item>
+        <item quantity="many">%d песен играет.</item>
+    </plurals>
+    <plurals name="enqueued">
+        <item quantity="one">%d песня в очереди.</item>
+        <item quantity="other">%d песен в очереди.</item>
+        <item quantity="many">%d песен в очереди.</item>
+    </plurals>
+    <plurals name="added_to_playlist">
+        <item quantity="one">1 песня добавлена в плейлист %2$s.</item>
+        <item quantity="other">%1$d добавлено в плей-лист %2$s.</item>
+        <item quantity="many">%1$d добавлено в плей-лист %2$s.</item>
+    </plurals>
+    <plurals name="deleted">
+        <item quantity="one">%d песня удалена.</item>
+        <item quantity="other">%d песен удалено.</item>
+        <item quantity="many">%d песен удалено.</item>
+    </plurals>
+    <plurals name="seconds">
+        <item quantity="one">%d секунда</item>
+        <item quantity="other">%d секунд</item>
+        <item quantity="many">%d секунд</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%d минута</item>
+        <item quantity="other">%d минут</item>
+        <item quantity="many">%d минут</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%d час</item>
+        <item quantity="other">%d часов</item>
+        <item quantity="many">%d часов</item>
+    </plurals>
+    <!-- end of translatable -->
+
+</resources>
