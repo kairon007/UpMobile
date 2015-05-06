@@ -3,7 +3,7 @@
 
     <style name="UBDivider" parent="UndoBarDividerClassic" />
 
-    <style name="UBContainer" parent="UndoBarMaterial" >
+    <style name="UBContainer" parent="UndoBarMaterial">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:maxWidth">568dp</item>
         <item name="android:minWidth">288dp</item>
@@ -17,7 +17,7 @@
         <item name="android:textColor">?attr/colorAccent</item>
     </style>
 
-    <style name="UBMessage" parent="UndoBarMessageMaterial" >
+    <style name="UBMessage" parent="UndoBarMessageMaterial">
         <item name="android:maxLines">2</item>
     </style>
 

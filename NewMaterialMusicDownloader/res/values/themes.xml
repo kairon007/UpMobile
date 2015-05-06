@@ -11,10 +11,13 @@
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
         <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
         <item name="android:ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
-
-    <!-- Application theme. -->
-    <style name="MaterialAppThemeNoFonts" parent="AppBaseTheme">
+    
+    
+    <!-- Application default theme. -->
+    <style name="MaterialAppTheme" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_default</item>
         <item name="colorPrimaryDark">@color/material_primary_dark</item>
         <item name="colorPrimary">@color/material_primary</item>
@@ -29,11 +32,19 @@
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_default</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_default</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_default</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_mtrl</item>
+        <item name="android:textSelectHandleLeft">@drawable/text_select_handle_left_mtrl</item>
+        <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl</item>
+        <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl</item>
     </style>
-
-    <style name="MaterialAppTheme" parent="@style/MaterialAppThemeNoFonts"></style>
-
-    <style name="MaterialAppTheme.BlackNoFonts" parent="AppBaseTheme">
+    
+    <style name="MaterialAppThemeNoFonts" parent="MaterialAppTheme">
+	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
+        <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
+	</style>
+    
+    <!-- Application black theme. -->
+    <style name="MaterialAppTheme.Black" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_black</item>
         <item name="colorPrimaryDark">@color/black_material_accent</item>
         <item name="colorPrimary">@color/black_material_primary</item>
@@ -48,11 +59,19 @@
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_black</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_black</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_black</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_mtrl_black</item>
+        <item name="android:textSelectHandleLeft">@drawable/text_select_handle_left_mtrl_black</item>
+        <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl_black</item>
+        <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl_black</item>
     </style>
 
-    <style name="MaterialAppTheme.Black" parent="@style/MaterialAppTheme.BlackNoFonts"></style>
-
-    <style name="MaterialAppTheme.BrownNoFonts" parent="AppBaseTheme">
+    <style name="MaterialAppTheme.BlackNoFonts" parent="MaterialAppTheme.Black">
+	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
+        <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
+	</style>
+    
+    <!-- Application brown theme. -->
+    <style name="MaterialAppTheme.Brown" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_brown</item>
         <item name="colorPrimaryDark">@color/brown_material_primary_dark</item>
         <item name="colorPrimary">@color/brown_material_primary</item>
@@ -68,11 +87,19 @@
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_brown</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_brown</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_brown</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_mtrl_brown</item>
+        <item name="android:textSelectHandleLeft">@drawable/text_select_handle_left_mtrl_brown</item>
+        <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl_brown</item>
+        <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl_brown</item>
     </style>
 
-    <style name="MaterialAppTheme.Brown" parent="@style/MaterialAppTheme.BrownNoFonts"></style>
-
-    <style name="MaterialAppTheme.DeepOrangeNoFonts" parent="AppBaseTheme">
+    <style name="MaterialAppTheme.BrownNoFonts" parent="MaterialAppTheme.Brown">
+	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
+        <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
+	</style>
+    
+    <!-- Application deep orange theme. -->
+    <style name="MaterialAppTheme.DeepOrange" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_orange</item>
         <item name="colorPrimaryDark">@color/orange_material_primary_dark</item>
         <item name="colorPrimary">@color/orange_material_primary</item>
@@ -87,11 +114,19 @@
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_orange</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_orange</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_orange</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_mtrl_orange</item>
+        <item name="android:textSelectHandleLeft">@drawable/text_select_handle_left_mtrl_orange</item>
+        <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl_orange</item>
+        <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl_orange</item>
     </style>
 
-    <style name="MaterialAppTheme.DeepOrange" parent="@style/MaterialAppTheme.DeepOrangeNoFonts"></style>
-
-    <style name="MaterialAppTheme.GreenNoFonts" parent="AppBaseTheme">
+	<style name="MaterialAppTheme.DeepOrangeNoFonts" parent="@style/MaterialAppTheme.DeepOrange">
+	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
+        <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
+	</style>
+	
+	<!-- Application green theme. -->
+    <style name="MaterialAppTheme.Green" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_green</item>
         <item name="colorPrimaryDark">@color/green_material_primary_dark</item>
         <item name="colorPrimary">@color/green_material_primary</item>
@@ -106,8 +141,15 @@
         <item name="cpbSelectorIdle">@drawable/cpb_idle_state_selector_green</item>
         <item name="cpbSelectorComplete">@drawable/cpb_complete_state_selector_green</item>
         <item name="cpbSelectorError">@drawable/cpb_error_state_selector_green</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_mtrl_green</item>
+        <item name="android:textSelectHandleLeft">@drawable/text_select_handle_left_mtrl_green</item>
+        <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl_green</item>
+        <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl_green</item>
     </style>
 
-    <style name="MaterialAppTheme.Green" parent="@style/MaterialAppTheme.GreenNoFonts"></style>
-
+	<style name="MaterialAppTheme.GreenNoFonts" parent="@style/MaterialAppTheme.Green">
+	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
+        <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
+	</style>
+	
 </resources>

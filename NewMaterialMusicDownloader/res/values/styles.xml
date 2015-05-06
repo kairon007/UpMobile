@@ -81,5 +81,13 @@
     <style name="UBMessage" parent="UndoBarMessageMaterial">
         <item name="android:maxLines">2</item>
     </style>
+    
+    <style name="TextViewStyle" parent="android:Widget.TextView"/>
+
+    <style name="EditTextStyle" parent="@style/Widget.AppCompat.EditText"/>
+
+    <style name="TextViewStyle.Simple" parent="android:Widget.TextView" />
+
+    <style name="EditTextStyle.Simple" parent="@style/Widget.AppCompat.EditText" />
 
 </resources>
