@@ -58,9 +58,9 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	private TypefaceHelper typefaceHelper;
 	private ArrayList<MusicData> abstractSongArrayList;
 	private PlaybackService musicService;
-	private boolean musicBound = false;
+	private boolean musicBound = Boolean.FALSE;
 	private AbstractSong song;
-	private boolean paused = false, playbackPaused = false;
+	private boolean paused = Boolean.FALSE, playbackPaused = Boolean.FALSE;
 
 	// controller variables
 	private double startTime = 0;
@@ -83,9 +83,6 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		musicService = PlaybackService.get(getActivity());
 		musicService.addStatePlayerListener(this);
 		musicService.setDestroyListener(this);
-		if (!musicService.hasArray()) {
-			setPlayback();
-		}
 		if (null != musicService.getPlayingSong()) {
 			song = musicService.getPlayingSong();
 			setPlayerCover();
@@ -98,15 +95,11 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 				song = abstractSongArrayList.get(0);
 			} else {
 				abstractSongArrayList = querySong();
-				musicService.setArrayPlayback(new ArrayList<AbstractSong>(abstractSongArrayList));
+				setPlayback();
 			}
 		}
 		setupViews();
-		if (!musicService.enabledShuffle()) {
-			btnShuffle.setAlpha((float) 0.5);
-		} else {
-			btnShuffle.setAlpha((float) 1);
-		}
+		btnShuffle.setAlpha(!musicService.enabledShuffle() ? (float) 0.5 : (float) 1);
 		musicBound = true;
 		return rootView;
 	}
@@ -146,9 +139,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 				
 				@Override
 				public void run() {
-					if (abstractSongArrayList.size() <= songListAdapter.getCount()) {
-						return;
-					}
+					if (abstractSongArrayList.size() <= songListAdapter.getCount()) return;
 					songListAdapter.clear();
 					setPlayback();
 					songListAdapter.addAll(abstractSongArrayList);
