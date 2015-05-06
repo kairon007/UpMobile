@@ -71,7 +71,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	};
 	
 	private void fillAdapter(ArrayList<MusicData> list) {
-		if (list.isEmpty()) {
+		if (list.isEmpty() && !adapter.isEmpty()) {
 			adapter.clear();
 			return;
 		}

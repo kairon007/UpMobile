@@ -74,14 +74,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected RemoteSong downloadingSong;
 	protected Bitmap cover;
 
-	protected Long currentDownloadId = (long) 0;
+	protected Long currentDownloadId = 0L;
 	private Integer songId;
 	private String downloadPath = null;
 
 	private int id;
 	private long progress = 0;
-	private boolean useAlbumCover = true;
-	protected boolean interrupted = false;
+	private boolean useAlbumCover = Boolean.TRUE;
+	protected boolean interrupted = Boolean.FALSE;
 
 	private CanceledCallback cancelDownload = new CanceledCallback() {
 		
@@ -262,7 +262,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	@Override
 	public void onBitmapReady(Bitmap bmp) {
-		this.cover = bmp;
+		cover = bmp;
 	}
 
 	@SuppressLint("NewApi")
@@ -453,13 +453,11 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		private Item item;
 		private File src;
 		private DownloadManager manager;
-		private boolean useCover;
 		private int counter = 0;
 
 		public UpdateTimerTask(RemoteSong song, DownloadManager manager, boolean useCover, Item item) {
 			this.song = song;
 			this.manager = manager;
-			this.useCover = useCover;
 			this.item = item;
 		}
 
@@ -525,7 +523,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 							}
 						}
 						src = new File(path);
-						if (setMetadataToFile(src, useCover, song)) {
+						if (setMetadataToFile(src, useAlbumCover, song)) {
 							insertToMediaStore(song, path);
 						}
 						setFileUri(currentDownloadId, src.getAbsolutePath());
