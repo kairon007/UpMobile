@@ -40,17 +40,18 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment, Co
 	
 	@Override
 	public void onResume() {
-		((UIMainActivity) getActivity()).setVisibleSearchView(false);
-		query = ((UIMainActivity) getActivity()).getQuery();
+		MainActivity activity = (MainActivity) getActivity();
+		activity.setVisibleSearchView(false);
+		query = activity.getQuery();
 		if (null != query) {
 			searchView.setExtraSearch(query);
 			searchView.setSearchField(query);
 			searchView.trySearch();
 			query = null;
 		}
-		((UIMainActivity) getActivity()).setSelectedItem(SEARCH_FRAGMENT);
-		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
-		((MainActivity) getActivity()).setDrawerEnabled(true);
+		activity.setSelectedItem(SEARCH_FRAGMENT);
+		activity.setTitle(getDrawerTitle());
+		activity.setDrawerEnabled(true);
 		searchView.onResume();
 		super.onResume();
 	}

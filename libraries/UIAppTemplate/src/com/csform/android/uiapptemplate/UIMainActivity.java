@@ -182,13 +182,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		currentPosition = position;
 	}
 	
-	protected void setSearchViewVisibility(String fragmentName) {
-		isVisibleSearchView = (fragmentName.equals((mFragments.get(LIBRARY_FRAGMENT)).getClass().getSimpleName())) || (fragmentName.equals((mFragments.get(PLAYLIST_FRAGMENT)).getClass().getSimpleName()));
-	}
-	
 	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate) {
-		String fragmentName =  ((Fragment) baseMaterialFragment).getClass().getSimpleName();
-		setSearchViewVisibility(fragmentName);
 		if (null != searchView) {
 			Util.hideKeyboard(this, searchView);
 		}
@@ -211,7 +205,6 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	
 	@Override
 	public void onBackPressed() {
-		setSearchViewVisibility(getPreviousFragmentName(2));
 		hadClosedDraver = navigationDrawerFragment.isDrawerOpen();
 		if (hadClosedDraver) {
 			navigationDrawerFragment.closeDrawer();
@@ -250,6 +243,9 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	}
 	
 	public void setVisibleSearchView(boolean flag) {
+		if (flag != isVisibleSearchView) {
+			invalidateOptionsMenu();
+		}
 		isVisibleSearchView = flag;
 	}
 }

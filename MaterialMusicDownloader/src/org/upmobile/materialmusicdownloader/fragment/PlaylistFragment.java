@@ -2,6 +2,7 @@ package org.upmobile.materialmusicdownloader.fragment;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.PlaylistView;
 
 import android.app.Fragment;
@@ -25,9 +26,11 @@ public class PlaylistFragment extends Fragment implements BaseMaterialFragment, 
 	
 	@Override
 	public void onResume() {
-		((UIMainActivity) getActivity()).setSelectedItem(PLAYLIST_FRAGMENT);
-		((UIMainActivity) getActivity()).setTitle(getDrawerTitle());
-		((UIMainActivity)getActivity()).setDrawerEnabled(true);
+		MainActivity activity = (MainActivity) getActivity();
+		activity.setSelectedItem(PLAYLIST_FRAGMENT);
+		activity.setTitle(getDrawerTitle());
+		activity.setDrawerEnabled(true);
+		activity.setVisibleSearchView(true);
 		super.onResume();
 	}
 

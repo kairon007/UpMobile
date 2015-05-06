@@ -289,9 +289,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public void onResume() {
-		UIMainActivity activity = ((UIMainActivity) getActivity());
+		MainActivity activity = ((MainActivity) getActivity());
 		activity.setSelectedItem(Constants.PLAYER_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
+		activity.setVisibleSearchView(false);
 		setHasOptionsMenu(Boolean.TRUE);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (StateKeeper.DOWNLOADED == state) {
