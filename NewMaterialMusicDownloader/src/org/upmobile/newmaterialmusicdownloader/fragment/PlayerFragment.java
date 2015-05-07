@@ -59,7 +59,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.graphics.Palette.PaletteAsyncListener;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -68,6 +70,7 @@ import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
@@ -656,6 +659,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		download.setEnabled(state);
 		((RippleView) download.getParent()).setEnabled(state);
 	}
+	
 
 	private void openArtistField() {
 		if (tvArtist.getVisibility() == View.VISIBLE) {
@@ -665,6 +669,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			etArtist.setVisibility(View.VISIBLE);
 			etArtist.requestFocus();
 			etArtist.setText(song.getArtist());
+			sizeWatcher(etArtist);
 			int size = song.getArtist().length();
 			etArtist.setSelection(size);
 		} else {
@@ -681,12 +686,32 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			etTitle.setVisibility(View.VISIBLE);
 			etTitle.requestFocus();
 			etTitle.setText(song.getTitle());
+			sizeWatcher(etTitle);
 			int size = song.getTitle().length();
 			etTitle.setSelection(size);
 		} else {
 			tvTitle.setVisibility(View.VISIBLE);
 			etTitle.setVisibility(View.GONE);
 		}
+	}
+
+	private void sizeWatcher(final EditText editText) {
+		editText.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				LayoutParams params = editText.getLayoutParams();
+				params.width = LayoutParams.WRAP_CONTENT;
+				editText.setLayoutParams(params);
+				etTitle.invalidate();
+			}
+		});
 	}
 
 	private void closeEditViews() {
