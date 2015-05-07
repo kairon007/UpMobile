@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -178,7 +179,9 @@ public class DigitalClockView extends View {
 			}
 
 			if (!mFont.hasGlyph(c)) {
-				throw new RuntimeException("Character not supported " + c);
+				// throw new RuntimeException("Character not supported " + c);
+				c = '0';
+				Log.e(getClass().getSimpleName(), "Character not supported " + c);
 			}
 			chars[i] = mFont.getGlyphPoints(c);
 			widths[i] = mFont.getGlyphBounds(c);
