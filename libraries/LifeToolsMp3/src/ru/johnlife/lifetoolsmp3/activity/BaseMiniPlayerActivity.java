@@ -68,7 +68,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		public void update(AbstractSong song) {
 			BaseMiniPlayerActivity.this.song = song;
 			if (miniPlayer.getVisibility() == View.GONE) {
-				setData(song);
+				setData(song, "update");
 			} else {
 				showMiniPlayer(true, true);
 			}
@@ -108,7 +108,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 
 		private void refreshButton() {
 			showProgress(false);
-			playPause.setVisibility(View.VISIBLE);
 		}
 
 		@Override
@@ -194,6 +193,16 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		methodIsCalled = false;
 		service.removeStatePlayerListener(stateListener);
 		super.onPause();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (!PlaybackService.hasInstance()) return;
+		if (null == service) {
+			service = PlaybackService.get(this);
+		}
+		service.addStatePlayerListener(stateListener);
 	}
 	
 	private void initMiniPlayer() {
@@ -299,7 +308,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				miniPlayer.setVisibility(View.VISIBLE);
 				View parentMiniPlayer = (View) miniPlayer.getParent();
 				parentMiniPlayer.setVisibility(View.VISIBLE);
-				setData(song);
+				setData(song, "showMiniPlayer, !isAnimationEnabled()");
 				if (null != fakeView) fakeView.setVisibility(View.VISIBLE);
 				customDownloadButton();
 				isClickOnDownload  = false;
@@ -310,7 +319,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			
 				@Override
 				public void onAnimationStart(Animation animation) {
-					setData(song);
+					setData(song, "showMiniPlayer, onAnimationStart");
 				}
 				
 				@Override
@@ -378,7 +387,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	
 	private void startFakeAnimation () {
 		if (!isAnimationEnabled()) {
-			setData(song);
+			setData(song, "startFakeAnimation, begin");
 			return;
 		}
 		final View fakeMiniPlayer = findViewById(getMiniPlayerDuplicateID());
@@ -405,7 +414,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		});
 		Animation slideInRight = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_right);
 		fakeMiniPlayer.setVisibility(View.VISIBLE);
-		setData(song);
+		setData(song, "startFakeAnimation, end");
 		fakeMiniPlayer.setAnimation(slideOutLeft);
 		miniPlayer.setAnimation(slideInRight);
 		fakeMiniPlayer.startAnimation(slideOutLeft);
@@ -428,11 +437,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		showMiniPlayer(show, oldIsPrepared);
 	}
 	
-	private void setData(final AbstractSong song) {
+	private void setData(final AbstractSong song, String from) {
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
 		setCover(null);
-		playPause.setVisibility(service.isPrepared() ? View.VISIBLE : View.GONE);
 		showProgress(!service.isPrepared());
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
@@ -506,8 +514,14 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		return isMiniPlayerPrepared;
 	}
 
-	protected void showProgress(boolean flag) {
-		progress.setVisibility(flag ? View.VISIBLE : View.GONE);
+	protected void showProgress(boolean isShowProgres) {
+		if (isShowProgres) {
+			progress.setVisibility(View.VISIBLE);
+			playPause.setVisibility(View.GONE);
+		} else {
+			progress.setVisibility(View.GONE);
+			playPause.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	protected void setPlayerFragmentVisible(boolean value) {

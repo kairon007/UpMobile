@@ -86,13 +86,4 @@ public class LibraryView extends BaseLibraryView implements Constants {
 		((MainActivity)getContext()).showMessage(message);
 	}
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-	
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
 }

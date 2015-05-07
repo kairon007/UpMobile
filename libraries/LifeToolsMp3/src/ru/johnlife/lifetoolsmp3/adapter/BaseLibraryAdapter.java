@@ -58,10 +58,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 	public BaseLibraryAdapter(Context context, int resource) {
 		super(context, resource);
+		service = PlaybackService.get(getContext());
 	}
 	
 	public BaseLibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
+		service = PlaybackService.get(getContext());
 	}
 	
 	@Override
@@ -117,8 +119,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		}
 	}
 	
-	protected void initService() {
-		service = PlaybackService.get(getContext());
+	public void setListener() {
 		service.addStatePlayerListener(stateListener);
 	}
 	

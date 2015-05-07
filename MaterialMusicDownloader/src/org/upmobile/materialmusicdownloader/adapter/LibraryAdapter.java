@@ -7,6 +7,7 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -30,12 +31,10 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
-		initService();
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		initService();
 	}
 
 	@Override

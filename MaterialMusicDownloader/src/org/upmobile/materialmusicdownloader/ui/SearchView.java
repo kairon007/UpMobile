@@ -20,10 +20,8 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
@@ -111,7 +109,7 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	
 	@Override
 	public Object initRefreshProgress() {
-		return LayoutInflater.from(getContext()).inflate(org.upmobile.materialmusicdownloader.R.layout.progress, null);
+		return LayoutInflater.from(getContext()).inflate(R.layout.progress, null);
 	}
 	
 	@Override

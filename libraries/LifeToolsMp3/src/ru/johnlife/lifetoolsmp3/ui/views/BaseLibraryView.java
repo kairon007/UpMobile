@@ -21,7 +21,6 @@ import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Handler.Callback;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -111,6 +110,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	
 	public void onResume() {
 		MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sPrefListener);
+		((BaseLibraryAdapter) adapter).setListener();
 		checkRemovedFiles = new CheckRemovedFiles(adapter.getAll());
 		if (checkRemovedFiles.getStatus() == Status.RUNNING) return;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -130,7 +130,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	
 	public BaseLibraryView(LayoutInflater inflater) {
 		super(inflater.getContext());
-		uiHandler = new Handler((Callback) this);
+		uiHandler = new Handler(this);
 		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
 		init(inflater);
 		if (null != listView) {
@@ -149,16 +149,18 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			public void run() {
 				querySong = querySong();
 				uiHandler.postDelayed(new Runnable() {
-					
+
 					@Override
 					public void run() {
-						adapter.add(querySong);
+						fillAdapter(querySong);
 						hideProgress(view);
 						int firstPosition = StateKeeper.getInstance().getLibaryFirstPosition();
 						if (firstPosition != 0 && firstPosition < adapter.getCount()) {
 							listView.setSelection(firstPosition);
 						}
-						listView.setEmptyView(emptyMessage);
+						if (querySong.isEmpty()) {
+							listView.setEmptyView(emptyMessage);
+						}
 					}
 
 				}, 1000);
@@ -207,7 +209,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private void init(LayoutInflater inflater) {
 		view = (ViewGroup) inflater.inflate(getLayoutId(), null);
 		listView = getListView(view);
-		emptyMessage = getMessageView(view);			
+		emptyMessage = getMessageView(view);
+		
 		adapter = getAdapter();
 		listView.setAdapter(adapter);
 		specialInit(view);

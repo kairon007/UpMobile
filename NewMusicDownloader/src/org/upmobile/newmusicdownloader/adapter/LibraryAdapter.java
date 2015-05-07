@@ -6,6 +6,7 @@ import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -20,12 +21,10 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
-		initService();
 	}
 	
 	public LibraryAdapter(Context context, int resource, ArrayList<MusicData> array) {
 		super(context, resource, array);
-		initService();
 	}
 
 	@Override
