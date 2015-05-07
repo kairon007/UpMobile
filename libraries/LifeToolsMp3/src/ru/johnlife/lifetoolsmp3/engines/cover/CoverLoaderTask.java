@@ -32,7 +32,7 @@ public class CoverLoaderTask implements ImageLoadingListener {
 	
 	public void execute() {
 		try {
-			if (coverUrl == null || coverUrl.equals("NOT_FOUND") || "".equals(coverUrl)) {
+			if (null == coverUrl || coverUrl.equals("NOT_FOUND") || "".equals(coverUrl) || "null".equals(coverUrl)) {
 				for (OnBitmapReadyListener listener : listeners) {
 					if (null != listener) {
 						listener.onBitmapReady(null);
