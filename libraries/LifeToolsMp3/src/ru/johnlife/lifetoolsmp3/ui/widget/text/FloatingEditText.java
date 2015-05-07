@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3.ui.widget.text;
 import ru.johnlife.lifetoolsmp3.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -10,15 +11,13 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.EditText;
 
 /**
@@ -54,6 +53,7 @@ public class FloatingEditText extends EditText {
     private int maxCharCount = MAX_CHAR_COUNT;
     private int currentCharCount = 0;
     private float hintScale;
+    private float actualWidth = 0f;
     private boolean showCharCount = false;
     
     
@@ -193,6 +193,7 @@ public class FloatingEditText extends EditText {
 	@Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        android.util.Log.d("logks", "FloatingEditText, onTextChanged: start - " + start + ". lengthBefore = " + lengthBefore + ", lengthAfter = " + lengthAfter);
         currentCharCount = text.length();
         if (showCharCount) {
         	isExcessiveCount = maxCharCount <= currentCharCount;
@@ -210,6 +211,9 @@ public class FloatingEditText extends EditText {
                 state = StateHintZoomOut;
             }
         }
+        Rect bounds = new Rect();
+        getPaint().getTextBounds(getText().toString(), 0, getText().length(), bounds);
+		actualWidth = getWidth() < bounds.width() ? bounds.width() : getWidth();
     }
 
 	@Override
@@ -226,7 +230,7 @@ public class FloatingEditText extends EditText {
 			float hintX = getCompoundPaddingLeft() + getScrollX();
 			long elapsed = System.currentTimeMillis() - startTime;
 			switch (state) {
-			case StateHintNormal: 
+			case StateHintNormal:
 				textSize = maxTextSize;
 				hintY = maxHintY;
 				hintPaint.setColor(color);
@@ -249,7 +253,7 @@ public class FloatingEditText extends EditText {
 					canvas.drawText(getHint().toString(), hintX, hintY, hintPaint);
 				}
 				break;
-			case StateHintZoomOut: {
+			case StateHintZoomOut:
 				if (elapsed < ANIMATION_DURATION) {
 					textSize = maxTextSize - ((maxTextSize - minTextSize) * elapsed) / ANIMATION_DURATION;
 					hintY = maxHintY - ((maxHintY - minHintY) * elapsed) / ANIMATION_DURATION;
@@ -268,7 +272,6 @@ public class FloatingEditText extends EditText {
 					hintPaint.setTextSize(textSize);
 					canvas.drawText(getHint().toString(), hintX, hintY, hintPaint);
 				}
-			}
 				break;
 			}
 		}
@@ -277,20 +280,29 @@ public class FloatingEditText extends EditText {
 			float textSize = spToPx(12);
 			int bottom = (int) (canvas.getHeight() - textSize);
 			float y = bottom + (dpToPx(8) - countPaint.getFontMetricsInt().top) / 2;
-			float x = getWidth() - (str.length() * getTextSize() / 2);
+			float x = actualWidth - (5 * getTextSize() / 2);
 			countPaint.set(getPaint());
 			countPaint.setColor(isExcessiveCount ? errorColor : highlightedColor);
 			countPaint.setTextSize(textSize);
 			canvas.drawText(str, x, y, countPaint);
 		}
 	}
+	
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		if (changed) {
+			actualWidth = getWidth();
+		}
+	}
 
-    public static float spToPx(int value) {
+    private static float spToPx(int value) {
 		return (value * Resources.getSystem().getDisplayMetrics().scaledDensity);
 	}
     
-    public static int dpToPx(int dp) {
+    private static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
+    
     
 }
