@@ -146,6 +146,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			showMessage(context, R.string.download_error);
 			return;
 		}
+		StateKeeper.getInstance().putSongInfo(downloadingSong.getComment(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 		String songArtist = downloadingSong.getArtist().trim();
 		String songTitle = downloadingSong.getTitle().trim();
 		final File musicDir = new File(downloadPath == null ? getDirectory() : downloadPath);
@@ -242,7 +243,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			}
 			
 		});
-		StateKeeper.getInstance().putSongInfo(downloadingSong.getComment(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(downloadingSong, manager, useAlbumCover, cacheItem);
 		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
