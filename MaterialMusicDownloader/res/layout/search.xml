@@ -84,7 +84,7 @@
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:lines="1"
-                            android:paddingRight="56dp"
+                            android:drawableRight="@drawable/fake_image"
                             android:singleLine="true" />
 
                         <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
