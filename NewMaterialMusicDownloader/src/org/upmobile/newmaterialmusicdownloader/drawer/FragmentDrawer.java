@@ -7,6 +7,7 @@ import org.upmobile.newmaterialmusicdownloader.adapter.NavigationDrawerAdapter;
 import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -69,6 +71,11 @@ public class FragmentDrawer extends Fragment {
  
 	public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
         containerView = getActivity().findViewById(fragmentId);
+        ViewGroup.LayoutParams layoutParams = containerView.getLayoutParams();
+        Display display = ((Activity) containerView.getContext()).getWindowManager().getDefaultDisplay(); 
+        int width = display.getWidth();
+        width = width - Util.dpToPx(containerView.getContext(), 56);
+        layoutParams.width = width > 320 ? 320 : width;
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override

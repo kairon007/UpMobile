@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -123,6 +125,11 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     @SuppressWarnings("deprecation")
 	public void setUp(int fragmentId, DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
+        ViewGroup.LayoutParams layoutParams = mFragmentContainerView.getLayoutParams();
+        Display display = ((Activity) mFragmentContainerView.getContext()).getWindowManager().getDefaultDisplay(); 
+        int width = display.getWidth();
+        width = width - Util.dpToPx(mFragmentContainerView.getContext(), 56);
+        layoutParams.width = width > 320 ? 320 : width;
         mDrawerLayout = drawerLayout;
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         android.support.v7.app.ActionBar actionBar = getActionBar();
