@@ -151,6 +151,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		} else if (position <= LIBRARY_FRAGMENT){
 			showMiniPlayer(true);
 		}
+		getSupportActionBar().setElevation(position == SEARCH_FRAGMENT ? 0 : 16);
 		switch (position) {
 		case SEARCH_FRAGMENT:
 	        changeFragment(mFragments.get(SEARCH_FRAGMENT), false);
@@ -205,6 +206,9 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	
 	@Override
 	public void onBackPressed() {
+		if (getPreviousFragmentName(2).equals(mFragments.get(SEARCH_FRAGMENT).getClass().getSimpleName())) {
+			getSupportActionBar().setElevation(0);
+		}
 		hadClosedDraver = navigationDrawerFragment.isDrawerOpen();
 		if (hadClosedDraver) {
 			navigationDrawerFragment.closeDrawer();
