@@ -87,6 +87,7 @@
                             android:paddingRight="50dp"
                             android:singleLine="true"
                             android:textColor="?attr/textViewColor"
+                            android:drawableRight="@drawable/fake_image"
                             android:textColorHint="?attr/textViewColor" />
 
                         <ImageButton
