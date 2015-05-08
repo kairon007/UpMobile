@@ -199,10 +199,11 @@ public class FragmentDrawer extends Fragment implements Constants{
     
 	public void showPlayerElement(final boolean flag) {
 		if (!flag) {
+			if (adapter.getItemCount() < 6) return;
 			adapter.delete(3);
 		} else {
 			if (adapter.getItemCount() > 6) return;
-			adapter.add(3, new NavDrawerItem(R.drawable.ic_headset_grey , getResources().getString(R.string.tab_now_plaing), NavDrawerItem.Type.Primary));
+			adapter.add(3, new NavDrawerItem(R.drawable.ic_headset_grey, getResources().getString(R.string.tab_now_plaing), NavDrawerItem.Type.Primary));
 		}
 	}
 	
