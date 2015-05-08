@@ -98,7 +98,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		if (file.exists()) {
 			file.delete();
 		} else {
-			android.util.Log.i("logks", "Attention! File " + artist + " - " + title + ".mp3 " + " doesn't exist");
+			android.util.Log.i(getClass().getSimpleName(), "Attention! File " + artist + " - " + title + ".mp3 " + " doesn't exist");
 		}
 	}
 
@@ -128,7 +128,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			cover = Util.getArtworkImage(2, metadata);
 		} catch (Exception e) {
-			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
+			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e);
 			return null;
 		}
 		return cover;
@@ -143,7 +143,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 			comment = metadata.getComment();
 		} catch (Exception e) {
-			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
+			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e);
 		}
 		return null != comment && !comment.isEmpty() ? comment : EMPTY_COMMENT;
 	}
@@ -177,11 +177,11 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	}
 
 	public String getTitle() {
-		return title;
+		return title.replace("?", "");
 	}
 
 	public String getArtist() {
-		return artist;
+		return artist.replace("?", "");
 	}
 
 	public long getId() {
