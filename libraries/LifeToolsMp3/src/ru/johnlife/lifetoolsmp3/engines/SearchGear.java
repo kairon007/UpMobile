@@ -52,7 +52,7 @@ public class SearchGear extends SearchWithPages {
 				}
 			}
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Something went wrong :(" + e.getMessage());
+			Log.e(getClass().getSimpleName(), "Something went wrong :(" + e);
 		}
 		return null;
 	}

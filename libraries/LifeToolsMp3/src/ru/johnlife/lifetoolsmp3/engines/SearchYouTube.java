@@ -24,7 +24,12 @@ public class SearchYouTube extends SearchWithPages {
 	protected Void doInBackground(Void... arg0) {
 		try {
 			String strLink = String.format(URL_PATTERN, URLEncoder.encode(getSongName(), "UTF-8"), ((page * 25) - 24));
-			JSONObject parent = new JSONObject((Jsoup.connect(strLink).ignoreContentType(true).followRedirects(true).get()).body().text());
+			android.util.Log.d("logd", "doInBackground: " + strLink);
+			JSONObject parent = new JSONObject((Jsoup.connect(strLink)
+					.userAgent("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36")
+					.ignoreContentType(true)
+					.followRedirects(true)
+					.get()).body().text());
 			JSONObject data = parent.getJSONObject("data");
 			JSONArray items = data.getJSONArray("items");
 			for(int i = 1; i< items.length(); i++) {
@@ -43,7 +48,7 @@ public class SearchYouTube extends SearchWithPages {
 				}
 			}
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Something went wrong :( " + e.getMessage());
+			Log.e(getClass().getSimpleName(), "Something went wrong :( " + e);
 		}
 		return null;
 	}

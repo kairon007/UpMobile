@@ -43,7 +43,7 @@ public class SearchJamendo extends SearchWithPages {
 					addSong(new JamendoSong(downloadUrl, coverUrl).setArtistName(author).setSongTitle(title));
 			}
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), e.getMessage());
+			Log.e(getClass().getSimpleName(), e + "");
 		}
 		return null;
 	}

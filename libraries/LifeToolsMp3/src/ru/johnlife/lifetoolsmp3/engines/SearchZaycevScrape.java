@@ -43,7 +43,7 @@ public class SearchZaycevScrape extends SearchWithPages {
 				addSong(new RemoteSong(getDownloadUrl(songPage)).setArtistName(author).setSongTitle(title));
 			}
 		} catch (IOException e) {
-			Log.e(getClass().getSimpleName(), "Something went wrong :(" + e.getMessage());
+			Log.e(getClass().getSimpleName(), "Something went wrong :(" + e);
 		}
 		return null;
 	}
@@ -64,7 +64,7 @@ public class SearchZaycevScrape extends SearchWithPages {
 					.get();
 			return new JSONObject(doc.body().text()).getString("url");
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Something went wrong :(" + e.getMessage());
+			Log.e(getClass().getSimpleName(), "Something went wrong :(" + e);
 		}
 		return null;
 	}

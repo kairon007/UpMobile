@@ -54,7 +54,7 @@ public class SearchSoundCloud extends SearchWithPages {
 				addSong(new SoundCloudV1Song(streamUrl, coverUrl).setSongTitle(title).setArtistName(artist).setDuration(duration));
 			}
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), e.getMessage());
+			Log.e(getClass().getSimpleName(), e + "");
 		}
 		return null;
 	}

@@ -52,7 +52,7 @@ public class SearchMyFreeMp3 extends SearchWithPages {
 				addSong(new RemoteSong(link).setSongTitle(title).setArtistName(artist).setDuration(duration));
 			}
 		} catch (Exception e) {
-			Log.d(getClass().getSimpleName(), e.getMessage());
+			Log.d(getClass().getSimpleName(), e + "");
 		}
 		return null;
 	}

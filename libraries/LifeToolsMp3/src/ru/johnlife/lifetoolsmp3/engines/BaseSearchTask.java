@@ -181,7 +181,7 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 				return false;
 			}
 		} catch (Exception e) {
-			Log.d("log", "SearchMyFreeMp3.checkConnection; exeption - " + e.getMessage());
+			Log.d("log", "SearchMyFreeMp3.checkConnection; exeption - " + e);
 		} 
 		return true;
 	}
