@@ -461,7 +461,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		titleBox = (LinearLayout) view.findViewById(R.id.songNameBox);
 		undo = new UndoBar(getActivity());
 		imageView = new ImageView(getActivity());
-		System.out.println("!!! ImageView="+imageView);
 	}
 
 	private void setListeners() {

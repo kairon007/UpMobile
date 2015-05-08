@@ -32,6 +32,7 @@ public class FloatingEditText extends EditText {
     private static final int StateHintZoomIn = 1;
     private static final int StateHintZoomOut = 2;
     private static final float HINT_SCALE = 0.6f;
+    private static final int COUNT_UDERLINE_LETTER = 5;
     
     private Paint hintPaint;
     private Paint countPaint;
@@ -193,7 +194,6 @@ public class FloatingEditText extends EditText {
 	@Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        android.util.Log.d("logks", "FloatingEditText, onTextChanged: start - " + start + ". lengthBefore = " + lengthBefore + ", lengthAfter = " + lengthAfter);
         currentCharCount = text.length();
         if (showCharCount) {
         	isExcessiveCount = maxCharCount <= currentCharCount;
@@ -280,7 +280,7 @@ public class FloatingEditText extends EditText {
 			float textSize = spToPx(12);
 			int bottom = (int) (canvas.getHeight() - textSize);
 			float y = bottom + (dpToPx(8) - countPaint.getFontMetricsInt().top) / 2;
-			float x = actualWidth - (5 * getTextSize() / 2);
+			float x = actualWidth - (COUNT_UDERLINE_LETTER * getTextSize() / 2);
 			countPaint.set(getPaint());
 			countPaint.setColor(isExcessiveCount ? errorColor : highlightedColor);
 			countPaint.setTextSize(textSize);
@@ -296,11 +296,11 @@ public class FloatingEditText extends EditText {
 		}
 	}
 
-    private static float spToPx(int value) {
+    private float spToPx(int value) {
 		return (value * Resources.getSystem().getDisplayMetrics().scaledDensity);
 	}
     
-    private static int dpToPx(int dp) {
+    private int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
     

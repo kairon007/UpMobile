@@ -68,7 +68,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		public void update(AbstractSong song) {
 			BaseMiniPlayerActivity.this.song = song;
 			if (miniPlayer.getVisibility() == View.GONE) {
-				setData(song, "update");
+				setData(song);
 			} else {
 				showMiniPlayer(true, true);
 			}
@@ -90,24 +90,20 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		public void start(AbstractSong s) {
 			song = s;
 			isMiniPlayerPrepared = true;
-			refreshButton();
+			showProgress(false);
 			setPlayPauseMini(false);
 		}
 
 		@Override
 		public void play(AbstractSong song) {
-			refreshButton();
+			showProgress(false);
 			setPlayPauseMini(false);
 		}
 
 		@Override
 		public void pause(AbstractSong song) {
-			refreshButton();
-			setPlayPauseMini(true);
-		}
-
-		private void refreshButton() {
 			showProgress(false);
+			setPlayPauseMini(true);
 		}
 
 		@Override
@@ -308,7 +304,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				miniPlayer.setVisibility(View.VISIBLE);
 				View parentMiniPlayer = (View) miniPlayer.getParent();
 				parentMiniPlayer.setVisibility(View.VISIBLE);
-				setData(song, "showMiniPlayer, !isAnimationEnabled()");
+				setData(song);
 				if (null != fakeView) fakeView.setVisibility(View.VISIBLE);
 				customDownloadButton();
 				isClickOnDownload  = false;
@@ -319,7 +315,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			
 				@Override
 				public void onAnimationStart(Animation animation) {
-					setData(song, "showMiniPlayer, onAnimationStart");
+					setData(song);
 				}
 				
 				@Override
@@ -387,7 +383,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	
 	private void startFakeAnimation () {
 		if (!isAnimationEnabled()) {
-			setData(song, "startFakeAnimation, begin");
+			setData(song);
 			return;
 		}
 		final View fakeMiniPlayer = findViewById(getMiniPlayerDuplicateID());
@@ -414,7 +410,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		});
 		Animation slideInRight = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_right);
 		fakeMiniPlayer.setVisibility(View.VISIBLE);
-		setData(song, "startFakeAnimation, end");
+		setData(song);
 		fakeMiniPlayer.setAnimation(slideOutLeft);
 		miniPlayer.setAnimation(slideInRight);
 		fakeMiniPlayer.startAnimation(slideOutLeft);
@@ -437,7 +433,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		showMiniPlayer(show, oldIsPrepared);
 	}
 	
-	private void setData(final AbstractSong song, String from) {
+	private void setData(final AbstractSong song) {
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
 		setCover(null);

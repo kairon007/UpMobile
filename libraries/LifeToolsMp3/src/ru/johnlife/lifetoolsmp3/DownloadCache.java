@@ -71,9 +71,8 @@ public class DownloadCache {
 		}
 		if (null != deleteItem) {
 			return remove(deleteItem);
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	public ArrayList<Item> getCachedItems() {
