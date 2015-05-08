@@ -6,8 +6,10 @@ import java.util.List;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
 
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,8 +53,13 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 		NavDrawerItem current = data.get(position);
 		if (current.getType() == NavDrawerItem.Type.Secondary) {
 			holder.ripple.setClickable(false);
+			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 36);
+			int padding = Util.dpToPx(inflater.getContext(), 16);
+			holder.ripple.setPadding(padding, 0, padding, 0);
 			holder.icon.setVisibility(View.GONE);
 			holder.line.setVisibility(View.VISIBLE);
+			holder.title.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+			holder.title.setTextSize(14);
 		} else {
 			holder.ripple.setClickable(true);
 			holder.icon.setVisibility(View.VISIBLE);
