@@ -43,7 +43,9 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private TextView emptyMessage;
 	private Handler uiHandler;
 	private String filterQuery = "";
+	private Object lock = new Object();
 	private CheckRemovedFiles checkRemovedFiles;
+	
 	private ContentObserver observer = new ContentObserver(null) {
 
 		@Override
@@ -217,27 +219,33 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	}
 	
 	protected ArrayList<MusicData> querySong() {
-		ArrayList<MusicData> result = new ArrayList<MusicData>();
-		Cursor cursor = buildQuery(getContext().getContentResolver(), getFolderPath());
-		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+		ArrayList<MusicData> result;
+		synchronized (lock) {
+			result = new ArrayList<MusicData>();
+			Cursor cursor = buildQuery(getContext().getContentResolver(), getFolderPath());
+			if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+				cursor.close();
+				return result;
+			}
+			MusicData d = new MusicData();
+			d.populate(cursor);
+			result.add(d);
+			while (cursor.moveToNext()) {
+				MusicData data = new MusicData();
+				data.populate(cursor);
+				result.add(data);
+			}
 			cursor.close();
-			return result;
 		}
-		MusicData d = new MusicData();
-		d.populate(cursor);
-		result.add(d);
-		while (cursor.moveToNext()) {
-			MusicData data = new MusicData();
-			data.populate(cursor);
-			result.add(data);
-		}
-		cursor.close();
 		return result;
 	}
 	
 	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
-		String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + filterQuery + "%'";
-		Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+		Cursor cursor;
+		synchronized (lock) {
+			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + filterQuery + "%'";
+			cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+		}
 		return cursor;
 	}
 	
