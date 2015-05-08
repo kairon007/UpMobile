@@ -1,5 +1,6 @@
 package org.upmobile.newmaterialmusicdownloader.drawer;
 
+import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
@@ -7,8 +8,11 @@ import org.upmobile.newmaterialmusicdownloader.adapter.NavigationDrawerAdapter;
 import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class FragmentDrawer extends Fragment {
+public class FragmentDrawer extends Fragment implements Constants{
 	
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -36,8 +40,23 @@ public class FragmentDrawer extends Fragment {
     private View selectedView;
 
     private FragmentDrawerListener drawerListener;
+    
+    private SharedPreferences sPref;
+    
+    private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
+
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+			if (PREF_DIRECTORY.equals(key)) {
+				adapter.updateList(((MainActivity) getActivity()).getData());
+			}
+		}
+	};
  
-    public FragmentDrawer() { }
+    public FragmentDrawer() {
+    	 sPref = MusicApp.getSharedPreferences();
+    	 sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
+    }
  
     public void setDrawerListener(FragmentDrawerListener listener) {
         this.drawerListener = listener;
@@ -109,6 +128,13 @@ public class FragmentDrawer extends Fragment {
         });
  
     }
+	
+	@Override
+	public void onDetach() {
+		sPref.unregisterOnSharedPreferenceChangeListener(sPrefListener);
+		super.onDetach();
+	}
+	
  
     public static interface ClickListener {
         public void onClick(View view, int position);

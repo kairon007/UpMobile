@@ -193,7 +193,6 @@ public class FloatingEditText extends EditText {
 	@Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        android.util.Log.d("logks", "FloatingEditText, onTextChanged: start - " + start + ". lengthBefore = " + lengthBefore + ", lengthAfter = " + lengthAfter);
         currentCharCount = text.length();
         if (showCharCount) {
         	isExcessiveCount = maxCharCount <= currentCharCount;
@@ -296,11 +295,11 @@ public class FloatingEditText extends EditText {
 		}
 	}
 
-    private static float spToPx(int value) {
+    private float spToPx(int value) {
 		return (value * Resources.getSystem().getDisplayMetrics().scaledDensity);
 	}
     
-    private static int dpToPx(int dp) {
+    private int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
     
