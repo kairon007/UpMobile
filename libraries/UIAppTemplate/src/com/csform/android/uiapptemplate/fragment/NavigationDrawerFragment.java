@@ -129,7 +129,8 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         Display display = ((Activity) mFragmentContainerView.getContext()).getWindowManager().getDefaultDisplay(); 
         int width = display.getWidth();
         width = width - Util.dpToPx(mFragmentContainerView.getContext(), 56);
-        layoutParams.width = width > 320 ? 320 : width;
+        int maxWidth = Util.dpToPx(mFragmentContainerView.getContext(), 320);
+        layoutParams.width = width > maxWidth ? maxWidth : width;
         mDrawerLayout = drawerLayout;
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         android.support.v7.app.ActionBar actionBar = getActionBar();

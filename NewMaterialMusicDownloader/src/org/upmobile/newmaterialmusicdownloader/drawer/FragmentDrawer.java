@@ -75,7 +75,8 @@ public class FragmentDrawer extends Fragment {
         Display display = ((Activity) containerView.getContext()).getWindowManager().getDefaultDisplay(); 
         int width = display.getWidth();
         width = width - Util.dpToPx(containerView.getContext(), 56);
-        layoutParams.width = width > 320 ? 320 : width;
+        int maxWidth = Util.dpToPx(containerView.getContext(), 320);
+        layoutParams.width = width > maxWidth ? maxWidth : width;
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
