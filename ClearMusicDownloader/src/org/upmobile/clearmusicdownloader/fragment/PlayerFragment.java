@@ -26,6 +26,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -80,7 +81,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private final int MESSAGE_DURATION = 5000;
     public static final int DURATION = 500; // in ms
-    private String PACKAGE = "IDENTIFY";
 	private AbstractSong song;
 	private RenameTask renameTask;
 	private PlaybackService player;
@@ -131,6 +131,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private float scale_width;
     private float scale_height;
 	private float ratio;
+	private boolean fromMenu = Boolean.FALSE;
     private boolean isDestroy;
     private boolean isUseAlbumCover = Boolean.TRUE;
     private boolean isNeedCalculateCover = Boolean.TRUE;
@@ -140,11 +141,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		@Override
 		public void start(AbstractSong s) {
 			downloadButtonState(true);
-			if (s.getClass() != MusicData.class) {
-				song = ((RemoteSong) s).cloneSong();
-			} else {
-				song = s;
-			}
+			song = s.getClass() != MusicData.class ? ((RemoteSong) s).cloneSong() : s;
 			if (isDestroy) return;
 			setClickablePlayerElement(true);
 			showLyrics();
@@ -210,28 +207,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitleBarTitle.setVisibility(View.INVISIBLE);
 		playerCover.bringToFront();
 		isUseAlbumCover = ((MainActivity) getActivity()).stateCoverHelper();
-		if (null != getArguments() && getArguments().containsKey(KEY_SELECTED_SONG)) {
-			song = getArguments().getParcelable(KEY_SELECTED_SONG);
-			top = getArguments().getInt(PACKAGE + ".top");
-			left = getArguments().getInt(PACKAGE + ".left");
-			width = getArguments().getInt(PACKAGE + ".width");
-			height = getArguments().getInt(PACKAGE + ".height");
-			if (song.equals(player.getPlayingSong()) && player.isPlaying()) {
-				player.play();
-			} else if (!song.equals(player.getPlayingSong())){
-				player.pause();
-			}
-		} else {
-			song = player.getPlayingSong();
-			parentView.findViewById(R.id.title_bar_left_menu).setBackgroundDrawable(getResources().getDrawable(R.drawable.titlebar_menu_selector));
-		}
+		fromMenu = ((MainActivity) getActivity()).isBackButtonEnabled();
+		parentView.findViewById(R.id.title_bar_left_menu).setBackgroundDrawable(getResources().getDrawable(fromMenu ? R.drawable.titlebar_menu_selector : R.drawable.titlebar_back_selector));
+		song = player.getPlayingSong();
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
-		if (prepared) {
-			changePlayPauseView(!player.isPlaying());
-		} else {
-			changePlayPauseView(Boolean.FALSE);
-		}
+		changePlayPauseView(prepared ? !player.isPlaying() : Boolean.FALSE);
 		downloadButtonState(!player.isGettingURl());
 		return parentView;
 	}
@@ -248,7 +229,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		super.onDestroyView();
 	}
 	
-
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -535,10 +515,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void onClick(View v) {
 		if (v.getId() == R.id.title_bar_left_menu) {
 			if (!closeEditViews()) {
-				if (null != getArguments()) {
-					onBackPress();
-				} else {
+				if (fromMenu) {
 					((MainActivity) getActivity()).openMenu();
+				} else {
+					onBackPress();
 				}
 			}
 			return;

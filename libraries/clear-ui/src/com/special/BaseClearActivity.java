@@ -22,6 +22,8 @@ import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
 public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements Constants {
+	
+	public static final String CALL_FROM_MENU = "call.player.fragment.from.reside.menu";
 
 	private ResideMenu resideMenu;
     private ResideMenuItem[] menuItems;
@@ -30,11 +32,11 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
     private LinearLayout topFrame;
 	private Fragment lastOpenedFragment;
 	private TextView tvTitle;
+	protected boolean isBackButtonEnabled = Boolean.FALSE;
   
     protected abstract Fragment[] getFragments();
     protected abstract ResideMenuItem[] getMenuItems();
     protected abstract String[] getTitlePage();
-    protected abstract Bundle getArguments();
     protected abstract Fragment getPlayerFragment();
     protected abstract void showDialog();
     protected abstract boolean isPlaying();
@@ -84,7 +86,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			@Override
 			public void onClick(View view) {
 				Util.hideKeyboard(BaseClearActivity.this, view);
-				openMenu();
+				resideMenu.openMenu();
 			}
 		});
     }
@@ -103,7 +105,8 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         			resideMenu.closeMenu();
         			return;
         		}
-        		if (i == PLAYER_FRAGMENT && null != getArguments()) {
+        		if (i == PLAYER_FRAGMENT) {
+        			isBackButtonEnabled = true;
         			changeFragment(getPlayerFragment(), true);
         		} else {
         			showMiniPlayer(true);
@@ -184,29 +187,6 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 		return titles[0];
 	}
     
-//    @SuppressLint("NewApi") @Override
-//	public void onBackPressed() {
-//		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[3].getClass().getSimpleName())) {
-//			getSupportFragmentManager().popBackStack();
-//			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 2);
-//			String lastFragmentName = backEntry.getName();
-//			if (lastFragmentName.equals(getFragments()[0].getClass().getSimpleName())) {
-//				tvTitle.setText(titles[0]);
-//			} else if (lastFragmentName.equals(getFragments()[1].getClass().getSimpleName())) {
-//				tvTitle.setText(titles[1]);
-//			} else if (lastFragmentName.equals(getFragments()[2].getClass().getSimpleName())) {
-//				tvTitle.setText(titles[2]);
-//			}
-//			lastOpenedFragment = getSupportFragmentManager().findFragmentByTag(lastFragmentName);
-//			return;
-//		}
-//    	if (resideMenu.isOpened()){
-//    		resideMenu.closeMenu();
-//    	} else {
-//    		resideMenu.openMenu();
-//    	}
-//    }
-    
 	public void showTopFrame() {
 		topFrame.setVisibility(View.VISIBLE);
 	}
@@ -228,6 +208,10 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 
 	public void openMenu() {
 		resideMenu.openMenu();
+	}
+	
+	public boolean isBackButtonEnabled() {
+		return isBackButtonEnabled;
 	}
 	
 	public void reDrawMenu(){

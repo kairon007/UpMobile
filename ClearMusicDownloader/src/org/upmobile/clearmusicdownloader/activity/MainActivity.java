@@ -234,16 +234,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		}
 	}
 
-	@Override
-	protected Bundle getArguments() {
-		if (null != service) {
-			Bundle args = new Bundle();
-			args.putParcelable(Constants.KEY_SELECTED_SONG, (AbstractSong) service.getPlayingSong());
-			return args;
-		}
-		return null;
-	}
-
 	public void setCoverHelper(boolean val) {
 		useCoverHelper = val;
 	}
@@ -293,14 +283,8 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	@Override
 	protected void showPlayerFragment() {
 		Fragment fragment = getPlayerFragment();
-		try {
-			if (!fragment.isAdded()) {
-				fragment.setArguments(getArguments());
-				changeFragment(fragment, true);
-			}
-		} catch (Exception e) {
-			changeFragment(fragment, true);
-		}
+		isBackButtonEnabled = false;
+		changeFragment(fragment, true);
 	}
 	
 	@Override
