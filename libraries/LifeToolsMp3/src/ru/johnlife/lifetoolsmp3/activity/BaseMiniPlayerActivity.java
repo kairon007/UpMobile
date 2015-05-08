@@ -90,24 +90,20 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		public void start(AbstractSong s) {
 			song = s;
 			isMiniPlayerPrepared = true;
-			refreshButton();
+			showProgress(false);
 			setPlayPauseMini(false);
 		}
 
 		@Override
 		public void play(AbstractSong song) {
-			refreshButton();
+			showProgress(false);
 			setPlayPauseMini(false);
 		}
 
 		@Override
 		public void pause(AbstractSong song) {
-			refreshButton();
-			setPlayPauseMini(true);
-		}
-
-		private void refreshButton() {
 			showProgress(false);
+			setPlayPauseMini(true);
 		}
 
 		@Override

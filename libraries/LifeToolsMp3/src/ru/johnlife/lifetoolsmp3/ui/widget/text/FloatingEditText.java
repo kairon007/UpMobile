@@ -32,6 +32,7 @@ public class FloatingEditText extends EditText {
     private static final int StateHintZoomIn = 1;
     private static final int StateHintZoomOut = 2;
     private static final float HINT_SCALE = 0.6f;
+    private static final int COUNT_UDERLINE_LETTER = 5;
     
     private Paint hintPaint;
     private Paint countPaint;
@@ -279,7 +280,7 @@ public class FloatingEditText extends EditText {
 			float textSize = spToPx(12);
 			int bottom = (int) (canvas.getHeight() - textSize);
 			float y = bottom + (dpToPx(8) - countPaint.getFontMetricsInt().top) / 2;
-			float x = actualWidth - (5 * getTextSize() / 2);
+			float x = actualWidth - (COUNT_UDERLINE_LETTER * getTextSize() / 2);
 			countPaint.set(getPaint());
 			countPaint.setColor(isExcessiveCount ? errorColor : highlightedColor);
 			countPaint.setTextSize(textSize);

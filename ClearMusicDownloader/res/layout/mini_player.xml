@@ -63,13 +63,6 @@
                     android:textSize="@dimen/material_body" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/mini_player_progress"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:src="@drawable/loader_black" />
-
             <ImageButton
                 android:id="@+id/mini_player_download"
                 android:layout_width="48dp"
@@ -78,17 +71,27 @@
                 android:layout_weight="0"
                 android:background="@drawable/selectable_item_bg"
                 android:src="@drawable/mini_player_download_dark"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
-            <ImageButton
-                android:id="@+id/mini_player_play_pause"
+            <FrameLayout
                 android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0"
-                android:background="@drawable/selectable_item_bg"
-                android:src="@drawable/mini_player_pause"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:layout_weight="0" >
+
+                <ImageView
+                    android:id="@+id/mini_player_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/loader_black" />
+
+                <ImageButton
+                    android:id="@+id/mini_player_play_pause"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/selectable_item_bg"
+                    android:src="@drawable/mini_player_pause"/>
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 
