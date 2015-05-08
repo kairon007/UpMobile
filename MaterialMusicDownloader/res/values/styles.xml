@@ -8,23 +8,25 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
-<!--         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item> -->
+        <!-- <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item> -->
         <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
         <item name="searchViewStyle">@style/SearchViewStyle</item>
-         <item name="useRoboto">true</item>
-    </style>
-    
-        <style name="AppTheme.NoFonts" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowContentOverlay">@null</item>
-<!--         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item> -->
-        <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
-        <item name="searchViewStyle">@style/SearchViewStyle</item>
-         <item name="useRoboto">false</item>
+        <item name="useRoboto">true</item>
+        <item name="colorPrimary">@color/main_color_500</item>
     </style>
 
-<!--     <style name="myPopupMenuStyle" parent="@android:style/Widget.Holo.Light.PopupMenu"> -->
-<!--         <item name="android:popupBackground">@color/main_color_background</item> -->
-<!--     </style> -->
+    <style name="AppTheme.NoFonts" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item> -->
+        <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+        <item name="useRoboto">false</item>
+        <item name="colorPrimary">@color/main_color_500</item>
+    </style>
+
+    <!-- <style name="myPopupMenuStyle" parent="@android:style/Widget.Holo.Light.PopupMenu"> -->
+    <!-- <item name="android:popupBackground">@color/main_color_background</item> -->
+    <!-- </style> -->
 
     <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
         <item name="android:textSize">18sp</item>
@@ -190,22 +192,19 @@
     <style name="RippleStyle">
         <item name="rv_rippleDuration">150</item>
         <item name="rv_alpha">200</item>
-        <!-- <item name="rv_alphaVisible">true</item> -->
-        <item name="rv_color">?attr/colorPrimaryDark</item>
+        <item name="rv_color">?attr/colorPrimary</item>
     </style>
 
     <style name="RippleStyleRectangle" parent="RippleStyle">
         <item name="rv_type">rectangle</item>
     </style>
 
-    <style name="RippleStyleLongPress" parent="RippleStyle">
+    <style name="RippleStyleLongPress" parent="RippleStyleRectangle">
         <item name="rv_rippleDuration">800</item>
-        <item name="rv_type">rectangle</item>
     </style>
 
-    <style name="RippleStyleShortPress" parent="RippleStyle">
+    <style name="RippleStyleShortPress" parent="RippleStyleRectangle">
         <item name="rv_rippleDuration">250</item>
-        <item name="rv_type">rectangle</item>
     </style>
 
     <style name="RippleStyleCircle" parent="RippleStyle">
