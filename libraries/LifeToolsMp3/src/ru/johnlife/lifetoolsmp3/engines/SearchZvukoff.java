@@ -14,8 +14,8 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 public class SearchZvukoff extends SearchWithPages{
 	
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
-	private static String HTTP_ZVUKOFF_RU = "http://zvukoff.ru";
-	private static String URL = "http://zvukoff.ru/mp3/search?keywords=%s&page=%s";
+	private static String HTTP_ZVUKOFF_RU = "http://zv.fm";
+	private static String URL = "http://zv.fm/mp3/search?keywords=%s&page=%s";
 	
 
 	public SearchZvukoff(FinishedParsingSongs dInterface, String songName) {
@@ -40,8 +40,8 @@ public class SearchZvukoff extends SearchWithPages{
 			for (Element element : songs) {
 				String artist = element.select("div[class=song-artist]").select("span").text().toString();
 				String title = element.select("div[class=song-name]").select("span").text().toString();
-				long duration = Long.parseLong(element.select("a").attr("duration").toString()) * 1000;
-				String downloadUrl = HTTP_ZVUKOFF_RU + element.select("a[class=song-play btn4 play]").attr("href").toString();
+				long duration = Long.parseLong(element.select("span[class=song-play btn4 play]").attr("data-time")) * 1000;
+				String downloadUrl = HTTP_ZVUKOFF_RU + element.select("span[class=song-play btn4 play]").attr("data-url").toString();
 				addSong(new RemoteSong(downloadUrl).setArtistName(artist).setSongTitle(title).setDuration(duration));
 			}
 		} catch (Exception e) {
