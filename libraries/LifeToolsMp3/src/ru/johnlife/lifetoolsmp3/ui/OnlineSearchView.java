@@ -272,20 +272,27 @@ public abstract class OnlineSearchView extends View {
 				}
 			} else {
 				hideBaseProgress();
-				ArrayList<AbstractSong> songs = new ArrayList<AbstractSong>();
 				try {
 					for (Song song : songsList) {
-						if (!resultAdapter.contains(song)) {
+						if (!contains(song)) {
 							resultAdapter.add(song);
-							songs.add(song.cloneSong());
 						}
 					}
 				} catch (Exception e) {
-					android.util.Log.d("logks", "in " + getClass().getName() + " appear problem: " + e);
+					Log.e(getClass().getSimpleName(), e + "");
 				}
 			}
 		}
 	};
+	
+	private boolean contains (Song song) {
+		for (int i = 0; i < resultAdapter.getCount(); i++) {
+			if (((Song) resultAdapter.getItem(i)).getComment().equals(song.getComment())) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public View getView() {
 		if (!showFullElement()) {
