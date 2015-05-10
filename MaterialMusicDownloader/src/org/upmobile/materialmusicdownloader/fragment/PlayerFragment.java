@@ -525,7 +525,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 *            current song
 	 */
 	private void play(int delta) throws IllegalArgumentException {
-		TestApp.start("Play");
 		if (delta == 0) {
 			player.play(song);
 			return;
@@ -553,7 +552,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		cancelProgressTask();
 		thatSongIsDownloaded();
 		cbUseCover.setOnCheckedChangeListener(this);
-		TestApp.stop();
 	}
 
 	private void setElementsView(int progress) {

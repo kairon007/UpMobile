@@ -251,9 +251,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void setKeyListener() {
-		getView().setFocusableInTouchMode(true);
-		getView().requestFocus();
-		getView().setOnKeyListener(new View.OnKeyListener() {
+		View view = getView();
+		view.setFocusableInTouchMode(true);
+		view.requestFocus();
+		view.setOnKeyListener(new View.OnKeyListener() {
 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -748,7 +749,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			throw new IllegalArgumentException("Delta must be -1 < delta < 1");
 		}
 		int state = StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
-		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
+		if (MusicData.class == song.getClass() || StateKeeper.DOWNLOADED <= state) {
 			download.setVisibility(View.GONE);
 		} else {
 			download.setVisibility(View.VISIBLE);
@@ -756,7 +757,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void getCover(final AbstractSong song) {
-		setCheckBoxState(false);
+		
 		if (song.isHasCover()) {
 			Bitmap bitmap = song.getCover();
 			if (null != bitmap) {
@@ -776,6 +777,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					((RemoteSong) song).setHasCover(true);
 					playerCover.setImageBitmap(bmp);
 					player.updatePictureNotification(bmp);
+					useCover.setVisibility(View.VISIBLE);
 					setCheckBoxState(true);
 				}
 			};
