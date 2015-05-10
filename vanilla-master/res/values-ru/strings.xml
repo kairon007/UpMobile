@@ -47,7 +47,7 @@
     <string name="_composer">Композитор</string>
     <string name="_format">Формат</string>
     <string name="_title">Название</string>
-    <string name="_artist">Художник</string>
+    <string name="_artist">Артист</string>
     <string name="_album">Альбом</string>
     <string name="_year">Год</string>
     <!-- New Playlist Dialog -->
@@ -74,7 +74,7 @@
     <string name="play_or_enqueue">Поставить в очередь если играет; Играть если приостановлено</string>
     <string name="deleted">%s удален.</string>
     <string name="delete_file_failed">Не удалось удалить %s.</string>
-    <string name="artists">Художники</string>
+    <string name="artists">Артисты</string>
     <string name="albums">Альбомы</string>
     <string name="songs">Библиотека</string>
     <string name="playlists">Списки воспроизведения</string>
