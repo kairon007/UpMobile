@@ -5,6 +5,7 @@ import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.adapter.NavigationDrawerAdapter;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
 
 import ru.johnlife.lifetoolsmp3.Util;
@@ -49,7 +50,7 @@ public class FragmentDrawer extends Fragment implements Constants {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			if (PREF_DIRECTORY.equals(key)) {
-				adapter.updateList(((MainActivity) getActivity()).getData());
+				adapter.updateItem(adapter.getItemCount() - 1, new NavDrawerItem(R.drawable.ic_settings_applications_grey, NewMaterialApp.getDirectory(), NavDrawerItem.Type.Primary));
 			}
 		}
 	};

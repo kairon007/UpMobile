@@ -38,7 +38,18 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 	}
 
 	public void updateList(List<NavDrawerItem> data) {
-		this.data = data;
+		this.data.clear();
+		this.data.addAll(data);
+		notifyDataSetChanged();
+	}
+	
+	public void updateItem(int position, NavDrawerItem object) {
+		delete(position);
+		add(position, object);
+	}
+	
+	public void clear() {
+		data.clear();
 		notifyDataSetChanged();
 	}
 
