@@ -7,7 +7,6 @@ import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -39,7 +38,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener {
 
 		private MusicData data;
-		private ViewGroup info;
 
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);

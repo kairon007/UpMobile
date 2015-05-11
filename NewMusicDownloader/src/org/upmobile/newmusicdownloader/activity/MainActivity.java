@@ -262,6 +262,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
 		setSearchViewVisibility(targetFragment.getClass().getSimpleName());
 		currentTag = targetFragment.getClass().getSimpleName();
+		currentFragmentIsPlayer = currentTag.equals(PlayerFragment.class.getSimpleName());
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate && Nulldroid_Settings.ENABLE_ANIMATIONS) {
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
@@ -287,6 +288,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void onBackPressed() {
 		Fragment currentFragment = getFragmentManager().findFragmentByTag(currentTag);
 		setSearchViewVisibility(getPreviousFragmentName(2));
+		currentFragmentIsPlayer = true;
 		if (null != currentFragment && currentFragment.isVisible() && currentFragment.getClass() == PlayerFragment.class) {
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();

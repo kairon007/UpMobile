@@ -129,7 +129,8 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 
 	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
 		manageSearchView(targetFragment.getClass().getSimpleName());
-		this.lastOpenedFragment = targetFragment;
+		currentFragmentIsPlayer = targetFragment.getClass() == getFragments()[PLAYER_FRAGMENT].getClass();
+		lastOpenedFragment = targetFragment;
 		resideMenu.clearIgnoredViewList();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate && isAnimationEnabled()) {
@@ -159,6 +160,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 	@Override
 	public void onBackPressed() {
 		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[PLAYER_FRAGMENT].getClass().getSimpleName())){
+			currentFragmentIsPlayer = true;
 			getFragmentManager().popBackStack();
 			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
@@ -168,6 +170,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			manageSearchView(lastFragmentName);
 			showMiniPlayer(true);
 		} else {
+			currentFragmentIsPlayer = false;
 			if (isMiniPlayerPrepared()) {
 				stopChildsServices();
 			} else {

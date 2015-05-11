@@ -56,7 +56,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService" >
+        <service
+            android:name="ru.johnlife.lifetoolsmp3.PlaybackService"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="playbackservice.action.main" />
                 <action android:name="playbackservice.action.prev" />

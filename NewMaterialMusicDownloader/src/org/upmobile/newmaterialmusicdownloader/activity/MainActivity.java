@@ -249,6 +249,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void setCurrentFragmentId(int currentFragmentId) {
 		this.currentFragmentId = currentFragmentId;
+		currentFragmentIsPlayer = ManagerFragmentId.playerFragment() == currentFragmentId;
 		if (null != drawerFragment) {
 			drawerFragment.setItemChecked(currentFragmentId);	
 		}

@@ -58,6 +58,7 @@
         
         <service
             android:name="ru.johnlife.lifetoolsmp3.PlaybackService"
+            android:exported="false"
             android:enabled="true" >
             <intent-filter>
                 <action android:name="playbackservice.action.main" />

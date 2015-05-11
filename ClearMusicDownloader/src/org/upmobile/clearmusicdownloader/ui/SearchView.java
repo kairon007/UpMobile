@@ -19,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
@@ -35,7 +34,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	public View getView() {
 		View v = super.getView();
-		listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
+		listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		return v;
 	}
 	
@@ -167,7 +166,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			
 			@Override
 			public void run() {
-				Toast.makeText(getContext(), error, Toast.LENGTH_SHORT);
+				Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 				service.stopPressed();
 			}
 		});

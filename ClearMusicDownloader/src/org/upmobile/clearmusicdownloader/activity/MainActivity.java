@@ -316,14 +316,12 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		hidePlayerElement();
 	}
 	
-	
 	@Override
 	protected void showProgress(boolean flag) {
 		progress = ((ImageView) findViewById(R.id.mini_player_progress));
 		super.showProgress(flag);
 		if (flag) {
 			progress.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
-
 		} else {
 			progress.clearAnimation();
 		}

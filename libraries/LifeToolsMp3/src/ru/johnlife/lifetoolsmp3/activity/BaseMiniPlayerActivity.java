@@ -57,6 +57,8 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	private boolean isAnimated = Boolean.FALSE;
 	private boolean isClickOnDownload = Boolean.FALSE;
 	private boolean methodIsCalled = Boolean.FALSE;
+	private boolean isShown = Boolean.FALSE;
+	protected boolean currentFragmentIsPlayer = Boolean.FALSE;
 	
 	private int checkIdCover;
 	private DownloadClickListener downloadListener;
@@ -90,10 +92,15 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		public void start(AbstractSong s) {
 			song = s;
 			isMiniPlayerPrepared = true;
-			showProgress(false);
-			setPlayPauseMini(false);
+			showProgress(false);//TODO
+			if (!currentFragmentIsPlayer && song.getClass() == MusicData.class) {
+				boolean oldIsPrepared = isMiniPlayerPrepared;
+				isMiniPlayerPrepared = true;
+				showMiniPlayer(isShown, oldIsPrepared);
+				setPlayPauseMini(false);
+			}
 		}
-
+		
 		@Override
 		public void play(AbstractSong song) {
 			showProgress(false);
@@ -427,16 +434,19 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		}
 		if (service.isPlaying() &&  (null != service && song.equals(service.getPlayingSong()))) return;
 		this.song = song;
+		isShown = show;
 		service.play(song);
-		boolean oldIsPrepared = isMiniPlayerPrepared;
-		isMiniPlayerPrepared = true;
-		showMiniPlayer(show, oldIsPrepared);
+		if (song.getClass() != MusicData.class) {
+			boolean oldIsPrepared = isMiniPlayerPrepared;
+			isMiniPlayerPrepared = true;
+			showMiniPlayer(isShown, oldIsPrepared);
+			setPlayPauseMini(false);
+		}
 	}
 	
 	private void setData(final AbstractSong song) {
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
-		setCover(null);
 		showProgress(!service.isPrepared());
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {

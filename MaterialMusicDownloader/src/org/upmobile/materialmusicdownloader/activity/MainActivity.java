@@ -126,6 +126,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		boolean isDraverClose = isDraverClosed();
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		isEnabledFilter = false;
+		currentFragmentIsPlayer = false;
 		if (null != player && player.isVisible()) {
 			if (isDraverClose) {
 				service.stopPressed();

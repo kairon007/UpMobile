@@ -9,6 +9,18 @@ public class TestApp {
 	private static long time = 0L;
 	
 	private static String method = "";
+	
+	public static void start() {
+		synchronized (lock) {
+			if (isWork) {
+				stop();
+			}
+			isWork = Boolean.TRUE;
+			start = time = System.currentTimeMillis();
+			String strThread =  Thread.currentThread().getName();
+			android.util.Log.d("logks", "_|START TEST|_start = " + start + "|, thread name - \"" + strThread + "\"");
+		}
+	}
 
 	public static void start(String m) {
 		synchronized (lock) {

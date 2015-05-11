@@ -152,6 +152,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 			showMiniPlayer(true);
 		}
 		getSupportActionBar().setElevation(position == SEARCH_FRAGMENT ? 0 : 16);
+		currentFragmentIsPlayer = false;
 		switch (position) {
 		case SEARCH_FRAGMENT:
 	        changeFragment(mFragments.get(SEARCH_FRAGMENT), false);
@@ -168,6 +169,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
+			currentFragmentIsPlayer = true;
 	    	BaseMaterialFragment fragment = mFragments.get(Constants.PLAYER_FRAGMENT);
 		    if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
 		    	changeFragment(fragment, true);
