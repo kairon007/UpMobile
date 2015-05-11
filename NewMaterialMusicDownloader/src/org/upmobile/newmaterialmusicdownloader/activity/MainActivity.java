@@ -45,6 +45,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
@@ -54,12 +55,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback, FragmentDrawerListener {
+public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback, FragmentDrawerListener, DrawerListener {
 
-	private Integer currentFragmentId = Integer.valueOf(-1);
-	private Integer lastCheckPosition = Integer.valueOf(0);
-	private Boolean isVisibleSearchView = Boolean.FALSE;
-	private Boolean isOpenFromDraver = Boolean.FALSE;
+	private int currentFragmentId = Integer.valueOf(-1);
+	private int lastCheckPosition = Integer.valueOf(0);
+	private boolean isVisibleSearchView = Boolean.FALSE;
+	private boolean isOpenFromDraver = Boolean.FALSE;
+	private boolean isDrawerOpen = Boolean.FALSE;
 	private SearchView searchView;
 	private View floatBtnContainer;
 	private Toolbar toolbar;
@@ -76,6 +78,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+        drawerFragment.setFragmentDrawerListener(this);
         drawerFragment.setDrawerListener(this);
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
@@ -516,4 +519,39 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		data.add(new NavDrawerItem(R.drawable.ic_settings_applications_grey, NewMaterialApp.getDirectory(), NavDrawerItem.Type.Primary));
 		return data;
 	}
+	
+	@Override
+	public void onDrawerOpened(View drawerView) {
+		isDrawerOpen = Boolean.TRUE;
+		invalidateOptionsMenu();
+		Util.hideKeyboard(this, drawerView);
+	}
+
+	@Override
+	public void onDrawerClosed(View drawerView) {
+		isDrawerOpen = Boolean.FALSE;
+		invalidateOptionsMenu();
+		Util.hideKeyboard(this, drawerView);
+	}
+
+	@Override
+	public void onDrawerSlide(View drawerView, float slideOffset) {
+		toolbar.setAlpha(1 - slideOffset / 2);
+		Util.hideKeyboard(this, drawerView);
+	}
+
+	@Override
+	public void onDrawerStateChanged(int newState) {
+		if (newState == DrawerLayout.STATE_SETTLING) {
+			if (ManagerFragmentId.playerFragment() == getCurrentFragmentId()) {
+				PlayerFragment player = (PlayerFragment) getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
+				if (!isDrawerOpen) {
+					player.hideIndicator();
+				} else {
+					player.showIndicator();
+				}
+			}
+		}
+	}
+
 }

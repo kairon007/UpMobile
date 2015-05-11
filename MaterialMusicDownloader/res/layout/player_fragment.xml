@@ -160,19 +160,19 @@
                 style="@style/TextViewAppearance.Body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:gravity="end" />
 
             <org.upmobile.materialmusicdownloader.ui.TrueSeekBar
-                android:paddingTop="20dp"
+            	style="@style/SeerkBar.Indeterminate"
                 android:id="@+id/progress_track"
-                style="@style/SeerkBar.Indeterminate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:max="100"
-                android:progress="0" />
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="20dp" />
         </RelativeLayout>
     </LinearLayout>
 
