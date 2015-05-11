@@ -186,8 +186,6 @@
   <string name="download_error">Vänta medan låten laddar.</string>
   <string name="search_message_no_internet">Ingen internet-anslutning. \nYou kan försöka igen senare.</string>
   <string name="fileName_unknown_mp3">okänd</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Byta Visa fliken</string>
   <string name="customize_show_position_tab">Swich visar flikar längst upp eller längst ned</string>
   <string name="show_top">Top</string>

@@ -187,8 +187,6 @@
   <string name="download_error">Vent, mens sangen belastninger.</string>
   <string name="search_message_no_internet">Ingen internet forbindelse. \nYou kan prøve igen senere.</string>
   <string name="fileName_unknown_mp3">Ukendt</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Skifte Vis fanen</string>
   <string name="customize_show_position_tab">Swich viser faner øverst eller nederst</string>
   <string name="show_top">Top</string>

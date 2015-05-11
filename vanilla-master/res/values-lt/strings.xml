@@ -186,8 +186,6 @@
   <string name="download_error">Palaukite, kol daina.</string>
   <string name="search_message_no_internet">Nėra interneto ryšio. \nYou gali pakartoti vėliau.</string>
   <string name="fileName_unknown_mp3">nežinomas</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Perjungimo Rodyti skirtuką</string>
   <string name="customize_show_position_tab">Jungiklis nurodant kortelės viršuje arba apačioje</string>
   <string name="show_top">Viršuje</string>

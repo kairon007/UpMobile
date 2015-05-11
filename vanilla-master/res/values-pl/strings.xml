@@ -186,8 +186,6 @@
   <string name="download_error">Czekaj, piosenki ładunki.</string>
   <string name="search_message_no_internet">Nie internet połączenie. \nYou można ponownie później.</string>
   <string name="fileName_unknown_mp3">nieznany</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Przełączanie Pokaż kartę</string>
   <string name="customize_show_position_tab">Swich wyświetlania zakładek u góry lub u dołu</string>
   <string name="show_top">Do góry</string>

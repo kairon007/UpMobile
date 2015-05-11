@@ -186,8 +186,6 @@
   <string name="download_error">Várjon, amíg betölti a dal.</string>
   <string name="search_message_no_internet">Nincs internet kapcsolat. \nYou újra később.</string>
   <string name="fileName_unknown_mp3">ismeretlen</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Váltás a Megjelenítés lapon</string>
   <string name="customize_show_position_tab">Swich mutatja a lapok tetején vagy alján</string>
   <string name="show_top">Top</string>

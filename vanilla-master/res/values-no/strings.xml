@@ -186,8 +186,6 @@
   <string name="download_error">Vent mens sangen laster.</string>
   <string name="search_message_no_internet">Ingen Internett-tilkobling. \nYou kan prøve på nytt senere.</string>
   <string name="fileName_unknown_mp3">Ukjent</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Bytte kategorien</string>
   <string name="customize_show_position_tab">Swich vise fanene øverst eller nederst</string>
   <string name="show_top">Topp</string>

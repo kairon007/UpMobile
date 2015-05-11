@@ -186,8 +186,6 @@
   <string name="download_error">Por favor aguarde enquanto canção carrega.</string>
   <string name="search_message_no_internet">Não há conexão de internet. \nYou pode tentar novamente mais tarde.</string>
   <string name="fileName_unknown_mp3">desconhecido</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Guia de programa de comutação</string>
   <string name="customize_show_position_tab">Swich mostrando as guias na parte superior ou na parte inferior</string>
   <string name="show_top">Início</string>

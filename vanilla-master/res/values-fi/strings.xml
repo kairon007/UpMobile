@@ -72,11 +72,7 @@
   <string name="remove">Poista</string>
   <string name="clear_search">Tyhjennä haku</string>
   <string name="play_or_enqueue">Jonoon jos pelaaminen; Jos keskeytetty</string>
-  <plurals name="playing">1 kappale playing.%d kappaleita pelissä.</plurals>
-  <plurals name="enqueued">1 kappale enqueued.%d kappaleita asetettavat.</plurals>
-  <plurals name="added_to_playlist">1 kappale lisätty soittolistaan %2$s.%1$d laulua lisätty soittolistaan %2$ s.</plurals>
   <string name="deleted">%s poistetaan.</string>
-  <plurals name="deleted">1 kappale deleted.%d kappaleet poistetaan.</plurals>
   <string name="delete_file_failed">%S poistaminen epäonnistui.</string>
   <string name="artists">Taiteilijat</string>
   <string name="albums">Albumit</string>
@@ -104,9 +100,6 @@
   <!-- Notification -->
   <string name="notification_title_paused">%s (keskeytetty)</string>
   <!-- Preferences -->
-  <plurals name="seconds">1 toinen %d sekuntia</plurals>
-  <plurals name="minutes">1 minuutti %d minuuttia</plurals>
-  <plurals name="hours">1 tunti %d tuntia</plurals>
   <string name="audio">Audio</string>
   <string name="volume_title">Tilavuus</string>
   <string name="media_button_title">Headset/Bluetooth valvonta</string>
@@ -195,8 +188,6 @@
   <string name="download_error">Odota, kun biisi Lataa.</string>
   <string name="search_message_no_internet">Ei internet yhteyttä. \nYou voi yrittää myöhemmin.</string>
   <string name="fileName_unknown_mp3">Tuntematon</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Kytkentä Näytä välilehti</string>
   <string name="customize_show_position_tab">Swich osoittaa tabs ylä- tai alareunassa</string>
   <string name="show_top">Alkuun</string>

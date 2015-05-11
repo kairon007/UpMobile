@@ -186,8 +186,6 @@
   <string name="download_error">Palun oodake, kuni laul koormusi.</string>
   <string name="search_message_no_internet">Nr internet connection. \nYou saab konfiguratsiooniandmebaasi.</string>
   <string name="fileName_unknown_mp3">teadmata</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Üleminek Näita vahekaarti</string>
   <string name="customize_show_position_tab">Swich nähtaval vahekaartide ülemises või alumises</string>
   <string name="show_top">Top</string>

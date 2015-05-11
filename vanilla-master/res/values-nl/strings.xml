@@ -186,8 +186,6 @@
   <string name="download_error">Een moment geduld a.u.b., lied ladingen.</string>
   <string name="search_message_no_internet">Geen internet verbinding. \nYou kan later opnieuw proberen.</string>
   <string name="fileName_unknown_mp3">onbekend</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Tabblad weergeven schakelen</string>
   <string name="customize_show_position_tab">Swich tonen van tabbladen bovenaan of onderaan</string>
   <string name="show_top">Boven</string>

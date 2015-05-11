@@ -186,8 +186,6 @@
   <string name="download_error">Моля, изчакайте, докато песен товари.</string>
   <string name="search_message_no_internet">Няма интернет връзка. \nYou може да опитате отново по-късно.</string>
   <string name="fileName_unknown_mp3">неизвестен</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Смяна на Показвай раздела</string>
   <string name="customize_show_position_tab">Превключвател, Показване на разделите на върха или на дъното</string>
   <string name="show_top">Топ</string>

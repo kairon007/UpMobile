@@ -186,8 +186,6 @@
   <string name="download_error">กรุณารอขณะโหลดเพลง</string>
   <string name="search_message_no_internet">ไม่มีอินเทอร์เน็ตเชื่อมต่อ \nYou สามารถลองอีกครั้งในภายหลัง</string>
   <string name="fileName_unknown_mp3">ไม่รู้จัก</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">สลับแท็บแสดง</string>
   <string name="customize_show_position_tab">Swich แสดงแท็บ ที่ด้านบน หรือ ด้านล่าง</string>
   <string name="show_top">ด้านบน</string>

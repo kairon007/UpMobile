@@ -186,8 +186,6 @@
   <string name="download_error">Sila tunggu sementara lagu beban.</string>
   <string name="search_message_no_internet">Tiada sambungan internet. \nYou boleh cuba semula kemudian.</string>
   <string name="fileName_unknown_mp3">tidak diketahui</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Menukar tab Papar</string>
   <string name="customize_show_position_tab">Swich paparan tab di bahagian atas atau di bawah</string>
   <string name="show_top">Bahagian atas</string>

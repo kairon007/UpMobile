@@ -186,8 +186,6 @@
   <string name="download_error">Počkajte, kým skladbu zaťaženie.</string>
   <string name="search_message_no_internet">Žiadnu internet pripojenie. \nYou môže znova neskôr.</string>
   <string name="fileName_unknown_mp3">Neznámy</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Prepínanie Zobraziť kartu</string>
   <string name="customize_show_position_tab">Swich ukazuje záložiek v hornej alebo dolnej</string>
   <string name="show_top">Hore</string>

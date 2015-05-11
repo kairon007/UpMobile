@@ -72,11 +72,7 @@
   <string name="remove">Odstrani</string>
   <string name="clear_search">Zapri iskanje</string>
   <string name="play_or_enqueue">Poizvedovati, če igrajo; Igra, če je začasno ustavljen</string>
-  <plurals name="playing">1 pesem playing.%d pesmi igranje.</plurals>
-  <plurals name="enqueued">1 pesem enqueued.%d pesmi enqueued.</plurals>
-  <plurals name="added_to_playlist">1 pesem dodan seznam predvajanja %2$s.%1$d pesmi doda seznam predvajanja %2$ s.</plurals>
   <string name="deleted">%s črta.</string>
-  <plurals name="deleted">1 pesem deleted.%d pesmi črta.</plurals>
   <string name="delete_file_failed">Izbrisati %s ni uspelo.</string>
   <string name="artists">Umetniki</string>
   <string name="albums">Albumi</string>
@@ -104,9 +100,6 @@
   <!-- Notification -->
   <string name="notification_title_paused">%s (zamrznjena)</string>
   <!-- Preferences -->
-  <plurals name="seconds">1 sekundo %d sekund</plurals>
-  <plurals name="minutes">1 minuto %d minut</plurals>
-  <plurals name="hours">1 uro %d ure</plurals>
   <string name="audio">Avdio</string>
   <string name="volume_title">Obseg</string>
   <string name="media_button_title">Slušalke/Bluetooth kontrole</string>
@@ -195,8 +188,6 @@
   <string name="download_error">Počakajte, da se naloži pesem.</string>
   <string name="search_message_no_internet">Brez internetne povezave. \nYou lahko poskusite znova pozneje.</string>
   <string name="fileName_unknown_mp3">neznano</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Preklapljanje Prikaži jeziček</string>
   <string name="customize_show_position_tab">Swich, ki prikazuje zavihki na vrhu ali na dnu</string>
   <string name="show_top">Top</string>

@@ -187,8 +187,6 @@
   <string name="download_error">Bitte warten Sie, bis Song lädt.</string>
   <string name="search_message_no_internet">Keine Internet Verbindung. \nYou können später wiederholen.</string>
   <string name="fileName_unknown_mp3">unbekannt</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Registerkarte Anzeigen schalten</string>
   <string name="customize_show_position_tab">Swich anzeigen Registerkarten oben oder unten</string>
   <string name="show_top">Nach oben</string>

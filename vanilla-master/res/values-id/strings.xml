@@ -186,8 +186,6 @@
   <string name="download_error">Harap tunggu sementara lagu beban.</string>
   <string name="search_message_no_internet">Tidak ada koneksi internet. \nYou dapat coba lagi nanti.</string>
   <string name="fileName_unknown_mp3">tidak diketahui</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Beralih Tampilkan tab</string>
   <string name="customize_show_position_tab">Swich menampilkan tab di bagian atas atau di bawah</string>
   <string name="show_top">Atas</string>

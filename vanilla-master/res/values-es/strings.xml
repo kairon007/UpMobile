@@ -72,11 +72,7 @@
   <string name="remove">Quitar</string>
   <string name="clear_search">Búsqueda de clara</string>
   <string name="play_or_enqueue">Enqueue si jugando; Jugar si está en pausa</string>
-  <plurals name="playing">1 canción playing.%d canciones jugando.</plurals>
-  <plurals name="enqueued">1 song enqueued.%d canciones en cola.</plurals>
-  <plurals name="added_to_playlist">1 canción agregada a lista de reproducción %2$s.%1$d canciones añadidos a la lista de reproducción %2$ s.</plurals>
   <string name="deleted">%s borrado.</string>
-  <plurals name="deleted">canciones de deleted.%d 1 canción borradas.</plurals>
   <string name="delete_file_failed">Error al eliminar %s.</string>
   <string name="artists">Artistas</string>
   <string name="albums">Álbumes</string>
@@ -104,9 +100,6 @@
   <!-- Notification -->
   <string name="notification_title_paused">%s (en pausa)</string>
   <!-- Preferences -->
-  <plurals name="seconds">1 segundo segundos de %d</plurals>
-  <plurals name="minutes">minutos 1 minuto %d</plurals>
-  <plurals name="hours">horas 1 hora %d</plurals>
   <string name="audio">Audio</string>
   <string name="volume_title">Volumen</string>
   <string name="media_button_title">Controles del auricular/Bluetooth</string>
@@ -195,8 +188,6 @@
   <string name="download_error">Por favor espere mientras carga la canción.</string>
   <string name="search_message_no_internet">Ninguna conexión de internet. \nYou puede reintentar más tarde.</string>
   <string name="fileName_unknown_mp3">desconocido</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Ver ficha de conmutación</string>
   <string name="customize_show_position_tab">SWICH mostrando las lengüetas en la parte superior o en la parte inferior</string>
   <string name="show_top">Arriba</string>

@@ -187,8 +187,6 @@
   <string name="download_error">Veuillez patienter pendant le charge de la chanson.</string>
   <string name="search_message_no_internet">Aucune connexion internet. \nYou ne pouvez réessayer plus tard.</string>
   <string name="fileName_unknown_mp3">inconnu</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Onglet spectacle de commutation</string>
   <string name="customize_show_position_tab">Swich montrant les onglets en haut ou en bas</string>
   <string name="show_top">Retour au début</string>

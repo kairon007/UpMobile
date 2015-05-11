@@ -186,8 +186,6 @@
   <string name="download_error">Şarkı yüklenirken lütfen bekleyin.</string>
   <string name="search_message_no_internet">Hiçbir internet bağlantısı. \nYou daha sonra yeniden deneyebilirsiniz.</string>
   <string name="fileName_unknown_mp3">Bilinmeyen</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Gösterisi sekmesine anahtarlama</string>
   <string name="customize_show_position_tab">Üst veya alt sekmeleri gösterilen Swich</string>
   <string name="show_top">Sayfanın Üstü</string>

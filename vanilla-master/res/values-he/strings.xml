@@ -186,8 +186,6 @@
   <string name="download_error">אנא המתן, טוען השיר.</string>
   <string name="search_message_no_internet">אין חיבור לאינטרנט. \nYou יכול נסה שוב מאוחר יותר.</string>
   <string name="fileName_unknown_mp3">לא ידוע</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">הכרטיסיה הצגת מיתוג</string>
   <string name="customize_show_position_tab">Swich הצגת כרטיסיות בראש או בתחתית</string>
   <string name="show_top">העליון</string>

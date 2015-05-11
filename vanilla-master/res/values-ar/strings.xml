@@ -191,10 +191,6 @@
     <string name="download_error">الرجاء الانتظار أثناء تحميل أغنية.</string>
     <string name="search_message_no_internet">لا يوجد اتصال إنترنت. \nYou يمكن إعادة المحاولة في وقت لاحق.</string>
     <string name="fileName_unknown_mp3">غير معروف</string>
-
-    <string-array name="tracks">تراكستراكتراكس</string-array>
-    <string-array name="songs">سونجسونجسونجس</string-array>
-
     <string name="show_position_tab">التبديل بين إظهار علامة التبويب</string>
     <string name="customize_show_position_tab">Swich عرض علامات التبويب في الأعلى أو أسفل</string>
     <string name="show_top">أعلى</string>

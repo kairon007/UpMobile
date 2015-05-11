@@ -186,8 +186,6 @@
   <string name="download_error">Počkejte prosím, než píseň načte.</string>
   <string name="search_message_no_internet">Žádné internetové připojení. \nYou lze opakovat později.</string>
   <string name="fileName_unknown_mp3">neznámé</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Spínací Ukázat kartu</string>
   <string name="customize_show_position_tab">Swich ukazuje karty, nahoře nebo dole</string>
   <string name="show_top">Vrchol</string>

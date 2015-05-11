@@ -186,8 +186,6 @@
   <string name="download_error">Espereu-vos mentre es carrega cançó.</string>
   <string name="search_message_no_internet">Cap connexió dinternet. \nYou pot a provar més tard.</string>
   <string name="fileName_unknown_mp3">desconeguda</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">Commutació de tabulador de demostració</string>
   <string name="customize_show_position_tab">Swich mostrant pestanyes a la part superior o a la part inferior</string>
   <string name="show_top">Part superior</string>

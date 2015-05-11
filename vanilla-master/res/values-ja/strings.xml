@@ -186,8 +186,6 @@
   <string name="download_error">曲を読み込むまでお待ちください。</string>
   <string name="search_message_no_internet">インターネット接続。 \nYou は後で再試行することができますありません。</string>
   <string name="fileName_unknown_mp3">不明な</string>
-  <string-array name="tracks">trackstracktracks</string-array>
-  <string-array name="songs">songssongsongs</string-array>
   <string name="show_position_tab">[表示] タブの切り替え</string>
   <string name="customize_show_position_tab">スイッチの上部または下部のタブを表示</string>
   <string name="show_top">ページのトップへ</string>
