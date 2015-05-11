@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class FragmentDrawer extends Fragment implements Constants{
+public class FragmentDrawer extends Fragment implements Constants {
 	
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -58,8 +59,12 @@ public class FragmentDrawer extends Fragment implements Constants{
     	 sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
     }
  
-    public void setDrawerListener(FragmentDrawerListener listener) {
+    public void setFragmentDrawerListener(FragmentDrawerListener listener) {
         this.drawerListener = listener;
+    }
+    
+    public void setDrawerListener(DrawerListener listener) {
+        mDrawerLayout.setDrawerListener(listener);
     }
  
     @Override
@@ -97,30 +102,8 @@ public class FragmentDrawer extends Fragment implements Constants{
         int maxWidth = Util.dpToPx(containerView.getContext(), 320);
         layoutParams.width = width > maxWidth ? maxWidth : width;
         mDrawerLayout = drawerLayout;
-        mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getActivity().invalidateOptionsMenu();
-                Util.hideKeyboard(getActivity(), drawerView);
-            }
- 
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                getActivity().invalidateOptionsMenu();
-                Util.hideKeyboard(getActivity(), drawerView);
-            }
- 
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-                toolbar.setAlpha(1 - slideOffset / 2);
-                Util.hideKeyboard(getActivity(), drawerView);
-            }
-        };
+        mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {

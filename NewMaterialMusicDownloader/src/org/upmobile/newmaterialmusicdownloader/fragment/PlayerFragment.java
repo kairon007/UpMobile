@@ -979,4 +979,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		super.onConfigurationChanged(newConfig);
 	}
 	
+	public void hideIndicator() {
+		playerProgress.forceHideFloater();
+	}
+	
+	public void showIndicator() {
+		if (playerProgress.isIndeterminate()) {
+			playerProgress.showFloater();	
+		}	
+	}
+	
 }

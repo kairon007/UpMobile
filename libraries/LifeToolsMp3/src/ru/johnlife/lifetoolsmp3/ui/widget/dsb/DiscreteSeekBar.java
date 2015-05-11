@@ -127,10 +127,10 @@ public class DiscreteSeekBar extends View {
     private int mValue;
     private int secondaryProgress;
     private int mKeyProgressIncrement = 1;
-    private boolean mMirrorForRtl = false;
-    private boolean mAllowTrackClick = true;
-    private boolean mTimeFormatt = false;
-    private boolean isIndeterminate = false;
+    private boolean mMirrorForRtl = Boolean.FALSE;
+    private boolean mAllowTrackClick = Boolean.TRUE;
+    private boolean mTimeFormatt = Boolean.FALSE;
+    private boolean isIndeterminate = Boolean.FALSE;
     //We use our own Formatter to avoid creating new instances on every progress change
     Formatter mFormatter;
     private String mIndicatorFormatter;
@@ -276,7 +276,11 @@ public class DiscreteSeekBar extends View {
     	this.isIndeterminate = isIndeterminate;
     }
     
-    public void setIndeterminateColor(ColorStateList color) {
+    public boolean isIndeterminate() {
+		return isIndeterminate;
+	}
+
+	public void setIndeterminateColor(ColorStateList color) {
     	mIndicator.setIndeterminateColor(color);
     }
 
@@ -530,11 +534,6 @@ public class DiscreteSeekBar extends View {
             }
             updateFromDrawableState();
         }
-    }
-
-    @Override
-    public void scheduleDrawable(Drawable who, Runnable what, long when) {
-        super.scheduleDrawable(who, what, when);
     }
 
     @Override
@@ -910,7 +909,7 @@ public class DiscreteSeekBar extends View {
         }
     };
 
-    private void showFloater() {
+    public void showFloater() {
         if (!isInEditMode()) {
             mThumb.animateToPressed();
             mIndicator.showIndicator(this, mThumb.getBounds());
@@ -922,6 +921,14 @@ public class DiscreteSeekBar extends View {
         removeCallbacks(mShowIndicatorRunnable);
         if (!isInEditMode()) {
             mIndicator.dismiss();
+            notifyBubble(false);
+        }
+    }
+    
+    public void forceHideFloater() {
+    	removeCallbacks(mShowIndicatorRunnable);
+        if (!isInEditMode()) {
+            mIndicator.dismissComplete();
             notifyBubble(false);
         }
     }
