@@ -38,6 +38,7 @@ public class SongPleer extends RemoteSong {
 							.ignoreContentType(true)
 							.followRedirects(true)
 							.ignoreHttpErrors(true)
+							.timeout(20000)
 							.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36")
 							.execute()
 							.parse()
