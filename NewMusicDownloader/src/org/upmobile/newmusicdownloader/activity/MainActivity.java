@@ -288,7 +288,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void onBackPressed() {
 		Fragment currentFragment = getFragmentManager().findFragmentByTag(currentTag);
 		setSearchViewVisibility(getPreviousFragmentName(2));
-		currentFragmentIsPlayer = true;
+		currentFragmentIsPlayer = false;
 		if (null != currentFragment && currentFragment.isVisible() && currentFragment.getClass() == PlayerFragment.class) {
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
