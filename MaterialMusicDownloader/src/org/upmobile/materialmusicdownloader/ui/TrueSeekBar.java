@@ -12,21 +12,15 @@ import android.widget.SeekBar;
 public class TrueSeekBar extends SeekBar {
 
 	public TrueSeekBar(Context context) {
-		super(context);
-		init(context);
+		this(context, null);
 	}
 
 	public TrueSeekBar(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init(context);
+		this(context, attrs, 0);
 	}
 
 	public TrueSeekBar(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		init(context);
-	}
-
-	private void init(Context context) {
 		int colorAccent = context.getResources().getColor(R.color.material_accent);
 		Drawable drawable = context.getResources().getDrawable(R.drawable.progress_indeterminate_horizontal_holo);
 		drawable.setColorFilter(new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
