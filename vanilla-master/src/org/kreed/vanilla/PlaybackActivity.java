@@ -222,13 +222,11 @@ public abstract class PlaybackActivity extends Activity
 		if ((PlaybackService.get(this).getSong(0)) != null) {
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 			isLyricsShow = settings.getBoolean(getString(R.string.lyric_preference), false);
-			if (mLyricsView != null && Nulldroid_Settings.ENABLE_LYRICS && isLyricsShow == true && mLyricsView.getVisibility() == View.VISIBLE) {
+			if (mLyricsView != null && Nulldroid_Settings.ENABLE_LYRICS && isLyricsShow && mLyricsView.getVisibility() == View.VISIBLE) {
 				loaderLyrics((PlaybackService.get(this).getSong(0)));
-			}/* else if (mLyricsView != null) {
-				mLyricsView.setText("");
-			}*/ else {
-					mLyricsConteiner.setVisibility(View.GONE);
-				}
+			} else {
+				mLyricsConteiner.setVisibility(View.GONE);
+			}
 		}
 	}
 
@@ -330,7 +328,8 @@ public abstract class PlaybackActivity extends Activity
 		}
 	}
 	
-	public void setParentView(TextView mLyricsView, ProgressBar progressLyric) {
+	public void setParentView(FrameLayout mLyricsConteiner, TextView mLyricsView, ProgressBar progressLyric) {
+		this.mLyricsConteiner = mLyricsConteiner;
 		this.mLyricsView = mLyricsView;
 		this.progressLyric = progressLyric;
 	}

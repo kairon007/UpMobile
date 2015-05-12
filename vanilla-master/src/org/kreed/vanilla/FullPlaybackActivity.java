@@ -197,7 +197,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 				mLyricsConteiner.setVisibility(View.GONE);
 			}
 		});
-		setParentView(mLyricsView, progressLyric);
+		setParentView(mLyricsConteiner, mLyricsView, progressLyric);
 		mControlsBottom = findViewById(R.id.controls_bottom);
 		View previousButton = findViewById(R.id.previous);
 		previousButton.setOnClickListener(this);

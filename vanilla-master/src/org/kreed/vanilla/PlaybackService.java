@@ -1716,7 +1716,6 @@ public final class PlaybackService extends Service
 		boolean playing = (state & FLAG_PLAYING) != 0;
 		Bitmap cover = song.getCover();
 		if (cover == null) {
-			System.out.println("!!! cover == null");
 			cover = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.fallback_cover);
 		}
 		float size = Util.dpToPx(this, 64);
