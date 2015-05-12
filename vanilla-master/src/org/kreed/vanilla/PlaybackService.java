@@ -1691,7 +1691,7 @@ public final class PlaybackService extends Service
 			intent.setAction(PlaybackService.ACTION_NEXT_SONG_AUTOPLAY);
 			return PendingIntent.getService(this, 0, intent, 0);
 		case NOT_ACTION_MINI_ACTIVITY:
-			intent = new Intent(this, MiniPlaybackActivity.class);
+			intent = new Intent(this, FullPlaybackActivity.class);
 			break;
 		case NOT_ACTION_MAIN_ACTIVITY: {
 			intent = new Intent(this, LibraryActivity.class);

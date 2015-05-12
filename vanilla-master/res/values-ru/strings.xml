@@ -165,7 +165,7 @@
     <string name="show_when_playing">Показывать при проигрывании (по умолчанию)</string>
     <string name="always_show">Всегда показывать</string>
     <string name="open_main_activity">Открывать библиотеку (по умолчанию)</string>
-    <string name="open_mini_popup">Открыть мини всплывающее окно</string>
+    <string name="open_mini_popup">Открыть текущую песню</string>
     <string name="skip_to_next_song">Перейти к следующей песне</string>
     <string name="info_on_cover">Подробная информация на обложке</string>
     <string name="info_below_cover">Информация ниже обложки</string>
