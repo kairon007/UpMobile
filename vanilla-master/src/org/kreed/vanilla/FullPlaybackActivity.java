@@ -585,7 +585,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		menu.add(0, MENU_ENQUEUE_ALBUM, 0, R.string.enqueue_current_album).setIcon(R.drawable.ic_menu_add);
 		menu.add(0, MENU_ENQUEUE_ARTIST, 0, R.string.enqueue_current_artist).setIcon(R.drawable.ic_menu_add);
 		menu.add(0, MENU_ENQUEUE_GENRE, 0, R.string.enqueue_current_genre).setIcon(R.drawable.ic_menu_add);
-		menu.add(0, MENU_TOGGLE_CONTROLS, 0, R.string.toggle_controls);
+		menu.add(0, MENU_TOGGLE_CONTROLS, 0, R.string.toggle_controls); 
 		if (Nulldroid_Settings.ENABLE_EQUALIZER) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.playback_menu, menu);
@@ -713,9 +713,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	 *
 	 * @param visible True to show, false to hide
 	 */
-	private void setControlsVisible(boolean visible)
-	{
-		visible = true;
+	private void setControlsVisible(boolean visible) {
+//		visible = true; //why..
 		int mode = visible ? View.VISIBLE : View.GONE;
 		mControlsTop.setVisibility(mode);
 		mControlsBottom.setVisibility(mode);

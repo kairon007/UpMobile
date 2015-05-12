@@ -183,7 +183,7 @@
     <string name="enqueue_current_artist">Поставить в очередь артиста</string>
     <string name="enqueue_current_genre">Поставить в очередь жанр</string>
     <string name="clear_queue">Очистить очередь</string>
-    <string name="toggle_controls">Меню настроек</string>
+    <string name="toggle_controls">Элементы управления</string>
     <string name="downloads">Скачиваний</string>
     <string name="download_error">Пожалуйста, подождите, пока загружается песня.</string>
     <string name="search_message_no_internet">Без Интернет подключения. \nВы можете повторить попытку позже.</string>
