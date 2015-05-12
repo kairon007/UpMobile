@@ -74,6 +74,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -130,10 +131,27 @@ public abstract class OnlineSearchView extends View {
 	OnShowListener dialogShowListener = new OnShowListener() {
 
 		@Override
-		public void onShow(DialogInterface dialog) {
+		public void onShow(final DialogInterface dialog) {
 			float textSize = 16f;
-			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(textSize);
-			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
+			final Button positive = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+			positive.setTextSize(textSize);
+			positive.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					downloadListener.setSong(keeper.getDownloadSong());
+					downloadListener.setUseAlbumCover(keeper.isUseCover());
+					downloadListener.downloadSong(Boolean.FALSE);
+					positive.setEnabled(Boolean.FALSE);
+				}
+			});
+			Button negative = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE);
+			negative.setTextSize(textSize);
+			negative.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.cancel();
+				}
+			});
 		}
 	};
 	
@@ -1149,24 +1167,8 @@ public abstract class OnlineSearchView extends View {
 		}
 		stopSystemPlayer(getContext());
 		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(getContext(), isWhiteTheme(getContext())).setView(player.getView());
-		b.setNegativeButton(R.string.download_dialog_cancel, new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
-			}
-
-		});
-		b.setPositiveButton(R.string.download_dialog_download, new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				downloadListener.setSong(keeper.getDownloadSong());
-				downloadListener.setUseAlbumCover(keeper.isUseCover());
-				downloadListener.downloadSong(false);
-				dialog.cancel();
-			}
-		});
+		b.setNegativeButton(R.string.download_dialog_cancel, null);
+		b.setPositiveButton(R.string.download_dialog_download, null);
 		alertDialog = b.create();
 		alertDialog.setOnCancelListener(new OnCancelListener() {
 			
