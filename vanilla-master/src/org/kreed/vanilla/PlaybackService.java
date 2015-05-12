@@ -28,9 +28,9 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -1712,6 +1712,7 @@ public final class PlaybackService extends Service
 	 * @param song The Song to display information about.
 	 * @param state The state. Determines whether to show paused or playing icon.
 	 */
+	@SuppressLint("NewApi")
 	public Notification createNotification(Song song, int state) {
 		boolean playing = (state & FLAG_PLAYING) != 0;
 		Bitmap cover = song.getCover();
