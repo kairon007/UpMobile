@@ -28,7 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
@@ -81,6 +80,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	public static final int DISPLAY_INFO_WIDGETS = 2;
 	private static final String EXTRA_LYRICS_STATE = "EXTRA_LYRICS_STATE";
 	private static final String EXTRA_LIRYCS_TEXT = "EXTRA_LIRYCS_TEXT";
+	private static final String EXTRA_LOAD_LIRYCS = "EXTRA_LOAD_LIRYCS";
 
 	private TextView mOverlayText;
 	private View mControlsTop;
@@ -286,13 +286,18 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		*/
 		lyricConfigurate();
 		
-		if (icicle != null && mLyricsView != null && icicle.getBoolean(EXTRA_LYRICS_STATE)) {
-			mLyricsConteiner.setVisibility(View.VISIBLE);
-			progressLyric.setVisibility(View.GONE);
-			mLyricsView.setVisibility(View.VISIBLE);
-			mLyricsView.setText(Html.fromHtml(icicle.getString(EXTRA_LIRYCS_TEXT)));
-		} else {
-			loadLyrics(PlaybackService.get(this).getSong(0));
+		if (icicle != null) {
+			loadLirycs = icicle.getBoolean(EXTRA_LOAD_LIRYCS);
+			if (loadLirycs) {
+				mLyricsConteiner.setVisibility(View.VISIBLE);
+				mLyricsView.setVisibility(View.VISIBLE);
+				loadLyrics(PlaybackService.get(this).getSong(0));
+			} else if (mLyricsView != null && icicle.getBoolean(EXTRA_LYRICS_STATE)) {
+				mLyricsConteiner.setVisibility(View.VISIBLE);
+				progressLyric.setVisibility(View.GONE);
+				mLyricsView.setVisibility(View.VISIBLE);
+				mLyricsView.setText(Html.fromHtml(icicle.getString(EXTRA_LIRYCS_TEXT)));
+			}
 		}
 	}
 
@@ -945,10 +950,10 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	}
 	
 	private boolean isNetworkConnected() {
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getActiveNetworkInfo();
 		if (ni == null) return false;
-		else return true;
+		return true;
 	}
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -956,6 +961,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			outState.putString(EXTRA_LIRYCS_TEXT, Html.toHtml(new SpannableStringBuilder(mLyricsView.getText().toString())));
 			outState.putBoolean(EXTRA_LYRICS_STATE, true);
 		}
+		outState.putBoolean(EXTRA_LOAD_LIRYCS, loadLirycs);
 		super.onSaveInstanceState(outState);
 	}
 }

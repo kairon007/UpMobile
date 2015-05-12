@@ -94,6 +94,8 @@ public abstract class PlaybackActivity extends Activity
 	private TextView mLyricsView;
 	private ProgressBar progressLyric;
 	
+	protected boolean loadLirycs = false;
+	
 	@Override
 	public void onCreate(Bundle state)
 	{
@@ -335,15 +337,17 @@ public abstract class PlaybackActivity extends Activity
 	}
 	
 	public void enableProgress() {
-		if (progressLyric != null)
+		if (progressLyric != null) {
+			loadLirycs = true;
 			progressLyric.setVisibility(View.VISIBLE);
-
+		}
 	}
 
 	public void disableProgress() {
-		if (progressLyric != null)
+		if (progressLyric != null) {
+			loadLirycs = false;
 			progressLyric.setVisibility(View.GONE);
-
+		}
 	}
 	
 	protected void setSong(final Song song)	{
