@@ -696,7 +696,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			mAdapters[index].commitQuery(message.obj);
 			int pos;
 			if (mSavedPositions == null) {
-				pos = 0;
+				pos = mLists[index].getFirstVisiblePosition();
 			} else {
 				pos = mSavedPositions[index];
 				mSavedPositions[index] = 0;
