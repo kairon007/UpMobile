@@ -47,9 +47,8 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 			}
 			service.setArrayPlayback(list);
 		} 
-		((MainActivity) getContext()).showPlayerElement(true);
 		((MainActivity) getContext()).startSong(service.getArrayPlayback().get(position));
-		((MainActivity)getContext()).setSelectedItem(Constants.SEARCH_FRAGMENT);
+		((MainActivity) getContext()).setSelectedItem(Constants.SEARCH_FRAGMENT);
 		super.click(view, position);
 	}
 

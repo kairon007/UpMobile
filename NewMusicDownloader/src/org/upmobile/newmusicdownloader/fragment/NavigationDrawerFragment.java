@@ -151,9 +151,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
+                if (!isAdded()) return;
             	if (!isVisibleSettings()) {
             		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true); //	
             	}

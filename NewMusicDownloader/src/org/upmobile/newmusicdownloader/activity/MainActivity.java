@@ -1,7 +1,6 @@
 package org.upmobile.newmusicdownloader.activity;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DownloadListener;
@@ -20,7 +19,6 @@ import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
@@ -89,13 +87,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 		File file = new File(folderPath);
 		if (!file.exists()) file.mkdirs();
-		if (null != service) {
-			if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
-				ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
-				service.setArrayPlayback(list);
-			}
-			if (service.isPlaying()) showPlayerElement(true);
-		}
 		fileObserver.startWatching();
 		int resId = getResources().getIdentifier("action_bar_title", "id", "android");
 		View v1 = findViewById(resId);
@@ -186,16 +177,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	}
 	
 	@Override
-	protected void onResume() {
-		if (null != service && service.isPlaying()) {
-			showPlayerElement(true);
-		} else if (PlaybackService.hasInstance()) {
-			service = PlaybackService.get(this);
-		}
-		super.onResume();
-	}
-	
-	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
@@ -268,9 +249,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
 		}
 		transaction.replace(R.id.content_frame, targetFragment, currentTag)
-		.addToBackStack(targetFragment.getClass().getSimpleName())
-		.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-		.commit();
+				   .addToBackStack(targetFragment.getClass()
+				   .getSimpleName())
+				   .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+				   .commit();
 	}
 
 	private void setSearchViewVisibility(String fragmentName) {
@@ -286,6 +268,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	
 	@Override
 	public void onBackPressed() {
+		if (navigationDrawerFragment.isVisible()) {
+			navigationDrawerFragment.closeDrawer();
+			return;
+		}
 		Fragment currentFragment = getFragmentManager().findFragmentByTag(currentTag);
 		setSearchViewVisibility(getPreviousFragmentName(2));
 		currentFragmentIsPlayer = false;
@@ -296,7 +282,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
-				showPlayerElement(false);
 			} else {
 				stopService(new Intent(this, PlaybackService.class));
 				finish();
@@ -311,16 +296,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	}
 	
 	@Override
-	protected void onSaveInstanceState(Bundle out) {
-		super.onSaveInstanceState(out);
-		if (service == null) {
-			service = PlaybackService.get(this);
-		}
-		if (service.hasArray()) {
-			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
-		}
-	}
-	
 	public void showPlayerElement(boolean flag) {
 		if (null != navigationDrawerFragment) {
 			navigationDrawerFragment.setAdapter(flag);

@@ -42,9 +42,10 @@ public class SearchFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
-		((MainActivity) getActivity()).setTitle(R.string.tab_search);
-		((MainActivity) getActivity()).setSelectedItem(Constants.SEARCH_FRAGMENT);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
+		MainActivity act = (MainActivity) getActivity();
+		act.setTitle(R.string.tab_search);
+		act.setSelectedItem(Constants.SEARCH_FRAGMENT);
+		act.invalidateOptionsMenu();
 		super.onResume();
 	}
 }

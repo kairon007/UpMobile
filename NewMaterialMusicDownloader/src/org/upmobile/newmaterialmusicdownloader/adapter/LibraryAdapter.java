@@ -88,9 +88,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				StateKeeper.getInstance().setPlayingSong(data);
 				data.getSpecial().setChecked(Boolean.TRUE);
 				notifyDataSetChanged();
-				MainActivity activity = (MainActivity) getContext();
-				activity.showPlayerElement(Boolean.TRUE);
-				activity.startSong(data);
+				((MainActivity) getContext()).startSong(data);
 				break;
 			}
 			
@@ -139,9 +137,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 	@Override
 	protected void startSong(AbstractSong abstractSong) {
-		MainActivity activity = (MainActivity) getContext();
-		activity.showPlayerElement(Boolean.TRUE);
-		activity.startSong(abstractSong);
+		((MainActivity) getContext()).startSong(abstractSong);
 	}
 	
 	@Override

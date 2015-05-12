@@ -87,7 +87,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				data.getSpecial().setChecked(true);
 				notifyDataSetChanged();
 				MainActivity activity = ((MainActivity) getContext());
-				activity.showPlayerElement(true);
 				activity.startSong(data);
 				activity.setSelectedItem(LIBRARY_FRAGMENT);
 				break;

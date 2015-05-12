@@ -155,7 +155,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		public void start(AbstractSong s) {
 			song = s;
 			if (isDestroy) return;
-			((MainActivity) getActivity()).showPlayerElement(true);
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
 			changePlayPauseView(true);
@@ -346,6 +345,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	@Override
 	public void onPause() {
+		((MainActivity) getActivity()).showPlayerElement(false);
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
 		}

@@ -6,7 +6,6 @@ import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -75,9 +74,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 	@Override
 	protected void remove() {
 		if (isEmpty()) {
-			MainActivity act =  (MainActivity) getContext(); 
-			act.showPlayerElement(false);
-			TextView emptyMsg = (TextView) act.findViewById(R.id.message_listview);
+			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
 			emptyMsg.setVisibility(View.VISIBLE);
 			emptyMsg.setText(R.string.library_empty);
 		}

@@ -24,9 +24,10 @@ public class PlaylistFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		((MainActivity) getActivity()).setTitle(R.string.tab_playlist);
-		((MainActivity) getActivity()).setSelectedItem(Constants.PLAYLIST_FRAGMENT);
-		((MainActivity) getActivity()).invalidateOptionsMenu();
+		MainActivity act = (MainActivity) getActivity();
+		act.setTitle(R.string.tab_playlist);
+		act.setSelectedItem(Constants.PLAYLIST_FRAGMENT);
+		act.invalidateOptionsMenu();
 	}
 	
 	public void setFilter(String filter) {
@@ -38,6 +39,5 @@ public class PlaylistFragment extends Fragment {
 		playlistView.clearFilter();
 		playlistView.getMessageView(getView()).setText(R.string.playlist_is_empty);
 	}
-
 
 }

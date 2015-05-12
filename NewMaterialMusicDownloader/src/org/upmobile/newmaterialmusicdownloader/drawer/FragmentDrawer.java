@@ -1,5 +1,8 @@
 package org.upmobile.newmaterialmusicdownloader.drawer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
@@ -182,13 +185,12 @@ public class FragmentDrawer extends Fragment implements Constants {
     }
     
 	public void showPlayerElement(final boolean flag) {
-		if (!flag) {
-			if (adapter.getItemCount() < 6) return;
-			adapter.delete(3);
-		} else {
-			if (adapter.getItemCount() > 6) return;
-			adapter.add(3, new NavDrawerItem(R.drawable.ic_headset_grey, getResources().getString(R.string.tab_now_plaing), NavDrawerItem.Type.Primary));
+		adapter.clear();
+		List<NavDrawerItem> list = new ArrayList<NavDrawerItem>(((MainActivity) getActivity()).getData());
+		if (flag) {
+			list.add(3, new NavDrawerItem(R.drawable.ic_headset_grey, getResources().getString(R.string.tab_now_plaing), NavDrawerItem.Type.Primary));
 		}
+		adapter.updateList(list);
 	}
 	
 	public void setItemChecked(int position) {

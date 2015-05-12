@@ -65,13 +65,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-		if (PlaybackService.hasInstance()) {
-			service = PlaybackService.get(MainActivity.this);
-			if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
-				ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
-				service.setArrayPlayback(list);
-			}
-		}
 		File file = new File(folder_path);
 		if (!file.exists()) {
 			file.mkdirs();
@@ -193,21 +186,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	}
 
 	@Override
-	protected void onResume() {
-		checkService();
-		if (null != service && service.isPlaying()) {
-			showPlayerElement();
-		}
-		super.onResume();
-	}
-
-	private void checkService() {
-		if (PlaybackService.hasInstance()) {
-			service = PlaybackService.get(this);
-		}
-	}
-
-	@Override
 	protected ResideMenuItem[] getMenuItems() {
 		items = new ResideMenuItem[COUNT_FRAGMENT];
 		items[SEARCH_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_search, ResideMenuItem.Types.TYPE_MENU);
@@ -223,15 +201,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	protected String[] getTitlePage() {
 		titles = getResources().getStringArray(R.array.titles);
 		return titles;
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle out) {
-		super.onSaveInstanceState(out);
-		checkService();
-		if (service.hasArray()) {
-			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
-		}
 	}
 
 	public void setCoverHelper(boolean val) {
@@ -277,7 +246,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	protected boolean isPlaying() {
-		return PlaybackService.get(this).isPlaying();
+		return PlaybackService.get(this).isPrepared();
 	}
 
 	@Override
@@ -313,7 +282,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	protected void showPlayerElement(boolean flag) {
-		hidePlayerElement();
+		reDrawMenu();
 	}
 	
 	@Override

@@ -17,7 +17,6 @@ import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -32,7 +31,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	public View getView() {
 		View v = super.getView();
-		listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
+		listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		return v;
 	}
 	
@@ -53,8 +52,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			}
 			service.setArrayPlayback(list);
 		} 
-		((MainActivity) getContext()).showPlayerElement(true);
-//		((MainActivity)getContext()).setSelectedItem(Constants.SEARCH_FRAGMENT);
 		try {
 			((MainActivity) getContext()).startSong(((Song) getResultAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
@@ -121,7 +118,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			
 			@Override
 			public void run() {
-				Toast.makeText(getContext(), error, Toast.LENGTH_SHORT);
+				Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 				service.stopPressed();
 			}
 		});

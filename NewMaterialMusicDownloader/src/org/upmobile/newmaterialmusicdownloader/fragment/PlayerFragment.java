@@ -392,6 +392,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	@Override
 	public void onPause() {
+		((MainActivity) getActivity()).showPlayerElement(false);
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
 		}
@@ -466,7 +467,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		public void start(final AbstractSong s) {
 			song = s;
 			if (isDestroy) return;
-			((MainActivity) getActivity()).showPlayerElement(true);
 			if (visualizerIsBroken) setupVisualizerFxAndUI(cbShowVisualizer.isChecked());
 			setDownloadButtonState(true);
 			setClickablePlayerElement(true);
@@ -580,7 +580,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			undoMessage = MSG_UNDO_REMOVE;
 			undo.clear();
 		}
-		player.stop();
 		setClickablePlayerElement(false);
 		player.shift(delta);
 		setDownloadButtonState(!player.isGettingURl());

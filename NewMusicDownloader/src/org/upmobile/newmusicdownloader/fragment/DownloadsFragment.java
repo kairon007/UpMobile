@@ -29,9 +29,10 @@ public class DownloadsFragment extends Fragment {
 	@Override
 	public void onResume() {
 		downloadsView.onResume();
-		((MainActivity) getActivity()).invalidateOptionsMenu();
-		((MainActivity) getActivity()).setSelectedItem(Constants.DOWNLOADS_FRAGMENT);
-		((MainActivity) getActivity()).setTitle(R.string.tab_downloads);
+		MainActivity act = (MainActivity) getActivity();
+		act.invalidateOptionsMenu();
+		act.setSelectedItem(Constants.DOWNLOADS_FRAGMENT);
+		act.setTitle(R.string.tab_downloads);
 		super.onResume();
 	}
 }

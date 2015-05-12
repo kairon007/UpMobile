@@ -67,13 +67,6 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		super.onCreate(savedInstanceState);
 		File file = new File(folderPath);
 		if (!file.exists()) file.mkdirs();
-		if (null != service) {
-			if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE)) {
-				ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
-				service.setArrayPlayback(list);
-			}
-			if (service.isPlaying()) showPlayerElement(true);
-		}
 		fileObserver.startWatching();
 //		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
@@ -99,17 +92,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		startService(new Intent(this, PlaybackService.class));
 		super.onStart();
 	}
-	
-	@Override
-	protected void onResume() {
-		if (null != service && service.isPlaying()) {
-			showPlayerElement(true);
-		} else if (PlaybackService.hasInstance()) {
-			service = PlaybackService.get(this);
-		}
-		super.onResume();
-	}
-	
+
 	@Override
 	protected void checkOnStart(boolean showMiniPlayer) {
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
@@ -156,17 +139,6 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			}
-		}
-	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle out) {
-		super.onSaveInstanceState(out);
-		if (service == null) {
-			service = PlaybackService.get(this);
-		}
-		if (service.hasArray()) {
-			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
 		}
 	}
 	

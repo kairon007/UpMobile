@@ -99,27 +99,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		startService(new Intent(this, PlaybackService.class));
 		super.onStart();
 	}
-	
-	@Override
-	protected void onResume() {
-		if (null != service && service.isPlaying()) {
-			showPlayerElement(true);
-		} else if (PlaybackService.hasInstance()) {
-			service = PlaybackService.get(this);
-		}
-		super.onResume();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle out) {
-		super.onSaveInstanceState(out);
-		if (service == null) {
-			service = PlaybackService.get(this);
-		}
-		if (service.hasArray()) {
-			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
-		}
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -263,7 +242,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	public void showPlayerElement(boolean flag) {
 		ManagerFragmentId.switchMode(flag);
 		drawerFragment.showPlayerElement(flag);
-		if (flag || service.isPrepared()) {
+		if (flag) {
 			Fragment playlist = getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 			if (null != playlist && playlist.isVisible()) {
 				setCurrentFragmentId(ManagerFragmentId.playlistFragment());

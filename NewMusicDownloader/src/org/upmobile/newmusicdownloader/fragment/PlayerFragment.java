@@ -134,7 +134,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		song = s;
 		downloadButtonState(true);
 		if (isDestroy) return;
-		((MainActivity) getActivity()).showPlayerElement(true);
 		setImageButton();
 		setClickablePlayerElement(true);
 		changePlayPauseView(!player.isPlaying());
@@ -191,6 +190,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void onPause() {
+		((MainActivity) getActivity()).showPlayerElement(player.isPrepared());
 		if (null != lyricsFetcher) lyricsFetcher.cancel();
 		if (null != volumeReceiver) getActivity().unregisterReceiver(volumeReceiver);
 		super.onPause();
@@ -239,25 +239,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
 			btnDownload.setVisibility(View.GONE);
 		}
-//		getView().setFocusableInTouchMode(true);
-//		getView().requestFocus();
-//		getView().setOnKeyListener(new View.OnKeyListener() {
-//			
-//			@Override
-//			public boolean onKey(View v, int keyCode, KeyEvent event) {
-//				switch (keyCode) {
-//				case KeyEvent.KEYCODE_VOLUME_DOWN:
-//					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-//					break;
-//				case KeyEvent.KEYCODE_VOLUME_UP:
-//					volume.setProgress(audio.getStreamVolume(AudioManager.STREAM_MUSIC));
-//					break;
-//				default:
-//					break;
-//				}
-//				return false;
-//			}
-//		});
 	}
 	
 	@Override
@@ -592,7 +573,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			player.play(song);
 			return;
 		}
-		player.stop();
 		playerCover.invalidate();
 		if (delta > 0) {
 			player.shift(1);

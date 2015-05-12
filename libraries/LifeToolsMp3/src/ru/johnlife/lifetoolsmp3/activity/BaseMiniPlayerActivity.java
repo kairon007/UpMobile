@@ -78,6 +78,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 
 		@Override
 		public void stop(AbstractSong s) {
+			showPlayerElement(currentFragmentIsPlayer);
 		}
 
 		@Override
@@ -85,14 +86,15 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			setPlayPauseMini(false);
 			isMiniPlayerPrepared = false;
 			showMiniPlayer(false);
-			showPlayerElement(false);
+			showPlayerElement(currentFragmentIsPlayer);
 		}
 
 		@Override
 		public void start(AbstractSong s) {
 			song = s;
 			isMiniPlayerPrepared = true;
-			showProgress(false);//TODO
+			showProgress(false);
+			showPlayerElement(true);
 			if (!currentFragmentIsPlayer && song.getClass() == MusicData.class) {
 				boolean oldIsPrepared = isMiniPlayerPrepared;
 				isMiniPlayerPrepared = true;
@@ -147,6 +149,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		super.onCreate(savedInstanceState);
 		StateKeeper.getInstance().initSongHolder(getDirectory());
 		checkDownloadingUrl(true);
+		if (null != savedInstanceState && savedInstanceState.containsKey(ARRAY_SAVE) && null != service) {
+			ArrayList<AbstractSong> list = savedInstanceState.getParcelableArrayList(ARRAY_SAVE);
+			service.setArrayPlayback(list);
+		}
 		methodIsCalled = true;
 	}
 	
@@ -205,7 +211,16 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
+		showPlayerElement(service.isPrepared());
 		service.addStatePlayerListener(stateListener);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle out) {
+		super.onSaveInstanceState(out);
+		if (service.hasArray()) {
+			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
+		}
 	}
 	
 	private void initMiniPlayer() {
@@ -233,7 +248,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 						setPlayPauseMini(false);
 						isMiniPlayerPrepared = false;
 						showMiniPlayer(false);
-						showPlayerElement(false);
+						showPlayerElement(false); 
 						showMessage(error);
 					}
 				});
@@ -440,7 +455,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			boolean oldIsPrepared = isMiniPlayerPrepared;
 			isMiniPlayerPrepared = true;
 			showMiniPlayer(isShown, oldIsPrepared);
-			setPlayPauseMini(false);
 		}
 	}
 	
