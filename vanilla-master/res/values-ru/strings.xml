@@ -123,8 +123,8 @@
     <string name="display_mode_title">Режим отображения</string>
     <string name="swipe_up_action_title">Провести пальцем вверх</string>
     <string name="swipe_down_action_title">Быстро проведите пальцем вниз действий</string>
-    <string name="cover_press_action_title">Охватывать действия крана</string>
-    <string name="cover_longpress_action_title">Охватывать действия, длительно нажмите</string>
+    <string name="cover_press_action_title">Действие при нажатие на обложку</string>
+    <string name="cover_longpress_action_title">Действия при длительном нажатие на обложку</string>
     <string name="library_screen">Экран Библиотека</string>
     <string name="controls_in_selector_title">Элементы управления в библиотеке</string>
     <string name="controls_in_selector_summary">Показать в настоящее время играет песня и СМИ управления в представлении библиотеки</string>
@@ -147,7 +147,7 @@
     <string name="double_tap_summary">Двойной клик на  1 x 1 виджет откроет плеер. Приводит к задержке 400ms перед тем как виджет ответит на действия.</string>
     <string name="scrobble_title">Использовать ScrobbleDroid API</string>
     <string name="scrobble_summary">Scrobble Last.FM через ScrobbleDroid или простой скробблер Last.FM</string>
-    <string name="stock_broadcast_title">Эмулировать встроенное вещание</string>
+    <string name="stock_broadcast_title">Эмулировать сообщения плеера</string>
       <string name="stock_broadcast_summary">Отправлять широковещательные сообщения, эмулируя встроенный плеер, для работы с экраном блокировки, виджетами и т.д.</string>
     <string name="media_scan">Обновление библиотеки</string>
     <string name="tap_to_scan">Нажмите для сканирования хранилища музыки</string>
