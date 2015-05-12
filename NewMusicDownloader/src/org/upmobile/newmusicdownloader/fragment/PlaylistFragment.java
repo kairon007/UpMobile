@@ -27,6 +27,7 @@ public class PlaylistFragment extends Fragment {
 		MainActivity act = (MainActivity) getActivity();
 		act.setTitle(R.string.tab_playlist);
 		act.setSelectedItem(Constants.PLAYLIST_FRAGMENT);
+		act.setDrawerEnabled(true);
 		act.invalidateOptionsMenu();
 	}
 	

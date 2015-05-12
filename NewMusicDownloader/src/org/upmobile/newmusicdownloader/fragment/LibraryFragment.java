@@ -28,6 +28,7 @@ public class LibraryFragment extends Fragment {
 		activity.setSelectedItem(Constants.LIBRARY_FRAGMENT);
 		activity.setCurrentTag(getClass().getSimpleName());
 		activity.setTitle(R.string.tab_library);
+		activity.setDrawerEnabled(true);
 		libraryView.onResume();
 		super.onResume();
 	}

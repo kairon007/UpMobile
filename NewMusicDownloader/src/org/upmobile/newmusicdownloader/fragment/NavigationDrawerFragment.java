@@ -143,9 +143,6 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
             }
 
             @Override

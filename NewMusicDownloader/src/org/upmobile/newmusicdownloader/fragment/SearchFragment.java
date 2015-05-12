@@ -45,6 +45,7 @@ public class SearchFragment extends Fragment {
 		MainActivity act = (MainActivity) getActivity();
 		act.setTitle(R.string.tab_search);
 		act.setSelectedItem(Constants.SEARCH_FRAGMENT);
+		act.setDrawerEnabled(true);
 		act.invalidateOptionsMenu();
 		super.onResume();
 	}

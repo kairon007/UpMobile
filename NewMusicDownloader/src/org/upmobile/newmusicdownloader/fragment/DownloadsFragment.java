@@ -33,6 +33,7 @@ public class DownloadsFragment extends Fragment {
 		act.invalidateOptionsMenu();
 		act.setSelectedItem(Constants.DOWNLOADS_FRAGMENT);
 		act.setTitle(R.string.tab_downloads);
+		act.setDrawerEnabled(true);
 		super.onResume();
 	}
 }

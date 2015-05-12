@@ -234,6 +234,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		activity.registerReceiver(volumeReceiver, filter); 
 		activity.setSelectedItem(Constants.PLAYER_FRAGMENT);
 		activity.invalidateOptionsMenu();
+		activity.setDrawerEnabled(activity.isButtonBackEnabled());
 		activity.setTitle(R.string.tab_now_plaing);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {

@@ -19,6 +19,7 @@ import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
@@ -60,6 +61,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private String currentTag;
 	private boolean isVisibleSearchView = false;
+	private boolean buttonBackEnabled = false;
 
 	private FileObserver fileObserver = new FileObserver(folderPath) {
 
@@ -178,6 +180,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
+		buttonBackEnabled = true;
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT){
@@ -201,18 +204,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			String lastFragmentName = backEntry.getName();
 		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
 		    	Fragment fragment = new PlayerFragment();
-		    	if (null == service) {
-		    		service = PlaybackService.get(this);
-		    	}
 		    	changeFragment(fragment, true);
 		    }
 			break;
 		case SETTINGS_FRAGMENT:
 		case 6:
 	        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-	    	if (null == service) {
-	    		service = PlaybackService.get(this);
-	    	}
 			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, isWhiteTheme(this), new DirectoryChooserDialog.ChosenDirectoryListener() {
 				
 				@Override
@@ -257,6 +254,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	private void setSearchViewVisibility(String fragmentName) {
 		isVisibleSearchView = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
+	}
+	
+	public boolean isButtonBackEnabled() {
+		return buttonBackEnabled;
 	}
 	
 	private String getPreviousFragmentName(int position) {
@@ -320,14 +321,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	protected int getMiniPlayerID() {
 		return R.id.mini_player;
 	}
-
+	
 	@Override
 	protected int getMiniPlayerClickableID() {
 		return R.id.mini_player_main;
 	}
-
+	
 	@Override
 	protected void showPlayerFragment() {
+		buttonBackEnabled = false;
 		showMiniPlayer(false);
 		Fragment fragment = new PlayerFragment();
     	changeFragment(fragment, true);
