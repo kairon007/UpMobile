@@ -85,6 +85,8 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
             	DrawerItem item = (DrawerItem) mAdapter.getItem(position);
                 if (item.getType() != DrawerItem.Types.TYPE_SECTION) {
                 	selectItem(position);
+                } else {
+                	mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
                 }
             }
         });
