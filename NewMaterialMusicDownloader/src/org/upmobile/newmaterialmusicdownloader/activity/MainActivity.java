@@ -523,6 +523,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	public void onDrawerStateChanged(int newState) {
 		if (newState == DrawerLayout.STATE_SETTLING) {
+			drawerFragment.setItemChecked(getCurrentFragmentId());
 			if (ManagerFragmentId.playerFragment() == getCurrentFragmentId()) {
 				PlayerFragment player = (PlayerFragment) getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 				if (!isDrawerOpen) {
