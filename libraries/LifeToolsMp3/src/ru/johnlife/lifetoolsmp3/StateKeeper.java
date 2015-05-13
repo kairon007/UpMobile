@@ -16,8 +16,14 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 
 public class StateKeeper {
@@ -44,6 +50,7 @@ public class StateKeeper {
 	private String lyrics;
 	private String directoryChooserPath;
 	private String newDirName;
+	private String[] youTubeNextPageToken = new String[2];
 	private int listViewPosition;
 	private int clickPosition;
 	private int currentPlayersId;
@@ -271,20 +278,49 @@ public class StateKeeper {
 		File[] files = new File(folder).listFiles();
 		if (null == files) return;
 		for (int i = 0; i < files.length; i++) {
-			try {
-				MusicMetadataSet src_set = new MyID3().read(files[i]);
-				if (null != src_set) {
-					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-					String comment = metadata.getComment().toLowerCase(Locale.getDefault());
-					if (null == comment) {
-						comment = metadata.hashCode() + "";
+			File file = files[i];
+			initSongInfo(file);
+		}
+	}
+	
+	public void initSongHolderAllFolders(Context context) {
+		songHolder.clear();
+		try {
+			ContentResolver cr = context.getContentResolver();
+			Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+			String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+			Cursor cur = cr.query(uri, null, selection, null, null);
+			int count = 0;
+			if (cur != null) {
+				count = cur.getCount();
+				if (count > 0) {
+					while (cur.moveToNext()) {
+						String data = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
+						initSongInfo(new File(data));
 					}
-					SongInfo info = new SongInfo(files[i].getAbsolutePath(), DOWNLOADED);
-					songHolder.put(comment, info);
+
 				}
-			} catch (Exception e) {
-				android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
 			}
+			cur.close();
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e + "");
+		}
+	}
+
+	private void initSongInfo(File file) {
+		try {
+			MusicMetadataSet src_set = new MyID3().read(file);
+			if (null != src_set) {
+				MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+				String comment = metadata.getComment().toLowerCase(Locale.getDefault());
+				if (null == comment) {
+					comment = metadata.hashCode() + "";
+				}
+				SongInfo info = new SongInfo(file.getAbsolutePath(), DOWNLOADED);
+				songHolder.put(comment, info);
+			}
+		} catch (Exception e) {
+			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
 		}
 	}
 	
@@ -441,6 +477,14 @@ public class StateKeeper {
 	
 	public void setSearchView(OnlineSearchView searchView) {
 		this.searchView = searchView;
+	}
+	
+	public String[] getYouTubeNextPageToken() {
+		return youTubeNextPageToken;
+	}
+
+	public void setYouTubeNextPageToken(int position, String token) {
+		youTubeNextPageToken[position] = token;
 	}
 	
 	private class SongInfo {

@@ -340,6 +340,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		pager.setAdapter(pagerAdapter);
 		mViewPager = pager;
 		SharedPreferences settings = PlaybackService.getSettings(this);
+		StateKeeper.getInstance().initSongHolderAllFolders(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			pager.setOnPageChangeListener(pagerAdapter);
 //			View controls = getLayoutInflater().inflate(R.layout.actionbar_controls, null);

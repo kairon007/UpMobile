@@ -129,7 +129,7 @@ public abstract class OnlineSearchView extends View {
 	private BaseSearchTask searchTask;
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
-
+		
 		@Override
 		public void onShow(final DialogInterface dialog) {
 			float textSize = 16f;
@@ -1104,6 +1104,7 @@ public abstract class OnlineSearchView extends View {
 		if (keeper.checkState(StateKeeper.STREAM_DIALOG) && !force) return;
 		RemoteSong song = remoteSong.cloneSong();
 		keeper.setDownloadSong(song);
+		AlertDialog streamDialog = null;
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
@@ -1114,7 +1115,8 @@ public abstract class OnlineSearchView extends View {
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());
 			}
-			createStreamDialog(song).show();
+			streamDialog = (AlertDialog) createStreamDialog(song);
+			streamDialog.show();
 			
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				if (null != listViewImage) {
@@ -1128,7 +1130,8 @@ public abstract class OnlineSearchView extends View {
 			}
 		} else {
 			if (keeper.checkState(StateKeeper.STREAM_DIALOG)) {
-				createStreamDialog(song).show();
+				streamDialog = (AlertDialog) createStreamDialog(song);
+				streamDialog.show();
 				player.setTitle(song.getArtist() + " - " + song.getTitle());
 			}
 		}
@@ -1139,6 +1142,13 @@ public abstract class OnlineSearchView extends View {
 				player.hideCoverProgress();
 				player.setCover(null);
 			}
+		}
+		int lableStatus = keeper.checkSongInfo(song.getComment());
+		if (lableStatus == StateKeeper.DOWNLOADED) {
+			song.setPath(keeper.getSongPath(song.getComment()));
+		}
+		if (lableStatus != -1) {
+			streamDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);	
 		}
 	}
 
