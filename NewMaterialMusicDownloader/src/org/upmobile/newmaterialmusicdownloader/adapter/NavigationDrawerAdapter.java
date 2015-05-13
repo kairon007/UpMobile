@@ -64,10 +64,12 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 		if (current.getType() == NavDrawerItem.Type.Secondary) {
 			holder.ripple.setClickable(Boolean.FALSE);
 			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 36);
+			holder.title.setTextAppearance(inflater.getContext(), R.style.boldText);
 			setVisibility(holder, Boolean.FALSE);
 		} else {
 			holder.ripple.setClickable(Boolean.TRUE);
 			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 48);
+			holder.title.setTextAppearance(inflater.getContext(), R.style.normalText);
 			setVisibility(holder, Boolean.TRUE);
 		}
 		holder.title.setText(current.getTitle());
