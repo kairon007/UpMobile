@@ -9,7 +9,6 @@ import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 	public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
 		inflater = LayoutInflater.from(context);
 		this.data = data;
+		setHasStableIds(true);
 	}
 
 	public void delete(int position) {
@@ -38,8 +38,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 	}
 
 	public void updateList(List<NavDrawerItem> data) {
-		this.data.clear();
-		this.data.addAll(data);
+		this.data = data;
 		notifyDataSetChanged();
 	}
 	
@@ -63,18 +62,13 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		NavDrawerItem current = data.get(position);
 		if (current.getType() == NavDrawerItem.Type.Secondary) {
-			holder.ripple.setClickable(false);
+			holder.ripple.setClickable(Boolean.FALSE);
 			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 36);
-			int padding = Util.dpToPx(inflater.getContext(), 16);
-			holder.ripple.setPadding(padding, 0, padding, 0);
-			holder.icon.setVisibility(View.GONE);
-			holder.line.setVisibility(View.VISIBLE);
-			holder.title.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-			holder.title.setTextSize(14);
+			setVisibility(holder, Boolean.FALSE);
 		} else {
-			holder.ripple.setClickable(true);
-			holder.icon.setVisibility(View.VISIBLE);
-			holder.line.setVisibility(View.GONE);
+			holder.ripple.setClickable(Boolean.TRUE);
+			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 48);
+			setVisibility(holder, Boolean.TRUE);
 		}
 		holder.title.setText(current.getTitle());
 		if (current.getIcon() != 0) {
@@ -85,6 +79,16 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 	@Override
 	public int getItemCount() {
 		return data.size();
+	}
+	
+	@Override
+	public long getItemId(int position) {
+		return data.get(position).getId();
+	}
+	
+	private void setVisibility(final ViewHolder holder, final boolean visible) {
+		holder.icon.setVisibility(visible ? View.VISIBLE : View.GONE);
+		holder.line.setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder {
