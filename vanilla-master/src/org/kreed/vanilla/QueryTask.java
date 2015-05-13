@@ -38,6 +38,7 @@ public class QueryTask {
 	public final String selection;
 	public final String[] selectionArgs;
 	public String sortOrder;
+	private Object lock = new Object();
 
 	/**
 	 * Used for {@link SongTimeline#addSongs(android.content.Context, QueryTask)}.
@@ -55,7 +56,6 @@ public class QueryTask {
 	 * documentation for details.
 	 */
 	public long data;
-	private Cursor q;
 
 	/**
 	 * Create the tasks. All arguments are passed directly to
@@ -75,28 +75,19 @@ public class QueryTask {
 	 *
 	 * @param resolver The ContentResolver to query with.
 	 */
-	public Cursor runQuery(ContentResolver resolver) {	
-		try {
-			return buildCurs(resolver);
-		} catch (Exception e) {
-			if (null != q) {
-				q.close();
+	public Cursor runQuery(ContentResolver resolver) {
+		synchronized (lock) {
+			final Cursor query = resolver.query(uri, projection, selection, selectionArgs, sortOrder);
+			Log.i(getClass().getSimpleName(), "runQuery()");
+			if (type == MediaUtils.TYPE_GENRE && query != null && query.getCount() > 0) {
+				Log.i(getClass().getSimpleName(), "... genreCursor returned");
+				return new GenreCursorWrapper(query, resolver);
 			}
-			return buildCurs(resolver);
+			return query;
 		}
-	}
-
-	private Cursor buildCurs(ContentResolver resolver) {
-		q = resolver.query(uri, projection, selection, selectionArgs, sortOrder);
-		Log.i(getClass().getSimpleName(), "runQuery()");
-		if (type == MediaUtils.TYPE_GENRE && q != null && q.getCount() > 0) {
-			Log.i(getClass().getSimpleName(), "... genreCursor returned");
-			return new GenreCursorWrapper(q, resolver);
-		}
-		return q;
 	}
 	
-	private final class GenreCursorWrapper extends MergeCursor {
+	public class GenreCursorWrapper extends MergeCursor {
 		private static final int COUNT_COLUMN = 3;
 		private final Cursor query;
 		private int[] counts;

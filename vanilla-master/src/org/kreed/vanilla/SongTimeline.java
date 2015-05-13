@@ -691,7 +691,7 @@ public final class SongTimeline {
 		}
 
 		changed();
-
+		cursor.close();
 		return count;
 	}
 
