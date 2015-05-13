@@ -345,7 +345,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	@Override
 	public void onPause() {
-		((MainActivity) getActivity()).showPlayerElement(false);
+		((MainActivity) getActivity()).showPlayerElement(player.isPrepared());
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
 		}
