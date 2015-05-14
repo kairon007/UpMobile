@@ -211,7 +211,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
+		android.util.Log.d("logd", "onResume: " + service == null ? null : service.isPlaying() + " ");
 		showPlayerElement(service.isPrepared());
+		showMiniPlayer(service.isPlaying());
 		service.addStatePlayerListener(stateListener);
 	}
 	
@@ -463,6 +465,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		artist.setText(song.getArtist());
 		showProgress(!service.isPrepared());
 		if (song.getClass() != MusicData.class) {
+			setCover(null);
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 				
 				@Override
