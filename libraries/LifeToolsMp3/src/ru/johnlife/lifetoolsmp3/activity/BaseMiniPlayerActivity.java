@@ -95,6 +95,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			isMiniPlayerPrepared = true;
 			showProgress(false);
 			showPlayerElement(true);
+			setPlayPauseMini(false);
 			if (!currentFragmentIsPlayer && song.getClass() == MusicData.class) {
 				boolean oldIsPrepared = isMiniPlayerPrepared;
 				isMiniPlayerPrepared = true;
@@ -211,7 +212,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		android.util.Log.d("logd", "onResume: " + service == null ? null : service.isPlaying() + " ");
 		showPlayerElement(service.isPrepared());
 		showMiniPlayer(service.isPlaying());
 		service.addStatePlayerListener(stateListener);
