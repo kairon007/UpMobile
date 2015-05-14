@@ -120,7 +120,11 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 								}
 							}
 							if (position != -1) {
-								dismiss(position);
+								try {
+									dismiss(position);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 							timers.remove(this);
 						}
