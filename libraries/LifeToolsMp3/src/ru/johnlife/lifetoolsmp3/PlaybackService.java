@@ -505,6 +505,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	private void play(boolean fromInternet) {
 		if (fromInternet && null == playingSong.getPath()) {
+			if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
+				player.reset();
+				offMode(SMODE_PREPARED);
+			}
 			onMode(SMODE_GET_URL);
 			((RemoteSong) playingSong).getDownloadUrl(new DownloadUrlListener() {
 
