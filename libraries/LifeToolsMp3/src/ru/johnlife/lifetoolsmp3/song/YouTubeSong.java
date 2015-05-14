@@ -107,14 +107,17 @@ public class YouTubeSong extends SongWithCover {
 							.header("Accept-Language", "ru-RU")
 							.referrer(YOUTUBE_MP3_REF)
 							.ignoreContentType(true)
+							.ignoreHttpErrors(true)
 							.timeout(10000)
 							.followRedirects(true)
 							.method(Method.GET)
 							.execute();
+					String body = pushItemResponse.parse().body().text().toString();
+					if (body.contains("pushItemYTError();")) return ERROR_GETTING_URL; //in this case the song could not be converted
+					if (body.contains("$$$ERROR$$$")) return ERROR_GETTING_URL; // too bad song
 					timer.schedule(new Updater(), 5000, 3000);
 					return watchId;
 				} catch (Exception e) {
-					android.util.Log.d("logd", "doInBackground: ");
 					Log.e(getClass().getSimpleName(), "Something went wrong :( " + e.getMessage());
 					onPostExecute(ERROR_GETTING_URL);
 				}
@@ -142,6 +145,7 @@ public class YouTubeSong extends SongWithCover {
 		long tsCreate = 0;
 		String r = null;
 		try {
+			android.util.Log.d("logd", "getUrlTask: " + YOUTUBE_MP3_URL + sig_url("/a/itemInfo/?video_id=" + watchId + "&ac=www&t=grp&r=" + System.currentTimeMillis()));
 			Document doc = Jsoup.connect(YOUTUBE_MP3_URL + sig_url("/a/itemInfo/?video_id=" + watchId + "&ac=www&t=grp&r=" + System.currentTimeMillis()))
 					.ignoreContentType(true)
 					.ignoreHttpErrors(true)

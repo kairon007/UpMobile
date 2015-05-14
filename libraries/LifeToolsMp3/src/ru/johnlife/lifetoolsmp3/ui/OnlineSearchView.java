@@ -515,7 +515,14 @@ public abstract class OnlineSearchView extends View {
 						}
 						
 						@Override
-						public void error(String error) {
+						public void error(final String error) {
+							((Activity) getContext()).runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									showMessage(error);
+								}
+							});
 						}
 					});
 					
