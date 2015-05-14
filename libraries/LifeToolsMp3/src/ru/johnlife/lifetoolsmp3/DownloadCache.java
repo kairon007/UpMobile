@@ -58,6 +58,7 @@ public class DownloadCache {
 	}
 	
 	public boolean remove(AbstractSong song) {
+		if (null == song) return false;
 		return remove(song.getArtist(), song.getTitle());	
 	}
 	
