@@ -110,11 +110,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private SimpleVisualizerView visualizerView;
 	private Visualizer visualizer;
 	private CheckBox cbShowVisualizer;
-	private Boolean visualizerIsBroken = Boolean.FALSE;
+	private Boolean visualizerIsBroken = false;
 	
 	//custom check box
 	private CheckBox cbUseCover;
-	private Boolean isUseAlbumCover = Boolean.FALSE;
+	private Boolean isUseAlbumCover = false;
 
 	// playback sections
 	private PlayPauseView play;
@@ -146,16 +146,16 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private ProgressUpdaterListener progressListener = new ProgressUpdaterListener() {
 
 		private static final String FAILURE = "failure";
-		Boolean canceled = Boolean.FALSE;
+		Boolean canceled = false;
 
 		@Override
 		public void onProgressUpdate(Integer... values) {
 			if (canceled) return;
 			int progress = values[0];
-			download.setIndeterminateProgressMode(Boolean.FALSE);
+			download.setIndeterminateProgressMode(false);
 			download.setProgress(progress > 0 ? progress : 1);
-			download.setClickable(Boolean.FALSE);
-			((RippleView) download.getParent()).setEnabled(Boolean.FALSE);
+			download.setClickable(false);
+			((RippleView) download.getParent()).setEnabled(false);
 		}
 
 		@Override
@@ -163,7 +163,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			canceled = true;
 			download.setOnClickListener(PlayerFragment.this);
 			((RippleView) download.getParent()).setEnabled(true);
-			download.setIndeterminateProgressMode(Boolean.FALSE);
+			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
 		}
 
@@ -181,9 +181,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 		@Override
 		public void onPreExecute() {
-			canceled = Boolean.FALSE;
-			((RippleView) download.getParent()).setEnabled(Boolean.FALSE);
-			download.setClickable(Boolean.FALSE);
+			canceled = false;
+			((RippleView) download.getParent()).setEnabled(false);
+			download.setClickable(false);
 			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
 			download.setProgress(50);
@@ -194,7 +194,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		isDestroy = false;
-		contentView = inflater.inflate(R.layout.player_fragment, container, Boolean.FALSE);
+		contentView = inflater.inflate(R.layout.player_fragment, container, false);
 		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		init();
 		setListeners();
@@ -352,14 +352,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	public void onResume() {
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.playerFragment());
-		act.setDraverEnabled(Boolean.FALSE);
+		act.setDraverEnabled(false);
 		act.setTitle(R.string.tab_now_plaing);
 		act.invalidateOptionsMenu();
-		act.setToolbarOverlay(Boolean.TRUE);
+		act.setToolbarOverlay(true);
 		act.setToolbarAlpha(scrollView.getToolbarAlpha());
-		act.showToolbarShadow(Boolean.TRUE);
+		act.showToolbarShadow(true);
 		SharedPreferences sp = NewMaterialApp.getSharedPreferences();
-		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, Boolean.FALSE);
+		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, false);
 		cbShowVisualizer.setChecked(stateVisualizer);
 		if (!stateVisualizer) {
 			setupVisualizerFxAndUI(stateVisualizer);
@@ -383,7 +383,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	@Override
 	public void onDestroyView() {
-		((MainActivity) getActivity()).setToolbarOverlay(Boolean.FALSE);
+		((MainActivity) getActivity()).setToolbarOverlay(false);
 		player.removeStatePlayerListener(stateListener);
 		isDestroy = true;
 		cancelProgressTask();
@@ -401,7 +401,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			undo.clear();
 		}
 		if (null != visualizer) {
-			visualizer.setEnabled(Boolean.FALSE);
+			visualizer.setEnabled(false);
 			visualizer.release();
 			visualizer = null;
 		}
@@ -421,7 +421,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 					public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
 						visualizerView.updateVisualizer(bytes);
 					}
-				}, Visualizer.getMaxCaptureRate() / 2, Boolean.FALSE, Boolean.TRUE);
+				}, Visualizer.getMaxCaptureRate() / 2, false, true);
 				visualizer.setEnabled(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -456,7 +456,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 		@Override
 		public void error() {
-			visualizerIsBroken = Boolean.TRUE;
+			visualizerIsBroken = true;
 			if (null != visualizer) {
 				visualizer.release();
 				visualizer = null;
@@ -473,7 +473,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			play.toggle(true);
 			getCover(song);
 			setElementsView(0);
-			playerProgress.setIndeterminate(Boolean.FALSE);
+			playerProgress.setIndeterminate(true);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 			StateKeeper.getInstance().setPlayingSong(song);
 			song.getSpecial().setChecked(true);
@@ -483,7 +483,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		public void update(AbstractSong current) {
 			if (isDestroy) return;
 			download.setOnClickListener(PlayerFragment.this);
-			download.setIndeterminateProgressMode(Boolean.FALSE);
+			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
 			song = current;
 			showLyrics();
@@ -582,6 +582,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		setClickablePlayerElement(false);
 		player.shift(delta);
+		player.pause();
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
 		playerProgress.setSecondaryProgress(0);
@@ -715,7 +716,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void closeEditViews() {
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
-			Boolean isSameWord = Boolean.FALSE;
+			Boolean isSameWord = false;
 			Util.hideKeyboard(getActivity(), contentView);
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
 				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
@@ -726,7 +727,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				song.setArtist(artist);
 				tvArtist.setText(artist);
 			} else {
-				isSameWord = Boolean.TRUE;
+				isSameWord = true;
 			}
 			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
@@ -762,7 +763,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 		};
 		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
-		renameTask.start(Boolean.TRUE, Boolean.FALSE);
+		renameTask.start(true, false);
 	}
 
 	private void showLyrics() {
@@ -855,7 +856,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void setCoverToZoomView(Bitmap bitmap) {
 		if (isDestroy) return;
 		if (null != paletteGenerator) {
-			paletteGenerator.cancel(Boolean.TRUE);
+			paletteGenerator.cancel(true);
 		}
 		visualizerView.setUpVizualizerColor(-1, -1);
 		if (null != bitmap) {
@@ -958,9 +959,15 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 							progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
 							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
 						} else {
-							download.setProgress(0);
-							download.setOnClickListener(PlayerFragment.this);
-							setDownloadButtonState(true);
+					        new Handler(Looper.getMainLooper()).post(new Runnable() {
+								
+								@Override
+								public void run() {
+									download.setProgress(0);
+									download.setOnClickListener(PlayerFragment.this);
+									setDownloadButtonState(true);
+								}
+							});
 						}
 					}
 					running.close();

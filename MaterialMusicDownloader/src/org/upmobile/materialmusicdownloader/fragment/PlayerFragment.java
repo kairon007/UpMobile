@@ -94,7 +94,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	//custom check box
 	private CheckBox cbUseCover;
-	private Boolean isUseAlbumCover = Boolean.FALSE;
+	private Boolean isUseAlbumCover = false;
 
 	// playback sections
 	private TextView play;
@@ -205,7 +205,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private ProgressUpdaterListener progressListener = new ProgressUpdaterListener() {
 
 		private static final String FAILURE = "failure";
-		Boolean canceled = Boolean.FALSE;
+		Boolean canceled = false;
 
 		@Override
 		public void onProgressUpdate(Integer... values) {
@@ -252,9 +252,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-		contentView = inflater.inflate(R.layout.player_fragment, container, Boolean.FALSE);
+		contentView = inflater.inflate(R.layout.player_fragment, container, false);
 		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-		isDestroy = Boolean.FALSE;
+		isDestroy = false;
 		scrollView = new PullToZoomScrollView(getActivity());
 		player = PlaybackService.get(getActivity());
 		song = player.getPlayingSong();
@@ -289,7 +289,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		activity.setSelectedItem(Constants.PLAYER_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
 		activity.setVisibleSearchView(false);
-		setHasOptionsMenu(Boolean.TRUE);
+		setHasOptionsMenu(true);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (StateKeeper.DOWNLOADED == state) {
 			setVisibilityRipple(true);
@@ -533,13 +533,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			clearCover();
 		}
 		player.shift(delta);
+		player.pause();
 		cbUseCover.setOnCheckedChangeListener(null);
 		setClickablePlayerElement(false);
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
-		playerProgress.setIndeterminate(Boolean.TRUE);
+		playerProgress.setIndeterminate(true);
 		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
-		player.getPlayingSong().getSpecial().setChecked(Boolean.TRUE);
+		player.getPlayingSong().getSpecial().setChecked(true);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
@@ -812,9 +813,15 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 							progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
 							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
 						} else {
-							download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
-							download.setOnClickListener(PlayerFragment.this);
-							setDownloadButtonState(true);
+					        new Handler(Looper.getMainLooper()).post(new Runnable() {
+								
+								@Override
+								public void run() {
+									download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
+									download.setOnClickListener(PlayerFragment.this);
+									setDownloadButtonState(true);
+								}
+							});
 						}
 					}
 					running.close();
