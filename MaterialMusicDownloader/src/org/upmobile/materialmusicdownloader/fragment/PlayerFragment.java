@@ -139,7 +139,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		public void stop(AbstractSong s) {
 			if (isDestroy) return;
 			changePlayPauseView(true);
-			setElementsView(0);
+			setElementsView(0, s);
 		}
 		
 		@Override
@@ -156,7 +156,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setClickablePlayerElement(true);
 			changePlayPauseView(true);
 			getCover(song);
-			setElementsView(0);
+			setElementsView(0, s);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 			StateKeeper.getInstance().setPlayingSong(song);
 			song.getSpecial().setChecked(true);
@@ -165,14 +165,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		public void update(AbstractSong current) {
 			if (isDestroy) return;
-			download.setOnClickListener(PlayerFragment.this);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
 			playerProgress.setProgress(0);
 			playerProgress.setSecondaryProgress(1);
 			playerProgress.setSecondaryProgress(0);
 			song = current;
-			setElementsView(0);
+			setElementsView(0, current);
 			setCoverToZoomView(null);
 			showLyrics();
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
@@ -221,7 +220,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		public void onCancelled() {
 			canceled = true;
 			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
-			download.setOnClickListener(PlayerFragment.this);
 			setDownloadButtonState(true);
 			ciRippleView.setEnabled(true);
 		}
@@ -231,7 +229,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (FAILURE.equals(params)) {
 				((MainActivity) getActivity()).showMessage(R.string.download_failed);
 				download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
-				download.setOnClickListener(PlayerFragment.this);
 				setDownloadButtonState(true);
 			} else {
 				download.setProgress(canceled ? CircularProgressButton.IDLE_STATE_PROGRESS : CircularProgressButton.SUCCESS_STATE_PROGRESS);
@@ -243,7 +240,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			canceled = false;
 			ciRippleView.setEnabled(false);
 			download.setClickable(false);
-			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
 			download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
 		}
@@ -291,18 +287,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		activity.setVisibleSearchView(false);
 		setHasOptionsMenu(true);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
-		if (StateKeeper.DOWNLOADED == state) {
-			setVisibilityRipple(true);
-		} else {
+		if (song.getClass() == MusicData.class && StateKeeper.DOWNLOADED != state) {
 			if (StateKeeper.DOWNLOADING == state) {
 				((RippleView) download.getParent()).setEnabled(false);
 				download.setClickable(false);
-				download.setOnClickListener(null);
 				download.setIndeterminateProgressMode(true);
 				download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
 			}
-			setVisibilityRipple(false);
-		}
+		} 
 		playerProgress.setIndeterminate(!player.isPrepared());
 		playerProgress.setSecondaryProgress(1);
 		playerProgress.setSecondaryProgress(0);
@@ -311,7 +303,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		getCover(song);
 		setImageButton();
 		showLyrics();
-		setElementsView(player.getCurrentPosition());
+		setElementsView(player.getCurrentPosition(), song);
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
 		if (prepared) {
@@ -544,16 +536,21 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
-			download.setOnClickListener(this);
 		}
-		setVisibilityRipple(StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment()));
 		cancelProgressTask();
 		thatSongIsDownloaded();
 		cbUseCover.setOnCheckedChangeListener(this);
 	}
 
-	private void setElementsView(int progress) {
-		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
+	private void setElementsView(int progress, AbstractSong song) {//TODO
+		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment());
+		if (song.getClass() == MusicData.class || isDownloaded) {
+			download.setVisibility(View.GONE);
+			ciRippleView.setVisibility(View.GONE);
+		} else {
+			download.setVisibility(View.VISIBLE);
+			ciRippleView.setVisibility(View.VISIBLE);
+		}
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
 		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
@@ -818,7 +815,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 								@Override
 								public void run() {
 									download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
-									download.setOnClickListener(PlayerFragment.this);
 									setDownloadButtonState(true);
 								}
 							});
@@ -859,7 +855,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				player.stopPressed();
 				download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
 				download.setIndeterminateProgressMode(false);
-				download.setOnClickListener(PlayerFragment.this);
 				setDownloadButtonState(true);
 			}
 		});
@@ -872,10 +867,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setCoverToZoomView(bitmap);
 		}
 		super.onConfigurationChanged(newConfig);
-	}
-	
-	private void setVisibilityRipple(boolean visible) {
-			ciRippleView.setVisibility(!visible ? View.VISIBLE : View.GONE);
 	}
 	
 }

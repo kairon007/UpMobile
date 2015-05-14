@@ -80,7 +80,7 @@ public class CircularProgressButton extends Button {
     }
 
     private void init(Context context, AttributeSet attributeSet) {
-        mStrokeWidth = (int) getContext().getResources().getDimension(R.dimen.cpb_stroke_width);
+        mStrokeWidth = (int) context.getResources().getDimension(R.dimen.cpb_stroke_width);
 
         initAttributes(context, attributeSet);
 
@@ -89,7 +89,7 @@ public class CircularProgressButton extends Button {
         mStateManager = new StateManager(this);
 
         setText(mIdleText);
-        setTypeface(RobotoTextView.getRoboto(getContext(), Roboto.ROBOTO_MEDIUM));
+        setTypeface(RobotoTextView.getRoboto(context, Roboto.ROBOTO_MEDIUM));
         
         initIdleStateDrawable();
         setBackgroundCompat(mIdleStateDrawable);
