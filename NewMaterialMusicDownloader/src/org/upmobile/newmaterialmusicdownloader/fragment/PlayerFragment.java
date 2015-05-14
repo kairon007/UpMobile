@@ -502,7 +502,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 						playerProgress.setSecondaryProgress((int)(playerProgress.getMax() * percent));
 					}
 					playerCurrTime.setText(Util.getFormatedStrDuration(time));
-					playerProgress.setIndeterminate(isOverBuffer);
+					if (!playerProgress.isPressed()) {
+						playerProgress.setIndeterminate(isOverBuffer);
+					}
 				}
 			});
 		}
