@@ -83,8 +83,14 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	public void showMessage(Context context, int message) {
-		showMessage(context, context.getString(message));
+	public void showMessage(final Context context, final int message) {
+		((Activity) context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				showMessage(context, context.getString(message));
+			}
+		});
 	}
 	
 	@Override

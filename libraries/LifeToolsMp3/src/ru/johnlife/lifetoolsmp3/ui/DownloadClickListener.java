@@ -247,8 +247,14 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
 
-	public void showMessage(Context context, String message) {
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	public void showMessage(final Context context, final String message) {
+		((Activity) context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	public void showMessage(Context context, int message) {
