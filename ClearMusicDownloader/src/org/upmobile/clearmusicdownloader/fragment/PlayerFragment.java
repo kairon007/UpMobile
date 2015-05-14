@@ -26,7 +26,6 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -491,7 +490,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTvTitle.setText(song.getTitle());
 		playerTitleBarArtis.setText(song.getArtist().trim());
 		playerTitleBarTitle.setText(song.getTitle().trim());
-		long totalTime = song.getDuration();
+		long totalTime = song.getDuration() == 0 ? player.getDuration() : song.getDuration();
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
 		playerProgress.setMax((int) totalTime);
 		if (progress > 0) {

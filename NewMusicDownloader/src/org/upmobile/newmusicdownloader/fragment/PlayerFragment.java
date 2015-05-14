@@ -319,7 +319,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerProgress.removeCallbacks(progressAction);
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());
-		long totalTime = song.getDuration();
+		long totalTime = (int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration());
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
 		playerProgress.setMax((int) totalTime);
 		playerProgress.setProgress(progress);

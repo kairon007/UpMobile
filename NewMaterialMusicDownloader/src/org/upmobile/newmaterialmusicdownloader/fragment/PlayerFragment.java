@@ -208,7 +208,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
 		changePlayPauseView(prepared && player.isPlaying());
-		playerProgress.setMax(prepared ? (int)song.getDuration() : 100);
+		playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		contentView.findViewById(R.id.controlPane).measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		scrollView.recalculateCover(R.id.controlPane, R.id.visualizer);
 		playerProgress.postDelayed(new Runnable() {
@@ -474,7 +474,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			getCover(song);
 			setElementsView(0);
 			playerProgress.setIndeterminate(Boolean.FALSE);
-			playerProgress.setMax((int) s.getDuration());
+			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 			StateKeeper.getInstance().setPlayingSong(song);
 			song.getSpecial().setChecked(true);
 		}
@@ -613,7 +613,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
-		playerTotalTime.setTime(Util.getFormatedStrDuration(song.getDuration()));
+		playerTotalTime.setTime(Util.getFormatedStrDuration((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration())));
 		playerCurrTime.setTime(Util.getFormatedStrDuration(progress));
 	}
 

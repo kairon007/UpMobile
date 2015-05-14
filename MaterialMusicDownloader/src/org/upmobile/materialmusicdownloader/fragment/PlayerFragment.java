@@ -16,7 +16,6 @@ import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -30,7 +29,6 @@ import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
 import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
-import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.ThemeSingleton;
 import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -69,7 +67,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 
@@ -160,7 +157,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			changePlayPauseView(true);
 			getCover(song);
 			setElementsView(0);
-			playerProgress.setMax((int)s.getDuration());
+			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 			StateKeeper.getInstance().setPlayingSong(song);
 			song.getSpecial().setChecked(true);
 		}
@@ -319,7 +316,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setClickablePlayerElement(prepared);
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
-			playerProgress.setMax((int) song.getDuration());
+			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		} else {
 			changePlayPauseView(prepared);
 		}
@@ -558,7 +555,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
-		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration()));
+		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
 	}
 
