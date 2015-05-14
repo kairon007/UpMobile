@@ -174,10 +174,14 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		private final int MAX_NOTUPDATE_COUNT = 3000 / UPDATE_DELAY;
 		private int notUpdateCount = 0;
 		private int lastTime = 0;
+		private TimerTask timerTask;
 
 		public void startUpdating() {
-			scheduleAtFixedRate(new TimerTask() {
-
+			if (null != timerTask) {
+				timerTask.cancel();
+			}
+			timerTask = new TimerTask() {
+				
 				@Override
 				public void run() {
 					synchronized (WAIT) {
@@ -196,7 +200,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 						}
 					}
 				}
-			}, 0, UPDATE_DELAY);
+			};
+			scheduleAtFixedRate(timerTask, 0, UPDATE_DELAY);
 		}
 	}
 	
