@@ -1,8 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.drawer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
@@ -73,10 +70,10 @@ public class FragmentDrawer extends Fragment implements Constants {
  
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, Boolean.FALSE);
+        View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
         adapter = new NavigationDrawerAdapter(getActivity(), ((MainActivity) getActivity()).getData());
-        recyclerView.setHasFixedSize(Boolean.TRUE);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
@@ -188,11 +185,14 @@ public class FragmentDrawer extends Fragment implements Constants {
     }
     
 	public void showPlayerElement(final boolean flag) {
-		List<NavDrawerItem> list = new ArrayList<NavDrawerItem>(((MainActivity) getActivity()).getData());
-		if (flag) {
-			list.add(3, new NavDrawerItem(R.drawable.ic_headset_grey, getResources().getString(R.string.tab_now_plaing), NavDrawerItem.Type.Primary));
+		int count = adapter.getItemCount();
+		if (!flag) {
+			if (count < COUNT_FRAGMENT) return;
+			adapter.delete(3);
+		} else {
+			if (count > COUNT_FRAGMENT) return;
+			adapter.add(3, new NavDrawerItem(R.drawable.ic_headset_grey, getResources().getString(R.string.tab_now_plaing), NavDrawerItem.Type.Primary));
 		}
-		adapter.updateList(list);
 	}
 	
 	public void setItemChecked(int position) {
