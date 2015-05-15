@@ -161,7 +161,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		@Override
 		public void onCancelled() {
 			canceled = true;
-			download.setOnClickListener(PlayerFragment.this);
 			((RippleView) download.getParent()).setEnabled(true);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
@@ -172,7 +171,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			if (FAILURE.equals(params)) {
 				((MainActivity) getActivity()).showMessage(R.string.download_failed);
 				download.setProgress(0);
-				download.setOnClickListener(PlayerFragment.this);
 				setDownloadButtonState(true);
 			} else {
 				download.setProgress(canceled ? 0 : 100);
@@ -184,7 +182,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			canceled = false;
 			((RippleView) download.getParent()).setEnabled(false);
 			download.setClickable(false);
-			download.setOnClickListener(null);
 			download.setIndeterminateProgressMode(true);
 			download.setProgress(50);
 		}
@@ -204,7 +201,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		getCover(song);
 		setImageButton();
 		showLyrics();
-		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
 		changePlayPauseView(prepared && player.isPlaying());
@@ -364,11 +360,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (!stateVisualizer) {
 			setupVisualizerFxAndUI(stateVisualizer);
 		}
-		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
-			((RippleView) download.getParent()).setVisibility(View.GONE);
-		} else {
-			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
-		}
+		setElementsView(player.getCurrentPosition());
 		showLyrics();
 		cancelProgressTask();
 		thatSongIsDownloaded();
@@ -482,7 +474,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		@Override
 		public void update(AbstractSong current) {
 			if (isDestroy) return;
-			download.setOnClickListener(PlayerFragment.this);
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
 			song = current;
@@ -597,11 +588,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setProgress(0);
 			download.setOnClickListener(this);
 		}
-		if (StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment())) {
-			((RippleView) download.getParent()).setVisibility(View.GONE);
-		} else {
-			((RippleView) download.getParent()).setVisibility(View.VISIBLE);
-		}
 		cancelProgressTask();
 		thatSongIsDownloaded();
 	}
@@ -613,6 +599,15 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void setElementsView(int progress) {
+		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment());
+		ViewGroup parentDownload = (ViewGroup) download.getParent();
+		if (song.getClass() == MusicData.class || isDownloaded) {
+			download.setVisibility(View.GONE);
+			parentDownload.setVisibility(View.GONE);
+		} else {
+			download.setVisibility(View.VISIBLE);
+			parentDownload.setVisibility(View.VISIBLE);
+		}
 		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
@@ -937,7 +932,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 					public void run() {
 						((MainActivity) getActivity()).showMessage(R.string.download_failed);
 						download.setProgress(0);
-						download.setOnClickListener(PlayerFragment.this);
 						setDownloadButtonState(true);
 					}
 				});
@@ -966,7 +960,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 								@Override
 								public void run() {
 									download.setProgress(0);
-									download.setOnClickListener(PlayerFragment.this);
 									setDownloadButtonState(true);
 								}
 							});
