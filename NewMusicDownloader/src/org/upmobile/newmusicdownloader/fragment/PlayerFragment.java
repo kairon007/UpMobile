@@ -570,6 +570,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 * delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 	 */
 	private void play(int delta) throws IllegalArgumentException {
+		if (player.isStoped()) {
+			playerProgress.setVisibility(View.GONE);
+			wait.setVisibility(View.VISIBLE);
+		}
 		if (delta == 0) {
 			player.play(song);
 			return;
