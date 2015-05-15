@@ -187,7 +187,7 @@ public class FragmentDrawer extends Fragment implements Constants {
 	public void showPlayerElement(final boolean flag) {
 		int count = adapter.getItemCount();
 		if (!flag) {
-			if (count < COUNT_FRAGMENT) return;
+			if (count <= COUNT_FRAGMENT) return;
 			adapter.delete(3);
 		} else {
 			if (count > COUNT_FRAGMENT) return;
