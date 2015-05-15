@@ -130,10 +130,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private float scale_width;
     private float scale_height;
 	private float ratio;
-	private boolean fromMenu = Boolean.FALSE;
+	private boolean fromMenu = false;
     private boolean isDestroy;
-    private boolean isUseAlbumCover = Boolean.TRUE;
-    private boolean isNeedCalculateCover = Boolean.TRUE;
+    private boolean isUseAlbumCover = true;
+    private boolean isNeedCalculateCover = true;
     
     private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
@@ -196,7 +196,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		parentView = inflater.inflate(R.layout.player, container, false);
-		isDestroy = Boolean.FALSE;
+		isDestroy = false;
 		player = PlaybackService.get(getActivity());
 		init(parentView);
 		setListener();
@@ -211,7 +211,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		song = player.getPlayingSong();
 		boolean prepared = player.isPrepared();
 		setClickablePlayerElement(prepared);
-		changePlayPauseView(prepared ? !player.isPlaying() : Boolean.FALSE);
+		changePlayPauseView(prepared ? !player.isPlaying() : false);
 		downloadButtonState(!player.isGettingURl());
 		return parentView;
 	}
@@ -237,7 +237,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		activity.getResideMenu().addIgnoredView(playerProgress);
 		activity.getResideMenu().addIgnoredView(playerEtTitle);
 		activity.getResideMenu().addIgnoredView(playerEtArtist);
-		activity.showMiniPlayer(Boolean.FALSE);
+		activity.showMiniPlayer(false);
 		setKeyListener();
 		showLyrics();
 		getCover(song);
@@ -261,9 +261,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					if (!closeEditViews()) {
 						onBackPress();
 					}
-					return Boolean.TRUE;
+					return true;
 				}
-				return Boolean.FALSE;
+				return false;
 			}
 		});
 	}
@@ -281,7 +281,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		if (!isUseAlbumCover && song.isHasCover()) {
 			undo.clear();
-			clearCover();
+			clearCover((MusicData) song);
 		}
 		super.onPause();
 	}
@@ -289,7 +289,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		editTag();
-		return Boolean.TRUE;
+		return true;
 	}
 
 	private void setClickablePlayerElement(boolean isClickable) {
@@ -357,9 +357,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
 					closeEditViews();
-					return Boolean.TRUE;
+					return true;
 				}
-				return Boolean.FALSE;
+				return false;
 			}
 		});
 		playerEtTitle.setOnKeyListener(new OnKeyListener() {
@@ -368,9 +368,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
 					closeEditViews();
-					return Boolean.TRUE;
+					return true;
 				}
-				return Boolean.FALSE;
+				return false;
 			}
 		});
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnTouchListener(new OnTouchListener() {
@@ -378,7 +378,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				editTag();
-				return Boolean.FALSE;
+				return false;
 			}
 		});
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(new OnScrollChangedListener() {
@@ -443,7 +443,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 				@Override
 				public void onHide(@Nullable Parcelable token) {
-					clearCover();
+					clearCover((MusicData) song);
 				}
 
 				@Override
@@ -472,13 +472,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		return false;
 	}
 	
-	private void clearCover() {
+	private void clearCover(MusicData song) {
 		setCheckBoxState(false);
 		if (MusicData.class == song.getClass()) {
 			playerCover.setImageResource(R.drawable.def_cover_circle_web);
 			((MusicData) song).clearCover();
 			RenameTask.deleteCoverFromFile(new File(song.getPath()));
 		}
+		isUseAlbumCover = true;
+		setCheckBoxState(true);
 	}
 	
 	private void setElementsView(int progress) {
@@ -723,10 +725,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 */
 	private void play(int delta) throws IllegalArgumentException {
 		if (!isUseAlbumCover) {
+			clearCover((MusicData) song);
 			if (null != undo) {
 				undo.clear();
 			}
-			clearCover();
 		}
 		switch (delta) {
 		case 0:
@@ -762,6 +764,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			if (null != bitmap) {
 				setCheckBoxState(true);
 				playerCover.setImageBitmap(bitmap);
+				useCover.setVisibility(View.VISIBLE);
 				return;
 			}
 		}
