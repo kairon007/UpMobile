@@ -385,6 +385,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				break;
 			case MSG_STOP:
 				if (check(SMODE_PREPARED)) {
+					helper(State.STOP, (AbstractSong) msg.obj);
 					player.pause();
 					player.seekTo(0);
 					removeNotification();
@@ -456,10 +457,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public void play() {
 		previousSong = playingSong;
 		if (check(SMODE_PREPARED)) {
-			helper(State.START, playingSong);
 			buildSendMessage(playingSong, MSG_PLAY, 0, 0);
 		} else {
-			helper(State.STOP, previousSong == null ? playingSong : previousSong);
+			buildSendMessage(playingSong, MSG_STOP, 0, 0);
 			stopForeground(true);
 		}
 	}
