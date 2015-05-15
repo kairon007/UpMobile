@@ -123,7 +123,6 @@ public class FragmentDrawer extends Fragment implements Constants {
 		super.onDetach();
 	}
 	
- 
     public static interface ClickListener {
         public void onClick(View view, int position);
  
@@ -179,6 +178,10 @@ public class FragmentDrawer extends Fragment implements Constants {
     public void openDrawer() {
     	mDrawerLayout.openDrawer(GravityCompat.START);
     }
+    
+    public void closeDrawer() {
+		mDrawerLayout.closeDrawer(GravityCompat.START);
+	}
     
     public boolean isDrawerOpened() {
     	return mDrawerLayout.isDrawerOpen(GravityCompat.START);

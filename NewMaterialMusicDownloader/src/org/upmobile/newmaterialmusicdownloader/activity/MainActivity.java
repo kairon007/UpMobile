@@ -135,7 +135,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	public void onBackPressed() {
 		setSearchViewVisibility(getPreviousFragmentName(2));
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
-		if (null != player && player.isVisible()) {
+		if (drawerFragment.isVisible()) {
+			drawerFragment.closeDrawer();
+		} else if (null != player && player.isVisible()) {
 			showMiniPlayer(true);
 			getFragmentManager().popBackStack();
 			isOpenFromDraver = true;
