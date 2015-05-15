@@ -212,8 +212,12 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		showPlayerElement(service.isPrepared());
-		showMiniPlayer(service.isPlaying());
+		boolean isPrepared = service.isPrepared();
+		showPlayerElement(isPrepared);
+		showMiniPlayer(isPrepared);
+		if (!isPrepared) {
+			StateKeeper.getInstance().setPlayingSong(null);
+		}
 		service.addStatePlayerListener(stateListener);
 	}
 	
