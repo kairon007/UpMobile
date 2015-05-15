@@ -92,6 +92,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		@Override
 		public void start(AbstractSong s) {
 			song = s;
+			setData(s);
 			isMiniPlayerPrepared = true;
 			showProgress(false);
 			showPlayerElement(true);
