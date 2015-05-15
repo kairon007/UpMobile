@@ -51,14 +51,14 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	private View miniPlayer;
 	private View fakeView;
 	protected View progress;
-	private boolean isMiniPlayerPrepared = Boolean.FALSE;
+	private boolean isMiniPlayerPrepared = false;
 	
-	private boolean isPlayerFragmentVisible = Boolean.FALSE;
-	private boolean isAnimated = Boolean.FALSE;
-	private boolean isClickOnDownload = Boolean.FALSE;
-	private boolean methodIsCalled = Boolean.FALSE;
-	private boolean isShown = Boolean.FALSE;
-	protected boolean currentFragmentIsPlayer = Boolean.FALSE;
+	private boolean isPlayerFragmentVisible = false;
+	private boolean isAnimated = false;
+	private boolean isClickOnDownload = false;
+	private boolean methodIsCalled = false;
+	private boolean isShown = false;
+	protected boolean currentFragmentIsPlayer = false;
 	
 	private int checkIdCover;
 	private DownloadClickListener downloadListener;
@@ -100,7 +100,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				boolean oldIsPrepared = isMiniPlayerPrepared;
 				isMiniPlayerPrepared = true;
 				showMiniPlayer(isShown, oldIsPrepared);
-				setPlayPauseMini(false);
 			}
 		}
 		
