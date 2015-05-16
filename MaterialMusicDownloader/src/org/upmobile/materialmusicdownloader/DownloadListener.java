@@ -28,7 +28,6 @@ public class DownloadListener extends DownloadClickListener {
 	
 	private final int MESSAGE_DURATION = 5000;
 
-	private Context context;
 	private String songArtist;
 	private String songTitle;
 	private OnCancelDownload cancelDownload;
@@ -40,7 +39,6 @@ public class DownloadListener extends DownloadClickListener {
 
 	public DownloadListener(Context context, RemoteSong song, int id) {
 		super(context, song, id);
-		this.context = context;
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
 	}
@@ -51,6 +49,7 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected void prepare(File src, final RemoteSong song, String pathToFile) {
+		final Context context = getContext();
 		((Activity) context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -69,11 +68,11 @@ public class DownloadListener extends DownloadClickListener {
 							list.add(song);
 							service.setArrayPlayback(list);
 						}
-						if (!((MainActivity) context).isPlayerFragment()) {
-							((BaseMiniPlayerActivity) context).startSong(song);
-						} else {
-							((BaseMiniPlayerActivity) context).startSong(song, false);
-						}
+						 else {
+								service.addArrayPlayback(song);
+							}
+							boolean inPlayerFragment = ((MainActivity) context).isPlayerFragment();
+							((BaseMiniPlayerActivity) context).startSong(song, !inPlayerFragment);
 					}
 				});
 				undoBar.style(new UndoBarStyle(R.drawable.ic_play, R.string.play));

@@ -68,12 +68,11 @@ public class DownloadListener extends DownloadClickListener {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 							list.add(song);
 							service.setArrayPlayback(list);
-						}
-						if (ManagerFragmentId.playerFragment() != ((MainActivity) context).getCurrentFragmentId()) {
-							((BaseMiniPlayerActivity) context).startSong(song);
 						} else {
-							((BaseMiniPlayerActivity) context).startSong(song, Boolean.FALSE);
+							service.addArrayPlayback(song);
 						}
+						boolean inPlayerFragment = ManagerFragmentId.playerFragment() == ((MainActivity) context).getCurrentFragmentId();
+						((BaseMiniPlayerActivity) context).startSong(song, !inPlayerFragment);
 					}
 					
 	 			});
