@@ -87,7 +87,11 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			if (key.contains(PREF_DIRECTORY_PREFIX)) {
-				adapter.clear();
+				if (View.VISIBLE == emptyMessage.getVisibility()) {
+					emptyMessage.setVisibility(View.GONE);
+				} else {
+					adapter.clear();
+				}
 				showProgress(view);
 				updateAdapter();
 			}
