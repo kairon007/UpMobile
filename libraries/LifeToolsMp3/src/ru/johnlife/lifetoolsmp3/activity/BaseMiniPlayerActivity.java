@@ -213,11 +213,15 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			service = PlaybackService.get(this);
 		}
 		boolean isPrepared = service.isPrepared();
+		StateKeeper keeper = StateKeeper.getInstance();
+		AbstractSong curr = service.getPlayingSong();
 		showPlayerElement(isPrepared);
-		showMiniPlayer(isPrepared);
-		if (!isPrepared) {
-			StateKeeper.getInstance().setPlayingSong(null);
+		if (!currentFragmentIsPlayer) {
+			showMiniPlayer(isPrepared);
 		}
+		keeper.setPlayingSong(isPrepared ? curr : null);
+		keeper.notifyLable(true);
+		setData(curr);
 		service.addStatePlayerListener(stateListener);
 	}
 	
