@@ -756,6 +756,12 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		} else {
 			onMode(SMODE_HAS_NOT_SONG, SONG_SOURCE_MASKS);
 		}
+	} 
+	
+	public void addArrayPlayback(AbstractSong source) {
+		if (!arrayPlayback.contains(source)) {
+			arrayPlayback.add(source);
+		}
 	}
 	
 	public void addStatePlayerListener(OnStatePlayerListener stateListener) {
