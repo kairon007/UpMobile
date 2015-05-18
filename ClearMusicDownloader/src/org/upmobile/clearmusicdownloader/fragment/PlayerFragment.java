@@ -477,6 +477,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (MusicData.class == song.getClass()) {
 			playerCover.setImageResource(R.drawable.def_cover_circle_web);
 			((MusicData) song).clearCover();
+			((MainActivity) getActivity()).setCover(null);
 			RenameTask.deleteCoverFromFile(new File(song.getPath()));
 		}
 		isUseAlbumCover = true;

@@ -401,7 +401,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	@Override
-	protected void setCover(Bitmap bmp) {
+	public void setCover(Bitmap bmp) {
+		android.util.Log.d("logd", "setCover: " + bmp);
 		if (null == bmp) {
 			((CircleImageView) findViewById(R.id.mini_player_cover)).setImageResource(R.drawable.ic_album_grey);
 			return;

@@ -422,6 +422,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void clearCover() {
 		if (MusicData.class == song.getClass()) {
+			((MainActivity) getActivity()).setCover(null);
 			((View)cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();

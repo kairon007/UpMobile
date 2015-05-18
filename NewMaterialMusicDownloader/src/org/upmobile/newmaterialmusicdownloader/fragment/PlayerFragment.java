@@ -837,6 +837,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 			setCoverToZoomView(null);
 			((MusicData) song).clearCover();
+			((MainActivity) getActivity()).setCover(null);
 			new Thread(new Runnable() {
 
 				@Override

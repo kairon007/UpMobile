@@ -19,7 +19,6 @@ import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
@@ -32,6 +31,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -96,6 +96,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			((View) v1.getParent().getParent().getParent().getParent()).setBackgroundColor(getResources().getColor(!isDarkActionBar(this)? android.R.color.white : android.R.color.black));
 		}
 		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+	}
+	
+	
+	@Override
+	public void setCover(Bitmap bmp) {
+		super.setCover(bmp);
 	}
 	
 	@Override

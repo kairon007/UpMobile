@@ -215,7 +215,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	@Override
-	protected void setCover(Bitmap bmp) {
+	public void setCover(Bitmap bmp) {
 		if (null == bmp) {
 			String cover = getString(R.string.font_musics);
 			bmp = getDefaultBitmapCover(64, 62, 60, cover);

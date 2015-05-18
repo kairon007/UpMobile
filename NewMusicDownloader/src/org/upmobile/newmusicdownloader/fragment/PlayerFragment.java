@@ -182,7 +182,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (isDestroy) return;
 		song = current;
 		setElementsView(0);
-		getCover(current);
 		setClickablePlayerElement(false);
 		playerProgress.setVisibility(View.INVISIBLE);
 		wait.setVisibility(View.VISIBLE);
@@ -539,10 +538,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else if (!manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change only cover
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(false, true);
+				((MusicData) song).clearCover();
+				((MainActivity) getActivity()).setCover(null);
 			}
 		} else if (manipulate && !playerTagsCheckBox.isChecked()) { 	// if we change cover and fields
 			if (song.getClass() == MusicData.class) {
 				renameTask.start(false, false);
+				((MusicData) song).clearCover();
+				((MainActivity) getActivity()).setCover(null);
 			}
 		}
 	}
@@ -586,10 +589,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			player.shift(-1);
 			downloadButtonState(!player.isGettingURl());
 		}
+		getCover(player.getPlayingSong());
 	}
 
 	private void getCover(final AbstractSong song) {
 		checkBoxState(false);
+		playerCover.setImageResource(R.drawable.no_cover_art_big);
 		if (song.isHasCover()) {
 			final Bitmap bitmap = song.getCover();
 			if (null != bitmap) {
@@ -605,7 +610,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 		}
 		if (song.getClass() != MusicData.class) {
-			playerCover.setImageResource(R.drawable.no_cover_art_big);
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
 				
 				@Override

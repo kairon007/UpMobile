@@ -267,7 +267,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	}
 
 	@Override
-	protected void setCover(Bitmap bmp) {
+	public void setCover(Bitmap bmp) {
 		if (null == bmp) {
 			bmp = BitmapFactory.decodeResource(getResources(), R.drawable.def_cover_circle);
 		}
