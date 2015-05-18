@@ -221,7 +221,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		}
 		keeper.setPlayingSong(isPrepared ? curr : null);
 		keeper.notifyLable(true);
-		setData(curr);
+		if (isPrepared) {
+			setData(curr);
+		}
 		service.addStatePlayerListener(stateListener);
 	}
 	
