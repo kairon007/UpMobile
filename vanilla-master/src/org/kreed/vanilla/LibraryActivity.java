@@ -729,6 +729,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	 *            The data for the row that was clicked.
 	 */
 	public void onItemClicked(Intent rowData) {
+		Util.hideKeyboard(this, mSearchBox);
 		int action = mDefaultAction;
 		if (action == ACTION_LAST_USED) {
 			action = mLastAction;

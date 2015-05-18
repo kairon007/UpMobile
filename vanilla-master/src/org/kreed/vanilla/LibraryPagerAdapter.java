@@ -43,20 +43,25 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
 /**
  * PagerAdapter that manages the library media ListViews.
  */
-public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callback, ViewPager.OnPageChangeListener, View.OnCreateContextMenuListener, AdapterView.OnItemClickListener {
+public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callback, OnPageChangeListener, 
+					OnCreateContextMenuListener, OnItemClickListener, OnScrollListener {
 	/**
 	 * The number of unique list types. The number of visible lists may be
 	 * smaller.
@@ -334,8 +339,8 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		int type = mTabOrder[position];
-		ListView view = mLists[type];
-		if (view == null) {
+		ListView listView = mLists[type];
+		if (listView == null) {
 			LibraryActivity activity = mActivity;
 			LayoutInflater inflater = activity.getLayoutInflater();
 			LibraryAdapter adapter;
@@ -399,35 +404,32 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			default:
 				throw new IllegalArgumentException("Invalid media type: " + type);
 			}
-
-			view = (ListView) inflater.inflate(R.layout.listview, null);
+			listView = (ListView) inflater.inflate(R.layout.listview, null);
 			if ("AppTheme.White".equals(Util.getThemeName(mActivity))) {
-				view.setDivider(new ColorDrawable(activity.getResources().getColor(R.color.divider_color_light)));
-				view.setDividerHeight(1);
+				listView.setDivider(new ColorDrawable(activity.getResources().getColor(R.color.divider_color_light)));
+				listView.setDividerHeight(1);
 			}
-			view.setOnCreateContextMenuListener(this);
-			view.setOnItemClickListener(this);
-			view.setTag(type);
+			listView.setOnCreateContextMenuListener(this);
+			listView.setOnItemClickListener(this);
+			listView.setOnScrollListener(this);
+			listView.setTag(type);
 			if (header != null) {
 				header.setText(mHeaderText);
 				header.setTag(type);
-				view.addHeaderView(header);
+				listView.addHeaderView(header);
 			}
-			view.setAdapter(adapter);
+			listView.setAdapter(adapter);
 			// if (type != MediaUtils.TYPE_FILE)
 			loadSortOrder((SortAdapter) adapter);
-			enableFastScroll(view);
+			enableFastScroll(listView);
 			adapter.setFilter(mFilter);
-
 			mAdapters[type] = adapter;
-			mLists[type] = view;
+			mLists[type] = listView;
 			mRequeryNeeded[type] = true;
 		}
-
 		requeryIfNeeded(type);
-		container.addView(view);
-
-		return view;
+		container.addView(listView);
+		return listView;
 	}
 
 	@Override
@@ -919,4 +921,12 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	public SearchView getSearchView() {
 		return searchView;
 	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		Util.hideKeyboard(mActivity, view);
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
 }
