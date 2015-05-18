@@ -59,9 +59,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	private int currentFragmentId = Integer.valueOf(-1);
 	private int lastCheckPosition = Integer.valueOf(0);
-	private boolean isVisibleSearchView = Boolean.FALSE;
-	private boolean isOpenFromDraver = Boolean.FALSE;
-	private boolean isDrawerOpen = Boolean.FALSE;
+	private boolean isVisibleSearchView = false;
+	private boolean isOpenFromDraver = false;
+	private boolean isDrawerOpen = false;
 	private SearchView searchView;
 	private View floatBtnContainer;
 	private Toolbar toolbar;
@@ -231,9 +231,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	public void setCurrentFragmentId(int currentFragmentId) {
 		this.currentFragmentId = currentFragmentId;
 		currentFragmentIsPlayer = ManagerFragmentId.playerFragment() == currentFragmentId;
-		if (null != drawerFragment) {
-			drawerFragment.setItemChecked(currentFragmentId);	
-		}
 	}
 	
 	public int getCurrentFragmentId() {
@@ -504,14 +501,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	
 	@Override
 	public void onDrawerOpened(View drawerView) {
-		isDrawerOpen = Boolean.TRUE;
+		drawerFragment.setItemChecked(getCurrentFragmentId());
+		isDrawerOpen = true;
 		invalidateOptionsMenu();
 		Util.hideKeyboard(this, drawerView);
 	}
 
 	@Override
 	public void onDrawerClosed(View drawerView) {
-		isDrawerOpen = Boolean.FALSE;
+		isDrawerOpen = false;
 		invalidateOptionsMenu();
 		Util.hideKeyboard(this, drawerView);
 	}
@@ -525,7 +523,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	public void onDrawerStateChanged(int newState) {
 		if (newState == DrawerLayout.STATE_SETTLING) {
-			drawerFragment.setItemChecked(getCurrentFragmentId());
 			if (ManagerFragmentId.playerFragment() == getCurrentFragmentId()) {
 				PlayerFragment player = (PlayerFragment) getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 				if (!isDrawerOpen) {

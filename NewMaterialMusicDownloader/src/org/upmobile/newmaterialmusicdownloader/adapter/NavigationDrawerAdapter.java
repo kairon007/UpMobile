@@ -62,15 +62,15 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		NavDrawerItem current = data.get(position);
 		if (current.getType() == NavDrawerItem.Type.Secondary) {
-			holder.ripple.setClickable(Boolean.FALSE);
+			holder.ripple.setClickable(false);
 			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 36);
 			holder.title.setTextAppearance(inflater.getContext(), R.style.boldText);
-			setVisibility(holder, Boolean.FALSE);
+			setVisibility(holder, false);
 		} else {
-			holder.ripple.setClickable(Boolean.TRUE);
+			holder.ripple.setClickable(true);
 			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 48);
 			holder.title.setTextAppearance(inflater.getContext(), R.style.normalText);
-			setVisibility(holder, Boolean.TRUE);
+			setVisibility(holder, true);
 		}
 		holder.title.setText(current.getTitle());
 		if (current.getIcon() != 0) {
