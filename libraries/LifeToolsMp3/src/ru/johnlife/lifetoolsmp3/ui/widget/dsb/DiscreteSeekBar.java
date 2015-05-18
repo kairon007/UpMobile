@@ -127,10 +127,10 @@ public class DiscreteSeekBar extends View {
     private int mValue;
     private int secondaryProgress;
     private int mKeyProgressIncrement = 1;
-    private boolean mMirrorForRtl = Boolean.FALSE;
-    private boolean mAllowTrackClick = Boolean.TRUE;
-    private boolean mTimeFormatt = Boolean.FALSE;
-    private boolean isIndeterminate = Boolean.FALSE;
+    private boolean mMirrorForRtl = false;
+    private boolean mAllowTrackClick = true;
+    private boolean mTimeFormatt = false;
+    private boolean isIndeterminate = false;
     //We use our own Formatter to avoid creating new instances on every progress change
     Formatter mFormatter;
     private String mIndicatorFormatter;
@@ -917,7 +917,7 @@ public class DiscreteSeekBar extends View {
         }
     }
     
-    private void hideFloater() {
+    public void hideFloater() {
         removeCallbacks(mShowIndicatorRunnable);
         if (!isInEditMode()) {
             mIndicator.dismiss();

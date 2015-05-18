@@ -287,6 +287,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			@Override
 			public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt, int alpha) {
 				((MainActivity)getActivity()).setToolbarAlpha(alpha);
+				playerProgress.hideFloater();
 			}
 		});
 		scrollView.setOnTouchListener(new OnTouchListener() {
@@ -384,6 +385,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	@Override
 	public void onPause() {
+		playerProgress.forceHideFloater();
 		((MainActivity) getActivity()).showPlayerElement(player.isPrepared());
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancel();
