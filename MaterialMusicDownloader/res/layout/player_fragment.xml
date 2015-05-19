@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="@string/edit_mp3_use_album_cover"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
