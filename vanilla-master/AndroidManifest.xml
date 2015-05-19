@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Copyright (C) 2012 Christopher Eby <kreed@kreed.org>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
--->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.kreed.vanilla"  
+    package="org.kreed.vanilla"
     android:installLocation="auto"
     android:versionCode="0910"
     android:versionName="0.9.10" >
@@ -30,17 +9,16 @@ THE SOFTWARE.
         android:minSdkVersion="9"
         android:targetSdkVersion="19" />
 
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-<uses-permission android:name="android.permission.WAKE_LOCK" />
-<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -49,54 +27,24 @@ THE SOFTWARE.
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    
-    
-    
-
-    <!-- This is needed for isWiredHeadsetOn() to work in some cases. (bug?) -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    
-      <!-- AD NETWORK PERMISSIONS -->
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	
-	<uses-permission android:name="android.permission.GET_TASKS" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	
-	<uses-permission android:name="android.permission.WAKE_LOCK" /> 
-	
-	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/> 
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    
-    
-  <!-- AD NETWORK PERMISSIONS -->
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    
-    
-    
-    <application android:icon="@drawable/icon" android:label="@string/app_name"
+    <!-- AD NETWORK PERMISSIONS -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <application
         android:name="ru.johnlife.lifetoolsmp3.app.MusicApp"
         android:backupAgent="PreferencesBackupAgent"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
         android:theme="@style/AppTheme.Black" >
 
-        <!-- Activities with theme -->
-        <!-- android:theme="@style/Playback" -->
         <activity
             android:name="FullPlaybackActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MUSIC_PLAYER" />
@@ -108,48 +56,37 @@ THE SOFTWARE.
                 <data android:mimeType="audio/*" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="LibraryActivity"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTask"
-            android:uiOptions="splitActionBarWhenNarrow" >
-            
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            
         </activity>
-        <!-- android:theme="@style/BackActionBar" -->
         <activity
-            android:windowSoftInputMode="stateHidden"
             android:name="PlaylistActivity"
             android:configChanges="screenSize|orientation"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:windowSoftInputMode="stateHidden"
             android:name="com.millennialmedia.android.MMActivity"
             android:configChanges="keyboardHidden|orientation|keyboard"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!-- android:theme="@style/Dialog" -->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:windowSoftInputMode="stateHidden"
             android:name="MiniPlaybackActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleInstance" />
-        <!-- android:theme="@style/BackActionBar" -->
-        <activity
-            android:name="PreferencesActivity" />
-        <!-- android:theme="@style/BackActionBar" -->
-        <activity
-            android:name="TabOrderActivity" />
-        
-        <activity
-            android:name=".CustomEqualizer" />
-        
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name="PreferencesActivity" />
+        <activity android:name="TabOrderActivity" />
+        <activity android:name=".CustomEqualizer" />
+
         <receiver
             android:name=".OneCellWidget"
             android:label="Vanilla Music 1x1" >
@@ -228,7 +165,7 @@ THE SOFTWARE.
             </intent-filter>
         </receiver>
 
-        <service android:name="PlaybackService" >
+        <service android:name="org.kreed.vanilla.PlaybackService" >
             <intent-filter>
                 <action android:name="org.kreed.vanilla.action.PLAY" />
                 <action android:name="org.kreed.vanilla.action.PAUSE" />
@@ -246,18 +183,6 @@ THE SOFTWARE.
         <activity android:name="PreferencesActivity$MiscActivity" />
         <activity android:name="PreferencesActivity$AboutActivity" />
 
-       
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         <!-- MOBILECORE -->
 
         <service
@@ -285,19 +210,17 @@ THE SOFTWARE.
             android:name="com.startapp.android.publish.AppWallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent" />
-        
-        
+
         <!-- REVMOB -->
-        
-		<meta-data android:name="com.revmob.app.id" android:value="_NULLDROID_REVMOB_ID_"/>
-		<activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
-			android:configChanges="keyboardHidden|orientation|screenSize"
-			android:theme="@android:style/Theme.Translucent">
-		</activity>
-        
-        
 
+        <meta-data
+            android:name="com.revmob.app.id"
+            android:value="_NULLDROID_REVMOB_ID_" />
 
+        <activity
+            android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent" />
     </application>
 
 </manifest>

@@ -291,6 +291,10 @@ public class AdapterHelper {
 			return id;
 		}
 
+		public String getArtist() {
+			return artistLine.getText().toString();
+		}
+		
 		public String getTitle() {
 			return title;
 		}

@@ -541,7 +541,7 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 	@Override
 	public Intent createData(View view) {
 		ViewBuilder holder = (ViewBuilder) view.getTag();
-		String title = holder.getTitle();
+		String title = null == holder.getTitle() ? holder.getArtist() : "";
 		String path = arrayFilePath.get(title);
 		Intent intent = new Intent();
 		intent.putExtra(LibraryAdapter.DATA_TYPE, mType);

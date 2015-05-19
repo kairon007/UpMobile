@@ -79,7 +79,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -95,7 +94,7 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * The library activity where songs to play can be selected from the library.
  */
-public class LibraryActivity extends PlaybackActivity implements TextWatcher, DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
+public class LibraryActivity extends PlaybackActivity implements TextWatcher, View.OnKeyListener, DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
 	
 	private static final String IS_FIRST_RUN = "is_first_run";
 	/**
@@ -149,7 +148,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	private boolean mSearchBoxVisible;
 	private boolean swichShowDialogRate = true;
 
-	private TextView mTextFilter;
+	private EditText mEditFilter;
 	private View mSortButton;
 	private View mEqualizerButton;
 
@@ -227,11 +226,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 
-	public static void hideSoftKeyboard(final EditText editText) {
-		InputMethodManager inputMethodManager = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-	}
-
 	// protected void loadMoPubView(MoPubView moPubView, String adUnitId, String
 	// keywords) {
 	// //TODO
@@ -303,13 +297,14 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
 		}
 		keeper = StateKeeper.getInstance();
-		mTextFilter = (TextView) findViewById(R.id.filter_text);
-		mTextFilter.addTextChangedListener(this);
+		mEditFilter = (EditText) findViewById(R.id.filter_text);
+		mEditFilter.addTextChangedListener(this);
+		mEditFilter.setOnKeyListener(this);
 		mClearFilterEditText = (ImageButton) findViewById(R.id.clear_filter);
 		mClearFilterEditText.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				mTextFilter.setText(null);
+				mEditFilter.setText("");
 			}
 		});
 		// Intent intent = getIntent();
@@ -489,10 +484,10 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	public void setFilterHint(int type) {
 		int[] hintResIds = new int[] { R.string.hint_filter_artists, R.string.hint_filter_songs, R.string.hint_filter_playlists, R.string.hint_filter_genres, R.string.hint_filter_files };
-		float width = mTextFilter.getPaint().measureText(getResources().getString(hintResIds[type - 1]));
-		if(mTextFilter.getWidth() - mClearFilterEditText.getWidth() < width) {
-			mTextFilter.setHint(Html.fromHtml("<small>" + getResources().getString(hintResIds[type - 1]) + "</small>"));
-		} else mTextFilter.setHint(hintResIds[type - 1]);
+		float width = mEditFilter.getPaint().measureText(getResources().getString(hintResIds[type - 1]));
+		if(mEditFilter.getWidth() - mClearFilterEditText.getWidth() < width) {
+			mEditFilter.setHint(Html.fromHtml("<small>" + getResources().getString(hintResIds[type - 1]) + "</small>"));
+		} else mEditFilter.setHint(hintResIds[type - 1]);
 	}
 
 	@Override
@@ -601,7 +596,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			mTextFilter.setText("");
+			mEditFilter.setText("");
 			Limiter limiter = mPagerAdapter.getCurrentLimiter();
 			int len = -1;
 			if (null != limiter) {
@@ -615,6 +610,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			}
 			break;
 		case KeyEvent.KEYCODE_SEARCH:
+			System.out.println("!!! KEYCODE_SEARCH");
+			Util.hideKeyboard(this, mSearchBox);
 			setSearchBoxVisible(!mSearchBoxVisible);
 			break;
 		default:
@@ -626,23 +623,24 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_FORWARD_DEL)
+		switch(keyCode) {
+		case KeyEvent.KEYCODE_DEL:
+		case KeyEvent.KEYCODE_FORWARD_DEL:
 			// On ICS, EditText reports backspace events as unhandled despite
 			// actually handling them. To workaround, just assume the event was
 			// handled if we get here.
 			return true;
-
-		if (super.onKeyDown(keyCode, event))
+		case KeyEvent.KEYCODE_SEARCH:
+			Util.hideKeyboard(this, mSearchBox);
 			return true;
-
-		if (mTextFilter.onKeyDown(keyCode, event)) {
+		}
+		if (mEditFilter.onKeyDown(keyCode, event)) {
 			if (!mSearchBoxVisible)
 				setSearchBoxVisible(true);
 			else
-				mTextFilter.requestFocus();
-			return true;
+				mEditFilter.requestFocus();
 		}
-		return false;
+		return super.onKeyDown(keyCode, event);
 	}
 
 	/**
@@ -1581,7 +1579,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 			handler.sendMessage(mHandler.obtainMessage(MSG_SAVE_PAGE, position, 0));
 		}
 		if (lastPage != position && lastPage != -1) {
-			mTextFilter.setText("");
+			mEditFilter.setText("");
 		}
 		if (lastPage == 0) {
 			StateKeeper.getInstance().saveStateAdapter(((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView());
@@ -1608,4 +1606,14 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Di
 		return info;
 	}
 
+	@Override
+	public boolean onKey(View view, int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_ENTER:
+		case KeyEvent.KEYCODE_SEARCH:
+			Util.hideKeyboard(this, view);
+			break;
+		}
+		return false;
+	}
 }
