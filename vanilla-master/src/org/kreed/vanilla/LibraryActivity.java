@@ -609,8 +609,8 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 				finish();
 			}
 			break;
+		case KeyEvent.KEYCODE_ENTER:
 		case KeyEvent.KEYCODE_SEARCH:
-			System.out.println("!!! KEYCODE_SEARCH");
 			Util.hideKeyboard(this, mSearchBox);
 			setSearchBoxVisible(!mSearchBoxVisible);
 			break;
@@ -630,6 +630,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 			// actually handling them. To workaround, just assume the event was
 			// handled if we get here.
 			return true;
+		case KeyEvent.KEYCODE_ENTER:
 		case KeyEvent.KEYCODE_SEARCH:
 			Util.hideKeyboard(this, mSearchBox);
 			return true;
