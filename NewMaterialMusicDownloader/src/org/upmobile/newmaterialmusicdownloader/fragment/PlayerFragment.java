@@ -287,7 +287,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			@Override
 			public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt, int alpha) {
 				((MainActivity)getActivity()).setToolbarAlpha(alpha);
-				playerProgress.hideFloater();
+				playerProgress.forceHideFloater();
 			}
 		});
 		scrollView.setOnTouchListener(new OnTouchListener() {

@@ -24,6 +24,7 @@
 
         <ImageView
             android:id="@+id/icon"
+            android:background="@null"
             android:layout_width="@dimen/material_drawer_item_primary"
             android:layout_height="@dimen/material_drawer_item_primary"
             android:layout_gravity="center_vertical"
@@ -43,6 +44,7 @@
             android:layout_toRightOf="@id/icon"
             android:gravity="center_vertical"
             android:lines="1"
+            android:background="@android:color/transparent"
             android:singleLine="true" />
     </RelativeLayout>
 

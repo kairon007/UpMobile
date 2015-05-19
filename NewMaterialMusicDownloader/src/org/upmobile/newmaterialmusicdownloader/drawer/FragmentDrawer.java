@@ -39,7 +39,6 @@ public class FragmentDrawer extends Fragment implements Constants {
     private DrawerLayout mDrawerLayout;
     private NavigationDrawerAdapter adapter;
     private View containerView;
-    private View selectedView;
 
     private FragmentDrawerListener drawerListener;
     
@@ -81,8 +80,8 @@ public class FragmentDrawer extends Fragment implements Constants {
             @Override
             public void onClick(View view, final int position) {
 				if ((position + 1) > ManagerFragmentId.playlistFragment() && (position + 1) < ManagerFragmentId.settingFragment()) return;
-            	if ((position + 1) != ManagerFragmentId.settingFragment()){
-            		setItemChecked(view);
+            	if ((position + 1) != ManagerFragmentId.settingFragment()) {
+            		adapter.selectPosition(position);
             	}
                 drawerListener.onDrawerItemSelected(view, position);
                 mDrawerLayout.closeDrawer(containerView);
@@ -196,21 +195,7 @@ public class FragmentDrawer extends Fragment implements Constants {
 	}
 	
 	public void setItemChecked(int position) {
-		View view = recyclerView.getChildAt(--position);
-		if (null != view) {
-			setItemChecked(view);
-		}
-	}
-	
-	public void setItemChecked(View view){
-		if (null != selectedView) {
-			selectedView.setBackgroundColor(Color.TRANSPARENT);
-			((TextView) selectedView.findViewById(R.id.title)).setTextColor(getResources().getColor(Util.getResIdFromAttribute(getActivity(), R.attr.colorTextSecondary)));
-		}
-		selectedView = view;
-		View selectView = recyclerView.findChildViewUnder(view.getX(), view.getY());
-		selectView.setBackgroundColor(getResources().getColor(R.color.selected_item));
-		((TextView) selectView.findViewById(R.id.title)).setTextColor(getResources().getColor(android.R.color.holo_blue_light));
+		adapter.selectPosition(--position);
 	}
 
 }

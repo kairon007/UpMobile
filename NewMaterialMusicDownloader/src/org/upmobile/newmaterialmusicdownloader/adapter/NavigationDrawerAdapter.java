@@ -9,6 +9,7 @@ import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,13 @@ import android.widget.TextView;
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.ViewHolder> {
 
 	private List<NavDrawerItem> data = Collections.emptyList();
-	private LayoutInflater inflater;
+	private Context context;
+	
+	private int mSelectedPosition = -1;
+    private int mTouchedPosition = -1;
 
 	public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
-		inflater = LayoutInflater.from(context);
+		this.context = context;
 		this.data = data;
 		setHasStableIds(true);
 	}
@@ -54,7 +58,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = inflater.inflate(R.layout.nav_drawer_row, parent, false);
+		View view = LayoutInflater.from(context).inflate(R.layout.nav_drawer_row, parent, false);
 		return new ViewHolder(view);
 	}
 
@@ -62,25 +66,30 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		NavDrawerItem current = data.get(position);
 		if (current.getType() == NavDrawerItem.Type.Secondary) {
-			holder.ripple.setClickable(false);
-			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 36);
-			holder.title.setTextAppearance(inflater.getContext(), R.style.boldText);
+			holder.itemView.setClickable(false);
+			holder.ripple.getLayoutParams().height = Util.dpToPx(context, 36);
+			holder.title.setTextAppearance(context, R.style.boldText);
 			setVisibility(holder, false);
 		} else {
-			holder.ripple.setClickable(true);
-			holder.ripple.getLayoutParams().height = Util.dpToPx(inflater.getContext(), 48);
-			holder.title.setTextAppearance(inflater.getContext(), R.style.normalText);
+			holder.itemView.setClickable(true);
+			holder.ripple.getLayoutParams().height = Util.dpToPx(context, 48);
+			holder.title.setTextAppearance(context, R.style.normalText);
 			setVisibility(holder, true);
+			if (current.getIcon() != 0) {
+				holder.icon.setImageResource(current.getIcon());
+			}
 		}
 		holder.title.setText(current.getTitle());
-		if (current.getIcon() != 0) {
-			holder.icon.setImageResource(current.getIcon());
-		}
+		if (mSelectedPosition == position || mTouchedPosition == position) {
+        	holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.selected_item));
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
 	}
 
 	@Override
 	public int getItemCount() {
-		return data.size();
+		return data != null ? data.size() : 0;
 	}
 	
 	@Override
@@ -92,6 +101,13 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 		holder.icon.setVisibility(visible ? View.VISIBLE : View.GONE);
 		holder.line.setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
+	
+	public void selectPosition(int position) {
+        int lastPosition = mSelectedPosition;
+        mSelectedPosition = position;
+        notifyItemChanged(lastPosition);
+        notifyItemChanged(position);
+    }
 
 	class ViewHolder extends RecyclerView.ViewHolder {
 		RippleView ripple;
