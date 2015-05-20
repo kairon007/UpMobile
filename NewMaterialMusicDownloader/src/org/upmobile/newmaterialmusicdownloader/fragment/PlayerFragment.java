@@ -469,8 +469,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setElementsView(0);
 			playerProgress.setIndeterminate(true);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
-			StateKeeper.getInstance().setPlayingSong(song);
-			song.getSpecial().setChecked(true);
 		}
 
 		@Override
@@ -582,8 +580,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		playerProgress.setProgress(0);
 		playerProgress.setSecondaryProgress(0);
 		playerProgress.setIndeterminate(true);
-		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
-		player.getPlayingSong().getSpecial().setChecked(true);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			cancelProgressTask();

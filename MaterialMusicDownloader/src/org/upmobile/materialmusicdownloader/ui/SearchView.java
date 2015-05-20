@@ -28,7 +28,6 @@ import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter
 
 public class SearchView extends OnlineSearchView implements Constants, PlaybackService.OnErrorListener{
 
-	private PlaybackService service;
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
@@ -173,8 +172,6 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 
 		@Override
 		public void start(AbstractSong song) {
-			song.getSpecial().setChecked(true);
-			StateKeeper.getInstance().setPlayingSong(song);
 			notifyAdapter();
 		}
 
@@ -185,11 +182,12 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 		public void pause(AbstractSong song) {}
 
 		@Override
-		public void stop(AbstractSong song) {}
+		public void stop(AbstractSong song) {
+			notifyAdapter();
+		}
 
 		@Override
 		public void stopPressed() {			
-		StateKeeper.getInstance().setPlayingSong(null);
 		notifyAdapter();
 		}
 
@@ -201,13 +199,13 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 
 		@Override
 		public void update(AbstractSong song) {
-			song.getSpecial().setChecked(true);
-			StateKeeper.getInstance().setPlayingSong(song);
 			notifyAdapter();
 		}
 
 		@Override
-		public void error() {}
+		public void error() {
+			notifyAdapter();
+		}
 		
 	};
 

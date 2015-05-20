@@ -7,8 +7,7 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -42,9 +41,10 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener {
+	private class LibraryViewHolder extends BaseLibraryViewHolder {
 
 		private MusicData data;
+		private View indicator;
 
 		public LibraryViewHolder(View v) {
 			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
@@ -53,45 +53,31 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			artist = (TextView) v.findViewById(R.id.artistLine);
 			duration = (TextView) v.findViewById(R.id.chunkTime);
 			threeDot = v.findViewById(R.id.threeDot);
+			indicator = info.findViewById(R.id.playingIndicator);
 		}
-
+		
 		@Override
 		protected void hold(MusicData md, int position) {
 			data = md;
-			setListener();
-			if (data.equals(StateKeeper.getInstance().getPlayingSong())) {
-				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(true);
-			} else if (null != StateKeeper.getInstance().getPlayingSong() && data.getPath().equals(StateKeeper.getInstance().getPlayingSong().getPath())) {
-				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(true);
-			}
-			info.findViewById(R.id.playingIndicator).setVisibility(data.getSpecial().getIsChecked() ? View.VISIBLE : View.GONE);
-			super.hold(data, position);
-		}
-		
-		private void setListener() {
-			info.setOnClickListener(this);
+			info.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Util.hideKeyboard(getContext(), v);
+					if (!service.isCorrectlyState(MusicData.class, getCount())) {
+						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+						service.setArrayPlayback(list);
+					}
+					if (!service.isPrepared() || !data.getPath().equals(service.getPlayingSong().getPath())) {
+						((MainActivity) getContext()).startSong(data);
+					}
+				}
+			});
+			boolean isPlaying = service.isPrepared() && md.getPath().equals(service.getPlayingSong().getPath());
+			indicator.setVisibility(isPlaying ? View.VISIBLE : View.GONE);
+			super.hold(md, position);
 		}
 
-		@Override
-		public void onClick(View view) {
-			switch (view.getId()) {
-			case R.id.boxInfoItem:
-				if (!service.isCorrectlyState(MusicData.class, getCount())) {
-					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-					service.setArrayPlayback(list);
-				}
-				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
-				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(true);
-				notifyDataSetChanged();
-				MainActivity activity = ((MainActivity) getContext());
-				activity.startSong(data);
-				activity.setSelectedItem(LIBRARY_FRAGMENT);
-				break;
-			}
-		}
 	}
 	
 	@Override
@@ -121,7 +107,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 	@Override
 	protected boolean showDeleteItemMenu() {
-		return Boolean.FALSE;
+		return false;
 	}
 
 	@Override

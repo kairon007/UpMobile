@@ -24,7 +24,6 @@ import android.view.View;
 
 public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
 
-	private PlaybackService service;
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
 	}
@@ -87,17 +86,17 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 
 	@Override
 	public boolean isWhiteTheme(Context context) {
-		return Boolean.FALSE;
+		return false;
 	}
 	
 	@Override
 	protected boolean showFullElement() {
-		return Boolean.FALSE;
+		return false;
 	}
 	
 	@Override
 	protected boolean showDownloadButton() {
-		return Boolean.FALSE;
+		return false;
 	}
 	
 	@Override
@@ -107,7 +106,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	public boolean isUseDefaultSpinner() {
-		return Boolean.TRUE;
+		return true;
 	}
 	
 	@Override
@@ -139,7 +138,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	protected boolean showDownloadLabel() {
-		return Boolean.TRUE;
+		return true;
 	}
 	
 	@Override
@@ -151,16 +150,14 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	protected void download(final View v, RemoteSong song, final int position) {
 		downloadListener = new DownloadListener(getContext(), song, 0);
 		downloadListener.setDownloadPath(getDirectory());
-		downloadListener.setUseAlbumCover(Boolean.TRUE);
-		downloadListener.downloadSong(Boolean.FALSE);
+		downloadListener.setUseAlbumCover(true);
+		downloadListener.downloadSong(false);
 	}
 	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
 		public void start(AbstractSong song) {
-			song.getSpecial().setChecked(Boolean.TRUE);
-			StateKeeper.getInstance().setPlayingSong(song);
 			notifyAdapter();
 		}
 
@@ -171,11 +168,12 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		public void pause(AbstractSong song) {}
 
 		@Override
-		public void stop(AbstractSong song) {}
+		public void stop(AbstractSong song) {
+			notifyAdapter();
+		}
 
 		@Override
 		public void stopPressed() {
-			StateKeeper.getInstance().setPlayingSong(null);
 			notifyAdapter();
 		}
 
@@ -187,13 +185,13 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 
 		@Override
 		public void update(final AbstractSong song) {
-			song.getSpecial().setChecked(Boolean.TRUE);
-			StateKeeper.getInstance().setPlayingSong(song);
 			notifyAdapter();
 		}
 
 		@Override
-		public void error() {}
+		public void error() {
+			notifyAdapter();
+		}
 		
 	};
 	
@@ -203,7 +201,9 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			@Override
 			public void run() {
 				if (null == service) {
+					android.util.Log.d("logks", "1");
 					service = PlaybackService.get(getContext());
+					android.util.Log.d("logks", "2");
 				}
 				service.setOnErrorListener(SearchView.this);
 				service.addStatePlayerListener(stateListener);
@@ -225,6 +225,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	protected boolean usePlayingIndicator() {
-		return Boolean.TRUE;
+		return true;
 	}
 }

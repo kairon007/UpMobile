@@ -8,6 +8,7 @@ import java.util.List;
 import org.json.JSONArray;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -24,7 +25,6 @@ import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
@@ -99,6 +99,8 @@ public abstract class OnlineSearchView extends View {
 	protected DownloadClickListener downloadListener;
 	protected ListView listView;
 	protected ProgressDialog progressSecond;	// For PtMusicAppOffline
+	
+	protected PlaybackService service;// init in subclasses
 
 	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
 	private int clickPosition;
@@ -380,11 +382,6 @@ public abstract class OnlineSearchView extends View {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				try {
 					if (position == resultAdapter.getCount()) return; // progress click
-//					if (null != keeper.getPlayingSong()) {
-//						keeper.getPlayingSong().getSpecial().setChecked(false);
-//					}
-					((AbstractSong) resultAdapter.getItem(position)).getSpecial().setChecked(true);
-					keeper.setPlayingSong(((AbstractSong) resultAdapter.getItem(position)));
 					getResultAdapter().notifyDataSetChanged();
 					viewItem = view;
 					clickPosition = position;
@@ -498,8 +495,6 @@ public abstract class OnlineSearchView extends View {
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.search_menu_play) {
-					((AbstractSong) resultAdapter.getItem(position)).getSpecial().setChecked(true);
-					keeper.setPlayingSong(((AbstractSong) resultAdapter.getItem(position)));
 					getResultAdapter().notifyDataSetChanged();
 					click(null, position);
 				}
@@ -786,14 +781,10 @@ public abstract class OnlineSearchView extends View {
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
 			String comment = song.getComment();
-			song.getSpecial().setChecked(((RemoteSong) song).equals(StateKeeper.getInstance().getPlayingSong()));
-//			if (((RemoteSong) song).equals(StateKeeper.getInstance().getPlayingSong())) {
-//				song.getSpecial().setChecked(true);
-//			} else {
-//				song.getSpecial().setChecked(false);
-//			}
 			song.setTitle(title);
 			song.setArtist(artist);
+			boolean hasPlayingSong = null != service && service.isEnqueueToStream()
+									&& (song.equals(service.getPlayingSong()) || (null != song.getPath() && song.getPath().equals(service.getPlayingSong().getPath())));
 			int lableStatus = keeper.checkSongInfo(comment);
 			if (lableStatus == StateKeeper.DOWNLOADED) {
 				song.setPath(keeper.getSongPath(comment));
@@ -804,7 +795,7 @@ public abstract class OnlineSearchView extends View {
 				   .setLine2(title)
 				   .setDownloadLable(showDownloadLabel() ? lableStatus : -1)
 				   .setId(position)
-				   .showPlayingIndicator(((AbstractSong) song).getSpecial().getIsChecked())
+				   .showPlayingIndicator(hasPlayingSong)
 				   .setIcon(isWhiteTheme(getContext()) ? R.drawable.fallback_cover_white : defaultCover() > 0 ? defaultCover() : getDeafultBitmapCover())
 				   .setButtonVisible(showDownloadButton() ? true : false);
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong)song).isHasCoverFromSearch()) {

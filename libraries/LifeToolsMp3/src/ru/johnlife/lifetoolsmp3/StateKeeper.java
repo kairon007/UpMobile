@@ -41,7 +41,6 @@ public class StateKeeper {
 	private ArrayList<Song> results = null;
 	private Player playerInstance;
 	private RemoteSong downloadSong;
-	private AbstractSong playingSong;
 	private View viewItem;
 	private String[] titleArtistLyrics;
 	private String[] tempID3Fields;
@@ -205,6 +204,10 @@ public class StateKeeper {
 		generalFlags = buff;
 		return result;
 	}
+	
+//	public void notifySearchView() {
+//		searchView.notifyAdapter();
+//	}
 	
 	public void saveStateAdapter(OnlineSearchView view) {
 		searchView = null;
@@ -456,17 +459,6 @@ public class StateKeeper {
 		return results;
 	}
 
-	public AbstractSong getPlayingSong() {
-		return playingSong;
-	}
-
-	public void setPlayingSong(AbstractSong playingSong) {
-		if (null != this.playingSong) {
-			this.playingSong.getSpecial().setChecked(false);
-		}
-		this.playingSong = playingSong;
-	}
-	
 	public int getLibaryFirstPosition() {
 		return libaryFirstPosition;
 	}

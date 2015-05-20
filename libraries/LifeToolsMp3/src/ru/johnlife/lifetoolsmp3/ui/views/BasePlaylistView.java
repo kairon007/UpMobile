@@ -189,8 +189,6 @@ public abstract class BasePlaylistView extends View {
 					MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, playlists.get(groupPosition).getId()).commit();
 					playbackService.setArrayPlayback(new ArrayList<AbstractSong>(playlists.get(groupPosition).getSongs()));
 					showPlayerFragment(playlists.get(groupPosition).getSongs().get(childPosition));
-					StateKeeper.getInstance().setPlayingSong((AbstractSong) playlists.get(groupPosition).getSongs().get(childPosition));
-					playlists.get(groupPosition).getSongs().get(childPosition).getSpecial().setChecked(true);
 					return true;
 				}
 				return false;

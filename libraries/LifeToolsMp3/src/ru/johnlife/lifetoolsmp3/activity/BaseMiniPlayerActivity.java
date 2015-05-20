@@ -219,7 +219,6 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		if (!currentFragmentIsPlayer) {
 			showMiniPlayer(isPrepared);
 		}
-		keeper.setPlayingSong(isPrepared ? curr : null);
 		keeper.notifyLable(true);
 		if (isPrepared) {
 			setData(curr);

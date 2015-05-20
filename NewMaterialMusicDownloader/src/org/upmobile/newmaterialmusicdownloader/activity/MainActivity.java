@@ -209,14 +209,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 			@Override
 			public void run() {
-				StateKeeper.getInstance().notifyLable(false);
-				StateKeeper.getInstance().initSongHolder(folder.getAbsolutePath());
+				final StateKeeper keeper = StateKeeper.getInstance();
+				keeper.notifyLable(false);
+				keeper.initSongHolder(folder.getAbsolutePath());
 				checkDownloadingUrl(false);
 				runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
-						StateKeeper.getInstance().notifyLable(true);
+						keeper.notifyLable(true);
 					}
 				});
 			}
@@ -402,7 +403,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	public void setCover(Bitmap bmp) {
-		android.util.Log.d("logd", "setCover: " + bmp);
 		if (null == bmp) {
 			((CircleImageView) findViewById(R.id.mini_player_cover)).setImageResource(R.drawable.ic_album_grey);
 			return;

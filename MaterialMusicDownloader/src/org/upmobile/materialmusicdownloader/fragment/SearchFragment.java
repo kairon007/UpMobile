@@ -5,6 +5,8 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.SearchView;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -53,6 +55,9 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment, Co
 		activity.setTitle(getDrawerTitle());
 		activity.setDrawerEnabled(true);
 		searchView.onResume();
+		if (PlaybackService.hasInstance() && PlaybackService.get(getActivity()).isPrepared()) {
+			searchView.notifyAdapter();
+		}
 		super.onResume();
 	}
 

@@ -7,8 +7,6 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -40,7 +38,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener {
+	private class LibraryViewHolder extends BaseLibraryViewHolder{
 
 		private MusicData data;
 		private ImageView indicator;
@@ -59,40 +57,25 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		@Override
 		protected void hold(MusicData md, int position) {
 			data = md;
-			setListener();
-			if (data.equals(StateKeeper.getInstance().getPlayingSong())) {
-				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(Boolean.TRUE);
-			} else if (null != StateKeeper.getInstance().getPlayingSong() && data.getPath().equals(StateKeeper.getInstance().getPlayingSong().getPath())) {
-				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(Boolean.TRUE);
-			}
-			info.findViewById(R.id.playingIndicator).setVisibility(data.getSpecial().getIsChecked() ? View.VISIBLE : View.GONE);
-			super.hold(data, position);
+			info.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Util.hideKeyboard(getContext(), v);
+					if (!service.isCorrectlyState(MusicData.class, getCount())) {
+						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
+						service.setArrayPlayback(list);
+					}
+					if (!service.isPrepared() || !data.getPath().equals(service.getPlayingSong().getPath())) {
+						((MainActivity) getContext()).startSong(data);
+					}
+				}
+			});
+			boolean isPlaying = service.isPrepared() && md.getPath().equals(service.getPlayingSong().getPath());
+			indicator.setVisibility(isPlaying ? View.VISIBLE : View.GONE);
+			super.hold(md, position);
 		}
 		
-		private void setListener() {
-			info.setOnClickListener(this);
-		}
-
-		@Override
-		public void onClick(View view) {
-			switch (view.getId()) {
-			case R.id.boxInfoItem:
-				Util.hideKeyboard(getContext(), view);
-				if (!service.isCorrectlyState(MusicData.class, getCount())) {
-					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-					service.setArrayPlayback(list);
-				}
-				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
-				StateKeeper.getInstance().setPlayingSong(data);
-				data.getSpecial().setChecked(Boolean.TRUE);
-				notifyDataSetChanged();
-				((MainActivity) getContext()).startSong(data);
-				break;
-			}
-			
-		}
 	}
 	
 	@Override
@@ -104,7 +87,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	public View getUndoView(int paramInt, View paramView, ViewGroup paramViewGroup) {
 		View view = paramView;
 		if (view == null) {
-			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view, paramViewGroup, Boolean.FALSE);
+			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view, paramViewGroup, false);
 		}
 		return view;
 	}

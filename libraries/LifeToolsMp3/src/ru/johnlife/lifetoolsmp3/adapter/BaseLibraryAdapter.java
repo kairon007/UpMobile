@@ -141,8 +141,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
 						service.setArrayPlayback(list);
 					} 
-					((AbstractSong) v.getTag()).getSpecial().setChecked(true);
-					StateKeeper.getInstance().setPlayingSong((AbstractSong) v.getTag());
 					notifyDataSetChanged();
 					startSong((AbstractSong) v.getTag());
 				} else if (paramMenuItem.getItemId() == R.id.library_menu_add_to_playlist) {
@@ -253,8 +251,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 		@Override
 		public void start(AbstractSong song) {
-			song.getSpecial().setChecked(true);
-			StateKeeper.getInstance().setPlayingSong(song);
 			notifyDataSetChanged();
 		}
 
@@ -270,7 +266,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 		@Override
 		public void stopPressed() {
-			StateKeeper.getInstance().setPlayingSong(null);
 			notifyDataSetChanged();
 		}
 
@@ -282,8 +277,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 		@Override
 		public void update(AbstractSong song) {
-			song.getSpecial().setChecked(true);
-			StateKeeper.getInstance().setPlayingSong(song);
 			notifyDataSetChanged();
 		}
 

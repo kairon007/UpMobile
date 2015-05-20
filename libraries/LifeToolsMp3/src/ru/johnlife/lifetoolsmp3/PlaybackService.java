@@ -356,11 +356,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				break;
 			case MSG_PAUSE:
 				if (check(SMODE_PREPARED)) {
-					AbstractSong songPasue = (AbstractSong) msg.obj;
-					helper(State.PAUSE, songPasue);
+					AbstractSong songPause = (AbstractSong) msg.obj;
+					helper(State.PAUSE, songPause);
 					player.pause();
 					mode |= SMODE_PAUSE;
-					sendNotification(false, songPasue.getCover());
+					sendNotification(false, songPause.getCover());
 				}
 				break;
 			case MSG_SEEK_TO:
@@ -511,8 +511,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private void play(boolean fromInternet) {
 		if (fromInternet && null == playingSong.getPath()) {
 			if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
-				player.reset();
-				offMode(SMODE_PREPARED);
+				buildSendMessage(null, MSG_RESET, 0, 0);
 			}
 			onMode(SMODE_GET_URL);
 			((RemoteSong) playingSong).getDownloadUrl(new DownloadUrlListener() {
@@ -903,6 +902,12 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	    manager.cancel(NOTIFICATION_ID);  
 	    stopForeground(true);
 	}  
+	
+	public boolean isEnqueueToStream() {// it mean that mode SMODE_PREPARED or SMODE_START_PREPARED or SMODE_GET_URL have been turned on
+		int songIsPrepared = SMODE_GET_URL | SMODE_START_PREPARE | SMODE_PREPARED; 
+		printStateDebug();
+		return (mode & songIsPrepared) != 0;
+	}
 	
 	public void updatePictureNotification(Bitmap bmp) {
 		sendNotification(isPlaying(), bmp);

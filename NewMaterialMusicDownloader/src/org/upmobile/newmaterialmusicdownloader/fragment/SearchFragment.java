@@ -7,6 +7,8 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.ui.SearchView;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,6 +35,9 @@ public class SearchFragment extends Fragment implements Constants{
 		act.showToolbarShadow(false);
 		searchView.onResume();
 		searchView.restoreState();
+		if (PlaybackService.hasInstance() && PlaybackService.get(getActivity()).isPrepared()) {
+			searchView.notifyAdapter();
+		}
 		super.onResume();
 	}
 	

@@ -158,8 +158,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			getCover(song);
 			setElementsView(0, s);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
-			StateKeeper.getInstance().setPlayingSong(song);
-			song.getSpecial().setChecked(true);
 		}
 
 		@Override
@@ -532,8 +530,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
 		playerProgress.setIndeterminate(true);
-		StateKeeper.getInstance().setPlayingSong(player.getPlayingSong());
-		player.getPlayingSong().getSpecial().setChecked(true);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
 			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
