@@ -116,7 +116,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			} else {
-				showMiniPlayer(true);
+				showMiniPlayer(service.isEnqueueToStream());
 				getFragmentManager().popBackStack();
 			}
 		} else if (currentFragmentID == LIBRARY_FRAGMENT){

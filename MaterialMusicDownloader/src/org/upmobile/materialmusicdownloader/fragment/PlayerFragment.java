@@ -153,10 +153,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			song = s;
 			if (isDestroy) return;
 			setDownloadButtonState(true);
-			setClickablePlayerElement(true);
 			changePlayPauseView(true);
 			getCover(song);
 			setElementsView(0, s);
+			play.setClickable(true);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		}
 
@@ -293,9 +293,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
 			}
 		} 
-		playerProgress.setIndeterminate(!player.isPrepared());
-		playerProgress.setSecondaryProgress(1);
-		playerProgress.setSecondaryProgress(0);
 		initCover();
 		setCoverToZoomView(null);
 		getCover(song);
@@ -303,12 +300,15 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		showLyrics();
 		setElementsView(player.getCurrentPosition(), song);
 		boolean prepared = player.isPrepared();
-		setClickablePlayerElement(prepared);
+		playerProgress.setIndeterminate(prepared);
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		} else {
 			changePlayPauseView(prepared);
+			play.setClickable(false);
+			playerProgress.setProgress(0);
+			playerCurrTime.setText("0:00");
 		}
 		setCheckBoxState(true);
 		cbUseCover.setOnCheckedChangeListener(this);
@@ -514,6 +514,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 */
 	private void play(int delta) throws IllegalArgumentException {
 		if (delta == 0) {
+			if (!player.isPrepared()){
+				playerProgress.setIndeterminate(true);
+			}
 			player.play(song);
 			return;
 		}
@@ -526,8 +529,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		player.shift(delta);
 		player.pause();
 		cbUseCover.setOnCheckedChangeListener(null);
-		setClickablePlayerElement(false);
 		setDownloadButtonState(!player.isGettingURl());
+		play.setClickable(false);
 		playerProgress.setProgress(0);
 		playerProgress.setIndeterminate(true);
 		if (!player.enabledRepeat()) {
@@ -539,7 +542,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		cbUseCover.setOnCheckedChangeListener(this);
 	}
 
-	private void setElementsView(int progress, AbstractSong song) {//TODO
+	private void setElementsView(int progress, AbstractSong song) {
 		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (song.getClass() == MusicData.class || isDownloaded) {
 			download.setVisibility(View.GONE);
@@ -559,12 +562,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		shuffle.setAlpha(player.enabledShuffle() ? 1 : (float) 0.5);
 	}
 
-	private void setClickablePlayerElement(boolean isClickable) {
-		play.setClickable(isClickable);
-		if (!isClickable) {
-			playerCurrTime.setText("0:00");
-		}
-	}
 
 	/**
 	 * @param isPlaying

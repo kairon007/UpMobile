@@ -199,21 +199,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		player.addStatePlayerListener(stateListener);
 		song = player.getPlayingSong();
 		getCover(song);
-		setImageButton();
-		showLyrics();
-		boolean prepared = player.isPrepared();
-		setClickablePlayerElement(prepared);
-		changePlayPauseView(prepared && player.isPlaying());
 		playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		contentView.findViewById(R.id.controlPane).measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		scrollView.recalculateCover(R.id.controlPane, R.id.visualizer);
-		playerProgress.postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				playerProgress.setIndeterminate(!player.isPrepared());
-			}
-		}, 1000);
 		return contentView;
 	}
 	
@@ -361,8 +349,24 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (!stateVisualizer) {
 			setupVisualizerFxAndUI(stateVisualizer);
 		}
+		final boolean prepared = player.isPrepared();
+		if (!prepared) {
+			playerProgress.setProgress(0);
+			playerCurrTime.setTime("0:00");
+		}
+		changePlayPauseView(prepared && player.isPlaying());
+		playerProgress.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				playerProgress.setIndeterminate(!prepared);
+			}
+		}, 1000);
+
+
 		setElementsView(player.getCurrentPosition());
 		showLyrics();
+		setImageButton();
 		cancelProgressTask();
 		thatSongIsDownloaded();
 		super.onResume();
@@ -463,7 +467,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			if (isDestroy) return;
 			if (visualizerIsBroken) setupVisualizerFxAndUI(cbShowVisualizer.isChecked());
 			setDownloadButtonState(true);
-			setClickablePlayerElement(true);
+			play.setClickable(true);
 			play.toggle(true);
 			getCover(song);
 			setElementsView(0);
@@ -566,6 +570,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	 */
 	private void play(final int delta) throws IllegalArgumentException {
 		if (delta == 0) {
+			if (!player.isPrepared()){
+				playerProgress.setIndeterminate(true);
+			}
 			player.play(song);
 			return;
 		}
@@ -573,7 +580,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			undoMessage = MSG_UNDO_REMOVE;
 			undo.clear();
 		}
-		setClickablePlayerElement(false);
+		play.setClickable(false);
 		player.shift(delta);
 		player.pause();
 		setDownloadButtonState(!player.isGettingURl());
@@ -606,6 +613,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setVisibility(View.VISIBLE);
 			parentDownload.setVisibility(View.VISIBLE);
 		}
+		playerProgress.setProgress(progress);
 		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
@@ -629,13 +637,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		} else {
 			drawableShuffle.setAlpha(125);
 			shuffle.setImageDrawable(drawableShuffle);
-		}
-	}
-
-	private void setClickablePlayerElement(final boolean isClickable) {
-		play.setClickable(isClickable);
-		if (!isClickable) {
-			playerCurrTime.setTime("0:00");
 		}
 	}
 

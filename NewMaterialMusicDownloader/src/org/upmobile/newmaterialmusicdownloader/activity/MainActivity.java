@@ -138,7 +138,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		if (drawerFragment.isVisible()) {
 			drawerFragment.closeDrawer();
 		} else if (null != player && player.isVisible()) {
-			showMiniPlayer(true);
+			showMiniPlayer(service.isEnqueueToStream());
 			getFragmentManager().popBackStack();
 			isOpenFromDraver = true;
 			setPlayerFragmentVisible(false);

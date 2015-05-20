@@ -938,7 +938,6 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public boolean isEnqueueToStream() {// it mean that mode SMODE_PREPARED or SMODE_START_PREPARED or SMODE_GET_URL have been turned on
 		int songIsPrepared = SMODE_GET_URL | SMODE_START_PREPARE | SMODE_PREPARED; 
-		printStateDebug();
 		return (mode & songIsPrepared) != 0;
 	}
 	
