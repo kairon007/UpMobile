@@ -67,6 +67,12 @@
                 <action android:name="playbackservice.action.next" />
             </intent-filter>
         </service>
+        
+        <receiver android:name="ru.johnlife.lifetoolsmp3.MediaButtonReceiver" >
+            <intent-filter android:priority="998" >
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
 	<service android:name="ru.johnlife.lifetoolsmp3.HelperService"/>
         

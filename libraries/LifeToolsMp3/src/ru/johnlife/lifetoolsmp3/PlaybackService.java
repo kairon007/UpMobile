@@ -45,7 +45,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 public class PlaybackService  extends Service implements Constants, OnCompletionListener, 
-	OnErrorListener, OnPreparedListener, Handler.Callback {
+	OnErrorListener, OnPreparedListener, Handler.Callback, AudioManager.OnAudioFocusChangeListener {
 	
 	//constants section
 	private static final int SMODE_GET_URL = 0x00000001;
@@ -90,6 +90,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private ArrayList<OnStatePlayerListener> stateListeners = new ArrayList<OnStatePlayerListener>();
 	private OnPlaybackServiceDestroyListener destroyListener;
 	private OnErrorListener errorListener;
+	private AudioManager audioManager;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
 	private MediaPlayer player;
@@ -99,7 +100,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	private PlayerStateUpdater stateUpdater = new PlayerStateUpdater();
 	private double bufferingPercent;
 	private int mode;
-	private boolean isDestroyed = Boolean.FALSE;
+	private boolean isDestroyed = false;
 	
 	public interface OnStatePlayerListener {
 		
@@ -215,7 +216,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			} catch (InterruptedException ignored) {
 			}
 		}
-		instance.activityContext = context;
+		if (null == instance.activityContext ) {
+			instance.activityContext = context;
+		}
 		return instance;
 	}
 	
@@ -236,6 +239,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 		registerReceiver(headsetReceiver, filter);
+		audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		player = new MediaPlayer();
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		player.setOnCompletionListener(this);
@@ -263,6 +267,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		player.release();
 		instance = null;
 		looper.quit();
+		MediaButtonReceiver.unregisterMediaButton(this);
 		removeNotification();
 		super.onDestroy();
 	}
@@ -403,7 +408,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			default:
 				Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
 				break;
-			}
+			} 
+			audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+			CompatIcs.updateRemote(activityContext, getPlayingSong());
+			stockMusicBroadcast();
 			return false;
 		}
 	}
@@ -452,6 +460,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				helper(State.STOP, previousSong);
 			}
 		}
+		CompatIcs.updateRemote(activityContext, getPlayingSong());
+		stockMusicBroadcast();
 	}
 	
 	public void play() {
@@ -543,6 +553,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	private void helper(final State state, final AbstractSong targetSong) {
+		audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+		CompatIcs.updateRemote(activityContext, getPlayingSong());
+		stockMusicBroadcast();
 		if (stateListeners == null) return;
 		Handler h = new Handler(getMainLooper());
 		for (final OnStatePlayerListener stateListener : stateListeners) {
@@ -811,6 +824,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				shift(1);
 			}
 		}
+		if (null != activityContext) {
+			CompatIcs.registerRemote(activityContext, audioManager);
+		}
 		return Service.START_FLAG_REDELIVERY;
 	}
 
@@ -886,8 +902,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		    .addAction(drawable, state, pplayIntent)
 			.addAction(R.drawable.ic_next, getString(R.string.next), pnextIntent)
 			.addAction(R.drawable.ic_close, getString(R.string.close), pcloseIntent)
-		    .setStyle(new Notification.MediaStyle()
-		    .setShowActionsInCompactView(2))
+//		    .setStyle(new Notification.MediaStyle()
+//		    .setShowActionsInCompactView(2))
 		    .setContentTitle(playingSong.getTitle())
 		    .setContentText(playingSong.getArtist())
 		    .setContentIntent(pendingIntent)
@@ -901,7 +917,24 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
 	    manager.cancel(NOTIFICATION_ID);  
 	    stopForeground(true);
-	}  
+	}
+	
+	@Override
+	public void onAudioFocusChange(int type) {
+		CompatIcs.updateRemote(activityContext, getPlayingSong());
+		stockMusicBroadcast();
+	}
+	
+	private void stockMusicBroadcast() {
+		Intent intent = new Intent("com.android.music.playstatechanged");
+		intent.putExtra("playing", true);
+		if (getPlayingSong() != null) {
+			intent.putExtra("track", getPlayingSong().getTitle());
+			intent.putExtra("artist", getPlayingSong().getArtist());
+			intent.putExtra("album", getPlayingSong().getAlbum());
+		}
+		sendBroadcast(intent);
+	}
 	
 	public boolean isEnqueueToStream() {// it mean that mode SMODE_PREPARED or SMODE_START_PREPARED or SMODE_GET_URL have been turned on
 		int songIsPrepared = SMODE_GET_URL | SMODE_START_PREPARE | SMODE_PREPARED; 
