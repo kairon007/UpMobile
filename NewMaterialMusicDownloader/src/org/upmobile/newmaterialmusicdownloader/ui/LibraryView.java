@@ -1,7 +1,6 @@
 package org.upmobile.newmaterialmusicdownloader.ui;
 
 import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
@@ -22,6 +21,9 @@ import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 public class LibraryView extends BaseLibraryView {
+	
+	private TextView message;
+	private ListView lView;
 
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
@@ -34,7 +36,8 @@ public class LibraryView extends BaseLibraryView {
 
 	@Override
 	protected ListView getListView(View view) {
-		return (ListView) view.findViewById(R.id.list);
+		lView = (ListView) view.findViewById(R.id.list);
+		return lView;
 	}
 
 	@Override
@@ -44,7 +47,8 @@ public class LibraryView extends BaseLibraryView {
 
 	@Override
 	public TextView getMessageView(View view) {
-		return (TextView) view.findViewById(R.id.message_listview);
+		message = (TextView) view.findViewById(R.id.message_listview);
+		return message;
 	}
 
 	@Override
@@ -66,10 +70,8 @@ public class LibraryView extends BaseLibraryView {
 	            	adapter.remove(data);
 	            	data.reset(getContext());
 	            	if (adapter.isEmpty()) {
-	        			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
-	        			if (null == emptyMsg) return;
-	        			emptyMsg.setVisibility(View.VISIBLE);
-	        			emptyMsg.setText(R.string.library_empty);
+	        			lView.setEmptyView(message);
+	        			message.setVisibility(View.VISIBLE);
 	        		}
 	            }
 	        }

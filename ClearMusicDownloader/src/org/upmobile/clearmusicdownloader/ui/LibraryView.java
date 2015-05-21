@@ -25,6 +25,9 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 
 public class LibraryView extends BaseLibraryView implements Constants {
 
+	private ListView lView;
+	private TextView message;
+
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
 	}
@@ -36,7 +39,8 @@ public class LibraryView extends BaseLibraryView implements Constants {
 
 	@Override
 	protected ListView getListView(View view) {
-		return (ListView) view.findViewById(R.id.list);
+		lView = (ListView) view.findViewById(R.id.list);
+		return lView;
 	}
 
 	@Override
@@ -51,7 +55,8 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	
 	@Override
 	public TextView getMessageView(View view) {
-		return (TextView) view.findViewById(R.id.message_listview);
+		message = (TextView) view.findViewById(R.id.message_listview);
+		return message;
 	}
 	
 	@Override
@@ -69,9 +74,8 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	            	data.reset(getContext());
 	            	if (adapter.isEmpty()) {
 	        			((MainActivity) getContext()).showPlayerElement();
-	        			TextView emptyMsg = (TextView) ((MainActivity) getContext()).findViewById(R.id.message_listview);
-	        			emptyMsg.setVisibility(View.VISIBLE);
-	        			emptyMsg.setText(R.string.library_empty);
+	        			lView.setEmptyView(message);
+	        			message.setVisibility(View.VISIBLE);
 	        		}
 	            }
 	        }
