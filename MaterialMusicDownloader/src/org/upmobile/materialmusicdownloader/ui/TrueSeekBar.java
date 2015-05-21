@@ -25,7 +25,15 @@ public class TrueSeekBar extends SeekBar {
 		Drawable drawable = context.getResources().getDrawable(R.drawable.progress_indeterminate_horizontal_holo);
 		drawable.setColorFilter(new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
 		setIndeterminateDrawable(drawable);
-		setProgressDrawable(context.getResources().getDrawable(R.drawable.seekbar));
 	}
 
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		boolean current = isIndeterminate();
+		setIndeterminate(!current);
+		super.onSizeChanged(w, h, oldw, oldh);
+		setIndeterminate(current);
+		super.onSizeChanged(w, h, oldw, oldh);
+	}
+	
 }

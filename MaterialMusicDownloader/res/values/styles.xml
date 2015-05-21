@@ -149,13 +149,6 @@
         <item name="rimColor">@color/main_color_accent</item>
     </style>
 
-    <style name="SeerkBar.Indeterminate" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
-        <item name="android:thumb">@drawable/seekbar_selector</item>
-        <item name="android:progressDrawable">@drawable/seekbar</item>
-        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
-        <item name="android:focusable">true</item>
-    </style>
-
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="searchIcon">@drawable/ic_search_ab</item>
     </style>

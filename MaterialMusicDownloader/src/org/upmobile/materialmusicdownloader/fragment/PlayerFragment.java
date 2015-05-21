@@ -166,7 +166,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
 			playerProgress.setProgress(0);
-			playerProgress.setSecondaryProgress(1);
 			playerProgress.setSecondaryProgress(0);
 			song = current;
 			setElementsView(0, current);
@@ -187,13 +186,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				
 				@Override
 				public void run() {
+					playerProgress.setIndeterminate(isOverBuffer);
 					playerProgress.setProgress(time);
 					if (time < playerProgress.getMax() * percent) {
 						playerProgress.setSecondaryProgress(0);
 						playerProgress.setSecondaryProgress((int) (playerProgress.getMax() * percent));
 					}
 					playerCurrTime.setText(Util.getFormatedStrDuration(time));
-					playerProgress.setIndeterminate(isOverBuffer);
 				}
 			});
 		}
@@ -292,7 +291,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				download.setIndeterminateProgressMode(true);
 				download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
 			}
-		} 
+		}
+		percent = 0;
 		initCover();
 		setCoverToZoomView(null);
 		getCover(song);
@@ -308,6 +308,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			changePlayPauseView(prepared);
 			play.setClickable(false);
 			playerProgress.setProgress(0);
+			playerProgress.setSecondaryProgress(0);
 			playerCurrTime.setText("0:00");
 		}
 		setCheckBoxState(true);
@@ -474,8 +475,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				if (fromUser) {
 					try {
-						playerProgress.setSecondaryProgress(0);
-						playerProgress.setSecondaryProgress(Math.max(progress, (int)(playerProgress.getMax() * percent)));
+						seekBar.setSecondaryProgress(0);
+						seekBar.setSecondaryProgress(Math.max(progress, (int) (playerProgress.getMax() * percent)));
 						player.seekTo(progress);
 					} catch (Exception e) {
 						e.printStackTrace();
