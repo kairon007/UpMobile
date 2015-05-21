@@ -1,11 +1,13 @@
 package org.upmobile.clearmusicdownloader.ui;
 
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.adapters.ExpandableAdapterWrapper;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -56,5 +59,10 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected Object[] groupItems() {
 		return new Object[]{BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_down_black_18dp),BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_up_black_18dp)};
+	}
+
+	@Override
+	protected BaseExpandableListAdapter getAdapter(Context context) {
+		return new ExpandableAdapterWrapper(context);
 	}
 }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.ExpandableAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -35,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -66,6 +66,8 @@ public abstract class BasePlaylistView extends View {
 	protected abstract String getDirectory();
 
 	protected abstract int getLayoutId();
+	
+	protected abstract BaseExpandableListAdapter getAdapter(Context context);
 
 	protected abstract void showPlayerFragment(MusicData musicData);
 
@@ -129,7 +131,7 @@ public abstract class BasePlaylistView extends View {
 		createNewPlayList = view.findViewById(R.id.createNewPlaylist);
 		emptyView = getMessageView(view);
 		initListeners();
-		expandableAdapter = new ExpandableAdapter(view.getContext());
+		expandableAdapter = (ExpandableAdapter) (null != getAdapter(view.getContext()) ? getAdapter(view.getContext()) : new ExpandableAdapter(view.getContext()));
 		expandableAdapter.setProjectPrefics(getDirectory());
 		expandableAdapter.setDefaultBmp(getDeafultCover());
 		updatePlaylist();

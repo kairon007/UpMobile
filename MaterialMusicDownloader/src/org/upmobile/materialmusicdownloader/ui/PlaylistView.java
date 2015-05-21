@@ -1,6 +1,7 @@
 package org.upmobile.materialmusicdownloader.ui;
 
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.adapter.ExpandableAdapterWrapper;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.Util;
@@ -14,6 +15,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -124,5 +126,10 @@ public class PlaylistView extends BasePlaylistView{
 	@Override
 	protected Object[] groupItems() {
 		return new Object[]{getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_arrow_down),getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_arrow_up)};
+	}
+
+	@Override
+	protected BaseExpandableListAdapter getAdapter(Context context) {
+		return new ExpandableAdapterWrapper(context);
 	}
 }

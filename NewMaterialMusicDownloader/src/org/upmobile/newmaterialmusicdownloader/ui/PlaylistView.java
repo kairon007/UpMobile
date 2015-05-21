@@ -2,6 +2,7 @@ package org.upmobile.newmaterialmusicdownloader.ui;
 
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+import org.upmobile.newmaterialmusicdownloader.adapter.ExpandableAdapterWrapper;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import ru.johnlife.lifetoolsmp3.Util;
@@ -18,6 +19,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -148,6 +150,11 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	protected boolean isAnimateExpandCollapse() {
 		return true;
+	}
+
+	@Override
+	protected BaseExpandableListAdapter getAdapter(Context context) {
+		return new ExpandableAdapterWrapper(context);
 	}
 
 }

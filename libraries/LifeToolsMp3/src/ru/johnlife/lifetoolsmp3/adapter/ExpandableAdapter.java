@@ -1,10 +1,13 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView.AnimatedExpandableListAdapter;
@@ -12,6 +15,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.ImageView;
@@ -107,16 +111,24 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 		GroupHolder holder;
-		PlaylistData item = getGroup(groupPosition);
+		final PlaylistData item = getGroup(groupPosition);
 		if (convertView == null) {
 			holder = new GroupHolder();
 			convertView = inflater.inflate(R.layout.playlist_group_item, parent, false);
 			holder.title = (TextView) convertView.findViewById(R.id.textTitle);
+			holder.playAll = (View) convertView.findViewById(R.id.playAll);
 			convertView.setTag(holder);
 		} else {
 			holder = (GroupHolder) convertView.getTag();
 		}
 		holder.title.setText(item.getName().replace(projectPrefics, ""));
+		holder.playAll.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				playAll(item, v.getContext());
+			}
+		});
 		return convertView;
 	}
 
@@ -160,6 +172,7 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
 
 	private static class GroupHolder {
 		public TextView title;
+		public View playAll;
 	}
 	
 	private class ResultFilter extends Filter {
@@ -205,5 +218,6 @@ public class ExpandableAdapter extends AnimatedExpandableListAdapter {
             }
 		}
 	}
-
+	
+	public void playAll(final PlaylistData item, Context v) {}
 }

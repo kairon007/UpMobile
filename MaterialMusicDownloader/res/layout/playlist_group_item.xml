@@ -3,36 +3,50 @@
     style="@style/RippleStyleRectangle"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:gravity="center_vertical"
-    android:paddingRight="8dp" >
+    android:gravity="center_vertical" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
-        android:paddingBottom="10dp"
-        android:paddingTop="8dp" >
+        android:clickable="true" >
 
         <com.csform.android.uiapptemplate.font.MusicTextView
             android:id="@+id/customGroupIndicator"
             style="@style/TextViewAppearance.CustomMusicButtons.Colored"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:padding="4dp"
             android:text="@string/font_arrow_down"
             android:textSize="16sp" />
 
         <com.csform.android.uiapptemplate.font.RobotoTextView
             android:id="@+id/textTitle"
             style="@style/TextViewAppearance.Body"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:lines="1" />
+
+        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+            style="@style/RippleStyleCircle"
+            android:layout_width="48dp"
+            android:layout_height="48dp" >
+
+            <com.csform.android.uiapptemplate.font.MusicTextView
+                android:id="@+id/playAll"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="4dp"
+                android:text="@string/font_play"
+                android:textSize="24sp" />
+        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
     </LinearLayout>
 
 </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>

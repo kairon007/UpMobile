@@ -52,7 +52,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/list_selector_white"
+        android:background="@color/white_transparent"
         android:padding="4dp" >
 
         <TextView
