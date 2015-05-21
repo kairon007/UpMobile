@@ -190,7 +190,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT){
-			showMiniPlayer(true);
+			showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
@@ -285,7 +285,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		if (null != currentFragment && currentFragment.isVisible() && currentFragment.getClass() == PlayerFragment.class) {
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
-			showMiniPlayer(true);
+			showMiniPlayer(service.isEnqueueToStream());
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();

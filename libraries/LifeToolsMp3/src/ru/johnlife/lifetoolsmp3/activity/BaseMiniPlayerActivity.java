@@ -306,7 +306,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 				@Override
 				public void run() {
 					song = service.getPlayingSong();
-					if (showMiniPlayer) {
+					if (showMiniPlayer && !currentFragmentIsPlayer) {
 						isMiniPlayerPrepared = true;
 						showMiniPlayer(true);
 						setPlayPauseMini(!service.isPlaying());

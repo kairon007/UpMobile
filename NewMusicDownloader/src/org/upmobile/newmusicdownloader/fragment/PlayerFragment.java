@@ -88,14 +88,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private EditText playerTagsArtist;
 	private int checkIdCover;
     private boolean isDestroy;
-    private boolean isUseAlbumCover = Boolean.TRUE;
+    private boolean isUseAlbumCover = true;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-		parentView = inflater.inflate(R.layout.player_fragment, container, Boolean.FALSE);
+		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		player = PlaybackService.get(getActivity());
-		isDestroy = Boolean.FALSE;
-		setHasOptionsMenu(Boolean.TRUE);
+		isDestroy = false;
+		setHasOptionsMenu(true);
 		init(parentView);
 		playerProgress.setVisibility(View.INVISIBLE);
 		filter = new IntentFilter();
@@ -685,7 +685,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public void run() {
-				Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT);
+				Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
 				player.stopPressed();
 			}
 		});
