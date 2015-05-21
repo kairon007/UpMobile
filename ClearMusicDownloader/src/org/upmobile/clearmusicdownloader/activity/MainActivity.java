@@ -1,7 +1,6 @@
 package org.upmobile.clearmusicdownloader.activity;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
@@ -16,7 +15,6 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
@@ -48,7 +46,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	private SearchView searchView;
 	private String[] titles;
 	private String query;
-	private boolean useCoverHelper = Boolean.TRUE;
+	private boolean useCoverHelper = true;
 	private String folder_path = ClearMusicDownloaderApp.getDirectory();
 	private FileObserver fileObserver = new FileObserver(folder_path) {
 

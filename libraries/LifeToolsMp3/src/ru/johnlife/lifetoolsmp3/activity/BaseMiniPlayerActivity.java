@@ -69,10 +69,10 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		@Override
 		public void update(AbstractSong song) {
 			BaseMiniPlayerActivity.this.song = song;
-			if (miniPlayer.getVisibility() == View.GONE) {
+			if (miniPlayer.getVisibility() == View.GONE || miniPlayer.getVisibility() == View.INVISIBLE) {
 				setData(song);
 			} else {
-				showMiniPlayer(true, true);
+				showMiniPlayer(true, false);
 			}
 		}
 
@@ -117,16 +117,13 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 		}
 
 		@Override
-		public void error() {
-		}
+		public void error() {}
 
 		@Override
-		public void onTrackTimeChanged(int time, boolean isOverBuffer) {
-		}
+		public void onTrackTimeChanged(int time, boolean isOverBuffer) {}
 
 		@Override
-		public void onBufferingUpdate(double percent) {
-		}
+		public void onBufferingUpdate(double percent) {}
 	};
 	
 

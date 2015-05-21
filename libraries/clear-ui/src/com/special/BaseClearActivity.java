@@ -32,7 +32,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
     private LinearLayout topFrame;
 	private Fragment lastOpenedFragment;
 	private TextView tvTitle;
-	protected boolean isBackButtonEnabled = Boolean.FALSE;
+	protected boolean isBackButtonEnabled = false;
   
     protected abstract Fragment[] getFragments();
     protected abstract ResideMenuItem[] getMenuItems();
