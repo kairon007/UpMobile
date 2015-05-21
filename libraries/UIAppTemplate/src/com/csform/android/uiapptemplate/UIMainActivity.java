@@ -149,7 +149,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT){
-			showMiniPlayer(true);
+			showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
 		}
 		getSupportActionBar().setElevation(position == SEARCH_FRAGMENT ? 0 : position != SETTINGS_FRAGMENT && position != 6 ? 16 : 0);
 		currentFragmentIsPlayer = false;

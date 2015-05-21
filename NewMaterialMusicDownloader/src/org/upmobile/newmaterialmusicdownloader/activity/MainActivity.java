@@ -171,7 +171,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		isOpenFromDraver = fromDraver;
 		if (ManagerFragmentId.playerFragment() != fragmentId) {
 			setPlayerFragmentVisible(false);
-			showMiniPlayer(true);
+			showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
 		}
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		Fragment selectedFragment = null;

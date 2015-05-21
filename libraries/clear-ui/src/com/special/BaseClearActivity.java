@@ -9,7 +9,6 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentManager.BackStackEntry;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -109,7 +108,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         			isBackButtonEnabled = true;
         			changeFragment(getPlayerFragment(), true);
         		} else {
-        			showMiniPlayer(true);
+        			showMiniPlayer(null != service ? service.isEnqueueToStream(): false);
         			changeFragment(fragments[i], false);
         		}
         		tvTitle.setText(titles[i]);
@@ -156,21 +155,19 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
     /**
      * Beware, this method is suitable only for api > 11 if you want to port, you need to think of another way
      */
-    
 	@Override
 	public void onBackPressed() {
+		currentFragmentIsPlayer = false;
 		if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[PLAYER_FRAGMENT].getClass().getSimpleName())){
-			currentFragmentIsPlayer = true;
 			getFragmentManager().popBackStack();
-			FragmentManager.BackStackEntry backEntry = (BackStackEntry) getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
+			FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
 			lastOpenedFragment = getFragmentManager().findFragmentByTag(lastFragmentName);
 			String title = getNameCurrentFragment(lastFragmentName);
 			tvTitle.setText(title);
 			manageSearchView(lastFragmentName);
-			showMiniPlayer(true);
+			showMiniPlayer(service.isEnqueueToStream());
 		} else {
-			currentFragmentIsPlayer = false;
 			if (isMiniPlayerPrepared()) {
 				stopChildsServices();
 			} else {

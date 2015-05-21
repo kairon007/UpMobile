@@ -205,10 +205,6 @@ public class StateKeeper {
 		return result;
 	}
 	
-//	public void notifySearchView() {
-//		searchView.notifyAdapter();
-//	}
-	
 	public void saveStateAdapter(OnlineSearchView view) {
 		searchView = null;
 		view.unregisterObserver();

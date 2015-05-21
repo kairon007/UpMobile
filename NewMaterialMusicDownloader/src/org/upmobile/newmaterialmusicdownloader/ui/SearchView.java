@@ -201,9 +201,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			@Override
 			public void run() {
 				if (null == service) {
-					android.util.Log.d("logks", "1");
 					service = PlaybackService.get(getContext());
-					android.util.Log.d("logks", "2");
 				}
 				service.setOnErrorListener(SearchView.this);
 				service.addStatePlayerListener(stateListener);

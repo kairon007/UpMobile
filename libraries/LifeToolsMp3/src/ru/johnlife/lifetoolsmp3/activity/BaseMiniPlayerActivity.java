@@ -97,7 +97,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			showProgress(false);
 			showPlayerElement(true);
 			setPlayPauseMini(false);
-			if (!currentFragmentIsPlayer && song.getClass() == MusicData.class) {
+			if (!currentFragmentIsPlayer && s.getClass() == MusicData.class) {
 				boolean oldIsPrepared = isMiniPlayerPrepared;
 				isMiniPlayerPrepared = true;
 				showMiniPlayer(isShown, oldIsPrepared);

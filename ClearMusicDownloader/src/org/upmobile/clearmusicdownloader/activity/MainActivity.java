@@ -24,6 +24,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
@@ -55,8 +56,9 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			if (event == FileObserver.DELETE_SELF) {
 				File file = new File(folder_path);
 				file.mkdirs();
-				getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.MediaColumns.DATA + " LIKE '" + folder_path + "%'", null);
-				getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+				Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+				getContentResolver().delete(uri, MediaStore.MediaColumns.DATA + " LIKE '" + folder_path + "%'", null);
+				getContentResolver().notifyChange(uri, null);
 			}
 		}
 	};
@@ -285,7 +287,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	@Override
 	protected void showProgress(boolean flag) {
-		progress = ((ImageView) findViewById(R.id.mini_player_progress));
+		progress = findViewById(R.id.mini_player_progress);
 		super.showProgress(flag);
 		if (flag) {
 			progress.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));

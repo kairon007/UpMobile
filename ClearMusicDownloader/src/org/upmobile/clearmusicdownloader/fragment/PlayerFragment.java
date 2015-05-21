@@ -94,6 +94,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton play;
 	private ImageButton previous;
 	private ImageButton forward;
+	private View playProgress;
 	private CheckBox useCover;
 	private FrameLayout playerBtnTitle;
 	private FrameLayout playerBtnArtist;
@@ -139,12 +140,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 		@Override
 		public void start(AbstractSong s) {
-			downloadButtonState(true);
 			song = s.getClass() != MusicData.class ? ((RemoteSong) s).cloneSong() : s;
 			if (isDestroy) return;
-			setClickablePlayerElement(true);
+			playProgress.clearAnimation();
+			playProgress.setVisibility(View.GONE);
+			play.setVisibility(View.VISIBLE);
+			changePlayPauseView(false);
 			showLyrics();
 			setElementsView(0);
+			downloadButtonState(true);
+			playerProgress.setEnabled(true);
 			playerProgress.post(progressAction);
 		}
 
@@ -164,7 +169,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		public void stop(AbstractSong s) {
 			playerProgress.removeCallbacks(progressAction);
 			playerProgress.setProgress(0);
-			setClickablePlayerElement(player.isPrepared());
+			playerCurrTime.setText("0:00");
+			changePlayPauseView(true);
+			playerProgress.setEnabled(false);
 		}
 		
 		@Override
@@ -182,7 +189,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			song = s;
 			setElementsView(0);
 			getCover(song);
-			setClickablePlayerElement(false);
 		}
 
 		@Override
@@ -192,7 +198,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		public void onBufferingUpdate(double percent) {}
 	};
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		parentView = inflater.inflate(R.layout.player, container, false);
@@ -209,10 +214,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		fromMenu = ((MainActivity) getActivity()).isBackButtonEnabled();
 		parentView.findViewById(R.id.title_bar_left_menu).setBackgroundDrawable(getResources().getDrawable(fromMenu ? R.drawable.titlebar_menu_selector : R.drawable.titlebar_back_selector));
 		song = player.getPlayingSong();
-		boolean prepared = player.isPrepared();
-		setClickablePlayerElement(prepared);
-		changePlayPauseView(prepared ? !player.isPlaying() : false);
-		downloadButtonState(!player.isGettingURl());
 		return parentView;
 	}
 	
@@ -243,6 +244,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		getCover(song);
 		startImageAnimation(playerCover);
 		setElementsView(player.getCurrentPosition());
+		boolean prepared = player.isPrepared();
+		changePlayPauseView(prepared ? !player.isPlaying() : true);
+		if (!prepared && player.isEnqueueToStream()) {
+			play.setVisibility(View.GONE);
+			playProgress.setVisibility(View.VISIBLE);
+			playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
+		}
+		playerProgress.setEnabled(prepared);
+		downloadButtonState(!player.isGettingURl());
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
 			download.setVisibility(View.GONE);
@@ -281,7 +291,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		if (!isUseAlbumCover && song.isHasCover()) {
 			undo.clear();
-			clearCover((MusicData) song);
+			if (MusicData.class == song.getClass()) {
+				clearCover((MusicData) song);
+			}
 		}
 		super.onPause();
 	}
@@ -292,23 +304,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		return true;
 	}
 
-	private void setClickablePlayerElement(boolean isClickable) {
-		play.setClickable(isClickable);
-		playerProgress.setEnabled(isClickable);
-		if (isClickable) {
-			play.setImageResource(R.drawable.pause);
-			play.setVisibility(View.VISIBLE);
-			parentView.findViewById(R.id.player_play_progress).clearAnimation();
-			parentView.findViewById(R.id.player_play_progress).setVisibility(View.GONE);
-		} else {
-			playerCurrTime.setText("0:00");
-			playerProgress.setProgress(0);
-			play.setVisibility(View.GONE);
-			parentView.findViewById(R.id.player_play_progress).setVisibility(View.VISIBLE);
-			parentView.findViewById(R.id.player_play_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-		}
-	}
-	
 	/**
 	 * @param isPlaying - If "true", the button changes the picture to "play", if "false" changes to "pause"
 	 */
@@ -325,6 +320,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerTitleBarBack = (Button) view.findViewById(R.id.title_bar_left_menu);
 		playerProgress = (SeekBar) view.findViewById(R.id.player_progress);
 		playerTvTitle = (TextView) view.findViewById(R.id.player_title);
+		playProgress =  view.findViewById(R.id.player_play_progress);
 		playerEtTitle = (EditText) view.findViewById(R.id.player_title_edit_view);
 		playerBtnTitle = (FrameLayout) view.findViewById(R.id.player_edit_title);
 		playerTvArtist = (TextView) view.findViewById(R.id.player_artist);
@@ -443,7 +439,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 				@Override
 				public void onHide(@Nullable Parcelable token) {
-					clearCover((MusicData) song);
+					if (MusicData.class == song.getClass()) {
+						clearCover((MusicData) song);
+					}
 				}
 
 				@Override
@@ -474,12 +472,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void clearCover(MusicData song) {
 		setCheckBoxState(false);
-		if (MusicData.class == song.getClass()) {
-			playerCover.setImageResource(R.drawable.def_cover_circle_web);
-			((MusicData) song).clearCover();
-			((MainActivity) getActivity()).setCover(null);
-			RenameTask.deleteCoverFromFile(new File(song.getPath()));
-		}
+		playerCover.setImageResource(R.drawable.def_cover_circle_web);
+		song.clearCover();
+		((MainActivity) getActivity()).setCover(null);
+		RenameTask.deleteCoverFromFile(new File(song.getPath()));
 		isUseAlbumCover = true;
 		setCheckBoxState(true);
 	}
@@ -496,11 +492,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		long totalTime = song.getDuration() == 0 ? player.getDuration() : song.getDuration();
 		playerTotalTime.setText(Util.getFormatedStrDuration(totalTime));
 		playerProgress.setMax((int) totalTime);
-		if (progress > 0) {
-			playerProgress.setProgress(progress);
-			playerCurrTime.setText(Util.getFormatedStrDuration(progress));
-			playerProgress.post(progressAction);
-		}
+		playerProgress.setProgress(progress);
+		playerCurrTime.setText(Util.getFormatedStrDuration(progress));
+		playerProgress.post(progressAction);
 	}
 		
 	private void updateObject() {
@@ -725,31 +719,32 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	 * delta must be 1 or -1 or 0, 1 - next, -1 - previous, 0 - current song
 	 */
 	private void play(int delta) throws IllegalArgumentException {
-		if (!isUseAlbumCover) {
+		if (!isUseAlbumCover && MusicData.class == song.getClass()) {
 			clearCover((MusicData) song);
 			if (null != undo) {
 				undo.clear();
 			}
 		}
-		switch (delta) {
-		case 0:
+		if (0 == delta) {
+			if (!player.isEnqueueToStream()) {
+				play.setVisibility(View.GONE);
+				playProgress.setVisibility(View.VISIBLE);
+				playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
+			}
 			if (player.isPlaying()) {
 				player.pause();
 			} else {
 				player.play(song);
 			}
-			break;
-		case 1:
-			player.shift(1);
-			downloadButtonState(!player.isGettingURl());
-			break;
-		case -1:
-			player.shift(-1);
-			downloadButtonState(!player.isGettingURl());
-			break;
-		default:
-			throw new IllegalArgumentException("Delta must be -1 < delta < 1");
+			return;
 		}
+		play.setVisibility(View.GONE);
+		playerProgress.setEnabled(false);
+		playerProgress.removeCallbacks(progressAction);
+		playProgress.setVisibility(View.VISIBLE);
+		playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
+		player.shift(delta);
+		downloadButtonState(!player.isGettingURl());
 		int state = StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
 		if (MusicData.class == song.getClass() || StateKeeper.DOWNLOADED <= state) {
 			download.setVisibility(View.GONE);
