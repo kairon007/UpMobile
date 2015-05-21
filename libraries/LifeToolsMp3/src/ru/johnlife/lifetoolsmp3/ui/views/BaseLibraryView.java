@@ -161,15 +161,15 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 					@Override
 					public void run() {
 						fillAdapter(querySong);
-						hideProgress(view);
 						int firstPosition = StateKeeper.getInstance().getLibaryFirstPosition();
 						if (firstPosition != 0 && firstPosition < adapter.getCount()) {
 							listView.setSelection(firstPosition);
 						}
 						if (querySong.isEmpty()) {
+							hideProgress(view);
 							listView.setEmptyView(emptyMessage);
 						}
-					}
+					} 
 
 				}, 1000);
 			}
@@ -267,6 +267,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 				adapter.add(list);
 				adapter.notifyDataSetChanged();
 			}
+			hideProgress(view);
 		}
 		return true;
 	}
@@ -287,6 +288,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		@Override
 		protected ArrayList<MusicData> doInBackground(Void... params) {
 			ArrayList<MusicData> badFiles = new ArrayList<MusicData>();
+			if (srcList.isEmpty()) return null;
 			for (MusicData data : srcList) {
 				if (!new File(data.getPath()).exists()) {
 					badFiles.add(data);
