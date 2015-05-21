@@ -201,7 +201,9 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	@Override
 	protected void onPause() {
 		methodIsCalled = false;
-		service.removeStatePlayerListener(stateListener);
+		if (null != service) {
+			service.removeStatePlayerListener(stateListener);
+		}
 		super.onPause();
 	}
 	
