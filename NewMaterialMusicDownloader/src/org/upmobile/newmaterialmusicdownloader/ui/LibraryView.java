@@ -71,7 +71,6 @@ public class LibraryView extends BaseLibraryView {
 	            	data.reset(getContext());
 	            	if (adapter.isEmpty()) {
 	        			lView.setEmptyView(message);
-	        			message.setVisibility(View.VISIBLE);
 	        		}
 	            }
 	        }

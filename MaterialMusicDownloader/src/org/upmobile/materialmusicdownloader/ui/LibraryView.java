@@ -73,7 +73,6 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	            	data.reset(getContext());
 	            	if (adapter.isEmpty()) {
 	        			lView.setEmptyView(message);
-	        			message.setVisibility(View.VISIBLE);
 	        		}
 	            }
 	        }

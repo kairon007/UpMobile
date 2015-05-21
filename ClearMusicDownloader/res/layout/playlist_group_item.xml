@@ -24,11 +24,17 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/primary_text_color" />
 
-    <ImageView
+    <FrameLayout
         android:id="@+id/playAll"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/selectable_item_bg"
-        android:src="@drawable/play" />
+        android:background="@drawable/selectable_item_bg" >
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_play" />
+    </FrameLayout>
 
 </LinearLayout>

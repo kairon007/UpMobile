@@ -24,11 +24,17 @@
         android:paddingTop="10dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ImageView
+    <FrameLayout
         android:id="@+id/playAll"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/selectable_item_bg"
-        android:src="?attr/mediaPlay" />
+        android:background="@drawable/selectable_item_bg" >
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="?attr/mediaPlay" />
+    </FrameLayout>
 
 </LinearLayout>
