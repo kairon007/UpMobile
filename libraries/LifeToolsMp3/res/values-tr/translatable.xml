@@ -62,23 +62,29 @@
     <string name="create">Oluşturmak</string>
     <string name="retry">Tekrar</string>
     <string name="message_undo_bar">Kapak çıkarıldı</string>
-    <string name="delete_item">öğeyi çıkar</string>    
+    <string name="delete_item">öğeyi çıkar</string>
     <string name="no_songs_in_the_last_playlist">Son oynanan çalma yok şarkılar</string>
     <string name="the_playlist_was_deleted">Oynadığı son kez Playlist silindi</string>
     <string name="playlists_are_missing">Çalma listeleri çevrimdışı</string>
     <string name="undo_deletion">Silme geri al</string>
-	<string name="playlist_cannot_be_empty">Playlist adı boş olamaz</string>
-	<string name="playlist_is_empty">Playlist boş</string>
-	<string name="no_previous_playlists">Hiçbir önceki Çalma listeleri</string>
-	<string name="select_playlist">seç Playlist</string>
-	
-	<string name="folder_name">Klasör adı</string>
+    <string name="playlist_cannot_be_empty">Playlist adı boş olamaz</string>
+    <string name="playlist_is_empty">Playlist boş</string>
+    <string name="no_previous_playlists">Hiçbir önceki Çalma listeleri</string>
+    <string name="select_playlist">seç Playlist</string>
+    <string name="folder_name">Klasör adı</string>
     <string name="playlist_name">Playlist isim</string>
     <string name="does_not_support_type">Oyuncu ses dosyasının bu tür desteklemiyor</string>
     <string name="done">Hazır</string>
     <string name="show_equalizer">Göster grafiker</string>
-    
-        <string name="downloading">İndirme...</string>
+    <string name="downloading">İndirme...</string>
     <string name="downloaded">İndirilen</string>
+    <string name="download_failed">Karşıdan yükleme başarısız oldu</string>
+    <string name="download_error">Şarkı yüklenirken lütfen bekleyin.</string>
+    <string name="download_canceled">Karşıdan yükleme iptal edildi</string>
+    <string name="no_wi_fi">Kablosuz bağlantı</string>
+    <string name="expand">Genişletme</string>
+    <string name="new_folder_dialog_title">Yeni klasör adı</string>
+    <string name="error_getting_url_songs">Hata Başlarken url şarkıları.</string>
+    <string name="turn_on_dm">Lütfen Download Manager üzerinde şarkı indirmek için aygıtınızı açın.</string>
 
 </resources>

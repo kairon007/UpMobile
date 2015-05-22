@@ -63,23 +63,29 @@
     <string name="create">बनाएँ</string>
     <string name="retry">दोहराना</string>
     <string name="message_undo_bar">कवर हटा दिया गया था</string>
-    <string name="delete_item">वस्तु निकालें</string>    
+    <string name="delete_item">वस्तु निकालें</string>
     <string name="no_songs_in_the_last_playlist">पिछले खेला प्लेलिस्ट में कोई गीत नहीं</string>
     <string name="the_playlist_was_deleted">अंतिम बजाने प्लेलिस्ट हटा दिया गया है</string>
     <string name="playlists_are_missing">प्लेलिस्ट ऑफ़लाइन</string>
     <string name="undo_deletion">हटाना पूर्ववत करें</string>
-	<string name="playlist_cannot_be_empty">प्लेलिस्ट का नाम रिक्त नहीं हो सकता</string>
-	<string name="playlist_is_empty">प्लेलिस्ट खाली है</string>
-	<string name="no_previous_playlists">कोई पिछला प्लेलिस्ट</string>
-	<string name="select_playlist">चयन करें प्लेलिस्ट</string>
-	
-	<string name="folder_name">फ़ोल्डर का नाम</string>
+    <string name="playlist_cannot_be_empty">प्लेलिस्ट का नाम रिक्त नहीं हो सकता</string>
+    <string name="playlist_is_empty">प्लेलिस्ट खाली है</string>
+    <string name="no_previous_playlists">कोई पिछला प्लेलिस्ट</string>
+    <string name="select_playlist">चयन करें प्लेलिस्ट</string>
+    <string name="folder_name">फ़ोल्डर का नाम</string>
     <string name="playlist_name">प्लेलिस्ट का नाम</string>
-	<string name="does_not_support_type">खिलाड़ी ऑडियो फ़ाइल के इस प्रकार का समर्थन नहीं करता</string>
-	<string name="done">रेडी</string>
-	<string name="show_equalizer">दिखाएँ Visualizer</string>
-	
-	    <string name="downloading">डाउनलोड कर रहा है...</string>
+    <string name="does_not_support_type">खिलाड़ी ऑडियो फ़ाइल के इस प्रकार का समर्थन नहीं करता</string>
+    <string name="done">रेडी</string>
+    <string name="show_equalizer">दिखाएँ Visualizer</string>
+    <string name="downloading">डाउनलोड कर रहा है...</string>
     <string name="downloaded">डाउनलोड किए गए</string>
-	
+    <string name="download_failed">डाउनलोड विफल रहा है</string>
+    <string name="download_error">कृपया प्रतीक्षा करें जब तक गाना लोड करता है।</string>
+    <string name="download_canceled">डाउनलोड रद्द कर दिया गया है</string>
+    <string name="no_wi_fi">कोई Wi-Fi कनेक्शन</string>
+    <string name="expand">विस्तृत करें</string>
+    <string name="new_folder_dialog_title">नया फ़ोल्डर नाम</string>
+    <string name="error_getting_url_songs">त्रुटि हो रही url गाने।</string>
+    <string name="turn_on_dm">कृपया डाउनलोड प्रबंधक पर गाने डाउनलोड करने के लिए आपकी डिवाइस पर बारी।</string>
+
 </resources>

@@ -65,23 +65,29 @@
     <string name="create">Créer</string>
     <string name="retry">Répétition</string>
     <string name="message_undo_bar">La couverture a été retirée</string>
-    <string name="delete_item">Supprimer l\'élément</string>    
+    <string name="delete_item">Supprimer l\'élément</string>
     <string name="no_songs_in_the_last_playlist">Pas de chansons dans la dernière playlist joué</string>
     <string name="the_playlist_was_deleted">Dernière playlist jouable a été supprimé</string>
     <string name="playlists_are_missing">Playlists déconnecté</string>
     <string name="undo_deletion">Annuler Supprimer</string>
-	<string name="playlist_cannot_be_empty">Nom de la sélection ne peut pas être vide</string>
-	<string name="playlist_is_empty">Playlist est vide</string>
-	<string name="no_previous_playlists">Aucun Playlists précédentes</string>
-	<string name="select_playlist">Sélectionnez playlist</string>
-	
-	<string name="folder_name">Nom du dossier</string>
+    <string name="playlist_cannot_be_empty">Nom de la sélection ne peut pas être vide</string>
+    <string name="playlist_is_empty">Playlist est vide</string>
+    <string name="no_previous_playlists">Aucun Playlists précédentes</string>
+    <string name="select_playlist">Sélectionnez playlist</string>
+    <string name="folder_name">Nom du dossier</string>
     <string name="playlist_name">Nom de la sélection</string>
-	<string name="does_not_support_type">Le lecteur ne supporte pas ce type de fichier audio</string>
-	<string name="done">Prêt</string>
-	<string name="show_equalizer">Afficher visualiseur</string>
-	
-	    <string name="downloading">Téléchargement...</string>
+    <string name="does_not_support_type">Le lecteur ne supporte pas ce type de fichier audio</string>
+    <string name="done">Prêt</string>
+    <string name="show_equalizer">Afficher visualiseur</string>
+    <string name="downloading">Telechargement...</string>
     <string name="downloaded">Téléchargé</string>
-    
+    <string name="download_failed">Le téléchargement est échoué</string>
+    <string name="download_error">Veuillez patienter pendant le charge de la chanson.</string>
+    <string name="download_canceled">Télécharger est annulé</string>
+    <string name="no_wi_fi">Pas de connexion Wi-Fi</string>
+    <string name="expand">Développez</string>
+    <string name="new_folder_dialog_title">Nouveau nom du dossier</string>
+    <string name="error_getting_url_songs">Chansons url obtenir par erreur.</string>
+    <string name="turn_on_dm">Sil vous plait activer Download Manager sur votre appareil pour telecharger la chanson.</string>
+
 </resources>

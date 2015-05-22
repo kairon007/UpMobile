@@ -63,24 +63,29 @@
     <string name="create">Criar</string>
     <string name="retry">Repita</string>
     <string name="message_undo_bar">A tampa foi removida</string>
-    <string name="delete_item">Remove item</string>    
+    <string name="delete_item">Remove item</string>
     <string name="no_songs_in_the_last_playlist">Nenhuma música na última lista jogado</string>
     <string name="the_playlist_was_deleted">Última lista jogável foi excluído</string>
     <string name="playlists_are_missing">Listas de reprodução off-line</string>
     <string name="undo_deletion">Desfazer excluir</string>
-	<string name="playlist_cannot_be_empty">Playlist nome não pode ser vazio</string>
-	<string name="playlist_is_empty">Lista está vazia</string>
-	
-	<string name="no_previous_playlists">Não há listas anteriores</string>
-	<string name="select_playlist">Selecionar Playlist</string>
-	
-	<string name="folder_name">Nome da pasta</string>
+    <string name="playlist_cannot_be_empty">Playlist nome não pode ser vazio</string>
+    <string name="playlist_is_empty">Lista está vazia</string>
+    <string name="no_previous_playlists">Não há listas anteriores</string>
+    <string name="select_playlist">Selecionar Playlist</string>
+    <string name="folder_name">Nome da pasta</string>
     <string name="playlist_name">Nome Playlist</string>
-	<string name="does_not_support_type">O jogador não suporta este tipo de arquivo de áudio</string>
-	<string name="done">Pronto</string>
-	<string name="show_equalizer">Mostrar visualizador</string>
-	
-	    <string name="downloading">Transferido...</string>
+    <string name="does_not_support_type">O jogador não suporta este tipo de arquivo de áudio</string>
+    <string name="done">Pronto</string>
+    <string name="show_equalizer">Mostrar visualizador</string>
+    <string name="downloading">Transferido...</string>
     <string name="downloaded">Transferido</string>
-	
+    <string name="download_failed">Download falhou</string>
+    <string name="download_error">Por favor aguarde enquanto canção carrega.</string>
+    <string name="download_canceled">Download é cancelado</string>
+    <string name="no_wi_fi">Não há conexão Wi-Fi</string>
+    <string name="expand">Expandir</string>
+    <string name="new_folder_dialog_title">Nome da nova pasta</string>
+    <string name="error_getting_url_songs">Canções de url recebendo erro.</string>
+    <string name="turn_on_dm">Por favor, ligue Download Manager no seu dispositivo para baixar a música.</string>
+
 </resources>

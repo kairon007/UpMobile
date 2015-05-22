@@ -84,5 +84,14 @@
 	<string name="downloading">جارى التحميل...</string>
     <string name="downloaded">تم تنزيلها</string>
     
+  <string name="download_failed">فشل في تحميل</string>
+  <string name="download_error">الرجاء الانتظار أثناء تحميل أغنية.</string>
+  <string name="download_canceled">يتم إلغاء تحميل</string>
+  <string name="no_wi_fi">لا يوجد اتصال لاسلكي</string>
+  <string name="expand">قم بتوسيع</string>
+  <string name="new_folder_dialog_title">اسم المجلد الجديد</string>
+  <string name="error_getting_url_songs">خطأ في الحصول على عنوان url الأغاني.</string>
+  <string name="turn_on_dm">الرجاء تشغيل "مدير تحميل" على الجهاز الخاص بك لتحميل الأغنية.</string>
+    
 
 </resources>

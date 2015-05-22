@@ -65,23 +65,29 @@
     <string name="create">Δημιουργήστε</string>
     <string name="retry">επαναλαμβάνω</string>
     <string name="message_undo_bar">Το κάλυμμα αφαιρείται</string>
-    <string name="delete_item">Αφαιρέστε το στοιχείο</string>    
+    <string name="delete_item">Αφαιρέστε το στοιχείο</string>
     <string name="no_songs_in_the_last_playlist">Δεν υπάρχουν τραγούδια στην τελευταία έπαιξε λίστα αναπαραγωγής</string>
     <string name="the_playlist_was_deleted">Τελευταία παίζονται λίστα αναπαραγωγής έχει διαγραφεί</string>
     <string name="playlists_are_missing">Λίστες offline</string>
     <string name="undo_deletion">Αναίρεση διαγραφής</string>
-	<string name="playlist_cannot_be_empty">Το όνομα λίστας αναπαραγωγής δεν μπορεί να είναι κενό</string>
-	<string name="playlist_is_empty">Playlist είναι άδειο</string>
-	<string name="no_previous_playlists">Δεν υπάρχουν προηγούμενες λίστες αναπαραγωγής</string>
-	<string name="select_playlist">Επιλέξτε playlist</string>
-	
-	<string name="folder_name">όνομα φακέλου</string>
+    <string name="playlist_cannot_be_empty">Το όνομα λίστας αναπαραγωγής δεν μπορεί να είναι κενό</string>
+    <string name="playlist_is_empty">Playlist είναι άδειο</string>
+    <string name="no_previous_playlists">Δεν υπάρχουν προηγούμενες λίστες αναπαραγωγής</string>
+    <string name="select_playlist">Επιλέξτε playlist</string>
+    <string name="folder_name">όνομα φακέλου</string>
     <string name="playlist_name">Το όνομα λίστας αναπαραγωγής</string>
     <string name="does_not_support_type">Η συσκευή αναπαραγωγής δεν υποστηρίζει αυτόν τον τύπο αρχείου ήχου</string>
     <string name="done">έτοιμος</string>
     <string name="show_equalizer">Εμφάνιση οραματιστής</string>
-    
-        <string name="downloading">Λήψη...</string>
+    <string name="downloading">Λήψη...</string>
     <string name="downloaded">Κατέβηκε</string>
+    <string name="download_failed">Μεταφορτώνει είναι αποτυχημένος</string>
+    <string name="download_error">Περιμένετε όσο φορτώνει το τραγούδι.</string>
+    <string name="download_canceled">Λήψη θα ακυρωθεί</string>
+    <string name="no_wi_fi">Καμία σύνδεση Wi-Fi</string>
+    <string name="expand">Επεκτείνετε</string>
+    <string name="new_folder_dialog_title">Νέο όνομα φακέλου</string>
+    <string name="error_getting_url_songs">Σφάλμα να πάρει url τραγούδια.</string>
+    <string name="turn_on_dm">Παρακαλώ ενεργοποιήστε Download Manager στη συσκευή σας για να κατεβάσετε το τραγούδι.</string>
 
 </resources>

@@ -63,23 +63,29 @@
     <string name="create">Crea</string>
     <string name="retry">Repeta</string>
     <string name="message_undo_bar">Capacul a fost îndepărtat</string>
-    <string name="delete_item">Eliminați element</string>    
+    <string name="delete_item">Eliminați element</string>
     <string name="no_songs_in_the_last_playlist">Nu melodiile din lista de redare ultimul jucat</string>
     <string name="the_playlist_was_deleted">Ultima lista de redare pot fi redate a fost șters</string>
     <string name="playlists_are_missing">Liste de redare conectat</string>
     <string name="undo_deletion">Anulați șterge</string>
-	<string name="playlist_cannot_be_empty">Numele Playlist nu poate fi gol</string>
-	<string name="playlist_is_empty">Playlist este gol</string>
-	<string name="no_previous_playlists">Nu Liste de redare anterioare</string>
-	<string name="select_playlist">Selectați Playlist</string>
-	
-	<string name="folder_name">Nume folder</string>
+    <string name="playlist_cannot_be_empty">Numele Playlist nu poate fi gol</string>
+    <string name="playlist_is_empty">Playlist este gol</string>
+    <string name="no_previous_playlists">Nu Liste de redare anterioare</string>
+    <string name="select_playlist">Selectați Playlist</string>
+    <string name="folder_name">Nume folder</string>
     <string name="playlist_name">Numele Playlist</string>
     <string name="does_not_support_type">Jucatorul nu acceptă acest tip de fișier audio</string>
     <string name="done">Gata</string>
     <string name="show_equalizer">Afișare Visualizer</string>
-    
-        <string name="downloading">Descărcarea...</string>
+    <string name="downloading">Descărcarea...</string>
     <string name="downloaded">Descarcate</string>
+    <string name="download_failed">Download este nu a reuşit</string>
+    <string name="download_error">Vă rugăm să aşteptaţi în timp ce melodie încarcă.</string>
+    <string name="download_canceled">Descarca este anulat</string>
+    <string name="no_wi_fi">Nici o conexiune Wi-Fi</string>
+    <string name="expand">Extinde</string>
+    <string name="new_folder_dialog_title">Nou pliant nume</string>
+    <string name="error_getting_url_songs">Eroare obtinerea url melodii.</string>
+    <string name="turn_on_dm">Vă rugăm să porniţi Download Manager pe aparat pentru a descărca melodia.</string>
 
 </resources>

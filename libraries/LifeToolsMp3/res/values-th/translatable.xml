@@ -63,23 +63,29 @@
     <string name="create">สร้าง</string>
     <string name="retry">ทำซ้ำ</string>
     <string name="message_undo_bar">ฝาครอบถูกลบออก</string>
-    <string name="delete_item">ลบรายการ</string>    
+    <string name="delete_item">ลบรายการ</string>
     <string name="no_songs_in_the_last_playlist">ไม่มีเพลงในรายการเพลงเล่นล่าสุด</string>
     <string name="the_playlist_was_deleted">ครั้งสุดท้ายที่เขาเล่นถูกลบเพลย์ลิส</string>
     <string name="playlists_are_missing">รายการเพลงออฟไลน์</string>
     <string name="undo_deletion">ยกเลิกการลบ</string>
-	<string name="playlist_cannot_be_empty">ชื่อเพลย์ลิสต้องไม่ว่างเปล่า</string>
-	<string name="playlist_is_empty">เพลย์ลิสเป็นที่ว่างเปล่า</string>
-	<string name="no_previous_playlists">ไม่มีรายการที่จะเล่นก่อนหน้านี้</string>
-	<string name="select_playlist">เลือกเพลย์ลิส</string>
-	
-	<string name="folder_name">ชื่อโฟลเดอร์</string>
+    <string name="playlist_cannot_be_empty">ชื่อเพลย์ลิสต้องไม่ว่างเปล่า</string>
+    <string name="playlist_is_empty">เพลย์ลิสเป็นที่ว่างเปล่า</string>
+    <string name="no_previous_playlists">ไม่มีรายการที่จะเล่นก่อนหน้านี้</string>
+    <string name="select_playlist">เลือกเพลย์ลิส</string>
+    <string name="folder_name">ชื่อโฟลเดอร์</string>
     <string name="playlist_name">ชื่อเพลย์ลิส</string>
     <string name="does_not_support_type">ผู้เล่นไม่สนับสนุนชนิดของไฟล์เสียงนี้</string>
     <string name="done">พร้อมแล้ว</string>
     <string name="show_equalizer">แสดง Visualizer</string>
-    
-        <string name="downloading">ดาวน์โหลด...</string>
+    <string name="downloading">ดาวน์โหลด...</string>
     <string name="downloaded">ดาวน์โหลด</string>
+    <string name="download_failed">ดาวน์โหลดจะล้มเหลว</string>
+    <string name="download_error">กรุณารอขณะโหลดเพลง</string>
+    <string name="download_canceled">ยกเลิกการดาวน์โหลด</string>
+    <string name="no_wi_fi">เชื่อมต่อ Wi-Fi</string>
+    <string name="expand">ขยาย</string>
+    <string name="new_folder_dialog_title">ชื่อโฟลเดอร์ใหม่</string>
+    <string name="error_getting_url_songs">ข้อผิดพลาดในการรับเพลง url</string>
+    <string name="turn_on_dm">กรุณาเปิดการดาวน์โหลดตัวจัดการอุปกรณ์ของคุณเพื่อดาวน์โหลดเพลง</string>
 
 </resources>

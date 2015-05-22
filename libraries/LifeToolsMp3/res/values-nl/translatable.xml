@@ -63,23 +63,29 @@
     <string name="create">Creëren</string>
     <string name="retry">Herhaling</string>
     <string name="message_undo_bar">Het deksel werd verwijderd</string>
-    <string name="delete_item">Item verwijderen</string>    
+    <string name="delete_item">Item verwijderen</string>
     <string name="no_songs_in_the_last_playlist">Geen nummers in de laatst gespeelde afspeellijst</string>
     <string name="the_playlist_was_deleted">Laatste speelbare afspeellijst is verwijderd</string>
     <string name="playlists_are_missing">Afspeellijsten offline</string>
     <string name="undo_deletion">Ongedaan verwijderen</string>
-	<string name="playlist_cannot_be_empty">Playlist naam mag niet leeg zijn</string>
-	<string name="playlist_is_empty">Afspeellijst is leeg</string>
-	<string name="no_previous_playlists">Geen vorige Afspeellijsten</string>
-	<string name="select_playlist">Selecteer playlist</string>
-	
-	<string name="folder_name">Mapnaam</string>
+    <string name="playlist_cannot_be_empty">Playlist naam mag niet leeg zijn</string>
+    <string name="playlist_is_empty">Afspeellijst is leeg</string>
+    <string name="no_previous_playlists">Geen vorige Afspeellijsten</string>
+    <string name="select_playlist">Selecteer playlist</string>
+    <string name="folder_name">Mapnaam</string>
     <string name="playlist_name">Playlist naam</string>
     <string name="does_not_support_type">De speler ondersteunt niet dit soort audiobestand</string>
     <string name="done">Klaar</string>
     <string name="show_equalizer">Toon visualizer</string>
-    
-        <string name="downloading">downloaden...</string>
+    <string name="downloading">downloaden...</string>
     <string name="downloaded">gedownload</string>
+    <string name="download_failed">Downloaden is mislukt</string>
+    <string name="download_error">Een moment geduld a.u.b., lied ladingen.</string>
+    <string name="download_canceled">Download is geannuleerd</string>
+    <string name="no_wi_fi">Geen Wi-Fi verbinding</string>
+    <string name="expand">Uit te breiden</string>
+    <string name="new_folder_dialog_title">Nieuwe mapnaam</string>
+    <string name="error_getting_url_songs">Fout krijgen url nummers.</string>
+    <string name="turn_on_dm">Schakel op Download Manager op uw apparaat te downloaden van het nummer.</string>
 
 </resources>

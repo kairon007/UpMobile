@@ -65,23 +65,29 @@
     <string name="create">ساختن</string>
     <string name="retry">تکرار</string>
     <string name="message_undo_bar">پوشش برداشته شد</string>
-    <string name="delete_item">حذف آیتم</string>    
+    <string name="delete_item">حذف آیتم</string>
     <string name="no_songs_in_the_last_playlist">بدون آهنگ در آخرین لیست پخش بازی</string>
     <string name="the_playlist_was_deleted">تاریخ و زمان آخرین لیست پخش قابل پخش حذف شده است</string>
     <string name="playlists_are_missing">لیست های پخش آنلاین</string>
     <string name="undo_deletion">لغو حذف</string>
-	<string name="playlist_cannot_be_empty">نام لیست پخش نمی تواند خالی باشد</string>
-	<string name="playlist_is_empty">لیست پخش خالی است</string>
-	<string name="no_previous_playlists">هیچ لیست پخشی قبلی</string>
-	<string name="select_playlist">انتخاب لیست پخش</string>
-	
-	<string name="folder_name">نام پوشه</string>
+    <string name="playlist_cannot_be_empty">نام لیست پخش نمی تواند خالی باشد</string>
+    <string name="playlist_is_empty">لیست پخش خالی است</string>
+    <string name="no_previous_playlists">هیچ لیست پخشی قبلی</string>
+    <string name="select_playlist">انتخاب لیست پخش</string>
+    <string name="folder_name">نام پوشه</string>
     <string name="playlist_name">نام لیست پخش</string>
     <string name="does_not_support_type">بهترین بازیکن این نوع فایل های صوتی را پشتیبانی نمی کند</string>
     <string name="done">اماده</string>
     <string name="show_equalizer">نمایش ویژوالایزر</string>
-    
-        <string name="downloading">دانلود...</string>
+    <string name="downloading">دانلود...</string>
     <string name="downloaded">دانلود</string>
-	
+    <string name="download_failed">دانلود شکست خورده است</string>
+    <string name="download_error">لطفا صبر کنید تا لود آهنگ.</string>
+    <string name="download_canceled">دانلود لغو شده است</string>
+    <string name="no_wi_fi">بدون اتصال Wi-Fi</string>
+    <string name="expand">گسترش</string>
+    <string name="new_folder_dialog_title">نام پوشه جدید</string>
+    <string name="error_getting_url_songs">خطا گرفتن آدرس آهنگ.</string>
+    <string name="turn_on_dm">لطفا دانلود منیجر بر روی دستگاه شما برای دانلود آهنگ روشن.</string>
+
 </resources>

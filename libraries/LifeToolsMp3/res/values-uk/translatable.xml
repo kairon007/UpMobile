@@ -63,23 +63,29 @@
     <string name="create">Створити</string>
     <string name="retry">Повторити</string>
     <string name="message_undo_bar">Обкладинка була видалена</string>
-    <string name="delete_item">Видалити елемент</string>    
+    <string name="delete_item">Видалити елемент</string>
     <string name="no_songs_in_the_last_playlist">Ні пісень в останньому програється плейлист</string>
     <string name="the_playlist_was_deleted">В останній раз грав Плейлист був видалений</string>
     <string name="playlists_are_missing">Списки відтворення відсутній</string>
     <string name="undo_deletion">Відмінити видалення</string>
-	<string name="playlist_cannot_be_empty">Назву списку відтворення не може бути порожнім</string>
-	<string name="playlist_is_empty">Плейлист порожній</string>
-	<string name="no_previous_playlists">Немає попередніх Плейлисти</string>
-	<string name="select_playlist">Виберіть плейлист</string>
-	
-	<string name="folder_name">Назва папки</string>
+    <string name="playlist_cannot_be_empty">Назву списку відтворення не може бути порожнім</string>
+    <string name="playlist_is_empty">Плейлист порожній</string>
+    <string name="no_previous_playlists">Немає попередніх Плейлисти</string>
+    <string name="select_playlist">Виберіть плейлист</string>
+    <string name="folder_name">Назва папки</string>
     <string name="playlist_name">Назва плейлиста</string>
     <string name="does_not_support_type">Плеєр не підтримує цей тип аудіофайлу</string>
     <string name="done">Готово</string>
     <string name="show_equalizer">Показати визуализатор</string>
-    
-        <string name="downloading">Завантаження...</string>
+    <string name="downloading">Завантаження...</string>
     <string name="downloaded">Завантажений</string>
+    <string name="download_failed">Помилка завантаження</string>
+    <string name="download_error">Зачекайте, поки пісня навантажень.</string>
+    <string name="download_canceled">Завантаження скасовано</string>
+    <string name="no_wi_fi">Немає зєднання Wi-Fi</string>
+    <string name="expand">Розгорнути</string>
+    <string name="new_folder_dialog_title">Нове імя папки</string>
+    <string name="error_getting_url_songs">Помилка отримання url пісні.</string>
+    <string name="turn_on_dm">Будь ласка Увімкніть диспетчера завантаження вашого пристрою, щоб завантажити пісню.</string>
 
 </resources>

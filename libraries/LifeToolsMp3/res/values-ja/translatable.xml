@@ -63,23 +63,29 @@
     <string name="create">作る</string>
     <string name="retry">リピート</string>
     <string name="message_undo_bar">カバーを除去した</string>
-    <string name="delete_item">アイテムの削除</string>    
+    <string name="delete_item">アイテムの削除</string>
     <string name="no_songs_in_the_last_playlist">最後に再生したプレイリスト内の曲ません</string>
     <string name="the_playlist_was_deleted">最後の再生可能なプレイリストは削除されました</string>
     <string name="playlists_are_missing">プレイリストをオフライン</string>
     <string name="undo_deletion">削除する元に戻す</string>
-	<string name="playlist_cannot_be_empty">プレイリストの名前を空にすることはできません</string>
-	<string name="playlist_is_empty">プレイリストは空です</string>
-	<string name="no_previous_playlists">以前プレイリストません</string>
-	<string name="select_playlist">プレイリスト選択</string>
-	
-	<string name="folder_name">フォルダ名</string>
+    <string name="playlist_cannot_be_empty">プレイリストの名前を空にすることはできません</string>
+    <string name="playlist_is_empty">プレイリストは空です</string>
+    <string name="no_previous_playlists">以前プレイリストません</string>
+    <string name="select_playlist">プレイリスト選択</string>
+    <string name="folder_name">フォルダ名</string>
     <string name="playlist_name">プレイリスト名</string>
     <string name="does_not_support_type">プレイヤーは、オーディオこの種類のファイルをサポートしていません</string>
     <string name="done">レディー</string>
     <string name="show_equalizer">ショービジュアライザ</string>
-    
     <string name="downloading">ダウンロード...</string>
     <string name="downloaded">ダウンロード</string>
+    <string name="download_failed">ダウンロードは失敗しました</string>
+    <string name="download_error">曲を読み込むまでお待ちください。</string>
+    <string name="download_canceled">ダウンロードをキャンセルします。</string>
+    <string name="no_wi_fi">Wi-Fi 接続がありません。</string>
+    <string name="expand">展開</string>
+    <string name="new_folder_dialog_title">新しいフォルダー名</string>
+    <string name="error_getting_url_songs">エラー取得 url 曲。</string>
+    <string name="turn_on_dm">曲をダウンロードするお使いのデバイスにダウンロード マネージャーをつけてください。</string>
 
 </resources>

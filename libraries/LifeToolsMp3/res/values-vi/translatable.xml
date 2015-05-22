@@ -61,23 +61,29 @@
     <string name="create">Sáng tạo</string>
     <string name="retry">Lặp lại</string>
     <string name="message_undo_bar">Các trang bìa đã được gỡ bỏ</string>
-    <string name="delete_item">Xóa mục</string>    
+    <string name="delete_item">Xóa mục</string>
     <string name="no_songs_in_the_last_playlist">Không có bài hát trong danh sách nhạc chơi cuối cùng</string>
     <string name="the_playlist_was_deleted">Lần cuối cùng ông chơi đã bị xóa Playlist</string>
     <string name="playlists_are_missing">Playlists ẩn</string>
     <string name="undo_deletion">Hoàn tác xóa</string>
-	<string name="playlist_cannot_be_empty">Tên danh sách không thể để trống</string>
-	<string name="playlist_is_empty">Playlist có sản phẩm nào</string>
-	<string name="no_previous_playlists">Không Playlists trước</string>
-	<string name="select_playlist">Chọn Playlist</string>
-	
-	<string name="folder_name">Tên thư mục</string>
+    <string name="playlist_cannot_be_empty">Tên danh sách không thể để trống</string>
+    <string name="playlist_is_empty">Playlist có sản phẩm nào</string>
+    <string name="no_previous_playlists">Không Playlists trước</string>
+    <string name="select_playlist">Chọn Playlist</string>
+    <string name="folder_name">Tên thư mục</string>
     <string name="playlist_name">Tên danh sách</string>
     <string name="does_not_support_type">Người chơi không hỗ trợ loại tập tin âm thanh</string>
     <string name="done">Làm xong</string>
     <string name="show_equalizer">Hiện visualizer</string>
-    
-        <string name="downloading">Tải về...</string>
+    <string name="downloading">Tải về...</string>
     <string name="downloaded">Tải về</string>
+    <string name="download_failed">Tải về không thành công</string>
+    <string name="download_error">Xin vui lòng chờ trong khi bài hát tải.</string>
+    <string name="download_canceled">Tải về được hủy bỏ</string>
+    <string name="no_wi_fi">Không có kết nối Wi-Fi</string>
+    <string name="expand">Mở rộng</string>
+    <string name="new_folder_dialog_title">Tên cặp mới</string>
+    <string name="error_getting_url_songs">Bài hát url nhận được lỗi.</string>
+    <string name="turn_on_dm">Vui lòng bật Download Manager trên điện thoại để tải các bài hát.</string>
 
 </resources>

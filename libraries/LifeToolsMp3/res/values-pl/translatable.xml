@@ -63,23 +63,29 @@
     <string name="create">Utworzyć</string>
     <string name="retry">Powtarzać</string>
     <string name="message_undo_bar">Okładka została usunięta</string>
-    <string name="delete_item">Usuń</string>    
+    <string name="delete_item">Usuń</string>
     <string name="no_songs_in_the_last_playlist">Brak utwory z ostatnio odtwarzanej listy odtwarzania</string>
     <string name="the_playlist_was_deleted">Ostatnio odtwarzane playlista została usunięta</string>
     <string name="playlists_are_missing">Listy odtwarzania w trybie offline</string>
     <string name="undo_deletion">Cofnij usunięcie</string>
-	<string name="playlist_cannot_be_empty">Lista odtwarzania Nazwa nie może być puste</string>
-	<string name="playlist_is_empty">Lista odtwarzania jest pusty</string>
-	<string name="no_previous_playlists">Brak wcześniejszych Listy odtwarzania</string>
-	<string name="select_playlist">Wybierz Playlist</string>
-	
-	<string name="folder_name">Nazwa folderu</string>
+    <string name="playlist_cannot_be_empty">Lista odtwarzania Nazwa nie może być puste</string>
+    <string name="playlist_is_empty">Lista odtwarzania jest pusty</string>
+    <string name="no_previous_playlists">Brak wcześniejszych Listy odtwarzania</string>
+    <string name="select_playlist">Wybierz Playlist</string>
+    <string name="folder_name">Nazwa folderu</string>
     <string name="playlist_name">Nazwa listy odtwarzania</string>
     <string name="does_not_support_type">Odtwarzacz nie obsługuje tego typu plików audio</string>
     <string name="done">Gotowy</string>
     <string name="show_equalizer">Pokaż wizualizer</string>
-    
     <string name="downloading">Ściąganie...</string>
     <string name="downloaded">Pobrano</string>
+    <string name="download_failed">Pobierz za darmo nie jest</string>
+    <string name="download_error">Czekaj, piosenki ładunki.</string>
+    <string name="download_canceled">Pobierz za darmo jest anulowane</string>
+    <string name="no_wi_fi">Brak połączenia Wi-Fi</string>
+    <string name="expand">Rozwiń</string>
+    <string name="new_folder_dialog_title">Nazwę nowego folderu</string>
+    <string name="error_getting_url_songs">Błąd coraz url piosenek.</string>
+    <string name="turn_on_dm">Proszę włączyć Menedżer pobierania plików w urządzeniu do pobrania piosenki.</string>
 
 </resources>

@@ -65,23 +65,29 @@
     <string name="create">Vytvořit</string>
     <string name="retry">Opakovat</string>
     <string name="message_undo_bar">Kryt byl odstraněn</string>
-    <string name="delete_item">Odebrat</string>    
+    <string name="delete_item">Odebrat</string>
     <string name="no_songs_in_the_last_playlist">Žádné skladby v posledním přehrávaného seznamu skladeb</string>
     <string name="the_playlist_was_deleted">Poslední přehrát playlist byl smazán</string>
     <string name="playlists_are_missing">Playlisty online</string>
     <string name="undo_deletion">Zpět Odstranit</string>
-	<string name="playlist_cannot_be_empty">Playlist Název nemůže být prázdný</string>
+    <string name="playlist_cannot_be_empty">Playlist Název nemůže být prázdný</string>
     <string name="playlist_is_empty">Playlist je prázdný</string>
     <string name="no_previous_playlists">Žádné předchozí Playlisty</string>
     <string name="select_playlist">Vyberte playlist</string>
-	
-	<string name="folder_name">Název složky</string>
+    <string name="folder_name">Název složky</string>
     <string name="playlist_name">Playlist jméno</string>
     <string name="does_not_support_type">Přehrávač nepodporuje tento typ zvukového souboru</string>
     <string name="done">Připravený</string>
     <string name="show_equalizer">Show visualizer</string>
-    
-        <string name="downloading">Stahování...</string>
+    <string name="downloading">Stahování...</string>
     <string name="downloaded">Staženo</string>
-    
+    <string name="download_failed">Stahování se nezdařilo</string>
+    <string name="download_error">Počkejte prosím, než píseň načte.</string>
+    <string name="download_canceled">Stahování zrušeno</string>
+    <string name="no_wi_fi">Bez Wi-Fi připojení</string>
+    <string name="expand">Rozbalit</string>
+    <string name="new_folder_dialog_title">Název nové složky</string>
+    <string name="error_getting_url_songs">Chyba načítání url skladby.</string>
+    <string name="turn_on_dm">Prosím zapněte na Download Manager zařízení stáhnout písničku.</string>
+
 </resources>

@@ -65,23 +65,29 @@
     <string name="create">Создать</string>
     <string name="retry">Повторить</string>
     <string name="message_undo_bar">Обложка была удалена</string>
-    <string name="delete_item">Удалить элемент</string>    
+    <string name="delete_item">Удалить элемент</string>
     <string name="no_songs_in_the_last_playlist">Нет песен в последнем проигрываемом плейлисте</string>
     <string name="the_playlist_was_deleted">Последний проигрываемый плейлист был удалён</string>
     <string name="playlists_are_missing">Списки воспроизведения отсутствуют</string>
     <string name="undo_deletion">Отменить удаление</string>
-	<string name="playlist_cannot_be_empty">Имя списка воспроизведения не может быть пустым</string>
-	<string name="playlist_is_empty">Плейлист пуст</string>
-	<string name="no_previous_playlists">Нет предыдущих плейлистов</string>
-	<string name="select_playlist">Выберите плейлист</string>
-	
-	<string name="folder_name">Название папки</string>
+    <string name="playlist_cannot_be_empty">Имя списка воспроизведения не может быть пустым</string>
+    <string name="playlist_is_empty">Плейлист пуст</string>
+    <string name="no_previous_playlists">Нет предыдущих плейлистов</string>
+    <string name="select_playlist">Выберите плейлист</string>
+    <string name="folder_name">Название папки</string>
     <string name="playlist_name">Название плейлиста</string>
     <string name="does_not_support_type">Плеер не поддерживает этот тип аудиофайла</string>
     <string name="done">Готово</string>
     <string name="show_equalizer">Показать визуалайзер</string>
-
     <string name="downloading">Загружается...</string>
     <string name="downloaded">Загружено</string>
-    
+    <string name="download_failed">Ошибка загрузки</string>
+    <string name="download_error">Пожалуйста, подождите, пока загружается песня.</string>
+    <string name="download_canceled">Загрузка отменена</string>
+    <string name="no_wi_fi">Нет Wi-Fi соединение</string>
+    <string name="expand">Развернуть</string>
+    <string name="new_folder_dialog_title">Имя новой папки</string>
+    <string name="error_getting_url_songs">Ошибка получения url песни.</string>
+    <string name="turn_on_dm">Пожалуйста, включите менеджер загрузок на вашем устройстве для того, что бы скачать песню.</string>
+
 </resources>

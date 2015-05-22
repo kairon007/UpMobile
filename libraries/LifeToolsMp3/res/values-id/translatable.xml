@@ -63,23 +63,29 @@
     <string name="create">Membuat</string>
     <string name="retry">Mengulang Kembali</string>
     <string name="message_undo_bar">Penutup telah dihapus</string>
-    <string name="delete_item">Menghapus item</string>    
+    <string name="delete_item">Menghapus item</string>
     <string name="no_songs_in_the_last_playlist">Tidak ada lagu dalam bermain playlist terakhir</string>
     <string name="the_playlist_was_deleted">Terakhir playlist dimainkan telah dihapus</string>
     <string name="playlists_are_missing">Playlist secara offline</string>
     <string name="undo_deletion">Urungkan menghapus</string>
-	<string name="playlist_cannot_be_empty">Nama Playlist tidak boleh kosong</string>
-	<string name="playlist_is_empty">Playlist kosong</string>
-	<string name="no_previous_playlists">Tidak ada Playlist sebelumnya</string>
-	<string name="select_playlist">pilih Playlist</string>
-	
-	<string name="folder_name">Nama folder</string>
+    <string name="playlist_cannot_be_empty">Nama Playlist tidak boleh kosong</string>
+    <string name="playlist_is_empty">Playlist kosong</string>
+    <string name="no_previous_playlists">Tidak ada Playlist sebelumnya</string>
+    <string name="select_playlist">pilih Playlist</string>
+    <string name="folder_name">Nama folder</string>
     <string name="playlist_name">Nama Playlist</string>
     <string name="does_not_support_type">Odtwarzacz nie obsługuje tego typu plików audio</string>
     <string name="done">Sudah Siap</string>
     <string name="show_equalizer">Tampilkan visualisator</string>
-    
-        <string name="downloading">Download...</string>
+    <string name="downloading">Download...</string>
     <string name="downloaded">Download</string>
-	
+    <string name="download_failed">Download gagal</string>
+    <string name="download_error">Harap tunggu sementara lagu beban.</string>
+    <string name="download_canceled">Download dibatalkan</string>
+    <string name="no_wi_fi">Tidak ada koneksi Wi-Fi</string>
+    <string name="expand">Memperluas</string>
+    <string name="new_folder_dialog_title">Nama folder baru</string>
+    <string name="error_getting_url_songs">Kesalahan mendapatkan url lagu.</string>
+    <string name="turn_on_dm">Silakan aktifkan Download Manager pada perangkat Anda untuk men-download lagu.</string>
+
 </resources>

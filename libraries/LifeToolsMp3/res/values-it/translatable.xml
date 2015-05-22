@@ -63,24 +63,29 @@
     <string name="create">Creare</string>
     <string name="retry">Ripetizione</string>
     <string name="message_undo_bar">Il coperchio è stato rimosso</string>
-    <string name="delete_item">Rimuovere articolo</string>    
+    <string name="delete_item">Rimuovere articolo</string>
     <string name="no_songs_in_the_last_playlist">Nessun brano nell\'ultimo playlist giocato</string>
     <string name="the_playlist_was_deleted">Ultimo playlist giocabile è stato eliminato</string>
     <string name="playlists_are_missing">Playlist offline</string>
     <string name="undo_deletion">Annulla eliminare</string>
-	<string name="playlist_cannot_be_empty">Nome playlist non può essere vuoto</string>
-	<string name="playlist_is_empty">Playlist è vuota</string>
-	
-	<string name="no_previous_playlists">Nessun precedenti Playlist</string>
-	<string name="select_playlist">Selezionare Playlist</string>
-	
-	<string name="folder_name">Nome cartella</string>
+    <string name="playlist_cannot_be_empty">Nome playlist non può essere vuoto</string>
+    <string name="playlist_is_empty">Playlist è vuota</string>
+    <string name="no_previous_playlists">Nessun precedenti Playlist</string>
+    <string name="select_playlist">Selezionare Playlist</string>
+    <string name="folder_name">Nome cartella</string>
     <string name="playlist_name">Nome playlist</string>
     <string name="does_not_support_type">Il lettore non supporta questo tipo di file audio</string>
     <string name="done">Pronto</string>
     <string name="show_equalizer">Mostra visualizer</string>
-    
-        <string name="downloading">Scaricare...</string>
+    <string name="downloading">Scaricare...</string>
     <string name="downloaded">Scaricato</string>
+    <string name="download_failed">Il download è fallito</string>
+    <string name="download_error">Si prega di attendere mentre canzone carica.</string>
+    <string name="download_canceled">Il download viene annullato</string>
+    <string name="no_wi_fi">Nessuna connessione Wi-Fi</string>
+    <string name="expand">Espandere</string>
+    <string name="new_folder_dialog_title">Nuovo nome della cartella</string>
+    <string name="error_getting_url_songs">Canzoni di url sempre errore.</string>
+    <string name="turn_on_dm">Per favore attivare Download Manager sul dispositivo per scaricare la canzone.</string>
 
 </resources>

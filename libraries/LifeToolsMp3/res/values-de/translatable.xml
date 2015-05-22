@@ -65,23 +65,29 @@
     <string name="create">Schaffen</string>
     <string name="retry">Wiederholung</string>
     <string name="message_undo_bar">Die Abdeckung wurde entfernt</string>
-    <string name="delete_item">Artikel entfernen</string>    
+    <string name="delete_item">Artikel entfernen</string>
     <string name="no_songs_in_the_last_playlist">Keine Titel in der zuletzt abgespielten Playlist</string>
     <string name="the_playlist_was_deleted">Letzte spielbar Playlist gelöscht wurde</string>
     <string name="playlists_are_missing">Playlists offline</string>
     <string name="undo_deletion">Rückgängig löschen</string>
-	<string name="playlist_cannot_be_empty">Playlist Name darf nicht leer sein</string>
+    <string name="playlist_cannot_be_empty">Playlist Name darf nicht leer sein</string>
     <string name="playlist_is_empty">Playlist ist leer</string>
     <string name="no_previous_playlists">Keine Schauplaylists</string>
     <string name="select_playlist">Wählen Sie die Playlists</string>
-	
-	<string name="folder_name">Ordnername</string>
+    <string name="folder_name">Ordnername</string>
     <string name="playlist_name">Playname</string>
-	<string name="does_not_support_type">De speler ondersteunt niet dit soort audiobestand</string>
-	<string name="done">Bereit</string>
-	<string name="show_equalizer">Visualizer anzeigen</string>
-	
-	    <string name="downloading">Herunterladen...</string>
+    <string name="does_not_support_type">De speler ondersteunt niet dit soort audiobestand</string>
+    <string name="done">Bereit</string>
+    <string name="show_equalizer">Visualizer anzeigen</string>
+    <string name="downloading">Herunterladen...</string>
     <string name="downloaded">Heruntergeladen</string>
+    <string name="download_failed">Download ist fehlgeschlagen</string>
+    <string name="download_error">Bitte warten Sie, bis Song lädt.</string>
+    <string name="download_canceled">Download abgebrochen</string>
+    <string name="no_wi_fi">Keine Wi-Fi-Verbindung</string>
+    <string name="expand">Erweitern Sie</string>
+    <string name="new_folder_dialog_title">Neuer Ordnername</string>
+    <string name="error_getting_url_songs">Fehler immer Url-Lieder.</string>
+    <string name="turn_on_dm">Bitte schalten Sie Download Manager auf Ihrem Gerät auf den Song downloaden.</string>
 
 </resources>

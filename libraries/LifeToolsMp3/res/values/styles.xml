@@ -127,5 +127,6 @@
         <item name="matProg_barSpinCycleTime">2000</item>
         <item name="matProg_barColor">@color/main_color_accent</item>
     </style>
+    
 
 </resources>
