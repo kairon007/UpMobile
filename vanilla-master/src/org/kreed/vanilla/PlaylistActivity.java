@@ -24,11 +24,14 @@ package org.kreed.vanilla;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -90,12 +93,14 @@ public class PlaylistActivity extends Activity
 	private Button mEditButton;
 	private Button mDeleteButton;
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle state)
 	{
 		super.onCreate(state);
 		Log.d(getClass().getSimpleName(), "");
-		if ("AppTheme.White".equals(Util.getThemeName(this))) {
+		boolean isWhiteTheme = "AppTheme.White".equals(Util.getThemeName(this));
+		if (isWhiteTheme) {
 			setTheme(R.style.BackActionBar_White);
 		} else {
 			setTheme(R.style.BackActionBar);
@@ -109,7 +114,13 @@ public class PlaylistActivity extends Activity
 		view.setOnItemClickListener(this);
 		view.setOnCreateContextMenuListener(this);
 		mListView = view;
-
+		if (isWhiteTheme) {
+			view.setBackgroundColor(getResources().getColor(android.R.color.white));
+			if (Build.VERSION.SDK_INT > 10) getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.white)));
+		} else {
+			view.setBackgroundColor(getResources().getColor(android.R.color.black));
+			if (Build.VERSION.SDK_INT > 10) getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.black)));
+		}
 		View header = LayoutInflater.from(this).inflate(R.layout.playlist_buttons, null);
 		mEditButton = (Button)header.findViewById(R.id.edit);
 		mEditButton.setOnClickListener(this);

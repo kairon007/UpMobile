@@ -1,25 +1,3 @@
-/*
-* Copyright (C) 2012 Christopher Eby <kreed@kreed.org>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
 package org.kreed.vanilla;
 
 import java.util.List;
@@ -51,13 +29,16 @@ public class PreferencesActivity extends PreferenceActivity {
 	 * Initialize the activity, loading the preference specifications.
 	 */
 
-	private static int colorBlack = R.color.window_background_black;
-	private static int colorWhite = android.R.color.white;
-	private static int colorDark = R.color.window_background_dark;
+	private static int colorBlack;
+	private static int colorWhite;
+	private static int colorDark;
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		colorBlack = getResources().getColor(android.R.color.black);
+		colorWhite = getResources().getColor(android.R.color.white);
+		colorDark = getResources().getColor(android.R.color.black); // old value is R.color.window_background_dark
 		if ("AppTheme.White".equals(Util.getThemeName(this))) {
 			setTheme(R.style.BackActionBar_White);
 		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
@@ -70,9 +51,9 @@ public class PreferencesActivity extends PreferenceActivity {
 			addPreferencesFromResource(R.xml.preferences);
 			if (!Nulldroid_Settings.ENABLE_LYRICS) {
 				CheckBoxPreference mCheckBoxPref = (CheckBoxPreference) findPreference(getString(R.string.lyric_preference));
-//				PreferenceCategory mCategory = (PreferenceCategory) findPreference("category_lyrics");
+				// PreferenceCategory mCategory = (PreferenceCategory) findPreference("category_lyrics");
 				PreferenceScreen screen = getPreferenceScreen();
-				screen.removePreference(mCheckBoxPref);	
+				screen.removePreference(mCheckBoxPref);
 			}
 		}
 	}
@@ -83,7 +64,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		loadHeadersFromResource(R.xml.preference_headers, target);
 		if (!Nulldroid_Settings.ENABLE_LYRICS) {
 			for (int i = 0; i < target.size(); i++) {
-				if (target.get(i).fragment != null && target.get(i).fragment.contains(LyricFragment.class.getSimpleName())){// equalsIgnoreCase(getPackageName()+"."+getClass().getSimpleName()+"$"+LyricFragment.class.getSimpleName())){
+				if (target.get(i).fragment != null && target.get(i).fragment.contains(LyricFragment.class.getSimpleName())) {// equalsIgnoreCase(getPackageName()+"."+getClass().getSimpleName()+"$"+LyricFragment.class.getSimpleName())){
 					target.remove(i);
 				}
 			}
@@ -125,11 +106,9 @@ public class PreferencesActivity extends PreferenceActivity {
 		}
 
 		@Override
-		public View onCreateView(final LayoutInflater inflater,
-				ViewGroup container, Bundle savedInstanceState) {
+		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			Context context = inflater.getContext();
-			View view = (View) super.onCreateView(inflater, container,
-					savedInstanceState);
+			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			if ("AppTheme.White".equals(Util.getThemeName(context))) {
 				view.setBackgroundColor(colorWhite);
 			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
@@ -166,11 +145,9 @@ public class PreferencesActivity extends PreferenceActivity {
 		}
 
 		@Override
-		public View onCreateView(final LayoutInflater inflater,
-				ViewGroup container, Bundle savedInstanceState) {
+		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			Context context = inflater.getContext();
-			View view = (View) super.onCreateView(inflater, container,
-					savedInstanceState);
+			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			if ("AppTheme.White".equals(Util.getThemeName(context))) {
 				view.setBackgroundColor(colorWhite);
 			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
@@ -209,11 +186,9 @@ public class PreferencesActivity extends PreferenceActivity {
 		}
 
 		@Override
-		public View onCreateView(final LayoutInflater inflater,
-				ViewGroup container, Bundle savedInstanceState) {
+		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			Context context = inflater.getContext();
-			View view = (View) super.onCreateView(inflater, container,
-					savedInstanceState);
+			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			if ("AppTheme.White".equals(Util.getThemeName(context))) {
 				view.setBackgroundColor(colorWhite);
 			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
@@ -250,11 +225,9 @@ public class PreferencesActivity extends PreferenceActivity {
 		}
 
 		@Override
-		public View onCreateView(final LayoutInflater inflater,
-				ViewGroup container, Bundle savedInstanceState) {
+		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			Context context = inflater.getContext();
-			View view = (View) super.onCreateView(inflater, container,
-					savedInstanceState);
+			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			if ("AppTheme.White".equals(Util.getThemeName(context))) {
 				view.setBackgroundColor(colorWhite);
 			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
@@ -291,11 +264,9 @@ public class PreferencesActivity extends PreferenceActivity {
 		}
 
 		@Override
-		public View onCreateView(final LayoutInflater inflater,
-				ViewGroup container, Bundle savedInstanceState) {
+		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			Context context = inflater.getContext();
-			View view = (View) super.onCreateView(inflater, container,
-					savedInstanceState);
+			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			view.setBackgroundColor(Color.TRANSPARENT);
 			if ("AppTheme.White".equals(Util.getThemeName(context))) {
 				view.setBackgroundColor(colorWhite);
@@ -333,11 +304,9 @@ public class PreferencesActivity extends PreferenceActivity {
 		}
 
 		@Override
-		public View onCreateView(final LayoutInflater inflater,
-				ViewGroup container, Bundle savedInstanceState) {
+		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			Context context = inflater.getContext();
-			View view = (View) super.onCreateView(inflater, container,
-					savedInstanceState);
+			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			if ("AppTheme.White".equals(Util.getThemeName(context))) {
 				view.setBackgroundColor(colorWhite);
 			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
@@ -348,7 +317,7 @@ public class PreferencesActivity extends PreferenceActivity {
 			return view;
 		}
 	}
-	
+
 	@TargetApi(11)
 	public static class LyricFragment extends PreferenceFragment {
 		@Override
@@ -358,11 +327,9 @@ public class PreferencesActivity extends PreferenceActivity {
 		}
 
 		@Override
-		public View onCreateView(final LayoutInflater inflater,
-				ViewGroup container, Bundle savedInstanceState) {
+		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			Context context = inflater.getContext();
-			View view = (View) super.onCreateView(inflater, container,
-					savedInstanceState);
+			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			if ("AppTheme.White".equals(Util.getThemeName(context))) {
 				view.setBackgroundColor(colorWhite);
 			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
@@ -395,11 +362,9 @@ public class PreferencesActivity extends PreferenceActivity {
 	@TargetApi(11)
 	public static class AboutFragment extends WebViewFragment {
 		@Override
-		public View onCreateView(final LayoutInflater inflater,
-				ViewGroup container, Bundle savedInstanceState) {
+		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			Context context = inflater.getContext();
-			WebView view = (WebView) super.onCreateView(inflater, container,
-					savedInstanceState);
+			WebView view = (WebView) super.onCreateView(inflater, container, savedInstanceState);
 			view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 			view.getSettings().setJavaScriptEnabled(true);
 			view.loadUrl("file:///android_asset/about.html");
