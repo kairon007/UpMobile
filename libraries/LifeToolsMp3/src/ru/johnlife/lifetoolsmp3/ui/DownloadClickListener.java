@@ -80,8 +80,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	private int id;
 	private long progress = 0;
-	private boolean useAlbumCover = Boolean.TRUE;
-	protected boolean interrupted = Boolean.FALSE;
+	private boolean useAlbumCover = true;
+	protected boolean interrupted = false;
 
 	private CanceledCallback cancelDownload = new CanceledCallback() {
 		
@@ -155,7 +155,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		boolean isCached = false;
 		if (!fromCallback) {
-			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, new DownloadCacheCallback() {
+			isCached = DownloadCache.getInstanse().put(songArtist, songTitle, downloadingSong.getComment(), new DownloadCacheCallback() {
 
 				@Override
 				public void callback(Item item) {

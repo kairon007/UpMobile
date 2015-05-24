@@ -30,10 +30,10 @@ public class DownloadCache {
 		return false;
 	}
 	
-	public synchronized boolean put(String artist, String title, DownloadCacheCallback callback) {
+	public synchronized boolean put(String artist, String title, String comment, DownloadCacheCallback callback) {
 		boolean isCached = cache.size() + 1 > CACHE_CAPACITY;
 	    randomId = random.nextInt(9999);
-		Item item = new Item(randomId, artist, title, isCached);
+		Item item = new Item(randomId, artist, title, isCached, comment);
 		item.setCallback(callback);
 		cache.add(item);
 		return isCached;
@@ -67,7 +67,7 @@ public class DownloadCache {
 		for (Item item : cache) {
 			if (item.getArtist().equals(artist) && item.getTitle().equals(title)) {
 				randomId = random.nextInt(9999);
-				deleteItem = new Item(randomId, artist, title, false);
+				deleteItem = new Item(randomId, artist, title, false, AbstractSong.EMPTY_COMMENT);
 			}
 		}
 		if (null != deleteItem) {
@@ -86,18 +86,38 @@ public class DownloadCache {
 		return cachedItems;
 	}
 	
+	public Item getCachedItem(String title, String artist) {
+		for (Item item : cache) {
+			if (item.getArtist().equals(artist) && item.getTitle().equals(title) && item.isCached) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	public String getCommentFromItem(String title, String artist) {
+		for (Item item : cache) {
+			if (item.getArtist().equals(artist) && item.getTitle().equals(title)) {
+				return item.comment;
+			}
+		}
+		return AbstractSong.EMPTY_COMMENT;
+	}
+	
 	public class Item {
 		
 		private long id;
 		private String artist;
 		private String title;
+		private String comment;
 		private boolean isCached;
 		private DownloadCacheCallback callback;
 		private DownloadCacheCallback customCallback;
 		
-		public Item(long id, String artist, String title, boolean isCached) {
+		public Item(long id, String artist, String title, boolean isCached, String comment) {
 			this.artist = artist;
 			this.title = title;
+			this.comment = comment;
 			this.isCached = isCached;
 			this.id = id;
 		}

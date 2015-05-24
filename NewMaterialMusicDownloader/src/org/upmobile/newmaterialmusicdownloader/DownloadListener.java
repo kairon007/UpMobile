@@ -113,7 +113,7 @@ public class DownloadListener extends DownloadClickListener {
 				((BaseMiniPlayerActivity) context).miniPlayerDownloadVisible(true);
 			}
 		});
-		undoBar.show(Boolean.FALSE);
+		undoBar.show(false);
 	}
 	
 	@Override
