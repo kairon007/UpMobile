@@ -946,7 +946,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (status == StateKeeper.DOWNLOADED) {
 			return;
 		} else if (status == StateKeeper.NOT_DOWNLOAD) {
-			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
+			download.setProgress(0);
 			setDownloadButtonState(true);
 		}
 		checkingSong.getDownloadUrl(new DownloadUrlListener() {
@@ -977,8 +977,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				
 						@Override
 						public void run() {
-							download.setIndeterminateProgressMode(true);
-							download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
+							download.setMode(ActionProcessButton.Mode.ENDLESS);
+							download.setProgress(50);
 						}
 					});
 					return;
