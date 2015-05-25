@@ -428,7 +428,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		visualizer.setEnabled(isShowVisualizer);
 	}
-
+	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
@@ -657,6 +657,10 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		((RippleView) download.getParent()).setEnabled(state);
 	}
 	
+	public void setupDownloadButton() {
+		download.setProgress(0);
+		setDownloadButtonState(true);
+	}
 
 	private void openArtistField() {
 		if (tvArtist.getVisibility() == View.VISIBLE) {

@@ -478,6 +478,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		toolbar.getBackground().setAlpha(alpha);
 		toolbarShadow.setAlpha((float) alpha / 255);
 	}
+	
+	public void setupDownloadBtn() { // in PlayerFragment
+		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
+		if (null != player && player.isVisible()) {
+			((PlayerFragment) player).setupDownloadButton();
+		}
+	}
 
 	@Override
 	public void onDrawerItemSelected(View view, int position) {

@@ -94,7 +94,7 @@ public class DownloadListener extends DownloadClickListener {
 	}
 	
 	@Override
-	public void showMessage(final Context context, String message) {
+	public void showMessage(final Context context, final String message) {
 		UndoBarController.clear((MainActivity) context);
 		undoBar = new UndoBar(((Activity) context));
 		undoBar.message(message);
@@ -105,6 +105,10 @@ public class DownloadListener extends DownloadClickListener {
 			public void onUndo(Parcelable token) {
 				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 				manager.remove(currentDownloadId);
+				String str =  context.getResources().getString(R.string.download_started);
+				if (message.startsWith(str)) {
+					((MainActivity) context).setupDownloadBtn();
+				}
 				StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
 				DownloadCache.getInstanse().remove(downloadingSong);
 				if (null != cancelDownload) {

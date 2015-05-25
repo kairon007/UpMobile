@@ -578,6 +578,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		download.setEnabled(state);
 		ciRippleView.setEnabled(state);
 	}
+	
+	public void setupDownloadButton() {
+		download.setProgress(0);
+		setDownloadButtonState(true);
+	}
 
 	private void openArtistField() {
 		if (tvArtist.getVisibility() == View.VISIBLE) {

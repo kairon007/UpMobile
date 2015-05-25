@@ -236,6 +236,13 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		((ImageView) findViewById(R.id.mini_player_download)).setImageBitmap(bmp);
 	}
 	
+	public void setupDownloadBtn() { // in PlayerFragment
+		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
+		if (null != player && player.isVisible()) {
+			((PlayerFragment) player).setupDownloadButton();
+		}
+	}
+	
 	@Override
 	public void onFolderSelection(final File folder) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
