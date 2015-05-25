@@ -102,7 +102,6 @@
                             android:maxLines="2"
                             android:text="@string/edit_mp3_use_album_cover" />
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,8 +141,8 @@
                                     android:layout_height="24dp"
                                     android:layout_gravity="end|top"
                                     android:layout_weight="0"
-                                    android:paddingLeft="4dp"
                                     android:alpha="0.5"
+                                    android:paddingLeft="4dp"
                                     android:src="@drawable/ic_mode_edit_grey" />
                             </LinearLayout>
                         </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
@@ -193,8 +192,8 @@
                                     android:layout_height="24dp"
                                     android:layout_gravity="end|top"
                                     android:layout_weight="0"
-                                    android:paddingLeft="4dp"
                                     android:alpha="0.5"
+                                    android:paddingLeft="4dp"
                                     android:src="@drawable/ic_mode_edit_grey" />
                             </LinearLayout>
                         </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
@@ -304,9 +303,9 @@
                             android:layout_height="56dp"
                             android:layout_gravity="center_horizontal|center_vertical"
                             app:colorButton="?attr/colorPrimary"
-                            app:pauseBarHeight="40"
                             app:mainColor="@android:color/transparent"
                             app:pauseBackground="@android:color/transparent"
+                            app:pauseBarHeight="40"
                             app:playBackground="@android:color/transparent" />
                     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
@@ -347,14 +346,19 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp" >
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton
+                    <ru.johnlife.lifetoolsmp3.ui.widget.processbutton.iml.ActionProcessButton
                         android:id="@+id/download"
-                        style="@style/CircularProgressBarStyle.Full"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:minHeight="48dp"
-                        android:text="@string/download_dialog_download" />
+                        android:layout_height="48dp"
+                        android:text="@string/download_dialog_download"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        app:pb_colorComplete="?attr/colorPrimary"
+                        app:pb_colorNormal="?attr/colorPrimary"
+                        app:pb_colorPressed="?attr/colorPrimaryDark"
+                        app:pb_colorProgress="?attr/colorAccent"
+                        app:pb_textComplete="@string/downloaded"
+                        app:pb_textProgress="@string/downloading" />
                 </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
                 <FrameLayout

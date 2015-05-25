@@ -37,7 +37,7 @@ import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar.OnProgressChangeListener;
-import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
+import ru.johnlife.lifetoolsmp3.ui.widget.processbutton.iml.ActionProcessButton;
 import ru.johnlife.lifetoolsmp3.ui.widget.visualizer.SimpleVisualizerView;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -95,7 +95,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private View contentView;
 
 	private NotifyingScrollView scrollView;
-	private CircularProgressButton download;
+	private ActionProcessButton download;
 	private LinearLayout artistBox;
 	private LinearLayout titleBox;
 	
@@ -152,7 +152,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		public void onProgressUpdate(Integer... values) {
 			if (canceled) return;
 			int progress = values[0];
-			download.setIndeterminateProgressMode(false);
+			download.setMode(ActionProcessButton.Mode.PROGRESS);
 			download.setProgress(progress > 0 ? progress : 1);
 			download.setClickable(false);
 			((RippleView) download.getParent()).setEnabled(false);
@@ -162,8 +162,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		public void onCancelled() {
 			canceled = true;
 			((RippleView) download.getParent()).setEnabled(true);
-			download.setIndeterminateProgressMode(false);
 			download.setProgress(0);
+			download.setClickable(true);
+			download.setEnabled(true);
 		}
 
 		@Override
@@ -182,7 +183,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			canceled = false;
 			((RippleView) download.getParent()).setEnabled(false);
 			download.setClickable(false);
-			download.setIndeterminateProgressMode(true);
+			download.setMode(ActionProcessButton.Mode.ENDLESS);
 			download.setProgress(50);
 		}
 
@@ -213,7 +214,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		forward = (ImageView) contentView.findViewById(R.id.next);
 		shuffle = (ImageView) contentView.findViewById(R.id.shuffle);
 		repeat = (ImageView) contentView.findViewById(R.id.repeat);
-		download = (CircularProgressButton) contentView.findViewById(R.id.download);
+		download = (ActionProcessButton) contentView.findViewById(R.id.download);
 		playerProgress = (DiscreteSeekBar) contentView.findViewById(R.id.progress_track);
 		tvTitle = (TextView) contentView.findViewById(R.id.songName);
 		etTitle = (EditText) contentView.findViewById(R.id.songNameEdit);
@@ -478,7 +479,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		@Override
 		public void update(AbstractSong current) {
 			if (isDestroy) return;
-			download.setIndeterminateProgressMode(false);
+			setDownloadButtonState(true);
 			download.setProgress(0);
 			song = current;
 			showLyrics();
@@ -895,7 +896,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			return;
 		}
 		if (downloadListener.getSongID() == -1) {
-			download.setIndeterminateProgressMode(true);
+			download.setMode(ActionProcessButton.Mode.ENDLESS);
 			download.setProgress(50);
 		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);

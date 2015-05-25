@@ -110,5 +110,8 @@
     <dimen name="md_action_corner_radius">2dp</dimen>
     <dimen name="md_progressdialog_paddingwithtitle">4dp</dimen>
     <!-- end -->
+    
+        <dimen name="corner_radius">2dp</dimen>
+    <dimen name="layer_padding">3dp</dimen>
         
 </resources>

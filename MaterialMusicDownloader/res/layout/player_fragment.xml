@@ -291,14 +291,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" >
 
-        <ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton
+        <ru.johnlife.lifetoolsmp3.ui.widget.processbutton.iml.ActionProcessButton
             android:id="@+id/download"
-            style="@style/CircularProgressBarStyle.Full"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minHeight="48dp"
-            android:text="@string/download_dialog_download" />
+            android:layout_height="48dp"
+            android:text="@string/download_dialog_download"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:pb_colorComplete="?attr/colorPrimary"
+            app:pb_colorNormal="?attr/colorPrimary"
+            app:pb_colorPressed="?attr/colorPrimary"
+            app:pb_colorProgress="?attr/colorAccent"
+            app:pb_textComplete="@string/downloaded"
+            app:pb_textProgress="@string/downloading" />
     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
     <FrameLayout

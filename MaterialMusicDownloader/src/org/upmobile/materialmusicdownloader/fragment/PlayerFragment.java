@@ -29,7 +29,7 @@ import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
 import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
-import ru.johnlife.lifetoolsmp3.ui.widget.progressbutton.CircularProgressButton;
+import ru.johnlife.lifetoolsmp3.ui.widget.processbutton.iml.ActionProcessButton;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
@@ -82,7 +82,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private PullToZoomScrollView scrollView;
 	private View contentView;
 
-	private CircularProgressButton download;
+	private ActionProcessButton download;
 	private RippleView ciRippleView;
 	private UndoBar undo;
 	private LinearLayout artistBox;
@@ -163,7 +163,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		public void update(AbstractSong current) {
 			if (isDestroy) return;
-			download.setIndeterminateProgressMode(false);
+			download.setMode(ActionProcessButton.Mode.PROGRESS);
 			download.setProgress(0);
 			playerProgress.setProgress(0);
 			playerProgress.setSecondaryProgress(0);
@@ -207,7 +207,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		public void onProgressUpdate(Integer... values) {
 			if (canceled) return;
 			int progress = values[0];
-			download.setIndeterminateProgressMode(false);
+			download.setMode(ActionProcessButton.Mode.PROGRESS);
 			download.setProgress(progress > 0 ? progress : 1);
 			download.setClickable(false);
 			ciRippleView.setEnabled(false);
@@ -216,7 +216,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		@Override
 		public void onCancelled() {
 			canceled = true;
-			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
+			download.setProgress(0);
 			setDownloadButtonState(true);
 			ciRippleView.setEnabled(true);
 		}
@@ -225,10 +225,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		public void onPostExecute(String params) {
 			if (FAILURE.equals(params)) {
 				((MainActivity) getActivity()).showMessage(R.string.download_failed);
-				download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
+				download.setProgress(0);
 				setDownloadButtonState(true);
 			} else {
-				download.setProgress(canceled ? CircularProgressButton.IDLE_STATE_PROGRESS : CircularProgressButton.SUCCESS_STATE_PROGRESS);
+				download.setProgress(canceled ? 0 : 100);
 			}
 		}
 
@@ -237,8 +237,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			canceled = false;
 			ciRippleView.setEnabled(false);
 			download.setClickable(false);
-			download.setIndeterminateProgressMode(true);
-			download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
+			download.setMode(ActionProcessButton.Mode.ENDLESS);
+			download.setProgress(50);
 		}
 
 	};
@@ -288,8 +288,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (StateKeeper.DOWNLOADING == state) {
 				((RippleView) download.getParent()).setEnabled(false);
 				download.setClickable(false);
-				download.setIndeterminateProgressMode(true);
-				download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
+				download.setMode(ActionProcessButton.Mode.ENDLESS);
+				download.setProgress(50);
 			}
 		}
 		percent = 0;
@@ -435,7 +435,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		forward = (TextView) view.findViewById(R.id.next);
 		shuffle = (TextView) view.findViewById(R.id.shuffle);
 		repeat = (TextView) view.findViewById(R.id.repeat);
-		download = (CircularProgressButton) view.findViewById(R.id.download);
+		download = (ActionProcessButton) view.findViewById(R.id.download);
 		ciRippleView = (RippleView) view.findViewById(R.id.circularRipple);
 		playerProgress = (TrueSeekBar) view.findViewById(R.id.progress_track);
 		tvTitle = (TextView) view.findViewById(R.id.songName);
@@ -536,7 +536,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerProgress.setIndeterminate(true);
 		if (!player.enabledRepeat()) {
 			setCheckBoxState(false);
-			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
+			download.setProgress(0);
 		}
 		cancelProgressTask();
 		thatSongIsDownloaded();
@@ -751,8 +751,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			return;
 		}
 		if (downloadListener.getSongID() == -1) {
-			download.setIndeterminateProgressMode(true);
-			download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
+			download.setMode(ActionProcessButton.Mode.ENDLESS);
+			download.setProgress(50);
 		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
@@ -809,7 +809,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 								
 								@Override
 								public void run() {
-									download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
+									download.setProgress(0);
 									setDownloadButtonState(true);
 								}
 							});
@@ -848,8 +848,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			public void run() {
 				((MainActivity) getActivity()).showMessage(error);
 				player.stopPressed();
-				download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
-				download.setIndeterminateProgressMode(false);
+				download.setProgress(0);
 				setDownloadButtonState(true);
 			}
 		});
