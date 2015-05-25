@@ -72,7 +72,8 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 		if (AbstractSong.EMPTY_COMMENT.equals(comment)) {
 			comment = DownloadCache.getInstanse().getCommentFromItem(item.getTitle(), item.getArtist());
 		}
-		if (comment.equals(PlaybackService.get(getContext()).getPlayingSong().getComment())) {
+		PlaybackService service = PlaybackService.get(getContext());
+		if (service.isPrepared() && comment.equals(service.getPlayingSong().getComment())) {
 			((BaseMiniPlayerActivity) getContext()).hideDownloadButton(false);
 		}
 		StateKeeper.getInstance().removeSongInfo(comment);

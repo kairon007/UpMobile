@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask;
 import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -78,6 +79,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
+	private ProgressUpdaterListener progressListener;
 
 	private PullToZoomScrollView scrollView;
 	private View contentView;
@@ -171,6 +173,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setElementsView(0, current);
 			setCoverToZoomView(null);
 			showLyrics();
+			thatSongIsDownloaded(current);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 		}
@@ -196,51 +199,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				}
 			});
 		}
-	};
-	
-	private ProgressUpdaterListener progressListener = new ProgressUpdaterListener() {
-
-		private static final String FAILURE = "failure";
-		Boolean canceled = false;
-
-		@Override
-		public void onProgressUpdate(Integer... values) {
-			if (canceled) return;
-			int progress = values[0];
-			download.setMode(ActionProcessButton.Mode.PROGRESS);
-			download.setProgress(progress > 0 ? progress : 1);
-			download.setClickable(false);
-			ciRippleView.setEnabled(false);
-		}
-
-		@Override
-		public void onCancelled() {
-			canceled = true;
-			download.setProgress(0);
-			setDownloadButtonState(true);
-			ciRippleView.setEnabled(true);
-		}
-
-		@Override
-		public void onPostExecute(String params) {
-			if (FAILURE.equals(params)) {
-				((MainActivity) getActivity()).showMessage(R.string.download_failed);
-				download.setProgress(0);
-				setDownloadButtonState(true);
-			} else {
-				download.setProgress(canceled ? 0 : 100);
-			}
-		}
-
-		@Override
-		public void onPreExecute() {
-			canceled = false;
-			ciRippleView.setEnabled(false);
-			download.setClickable(false);
-			download.setMode(ActionProcessButton.Mode.ENDLESS);
-			download.setProgress(50);
-		}
-
 	};
 	
 	@Override
@@ -314,7 +272,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setCheckBoxState(true);
 		cbUseCover.setOnCheckedChangeListener(this);
 		cancelProgressTask();
-		thatSongIsDownloaded();
+		initUpdater();
+		thatSongIsDownloaded(song);
 		super.onResume();
 	}
 
@@ -500,6 +459,54 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		player.setOnErrorListener(this);
 	}
 	
+	private void initUpdater() {
+		progressListener = new ProgressUpdaterListener() {
+
+			private static final String FAILURE = "failure";
+			boolean canceled = false;
+
+			@Override
+			public void onProgressUpdate(Integer... values) {
+				if (canceled) return;
+				int progress = values[0];
+				download.setMode(ActionProcessButton.Mode.PROGRESS);
+				download.setProgress(progress > 0 ? progress : 1);
+				download.setClickable(false);
+				((RippleView) download.getParent()).setEnabled(false);
+			}
+
+			@Override
+			public void onCancelled() {
+				canceled = true;
+				((RippleView) download.getParent()).setEnabled(true);
+				download.setProgress(0);
+				download.setClickable(true);
+				download.setEnabled(true);
+			}
+
+			@Override
+			public void onPostExecute(String params) {
+				if (FAILURE.equals(params)) {
+					((MainActivity) getActivity()).showMessage(R.string.download_failed);
+					download.setProgress(0);
+					setDownloadButtonState(true);
+				} else {
+					download.setProgress(canceled ? 0 : 100);
+				}
+			}
+
+			@Override
+			public void onPreExecute() {
+				canceled = false;
+				((RippleView) download.getParent()).setEnabled(false);
+				download.setClickable(false);
+				download.setMode(ActionProcessButton.Mode.ENDLESS);
+				download.setProgress(50);
+			}
+
+		};
+	}
+	
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		if(actionId == EditorInfo.IME_ACTION_DONE) {
@@ -539,7 +546,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setProgress(0);
 		}
 		cancelProgressTask();
-		thatSongIsDownloaded();
 		cbUseCover.setOnCheckedChangeListener(this);
 	}
 
@@ -794,39 +800,61 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		});
 	}
 	
-	private void thatSongIsDownloaded() {
-		if (player.getPlayingSong().getClass() == MusicData.class) return;
-		player.getPlayingSong().getDownloadUrl(new DownloadUrlListener() {
+	private void thatSongIsDownloaded(final AbstractSong checkingSong) {
+		if (checkingSong.getClass() == MusicData.class) return;
+		int status = StateKeeper.getInstance().checkSongInfo(checkingSong.getComment());
+		ViewGroup parent = (ViewGroup) download.getParent();
+		if (status == StateKeeper.DOWNLOADED) {
+			download.setVisibility(View.GONE);
+			parent.setVisibility(View.GONE);
+			return;
+		} else if (status == StateKeeper.NOT_DOWNLOAD) {
+			download.setVisibility(View.VISIBLE);
+			parent.setVisibility(View.VISIBLE);
+			download.setProgress(0);
+			setDownloadButtonState(true);
+			return;
+		}
+		checkingSong.getDownloadUrl(new DownloadUrlListener() {
 
 			@Override
 			public void success(String url) {
 				if (isDestroy) return;
+				int [] statuses = {DownloadManager.STATUS_RUNNING, DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED};
 				DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-				Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
-				if (running != null) {
-					while (running.moveToNext()) {
-						if (null != url && url.equals(running.getString(running.getColumnIndex(DownloadManager.COLUMN_URI)))) {
-							long id = running.getLong(running.getColumnIndex(DownloadManager.COLUMN_ID));
-							progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
-							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
-						} else {
-					        new Handler(Looper.getMainLooper()).post(new Runnable() {
-								
-								@Override
-								public void run() {
-									download.setProgress(0);
-									setDownloadButtonState(true);
-								}
-							});
-						}
+				for (int statusDownload : statuses) {
+					Cursor cursor = manager.query(new DownloadManager.Query().setFilterByStatus(statusDownload));
+					if (cursor != null) {
+						while (cursor.moveToNext()) {
+							if (null != url && url.equals(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI)))) {
+								long id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
+								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
+								download.setMode(ActionProcessButton.Mode.PROGRESS);
+								download.setProgress(50);
+								cursor.close();
+								return;
+							} 
+						} 
+						cursor.close();
 					}
-					running.close();
+				}
+				boolean isCahed = DownloadCache.getInstanse().getCachedItem(checkingSong.getTitle(), checkingSong.getArtist()) != null;
+				if (StateKeeper.getInstance().checkSongInfo(checkingSong.getComment()) == StateKeeper.DOWNLOADING && isCahed) {
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+				
+						@Override
+						public void run() {
+							setDownloadButtonState(false);
+							download.setMode(ActionProcessButton.Mode.ENDLESS);
+							download.setProgress(50);
+						}
+					});
 				}
 			}
 
 			@Override
-			public void error(String error) {
-			}
+			public void error(String error) {}
 		});
 	}
 
