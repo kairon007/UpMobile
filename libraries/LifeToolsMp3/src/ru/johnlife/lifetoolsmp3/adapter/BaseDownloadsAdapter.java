@@ -1,8 +1,11 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -65,8 +68,15 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 	}
 	
 	protected void removeItem(MusicData item) {
+		String comment =  item.getComment();
+		if (AbstractSong.EMPTY_COMMENT.equals(comment)) {
+			comment = DownloadCache.getInstanse().getCommentFromItem(item.getTitle(), item.getArtist());
+		}
+		if (comment.equals(PlaybackService.get(getContext()).getPlayingSong().getComment())) {
+			((BaseMiniPlayerActivity) getContext()).hideDownloadButton(false);
+		}
+		StateKeeper.getInstance().removeSongInfo(comment);
 		DownloadCache.getInstanse().remove(item);
-		StateKeeper.getInstance().removeSongInfo(item.getComment());
 		remove(item);
 	}
 	

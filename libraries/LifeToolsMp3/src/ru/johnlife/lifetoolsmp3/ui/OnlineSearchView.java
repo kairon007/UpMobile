@@ -142,8 +142,8 @@ public abstract class OnlineSearchView extends View {
 				public void onClick(View view) {
 					downloadListener.setSong(keeper.getDownloadSong());
 					downloadListener.setUseAlbumCover(keeper.isUseCover());
-					downloadListener.downloadSong(Boolean.FALSE);
-					positive.setEnabled(Boolean.FALSE);
+					downloadListener.downloadSong(false);
+					positive.setEnabled(false);
 				}
 			});
 			Button negative = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE);

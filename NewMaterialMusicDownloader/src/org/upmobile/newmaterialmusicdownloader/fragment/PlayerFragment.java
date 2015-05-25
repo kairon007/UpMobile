@@ -14,6 +14,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask;
 import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -362,14 +363,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			public void run() {
 				playerProgress.setIndeterminate(!prepared);
 			}
+			
 		}, 1000);
-
-
 		setElementsView(player.getCurrentPosition());
 		showLyrics();
 		setImageButton();
 		cancelProgressTask();
-		thatSongIsDownloaded();
+		thatSongIsDownloaded(song);
 		super.onResume();
 	}
 	
@@ -485,6 +485,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			showLyrics();
 			setCoverToZoomView(null);
 			setElementsView(0);
+			thatSongIsDownloaded(current);
 		}
 
 		@Override
@@ -595,7 +596,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setOnClickListener(this);
 		}
 		cancelProgressTask();
-		thatSongIsDownloaded();
 	}
 
 	private void cancelProgressTask() {
@@ -940,33 +940,48 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		});
 	}
 	
-	private void thatSongIsDownloaded() {
-		if (player.getPlayingSong().getClass() == MusicData.class) return;
-		player.getPlayingSong().getDownloadUrl(new DownloadUrlListener() {
+	private void thatSongIsDownloaded(final AbstractSong checkingSong) {
+		if (checkingSong.getClass() == MusicData.class) return;
+		int status = StateKeeper.getInstance().checkSongInfo(checkingSong.getComment());
+		if (status == StateKeeper.DOWNLOADED) {
+			return;
+		} else if (status == StateKeeper.NOT_DOWNLOAD) {
+			download.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
+			setDownloadButtonState(true);
+		}
+		checkingSong.getDownloadUrl(new DownloadUrlListener() {
 
 			@Override
 			public void success(String url) {
 				if (isDestroy) return;
+				int [] statuses = {DownloadManager.STATUS_RUNNING, DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED};
 				DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-				Cursor running = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
-				if (running != null) {
-					while (running.moveToNext()) {
-						if (null != url && url.equals(running.getString(running.getColumnIndex(DownloadManager.COLUMN_URI)))) {
-							long id = running.getLong(running.getColumnIndex(DownloadManager.COLUMN_ID));
-							progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
-							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
-						} else {
-					        new Handler(Looper.getMainLooper()).post(new Runnable() {
-								
-								@Override
-								public void run() {
-									download.setProgress(0);
-									setDownloadButtonState(true);
-								}
-							});
-						}
+				for (int statusDownload : statuses) {
+					Cursor cursor = manager.query(new DownloadManager.Query().setFilterByStatus(statusDownload));
+					if (cursor != null) {
+						while (cursor.moveToNext()) {
+							if (null != url && url.equals(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI)))) {
+								long id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
+								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
+								cursor.close();
+								return;
+							} 
+						} 
+						cursor.close();
 					}
-					running.close();
+				}
+				boolean isCahed = DownloadCache.getInstanse().getCachedItem(checkingSong.getTitle(), checkingSong.getArtist()) != null;
+				if (StateKeeper.getInstance().checkSongInfo(checkingSong.getComment()) == StateKeeper.DOWNLOADING && isCahed) {
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+				
+						@Override
+						public void run() {
+							download.setIndeterminateProgressMode(true);
+							download.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
+						}
+					});
+					return;
 				}
 			}
 
