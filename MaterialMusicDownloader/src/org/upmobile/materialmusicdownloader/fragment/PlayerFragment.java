@@ -104,6 +104,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView forward;
 	private TextView shuffle;
 	private TextView repeat;
+	private Bitmap bitmap;
 
 	// info sections
 	private TextView tvTitle;
@@ -220,7 +221,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
 		int height = display.getHeight();
-		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 16));
+		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 16) + contentView.findViewById(R.id.frame_lyrics).getMeasuredHeight());
 		minHeight = (coverHeight > width) ? width : coverHeight;
 		imageView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		imageView.setPadding(0, 8, 0, 8);
@@ -740,6 +741,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	 * @param bitmap - set to image view, if bitmap == null then use default cover
 	 */
 	private void setCoverToZoomView(Bitmap bitmap) {
+		this.bitmap = bitmap;
 		if (isDestroy) return;
 		imageView.setImageBitmap(Bitmap.createScaledBitmap(null == bitmap ? defaultCover : bitmap, minHeight, minHeight, false));
 		scrollView.setZoomView(imageView);
@@ -889,10 +891,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-		if (null != bitmap) {
-			setCoverToZoomView(bitmap);
-		}
+		initCover();
+		setCoverToZoomView(bitmap);
 		super.onConfigurationChanged(newConfig);
 	}
 	
