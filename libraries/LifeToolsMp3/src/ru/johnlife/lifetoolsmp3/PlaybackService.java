@@ -386,7 +386,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			case MSG_RESET:
 				offMode(SMODE_PREPARED);
 				player.reset();
-				removeNotification();
+//				removeNotification();
 				break;
 			case MSG_STOP:
 				if (check(SMODE_PREPARED)) {
@@ -404,6 +404,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					break;
 				}
 				play(songShift.getClass() != MusicData.class);
+				sendNotification(false, songShift.getCover());
 				break;
 			default:
 				Log.d(getClass().getName(), "invalid message send from Handler, what = " + msg.what);
