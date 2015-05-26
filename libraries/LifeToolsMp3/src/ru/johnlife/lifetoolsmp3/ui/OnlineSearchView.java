@@ -408,6 +408,8 @@ public abstract class OnlineSearchView extends View {
 				Util.hideKeyboard(getContext(), v);
 				searchField.setText(null);
 				setMessage(getResources().getString(R.string.search_your_results_appear_here));
+				//FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				getNextResults(true);
 				resultAdapter.clear();
 				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 				keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
@@ -959,8 +961,9 @@ public abstract class OnlineSearchView extends View {
 			keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			return;
 		}
+		android.util.Log.d("logd", "getNextResults: " + cancel + " - " + searchTask);
 		if (null != searchTask && cancel) {
-			searchTask.cancel(false);
+			searchTask.cancel(true);
 		}
 		try {
 			Engine engine = taskIterator.next();

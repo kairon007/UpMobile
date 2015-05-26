@@ -55,7 +55,10 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
 		this.songName = songName;
 	}
 
-	
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+	}
 
 	public String getJamendoClientId() {
 		String defaultJamendoClientId = "551aabd5";
@@ -215,7 +218,7 @@ public abstract class BaseSearchTask extends AsyncTask<Void, Void, Void> {
         
         songsList = filteredSongList;
         
-		if (downloadStopped) return;
+		if (isCancelled()) return;
 		dInterface.onFinishParsing(songsList);
 		super.onPostExecute(result);
 	}

@@ -740,13 +740,20 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		return arrayPlayback;
 	}
 	
-	public <T> boolean isCorrectlyState(Class<T> calledClass, int transferSize) {
+	public <T> boolean isCorrectlyState (Class<T> calledClass, int transferSize){
+		return isCorrectlyStateFullCheck(calledClass, transferSize, null);
+	}
+	
+	public <T> boolean isCorrectlyStateFullCheck(Class<T> calledClass, int transferSize, ArrayList<AbstractSong> newArray) {
 		boolean result = true;
 		if (null == arrayPlayback || transferSize != arrayPlayback.size()) {
 			result = false;
 		}
 		if (null != playingSong && playingSong.getClass() != calledClass) {
 			result = false;
+		}
+		if (null != newArray && null != arrayPlayback) {
+			result = newArray.equals(enabledShuffle() ? arrayPlaybackOriginal : arrayPlayback);
 		}
 		return result;
 	}
@@ -903,8 +910,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		    .addAction(drawable, state, pplayIntent)
 			.addAction(R.drawable.ic_next, getString(R.string.next), pnextIntent)
 			.addAction(R.drawable.ic_close, getString(R.string.close), pcloseIntent)
-//		    .setStyle(new Notification.MediaStyle()
-//		    .setShowActionsInCompactView(2))
+		    .setStyle(new Notification.MediaStyle()
+		    .setShowActionsInCompactView(2))
 		    .setContentTitle(playingSong.getTitle())
 		    .setContentText(playingSong.getArtist())
 		    .setContentIntent(pendingIntent)

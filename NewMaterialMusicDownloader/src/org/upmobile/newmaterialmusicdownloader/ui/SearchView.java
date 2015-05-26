@@ -30,7 +30,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	protected void click(final View view, int position) {
-		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
+		if (!service.isCorrectlyStateFullCheck(Song.class, getResultAdapter().getCount(), new ArrayList<AbstractSong>(getResultAdapter().getAll()))) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 			for (AbstractSong abstractSong : getResultAdapter().getAll()) {
 				try {
