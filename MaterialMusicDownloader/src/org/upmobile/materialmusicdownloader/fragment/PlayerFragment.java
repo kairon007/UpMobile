@@ -743,7 +743,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setCoverToZoomView(Bitmap bitmap) {
 		this.bitmap = bitmap;
 		if (isDestroy) return;
-		imageView.setImageBitmap(Bitmap.createScaledBitmap(null == bitmap ? defaultCover : bitmap, minHeight, minHeight, false));
+		Bitmap createScaledBitmap = Bitmap.createScaledBitmap(null == bitmap ? defaultCover : bitmap, minHeight, minHeight, false);
+		imageView.setImageBitmap(null);
+		imageView.setImageBitmap(createScaledBitmap);
+		imageView.requestLayout();
 		scrollView.setZoomView(imageView);
 	}
 	
