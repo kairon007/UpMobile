@@ -475,7 +475,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	public void setToolbarAlpha(int alpha) {
-		toolbar.getBackground().setAlpha(alpha);
+		if (alpha < 11) {
+			toolbar.setBackgroundDrawable(getResources().getDrawable(R.drawable.fake_toolbar_shadow));
+		} else {
+			toolbar.setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)));
+			toolbar.getBackground().setAlpha(alpha);
+		}
 		toolbarShadow.setAlpha((float) alpha / 255);
 	}
 	
