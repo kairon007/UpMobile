@@ -30,22 +30,29 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	protected void click(final View view, int position) {
+		AbstractSong playingSong = (AbstractSong) getResultAdapter().getItem(position);
 		if (!service.isCorrectlyStateFullCheck(Song.class, getResultAdapter().getCount(), new ArrayList<AbstractSong>(getResultAdapter().getAll()))) {
-			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
-			for (AbstractSong abstractSong : getResultAdapter().getAll()) {
-				try {
-					list.add(abstractSong.cloneSong());
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
-				}
-			}
-			service.setArrayPlayback(list);
-		} 
-		((MainActivity) getContext()).startSong(service.getArrayPlayback().get(position));
+			updatePlaybackArray();
+		}
+		if (service.getArrayPlayback().indexOf(playingSong) == -1){
+			updatePlaybackArray();
+		}
+		((MainActivity) getContext()).startSong((AbstractSong) getResultAdapter().getItem(position));
 		super.click(view, position);
 	}
 
-
+	private void updatePlaybackArray() {
+		ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
+		for (AbstractSong abstractSong : getResultAdapter().getAll()) {
+			try {
+				list.add(abstractSong.cloneSong());
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+		}
+		service.setArrayPlayback(list);
+	}
+	
 	@Override
 	protected BaseSettings getSettings() {
 		return new Nulldroid_Settings();
