@@ -72,7 +72,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			if (miniPlayer.getVisibility() == View.GONE || miniPlayer.getVisibility() == View.INVISIBLE) {
 				setData(song);
 			} else {
-				showMiniPlayer(true, false);
+				showMiniPlayer(true, true);
 			}
 		}
 
