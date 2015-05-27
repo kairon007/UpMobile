@@ -605,6 +605,7 @@ public final class SongTimeline {
 
 		int count = cursor.getCount();
 		if (count == 0) {
+			cursor.close();
 			return 0;
 		}
 
