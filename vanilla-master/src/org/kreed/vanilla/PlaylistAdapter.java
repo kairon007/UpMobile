@@ -217,7 +217,7 @@ public class PlaylistAdapter extends CursorAdapter implements Handler.Callback, 
 
 		// insert the new rows
 		resolver.bulkInsert(uri, values);
-
+		cursor.close();
 		changeCursor(runQuery(resolver));
 	}
 

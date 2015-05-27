@@ -56,6 +56,7 @@ public class QueryTask {
 	 * documentation for details.
 	 */
 	public long data;
+	public static Cursor query;
 
 	/**
 	 * Create the tasks. All arguments are passed directly to
@@ -75,13 +76,22 @@ public class QueryTask {
 	 *
 	 * @param resolver The ContentResolver to query with.
 	 */
-	public Cursor runQuery(ContentResolver resolver) {
+	public Cursor runQuery (ContentResolver resolver) {
 		synchronized (lock) {
-			final Cursor query = resolver.query(uri, projection, selection, selectionArgs, sortOrder);
-			Log.i(getClass().getSimpleName(), "runQuery()");
-			if (type == MediaUtils.TYPE_GENRE && query != null && query.getCount() > 0) {
-				Log.i(getClass().getSimpleName(), "... genreCursor returned");
-				return new GenreCursorWrapper(query, resolver);
+			try {
+				query = resolver.query(uri, projection, selection, selectionArgs, sortOrder);
+				Log.i(getClass().getSimpleName(), "runQuery()");
+				if (type == MediaUtils.TYPE_GENRE && query != null && query.getCount() > 0) {
+					Log.i(getClass().getSimpleName(), "... genreCursor returned");
+					return new GenreCursorWrapper(query, resolver);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				query.close();
+				query = resolver.query(uri, projection, selection, selectionArgs, sortOrder);
+				if (type == MediaUtils.TYPE_GENRE && query != null && query.getCount() > 0) {
+					return new GenreCursorWrapper(query, resolver);
+				}
 			}
 			return query;
 		}
