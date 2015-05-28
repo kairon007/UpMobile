@@ -222,7 +222,7 @@ public abstract class BasePlaylistView extends View {
 		}
 		playlists = getPlaylists();
 		for (PlaylistData playlistData : playlists) {
-			playlistData.setSongs(getSongsFromPlaylist(playlistData.getId()));
+			playlistData.setSongs(playlistData.getSongsFromPlaylist(getContext(), playlistData.getId()));
 		}
 		expandableAdapter.setData(playlists);
 		expandableAdapter.notifyDataSetChanged();
@@ -317,12 +317,15 @@ public abstract class BasePlaylistView extends View {
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
 					if (musicData == null) {
-						deletePlaylist(getContext().getContentResolver(), data.getId());
+						data.deletePlaylist(getContext(), data.getId());
 						playlists.remove(playlists.indexOf(data));
 					} else {
-						removeFromPlaylist(getContext().getContentResolver(), data.getId(), musicData.getId());
+						data.removeFromPlaylist(getContext(), data.getId(), musicData.getId());
 						playlists.get(playlists.indexOf(data)).getSongs().remove(musicData);
 						playbackService.remove(musicData);
+						if (playlists.get(playlists.indexOf(data)).getSongs().size() == 0 && null !=groupItems() && groupItems().length > 1) {
+		                		setGroupIndicator((View) v.getParent(), 0);
+						}
 					}
 					updateAdapter();
 				}
@@ -340,48 +343,7 @@ public abstract class BasePlaylistView extends View {
 			dialog.cancel();
 		}
 	}
-
-	private void deletePlaylist(ContentResolver resolver, long playlistId) {
-		try {
-			String playlistid = String.valueOf(playlistId);
-			String where = BaseColumns._ID + "=?";
-			String[] whereVal = { playlistid };
-			resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, where, whereVal);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void addToPlaylist(ContentResolver resolver, int audioId, int playlistId) {
-		try {
-			String[] cols = new String[] { "count(*)" };
-			Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(EXTERNAL, playlistId);
-			Cursor cur = resolver.query(uri, cols, null, null, null);
-			cur.moveToFirst();
-			final int base = cur.getInt(0);
-			cur.close();
-			ContentValues values = new ContentValues();
-			values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Integer.valueOf(base + audioId));
-			values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioId);
-			resolver.insert(uri, values);
-			cur.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
-	public void removeFromPlaylist(ContentResolver resolver, long playlistId, long audioId) {
-	    try {
-	        Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(EXTERNAL, playlistId);
-	        String where = MediaStore.Audio.Playlists.Members._ID + "=?" ;
-	        String audioId1 = Long.toString(audioId);
-	        String[] whereVal = { audioId1 };
-	        resolver.delete(uri, where,whereVal);      
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	 }
-
 	public void createPlaylist(ContentResolver resolver, String pName) {
 		pName = getDirectory() + pName; 
 		try {
@@ -432,25 +394,6 @@ public abstract class BasePlaylistView extends View {
 			e.printStackTrace();
 			return playlistDatas;
 		}
-	}
-
-	private ArrayList<MusicData> getSongsFromPlaylist(long playlistID) {
-		Cursor cursor = myQuery(getContext(), MediaStore.Audio.Playlists.Members.getContentUri(EXTERNAL, Long.valueOf(playlistID)), PROJECTION_MUSIC, null, null, null);
-		ArrayList<MusicData> result = new ArrayList<MusicData>();
-		if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
-			cursor.close();
-			return result;
-		}
-		MusicData d = new MusicData();
-		d.populate(cursor);
-		result.add(d);
-		while (cursor.moveToNext()) {
-			MusicData data = new MusicData();
-			data.populate(cursor);
-			result.add(data);
-		}
-		cursor.close();
-		return result;
 	}
 
 	public Cursor myQuery(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {

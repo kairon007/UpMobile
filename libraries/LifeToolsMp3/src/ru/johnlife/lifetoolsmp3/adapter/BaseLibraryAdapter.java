@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -166,6 +165,9 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		if (playlistDatas.size() == 0) {
 			showMessage(getContext(), R.string.playlists_are_missing);
 		} else {
+			for (PlaylistData playlistData : playlistDatas) {
+				playlistData.setSongs(playlistData.getSongsFromPlaylist(getContext(), playlistData.getId()));
+			}
 			showPlaylistsDialog(playlistDatas, v, data);
 		} 
 	}
@@ -180,7 +182,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 			@Override
 			public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong) {
-				addToPlaylist(paramView.getContext().getContentResolver(), ((MusicData) v.getTag()).getId(), playlistDatas.get(paramInt).getId());
+				if (contains(playlistDatas.get(paramInt), ((MusicData) v.getTag()))) {
+					showMessage(getContext(), R.string.song_in_the_playlist);
+					dialog.dismiss();
+					return;
+				}
+				playlistDatas.get(paramInt).addToPlaylist(paramView.getContext(), ((MusicData) v.getTag()).getId(), playlistDatas.get(paramInt).getId());
 				dialog.dismiss();
 			}
 		});
@@ -229,22 +236,13 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		}
 	}
 	
-	public void addToPlaylist(ContentResolver resolver, long audioId, long playlistId) {
-		try {
-			String[] cols = new String[] { "count(*)" };
-			Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(EXTERNAL, playlistId);
-			Cursor cur = resolver.query(uri, cols, null, null, null);
-			cur.moveToFirst();
-			final int base = cur.getInt(0);
-			cur.close();
-			ContentValues values = new ContentValues();
-			values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Long.valueOf(base + audioId));
-			values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioId);
-			resolver.insert(uri, values);
-			cur.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+	public boolean contains(PlaylistData data, MusicData mData) {
+		for (MusicData music : data.getSongs()) {
+			if (music.getPath().equalsIgnoreCase(mData.getPath())) {
+				return true;
+			}
 		}
+		return false;
 	}
 	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {

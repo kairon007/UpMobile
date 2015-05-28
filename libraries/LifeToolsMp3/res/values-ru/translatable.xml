@@ -89,5 +89,6 @@
     <string name="new_folder_dialog_title">Имя новой папки</string>
     <string name="error_getting_url_songs">Ошибка получения url песни.</string>
     <string name="turn_on_dm">Пожалуйста, включите менеджер загрузок на вашем устройстве для того, что бы скачать песню.</string>
+    <string name="song_in_the_playlist">Эта песня уже есть в этом плейлисте</string>
 
 </resources>

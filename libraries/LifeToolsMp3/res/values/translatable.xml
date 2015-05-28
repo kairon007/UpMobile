@@ -69,5 +69,6 @@
     <string name="does_not_support_type">The player does not support this type of audio file</string>
     <string name="done">Done</string>
     <string name="show_equalizer">Show visualizer</string>
+    <string name="song_in_the_playlist">This song is already in the playlist</string>
 
 </resources>
