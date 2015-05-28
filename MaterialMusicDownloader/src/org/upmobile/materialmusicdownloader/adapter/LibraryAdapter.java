@@ -132,7 +132,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			
 			@Override
 			public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-				addToPlaylist(getContext().getContentResolver(), ((MusicData) v.getTag()).getId(), playlistDatas.get(which).getId());
+				if (contains(playlistDatas.get(which), ((MusicData) v.getTag()))) {
+					showMessage(getContext(), R.string.song_in_the_playlist);
+					dialog.cancel();
+					return;
+				}
+				playlistDatas.get(which).addToPlaylist(getContext(), ((MusicData) v.getTag()).getId(), playlistDatas.get(which).getId());
 				dialog.cancel();
 			}
 		})
