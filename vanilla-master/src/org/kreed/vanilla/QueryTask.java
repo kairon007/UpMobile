@@ -104,6 +104,7 @@ public class QueryTask {
 		
 		private GenreCursorWrapper(Cursor query, ContentResolver resolver) {
 			super(new Cursor[]{query});
+			 Cursor c = null;
 			Log.i(getClass().getSimpleName(), "GenreCursor constructor");
 			this.query = query;
 			this.counts = new int[query.getCount()];
@@ -111,9 +112,13 @@ public class QueryTask {
 			query.moveToFirst();
 			while (query.moveToNext() && !query.isAfterLast()) {
 			    Uri uri = Audio.Genres.Members.getContentUri("external", query.getLong(0)); 
-			    Cursor c = resolver.query(uri, null, null, null, null);
+			    if (null != c && !c.isClosed()) {
+			    	c.close();
+			    }
+			    c = resolver.query(uri, null, null, null, null);
 			    if (c == null || c.getCount() == 0) {
 			    	counts[i++] = 0;
+			    	 c.close();
 			    	continue;
 			    }
 			    int num = c.getCount();
