@@ -78,6 +78,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	public static final int DISPLAY_INFO_OVERLAP = 0;
 	public static final int DISPLAY_INFO_BELOW = 1;
 	public static final int DISPLAY_INFO_WIDGETS = 2;
+	private static final String EXTRA_LYRICS_VISIBLE = "EXTRA_LYRICS_VISISBLE";
 	private static final String EXTRA_LYRICS_STATE = "EXTRA_LYRICS_STATE";
 	private static final String EXTRA_LIRYCS_TEXT = "EXTRA_LIRYCS_TEXT";
 	private static final String EXTRA_LOAD_LIRYCS = "EXTRA_LOAD_LIRYCS";
@@ -142,6 +143,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	private TextView mLyricsView;
 	private ImageView mLyricsHider;
 	private boolean isLyricsShow = false;
+	private boolean isLyricsClosed = false;
 	private boolean newIntent = false;
 	private boolean intentPending = false;
 	private ProgressBar progressLyric;
@@ -195,6 +197,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			@Override
 			public void onClick(View paramView) {
 				mLyricsConteiner.setVisibility(View.GONE);
+				isLyricsClosed = true;
 			}
 		});
 		setParentView(mLyricsConteiner, mLyricsView, progressLyric);
@@ -287,6 +290,12 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 		lyricConfigurate();
 		
 		if (icicle != null) {
+			isLyricsClosed = icicle.getBoolean(EXTRA_LYRICS_VISIBLE);
+			if (isLyricsClosed) {
+				progressLyric.setVisibility(View.GONE);
+				mLyricsConteiner.setVisibility(View.GONE);
+				return;
+			}
 			loadLirycs = icicle.getBoolean(EXTRA_LOAD_LIRYCS);
 			if (loadLirycs) {
 				mLyricsConteiner.setVisibility(View.VISIBLE);
@@ -635,12 +644,14 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 				case View.GONE:
 					mLyricsConteiner.setVisibility(View.VISIBLE);
 					mLyricsView.setVisibility(View.VISIBLE);
+					isLyricsClosed = false;
 					loadLyrics(mCurrentSong);
 					break;
 
 				case View.VISIBLE:
 					mLyricsConteiner.setVisibility(View.GONE);
 					mLyricsView.setText("");
+					isLyricsClosed = true;
 					break;
 				default:
 					break;
@@ -962,6 +973,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			outState.putBoolean(EXTRA_LYRICS_STATE, true);
 		}
 		outState.putBoolean(EXTRA_LOAD_LIRYCS, loadLirycs);
+		outState.putBoolean(EXTRA_LYRICS_VISIBLE, isLyricsClosed);
 		super.onSaveInstanceState(outState);
 	}
 }
