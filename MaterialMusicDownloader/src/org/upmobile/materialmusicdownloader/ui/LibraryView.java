@@ -26,6 +26,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 
 	private TextView message;
 	private ListView lView;
+	private CustomSwipeUndoAdapter swipeUndoAdapter;
 
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
@@ -60,7 +61,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	
 	@Override
 	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
-		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 			
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
@@ -88,4 +89,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 		((MainActivity)getContext()).showMessage(message);
 	}
 	
+	public void forceDelete () {
+		swipeUndoAdapter.forceDelete();
+	}
 }

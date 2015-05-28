@@ -66,7 +66,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         resideMenu.attachToActivity(this);
         resideMenu.setShadowVisible(true);
         resideMenu.setHeaderView(findViewById(R.id.actionbar));
-        resideMenu.setMenuListener(menuListener);
+        setMenuListener(menuListener);
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
         resideMenu.setScaleValue(0.6f);
         for (ResideMenuItem item : menuItems) {
@@ -89,6 +89,10 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			}
 		});
     }
+
+	public void setMenuListener(ResideMenu.OnMenuListener listener) {
+		resideMenu.setMenuListener(listener);
+	}
 
     @Override
     public void onClick(View view) {
@@ -120,12 +124,13 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 	//Example of menuListener
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
         @Override
-        public void openMenu() { }
+        public void openMenu() {
+        }
 
-        @Override
+		@Override
         public void closeMenu() { }
     };
-
+    
 	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
 		manageSearchView(targetFragment.getClass().getSimpleName());
 		currentFragmentIsPlayer = targetFragment.getClass() == getFragments()[PLAYER_FRAGMENT].getClass();

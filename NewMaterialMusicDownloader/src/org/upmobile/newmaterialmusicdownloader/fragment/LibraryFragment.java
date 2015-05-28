@@ -50,4 +50,8 @@ public class LibraryFragment extends Fragment implements Constants {
 		super.onPause();
 	}
 	
+	public void forceDelete () {
+		libraryView.forceDelete();
+	}
+	
 }

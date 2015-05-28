@@ -1,5 +1,6 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.Constants;
@@ -26,7 +27,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -49,7 +49,6 @@ import android.widget.Toast;
 public abstract class BasePlaylistView extends View {
 
 	private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
-	private final static String EXTERNAL = "external";
 	private ViewGroup view;
 	protected ListView listView;
 	private ExpandableAdapter expandableAdapter;

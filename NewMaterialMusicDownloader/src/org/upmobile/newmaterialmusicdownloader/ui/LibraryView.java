@@ -24,6 +24,7 @@ public class LibraryView extends BaseLibraryView {
 	
 	private TextView message;
 	private ListView lView;
+	private CustomSwipeUndoAdapter swipeUndoAdapter;
 
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
@@ -58,13 +59,13 @@ public class LibraryView extends BaseLibraryView {
 	
 	@Override
 	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
-		CustomSwipeUndoAdapter swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
-				
+		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+			
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	        	for (int position : reverseSortedPositions) {
 	            	MusicData data = ((MusicData) adapter.getItem(position));
-	            	isUserDeleted = Boolean.TRUE;
+	            	isUserDeleted = true;
 	            	PlaybackService.get(getContext()).remove(data);
 	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
 	            	adapter.remove(data);
@@ -78,6 +79,10 @@ public class LibraryView extends BaseLibraryView {
 		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
 		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
 		((DynamicListView)listView).enableSimpleSwipeUndo();
+	}
+	
+	public void forceDelete () {
+		swipeUndoAdapter.forceDelete();
 	}
 	
 }

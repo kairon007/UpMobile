@@ -254,4 +254,8 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		}
 		isVisibleSearchView = flag;
 	}
+	
+    public void setDrawerStateListener (DrawerLayout.DrawerListener listener) {
+    	navigationDrawerFragment.setDrawerStateListener(listener);
+    }
 }

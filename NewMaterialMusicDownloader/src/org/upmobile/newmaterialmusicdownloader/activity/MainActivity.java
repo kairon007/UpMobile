@@ -544,6 +544,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 					player.showIndicator();
 				}
 			}
+			if (ManagerFragmentId.libraryFragment() == getCurrentFragmentId()) {
+				LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+				library.forceDelete();
+			}
 		}
 	}
 

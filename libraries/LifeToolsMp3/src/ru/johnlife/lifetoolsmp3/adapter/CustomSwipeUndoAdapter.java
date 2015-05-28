@@ -73,7 +73,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 
 	private void startTimer(int position) {
 		if (null == getItem(position)) return;
-		timers.add(new DissmissTimer(getItem(position)).startTimer());
+		timers.add(new DissmissTimer(getItem(position), position).startTimer());
 	}
 	
 	private void stopTimer(int position) {
@@ -98,8 +98,10 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	private class DissmissTimer extends Timer {
 		
 		private Object tag;
+		private int position;
 		
-		public DissmissTimer(Object tag) {
+		public DissmissTimer(Object tag, int position) {
+			this.position = position;
 			this.tag = tag;
 		}
 		
@@ -114,7 +116,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 						public void run() {
 							int position = -1;
 							for (int i = 0; i < getCount(); i++) {
-								if (getItem(i).equals(tag)) {
+								if (getItem(i).equals(getTag())) {
 									position = i;
 									break;
 								}
@@ -137,15 +139,30 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		@Override
 		public boolean equals(Object o) {
 			if (o instanceof DissmissTimer) {
-				return ((DissmissTimer)o).tag.equals(this.tag);
+				return ((DissmissTimer)o).getTag().equals(this.getTag());
 			} else {
-				return o.equals(this.tag);
+				return o.equals(this.getTag());
 			}
 		}
 
 		@Override
 		public int hashCode() {
 			return super.hashCode();
+		}
+
+		public Object getTag() {
+			return tag;
+		}
+
+		public int getPosition() {
+			return position;
+		}
+	}
+	
+	public void forceDelete() {
+		for (DissmissTimer timer : timers) {
+			int position  = timer.getPosition();
+			dismiss(position);
 		}
 	}
 }

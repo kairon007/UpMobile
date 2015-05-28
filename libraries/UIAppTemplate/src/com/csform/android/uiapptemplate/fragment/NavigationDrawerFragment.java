@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.text.Html;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -295,5 +296,9 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     
     private boolean useOldToggle() {
 		return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
+    }
+    
+    public void setDrawerStateListener (DrawerLayout.DrawerListener listener) {
+    	mDrawerLayout.setDrawerListener(listener);
     }
 }
