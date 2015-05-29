@@ -48,6 +48,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -806,7 +807,13 @@ public abstract class OnlineSearchView extends View {
 					@Override
 					public void onBitmapReady(Bitmap bmp) {
 						if (builder != null && builder.getId() == position) {
-							builder.setIcon(bmp);
+							if (null != bmp) {
+								builder.setIcon(bmp);
+							} else {
+								Bitmap defaultCover = isWhiteTheme(getContext()) ? BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover_white) : defaultCover() > 0 ? BitmapFactory.decodeResource(getResources(), defaultCover()) : getDeafultBitmapCover();
+								builder.setIcon(defaultCover);
+								
+							}
 						}
 					}
 				});
@@ -961,7 +968,6 @@ public abstract class OnlineSearchView extends View {
 			keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			return;
 		}
-		android.util.Log.d("logd", "getNextResults: " + cancel + " - " + searchTask);
 		if (null != searchTask && cancel) {
 			searchTask.cancel(true);
 		}
