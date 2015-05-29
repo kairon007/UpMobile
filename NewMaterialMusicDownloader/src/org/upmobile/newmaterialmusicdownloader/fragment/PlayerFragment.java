@@ -516,6 +516,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			PlayerFragment.this.percent = percent;
 		}
 	};
+	private boolean hasPost;
 	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
@@ -586,6 +587,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (!isUseAlbumCover && ((View) cbUseCover.getParent()).getVisibility() == View.VISIBLE) {
 			undoMessage = MSG_UNDO_REMOVE;
 			undo.clear();
+		}
+		if (hasPost) {
+			download.removeCallbacks(postDownload);
+			download.post(postDownload);
+			hasPost = false;
 		}
 		play.setClickable(false);
 		player.shift(delta);
@@ -895,6 +901,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	Runnable postDownload = new Runnable() {
 		public void run() {
+			hasPost = false;
 			downloadListener.onClick(contentView);
 			((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
@@ -909,6 +916,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 							if (downloadListener.getSongID() == -1) {
 								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
 								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
+								download.removeCallbacks(postDownload);
 							}
 						}
 					});
@@ -941,6 +949,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setMode(ActionProcessButton.Mode.ENDLESS);
 			download.setProgress(50);
 		}
+		hasPost = true;
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		downloadListener.setCancelCallback(new OnCancelDownload() {
 			@Override

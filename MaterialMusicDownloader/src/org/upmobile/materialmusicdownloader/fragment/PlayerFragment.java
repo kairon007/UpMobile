@@ -201,6 +201,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			});
 		}
 	};
+	private boolean hasPost;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -535,6 +536,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 			clearCover();
 		}
+		if (hasPost) {
+			download.removeCallbacks(postDownload);
+			download.post(postDownload);
+			hasPost = false;
+		}
 		player.shift(delta);
 		player.pause();
 		cbUseCover.setOnCheckedChangeListener(null);
@@ -761,6 +767,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	Runnable postDownload = new Runnable() {
 		public void run() {
+			hasPost = false;
 			downloadListener.onClick(contentView);
 			((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
@@ -775,6 +782,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 							if (downloadListener.getSongID() == -1) {
 								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
 								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
+								download.removeCallbacks(postDownload);
 							}
 						}
 					});
@@ -807,6 +815,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setMode(ActionProcessButton.Mode.ENDLESS);
 			download.setProgress(50);
 		}
+		hasPost = true;
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		downloadListener.setCancelCallback(new OnCancelDownload() {
 			@Override

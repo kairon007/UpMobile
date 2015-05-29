@@ -108,13 +108,23 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	private DownloadClickListener() {
 	}
 
-	public DownloadClickListener(Context context, RemoteSong song, int id) {
+	public DownloadClickListener(final Context context, RemoteSong song, int id) {
 		this.context = context;
 		downloadingSong = song;
 		this.id = id;
 		songId = downloadingSong instanceof GrooveSong ? ((GrooveSong) downloadingSong).getSongId() : -1;
 		headers = downloadingSong.getHeaders();
 		downloadingSong.getCover(this);
+		StringBuilder stringBuilder = new StringBuilder(song.getArtist()).append(" - ").append(song.getTitle());
+		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
+		((Activity) context).runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				showMessage(context, context.getString(R.string.download_started) + " " + sb);
+			}
+			
+		});
 	}
 	
 	public static void writeDownloadSong (RemoteSong song, Context context) {
@@ -235,14 +245,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		if (!isUpdated) {
 			downloadingSong.setDownloaderListener(notifyStartDownload(currentDownloadId));
 		}
-		((Activity) context).runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				showMessage(context, context.getString(R.string.download_started) + " " + sb);
-			}
-			
-		});
 		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(downloadingSong, manager, useAlbumCover, cacheItem);
 		new Timer().schedule(progressUpdateTask, 2000, 3000);
 	}
