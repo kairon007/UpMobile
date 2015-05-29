@@ -9,14 +9,15 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.TrueSeekBar;
 
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask;
 import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
-import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -37,7 +38,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -758,6 +758,43 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			cbUseCover.setEnabled(state);
 		}
 	}
+	
+	Runnable postDownload = new Runnable() {
+		public void run() {
+			downloadListener.onClick(contentView);
+			((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+
+				@Override
+				public void success(String url) {
+					if (!url.startsWith("http")) return;
+					((RemoteSong) song).setDownloadUrl(url);
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+						@Override
+						public void run() {
+							if (downloadListener.getSongID() == -1) {
+								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
+								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
+							}
+						}
+					});
+				}
+
+				@Override
+				public void error(String error) {
+					((MainActivity) getActivity()).runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							((MainActivity) getActivity()).showMessage(R.string.download_failed);
+							download.setProgress(0);
+							setDownloadButtonState(true);
+						}
+					});
+				}
+			});
+		}
+	};
 
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
@@ -771,38 +808,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setProgress(50);
 		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
-
+		downloadListener.setCancelCallback(new OnCancelDownload() {
 			@Override
-			public void success(String url) {
-				if (!url.startsWith("http")) {
-					((MainActivity) getActivity()).showMessage(R.string.error_retrieving_the_url);
-					return;
-				}
-				((RemoteSong) song).setDownloadUrl(url);
-				new Handler(Looper.getMainLooper()).post(new Runnable() {
-
-					@Override
-					public void run() {
-						downloadListener.onClick(contentView);
-						downloadListener.setCancelCallback(new OnCancelDownload() {
-							@Override
-							public void onCancel() {
-								cancelProgressTask();
-							}
-						});
-						if (downloadListener.getSongID() == -1) {
-							progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
-							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
-						}
-					}
-				});
-			}
-
-			@Override
-			public void error(String error) {
+			public void onCancel() {
+				cancelProgressTask();
+				download.removeCallbacks(postDownload);
 			}
 		});
+		download.postDelayed(postDownload, 2000);
 	}
 	
 	private void thatSongIsDownloaded(final AbstractSong checkingSong) {

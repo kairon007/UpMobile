@@ -18,6 +18,7 @@ import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -891,6 +892,43 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			cbUseCover.setOnCheckedChangeListener(this);
 		}
 	}
+	
+	Runnable postDownload = new Runnable() {
+		public void run() {
+			downloadListener.onClick(contentView);
+			((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+
+				@Override
+				public void success(String url) {
+					if (!url.startsWith("http")) return;
+					((RemoteSong) song).setDownloadUrl(url);
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+						@Override
+						public void run() {
+							if (downloadListener.getSongID() == -1) {
+								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
+								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
+							}
+						}
+					});
+				}
+
+				@Override
+				public void error(String error) {
+					((MainActivity) getActivity()).runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							((MainActivity) getActivity()).showMessage(R.string.download_failed);
+							download.setProgress(0);
+							setDownloadButtonState(true);
+						}
+					});
+				}
+			});
+		}
+	};
 
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
@@ -904,44 +942,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setProgress(50);
 		}
 		downloadListener.setUseAlbumCover(isUseAlbumCover);
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
-
+		downloadListener.setCancelCallback(new OnCancelDownload() {
 			@Override
-			public void success(String url) {
-				if (!url.startsWith("http")) return;
-				((RemoteSong) song).setDownloadUrl(url);
-				new Handler(Looper.getMainLooper()).post(new Runnable() {
-
-					@Override
-					public void run() {
-						downloadListener.onClick(contentView);
-						downloadListener.setCancelCallback(new OnCancelDownload() {
-							@Override
-							public void onCancel() {
-								cancelProgressTask();
-							}
-						});
-						if (downloadListener.getSongID() == -1) {
-							progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
-							progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
-						}
-					}
-				});
-			}
-
-			@Override
-			public void error(String error) {
-				((MainActivity) getActivity()).runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						((MainActivity) getActivity()).showMessage(R.string.download_failed);
-						download.setProgress(0);
-						setDownloadButtonState(true);
-					}
-				});
+			public void onCancel() {
+				cancelProgressTask();
+				download.removeCallbacks(postDownload);
 			}
 		});
+		download.postDelayed(postDownload, 2000);
 	}
 	
 	private void thatSongIsDownloaded(final AbstractSong checkingSong) {
