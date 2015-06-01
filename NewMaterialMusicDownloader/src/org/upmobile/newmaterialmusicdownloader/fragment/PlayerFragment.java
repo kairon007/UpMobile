@@ -10,15 +10,14 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask;
 import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
-import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.RenameTask;
 import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
@@ -145,6 +144,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private int primaryColor;
 
 	private boolean isDestroy;
+	private boolean hasPost;
 	
 	private void initUpdater() {
 		progressListener = new ProgressUpdaterListener() {
@@ -516,7 +516,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			PlayerFragment.this.percent = percent;
 		}
 	};
-	private boolean hasPost;
 	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
@@ -590,7 +589,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		if (hasPost) {
 			download.removeCallbacks(postDownload);
-			download.post(postDownload);
+			forceDownload();
 			hasPost = false;
 		}
 		play.setClickable(false);
@@ -897,6 +896,31 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			cbUseCover.setEnabled(state);
 			cbUseCover.setOnCheckedChangeListener(this);
 		}
+	}
+	
+	private void forceDownload() {
+		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+			
+			@Override
+			public void success(String url) {
+				if (!url.startsWith("http")) return;
+				((RemoteSong) song).setDownloadUrl(url);
+				downloadListener.onClick(contentView);
+			}
+			
+			@Override
+			public void error(String error) {
+				((MainActivity) getActivity()).runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						((MainActivity) getActivity()).showMessage(R.string.download_failed);
+						download.setProgress(0);
+						setDownloadButtonState(true);
+					}
+				});
+			}
+		});
 	}
 	
 	Runnable postDownload = new Runnable() {
