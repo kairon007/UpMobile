@@ -1587,6 +1587,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		if (position == 0) {
 			((LibraryPagerAdapter) mViewPager.getAdapter()).getSearchView().notifyAdapter();
 		}
+		Util.hideKeyboard(this, mEditFilter);
 	}
 
 	@Override

@@ -371,6 +371,7 @@ public abstract class OnlineSearchView extends View {
 				} else {
 					spEnginesChoiserScroll.scrollBy(0, scrollBy);
 					if (0 != scrollBy) {
+						Util.hideKeyboard(getContext(), view);
 						showShadow(false);
 					}
 				}
@@ -409,7 +410,6 @@ public abstract class OnlineSearchView extends View {
 				Util.hideKeyboard(getContext(), v);
 				searchField.setText(null);
 				setMessage(getResources().getString(R.string.search_your_results_appear_here));
-				//FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				getNextResults(true);
 				resultAdapter.clear();
 				keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
