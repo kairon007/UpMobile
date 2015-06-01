@@ -956,7 +956,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		} else {
 			int type = rowData.getIntExtra(LibraryAdapter.DATA_TYPE, MediaUtils.TYPE_INVALID);
 			boolean isAllAdapter = type <= MediaUtils.TYPE_SONG;
-
 			menu.setHeaderTitle(rowData.getStringExtra(LibraryAdapter.DATA_TITLE));
 			menu.add(0, MENU_PLAY, 0, R.string.play).setIntent(rowData);
 			if (isAllAdapter)
@@ -1023,7 +1022,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		long id = intent.getLongExtra("id", LibraryAdapter.INVALID_ID);
 		String message = null;
 		Resources res = getResources();
-
 		if (type == MediaUtils.TYPE_FILE) {
 			String file = intent.getStringExtra("file");
 			boolean success = MediaUtils.deleteFile(new File(file));
@@ -1040,11 +1038,14 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 				Log.d(getClass().getSimpleName(), ex.getConversion() + "\n" + ex.getMessage());
 			}
 		}
-
 		if (message == null) {
-			message = res.getString(R.string.deleted, intent.getStringExtra("title"));
+			String title = intent.getStringExtra("title");
+			if (null == title) {
+				File file = new File(intent.getStringExtra("file"));
+				title = file.getName();
+			}
+			message = res.getString(R.string.deleted, title );
 		}
-
 		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
@@ -1052,9 +1053,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 	public boolean onContextItemSelected(MenuItem item) {
 		if (item.getGroupId() != 0)
 			return super.onContextItemSelected(item);
-
 		Intent intent = item.getIntent();
-
 		switch (item.getItemId()) {
 		case MENU_EXPAND:
 			onItemExpanded(intent);
@@ -1152,8 +1151,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 						}
 						
 						@Override
-						public void error() {
-						}
+						public void error() {}
 					}, new String[] {"", "", ""}).start(false, true);
 
 				}
