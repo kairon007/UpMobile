@@ -43,6 +43,12 @@ public class DownloadListener extends DownloadClickListener {
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
 	}
 	
+	public DownloadListener(Context context, RemoteSong song, int id, boolean b) {
+		super(context, song, id, b);
+		songTitle = Util.removeSpecialCharacters(song.getTitle());
+		songArtist = Util.removeSpecialCharacters(song.getArtist());
+	}
+	
 	public void setCancelCallback(OnCancelDownload cancelListener) {
 		cancelDownload = cancelListener;
 	}

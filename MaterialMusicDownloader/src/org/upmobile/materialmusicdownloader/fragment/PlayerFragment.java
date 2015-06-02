@@ -830,7 +830,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
+		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id, true);
 		if (downloadListener.isBadInet()) {
 			((MainActivity) getActivity()).showMessage(R.string.search_message_no_internet);
 			return;

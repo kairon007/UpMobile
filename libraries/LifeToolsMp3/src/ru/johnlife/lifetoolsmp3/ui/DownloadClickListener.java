@@ -91,6 +91,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		}
 		
 	};
+
+	private boolean earlierMsg = false;
 	
 	public interface CoverReadyListener {
 		void onCoverReady(Bitmap cover);
@@ -112,6 +114,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		this.context = context;
 		downloadingSong = song;
 		this.id = id;
+		songId = downloadingSong instanceof GrooveSong ? ((GrooveSong) downloadingSong).getSongId() : -1;
+		headers = downloadingSong.getHeaders();
+		downloadingSong.getCover(this);
+	}
+	
+	public DownloadClickListener(final Context context, RemoteSong song, int id, boolean earlierMessage) {
+		this.context = context;
+		downloadingSong = song;
+		this.id = id;
+		earlierMsg = earlierMessage;
 		songId = downloadingSong instanceof GrooveSong ? ((GrooveSong) downloadingSong).getSongId() : -1;
 		headers = downloadingSong.getHeaders();
 		downloadingSong.getCover(this);
@@ -244,6 +256,16 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		boolean isUpdated = continueDownload(id, currentDownloadId);
 		if (!isUpdated) {
 			downloadingSong.setDownloaderListener(notifyStartDownload(currentDownloadId));
+		}
+		if (!earlierMsg) {
+			((Activity) context).runOnUiThread(new Runnable() {
+	
+				@Override
+				public void run() {
+					showMessage(context, context.getString(R.string.download_started) + " " + sb);
+				}
+				
+			});
 		}
 		UpdateTimerTask progressUpdateTask = new UpdateTimerTask(downloadingSong, manager, useAlbumCover, cacheItem);
 		new Timer().schedule(progressUpdateTask, 2000, 3000);
