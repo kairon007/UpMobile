@@ -192,4 +192,6 @@
   <string name="show_bottom">Dưới cùng</string>
   <string name="lyric_no_internet">Không có kết nối internet. \nLyrics không thể tải.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Không thể chơi một bài hát.</string>
 </resources>

@@ -192,4 +192,6 @@
   <string name="show_bottom">Nederst</string>
   <string name="lyric_no_internet">Ingen Internett-tilkobling. \nLyrics kan ikke være belastning.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Kan ikke spille en sang.</string>
 </resources>

@@ -192,4 +192,6 @@
   <string name="show_bottom">Alt</string>
   <string name="lyric_no_internet">Hiçbir internet bağlantısı. \nLyrics yük olabilir.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Yapamaz-e doğru bir şarkı çal.</string>
 </resources>

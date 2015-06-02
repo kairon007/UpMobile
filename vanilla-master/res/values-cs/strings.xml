@@ -192,4 +192,6 @@
   <string name="show_bottom">Dole</string>
   <string name="lyric_no_internet">Žádné internetové připojení. \nLyrics nelze načíst.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Nelze přehrát písničku.</string>
 </resources>

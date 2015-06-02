@@ -192,4 +192,6 @@
   <string name="show_bottom">התחתון</string>
   <string name="lyric_no_internet">אין חיבור לאינטרנט. \nLyrics אינה יכולה להיות עומס.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">אין אפשרות לנגן שיר.</string>
 </resources>

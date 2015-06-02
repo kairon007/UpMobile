@@ -192,4 +192,6 @@
   <string name="show_bottom">Bottom</string>
   <string name="lyric_no_internet">No internet connection. \nLyrics can not be load.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Unable to play a song.</string>
 </resources>

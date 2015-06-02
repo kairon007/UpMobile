@@ -192,4 +192,6 @@
   <string name="show_bottom">Bounda bough @ branch</string>
   <string name="lyric_no_internet">Pa entènèt kouche. \nLyrics pa kapab fè chay.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Pa t \' kapab jwe yon chante pou yo chante.</string>
 </resources>

@@ -193,4 +193,6 @@
   <string name="show_bottom">Unten</string>
   <string name="lyric_no_internet">Keine Internet Verbindung. \nLyrics kann nicht laden.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Nicht in der Lage, ein Lied zu spielen.</string>
 </resources>

@@ -192,4 +192,6 @@
   <string name="show_bottom">Fons</string>
   <string name="lyric_no_internet">Cap connexió dinternet. \nLyrics no pot ser de càrrega.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Incapaç de tocar una cançó.</string>
 </resources>

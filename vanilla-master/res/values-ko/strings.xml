@@ -192,4 +192,6 @@
   <string name="show_bottom">하단</string>
   <string name="lyric_no_internet">아무 인터넷 연결. \nLyrics 로드 될 수 없습니다.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">노래를 재생할 수 없습니다.</string>
 </resources>
