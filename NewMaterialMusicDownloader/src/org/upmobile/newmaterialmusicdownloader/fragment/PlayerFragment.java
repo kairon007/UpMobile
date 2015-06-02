@@ -355,6 +355,17 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (!stateVisualizer) {
 			setupVisualizerFxAndUI(stateVisualizer);
 		}
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		if (song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state) {
+			if (StateKeeper.DOWNLOADING == state) {
+				((RippleView) download.getParent()).setEnabled(false);
+				download.setClickable(false);
+				download.setMode(ActionProcessButton.Mode.ENDLESS);
+				download.setProgress(50);
+			}
+		} else {
+			((RippleView) download.getParent()).setVisibility(View.GONE);
+		}
 		final boolean prepared = player.isPrepared();
 		if (!prepared) {
 			playerProgress.setProgress(0);

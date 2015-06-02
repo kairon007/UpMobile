@@ -243,13 +243,15 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		activity.setVisibleSearchView(false);
 		setHasOptionsMenu(true);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
-		if (song.getClass() == MusicData.class && StateKeeper.DOWNLOADED != state) {
+		if (song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state) {
 			if (StateKeeper.DOWNLOADING == state) {
 				((RippleView) download.getParent()).setEnabled(false);
 				download.setClickable(false);
 				download.setMode(ActionProcessButton.Mode.ENDLESS);
 				download.setProgress(50);
 			}
+		} else {
+			((RippleView) download.getParent()).setVisibility(View.GONE);
 		}
 		percent = 0;
 		initCover();
