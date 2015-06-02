@@ -542,6 +542,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		player.shift(delta);
 		player.pause();
+		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
+		if (song.getClass() == MusicData.class || isDownloaded) {
+			download.setVisibility(View.GONE);
+			ciRippleView.setVisibility(View.GONE);
+		} else {
+			download.setVisibility(View.VISIBLE);
+			ciRippleView.setVisibility(View.VISIBLE);
+		}
 		cbUseCover.setOnCheckedChangeListener(null);
 		setDownloadButtonState(!player.isGettingURl());
 		play.setClickable(false);
@@ -556,14 +564,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void setElementsView(int progress, AbstractSong song) {
-		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment());
-		if (song.getClass() == MusicData.class || isDownloaded) {
-			download.setVisibility(View.GONE);
-			ciRippleView.setVisibility(View.GONE);
-		} else {
-			download.setVisibility(View.VISIBLE);
-			ciRippleView.setVisibility(View.VISIBLE);
-		}
 		tvArtist.setText(song.getArtist());
 		tvTitle.setText(song.getTitle());
 		playerTotalTime.setText(Util.getFormatedStrDuration(song.getDuration() == 0 ? player.getDuration() : song.getDuration()));

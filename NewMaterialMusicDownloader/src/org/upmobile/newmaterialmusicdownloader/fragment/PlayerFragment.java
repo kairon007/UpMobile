@@ -606,6 +606,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setOnClickListener(this);
 		}
 		cancelProgressTask();
+		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
+		if (song.getClass() == MusicData.class || isDownloaded) {
+			download.setVisibility(View.GONE);
+			((ViewGroup) download.getParent()).setVisibility(View.GONE);
+		} else {
+			download.setVisibility(View.VISIBLE);
+			((ViewGroup) download.getParent()).setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void cancelProgressTask() {
@@ -615,11 +623,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void setElementsView(int progress) {
-		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(song.getComment());
-		if (song.getClass() == MusicData.class || isDownloaded) {
-			download.setVisibility(View.GONE);
-			((ViewGroup) download.getParent()).setVisibility(View.GONE);
-		} 
 		playerProgress.setProgress(progress);
 		download.setVisibility(song.getClass() == MusicData.class ? View.GONE : View.VISIBLE);
 		tvArtist.setText(song.getArtist());
