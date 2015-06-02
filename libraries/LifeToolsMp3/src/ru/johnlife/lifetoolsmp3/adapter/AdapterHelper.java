@@ -305,25 +305,24 @@ public class AdapterHelper {
 	}
 
 	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater, boolean whiteTheme, int idCustomView, boolean useIndicator) {
-		View target = convertView;
 		ViewBuilder builder;
-		if (null == target) {
+		if (null == convertView) {
 			boolean isCustomView = idCustomView > 0;
 			if (isCustomView) {
-				target = inflater.inflate(idCustomView, null);
+				convertView = inflater.inflate(idCustomView, null);
 			} else if (whiteTheme) {
-				target = inflater.inflate(R.layout.row_online_search_white2, null);
+				convertView = inflater.inflate(R.layout.row_online_search_white2, null);
 			} else {
 				if (Util.getSimpleThemeName(inflater.getContext()).equals("AppTheme.White")) {
-					target = inflater.inflate(R.layout.row_online_search_white, null);
+					convertView = inflater.inflate(R.layout.row_online_search_white, null);
 				} else {
-					target = inflater.inflate(R.layout.row_online_search, null);
+					convertView = inflater.inflate(R.layout.row_online_search, null);
 				}
 			}
-			builder = new ViewBuilder(target, whiteTheme, isCustomView, useIndicator);
+			builder = new ViewBuilder(convertView, whiteTheme, isCustomView, useIndicator);
 		} else {
 			try {
-				builder = (ViewBuilder) target.getTag();
+				builder = (ViewBuilder) convertView.getTag();
 			} catch (Exception e) {
 				return getViewBuilder(null, inflater, whiteTheme, idCustomView, useIndicator); // something wrong with the supplied view - create new one
 			}
