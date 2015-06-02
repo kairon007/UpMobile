@@ -962,6 +962,7 @@ public abstract class OnlineSearchView extends View {
 	}
 
 	private void getNextResults(boolean cancel) {
+		if (null == taskIterator) return;
 		showRefreshProgress();
 		if (!taskIterator.hasNext()) {
 			hideRefreshProgress();
