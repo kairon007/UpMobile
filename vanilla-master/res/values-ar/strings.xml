@@ -197,5 +197,6 @@
     <string name="show_bottom">أسفل</string>
     <string name="lyric_no_internet">لا يمكن أن يكون لا اتصال إنترنت. \nLyrics التحميل.</string>
     <!-- end of translatable -->
-
+    
+    <string name="song_open_failed">غير قادر على تشغيل أغنية.</string>
 </resources>

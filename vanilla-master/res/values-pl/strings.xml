@@ -192,4 +192,6 @@
   <string name="show_bottom">Dno</string>
   <string name="lyric_no_internet">Nie internet połączenie. \nLyrics może być obciążenia.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Nie można odtworzyć utwór.</string>
 </resources>

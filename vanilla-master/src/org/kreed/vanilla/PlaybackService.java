@@ -1464,8 +1464,7 @@ public final class PlaybackService extends Service
 		default:
 			throw new IllegalArgumentException("Invalid add mode: " + query.mode);
 		}
-
-		Toast.makeText(this, getResources().getQuantityString(text, count, count), Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, count != 0 ? getResources().getQuantityString(text, count, count) : getResources().getString(R.string.song_open_failed), Toast.LENGTH_SHORT).show();	
 	}
 
 	/**

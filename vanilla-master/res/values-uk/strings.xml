@@ -196,4 +196,5 @@
     <string name="lyric_no_internet">Немає інтернет зєднання. \nЛірікі не може бути навантаження.</string>
     <!-- end of translatable -->
 
+	<string name="song_open_failed">Не в змозі грати пісню.</string>
 </resources>

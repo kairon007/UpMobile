@@ -192,4 +192,6 @@
   <string name="show_bottom">Отдолу</string>
   <string name="lyric_no_internet">Няма интернет връзка. \nLyrics не може да бъде натоварване.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Не може да играе на песен.</string>
 </resources>

@@ -192,4 +192,6 @@
   <string name="show_bottom">तल</string>
   <string name="lyric_no_internet">कोई इंटरनेट कनेक्शन. \nLyrics लोड नहीं किया जा सकता।</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">एक गाना खेलने के लिए में असमर्थ।</string>
 </resources>

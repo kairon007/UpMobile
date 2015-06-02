@@ -192,4 +192,6 @@
   <string name="show_bottom">Partea de jos</string>
   <string name="lyric_no_internet">Nici o conexiune la internet. \nLyrics nu poate fi sarcina.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Imposibilitatea de a reda o melodie.</string>
 </resources>

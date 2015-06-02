@@ -38,7 +38,8 @@
     <string name="stop_current_song">Остановить по окончанию проигрывания песни</string>
     <string name="random">Случайная</string>
     <string name="random_enabling">Случайное воиспроизведение включено</string>
-    <string name="song_load_failed">Не удалось загрузить песню %s. Она может быть поврежден или отсутствует.</string>
+    <string name="song_load_failed">Не удалось загрузить песню %s. Она может быть повреждена или отсутствует.</string>
+	<string name="song_open_failed">Не удалось воспроизвести песню.</string>
     <string name="queue_cleared">Очередь очищена.</string>
     <string name="cover_art">Обложки</string>
     <string name="close_notification">Закрыть уведомление</string>

@@ -194,4 +194,6 @@
   <string name="show_bottom">Parte inferior</string>
   <string name="lyric_no_internet">Ninguna conexión de internet. \nLyrics no puede ser carga.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Ei saa esitada mingit laulu.</string>
 </resources>

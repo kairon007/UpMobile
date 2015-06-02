@@ -192,4 +192,6 @@
   <string name="show_bottom">ด้านล่าง</string>
   <string name="lyric_no_internet">ไม่มีอินเทอร์เน็ตเชื่อมต่อ \nLyrics ไม่สามารถโหลด</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">ไม่สามารถเล่นเพลง</string>
 </resources>

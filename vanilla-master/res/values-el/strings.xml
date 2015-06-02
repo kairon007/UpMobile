@@ -195,4 +195,6 @@
   <string name="show_bottom">Κάτω μέρος</string>
   <string name="lyric_no_internet">Δεν Διαδίκτυο σύνδεση. \nLyrics δεν μπορεί να είναι το φορτίο.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Σε θέση να παίξει ένα τραγούδι.</string>
 </resources>

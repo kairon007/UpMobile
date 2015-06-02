@@ -192,4 +192,6 @@
   <string name="show_bottom">Bawah</string>
   <string name="lyric_no_internet">Tidak ada koneksi internet. \nLyrics tidak dapat terbaca.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Mampu memainkan sebuah lagu.</string>
 </resources>

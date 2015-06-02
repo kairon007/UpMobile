@@ -192,4 +192,6 @@
   <string name="show_bottom">Alsó</string>
   <string name="lyric_no_internet">Nincs internet kapcsolat. \nLyrics terhelés nem lehet.</string>
   <!-- end of translatable -->
+  
+  <string name="song_open_failed">Nem lehet játszani egy dalt.</string>
 </resources>
