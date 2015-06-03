@@ -24,7 +24,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 public final class Util {
@@ -208,12 +207,17 @@ public final class Util {
 	    return dp;
 	}
 	
-	public static Bitmap textViewToBitmap(View view, int width, int height){
+	public static Bitmap textViewToBitmap(View view, int width, int height, int pR, int pT){
 		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 	    Canvas c = new Canvas(bmp);
-	    view.layout(0, 0, width, height);
+	    view.layout(pR, pT, width + pR, height + pT);
+	    android.util.Log.d("logd", "textViewToBitmap: " + view.getLayoutParams());
 	    view.draw(c);
 		return bmp;
+	}
+	
+	public static Bitmap textViewToBitmap(View view, int width, int height){
+		return textViewToBitmap(view, width, height, 0, 0);
 	}
 	
 	public static float pixelsToSp(Context context, float px) {

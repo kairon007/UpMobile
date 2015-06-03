@@ -31,12 +31,15 @@ import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
 import ru.johnlife.lifetoolsmp3.ui.widget.processbutton.iml.ActionProcessButton;
+import ru.johnlife.lifetoolsmp3.ui.widget.pulltozoomview.PullToZoomScrollViewEx;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,13 +48,12 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
-import android.view.Display;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -68,7 +70,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
-import com.csform.android.uiapptemplate.view.PullToZoomScrollView;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
 
@@ -80,8 +81,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private DownloadListener downloadListener;
 	private ProgressUpdaterListener progressListener;
 
-	private PullToZoomScrollView scrollView;
 	private View contentView;
+	private View headView;
+	private ImageView coverView;
+	private View playerContent;
 
 	private ActionProcessButton download;
 	private RippleView ciRippleView;
@@ -113,12 +116,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
 	private TrueSeekBar playerProgress;
-	private ImageView imageView;
 	private Bitmap defaultCover;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
-	private int minHeight;
 	private double percent = 0;
 
 	private boolean isDestroy;
@@ -201,33 +202,44 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			});
 		}
 	};
+	private PullToZoomScrollViewEx scrollView;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
-		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+//		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		loadViewForCode();
 		isDestroy = false;
-		scrollView = new PullToZoomScrollView(getActivity());
+		scrollView = (PullToZoomScrollViewEx) contentView.findViewById(R.id.scroll_view);
 		player = PlaybackService.get(getActivity());
 		song = player.getPlayingSong();
-		init(contentView);
+		init(playerContent);
 		setListeners();
-		scrollView.setContentContainerView(contentView);
-		return scrollView;
+		initHeaderSize();
+		return contentView;
 	}
-	
-	private void initCover() {
+
+	private void initHeaderSize() {
+		DisplayMetrics localDisplayMetrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(localDisplayMetrics);
+		int mScreenWidth = localDisplayMetrics.widthPixels;
+		int outWidth = (int) (9.0F * (mScreenWidth / 16.0F));
+		LinearLayout.LayoutParams localObject = new LinearLayout.LayoutParams(mScreenWidth, outWidth);
 		String cover =  getResources().getString(R.string.font_musics);
-		Display display = getActivity().getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		int coverHeight = Math.abs(height - contentView.getMeasuredHeight() - Util.dpToPx(getActivity(), 16) + contentView.findViewById(R.id.frame_lyrics).getMeasuredHeight());
-		minHeight = (coverHeight > width) ? width : coverHeight;
-		imageView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-		imageView.setPadding(0, 8, 0, 8);
-		defaultCover = ((MainActivity) getActivity()).getDefaultBitmapCover(minHeight, minHeight, minHeight - 16, cover);
+		android.util.Log.d("logd", "initHeaderSize: " + outWidth);
+		defaultCover = ((MainActivity) getActivity()).getDefaultBitmapCover(outWidth, outWidth, outWidth - 16, cover);
+		defaultCover = addBorder(defaultCover, outWidth / 2.6f);
+		scrollView.setHeaderLayoutParams(localObject);
 	}
 	
+	private Bitmap addBorder(Bitmap bmp, float borderSize) {
+	    Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + (int)borderSize * 2, bmp.getHeight() + (int)borderSize * 2, bmp.getConfig());
+	    Canvas canvas = new Canvas(bmpWithBorder);
+	    canvas.drawColor(Color.TRANSPARENT);
+	    canvas.drawBitmap(bmp, borderSize, borderSize, null);
+	    return bmpWithBorder;
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		getActivity().onBackPressed();
@@ -254,7 +266,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			((RippleView) download.getParent()).setVisibility(View.GONE);
 		}
 		percent = 0;
-		initCover();
 		setCoverToZoomView(null);
 		getCover(song);
 		setImageButton();
@@ -407,11 +418,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerCurrTime = (TextView) view.findViewById(R.id.trackTime);
 		playerTotalTime = (TextView) view.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) view.findViewById(R.id.lyrics_text);
-		cbUseCover = (CheckBox) view.findViewById(R.id.cbUseCover);
+		cbUseCover = (CheckBox) headView.findViewById(R.id.cbUseCover);
 		artistBox = (LinearLayout) view.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) view.findViewById(R.id.songNameBox);
 		undo = new UndoBar(getActivity());
-		imageView = new ImageView(getActivity());
 	}
 
 	private void setListeners() {
@@ -750,11 +760,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void setCoverToZoomView(Bitmap bitmap) {
 		this.bitmap = bitmap;
 		if (isDestroy) return;
-		Bitmap createScaledBitmap = Bitmap.createScaledBitmap(null == bitmap ? defaultCover : bitmap, minHeight, minHeight, false);
-		imageView.setImageBitmap(null);
-		imageView.setImageBitmap(createScaledBitmap);
-		imageView.requestLayout();
-		scrollView.setZoomView(imageView);
+		coverView.setImageBitmap(null == bitmap ? defaultCover : bitmap);
 	}
 	
 	private void setCheckBoxState(boolean state) {
@@ -942,9 +948,19 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		initCover();
+		initHeaderSize();
 		setCoverToZoomView(bitmap);
 		super.onConfigurationChanged(newConfig);
 	}
+	
+    private void loadViewForCode() {
+        PullToZoomScrollViewEx scrollView = (PullToZoomScrollViewEx) contentView.findViewById(R.id.scroll_view);
+        headView = LayoutInflater.from(getActivity()).inflate(R.layout.player_header_view, null, false);
+        coverView = (ImageView) LayoutInflater.from(getActivity()).inflate(R.layout.player_cover, null, false);
+        playerContent = LayoutInflater.from(getActivity()).inflate(R.layout.player_fragment_content, null, false);
+        scrollView.setHeaderView(headView);
+        scrollView.setZoomView(coverView);
+        scrollView.setScrollContentView(playerContent);
+    }
 	
 }

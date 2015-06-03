@@ -159,10 +159,10 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	}
 	
 	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image) {
-			return property < 0 ? null : getDefaultBitmapCover(outWidth, outHeight, property, image, 0);
+			return property < 0 ? null : getDefaultBitmapCover(outWidth, outHeight, property, image, 0, 0, 0);
 	}
 	
-	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image, int customColor) {
+	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image, int customColor, int pL,int pT) {
 		MusicTextView textCover = new MusicTextView(this);
 		textCover.setText(image);
 		textCover.setTextColor(getResources().getColor(customColor == 0 ? R.color.main_color_500 : customColor));
@@ -322,12 +322,12 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 
 	@Override
 	protected Bitmap getSearchActinBarIcon() {
-		return getDefaultBitmapCover(Util.dpToPx(this, 24), Util.dpToPx(this, 24), Util.dpToPx(this, 22), getResources().getString(R.string.font_search_online), R.color.main_color_for_search_fragment_text);
+		return getDefaultBitmapCover(Util.dpToPx(this, 24), Util.dpToPx(this, 24), Util.dpToPx(this, 22), getResources().getString(R.string.font_search_online), R.color.main_color_for_search_fragment_text, 0, 0);
 	}
 	
 	@Override
 	protected Bitmap getCloseActinBarIcon() {
-		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel),  R.color.main_color_for_search_fragment_text);
+		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel),  R.color.main_color_for_search_fragment_text, 0, 0);
 	}
 	
 	@Override
