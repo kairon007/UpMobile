@@ -328,15 +328,15 @@ public class StateKeeper {
 	}
 	
 	private void notifyLable() {
-		if (null != searchView && notifyLable) {
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-				
-				@Override
-				public void run() {
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+			@Override
+			public void run() {
+				if (null != searchView && notifyLable) {
 					searchView.notifyAdapter();
 				}
-			});
-		}
+			}
+		});
 	}
 	
 	public void putSongInfo(String comment, String path, int status) {
