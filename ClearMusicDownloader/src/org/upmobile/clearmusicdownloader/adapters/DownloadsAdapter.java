@@ -41,6 +41,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	}
 	
 	public void removeItem(MusicData item) {
+		if (null == item) return;
 		DownloadCache.getInstanse().remove(item.getArtist(), item.getTitle());
 		remove(item);
 		if (item.getId() == -1) return;

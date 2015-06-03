@@ -46,7 +46,7 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	@Override
 	public void removeItem(MusicData item) {
 		super.removeItem(item);
-		if (item.getId() == -1)	return;
+		if (null == item || item.getId() == -1)	return;
 		DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 		try {
 			manager.remove(item.getId());

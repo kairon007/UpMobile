@@ -68,6 +68,7 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 	}
 	
 	protected void removeItem(MusicData item) {
+		if (null == item) return;
 		String comment =  item.getComment();
 		if (AbstractSong.EMPTY_COMMENT.equals(comment)) {
 			comment = DownloadCache.getInstanse().getCommentFromItem(item.getTitle(), item.getArtist());
