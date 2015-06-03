@@ -27,14 +27,20 @@ import java.util.regex.Pattern;
 
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
 import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AlbumColumns;
+import android.provider.MediaStore.Audio.ArtistColumns;
+import android.provider.MediaStore.Audio.AudioColumns;
+import android.provider.MediaStore.Audio.GenresColumns;
+import android.provider.MediaStore.Audio.PlaylistsColumns;
+import android.provider.MediaStore.MediaColumns;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +57,7 @@ import android.widget.SectionIndexer;
  * specific group to be displayed, e.g. only songs from a certain artist. See
  * getLimiter and setLimiter for details.
  */
+@SuppressLint("DefaultLocale")
 public class MediaAdapter extends SortAdapter implements SectionIndexer, LibraryAdapter, View.OnClickListener {
 	
 	private static final Pattern SPACE_SPLIT = Pattern.compile("\\s+");
@@ -88,7 +95,6 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 	 * The URI of the content provider backing this adapter.
 	 */
 	private Uri mStore;
-	private Bitmap songCover;
 	/**
 	 * The fields to use from the content provider. The last field will be
 	 * displayed in the MediaView, as will the first field if there are multiple
@@ -162,33 +168,33 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 		switch (type) {
 		case MediaUtils.TYPE_ARTIST:
 			mStore = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Artists.ARTIST, "null", MediaStore.Audio.Artists.NUMBER_OF_TRACKS };
-			mFieldKeys = new String[] { MediaStore.Audio.Artists.ARTIST_KEY };
+			mFields = new String[] { ArtistColumns.ARTIST, "null", ArtistColumns.NUMBER_OF_TRACKS };
+			mFieldKeys = new String[] { ArtistColumns.ARTIST_KEY };
 			mSongSort = MediaUtils.DEFAULT_SORT;
 			mSortEntries = new int[] { R.string.name, R.string.number_of_tracks };
 			mSortValues = new String[] { "artist_key %1$s", "number_of_tracks %1$s,artist_key %1$s" };
 			break;
 		case MediaUtils.TYPE_ALBUM:
 			mStore = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ARTIST, MediaStore.Audio.Albums.NUMBER_OF_SONGS };
+			mFields = new String[] { AlbumColumns.ALBUM, AlbumColumns.ARTIST, AlbumColumns.NUMBER_OF_SONGS };
 			// Why is there no artist_key column constant in the album
 			// MediaStore? The column does seem to exist.
-			mFieldKeys = new String[] { "artist_key", MediaStore.Audio.Albums.ALBUM_KEY };
+			mFieldKeys = new String[] { "artist_key", AlbumColumns.ALBUM_KEY };
 			mSongSort = "album_key,track";
 			mSortEntries = new int[] { R.string.name, R.string.artist_album, R.string.year, R.string.number_of_tracks };
 			mSortValues = new String[] { "album_key %1$s", "artist_key %1$s,album_key %1$s", "minyear %1$s,album_key %1$s", "numsongs %1$s,album_key %1$s" };
 			break;
 		case MediaUtils.TYPE_SONG:
 			mStore = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DATA };
-			mFieldKeys = new String[] { MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE_KEY };
+			mFields = new String[] { MediaColumns.TITLE, AudioColumns.ARTIST, MediaColumns.DATA };
+			mFieldKeys = new String[] { AudioColumns.ARTIST_KEY, AudioColumns.ALBUM_KEY, AudioColumns.TITLE_KEY };
 			mSortEntries = new int[] { R.string.name, R.string.artist_album_track, R.string.artist_album_title, R.string.artist_year, R.string.year };
 			mSortValues = new String[] { "title_key %1$s", "artist_key %1$s,album_key %1$s,track %1$s", "artist_key %1$s,album_key %1$s,title_key %1$s", "artist_key %1$s,year %1$s,track %1$s",
 					"year %1$s,title_key %1$s" };
 			break;
 		case MediaUtils.TYPE_PLAYLIST:
 			mStore = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Playlists.NAME };
+			mFields = new String[] { PlaylistsColumns.NAME };
 			mFieldKeys = null;
 			mSortEntries = new int[] { R.string.name, R.string.date_added };
 			mSortValues = new String[] { "name %1$s", "date_added %1$s" };
@@ -196,7 +202,7 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 			break;
 		case MediaUtils.TYPE_GENRE:
 			mStore = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
-			mFields = new String[] { MediaStore.Audio.Genres.NAME, MediaStore.Audio.GenresColumns.NAME, MediaStore.Audio.GenresColumns.NAME };
+			mFields = new String[] { GenresColumns.NAME, MediaStore.Audio.GenresColumns.NAME, MediaStore.Audio.GenresColumns.NAME };
 			mFieldKeys = null;
 			mSortEntries = new int[] { R.string.name };
 			mSortValues = new String[] { "name %1$s" };
@@ -259,7 +265,7 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 			selection.append("is_music!=0");
 		}
 
-		if (constraint != null && constraint.length() != 0) {
+		if (constraint != null && !constraint.isEmpty()) {
 			String[] needles;
 			String[] keySource;
 
@@ -303,17 +309,16 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 			// Genre is not standard metadata for MediaStore.Audio.Media.
 			// We have to query it through a separate provider. : /
 			return MediaUtils.buildGenreQuery((Long) limiter.data, projection, selection.toString(), selectionArgs, sort);
-		} else {
-			if (limiter != null) {
-				if (selection.length() != 0)
-					selection.append(" AND ");
-				selection.append(limiter.data);
-			}
-
-			QueryTask queryTask = new QueryTask(mStore, projection, selection.toString(), selectionArgs, sort);
-			queryTask.type = mType;
-			return queryTask;
 		}
+		if (limiter != null) {
+			if (selection.length() != 0)
+				selection.append(" AND ");
+			selection.append(limiter.data);
+		}
+
+		QueryTask queryTask = new QueryTask(mStore, projection, selection.toString(), selectionArgs, sort);
+		queryTask.type = mType;
+		return queryTask;
 	}
 
 	@Override
@@ -383,11 +388,11 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 		switch (mType) {
 		case MediaUtils.TYPE_ARTIST:
 			fields = new String[] { cursor.getString(1) };
-			data = String.format("%s=%d", MediaStore.Audio.Media.ARTIST_ID, id);
+			data = String.format("%s=%d", AudioColumns.ARTIST_ID, id);
 			break;
 		case MediaUtils.TYPE_ALBUM:
 			fields = new String[] { cursor.getString(2), cursor.getString(1) };
-			data = String.format("%s=%d", MediaStore.Audio.Media.ALBUM_ID, id);
+			data = String.format("%s=%d", AudioColumns.ALBUM_ID, id);
 			break;
 		case MediaUtils.TYPE_GENRE:
 			fields = new String[] { cursor.getString(1) };

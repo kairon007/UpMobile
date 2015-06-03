@@ -350,7 +350,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			case MediaUtils.TYPE_ARTIST:
 				adapter = mArtistAdapter = new MediaAdapter(activity, MediaUtils.TYPE_ARTIST, null);
 				mArtistAdapter.setExpandable(mSongsPosition != -1 || mAlbumsPosition != -1);
-				mArtistHeader = header = (TextView) inflater.inflate(R.layout.library_row, null);
+				mArtistHeader = header = (TextView) inflater.inflate(R.layout.library_row, listView);
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					mArtistHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
 				}
@@ -360,7 +360,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				adapter = mAlbumAdapter = new MediaAdapter(activity, MediaUtils.TYPE_ALBUM, mPendingAlbumLimiter);
 				mAlbumAdapter.setExpandable(mSongsPosition != -1);
 				mPendingAlbumLimiter = null;
-				mAlbumHeader = header = (TextView) inflater.inflate(R.layout.library_row, null);
+				mAlbumHeader = header = (TextView) inflater.inflate(R.layout.library_row, listView);
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					mAlbumHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
 				}
@@ -369,7 +369,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 			case MediaUtils.TYPE_SONG:
 				adapter = mSongAdapter = new MediaAdapter(activity, MediaUtils.TYPE_SONG, mPendingSongLimiter);
 				mPendingSongLimiter = null;
-				mSongHeader = header = (TextView) inflater.inflate(R.layout.library_row, null);
+				mSongHeader = header = (TextView) inflater.inflate(R.layout.library_row, listView);
 				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
 					mSongHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
 				}
@@ -435,7 +435,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	@Override
 	public int getItemPosition(Object item) {
 		// int type = (Integer)((ListView)item).getTag();
-		// Log.d("ffuu", ""+type);
 		// int[] order = mTabOrder;
 		// for (int i = mTabCount; --i != -1; ) {
 		// if (order[i] == type)
