@@ -83,7 +83,7 @@ public class DownloadListener extends DownloadClickListener {
 					
 	 			});
 				undoBar.style(new UndoBarStyle(R.drawable.ic_play, R.string.play));
-				undoBar.show(Boolean.FALSE);
+				undoBar.show(false);
 			}
 		});
 	}

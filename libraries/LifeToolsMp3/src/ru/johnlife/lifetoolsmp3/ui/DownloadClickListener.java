@@ -74,8 +74,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	protected RemoteSong downloadingSong;
 	protected Bitmap cover;
 
-	protected Long currentDownloadId = 0L;
-	private Integer songId;
+	protected long currentDownloadId = 0;
+	private int songId;
 	private String downloadPath = null;
 
 	private int id;
@@ -620,7 +620,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			this.notificationTitle = Util.removeSpecialCharacters(song.artist) + " - " + Util.removeSpecialCharacters(song.title);
 			this.song = song;
 			this.useCover = useCover;
-			sPref = context.getSharedPreferences(DOWNLOAD_ID_GINGERBREAD, context.MODE_PRIVATE);
+			sPref = context.getSharedPreferences(DOWNLOAD_ID_GINGERBREAD, Context.MODE_PRIVATE);
 			idNotification = sPref.getInt(DOWNLOAD_KEY_GINGERBREAD, 1);
 			SharedPreferences.Editor editor = sPref.edit();
 			int i = idNotification + 1;

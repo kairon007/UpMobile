@@ -794,6 +794,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	Runnable postDownload = new Runnable() {
 		public void run() {
 			hasPost = false;
+			downloadListener.onClick(contentView);
 			((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
 				@Override
@@ -806,10 +807,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 						public void run() {
 							if (downloadListener.getSongID() == -1) {
 								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
-								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
+								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadListener.getDownloadId());
+								download.removeCallbacks(postDownload);
 							}
-							download.removeCallbacks(postDownload);
-							downloadListener.onClick(contentView);
 						}
 					});
 				}
