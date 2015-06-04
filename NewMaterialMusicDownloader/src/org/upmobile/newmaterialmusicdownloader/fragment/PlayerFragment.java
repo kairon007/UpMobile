@@ -940,13 +940,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	Runnable postDownload = new Runnable() {
 		public void run() {
 			hasPost = false;
-			downloadListener.onClick(contentView);
 			((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
 				@Override
 				public void success(String url) {
 					if (!url.startsWith("http")) return;
 					((RemoteSong) song).setDownloadUrl(url);
+					downloadListener.onClick(contentView);
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 						@Override
