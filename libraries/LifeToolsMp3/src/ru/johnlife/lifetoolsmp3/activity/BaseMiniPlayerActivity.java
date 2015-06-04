@@ -21,6 +21,7 @@ import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -635,6 +636,15 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	
 	protected DownloadClickListener createDownloadListener (RemoteSong song) {
 		return new DownloadClickListener(this, song, 0);
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		View view = (View) miniPlayer.getParent();
+		if (null != view) {
+			view.clearAnimation();
+		}
+		super.onConfigurationChanged(newConfig);
 	}
 	
 }
