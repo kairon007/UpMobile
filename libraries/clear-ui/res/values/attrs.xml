@@ -8,7 +8,7 @@
         <attr name="background_color" format="color"/>
     </declare-styleable>
     <declare-styleable name="UIParallaxScroll">
-        <attr name="headerView" format="integer"/>
+        <attr name="clrheaderView" format="integer"/>
         <attr name="backgroundView" format="integer"/>
     </declare-styleable>
 </resources>

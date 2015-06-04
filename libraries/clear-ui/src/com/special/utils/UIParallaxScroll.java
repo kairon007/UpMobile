@@ -48,7 +48,7 @@ public class UIParallaxScroll extends ScrollView {
         if (attrs != null) {
             TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.UIParallaxScroll, defStyle, 0);
             mBackgroundResId = values.getResourceId(R.styleable.UIParallaxScroll_backgroundView, 0);
-            mHeaderResId = values.getResourceId(R.styleable.UIParallaxScroll_headerView, 0);
+            mHeaderResId = values.getResourceId(R.styleable.UIParallaxScroll_clrheaderView, 0);
             values.recycle();
         }
 
