@@ -211,7 +211,6 @@ public final class Util {
 		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 	    Canvas c = new Canvas(bmp);
 	    view.layout(pR, pT, width + pR, height + pT);
-	    android.util.Log.d("logd", "textViewToBitmap: " + view.getLayoutParams());
 	    view.draw(c);
 		return bmp;
 	}

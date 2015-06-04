@@ -226,7 +226,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		int outWidth = (int) (9.0F * (mScreenWidth / 16.0F));
 		LinearLayout.LayoutParams localObject = new LinearLayout.LayoutParams(mScreenWidth, outWidth);
 		String cover =  getResources().getString(R.string.font_musics);
-		android.util.Log.d("logd", "initHeaderSize: " + outWidth);
 		defaultCover = ((MainActivity) getActivity()).getDefaultBitmapCover(outWidth, outWidth, outWidth - 16, cover);
 		defaultCover = addBorder(defaultCover, outWidth / 2.6f);
 		scrollView.setHeaderLayoutParams(localObject);
@@ -418,7 +417,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerCurrTime = (TextView) view.findViewById(R.id.trackTime);
 		playerTotalTime = (TextView) view.findViewById(R.id.trackTotalTime);
 		playerLyricsView = (TextView) view.findViewById(R.id.lyrics_text);
-		cbUseCover = (CheckBox) headView.findViewById(R.id.cbUseCover);
+		cbUseCover = (CheckBox) view.findViewById(R.id.cbUseCover);
 		artistBox = (LinearLayout) view.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) view.findViewById(R.id.songNameBox);
 		undo = new UndoBar(getActivity());
@@ -950,6 +949,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	public void onConfigurationChanged(Configuration newConfig) {
 		initHeaderSize();
 		setCoverToZoomView(bitmap);
+		contentView.invalidate();
 		super.onConfigurationChanged(newConfig);
 	}
 	
