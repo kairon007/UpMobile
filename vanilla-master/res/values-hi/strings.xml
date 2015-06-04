@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">एक गाना खेलने के लिए में असमर्थ।</string>
+  <string name="media_error_unknown">प्लेबैक के दौरान कोई अज्ञात त्रुटि उत्पन्न हुई।</string>
+  <string name="media_error_service_died">उत्तर के साथ संबंध विच्छेद किया गया है। आपके इंटरनेट कनेक्शन की जाँच करें।</string>
+  <string name="media_error_io">जिस फ़ाइल या URL पढ़ने में त्रुटि। गीत को फिर से डाउनलोड करने का प्रयास करें।</string>
+  <string name="media_error_unsupported">डिवाइस इस फ़ाइल स्वरूप का समर्थन नहीं करता। यह किसी अन्य खोज सेवा से डाउनलोड करने का प्रयास करें।</string>
+  <string name="media_error_timed_out">टाइमआउट। कृपया पुन: प्रयास करें।</string>
 </resources>

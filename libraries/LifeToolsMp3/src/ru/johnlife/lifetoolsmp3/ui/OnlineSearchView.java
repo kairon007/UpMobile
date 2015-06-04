@@ -518,7 +518,7 @@ public abstract class OnlineSearchView extends View {
 								
 								@Override
 								public void run() {
-									showMessage(error);
+									showMessage(getResources().getString(R.string.error_getting_url_songs));
 								}
 							});
 						}
@@ -1040,11 +1040,13 @@ public abstract class OnlineSearchView extends View {
 				}
 
 				@Override
-				public void error(String error) {
+				public void error(final String error) {
+					System.out.println("!!! OnlineSearchView error");
 					((Activity) getContext()).runOnUiThread(new Runnable() {
 
 						@Override
 						public void run() {
+							System.out.println("!!! OnlineSearchView Error = " + error + " str = "+getResources().getString(R.string.error_getting_url_songs));
 							dismissProgressDialog();
 							keeper.closeDialog(StateKeeper.PROGRESS_DIALOG);
 							Toast toast = Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT);
@@ -1064,6 +1066,7 @@ public abstract class OnlineSearchView extends View {
 
 				@Override
 				public void error(String error) {
+					System.out.println("!!! OnlineSearchView else error");
 					dismissProgressDialog();
 				}
 			});
@@ -1225,6 +1228,7 @@ public abstract class OnlineSearchView extends View {
 	}
 	
 	protected void showMessage(String msg) {
+		System.out.println("!!! showMessage");
 		Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
 	}
 	

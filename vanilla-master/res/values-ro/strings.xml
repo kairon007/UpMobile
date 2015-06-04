@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Imposibilitatea de a reda o melodie.</string>
+  <string name="media_error_unknown">Eroare necunoscută în timpul redării.</string>
+  <string name="media_error_service_died">Legătura cu partea de nord a fost întreruptă. Verificaţi conexiunea la Internet.</string>
+  <string name="media_error_io">Eroare la citirea fişierul sau URL. Încercaţi să descărcaţi din nou piesa.</string>
+  <string name="media_error_unsupported">Dispozitivul nu acceptă acest format de fişier. Încercaţi să descărcaţi-l la un alt serviciu de căutare.</string>
+  <string name="media_error_timed_out">Timeout. Vă rugăm să încercaţi din nou.</string>
 </resources>

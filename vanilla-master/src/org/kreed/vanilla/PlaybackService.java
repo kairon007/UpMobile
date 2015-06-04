@@ -28,6 +28,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.SuppressLint;
@@ -57,6 +58,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Virtualizer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -1083,11 +1085,16 @@ public final class PlaybackService extends Service
 					}
 				}
 			});
-		} catch (IOException e) {
-			mErrorMessage = getResources().getString(R.string.song_load_failed, song.path);
+		} catch (IllegalArgumentException e) {
+            Log.e("MediaPlayer", "IllegalArgumentException...");
+        } catch (IllegalStateException e) {
+            Log.e("MediaPlayer", "IllegalStateException...");
+        } catch (IOException e) {
+            Log.e("MediaPlayer", "IOException...");
+			File file = new File(song.path);
+			mErrorMessage = getResources().getString(R.string.song_load_failed, file.getName());
 			updateState(mState | FLAG_ERROR);
 			Toast.makeText(this, mErrorMessage, Toast.LENGTH_LONG).show();
-			Log.e("VanillaMusic", "IOException", e);
 		}
 		updateNotification();
 		mTimeline.purge();
@@ -1108,9 +1115,41 @@ public final class PlaybackService extends Service
 	}
 
 	@Override
-	public boolean onError(MediaPlayer player, int what, int extra)
-	{
-		Log.e("VanillaMusic", "MediaPlayer error: " + what + ' ' + extra);
+	public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+		String message = null;
+		switch (what) { // TO logs we should be aware of
+		case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+			message = getResources().getString(R.string.media_error_unknown);
+			Log.e(getClass().getSimpleName(), "Unknown media playback error");
+			break;
+		case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+			message = getResources().getString(R.string.media_error_service_died);
+			Log.e(getClass().getSimpleName(), "Server connection died");
+		default:
+			Log.e(getClass().getSimpleName(), "Generic audio playback error");
+			break;
+		}
+		switch (extra) { // To logs we should be aware of
+		case MediaPlayer.MEDIA_ERROR_IO:
+			message = getResources().getString(R.string.media_error_io);
+			Log.e(getClass().getSimpleName(), "I/O media error");
+			break;
+		case MediaPlayer.MEDIA_ERROR_MALFORMED:
+			Log.e(getClass().getSimpleName(), "Media error, malformed");
+			break;
+		case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+			message = getResources().getString(R.string.media_error_unsupported);
+			Log.e(getClass().getSimpleName(), "Unsupported media content");
+			break;
+		case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+			message = getResources().getString(R.string.media_error_timed_out);
+			Log.e(getClass().getSimpleName(), "Media timeout error");
+			break;
+		default:
+			Log.e(getClass().getSimpleName(), "Unknown playback error");
+			break;
+		}
+		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 		return true;
 	}
 
@@ -1444,9 +1483,7 @@ public final class PlaybackService extends Service
 	public void runQuery(QueryTask query)
 	{
 		int count = mTimeline.addSongs(this, query);
-
 		int text;
-
 		switch (query.mode) {
 		case SongTimeline.MODE_PLAY:
 		case SongTimeline.MODE_PLAY_POS_FIRST:

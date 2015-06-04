@@ -166,7 +166,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			
 			@Override
 			public void run() {
-				Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT).show();
 				service.stopPressed();
 			}
 		});

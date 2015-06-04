@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">노래를 재생할 수 없습니다.</string>
+  <string name="media_error_unknown">재생 하는 동안 알 수 없는 오류가 발생 했습니다.</string>
+  <string name="media_error_service_died">북한과 연결 절단 되었습니다. 인터넷 연결을 확인 하십시오.</string>
+  <string name="media_error_io">파일 또는 URL를 읽고 하는 중 오류가 발생 했습니다. 노래를 다시 다운로드 하려고 합니다.</string>
+  <string name="media_error_unsupported">장치가이 포맷을 지원 하지 않습니다. 다른 검색 서비스에서 그것을 다운로드 하려고 합니다.</string>
+  <string name="media_error_timed_out">시간이 초과 되었습니다. 다시 시도 하십시오.</string>
 </resources>

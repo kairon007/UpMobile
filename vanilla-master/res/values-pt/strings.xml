@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Não é possível reproduzir uma música.</string>
+  <string name="media_error_unknown">Ocorreu um erro desconhecido durante a reprodução.</string>
+  <string name="media_error_service_died">Conexão com o norte tem sido cortada. Verifique sua conexão de Internet.</string>
+  <string name="media_error_io">Erro ao ler o arquivo ou URL. Tente baixar a música novamente.</string>
+  <string name="media_error_unsupported">O dispositivo não suporta este formato de arquivo. Tente fazer o download de outro serviço de busca.</string>
+  <string name="media_error_timed_out">Tempo limite. Por favor, tente novamente.</string>
 </resources>

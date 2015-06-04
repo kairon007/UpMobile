@@ -194,4 +194,10 @@
   <string name="show_bottom">Dno</string>
   <string name="lyric_no_internet">Brez internetne povezave. \nLyrics ne more biti obremenitev.</string>
   <!-- end of translatable -->
+  
+  <string name="media_error_unknown">Neznana napaka med predvajanjem.</string>
+  <string name="media_error_service_died">Povezavo s severa, je bila pretrgal. Preverite povezavo z internetom.</string>
+  <string name="media_error_io">Napaka pri branju datoteke ali URL. Poskusite znova prenesti pesmi.</string>
+  <string name="media_error_unsupported">Naprava ne podpira to obliko zapisa datoteke. Začeti v travnato gričevje to s drugi iskalna storitev.</string>
+  <string name="media_error_timed_out">Časovna omejitev. Prosimo, poskusite znova.</string>
 </resources>

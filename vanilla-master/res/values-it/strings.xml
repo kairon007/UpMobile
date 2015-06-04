@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Impossibile riprodurre una canzone.</string>
+  <string name="media_error_unknown">Si è verificato un errore sconosciuto durante la riproduzione.</string>
+  <string name="media_error_service_died">Connessione con il Nord è stata interrotta. Controllare la connessione a Internet.</string>
+  <string name="media_error_io">Errore durante la lettura il file o l\'URL. Provare nuovamente a scaricare la canzone.</string>
+  <string name="media_error_unsupported">Il dispositivo non supporta questo formato di file. Prova a scaricarlo da un altro servizio di ricerca.</string>
+  <string name="media_error_timed_out">Timeout. Si prega di riprovare.</string>
 </resources>

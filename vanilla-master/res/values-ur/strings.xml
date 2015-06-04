@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">ایک گیت کو نشر کرنے میں نااہل ۔</string>
+  <string name="media_error_unknown">پلے بیک کے دوران ایک نامعلوم نقص واقع ہوا ہے ۔</string>
+  <string name="media_error_service_died">شمال کے ساتھ کنکشن منقطع ہوئے کیا گیا ہے ۔ آپ کا انٹرنیٹ کنکشن کی پڑتال کریں ۔</string>
+  <string name="media_error_io">مسل یا URL پڑھتے ہوئے نقص ۔ اس گیت کو دوبارہ ڈاؤن لوڈ کرنے کی کوشش کریں ۔</string>
+  <string name="media_error_unsupported">آلہ اس مسل وضع کی معاونت نہیں کرتا ۔ اس تلاش کے کسی دوسری خدمت سے ڈاؤن لوڈ کرنے کی کوشش کریں ۔</string>
+  <string name="media_error_timed_out">ٹائم آؤٹ ۔ براہ مہربانی دوبارہ کوشش کریں ۔</string>
 </resources>

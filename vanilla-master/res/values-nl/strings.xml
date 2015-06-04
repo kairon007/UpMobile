@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Niet in staat om een nummer te spelen.</string>
+  <string name="media_error_unknown">Er is een onbekende fout opgetreden tijdens het afspelen.</string>
+  <string name="media_error_service_died">Verbinding met het noorden heeft zijn verbroken. Controleer uw internetverbinding.</string>
+  <string name="media_error_io">Fout bij het lezen van het bestand of de URL. Probeert te downloaden van het nummer opnieuw.</string>
+  <string name="media_error_unsupported">Het apparaat biedt geen ondersteuning voor deze bestandsindeling. Probeer te downloaden vanaf een andere zoekservice.</string>
+  <string name="media_error_timed_out">Timeout. Probeer het opnieuw.</string>
 </resources>

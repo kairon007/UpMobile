@@ -195,4 +195,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Incapable de jouer une chanson.</string>
+  <string name="media_error_unknown">Une erreur inconnue s\'est produite pendant la lecture.</string>
+  <string name="media_error_service_died">Connexion avec le Nord a été interrompue. Vérifiez votre connexion Internet.</string>
+  <string name="media_error_io">Erreur de lecture du fichier ou une URL. Essayer de télécharger la chanson encore une fois.</string>
+  <string name="media_error_unsupported">L\'appareil ne supporte pas ce format de fichier. Essayez de télécharger à partir d\'un autre service de recherche.</string>
+  <string name="media_error_timed_out">Délai d\'attente. S\'il vous plaît essayer de nouveau.</string>
 </resources>

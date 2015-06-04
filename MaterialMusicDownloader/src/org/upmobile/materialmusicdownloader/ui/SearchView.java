@@ -155,7 +155,7 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 			
 			@Override
 			public void run() {
-				((MainActivity) getContext()).showMessage(error);
+				((MainActivity) getContext()).showMessage(R.string.error_getting_url_songs);
 				service.stopPressed();
 			}
 		});

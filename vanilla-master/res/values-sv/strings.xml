@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Det går inte att spela en sång.</string>
+  <string name="media_error_unknown">Ett okänt fel inträffade under uppspelning.</string>
+  <string name="media_error_service_died">Anslutning med Nord har försvunnit. Kontrollera din Internetanslutning.</string>
+  <string name="media_error_io">Fel vid läsning av filen eller URL. Försök att ladda ner låten igen.</string>
+  <string name="media_error_unsupported">Enheten stöder inte detta filformat. Försök ladda ner det från en annan söktjänst.</string>
+  <string name="media_error_timed_out">En timeout. Försök igen.</string>
 </resources>

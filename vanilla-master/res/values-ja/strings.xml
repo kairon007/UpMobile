@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">曲を再生することができません。</string>
+  <string name="media_error_unknown">再生中に不明なエラーが発生しました。</string>
+  <string name="media_error_service_died">北との接続が切断されています。インターネット接続を確認します。</string>
+  <string name="media_error_io">ファイルまたは URL の読み取りエラー。歌をもう一度ダウンロードしてください。</string>
+  <string name="media_error_unsupported">デバイスでは、このファイル形式はサポートしません。他の検索サービスからダウンロードしてください。</string>
+  <string name="media_error_timed_out">タイムアウトしました。もう一度やり直してください。</string>
 </resources>

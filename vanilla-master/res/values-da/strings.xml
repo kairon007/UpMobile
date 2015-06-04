@@ -195,4 +195,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Stand til at spille en sang.</string>
+  <string name="media_error_unknown">Der opstod en ukendt fejl under afspilning.</string>
+  <string name="media_error_service_died">Forbindelse med nord har været afbrudt. Tjek din internetforbindelse.</string>
+  <string name="media_error_io">Fejl ved læsning af fil eller URL. Prøv at downloade sangen igen.</string>
+  <string name="media_error_unsupported">Enheden understøtter ikke dette filformat. Prøv at hente det fra en anden søgetjeneste.</string>
+  <string name="media_error_timed_out">Timeout. Prøv venligst igen.</string>
 </resources>

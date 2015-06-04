@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Nelze přehrát písničku.</string>
+  <string name="media_error_unknown">Došlo k neznámé chybě během přehrávání.</string>
+  <string name="media_error_service_died">Bylo přerušeno spojení se severem. Zkontrolujte připojení k Internetu.</string>
+  <string name="media_error_io">Chyba při čtení souboru nebo adresu URL. Zkuste znovu stáhnout píseň.</string>
+  <string name="media_error_unsupported">Zařízení nepodporuje tento formát souboru. Pokuste se stáhnout z jiného vyhledávací služby.</string>
+  <string name="media_error_timed_out">Vypršel časový limit. Opakujte akci.</string>
 </resources>

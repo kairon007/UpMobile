@@ -73,8 +73,7 @@
     <string name="play_or_enqueue">Enqueue إذا لعب؛ اللعب في حالة الإيقاف المؤقت</string>
 
     <string name="deleted">حذف % s.</string>
-
-
+    
     <string name="delete_file_failed">فشل في حذف % s.</string>
     <string name="artists">الفنانين</string>
     <string name="albums">ألبومات</string>
@@ -197,6 +196,12 @@
     <string name="show_bottom">أسفل</string>
     <string name="lyric_no_internet">لا يمكن أن يكون لا اتصال إنترنت. \nLyrics التحميل.</string>
     <!-- end of translatable -->
-    
+
     <string name="song_open_failed">غير قادر على تشغيل أغنية.</string>
+    <string name="media_error_unknown">حدث خطأ غير معروف أثناء التشغيل.</string>
+    <string name="media_error_service_died">وقد قطعت اتصال مع الشمال. تحقق من الاتصال بإنترنت.</string>
+    <string name="media_error_io">حدث خطأ أثناء قراءة الملف أو URL. محاولة لتحميل الأغنية مرة أخرى.</string>
+    <string name="media_error_unsupported">الجهاز لا يدعم تنسيق الملف هذا. حاول تحميل البرنامج من خدمة بحث أخرى.</string>
+    <string name="media_error_timed_out">مهلة. الرجاء المحاولة مرة أخرى.</string>
+
 </resources>

@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">אין אפשרות לנגן שיר.</string>
+  <string name="media_error_unknown">שגיאה לא ידועה אירעה במהלך ההפעלה.</string>
+  <string name="media_error_service_died">החיבור עם הצפון נקטע. בדוק את החיבור שלך לאינטרנט.</string>
+  <string name="media_error_io">שגיאה בקריאת קובץ או כתובת URL. נסה להוריד את השיר שוב.</string>
+  <string name="media_error_unsupported">המכשיר אינו תומך בתבנית קובץ זו. לנסות להוריד אותה מאתר שירות חיפוש אחר.</string>
+  <string name="media_error_timed_out">זמן קצוב. נא נסה שוב.</string>
 </resources>

@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Mampu memainkan sebuah lagu.</string>
+  <string name="media_error_unknown">Kesalahan yang tidak dikenal terjadi selama pemutaran.</string>
+  <string name="media_error_service_died">Hubungan dengan Utara telah dipotong. Periksa koneksi Internet Anda.</string>
+  <string name="media_error_io">Kesalahan membaca file atau URL. Mencoba untuk men-download lagu lagi.</string>
+  <string name="media_error_unsupported">Perangkat tidak mendukung format file ini. Mencoba untuk men-download dari layanan pencarian yang lain.</string>
+  <string name="media_error_timed_out">Timeout. Silakan coba lagi.</string>
 </resources>

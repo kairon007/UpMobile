@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Nie można odtworzyć utwór.</string>
+  <string name="media_error_unknown">Wystąpił nieznany błąd podczas odtwarzania.</string>
+  <string name="media_error_service_died">Połączenie z północnej zostały zerwane. Sprawdź swoje połączenie internetowe.</string>
+  <string name="media_error_io">Błąd odczytu z pliku lub adresu URL. Spróbuj ponownie pobrać piosenki.</string>
+  <string name="media_error_unsupported">Urządzenie nie obsługuje tego formatu pliku. Spróbuj pobrać go z innej usługi wyszukiwania.</string>
+  <string name="media_error_timed_out">Limit czasu. Proszę spróbować ponownie.</string>
 </resources>

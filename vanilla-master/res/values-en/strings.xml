@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Unable to play a song.</string>
+  <string name="media_error_unknown">An unknown error occurred during playback.</string>
+  <string name="media_error_service_died">Connection with the North has been severed. Check your Internet connection.</string>
+  <string name="media_error_io">Error reading the file or URL. Try to download the song again.</string>
+  <string name="media_error_unsupported">The device does not support this file format. Try to download it from another search service.</string>
+  <string name="media_error_timed_out">Timeout. Please try again.</string>
 </resources>

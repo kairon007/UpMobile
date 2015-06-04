@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Negali leisti dainą.</string>
+  <string name="media_error_unknown">Atkūrimo metu įvyko nežinoma klaida.</string>
+  <string name="media_error_service_died">Ryšys su Šiaurės įtariamaisiais. Patikrinkite savo interneto ryšį.</string>
+  <string name="media_error_io">Klaida skaitant failą ar URL. Bandyti dar kartą įsirašyti daina.</string>
+  <string name="media_error_unsupported">Prietaisas nepalaiko šio failo formatas. Pabandykite atsisiųsti jį iš kitos paieškos paslaugos.</string>
+  <string name="media_error_timed_out">Skirtasis laikas. Bandykite dar kartą.</string>
 </resources>

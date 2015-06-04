@@ -197,4 +197,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Σε θέση να παίξει ένα τραγούδι.</string>
+  <string name="media_error_unknown">Παρουσιάστηκε άγνωστο σφάλμα κατά την αναπαραγωγή.</string>
+  <string name="media_error_service_died">Έχει διακοπεί η σύνδεση με το Βορρά. Ελέγξτε τη σύνδεσή σας στο Internet.</string>
+  <string name="media_error_io">Σφάλμα κατά την ανάγνωση του αρχείου ή URL. Προσπαθήστε να κατεβάσετε το τραγούδι και πάλι.</string>
+  <string name="media_error_unsupported">Η συσκευή δεν υποστηρίζει αυτήν τη μορφή αρχείου. Δοκιμάστε να το κατεβάσετε από μια άλλη υπηρεσία αναζήτησης.</string>
+  <string name="media_error_timed_out">Χρονικό όριο. Παρακαλώ ξαναπροσπαθήστε.</string>
 </resources>

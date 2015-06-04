@@ -39,7 +39,7 @@
     <string name="random">Случайная</string>
     <string name="random_enabling">Случайное воиспроизведение включено</string>
     <string name="song_load_failed">Не удалось загрузить песню %s. Она может быть повреждена или отсутствует.</string>
-	<string name="song_open_failed">Не удалось воспроизвести песню.</string>
+	<string name="song_open_failed">Не удалось воспроизвести песню. Она может быть повреждена или отсутствует.</string>
     <string name="queue_cleared">Очередь очищена.</string>
     <string name="cover_art">Обложки</string>
     <string name="close_notification">Закрыть уведомление</string>
@@ -243,5 +243,11 @@
         <item quantity="many">%d часов</item>
     </plurals>
     <!-- end of translatable -->
+    
+  <string name="media_error_unknown">Неизвестная ошибка при воспроизведении.</string>
+  <string name="media_error_service_died">Соединение с севером разорвано. Проверьте ваше соединение с интернетом.</string>
+  <string name="media_error_io">Ошибка чтения файла или URL. Попробуйте скачать песню заново.</string>
+  <string name="media_error_unsupported">Устройство не поддерживает данный формат файла. Попробуйте скачать ее с другого поискового сервиса.</string>
+  <string name="media_error_timed_out">Таймаут. Попробуйте ещё раз.</string>
 
 </resources>

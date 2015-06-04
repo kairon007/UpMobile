@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Không thể chơi một bài hát.</string>
+  <string name="media_error_unknown">Lỗi không biết xảy ra trong khi phát lại.</string>
+  <string name="media_error_service_died">Kết nối với phía Bắc đã bị cắt đứt. Kiểm tra kết nối Internet của bạn.</string>
+  <string name="media_error_io">Lỗi đọc tệp hoặc URL. Cố gắng để tải các bài hát một lần nữa.</string>
+  <string name="media_error_unsupported">Thiết bị không hỗ trợ định dạng tập tin này. Cố gắng để tải về nó từ một dịch vụ tìm kiếm.</string>
+  <string name="media_error_timed_out">Thời gian chờ. Xin vui lòng thử lại.</string>
 </resources>

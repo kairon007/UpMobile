@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Ei saa esitada mingit laulu.</string>
+  <string name="media_error_unknown">Taasesituse ajal ilmnes tundmatu tõrge.</string>
+  <string name="media_error_service_died">Seoses Põhja on katkestanud. Kontrollige Interneti-ühendust.</string>
+  <string name="media_error_io">Fail või URL-i lugemisel ilmnes tõrge. Proovige laadida laul jälle.</string>
+  <string name="media_error_unsupported">Seade ei toeta seda failivormingut. Proovige alla laadida teisele otsinguteenus.</string>
+  <string name="media_error_timed_out">Ajalõpp. Palun proovige uuesti.</string>
 </resources>

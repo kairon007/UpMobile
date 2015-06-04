@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Не може да играе на песен.</string>
+  <string name="media_error_unknown">Възникна неизвестна грешка по време на възпроизвеждане.</string>
+  <string name="media_error_service_died">Връзка със север е била отрязана. Проверете вашата интернет връзка.</string>
+  <string name="media_error_io">Грешка при четене на файла или URL. Опитайте се да изтеглите песента отново.</string>
+  <string name="media_error_unsupported">Устройството не поддържа този файлов формат. Опитайте се да го изтеглите от друга услуга за търсене.</string>
+  <string name="media_error_timed_out">Време на изчакване. Моля, опитайте отново.</string>
 </resources>

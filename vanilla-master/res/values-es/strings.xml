@@ -196,4 +196,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Ei saa esitada mingit laulu.</string>
+  <string name="media_error_unknown">Se ha producido un error desconocido durante la reproducción.</string>
+  <string name="media_error_service_died">Se ha interrumpido la conexión con el norte. Compruebe su conexión a Internet.</string>
+  <string name="media_error_io">Error al leer el archivo o URL. Trate de descargar la canción otra vez.</string>
+  <string name="media_error_unsupported">El dispositivo no admite este formato de archivo. Intenta descargarlo desde otro servicio de búsqueda.</string>
+  <string name="media_error_timed_out">Tiempo de espera. Por favor, inténtelo de nuevo.</string>
 </resources>

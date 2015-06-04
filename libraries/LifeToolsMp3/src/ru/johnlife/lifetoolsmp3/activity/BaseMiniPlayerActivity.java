@@ -518,7 +518,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 			public void error(final String error) {
 				runOnUiThread(new Runnable() {
 					public void run() {
-						showMessage(error);
+						showMessage(getString(R.string.error_getting_url_songs));
 					}
 				});
 			}

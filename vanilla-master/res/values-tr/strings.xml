@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Yapamaz-e doğru bir şarkı çal.</string>
+  <string name="media_error_unknown">Kayıttan yürütme sırasında bilinmeyen bir hata oluştu.</string>
+  <string name="media_error_service_died">Kuzey ile bağlantı koptu. Internet bağlantınızı kontrol edin.</string>
+  <string name="media_error_io">Dosya veya URL okunurken hata oluştu. Şarkı yine indirmeyi deneyin.</string>
+  <string name="media_error_unsupported">Cihazın bu dosya biçimini desteklemiyor. Başka bir arama hizmeti indirmeyi deneyin.</string>
+  <string name="media_error_timed_out">Zaman aşımı. Lütfen yeniden deneyin.</string>
 </resources>

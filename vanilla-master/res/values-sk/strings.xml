@@ -192,4 +192,10 @@
   <string name="show_bottom">Dno</string>
   <string name="lyric_no_internet">Žiadnu internet pripojenie. \nLyrics nie je možné načítať.</string>
   <!-- end of translatable -->
+  
+  <string name="media_error_unknown">Počas prehrávania sa vyskytla neznáma chyba.</string>
+  <string name="media_error_service_died">Spojenie s sever boli oddelené. Skontrolujte pripojenie na Internet.</string>
+  <string name="media_error_io">Chyba pri čítaní súboru alebo URL. Pokúste sa stiahnuť pieseň znova.</string>
+  <string name="media_error_unsupported">Zariadenie nepodporuje tento formát súboru. Pokúste sa stiahnuť z inej vyhľadávaciu službu.</string>
+  <string name="media_error_timed_out">Časový limit. Prosím skúste to znova.</string>
 </resources>

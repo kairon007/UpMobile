@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Pa t \' kapab jwe yon chante pou yo chante.</string>
+  <string name="media_error_unknown">Fè san aka san yo pa ki te fèt pandan lecture.</string>
+  <string name="media_error_service_died">Matant bò nò ki te vinn sevè. Tyeke ou kouche sou entènèt la.</string>
+  <string name="media_error_io">Bon lekti la ranpli oubyen adrès entènèt. Seye rale rale dosye a chante pou yo chante ankò.</string>
+  <string name="media_error_unsupported">Sistèm pa sipòte fòma dokiman sa a. Eseye desann li nan yon lòt sèvis rechèch.</string>
+  <string name="media_error_timed_out">Lasou yon pwent. Souple, eseye ankò.</string>
 </resources>

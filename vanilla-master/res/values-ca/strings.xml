@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Incapaç de tocar una cançó.</string>
+  <string name="media_error_unknown">S\'ha produït un error desconegut durant play back.</string>
+  <string name="media_error_service_died">Connexió amb el nord ha estat tallada. Comproveu la connexió d\'Internet.</string>
+  <string name="media_error_io">Error llegint el fitxer o URL. Intenten descarregar una altra vegada la cançó.</string>
+  <string name="media_error_unsupported">El dispositiu no admet aquest format de fitxer. Intenta descarregar des d\'un altre servei de cerca.</string>
+  <string name="media_error_timed_out">Temps d\'espera. Torneu-ho a provar.</string>
 </resources>

@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">ไม่สามารถเล่นเพลง</string>
+  <string name="media_error_unknown">เกิดข้อผิดพลาดที่ไม่รู้จักในระหว่างการเล่น</string>
+  <string name="media_error_service_died">เชื่อมต่อกับภาคเหนือมีการ severed ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต</string>
+  <string name="media_error_io">ข้อผิดพลาดในการอ่านแฟ้มหรือ URL พยายามที่จะดาวน์โหลดเพลงอีกครั้ง</string>
+  <string name="media_error_unsupported">อุปกรณ์ไม่สนับสนุนรูปแบบแฟ้มนี้ พยายามที่จะดาวน์โหลดจากบริการค้นหา</string>
+  <string name="media_error_timed_out">หมดเวลา กรุณาลองอีกครั้ง</string>
 </resources>

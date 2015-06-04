@@ -194,4 +194,9 @@
   <!-- end of translatable -->
   
   <string name="song_open_failed">Tidak dapat memainkan lagu.</string>
+  <string name="media_error_unknown">Ralat tidak diketahui berlaku semasa main semula.</string>
+  <string name="media_error_service_died">Sambungan dengan Utara telah diputuskan. Semak sambungan Internet anda.</string>
+  <string name="media_error_io">Ralat membaca fail atau URL. Cuba memuat turun lagu sekali lagi.</string>
+  <string name="media_error_unsupported">Peranti itu tidak menyokong format fail ini. Cuba muat turun dari Perkhidmatan Cari lain.</string>
+  <string name="media_error_timed_out">Tamat masa. Sila cuba sekali lagi.</string>
 </resources>

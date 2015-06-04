@@ -80,6 +80,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	protected void showMessage(String msg) {
+		System.out.println("!!! NewMaterial SearchView msg = " + msg);
 		((MainActivity) getContext()).showMessage(msg);
 	}
 	
@@ -137,7 +138,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			
 			@Override
 			public void run() {
-				((MainActivity) getContext()).showMessage(error);
+				((MainActivity) getContext()).showMessage(R.string.error_getting_url_songs);
 				service.stopPressed();
 			}
 		});
