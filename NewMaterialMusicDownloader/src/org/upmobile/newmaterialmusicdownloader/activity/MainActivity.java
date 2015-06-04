@@ -239,6 +239,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	@Override
+	public boolean onMenuOpened(final int featureId, final Menu menu) {
+	    super.onMenuOpened(featureId, menu);
+	    return false;
+	}
+	
+	@Override
 	public void showPlayerElement(boolean flag) {
 		ManagerFragmentId.switchMode(flag);
 		drawerFragment.showPlayerElement(flag);
