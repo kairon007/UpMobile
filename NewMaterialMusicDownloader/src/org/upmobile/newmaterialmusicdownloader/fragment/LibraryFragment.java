@@ -1,6 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.fragment;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
@@ -12,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class LibraryFragment extends Fragment implements Constants {
+public class LibraryFragment extends Fragment {
 	
 	private LibraryView libraryView;
 
