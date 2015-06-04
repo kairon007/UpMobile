@@ -228,7 +228,7 @@ public abstract class BaseMiniPlayerActivity extends ActionBarActivity implement
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
-		if (service.hasArray()) {
+		if (null != service && service.hasArray()) {
 			out.putParcelableArrayList(ARRAY_SAVE, service.getArrayPlayback());
 		}
 	}
