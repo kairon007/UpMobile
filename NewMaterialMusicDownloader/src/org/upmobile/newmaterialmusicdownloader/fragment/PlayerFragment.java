@@ -273,6 +273,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					if (!player.isPlaying()) {
+						playerCurrTime.setText(Util.getFormatedStrDuration(player.getCurrentPosition()));
+					}
 				}
 			}
 		});
