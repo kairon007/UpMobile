@@ -246,7 +246,7 @@ public abstract class OnlineSearchView extends View {
 				String value = sharedPreferences.getString(key, null);
 				initSearchEngines(getContext(), value);
 				String str = Util.removeSpecialCharacters(searchField.getText().toString());
-				if (!resultAdapter.isEmpty() && !str.equals("")) {
+				if (!str.isEmpty()) {
 					trySearch();
 				}
 			}
