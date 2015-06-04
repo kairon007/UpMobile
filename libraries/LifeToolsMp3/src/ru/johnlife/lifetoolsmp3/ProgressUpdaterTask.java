@@ -22,6 +22,7 @@ public class ProgressUpdaterTask extends AsyncTask<Long, Integer, String> {
 
 	@Override
 	protected String doInBackground(Long... params) {
+		if (null == context) return null;
 		DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 		int progress = 0;
 		do {
@@ -29,6 +30,7 @@ public class ProgressUpdaterTask extends AsyncTask<Long, Integer, String> {
 				return null;
 			if (params[0] != -1) {
 				Cursor c = manager.query(new DownloadManager.Query().setFilterById(params[0]));
+				if (null == c) return null;
 				if (c.moveToNext()) {
 					int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 					int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
