@@ -32,6 +32,7 @@ public final class Util {
 	public final static String WHITE_THEME = "AppTheme.White";
 	private final static int SMALL_BITMAP_SIZE = 100;
 	private final static String ZAYCEV_TAG = "(zaycev.net)";
+	private final static Object obj = new Object();
 	
 	public static long formatTime(String duration) {
 		long durationLong;
@@ -104,41 +105,45 @@ public final class Util {
 		return result;
 	}
 	
-	public synchronized static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
-		if (maxWidth == 0) {
-			return null;
-		}
-		Vector<ImageData> pictureList = metadata.getPictureList();
-		if ((pictureList == null) || (pictureList.size() == 0)) {
-			return null;
-		}
-		ImageData imageData = (ImageData) pictureList.get(0);
-		if (imageData == null) {
-			return null;
-		}
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inJustDecodeBounds = true;
-		opts.inPurgeable = true;
-		int scale = 1;
-		if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
-			// Find the correct scale value. It should be the power of 2.
-			int scaleWidth = opts.outWidth;
-			while (scaleWidth > maxWidth) {
-				scaleWidth /= 2;
-				scale *= 2;
+	public static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
+		synchronized (obj) {
+			if (maxWidth == 0) {
+				return null;
 			}
+			Vector<ImageData> pictureList = metadata.getPictureList();
+			if ((pictureList == null) || (pictureList.size() == 0)) {
+				return null;
+			}
+			ImageData imageData = (ImageData) pictureList.get(0);
+			if (imageData == null) {
+				return null;
+			}
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			opts.inPurgeable = true;
+			int scale = 1;
+			if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
+				// Find the correct scale value. It should be the power of 2.
+				int scaleWidth = opts.outWidth;
+				while (scaleWidth > maxWidth) {
+					scaleWidth /= 2;
+					scale *= 2;
+				}
+			}
+			opts = new BitmapFactory.Options();
+			opts.inSampleSize = scale;
+			Bitmap bitmap = null;
+			try {
+				bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0,
+						imageData.imageData.length, opts);
+			} catch (OutOfMemoryError e) {
+				Log.d("log", "ru.johnlife.lifetoolsmp3.Util.getArtworkImage :"
+						+ e.getMessage());
+				bitmap.recycle();
+				bitmap = null;
+			}
+			return bitmap;
 		}
-		opts = new BitmapFactory.Options();
-		opts.inSampleSize = scale;
-		Bitmap bitmap = null;
-		try {
-			bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
-		} catch (OutOfMemoryError e) {
-			Log.d("log", "ru.johnlife.lifetoolsmp3.Util.getArtworkImage :" + e.getMessage());
-			bitmap.recycle();
-			bitmap = null;
-		}
-		return bitmap;
 	}
 	
 	public synchronized static void copyFile(File source, File dest) throws IOException {
