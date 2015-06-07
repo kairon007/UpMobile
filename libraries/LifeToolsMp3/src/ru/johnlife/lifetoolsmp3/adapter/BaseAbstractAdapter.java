@@ -20,7 +20,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	protected ViewGroup parent;
 	private Filter filter;
 	
-	private int layoutId;
+	protected int layoutId;
 	private boolean doNotifyData = true;
 
 	public BaseAbstractAdapter(Context context, int resource) {

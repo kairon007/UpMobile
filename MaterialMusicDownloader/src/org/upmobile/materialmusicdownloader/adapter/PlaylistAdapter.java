@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
@@ -62,6 +63,39 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 	protected Bitmap getDefaultCover() {
 		String cover =  getContext().getResources().getString(R.string.font_musics);
 		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60,cover);
+	}
+	
+	@Override
+	protected int getSecondaryLayout() {
+		return R.layout.playlist_list_item;
+	}
+
+	@Override
+	protected ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter.ViewHolder<AbstractSong> createViewHolder(View v) {
+		return new PlaylistViewHolder(v);
+	}
+	
+	private class PlaylistViewHolder extends BasePlaylistViewHolder {
+		
+		public PlaylistViewHolder(View v) {
+			title = (TextView) v.findViewById(R.id.textTitle);
+			artist = (TextView) v.findViewById(R.id.textHint);
+			cover = v.findViewById(R.id.item_cover);
+			duaration = (TextView) v.findViewById(R.id.textDuration);
+			groupTitle = (TextView) v.findViewById(R.id.textTitle);
+			playAll = (View) v.findViewById(R.id.playAll);
+		}
+
+		@Override
+		protected void hold(AbstractSong data, int position) {
+			super.hold(data, position);
+		}
+		
+	}
+
+	@Override
+	protected int getFirstLayout() {
+		return R.layout.playlist_group_item;
 	}
 
 }

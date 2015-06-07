@@ -172,7 +172,7 @@ public class PlaylistView extends BasePlaylistView {
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	        	for (int position : reverseSortedPositions) {
-	        		AbstractSong data = adapter.getItem(position);
+	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
 	        		if (data.getClass() == MusicData.class) {
 	        			removeData(getViewByPosition((ListView) listView, position), getPlaylistBySong((MusicData) data), (MusicData) data);
 	        		} else {

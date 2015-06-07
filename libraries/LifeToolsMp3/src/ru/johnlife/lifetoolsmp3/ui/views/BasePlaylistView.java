@@ -138,7 +138,7 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				AbstractSong data = adapter.getItem(position);
+				AbstractSong data = (AbstractSong) adapter.getItem(position);
 				showMenu(view, data.getClass() == MusicData.class ? getPlaylistBySong((MusicData) data) : (PlaylistData)data, data.getClass() == MusicData.class ? (MusicData)data : null);
 				return false;
 			}
@@ -164,7 +164,7 @@ public abstract class BasePlaylistView extends View {
 						setGroupIndicator(view, 0);
 					}
 					adapter.clear();
-					adapter.addAll(playlists);
+					adapter.add(playlists);
 					adapter.notifyDataSetChanged();
 				} else {
 					Util.hideKeyboard(getContext(), view);
@@ -204,9 +204,9 @@ public abstract class BasePlaylistView extends View {
 		for (AbstractSong playlistData : playlists) {
 			((PlaylistData) playlistData).setSongs(((PlaylistData) playlistData).getSongsFromPlaylist(getContext(), playlistData.getId()));
 		}
-		adapter.setNotifyOnChange(false);
+//		adapter.setNotifyOnChange(false);
 		adapter.clear();
-		adapter.addAll(playlists);
+		adapter.add(playlists);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -333,11 +333,11 @@ public abstract class BasePlaylistView extends View {
 			
 			@Override
 			public void run() {
-				adapter.setNotifyOnChange(false);
+//				adapter.setNotifyOnChange(false);
 				adapter.clear();
-				adapter.addAll(playlists);
-				adapter.setNotifyOnChange(true);
-				adapter.notifyDataSetChanged();
+				adapter.add(playlists);
+//				adapter.setNotifyOnChange(true);
+//				adapter.notifyDataSetChanged();
 			}
 		});
 	}
