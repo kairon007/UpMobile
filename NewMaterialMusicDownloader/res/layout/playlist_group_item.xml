@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:background="@android:color/white"
+    android:gravity="center_vertical" >
+
+    <!--
+     <ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/RippleStyleShortPress"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:background="@android:color/white"
     android:gravity="center_vertical" >
+    -->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true" >
+        android:layout_height="match_parent" >
 
         <ImageView
             android:id="@+id/customGroupIndicator"
@@ -34,8 +42,9 @@
 
         <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
             style="@style/RippleStyleCircle"
-            android:layout_width="48dp"
-            android:layout_height="48dp" >
+            android:layout_width="64dp"
+            android:layout_height="64dp" 
+            android:layout_gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/playAll"
@@ -47,4 +56,6 @@
         </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
     </LinearLayout>
 
-</ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+    <!-- </ru.johnlife.lifetoolsmp3.ui.widget.RippleView> -->
+
+</FrameLayout>

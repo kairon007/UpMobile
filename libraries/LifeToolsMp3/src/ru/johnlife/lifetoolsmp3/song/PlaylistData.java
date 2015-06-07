@@ -2,15 +2,18 @@ package ru.johnlife.lifetoolsmp3.song;
 
 import java.util.ArrayList;
 
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Parcel;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
-public class PlaylistData {
+public class PlaylistData implements AbstractSong{
 
 	private final static String EXTERNAL = "external";
 
@@ -19,6 +22,8 @@ public class PlaylistData {
 	private String name;
 
 	private ArrayList<MusicData> songs;
+	
+	private boolean isExpanded = false;
 
 	public final String[] PROJECTION_MUSIC = { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.TITLE,
 			MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.ALBUM, };
@@ -131,5 +136,96 @@ public class PlaylistData {
 		} catch (UnsupportedOperationException ex) {
 			return null;
 		}
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(id);
+		dest.writeString(name);
+	}
+
+	@Override
+	public String getPath() {
+		return null;
+	}
+
+	@Override
+	public String getTitle() {
+		return null;
+	}
+
+	@Override
+	public String getArtist() {
+		return null;
+	}
+
+	@Override
+	public String getAlbum() {
+		return null;
+	}
+
+	@Override
+	public Bitmap getCover() {
+		return null;
+	}
+
+	@Override
+	public boolean isHasCover() {
+		return false;
+	}
+
+	@Override
+	public long getDuration() {
+		return 0;
+	}
+
+	@Override
+	public boolean getDownloadUrl(DownloadUrlListener listener) {
+		return false;
+	}
+
+	@Override
+	public String getDownloadUrl() {
+		return null;
+	}
+
+	@Override
+	public String getComment() {
+		return null;
+	}
+
+	@Override
+	public void setArtist(String artist) {}
+
+	@Override
+	public void setTitle(String title) {}
+
+	@Override
+	public void setAlbum(String album) {}
+
+	@Override
+	public void setPath(String path) {}
+
+	@Override
+	public AbstractSong cloneSong() throws CloneNotSupportedException {
+		return null;
+	}
+
+	@Override
+	public AbstractSpecial getSpecial() {
+		return new AbstractSpecial();
+	}
+
+	public boolean isExpanded() {
+		return isExpanded;
+	}
+
+	public void setExpanded(boolean isExpanded) {
+		this.isExpanded = isExpanded;
 	}
 }

@@ -2,11 +2,15 @@ package org.upmobile.newmaterialmusicdownloader.ui;
 
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.adapter.ExpandableAdapterWrapper;
+import org.upmobile.newmaterialmusicdownloader.adapter.PlaylistAdapter;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import ru.johnlife.lifetoolsmp3.ui.button.fab.FloatingActionButton;
 import ru.johnlife.lifetoolsmp3.ui.button.fab.ScrollDirectionListener;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
@@ -16,19 +20,26 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 public class PlaylistView extends BasePlaylistView {
 
 	private MaterialDialog.ButtonCallback buttonCallback;
 	private MaterialDialog.Builder builder;
 	private MaterialDialog dialog;
+	private CustomSwipeUndoAdapter swipeUndoAdapter;
+	private ListView lView;
+	private TextView message;
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
@@ -88,7 +99,7 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected int getLayoutId() {
-		return 0;
+		return R.layout.playlist_view;
 	}
 
 	@Override
@@ -98,12 +109,14 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected ListView getListView(View view) {
-		return null;
+		lView = (ListView) view.findViewById(R.id.list);
+		return lView;
 	}
 
 	@Override
 	public TextView getMessageView(View view) {
-		return (TextView) view.findViewById(R.id.emptyText);
+		message = (TextView) view.findViewById(R.id.emptyText);
+		return message;
 	}
 
 	@Override
@@ -148,13 +161,32 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected boolean isAnimateExpandCollapse() {
-		return true;
+	protected BasePlaylistsAdapter getAdapter(Context context) {
+		return new PlaylistAdapter(context, R.layout.playlist_group_item);
 	}
-
+	
 	@Override
-	protected BaseExpandableListAdapter getAdapter(Context context) {
-		return new ExpandableAdapterWrapper(context);
+	protected void animateListView(ListView listView, final BasePlaylistsAdapter adapter) {
+		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+			
+	        @Override
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	        	for (int position : reverseSortedPositions) {
+	        		AbstractSong data = adapter.getItem(position);
+	        		if (data.getClass() == MusicData.class) {
+	        			removeData(getViewByPosition((ListView) listView, position), getPlaylistBySong((MusicData) data), (MusicData) data);
+	        		} else {
+	        			removeData(getViewByPosition((ListView) listView, position), (PlaylistData) data, null);
+	        		}
+	            	if (adapter.isEmpty()) {
+	        			lView.setEmptyView(message);
+	        		}
+	            }
+	        }
+	    });
+		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
+		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
+		((DynamicListView)listView).enableSimpleSwipeUndo();
 	}
-
+	
 }

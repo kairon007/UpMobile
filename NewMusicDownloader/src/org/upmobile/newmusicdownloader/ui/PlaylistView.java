@@ -1,10 +1,11 @@
 package org.upmobile.newmusicdownloader.ui;
 
 import org.upmobile.newmusicdownloader.activity.MainActivity;
-import org.upmobile.newmusicdownloader.adapter.ExpandableAdapterWrapper;
+import org.upmobile.newmusicdownloader.adapter.PlaylistAdapter;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.content.Context;
@@ -12,11 +13,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class PlaylistView extends BasePlaylistView {
+
+	private ListView lView;
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
@@ -29,12 +31,13 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected int getLayoutId() {
-		return 0;
+		return R.layout.playlist_view;
 	}
 
 	@Override
 	protected ListView getListView(View view) {
-		return null;
+		lView = (ListView) view.findViewById(R.id.list);
+		return lView;
 	}
 	
 	@Override
@@ -63,7 +66,7 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected BaseExpandableListAdapter getAdapter(Context context) {
-		return new ExpandableAdapterWrapper(context);
+	protected BasePlaylistsAdapter getAdapter(Context context) {
+		return new PlaylistAdapter(context, R.layout.playlist_group_item);
 	}
 }

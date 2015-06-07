@@ -78,12 +78,16 @@
         android:text="@string/playlists_are_missing"
         android:visibility="gone" />
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView
-        android:id="@+id/expandableListView"
+    <com.nhaarman.listviewanimations.itemmanipulation.DynamicListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="8dp" >
-    </ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView>
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@color/material_grey_300"
+        android:dividerHeight="1dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" />
 
     <FrameLayout
         android:id="@+id/miniPlayerPlace"

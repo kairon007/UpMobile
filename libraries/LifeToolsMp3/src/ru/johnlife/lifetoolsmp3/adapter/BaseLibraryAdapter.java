@@ -12,7 +12,6 @@ import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -36,7 +35,6 @@ import android.widget.Toast;
 public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
 	
 	private final String PROJECT_PRIFICS = getDirectory().replace(Environment.getExternalStorageDirectory().toString(), "");
-	private final static String EXTERNAL = "external";
 	public final String[] PROJECTION_PLAYLIST = { 
 			MediaStore.Audio.Playlists._ID, 
 			MediaStore.Audio.Playlists.NAME, };
@@ -46,14 +44,11 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected PlaybackService service;
 	
 	protected abstract String getDirectory();
-	protected abstract int getDefaultCover();
+	protected abstract Bitmap getDefaultCover();
 	protected abstract boolean showDeleteItemMenu();
 	protected abstract void startSong(AbstractSong abstractSong);
 	
 	protected void remove() {};
-	protected Bitmap getDefaultBitmap() {
-		return null; 
-	}
 
 	public BaseLibraryAdapter(Context context, int resource) {
 		super(context, resource);
@@ -105,15 +100,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 				}
 			});
 			Bitmap bitmap = item.getCover();
-			if (null != bitmap) {
-				cover.setImageBitmap(bitmap);
-			} else {
-				if (getDefaultCover() > 0) {
-					cover.setImageResource(getDefaultCover());
-				} else {
-					cover.setImageBitmap(getDefaultBitmap());
-				}
-			}
+			cover.setImageBitmap(bitmap == null ? getDefaultCover() : bitmap);
 			bitmap = null;
 		}
 	}

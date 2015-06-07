@@ -10,6 +10,8 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -62,8 +64,8 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 	}
 
 	@Override
-	protected int getDefaultCover() {
-		return R.drawable.no_cover_art_light_big_dark;
+	protected Bitmap getDefaultCover() {
+		return BitmapFactory.decodeResource(getContext().getResources(), R.drawable.no_cover_art_light_big_dark);
 	}
 
 	@Override

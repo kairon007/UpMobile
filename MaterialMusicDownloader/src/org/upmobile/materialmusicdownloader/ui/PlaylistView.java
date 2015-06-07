@@ -1,11 +1,15 @@
 package org.upmobile.materialmusicdownloader.ui;
 
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.adapter.ExpandableAdapterWrapper;
+import org.upmobile.materialmusicdownloader.adapter.PlaylistAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ButtonCallback;
@@ -13,20 +17,26 @@ import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.Theme;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.BaseExpandableListAdapter;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.csform.android.uiapptemplate.R;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 public class PlaylistView extends BasePlaylistView{
 	
 	private MaterialDialog.ButtonCallback buttonCallback;
 	private MaterialDialog.Builder builder;
 	private MaterialDialog dialog;
+	private ListView lView;
+	private TextView message;
+	private CustomSwipeUndoAdapter swipeUndoAdapter;
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
@@ -67,7 +77,7 @@ public class PlaylistView extends BasePlaylistView{
 
 	@Override
 	protected int getLayoutId() {
-		return 0;
+		return R.layout.playlist_view;
 	}
 
 	@Override
@@ -77,12 +87,14 @@ public class PlaylistView extends BasePlaylistView{
 
 	@Override
 	protected ListView getListView(View view) {
-		return null;
+		lView = (ListView) view.findViewById(R.id.list);
+		return lView;
 	}
 
 	@Override
 	public TextView getMessageView(View view) {
-		return (TextView) view.findViewById(R.id.emptyText);
+		message = (TextView) view.findViewById(R.id.emptyText);
+		return message;
 	}
 	
 	@SuppressLint("NewApi")
@@ -129,7 +141,35 @@ public class PlaylistView extends BasePlaylistView{
 	}
 
 	@Override
-	protected BaseExpandableListAdapter getAdapter(Context context) {
-		return new ExpandableAdapterWrapper(context);
+	protected BasePlaylistsAdapter getAdapter(Context context) {
+		return new PlaylistAdapter(context, R.layout.playlist_group_item);
+	}
+	
+	@Override
+	protected void animateListView(ListView listView, final BasePlaylistsAdapter adapter) {
+		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+			
+	        @Override
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	        	for (int position : reverseSortedPositions) {
+	        		AbstractSong data = adapter.getItem(position);
+	        		if (data.getClass() == MusicData.class) {
+	        			removeData(getViewByPosition((ListView) listView, position), getPlaylistBySong((MusicData) data), (MusicData) data);
+	        		} else {
+	        			removeData(getViewByPosition((ListView) listView, position), (PlaylistData) data, null);
+	        		}
+	            	if (adapter.isEmpty()) {
+	        			lView.setEmptyView(message);
+	        		}
+	            }
+	        }
+	    });
+		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
+		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
+		((DynamicListView)listView).enableSimpleSwipeUndo();
+	}
+	
+	public void forceDelete () {
+		swipeUndoAdapter.forceDelete();
 	}
 }

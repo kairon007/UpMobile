@@ -11,6 +11,8 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,8 +78,8 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	}
 	
 	@Override
-	protected int getDefaultCover() {
-		return R.drawable.def_cover_circle;
+	protected Bitmap getDefaultCover() {
+		return BitmapFactory.decodeResource(getContext().getResources(), R.drawable.def_cover_circle);
 	}
 
 	@Override

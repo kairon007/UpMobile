@@ -81,14 +81,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	}
 	
 	@Override
-	protected Bitmap getDefaultBitmap() {
+	protected Bitmap getDefaultCover() {
 		String cover =  getContext().getResources().getString(R.string.font_musics);
 		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60,cover);
-	}
-	
-	@Override
-	protected int getDefaultCover() {
-		return 0;
 	}
 	
 	@Override

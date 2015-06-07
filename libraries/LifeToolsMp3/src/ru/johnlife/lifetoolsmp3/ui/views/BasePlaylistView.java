@@ -1,18 +1,16 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.ExpandableAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
-import ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,12 +31,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -51,10 +46,10 @@ public abstract class BasePlaylistView extends View {
 	private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 	private ViewGroup view;
 	protected ListView listView;
-	private ExpandableAdapter expandableAdapter;
 	private View playLastPlaylist;
 	private View createNewPlayList;
-	private View emptyView;
+	private TextView emptyMessage;
+	private BasePlaylistsAdapter adapter;
 	private AlertDialog.Builder newPlaylistDialog;
 	private PopupMenu menu;
 	
@@ -66,7 +61,7 @@ public abstract class BasePlaylistView extends View {
 
 	protected abstract int getLayoutId();
 	
-	protected abstract BaseExpandableListAdapter getAdapter(Context context);
+	protected abstract BasePlaylistsAdapter getAdapter(Context context);
 
 	protected abstract void showPlayerFragment(MusicData musicData);
 
@@ -74,8 +69,6 @@ public abstract class BasePlaylistView extends View {
 
 	public abstract TextView getMessageView(View view);
 	
-	protected boolean isAnimateExpandCollapse() {return true;};
-
 	public final String[] PROJECTION_PLAYLIST = { 
 			MediaStore.Audio.Playlists._ID, 
 			MediaStore.Audio.Playlists.NAME, };
@@ -88,16 +81,20 @@ public abstract class BasePlaylistView extends View {
 			MediaStore.Audio.Media.DURATION, 
 			MediaStore.Audio.Media.ALBUM, };
 	
-	private ArrayList<PlaylistData> playlists;
+	private ArrayList<AbstractSong> playlists;
 	private PlaybackService playbackService;
 	private AlertDialog dialog;
+	
+	protected void animateListView(ListView listView, BasePlaylistsAdapter adapter) {
+		//Animate ListView in childs, if need
+	}
 	
 	private OnSharedPreferenceChangeListener sharedPreferenceListener = new OnSharedPreferenceChangeListener() {
 		
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			if (key.contains(PREF_DIRECTORY_PREFIX)) {
-				expandableAdapter.setProjectPrefics(getDirectory());
+//				expandableAdapter.setProjectPrefics(getDirectory());
 				updatePlaylist();
 			}
 		}
@@ -124,75 +121,59 @@ public abstract class BasePlaylistView extends View {
 				playbackService = PlaybackService.get(getContext());
 			}
 		}).start();
-		view = (ViewGroup) inflater.inflate(getLayoutId() > 0 ? getLayoutId() : R.layout.playlist_view, null);
-		listView = getListView(view) != null ? getListView(view) : (AnimatedExpandableListView) view.findViewById(R.id.expandableListView);
+		view = (ViewGroup) inflater.inflate(getLayoutId(), null);
+		listView = getListView(view);
+		emptyMessage = getMessageView(view);
+		adapter = getAdapter(inflater.getContext());
+		listView.setAdapter(adapter);
 		playLastPlaylist = view.findViewById(R.id.lastPlayedPlaylist);
 		createNewPlayList = view.findViewById(R.id.createNewPlaylist);
-		emptyView = getMessageView(view);
+		animateListView(listView, adapter);
 		initListeners();
-		expandableAdapter = (ExpandableAdapter) (null != getAdapter(view.getContext()) ? getAdapter(view.getContext()) : new ExpandableAdapter(view.getContext()));
-		expandableAdapter.setProjectPrefics(getDirectory());
-		expandableAdapter.setDefaultBmp(getDeafultCover());
 		updatePlaylist();
-		if (null !=  groupItems() && groupItems().length > 1) {
-			((AnimatedExpandableListView) listView).setGroupIndicator(null);
+    	if (adapter.isEmpty()) {
+    		listView.setEmptyView(emptyMessage);
 		}
-		((AnimatedExpandableListView) listView).setAdapter(expandableAdapter);
-		((AnimatedExpandableListView) listView).setEmptyView(emptyView);
-		((AnimatedExpandableListView) listView).setOnGroupClickListener(new OnGroupClickListener() {
-
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-            	Util.hideKeyboard(getContext(), v);
-            	if (playlists.get(groupPosition).getSongs().size() == 0) {
-            		showMessage(getContext(), R.string.playlist_is_empty);
-            		return false;
-            	}
-                if (((AnimatedExpandableListView) listView).isGroupExpanded(groupPosition)) {
-                	if (isAnimateExpandCollapse()) {
-                		((AnimatedExpandableListView) listView).collapseGroupWithAnimation(groupPosition);
-                	} else {
-                		((AnimatedExpandableListView) listView).collapseGroup(groupPosition);
-                	}
-                	if (null !=groupItems() && groupItems().length > 1) {
-                		setGroupIndicator(v, 0);
-                	}
-                } else {
-                	if (isAnimateExpandCollapse()) {
-                		((AnimatedExpandableListView) listView).expandGroupWithAnimation(groupPosition); 
-                	} else {
-                		((AnimatedExpandableListView) listView).expandGroup(groupPosition);
-                	}
-                	if (null !=groupItems() && groupItems().length > 1) {
-                		setGroupIndicator(v, 1);
-                	}
-                }
-                return true;
-            }
-        });
-		((AnimatedExpandableListView) listView).setOnItemLongClickListener(new OnItemLongClickListener() {
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				Util.hideKeyboard(getContext(), view);
-				int groupPosition = ExpandableListView.getPackedPositionGroup(id);
-		        int childPosition = ExpandableListView.getPackedPositionChild(id);
-				showMenu(view, playlists.get(groupPosition), childPosition == -1 ? null : playlists.get(groupPosition).getSongs().get(childPosition) );
-				return true;
+				AbstractSong data = adapter.getItem(position);
+				showMenu(view, data.getClass() == MusicData.class ? getPlaylistBySong((MusicData) data) : (PlaylistData)data, data.getClass() == MusicData.class ? (MusicData)data : null);
+				return false;
 			}
 		});
-		((AnimatedExpandableListView) listView).setOnChildClickListener(new OnChildClickListener() {
+		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-				Util.hideKeyboard(getContext(), v);
-				if (null != playbackService) {
-					MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, playlists.get(groupPosition).getId()).commit();
-					playbackService.setArrayPlayback(new ArrayList<AbstractSong>(playlists.get(groupPosition).getSongs()));
-					showPlayerFragment(playlists.get(groupPosition).getSongs().get(childPosition));
-					return true;
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				AbstractSong abstractSong = playlists.get(position);
+				if (abstractSong.getClass() == PlaylistData.class) {
+					ArrayList<MusicData> songs = ((PlaylistData) abstractSong).getSongs();
+					if (null == songs || songs.size() == 0) {
+						showMessage(getContext(), R.string.playlist_is_empty);
+	            		return;
+					}
+					if (!((PlaylistData) abstractSong).isExpanded()) {
+						playlists.addAll(position + 1, songs);
+						((PlaylistData) abstractSong).setExpanded(true);
+						setGroupIndicator(view, 1);
+					} else {
+						playlists.removeAll(songs);
+						((PlaylistData) abstractSong).setExpanded(false);
+						setGroupIndicator(view, 0);
+					}
+					adapter.clear();
+					adapter.addAll(playlists);
+					adapter.notifyDataSetChanged();
+				} else {
+					Util.hideKeyboard(getContext(), view);
+					if (null != playbackService) {
+						MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, getPlaylistBySong((MusicData) playlists.get(position)).getId()).commit();
+						playbackService.setArrayPlayback(new ArrayList<AbstractSong>(getPlaylistBySong((MusicData) playlists.get(position)).getSongs()));
+						showPlayerFragment((MusicData) playlists.get(position));
+					}
 				}
-				return false;
 			}
 		});
 	}
@@ -220,11 +201,13 @@ public abstract class BasePlaylistView extends View {
 			playlists.clear();
 		}
 		playlists = getPlaylists();
-		for (PlaylistData playlistData : playlists) {
-			playlistData.setSongs(playlistData.getSongsFromPlaylist(getContext(), playlistData.getId()));
+		for (AbstractSong playlistData : playlists) {
+			((PlaylistData) playlistData).setSongs(((PlaylistData) playlistData).getSongsFromPlaylist(getContext(), playlistData.getId()));
 		}
-		expandableAdapter.setData(playlists);
-		expandableAdapter.notifyDataSetChanged();
+		adapter.setNotifyOnChange(false);
+		adapter.clear();
+		adapter.addAll(playlists);
+		adapter.notifyDataSetChanged();
 	}
 
 	private void initListeners() {
@@ -246,15 +229,15 @@ public abstract class BasePlaylistView extends View {
 					showMessage(getContext(), R.string.no_previous_playlists);
 				} else {
 					boolean isPlaylistExists = false;
-					for (PlaylistData data : playlists) {
+					for (AbstractSong data : playlists) {
 						if (data.getId() == id) {
 							isPlaylistExists = true;
-							if (data.getSongs().size() == 0) {
+							if (((PlaylistData) data).getSongs().size() == 0) {
 								showMessage(getContext(), R.string.no_songs_in_the_last_playlist);
 							} else {
-								playbackService.setArrayPlayback(new ArrayList<AbstractSong>(data.getSongs()));
-								playbackService.play(data.getSongs().get(0));
-								showPlayerFragment(data.getSongs().get(0));
+								playbackService.setArrayPlayback(new ArrayList<AbstractSong>(((PlaylistData) data).getSongs()));
+								playbackService.play(((PlaylistData) data).getSongs().get(0));
+								showPlayerFragment(((PlaylistData) data).getSongs().get(0));
 								return;
 							}
 						}
@@ -315,18 +298,7 @@ public abstract class BasePlaylistView extends View {
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
-					if (musicData == null) {
-						data.deletePlaylist(getContext(), data.getId());
-						playlists.remove(playlists.indexOf(data));
-					} else {
-						data.removeFromPlaylist(getContext(), data.getId(), musicData.getId());
-						playlists.get(playlists.indexOf(data)).getSongs().remove(musicData);
-						playbackService.remove(musicData);
-						if (playlists.get(playlists.indexOf(data)).getSongs().size() == 0 && null !=groupItems() && groupItems().length > 1) {
-		                		setGroupIndicator((View) v.getParent(), 0);
-						}
-					}
-					updateAdapter();
+					removeData(v, data, musicData);
 				}
 				return false;
 			}
@@ -351,7 +323,6 @@ public abstract class BasePlaylistView extends View {
 			values.put(MediaStore.Audio.Playlists.NAME, pName);
 			resolver.insert(uri, values);
 			updatePlaylist();
-			updateAdapter();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -362,15 +333,38 @@ public abstract class BasePlaylistView extends View {
 			
 			@Override
 			public void run() {
-				expandableAdapter.notifyDataSetChanged();
+				adapter.setNotifyOnChange(false);
+				adapter.clear();
+				adapter.addAll(playlists);
+				adapter.setNotifyOnChange(true);
+				adapter.notifyDataSetChanged();
 			}
 		});
 	}
+	
+	public void removeData(final View v, final PlaylistData data, final MusicData musicData) {
+		if (musicData == null) {
+			if (data.isExpanded()) {
+				playlists.removeAll(data.getSongs());
+			}
+			data.deletePlaylist(getContext(), data.getId());
+			playlists.remove(playlists.indexOf(data));
+		} else {
+			data.removeFromPlaylist(getContext(), data.getId(), musicData.getId());
+			((PlaylistData) playlists.get(playlists.indexOf(data))).getSongs().remove(musicData);
+			playlists.remove(musicData);
+			playbackService.remove(musicData);
+			if (((PlaylistData) playlists.get(playlists.indexOf(data))).getSongs().size() == 0 && null !=groupItems() && groupItems().length > 1) {
+		    		setGroupIndicator((View) v.getParent(), 0);
+			}
+		}
+		updateAdapter();
+	}
 
-	private ArrayList<PlaylistData> getPlaylists() {
-		ArrayList<PlaylistData> playlistDatas = null;
+	private ArrayList<AbstractSong> getPlaylists() {
+		ArrayList<AbstractSong> playlistDatas = null;
 		try {
-			playlistDatas = new ArrayList<PlaylistData>();
+			playlistDatas = new ArrayList<AbstractSong>();
 			Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
 			PlaylistData playlistData = new PlaylistData();
 			if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
@@ -394,6 +388,26 @@ public abstract class BasePlaylistView extends View {
 			return playlistDatas;
 		}
 	}
+	
+	public View getViewByPosition(ListView listView, int pos) {
+	    final int firstListItemPosition = listView.getFirstVisiblePosition();
+	    final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+	    if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+	        return listView.getAdapter().getView(pos, null, listView);
+	    }
+		final int childIndex = pos - firstListItemPosition;
+		return listView.getChildAt(childIndex);
+	}
+	
+	public PlaylistData getPlaylistBySong(MusicData song) {
+		for (AbstractSong playlistData : playlists) {
+			if (((PlaylistData) playlistData).getSongs().contains(song)) {
+				return ((PlaylistData) playlistData);
+			}
+		}
+		return null;
+	}
 
 	public Cursor myQuery(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		try {
@@ -408,11 +422,11 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void applyFilter(String srcFilter) {
-		expandableAdapter.getFilter().filter(srcFilter);
+		adapter.getFilter().filter(srcFilter);
 	}
 	
 	public void clearFilter() {
-		expandableAdapter.clearFilter();
+//		adapter.clearFilter();
 	}
 	
 	public void showMessage(Context context, String message) {

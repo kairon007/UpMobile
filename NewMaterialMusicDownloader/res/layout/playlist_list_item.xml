@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/RippleStyleShortPress"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_item_height"
     android:background="@android:color/white"
     android:paddingLeft="8dp" >
+<!-- <ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/RippleStyleShortPress"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/material_item_height"
+    android:background="@android:color/white"
+    android:paddingLeft="8dp" > -->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
         android:orientation="horizontal"
         android:paddingLeft="2dp"
         android:visibility="visible" >
@@ -68,5 +72,5 @@
                 android:text="Artist" />
         </LinearLayout>
     </LinearLayout>
-
-</ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+</FrameLayout>
+<!-- </ru.johnlife.lifetoolsmp3.ui.widget.RippleView> -->
