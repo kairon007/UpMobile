@@ -52,6 +52,20 @@ public abstract class BasePlaylistView extends View {
 	private BasePlaylistsAdapter adapter;
 	private AlertDialog.Builder newPlaylistDialog;
 	private PopupMenu menu;
+	private PlaybackService playbackService;
+	private AlertDialog dialog;
+	
+	public final String[] PROJECTION_PLAYLIST = { 
+			MediaStore.Audio.Playlists._ID, 
+			MediaStore.Audio.Playlists.NAME, };
+
+	public final String[] PROJECTION_MUSIC = { 
+			MediaStore.Audio.Media._ID, 
+			MediaStore.Audio.Media.DATA, 
+			MediaStore.Audio.Media.TITLE,
+			MediaStore.Audio.Media.ARTIST, 
+			MediaStore.Audio.Media.DURATION, 
+			MediaStore.Audio.Media.ALBUM, };
 	
 	protected abstract Object[] groupItems();
 
@@ -69,22 +83,6 @@ public abstract class BasePlaylistView extends View {
 
 	public abstract TextView getMessageView(View view);
 	
-	public final String[] PROJECTION_PLAYLIST = { 
-			MediaStore.Audio.Playlists._ID, 
-			MediaStore.Audio.Playlists.NAME, };
-
-	public final String[] PROJECTION_MUSIC = { 
-			MediaStore.Audio.Media._ID, 
-			MediaStore.Audio.Media.DATA, 
-			MediaStore.Audio.Media.TITLE,
-			MediaStore.Audio.Media.ARTIST, 
-			MediaStore.Audio.Media.DURATION, 
-			MediaStore.Audio.Media.ALBUM, };
-	
-	private ArrayList<AbstractSong> playlists;
-	private PlaybackService playbackService;
-	private AlertDialog dialog;
-	
 	protected void animateListView(ListView listView, BasePlaylistsAdapter adapter) {
 		//Animate ListView in childs, if need
 	}
@@ -94,7 +92,6 @@ public abstract class BasePlaylistView extends View {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 			if (key.contains(PREF_DIRECTORY_PREFIX)) {
-//				expandableAdapter.setProjectPrefics(getDirectory());
 				updatePlaylist();
 			}
 		}
@@ -134,51 +131,13 @@ public abstract class BasePlaylistView extends View {
     	if (adapter.isEmpty()) {
     		listView.setEmptyView(emptyMessage);
 		}
-		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				AbstractSong data = (AbstractSong) adapter.getItem(position);
-				showMenu(view, data.getClass() == MusicData.class ? getPlaylistBySong((MusicData) data) : (PlaylistData)data, data.getClass() == MusicData.class ? (MusicData)data : null);
-				return false;
-			}
-		});
-		listView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				AbstractSong abstractSong = playlists.get(position);
-				if (abstractSong.getClass() == PlaylistData.class) {
-					ArrayList<MusicData> songs = ((PlaylistData) abstractSong).getSongs();
-					if (null == songs || songs.size() == 0) {
-						showMessage(getContext(), R.string.playlist_is_empty);
-	            		return;
-					}
-					if (!((PlaylistData) abstractSong).isExpanded()) {
-						playlists.addAll(position + 1, songs);
-						((PlaylistData) abstractSong).setExpanded(true);
-						setGroupIndicator(view, 1);
-					} else {
-						playlists.removeAll(songs);
-						((PlaylistData) abstractSong).setExpanded(false);
-						setGroupIndicator(view, 0);
-					}
-					updateAdapter();
-				} else {
-					Util.hideKeyboard(getContext(), view);
-					if (null != playbackService) {
-						MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, getPlaylistBySong((MusicData) playlists.get(position)).getId()).commit();
-						playbackService.setArrayPlayback(new ArrayList<AbstractSong>(getPlaylistBySong((MusicData) playlists.get(position)).getSongs()));
-						showPlayerFragment((MusicData) playlists.get(position));
-					}
-				}
-			}
-		});
+    	adapter.getCount();
 	}
 	
 	public void collapseAll () {
-		ArrayList<MusicData> music = new ArrayList();
-		for (AbstractSong data : playlists) {
+		ArrayList<MusicData> music = new ArrayList<MusicData>();
+		ArrayList<AbstractSong> playlists = adapter.getAll();
+		for (AbstractSong data : playlists ) {
 			if (data.getClass() == MusicData.class) {
 				music.add((MusicData) data);
 			} else {
@@ -186,10 +145,10 @@ public abstract class BasePlaylistView extends View {
 			}
 		}
 		playlists.removeAll(music);
-		updateAdapter();
-		for (int i = 0; i < adapter.getCount(); i++) {
-			setGroupIndicator((View) getViewByPosition(listView, i).getParent(), 0);
-		}
+		updateAdapter(playlists);
+//		for (int i = 0; i < adapter.getCount(); i++) {
+//			setGroupIndicator((View) getViewByPosition(listView, i).getParent(), 0);
+//		}
 	}
 	
 	private void setGroupIndicator(View v, int i) {
@@ -211,17 +170,55 @@ public abstract class BasePlaylistView extends View {
 	}
 
 	private void updatePlaylist() {
-		if (null != playlists) {
-			playlists.clear();
-		}
-		playlists = getPlaylists();
+		ArrayList<AbstractSong> playlists = getPlaylists();
 		for (AbstractSong playlistData : playlists) {
 			((PlaylistData) playlistData).setSongs(((PlaylistData) playlistData).getSongsFromPlaylist(getContext(), playlistData.getId()));
 		}
-		updateAdapter();
+		updateAdapter(playlists);
 	}
 
 	private void initListeners() {
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				AbstractSong data = (AbstractSong) adapter.getItem(position);
+				showMenu(view, data.getClass() == MusicData.class ? getPlaylistBySong((MusicData) data) : (PlaylistData)data, data.getClass() == MusicData.class ? (MusicData)data : null);
+				return false;
+			}
+		});
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ArrayList<AbstractSong> playlists = adapter.getAll();
+				AbstractSong abstractSong = playlists .get(position);
+				if (abstractSong.getClass() == PlaylistData.class) {
+					ArrayList<MusicData> songs = ((PlaylistData) abstractSong).getSongs();
+					if (null == songs || songs.size() == 0) {
+						showMessage(getContext(), R.string.playlist_is_empty);
+	            		return;
+					}
+					if (!((PlaylistData) abstractSong).isExpanded()) {
+						playlists.addAll(position + 1, songs);
+						((PlaylistData) abstractSong).setExpanded(true);
+						setGroupIndicator(view, 1);
+					} else {
+						playlists.removeAll(songs);
+						((PlaylistData) abstractSong).setExpanded(false);
+						setGroupIndicator(view, 0);
+					}
+					updateAdapter(playlists);
+				} else {
+					Util.hideKeyboard(getContext(), view);
+					if (null != playbackService) {
+						MusicApp.getSharedPreferences().edit().putLong(Constants.PREF_LAST_PLAYLIST_ID, getPlaylistBySong((MusicData) playlists.get(position)).getId()).commit();
+						playbackService.setArrayPlayback(new ArrayList<AbstractSong>(getPlaylistBySong((MusicData) playlists.get(position)).getSongs()));
+						showPlayerFragment((MusicData) playlists.get(position));
+					}
+				}
+			}
+		});
 		createNewPlayList.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -240,7 +237,7 @@ public abstract class BasePlaylistView extends View {
 					showMessage(getContext(), R.string.no_previous_playlists);
 				} else {
 					boolean isPlaylistExists = false;
-					for (AbstractSong data : playlists) {
+					for (AbstractSong data : adapter.getAll()) {
 						if (data.getId() == id) {
 							isPlaylistExists = true;
 							if (((PlaylistData) data).getSongs().size() == 0) {
@@ -339,20 +336,21 @@ public abstract class BasePlaylistView extends View {
 		}
 	}
 
-	private void updateAdapter() {
+	private void updateAdapter(final ArrayList<AbstractSong> playlists) {
 		((Activity) getContext()).runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
 				adapter.setDoNotifyData(false);
 				adapter.clear();
-				adapter.add(playlists);
+				adapter.changeData(playlists);
 				adapter.notifyDataSetChanged();
 			}
 		});
 	}
 	
 	public void removeData(final View v, final PlaylistData data, final MusicData musicData) {
+		ArrayList<AbstractSong> playlists = adapter.getAll();
 		if (musicData == null) {
 			if (data.isExpanded()) {
 				playlists.removeAll(data.getSongs());
@@ -368,7 +366,7 @@ public abstract class BasePlaylistView extends View {
 		    		setGroupIndicator((View) v.getParent(), 0);
 			}
 		}
-		updateAdapter();
+		updateAdapter(playlists);
 	}
 
 	private ArrayList<AbstractSong> getPlaylists() {
@@ -411,7 +409,7 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public PlaylistData getPlaylistBySong(MusicData song) {
-		for (AbstractSong playlistData : playlists) {
+		for (AbstractSong playlistData : adapter.getAll()) {
 			if (((PlaylistData) playlistData).getSongs().contains(song)) {
 				return ((PlaylistData) playlistData);
 			}

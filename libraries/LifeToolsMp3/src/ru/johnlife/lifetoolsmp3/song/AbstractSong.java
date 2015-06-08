@@ -1,7 +1,6 @@
 package ru.johnlife.lifetoolsmp3.song;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
 
