@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -228,7 +229,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		ArrayList<MusicData> result;
 		synchronized (lock) {
 			result = new ArrayList<MusicData>();
-			Cursor cursor = buildQuery(getContext().getContentResolver(), getFolderPath());
+			Cursor cursor = buildQuery(getContext().getContentResolver(), Util.addQuotesForSqlQuery(getFolderPath()));
 			if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
 				cursor.close();
 				return result;

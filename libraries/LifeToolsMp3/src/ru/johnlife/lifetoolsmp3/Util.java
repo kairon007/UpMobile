@@ -178,14 +178,14 @@ public final class Util {
 	}
 	
 	public static String removeSpecialCharacters(String str) {
-		str = str.trim();
-		return str.toString()
+		return str.trim()
 				.replaceAll("\\?", "")
 				.replaceAll("#", "")
 				.replaceAll("%", "")
 				.replaceAll("\\\\", "-")
 				.replaceAll("/", "-")
-				.replaceAll(ZAYCEV_TAG, "");
+				.replaceAll(ZAYCEV_TAG, "")
+				.replaceAll("\'", "");
 	}
 	
 	public static String getSimpleThemeName(Context context) {
@@ -241,5 +241,9 @@ public final class Util {
 		final TypedValue typedvalueattr = new TypedValue();
 		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
 		return typedvalueattr.resourceId;
+	}
+	
+	public static String addQuotesForSqlQuery(String folderPath) {
+		return folderPath.replaceAll("\'", "\'\'");
 	}
 }
