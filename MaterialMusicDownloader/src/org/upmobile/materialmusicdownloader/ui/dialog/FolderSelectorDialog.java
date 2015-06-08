@@ -97,7 +97,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		parentContents = listFiles();
 	}
 
-	String[] getContentsArray() {
+	private String[] getContentsArray() {
 		String[] results = new String[parentContents.length + (canGoUp ? 1 : 0)];
 		if (canGoUp)
 			results[0] = "...";
@@ -106,8 +106,9 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		return results;
 	}
 
-	File[] listFiles() {
+	private File[] listFiles() {
 		File[] contents = parentFolder.listFiles();
+		if (null == contents) return new File[0];
 		List<File> results = new ArrayList<File>();
 		for (File fi : contents) {
 			if (fi.isDirectory())
@@ -155,6 +156,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		dialog.setTitle(parentFolder.getAbsolutePath());
 		dialog.setItems(getContentsArray());
 	}
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
