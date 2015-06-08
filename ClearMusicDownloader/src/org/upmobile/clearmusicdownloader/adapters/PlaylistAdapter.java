@@ -33,7 +33,7 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 	public View getUndoView(int paramInt, View paramView, ViewGroup paramViewGroup) {
 		View view = paramView;
 		if (view == null) {
-			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view, paramViewGroup, false);
+			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view_library, paramViewGroup, false);
 		}
 		return view;
 	}

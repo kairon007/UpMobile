@@ -228,4 +228,9 @@ public class PlaylistData implements AbstractSong{
 	public void setExpanded(boolean isExpanded) {
 		this.isExpanded = isExpanded;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%d %s", id, name);
+	}
 }

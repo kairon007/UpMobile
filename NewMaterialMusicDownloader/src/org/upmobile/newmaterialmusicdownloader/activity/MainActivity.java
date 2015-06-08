@@ -275,6 +275,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else if (lastFragmentName.equals(PlaylistFragment.class.getSimpleName())) {
 			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 			if (fragment.isVisible()) {
+				fragment.collapseAll();
 				if (query.isEmpty()) {
 					fragment.clearFilter();
 				} else {

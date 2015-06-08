@@ -49,4 +49,8 @@ public class PlaylistFragment extends Fragment {
 		super.onPause();
 	}
 	
+	public void collapseAll() {
+		playlistView.collapseAll();
+	}
+	
 }

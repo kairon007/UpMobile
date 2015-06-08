@@ -156,6 +156,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			searchView.clearFocus();
 			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 			if (fragment.isVisible()) {
+				fragment.collapseAll();
 				if (query.isEmpty()) {
 					fragment.clearFilter();
 				} else {

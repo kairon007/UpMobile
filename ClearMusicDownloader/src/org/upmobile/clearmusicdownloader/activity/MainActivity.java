@@ -120,6 +120,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 					searchView.clearFocus();
 					PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 					if (fragment.isVisible()) {
+						fragment.collapseAll();
 						if (query.isEmpty()) {
 							fragment.clearFilter();
 						} else {

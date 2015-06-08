@@ -58,5 +58,9 @@ public class PlaylistFragment extends Fragment implements BaseMaterialFragment, 
 		playlistView.clearFilter();
 		playlistView.getMessageView(getView()).setText(R.string.playlists_are_missing);
 	}
+	
+	public void collapseAll() {
+		playlistView.collapseAll();
+	}
 
 }

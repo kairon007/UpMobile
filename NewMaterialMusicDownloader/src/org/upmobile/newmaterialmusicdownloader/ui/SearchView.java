@@ -80,7 +80,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	
 	@Override
 	protected void showMessage(String msg) {
-		System.out.println("!!! NewMaterial SearchView msg = " + msg);
 		((MainActivity) getContext()).showMessage(msg);
 	}
 	

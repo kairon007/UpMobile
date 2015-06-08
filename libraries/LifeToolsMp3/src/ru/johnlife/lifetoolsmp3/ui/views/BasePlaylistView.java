@@ -163,9 +163,7 @@ public abstract class BasePlaylistView extends View {
 						((PlaylistData) abstractSong).setExpanded(false);
 						setGroupIndicator(view, 0);
 					}
-					adapter.clear();
-					adapter.add(playlists);
-					adapter.notifyDataSetChanged();
+					updateAdapter();
 				} else {
 					Util.hideKeyboard(getContext(), view);
 					if (null != playbackService) {
@@ -176,6 +174,22 @@ public abstract class BasePlaylistView extends View {
 				}
 			}
 		});
+	}
+	
+	public void collapseAll () {
+		ArrayList<MusicData> music = new ArrayList();
+		for (AbstractSong data : playlists) {
+			if (data.getClass() == MusicData.class) {
+				music.add((MusicData) data);
+			} else {
+				((PlaylistData) data).setExpanded(false);
+			}
+		}
+		playlists.removeAll(music);
+		updateAdapter();
+		for (int i = 0; i < adapter.getCount(); i++) {
+			setGroupIndicator((View) getViewByPosition(listView, i).getParent(), 0);
+		}
 	}
 	
 	private void setGroupIndicator(View v, int i) {
@@ -204,10 +218,7 @@ public abstract class BasePlaylistView extends View {
 		for (AbstractSong playlistData : playlists) {
 			((PlaylistData) playlistData).setSongs(((PlaylistData) playlistData).getSongsFromPlaylist(getContext(), playlistData.getId()));
 		}
-//		adapter.setNotifyOnChange(false);
-		adapter.clear();
-		adapter.add(playlists);
-		adapter.notifyDataSetChanged();
+		updateAdapter();
 	}
 
 	private void initListeners() {
@@ -333,11 +344,10 @@ public abstract class BasePlaylistView extends View {
 			
 			@Override
 			public void run() {
-//				adapter.setNotifyOnChange(false);
+				adapter.setDoNotifyData(false);
 				adapter.clear();
 				adapter.add(playlists);
-//				adapter.setNotifyOnChange(true);
-//				adapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();
 			}
 		});
 	}
@@ -426,7 +436,7 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void clearFilter() {
-//		adapter.clearFilter();
+		adapter.clearFilter();
 	}
 	
 	public void showMessage(Context context, String message) {
