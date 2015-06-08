@@ -84,7 +84,7 @@ public class LibraryAdapter extends BaseLibraryAdapter {
 
 	@Override
 	protected String getDirectory() {
-		return NewMusicDownloaderApp.getDirectory();
+		return NewMusicDownloaderApp.getDirectoryPrefix();
 	}
 
 	@Override

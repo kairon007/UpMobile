@@ -107,7 +107,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 	@Override
 	protected String getDirectory() {
-		return MaterialMusicDownloaderApp.getDirectory();
+		return MaterialMusicDownloaderApp.getDirectoryPrefix();
 	}
 	
 	@Override

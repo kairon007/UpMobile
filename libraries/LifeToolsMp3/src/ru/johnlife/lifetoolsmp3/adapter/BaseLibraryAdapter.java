@@ -34,7 +34,7 @@ import android.widget.Toast;
 
 public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
 	
-	private final String PROJECT_PRIFICS = getDirectory().replace(Environment.getExternalStorageDirectory().toString(), "");
+	private final String PROJECT_PRIFICS = getDirectory();
 	public final String[] PROJECTION_PLAYLIST = { 
 			MediaStore.Audio.Playlists._ID, 
 			MediaStore.Audio.Playlists.NAME, };
