@@ -184,8 +184,7 @@ public final class Util {
 				.replaceAll("%", "")
 				.replaceAll("\\\\", "-")
 				.replaceAll("/", "-")
-				.replaceAll(ZAYCEV_TAG, "")
-				.replaceAll("\'", "");
+				.replaceAll(ZAYCEV_TAG, "");
 	}
 	
 	public static String getSimpleThemeName(Context context) {
