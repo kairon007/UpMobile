@@ -37,6 +37,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.DownloadManager.Request;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -230,18 +231,20 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			url = url.replaceFirst("https", "http");
 		}
 		Uri uri = Uri.parse(url);
-		DownloadManager.Request request = new DownloadManager.Request(uri).addRequestHeader("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
+		Request request = new Request(uri).addRequestHeader("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)");
 		if (headers != null && !headers.isEmpty()) {
 			for (int i = 0; i < headers.size(); i++) {
 				request.addRequestHeader(headers.get(i)[0], headers.get(i)[1]);
 			}
 		}
+		request.setVisibleInDownloadsUi(true);
 		request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(sb);
 		try {
 			request.setTitle(songArtist);
 			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
 			request.setMimeType(downloadingSong.getComment());
 			request.setDescription(songTitle);
+			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE | DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
 			showMessage(context, e.getMessage());
