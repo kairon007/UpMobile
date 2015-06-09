@@ -717,15 +717,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private void getCover(final AbstractSong song) {
 		cbUseCover.setOnCheckedChangeListener(null);
 		setCheckBoxState(false);
-		if (song.isHasCover()) {
-			Bitmap bitmap = song.getCover();
-			if (null != bitmap) {
-				setCoverToZoomView(bitmap);
-				setCheckBoxState(true);
-				((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
-				cbUseCover.setOnCheckedChangeListener(this);
-				return;
-			}
+		Bitmap bitmap = song.getCover();
+		if (null != bitmap) {
+			setCoverToZoomView(bitmap);
+			setCheckBoxState(true);
+			((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+			cbUseCover.setOnCheckedChangeListener(this);
+			return;
 		}
 		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 		if (song.getClass() != MusicData.class) {

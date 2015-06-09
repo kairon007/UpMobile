@@ -753,15 +753,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void getCover(final AbstractSong song) {
-		
-		if (song.isHasCover()) {
-			Bitmap bitmap = song.getCover();
-			if (null != bitmap) {
-				setCheckBoxState(true);
-				playerCover.setImageBitmap(bitmap);
-				useCover.setVisibility(View.VISIBLE);
-				return;
-			}
+		Bitmap bitmap = song.getCover();
+		if (null != bitmap) {
+			setCheckBoxState(true);
+			playerCover.setImageBitmap(bitmap);
+			useCover.setVisibility(View.VISIBLE);
+			return;
 		}
 		playerCover.setImageResource(R.drawable.def_cover_circle_web);
 		useCover.setVisibility(View.INVISIBLE);
