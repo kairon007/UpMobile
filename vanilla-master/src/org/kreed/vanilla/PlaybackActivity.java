@@ -22,8 +22,8 @@
 
 package org.kreed.vanilla;
 
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.app.Activity;
 import android.content.Intent;
@@ -304,9 +304,7 @@ public abstract class PlaybackActivity extends Activity
 		mLyricsView.setText("");
 		if (null != song && null != song.title && null != song.artist) {
 			enableProgress();
-			LyricsFetcher lyricsFetcher = new LyricsFetcher(this);
-			lyricsFetcher.fetchLyrics(song.title, song.artist);
-			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+			SearchLyrics lyricsFetcher = new SearchLyrics(new OnLyricsFetchedListener() {
 
 				private Song s;
 				{ s = song; }
@@ -323,7 +321,8 @@ public abstract class PlaybackActivity extends Activity
 						}
 					}
 				}
-			});
+			}, song.artist, song.title);
+			lyricsFetcher.startSerach();
 		} else {
 			Toast toast = Toast.makeText(getApplicationContext(), R.string.not_selected_song, Toast.LENGTH_SHORT);
 			toast.show();

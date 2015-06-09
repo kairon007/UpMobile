@@ -243,11 +243,6 @@
                     android:layout_gravity="center"
                     android:text="@string/download_dialog_download" />
                 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:visibility="invisible" />
-
                 <include
                     android:id="@+id/player_edit_tag_dialog"
                     layout="@layout/edit_tag"

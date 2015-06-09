@@ -17,8 +17,8 @@ import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -84,7 +84,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private RenameTask renameTask;
 	private PlaybackService player;
 	private DownloadListener downloadListener;
-	private LyricsFetcher lyricsFetcher;
+	private SearchLyrics lyricsFetcher;
 	private View parentView;
 	private SeekBar playerProgress;
 	
@@ -287,7 +287,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onPause() {
 		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
+			lyricsFetcher.cancelSearch();
 		}
 		if (!isUseAlbumCover && song.isHasCover()) {
 			undo.clear();
@@ -681,14 +681,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void showLyrics() {
 		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
+			lyricsFetcher.cancelSearch();
 		}
 		parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
 		playerLyricsView.setText("");
 		lyricsLoader.setVisibility(View.VISIBLE);
 		lyricsLoader.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-		lyricsFetcher = new LyricsFetcher(getActivity());
-		lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 		OnLyricsFetchedListener fetchedListener = new OnLyricsFetchedListener() {
 			
 			@Override
@@ -709,8 +707,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			}
 			
 		};
+		lyricsFetcher = new SearchLyrics(fetchedListener, song.getTitle(), song.getArtist());
+		lyricsFetcher.startSerach();
 		currLyricsFetchedId = fetchedListener.hashCode();
-		lyricsFetcher.setOnLyricsFetchedListener(fetchedListener);
 	}
 	
 	/**

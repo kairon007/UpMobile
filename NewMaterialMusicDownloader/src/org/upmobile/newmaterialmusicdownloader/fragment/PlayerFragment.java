@@ -20,8 +20,8 @@ import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -105,7 +105,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private Integer undoMessage = Integer.valueOf(0);
 
 	// lyric sections
-	private LyricsFetcher lyricsFetcher;
+	private SearchLyrics lyricsFetcher;
 	private TextView playerLyricsView;
 	
 	// visualizer section
@@ -412,7 +412,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		playerProgress.forceHideFloater();
 		((MainActivity) getActivity()).showPlayerElement(player.isPrepared());
 		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
+			lyricsFetcher.cancelSearch();
 		}
 		if (!isUseAlbumCover && song.isHasCover()) {
 			undoMessage = MSG_UNDO_REMOVE;
@@ -798,11 +798,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		lastArtist = song.getArtist();
 		lastTitle = song.getTitle();
 		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
+			lyricsFetcher.cancelSearch();
 			playerLyricsView.setText(EMPTY_STRING);
 		}
-		lyricsFetcher = new LyricsFetcher(getActivity());
-		lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 		OnLyricsFetchedListener fetchedListener = new OnLyricsFetchedListener() {
 
 			@Override
@@ -820,7 +818,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 				}
 			}
 		};
-		lyricsFetcher.setOnLyricsFetchedListener(fetchedListener);
+		lyricsFetcher = new SearchLyrics(fetchedListener, song.getArtist(), song.getTitle());
+		lyricsFetcher.startSerach();
 		checkIdLyrics = fetchedListener.hashCode();
 	}
 

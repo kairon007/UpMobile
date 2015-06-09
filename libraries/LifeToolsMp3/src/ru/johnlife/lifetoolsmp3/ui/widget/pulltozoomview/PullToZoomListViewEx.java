@@ -16,7 +16,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class PullToZoomListViewEx extends PullToZoomBase<ListView> implements AbsListView.OnScrollListener {
-    private static final String TAG = PullToZoomListViewEx.class.getSimpleName();
+//    private static final String TAG = PullToZoomListViewEx.class.getSimpleName();
     private FrameLayout mHeaderContainer;
     private int mHeaderHeight;
     private ScalingRunnable mScalingRunnable;
@@ -233,7 +233,7 @@ public class PullToZoomListViewEx extends PullToZoomBase<ListView> implements Ab
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        Log.d(TAG, "onScrollStateChanged --> ");
+//        Log.d(TAG, "onScrollStateChanged --> ");
     }
 
     @Override

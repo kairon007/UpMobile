@@ -14,8 +14,8 @@ import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -58,7 +58,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private AudioManager audio;
 	private RenameTask renameTask;
 	private PlaybackService player;
-	private LyricsFetcher lyricsFetcher;
+	private SearchLyrics lyricsFetcher;
 	private DownloadListener downloadListener;
 	private IntentFilter filter;
 	private View parentView;
@@ -190,7 +190,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onPause() {
 		((MainActivity) getActivity()).showPlayerElement(player.isPrepared());
-		if (null != lyricsFetcher) lyricsFetcher.cancel();
+		if (null != lyricsFetcher) lyricsFetcher.cancelSearch();
 		if (null != volumeReceiver) getActivity().unregisterReceiver(volumeReceiver);
 		super.onPause();
 	}
@@ -455,14 +455,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	private void showLyrics() {
 		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
+			lyricsFetcher.cancelSearch();
 			playerLyricsView.setText("");
 		}
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
-			lyricsFetcher = new LyricsFetcher(getActivity());
-			lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
-			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+			lyricsFetcher = new SearchLyrics(new OnLyricsFetchedListener() {
 
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
@@ -476,7 +474,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					} catch (Exception e) {
 					}
 				}
-			});
+			}, song.getArtist(), song.getTitle());
+			lyricsFetcher.startSerach();
 		} else {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
 		}

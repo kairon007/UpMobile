@@ -6,8 +6,8 @@ import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
@@ -239,7 +239,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		} else {
 			lyricsView = inflater.inflate(R.layout.lyrics_view, null);
 		}
-		LyricsFetcher lyricsFetcher = new LyricsFetcher(view.getContext());
 		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme);
 		b.setView(lyricsView);
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -275,8 +274,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		final String strTitle = keeper.getTitleArtistLyrics()[0];
 		final String strArtist = keeper.getTitleArtistLyrics()[1];
 		if (null == lyrics) {
-		lyricsFetcher.fetchLyrics(strTitle, strArtist);
-			lyricsFetcher.setOnLyricsFetchedListener(new OnLyricsFetchedListener() {
+			SearchLyrics lyricsFetcher = new SearchLyrics(new OnLyricsFetchedListener() {
 
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
@@ -291,7 +289,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 						}
 					}
 				}
-			});
+			}, strArtist,strTitle);
+			lyricsFetcher.startSerach();
 		} else {
 			progressLayout.setVisibility(View.GONE);
 			if (lyrics.equals("")) {

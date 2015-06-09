@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_color_grey_200"
     android:fillViewport="true"
     android:orientation="vertical"
     android:padding="4dp"
-    android:background="@color/main_color_grey_200"
     tools:ignore="ContentDescription" >
-    
-        <LinearLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
@@ -33,7 +33,6 @@
             android:text="@string/edit_mp3_use_album_cover"
             android:textSize="16sp" />
     </LinearLayout>
-    
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -310,6 +309,23 @@
             app:pb_textComplete="@string/downloaded"
             app:pb_textProgress="@string/downloading" />
     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+
+    <TextView
+        android:id="@+id/textView1"
+        style="@style/TextViewAppearance.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/lyrics"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/main_color_accent" />
 
     <FrameLayout
         android:id="@+id/frame_lyrics"

@@ -19,8 +19,8 @@ import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher;
-import ru.johnlife.lifetoolsmp3.engines.lyric.LyricsFetcher.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -93,7 +93,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private LinearLayout titleBox;
 
 	// lyric sections
-	private LyricsFetcher lyricsFetcher;
+	private SearchLyrics lyricsFetcher;
 	private TextView playerLyricsView;
 	
 	//custom check box
@@ -307,7 +307,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	public void onPause() {
 		((MainActivity) getActivity()).showPlayerElement(player.isPrepared());
 		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
+			lyricsFetcher.cancelSearch();
 		}
 		cbUseCover.setOnCheckedChangeListener(null);
 		if (!isUseAlbumCover && song.isHasCover()) {
@@ -665,11 +665,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void showLyrics() {
 		if (null != lyricsFetcher) {
-			lyricsFetcher.cancel();
+			lyricsFetcher.cancelSearch();
 			playerLyricsView.setText("");
 		}
-		lyricsFetcher = new LyricsFetcher(getActivity());
-		lyricsFetcher.fetchLyrics(song.getTitle(), song.getArtist());
 		OnLyricsFetchedListener fetchedListener = new OnLyricsFetchedListener() {
 
 			@Override
@@ -687,7 +685,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				}
 			}
 		};
-		lyricsFetcher.setOnLyricsFetchedListener(fetchedListener);
+		lyricsFetcher = new SearchLyrics(fetchedListener,song.getArtist(),song.getTitle());
+		lyricsFetcher.startSerach();
 		checkIdLyrics = fetchedListener.hashCode();
 	}
 
