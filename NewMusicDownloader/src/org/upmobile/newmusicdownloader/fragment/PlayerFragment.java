@@ -594,19 +594,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void getCover(final AbstractSong song) {
 		checkBoxState(false);
 		playerCover.setImageResource(R.drawable.no_cover_art_big);
-		if (song.isHasCover()) {
-			final Bitmap bitmap = song.getCover();
-			if (null != bitmap) {
-				playerCover.post(new Runnable() {
+		final Bitmap bitmap = song.getCover();
+		if (null != bitmap) {
+			playerCover.post(new Runnable() {
 
-					@Override
-					public void run() {
-						checkBoxState(true);
-						playerCover.setImageBitmap(bitmap);
-					}
-				});
-				return;
-			}
+				@Override
+				public void run() {
+					checkBoxState(true);
+					playerCover.setImageBitmap(bitmap);
+				}
+			});
+			return;
 		}
 		if (song.getClass() != MusicData.class) {
 			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
