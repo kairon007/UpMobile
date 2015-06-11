@@ -410,7 +410,7 @@ public abstract class BasePlaylistView extends View {
 	
 	public PlaylistData getPlaylistBySong(MusicData song) {
 		for (AbstractSong playlistData : adapter.getAll()) {
-			if (((PlaylistData) playlistData).getSongs().contains(song)) {
+			if (playlistData.getClass() == PlaylistData.class && ((PlaylistData) playlistData).getSongs().contains(song)) {
 				return ((PlaylistData) playlistData);
 			}
 		}
