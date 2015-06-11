@@ -1,6 +1,9 @@
 package ru.johnlife.lifetoolsmp3.ui.widget;
 
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SwipeUndoView;
+
 import ru.johnlife.lifetoolsmp3.R;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -12,6 +15,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -29,7 +33,6 @@ import android.widget.ListView;
 public class RippleView extends FrameLayout implements OnGestureListener {
 
 	private static boolean click = false;
-	private static final String SWIPE_VIEW_TAG = "SwipeUndoView";
 	
     private int width;
     private int height;
@@ -106,7 +109,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		super.draw(canvas);
 		if (!animationRunning) return;
 		if (timer == 0)
-			canvas.save();
+			canvas.save(Canvas.CLIP_SAVE_FLAG);
 		if (rippleDuration <= timer * rippleFrameRate) {
 			if (!eventCanceled && singleTap) 
 				sendClickEvent();
@@ -152,36 +155,36 @@ public class RippleView extends FrameLayout implements OnGestureListener {
     }
 
 	@Override
-	public boolean onDown(MotionEvent event) {
-		return false;
-	}
+	public boolean onDown(MotionEvent event) { return false; }
 
 	@Override
 	public void onShowPress(MotionEvent event) {}
 	
 	@Override
 	public boolean onSingleTapUp(MotionEvent event) {
-		singleTap = true;
-		isLongClick = false;
+		if (!eventCanceled)
+			singleTapOn(true);
 		return true;
 	}
 
 	@Override
-	public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) {
-		return false;
-	}
+	public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) { return false; }
 
 	@Override
 	public void onLongPress(MotionEvent event) {
-		singleTap = false;
-		isLongClick = true;
-		sendClickEvent();
+		if (!eventCanceled) {
+			singleTapOn(false);
+			sendClickEvent();
+		}
+	}
+	
+	private void singleTapOn(boolean on) {
+		singleTap = on;
+		isLongClick = !on;
 	}
 
 	@Override
-	public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-		return false;
-	}
+	public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) { return false; }
     
     public void animateRipple(MotionEvent event) {
         createAnimation(event.getX(), event.getY());
@@ -235,26 +238,23 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		}
 		childView.setOnClickListener(onClickListener);
 	}
-
+	
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(@NonNull final MotionEvent event) {
-		if (!isEnabled() || !childView.isEnabled())  {
-			System.out.println("!!! onTouchEvent return");
-			return			super.onTouchEvent(event);
-		}
+		if (!isEnabled() || !childView.isEnabled()) return super.onTouchEvent(event);
 		gestureDetector.onTouchEvent(event);
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
-			System.out.println("!!! ACTION_UP");
 			childView.onTouchEvent(event);
 			isLongClick = false;
 			click = false;
 			break;
 		case MotionEvent.ACTION_DOWN:
-			System.out.println("!!! ACTION_DOWN");
 			if (click) return true;
 			childView.onTouchEvent(event);
 			eventCanceled = false;
+			singleTap = false;
 			click = true;
 			if (isInScrollingContainer()) {
 				final float x = event.getX();
@@ -273,9 +273,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 				animateRipple(event);
 			}
 			break;
-		case MotionEvent.ACTION_MOVE:
 		case MotionEvent.ACTION_CANCEL:
-			System.out.println("!!! ACTION_CANCEL");
 			childView.onTouchEvent(event);
 			eventCanceled = true;
 			animationRunning = false;
@@ -290,13 +288,9 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		ViewParent p = getParent();
 		while (p != null && p instanceof ViewGroup) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-				if (((ViewGroup) p).shouldDelayChildPressedState()) {
-					return true;
-				}
+				if (((ViewGroup) p).shouldDelayChildPressedState()) return true;
 			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-				if (((ViewGroup) p).isScrollContainer()) {
-					return true;
-				}
+				if (((ViewGroup) p).isScrollContainer()) return true;
 			}
 			p = p.getParent();
 		}
@@ -341,19 +335,15 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 					((AdapterView<?>) getParent()).getOnItemLongClickListener().onItemLongClick(((ListView) getParent()), this, position, id);
 			} else
 				((AdapterView<?>) getParent()).performItemClick(this, position, id);
-		} else if (getParent().toString().contains(SWIPE_VIEW_TAG)) {
+		} else if (getParent() instanceof SwipeUndoView) {
 			ViewParent parent = getParent().getParent();
 			final int position = ((AdapterView<?>) parent).getPositionForView(this);
 			final long id = ((AdapterView<?>) parent).getItemIdAtPosition(position);
 			if (isLongClick) {
-				if (((AdapterView<?>) parent).getOnItemLongClickListener() != null) {
-					System.out.println("!!! LongClick");
+				if (((AdapterView<?>) parent).getOnItemLongClickListener() != null)
 					((AdapterView<?>) parent).getOnItemLongClickListener().onItemLongClick(((ListView) parent), this, position, id);
-				}
-			} else {
-				System.out.println("!!! No LongCLick");
+			} else
 				((AdapterView<?>) parent).performItemClick(this, position, id);
-			}
 		}
 	}
 
