@@ -19,14 +19,18 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter {
 
+	private boolean isWhiteTheme;
+
 	public PlaylistAdapter(Context context, int resource) {
 		super(context, resource);
+		isWhiteTheme = ((MainActivity) getContext()).isWhiteTheme(getContext());
 	}
 
 	@Override
@@ -84,13 +88,24 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 			duaration = (TextView) v.findViewById(R.id.textDuration);
 			groupTitle = (TextView) v.findViewById(R.id.textTitle);
 			playAll = (View) v.findViewById(R.id.playAll);
+			customGroupIndicator = (ImageView) v.findViewById(R.id.customGroupIndicator);
 		}
 
 		@Override
 		protected void hold(AbstractSong data, int position) {
 			super.hold(data, position);
+			if (data.getClass() == PlaylistData.class) {
+				if (((PlaylistData) data).isExpanded()) {
+					((ImageView) customGroupIndicator).setImageDrawable(!isWhiteTheme ? 
+							getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_white_18dp)
+							: getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_18dp));
+				} else {
+					((ImageView) customGroupIndicator).setImageDrawable(!isWhiteTheme ? 
+							getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_white_18dp)
+							: getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_18dp));
+				}
+			}
 		}
-		
 	}
 
 	@Override

@@ -67,11 +67,6 @@ public class PlaylistView extends BasePlaylistView {
 	protected Bitmap getDeafultCover() {
 		return BitmapFactory.decodeResource(getResources(), org.upmobile.clearmusicdownloader.R.drawable.def_cover_circle);
 	}
-	
-	@Override
-	protected Object[] groupItems() {
-		return new Object[]{BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_down_black_18dp),BitmapFactory.decodeResource(getResources(), R.drawable.ic_keyboard_arrow_up_black_18dp)};
-	}
 
 	@Override
 	protected BasePlaylistsAdapter getAdapter(Context context) {
@@ -87,9 +82,9 @@ public class PlaylistView extends BasePlaylistView {
 	        	for (int position : reverseSortedPositions) {
 	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
 	        		if (data.getClass() == MusicData.class) {
-	        			removeData(getViewByPosition((ListView) listView, position), getPlaylistBySong((MusicData) data), (MusicData) data);
+	        			removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
 	        		} else {
-	        			removeData(getViewByPosition((ListView) listView, position), (PlaylistData) data, null);
+	        			removeData((PlaylistData) data, null);
 	        		}
 	            	if (adapter.isEmpty()) {
 	        			lView.setEmptyView(message);

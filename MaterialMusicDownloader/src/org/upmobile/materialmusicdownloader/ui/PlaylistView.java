@@ -136,11 +136,6 @@ public class PlaylistView extends BasePlaylistView{
 	}
 
 	@Override
-	protected Object[] groupItems() {
-		return new Object[]{getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_arrow_down),getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_arrow_up)};
-	}
-
-	@Override
 	protected BasePlaylistsAdapter getAdapter(Context context) {
 		return new PlaylistAdapter(context, R.layout.playlist_group_item);
 	}
@@ -154,9 +149,9 @@ public class PlaylistView extends BasePlaylistView{
 	        	for (int position : reverseSortedPositions) {
 	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
 	        		if (data.getClass() == MusicData.class) {
-	        			removeData(getViewByPosition((ListView) listView, position), getPlaylistBySong((MusicData) data), (MusicData) data);
+	        			removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
 	        		} else {
-	        			removeData(getViewByPosition((ListView) listView, position), (PlaylistData) data, null);
+	        			removeData((PlaylistData) data, null);
 	        		}
 	            	if (adapter.isEmpty()) {
 	        			lView.setEmptyView(message);

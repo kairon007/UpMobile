@@ -11,12 +11,15 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAd
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -25,8 +28,15 @@ import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 
 public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter {
 
+	private int color;
+	private Drawable arrowDown;
+	private Drawable arrowUp;
+
 	public PlaylistAdapter(Context context, int resource) {
 		super(context, resource);
+		color = context.getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimary));
+		arrowDown = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_18dp);
+		arrowUp = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_18dp);
 	}
 
 	@Override
@@ -84,11 +94,20 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 			duaration = (TextView) v.findViewById(R.id.textDuration);
 			groupTitle = (TextView) v.findViewById(R.id.textTitle);
 			playAll = (View) v.findViewById(R.id.playAll);
+			customGroupIndicator = (ImageView) v.findViewById(R.id.customGroupIndicator);
 		}
 
 		@Override
 		protected void hold(AbstractSong data, int position) {
 			super.hold(data, position);
+			if (data.getClass() == PlaylistData.class) {
+				((ImageView) customGroupIndicator).setColorFilter(color);
+				if (((PlaylistData) data).isExpanded()) {
+					((ImageView) customGroupIndicator).setImageDrawable(arrowUp);
+				} else {
+					((ImageView) customGroupIndicator).setImageDrawable(arrowDown);
+				}
+			}
 		}
 		
 	}

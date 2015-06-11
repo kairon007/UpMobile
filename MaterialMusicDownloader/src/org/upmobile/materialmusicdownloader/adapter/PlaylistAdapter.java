@@ -83,12 +83,20 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 			cover = v.findViewById(R.id.item_cover);
 			duaration = (TextView) v.findViewById(R.id.textDuration);
 			groupTitle = (TextView) v.findViewById(R.id.textTitle);
-			playAll = (View) v.findViewById(R.id.playAll);
+			playAll = (TextView) v.findViewById(R.id.playAll);
+			customGroupIndicator = (TextView) v.findViewById(R.id.customGroupIndicator);
 		}
 
 		@Override
 		protected void hold(AbstractSong data, int position) {
 			super.hold(data, position);
+			if (data.getClass() == PlaylistData.class) {
+				if (((PlaylistData) data).isExpanded()) {
+					((TextView) customGroupIndicator).setText(getContext().getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_arrow_up));
+				} else {
+					((TextView) customGroupIndicator).setText(getContext().getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_arrow_down));
+				}
+			}
 		}
 		
 	}

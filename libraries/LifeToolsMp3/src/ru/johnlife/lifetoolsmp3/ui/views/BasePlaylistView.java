@@ -22,7 +22,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -34,7 +33,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
@@ -67,8 +65,6 @@ public abstract class BasePlaylistView extends View {
 			MediaStore.Audio.Media.DURATION, 
 			MediaStore.Audio.Media.ALBUM, };
 	
-	protected abstract Object[] groupItems();
-
 	protected abstract Bitmap getDeafultCover();
 	
 	protected abstract String getDirectory();
@@ -146,29 +142,8 @@ public abstract class BasePlaylistView extends View {
 		}
 		playlists.removeAll(music);
 		updateAdapter(playlists);
-//		for (int i = 0; i < adapter.getCount(); i++) {
-//			setGroupIndicator((View) getViewByPosition(listView, i).getParent(), 0);
-//		}
 	}
 	
-	private void setGroupIndicator(View v, int i) {
-		if (groupItems()[0].getClass() == String.class) {
-			((TextView) v.findViewById(R.id.customGroupIndicator)).setText(groupItems()[i].toString());
-		} else {
-			if (groupItems()[0].getClass() == Bitmap.class) {
-				((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageBitmap((Bitmap) groupItems()[i]);
-				if (groupItems().length > 2) {
-					((ImageView) v.findViewById(R.id.customGroupIndicator)).setColorFilter((Integer) groupItems()[2]);
-				}
-			} else {
-				((ImageView) v.findViewById(R.id.customGroupIndicator)).setImageDrawable((Drawable) groupItems()[i]);
-				if (groupItems().length > 2) {
-					((ImageView) v.findViewById(R.id.customGroupIndicator)).setColorFilter((Integer) groupItems()[2]);
-				}
-			}
-		}
-	}
-
 	private void updatePlaylist() {
 		ArrayList<AbstractSong> playlists = getPlaylists();
 		for (AbstractSong playlistData : playlists) {
@@ -202,11 +177,9 @@ public abstract class BasePlaylistView extends View {
 					if (!((PlaylistData) abstractSong).isExpanded()) {
 						playlists.addAll(position + 1, songs);
 						((PlaylistData) abstractSong).setExpanded(true);
-						setGroupIndicator(view, 1);
 					} else {
 						playlists.removeAll(songs);
 						((PlaylistData) abstractSong).setExpanded(false);
-						setGroupIndicator(view, 0);
 					}
 					updateAdapter(playlists);
 				} else {
@@ -306,7 +279,7 @@ public abstract class BasePlaylistView extends View {
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
-					removeData(v, data, musicData);
+					removeData(data, musicData);
 				}
 				return false;
 			}
@@ -349,7 +322,7 @@ public abstract class BasePlaylistView extends View {
 		});
 	}
 	
-	public void removeData(final View v, final PlaylistData data, final MusicData musicData) {
+	public void removeData(final PlaylistData data, final MusicData musicData) {
 		ArrayList<AbstractSong> playlists = adapter.getAll();
 		if (musicData == null) {
 			if (data.isExpanded()) {
@@ -362,9 +335,9 @@ public abstract class BasePlaylistView extends View {
 			((PlaylistData) playlists.get(playlists.indexOf(data))).getSongs().remove(musicData);
 			playlists.remove(musicData);
 			playbackService.remove(musicData);
-			if (((PlaylistData) playlists.get(playlists.indexOf(data))).getSongs().size() == 0 && null !=groupItems() && groupItems().length > 1) {
-		    		setGroupIndicator((View) v.getParent(), 0);
-			}
+		}
+		if (((PlaylistData) playlists.get(playlists.indexOf(data))).getSongs().size() == 0) {
+			((PlaylistData) playlists.get(playlists.indexOf(data))).setExpanded(false);
 		}
 		updateAdapter(playlists);
 	}
@@ -395,17 +368,6 @@ public abstract class BasePlaylistView extends View {
 			e.printStackTrace();
 			return playlistDatas;
 		}
-	}
-	
-	public View getViewByPosition(ListView listView, int pos) {
-	    final int firstListItemPosition = listView.getFirstVisiblePosition();
-	    final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-	    if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-	        return listView.getAdapter().getView(pos, null, listView);
-	    }
-		final int childIndex = pos - firstListItemPosition;
-		return listView.getChildAt(childIndex);
 	}
 	
 	public PlaylistData getPlaylistBySong(MusicData song) {

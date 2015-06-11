@@ -8,8 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +27,6 @@ public abstract class BasePlaylistsAdapter extends BaseAbstractAdapter<AbstractS
 		super(context, resource);
 		inflater = LayoutInflater.from(context);
 	}
-	
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {
@@ -65,6 +64,7 @@ public abstract class BasePlaylistsAdapter extends BaseAbstractAdapter<AbstractS
 		protected View cover;
 		protected TextView groupTitle;
 		protected View playAll;
+		protected View customGroupIndicator;
 		protected boolean isChild = false;
 		
 		@Override

@@ -153,14 +153,6 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected Object[] groupItems() {
-		int color = getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimary));
-		Drawable arrowDown = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_18dp);
-		Drawable arrowUp = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_18dp);
-		return new Object[] { arrowDown, arrowUp, color };
-	}
-
-	@Override
 	protected BasePlaylistsAdapter getAdapter(Context context) {
 		return new PlaylistAdapter(context, R.layout.playlist_group_item);
 	}
@@ -174,9 +166,9 @@ public class PlaylistView extends BasePlaylistView {
 	        	for (int position : reverseSortedPositions) {
 	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
 	        		if (data.getClass() == MusicData.class) {
-	        			removeData(getViewByPosition((ListView) listView, position), getPlaylistBySong((MusicData) data), (MusicData) data);
+	        			removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
 	        		} else {
-	        			removeData(getViewByPosition((ListView) listView, position), (PlaylistData) data, null);
+	        			removeData((PlaylistData) data, null);
 	        		}
 	            	if (adapter.isEmpty()) {
 	        			lView.setEmptyView(message);
