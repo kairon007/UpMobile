@@ -336,7 +336,7 @@ public abstract class BasePlaylistView extends View {
 			playlists.remove(musicData);
 			playbackService.remove(musicData);
 		}
-		if (((PlaylistData) playlists.get(playlists.indexOf(data))).getSongs().size() == 0) {
+		if (null != musicData && ((PlaylistData) playlists.get(playlists.indexOf(data))).getSongs().size() == 0) {
 			((PlaylistData) playlists.get(playlists.indexOf(data))).setExpanded(false);
 		}
 		updateAdapter(playlists);
