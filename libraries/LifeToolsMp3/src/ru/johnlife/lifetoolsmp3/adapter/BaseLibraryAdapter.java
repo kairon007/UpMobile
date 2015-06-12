@@ -6,6 +6,8 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
@@ -16,7 +18,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -87,7 +88,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		protected ViewGroup info;
 		
 		@Override
-		protected void hold(MusicData item, int position) {
+		protected void hold(final MusicData item, int position) {
 			title.setText(item.getTitle());
 			artist.setText(item.getArtist());
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
@@ -99,11 +100,32 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 					showMenu(v, info);
 				}
 			});
-			Bitmap bitmap = item.getCover();
-			cover.setImageBitmap(bitmap == null ? getDefaultCover() : bitmap);
-			bitmap = null;
+			
+			cover.setImageBitmap(getDefaultCover());			 
+			item.getCover(new OnBitmapReadyListener() {				
+				int tag = item.hashCode();
+				
+				@Override
+				public void onBitmapReady(Bitmap bmp) {
+					if (bmp != null) {
+						bmp = Util.resizeBitmap(bmp, Util.dpToPx(getContext(), 72), Util.dpToPx(getContext(), 72));
+					}
+					setCover(bmp, tag);
+				}				
+			});
 		}
-	}
+		
+		private void setCover(final Bitmap bmp, final int tag) {
+			((BaseMiniPlayerActivity) getContext()).runOnUiThread(new Runnable() {						
+				@Override
+				public void run() {						
+					if (tag == threeDot.getTag().hashCode()) {
+						cover.setImageBitmap(bmp == null ? getDefaultCover() : bmp);
+					}
+				}
+			});
+		}
+	}	
 	
 	public void setListener() {
 		service.addStatePlayerListener(stateListener);

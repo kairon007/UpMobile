@@ -7,6 +7,7 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -131,6 +132,23 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e);
 			return null;
 		}
+	}
+	
+	public void getCover(final OnBitmapReadyListener readyListener) {
+		new Thread(new Runnable() {			
+			@Override
+			public void run() {
+				File file = new File(path);		
+				try {
+					MusicMetadataSet src_set = new MyID3().read(file);
+					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+					readyListener.onBitmapReady(Util.getArtworkImage(2, metadata));
+				} catch (Exception e) {
+					android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e);
+					readyListener.onBitmapReady(null);
+				}				
+			}
+		}).start();
 	}
 	
 	@Override
