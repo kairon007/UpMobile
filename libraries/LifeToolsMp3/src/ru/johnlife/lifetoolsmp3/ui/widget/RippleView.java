@@ -1,7 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui.widget;
 
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SwipeUndoView;
-
 import ru.johnlife.lifetoolsmp3.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,7 +13,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -29,6 +26,8 @@ import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SwipeUndoView;
 
 public class RippleView extends FrameLayout implements OnGestureListener {
 
@@ -239,6 +238,14 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 		childView.setOnClickListener(onClickListener);
 	}
 	
+	@Override
+	public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
+		if (childView == null) {
+			throw new IllegalStateException("RippleView must have a child view to handle clicks");
+		}
+		childView.setOnLongClickListener(onLongClickListener);
+	}
+	
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(@NonNull final MotionEvent event) {
@@ -285,14 +292,14 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 	}
 	
 	private boolean isInScrollingContainer() {
-		ViewParent p = getParent();
-		while (p != null && p instanceof ViewGroup) {
+		ViewParent parent = getParent();
+		while (null != parent && parent instanceof ViewGroup) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-				if (((ViewGroup) p).shouldDelayChildPressedState()) return true;
+				if (((ViewGroup) parent).shouldDelayChildPressedState()) return true;
 			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-				if (((ViewGroup) p).isScrollContainer()) return true;
+				if (((ViewGroup) parent).isScrollContainer()) return true;
 			}
-			p = p.getParent();
+			parent = parent.getParent();
 		}
 		return false;
 	}
@@ -334,17 +341,31 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 				if (((AdapterView<?>) getParent()).getOnItemLongClickListener() != null)
 					((AdapterView<?>) getParent()).getOnItemLongClickListener().onItemLongClick(((ListView) getParent()), this, position, id);
 			} else
-				((AdapterView<?>) getParent()).performItemClick(this, position, id);
-		} else if (getParent() instanceof SwipeUndoView) {
-			ViewParent parent = getParent().getParent();
-			final int position = ((AdapterView<?>) parent).getPositionForView(this);
-			final long id = ((AdapterView<?>) parent).getItemIdAtPosition(position);
-			if (isLongClick) {
-				if (((AdapterView<?>) parent).getOnItemLongClickListener() != null)
-					((AdapterView<?>) parent).getOnItemLongClickListener().onItemLongClick(((ListView) parent), this, position, id);
-			} else
-				((AdapterView<?>) parent).performItemClick(this, position, id);
+				((AdapterView<?>) getParent()).performItemClick(this, position, id);			
+		} else {
+			ViewParent parent = getSwipeParent();
+			if (null != parent) {
+				final int position = ((AdapterView<?>) parent).getPositionForView(this);
+				final long id = ((AdapterView<?>) parent).getItemIdAtPosition(position);
+				if (isLongClick) {
+					if (((AdapterView<?>) parent).getOnItemLongClickListener() != null)
+						((AdapterView<?>) parent).getOnItemLongClickListener().onItemLongClick(((ListView) parent), this, position, id);
+				} else
+					((AdapterView<?>) parent).performItemClick(this, position, id);
+			}
 		}
+	}
+	
+	private ViewParent getSwipeParent() {
+		ViewParent parent = getParent();
+		while (null != parent && parent instanceof ViewGroup) {
+			if (parent instanceof SwipeUndoView) {
+				return parent.getParent();
+			} else {
+				parent = parent.getParent();	
+			}
+		}
+		return null;
 	}
 
 	private Bitmap getCircleBitmap(final int radius) {

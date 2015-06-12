@@ -10,6 +10,7 @@ import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -25,9 +26,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,7 +113,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	public abstract TextView getMessageView(View view);
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
-	protected void specialInit(View view) {}
 	
 	public void onPause() {
 		((BaseLibraryAdapter) adapter).resetListener();
@@ -219,10 +226,35 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		view = (ViewGroup) inflater.inflate(getLayoutId(), null);
 		listView = getListView(view);
 		emptyMessage = getMessageView(view);
-		
 		adapter = getAdapter();
-		listView.setAdapter(adapter);
-		specialInit(view);
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				AbstractSong data = (AbstractSong) adapter.getItem(position);
+				showMenu(view, (MusicData) data);
+				return true;
+			}
+		});
+	}
+	
+	private void showMenu(final View view, final MusicData musicData) {
+		PopupMenu menu = new PopupMenu(getContext(), view);
+		menu.getMenuInflater().inflate(R.menu.library_menu, menu.getMenu());
+		menu.getMenu().getItem(0).setVisible(false);
+		menu.getMenu().getItem(1).setVisible(false);
+		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem paramMenuItem) {
+				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
+					adapter.remove(musicData);
+					musicData.reset(getContext());
+				}
+				return false;
+			}
+			
+		});
+		menu.show();
 	}
 	
 	protected ArrayList<MusicData> querySong() {

@@ -16,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener {
+	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener, OnLongClickListener {
 
 		private MusicData data;
 
@@ -59,6 +60,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		
 		private void setListener() {
 			info.setOnClickListener(this);
+			info.setOnLongClickListener(this);
 		}
 
 		@Override
@@ -75,6 +77,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				break;
 			}
 		}
+
+		@Override
+		public boolean onLongClick(View view) { return false; }
 	}
 	
 	@Override
