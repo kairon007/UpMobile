@@ -148,6 +148,7 @@ public class PlaylistView extends BasePlaylistView{
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	        	for (int position : reverseSortedPositions) {
 	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
+	        		if (null == data) return;
 	        		if (data.getClass() == MusicData.class) {
 	        			removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
 	        		} else {
@@ -167,4 +168,5 @@ public class PlaylistView extends BasePlaylistView{
 	public void forceDelete () {
 		swipeUndoAdapter.forceDelete();
 	}
+	
 }

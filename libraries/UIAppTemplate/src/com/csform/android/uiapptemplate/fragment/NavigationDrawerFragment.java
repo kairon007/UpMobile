@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.text.Html;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -39,6 +38,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private NavigationDrawerCallbacks mCallbacks;
+    private OnNavigationDrawerState drawerState;
     private android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
     private android.support.v4.app.ActionBarDrawerToggle drawerToggle;
     private List<BaseMaterialFragment> mFragments;
@@ -55,6 +55,10 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 	private ArrayList<DrawerItem> mDrawerItems;
 
     public NavigationDrawerFragment() {
+    }
+    
+    public interface OnNavigationDrawerState {
+    	public void onDrawerOpen();
     }
 
     @Override
@@ -151,15 +155,35 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 	                getActivity(),                    /* host Activity */
 	                mDrawerLayout,                    /* DrawerLayout object */
 	                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-	                R.string.navigation_drawer_close);  /* "close drawer" description for accessibility */
-        } else {
+	                R.string.navigation_drawer_close) {
+
+				@Override
+				public void onDrawerOpened(View drawerView) {
+					if (null != drawerState) {
+						drawerState.onDrawerOpen();
+					}
+					super.onDrawerOpened(drawerView);
+				}
+			}; /* "close drawer" description for accessibility */
+		} else {
         	drawerToggle = new android.support.v4.app.ActionBarDrawerToggle(
 	                    getActivity(),                    /* host Activity */
 	                    mDrawerLayout,                    /* DrawerLayout object */
-	                    R.drawable.ic_drawer_compat,             /* nav drawer image to replace 'Up' caret */
+	                    R.drawable.ic_drawer_compat,      /* nav drawer image to replace 'Up' caret */
 	                    R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
 	                    R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-	            );
+	            ) {
+        		
+				@Override
+				public void onDrawerOpened(View drawerView) {
+					if (null != drawerState) {
+						drawerState.onDrawerOpen();
+					}
+					super.onDrawerOpened(drawerView);
+				}
+				
+			};
+        	
         }
         
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
@@ -297,8 +321,13 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     private boolean useOldToggle() {
 		return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
     }
+
+	public OnNavigationDrawerState getDrawerState() {
+		return drawerState;
+	}
+
+	public void setDrawerState(OnNavigationDrawerState drawerState) {
+		this.drawerState = drawerState;
+	}
     
-    public void setDrawerStateListener (DrawerLayout.DrawerListener listener) {
-    	mDrawerLayout.setDrawerListener(listener);
-    }
 }

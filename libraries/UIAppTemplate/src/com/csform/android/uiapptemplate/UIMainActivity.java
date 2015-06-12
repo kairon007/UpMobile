@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
+import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.OnNavigationDrawerState;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public abstract class UIMainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
@@ -43,6 +44,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 	public abstract void showDialog();
 	protected abstract Bitmap getSearchActinBarIcon();
 	protected abstract Bitmap getCloseActinBarIcon();
+	protected void navigationDrawerOpened () {};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,13 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		setContentView(R.layout.activity_material_main);
 		navigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
+        navigationDrawerFragment.setDrawerState(new OnNavigationDrawerState() {
+			
+			@Override
+			public void onDrawerOpen() {
+				navigationDrawerOpened();
+			}
+		});
 	}
 	
     private boolean useOldToggle() {
@@ -112,7 +121,6 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
 		return super.onPrepareOptionsMenu(menu);
 	}
-	
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -255,7 +263,4 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		isVisibleSearchView = flag;
 	}
 	
-    public void setDrawerStateListener (DrawerLayout.DrawerListener listener) {
-    	navigationDrawerFragment.setDrawerStateListener(listener);
-    }
 }

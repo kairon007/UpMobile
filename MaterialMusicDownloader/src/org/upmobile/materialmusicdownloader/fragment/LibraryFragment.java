@@ -7,7 +7,6 @@ import org.upmobile.materialmusicdownloader.ui.LibraryView;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,22 +30,6 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 		activity.setTitle(getDrawerTitle());
 		activity.setDrawerEnabled(true);
 		activity.setVisibleSearchView(true);
-		activity.setDrawerStateListener(new DrawerListener() {
-			
-			@Override
-			public void onDrawerStateChanged(int paramInt) {
-				libraryView.forceDelete();
-			}
-			
-			@Override
-			public void onDrawerSlide(View paramView, float paramFloat) {}
-			
-			@Override
-			public void onDrawerOpened(View paramView) {}
-			
-			@Override
-			public void onDrawerClosed(View paramView) {}
-		});
 		libraryView.onResume();
 		super.onResume();
 	}
@@ -80,5 +63,9 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 	@Override
 	public int getDrawerTag() {
 		return getClass().getSimpleName().hashCode();
+	}
+	
+	public void forceDelete () {
+		libraryView.forceDelete();
 	}
 }

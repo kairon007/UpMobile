@@ -8,6 +8,7 @@ import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -67,11 +68,11 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 	            for (int position : reverseSortedPositions) {
 	            	MusicData data = ((MusicData) adapter.getItem(position));
+	            	data.reset(getContext());
 	            	isUserDeleted = true;
 	            	PlaybackService.get(getContext()).remove(data);
 	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
 	            	adapter.remove(data);
-	            	data.reset(getContext());
 	            	if (adapter.isEmpty()) {
 	        			lView.setEmptyView(message);
 	        		}

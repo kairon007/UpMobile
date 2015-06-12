@@ -163,6 +163,11 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		for (DissmissTimer timer : timers) {
 			int position  = timer.getPosition();
 			dismiss(position);
+			try {
+				timer.cancel();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
