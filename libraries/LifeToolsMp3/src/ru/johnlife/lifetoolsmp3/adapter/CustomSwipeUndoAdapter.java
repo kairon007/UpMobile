@@ -48,14 +48,14 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	}
 	
 	@Override
-	public void onDismiss(ViewGroup listView, int[] reverseSortedPositions) {
+	public void onDismiss(ViewGroup listView, int[] reverseSortedPositions, ArrayList<Object> removed) {
 		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
 		for (int position : reverseSortedPositions) {
 			stopTimer(position);
 		}
-		super.onDismiss(listView, reverseSortedPositions);
+		super.onDismiss(listView, reverseSortedPositions, removed);
 	}
 	
 	@Override

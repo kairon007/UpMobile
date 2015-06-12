@@ -1,5 +1,7 @@
 package org.upmobile.clearmusicdownloader.ui;
 
+import java.util.ArrayList;
+
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
@@ -65,7 +67,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 	        
 			@Override
-	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 	            for (int position : reverseSortedPositions) {
 	            	MusicData data = ((MusicData) adapter.getItem(position));
 	            	isUserDeleted = true;

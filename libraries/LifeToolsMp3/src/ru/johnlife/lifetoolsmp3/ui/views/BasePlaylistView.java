@@ -14,6 +14,7 @@ import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -82,6 +83,8 @@ public abstract class BasePlaylistView extends View {
 	protected void animateListView(ListView listView, BasePlaylistsAdapter adapter) {
 		//Animate ListView in childs, if need
 	}
+	
+	protected abstract void forceDelete();
 	
 	private OnSharedPreferenceChangeListener sharedPreferenceListener = new OnSharedPreferenceChangeListener() {
 		
@@ -166,6 +169,7 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				forceDelete();
 				ArrayList<AbstractSong> playlists = adapter.getAll();
 				AbstractSong abstractSong = playlists .get(position);
 				if (abstractSong.getClass() == PlaylistData.class) {

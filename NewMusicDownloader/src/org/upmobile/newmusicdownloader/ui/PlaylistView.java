@@ -59,4 +59,10 @@ public class PlaylistView extends BasePlaylistView {
 	protected BasePlaylistsAdapter getAdapter(Context context) {
 		return new PlaylistAdapter(context, R.layout.playlist_group_item);
 	}
+
+	@Override
+	protected void forceDelete() {
+		// TODO Auto-generated method stub
+		
+	}
 }

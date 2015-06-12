@@ -1,5 +1,7 @@
 package org.upmobile.materialmusicdownloader.ui;
 
+import java.util.ArrayList;
+
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
@@ -8,7 +10,6 @@ import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -65,7 +66,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 			
 	        @Override
-	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 	            for (int position : reverseSortedPositions) {
 	            	MusicData data = ((MusicData) adapter.getItem(position));
 	            	data.reset(getContext());

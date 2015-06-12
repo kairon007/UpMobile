@@ -1,5 +1,7 @@
 package org.upmobile.clearmusicdownloader.ui;
 
+import java.util.ArrayList;
+
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.PlaylistAdapter;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
@@ -78,7 +80,7 @@ public class PlaylistView extends BasePlaylistView {
 		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 			
 	        @Override
-	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 	        	for (int position : reverseSortedPositions) {
 	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
 	        		if (data.getClass() == MusicData.class) {
@@ -95,5 +97,11 @@ public class PlaylistView extends BasePlaylistView {
 		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
 		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
 		((DynamicListView)listView).enableSimpleSwipeUndo();
+	}
+
+	@Override
+	protected void forceDelete() {
+		// TODO Auto-generated method stub
+		
 	}
 }

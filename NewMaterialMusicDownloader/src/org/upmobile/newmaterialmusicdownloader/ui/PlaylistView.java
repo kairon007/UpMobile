@@ -1,5 +1,7 @@
 package org.upmobile.newmaterialmusicdownloader.ui;
 
+import java.util.ArrayList;
+
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.adapter.PlaylistAdapter;
@@ -19,7 +21,6 @@ import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ButtonCa
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -162,7 +163,7 @@ public class PlaylistView extends BasePlaylistView {
 		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 			
 	        @Override
-	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 	        	for (int position : reverseSortedPositions) {
 	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
 	        		if (data.getClass() == MusicData.class) {
@@ -179,6 +180,11 @@ public class PlaylistView extends BasePlaylistView {
 		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
 		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
 		((DynamicListView)listView).enableSimpleSwipeUndo();
+	}
+
+	@Override
+	protected void forceDelete() {
+		swipeUndoAdapter.forceDelete();
 	}
 	
 }
