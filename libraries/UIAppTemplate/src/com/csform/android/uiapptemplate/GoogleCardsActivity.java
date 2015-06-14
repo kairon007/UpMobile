@@ -15,6 +15,8 @@
  */
 package com.csform.android.uiapptemplate;
 
+import java.util.ArrayList;
+
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -79,7 +81,7 @@ public class GoogleCardsActivity extends ActionBarActivity implements OnDismissC
 
 	@Override
 	public void onDismiss(@NonNull final ViewGroup listView,
-			@NonNull final int[] reverseSortedPositions) {
+			@NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 		for (int position : reverseSortedPositions) {
 			mGoogleCardsAdapter.remove(mGoogleCardsAdapter.getItem(position));
 		}

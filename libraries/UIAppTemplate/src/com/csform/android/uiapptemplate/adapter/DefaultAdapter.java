@@ -111,7 +111,7 @@ public class DefaultAdapter extends BaseAdapter implements Swappable, UndoAdapte
 
 	@Override
 	public void onDismiss(@NonNull final ViewGroup listView,
-			@NonNull final int[] reverseSortedPositions) {
+			@NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 		for (int position : reverseSortedPositions) {
 			remove(position);
 		}

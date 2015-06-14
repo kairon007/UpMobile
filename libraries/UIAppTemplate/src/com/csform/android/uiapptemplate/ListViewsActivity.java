@@ -1,7 +1,8 @@
 package com.csform.android.uiapptemplate;
 
-import java.util.Random;
 
+import java.util.Random;
+import java.util.ArrayList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
@@ -101,7 +102,7 @@ public class ListViewsActivity extends ActionBarActivity {
 		SimpleSwipeUndoAdapter swipeUndoAdapter = new SimpleSwipeUndoAdapter(adapter, this,
 		    new OnDismissCallback() {
 		        @Override
-		        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+		        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 		            for (int position : reverseSortedPositions) {
 		            	adapter.remove(position);
 		            }
