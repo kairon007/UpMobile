@@ -173,6 +173,7 @@ public class SearchViewTab  extends OnlineSearchView {
 	protected void stopSystemPlayer(Context context) {
 	}
 
+	//TODO remove this method (and in superclass)
 	@Override
 	public boolean isWhiteTheme(Context context) {
 		return Util.isDifferentApp(context);

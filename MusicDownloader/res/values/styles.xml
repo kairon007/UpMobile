@@ -7,14 +7,23 @@
 
     <style name="AppTheme" parent="AppThemeBase">
         <item name="android:windowBackground">@color/window_background_dark</item>
+        <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
+        <item name="search_background">@color/window_background_dark</item>
     </style>
 
     <style name="AppTheme.Black" parent="AppThemeBase">
         <item name="android:windowBackground">@color/window_background_black</item>
+        <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview_white</item>
+        <item name="icon_ok">@drawable/icon_ok</item>
+        <item name="icon_cancel">@drawable/icon_cancel</item>
     </style>
 
     <style name="AppTheme.White" parent="AppThemeBase.White">
         <item name="android:windowBackground">@color/window_background_light</item>
+        <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
+        <item name="icon_ok">@drawable/icon_ok_black</item>
+        <item name="icon_cancel">@drawable/icon_cancel_black</item>
+        <item name="search_background">@drawable/search_background_white</item>
     </style>
 
     <style name="Dialog" parent="android:Theme.Dialog" />

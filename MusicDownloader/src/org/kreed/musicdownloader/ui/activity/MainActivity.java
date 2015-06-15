@@ -222,10 +222,6 @@ public class MainActivity extends Activity {
 		init();
 		keeper = StateKeeper.getInstance();
 		textWatcher = new CustomTextWatcher();
-		if (Util.getThemeName(this).equals(Util.WHITE_THEME)) {
-			findViewById(R.id.search_box).setBackgroundResource(R.drawable.search_background_white);
-			clearAll.setImageResource(R.drawable.icon_cancel_black);
-		}
 		mTextFilter.addTextChangedListener(textWatcher);
 		clearTextFilter.setOnClickListener(new View.OnClickListener() {
 
@@ -573,6 +569,7 @@ public class MainActivity extends Activity {
 	public void showEditDialog() {
 		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 		final MusicData item = (MusicData) keeper.getTag();
+		//TODO remove check isWhiteTheme + remove second parameter in constructor of MP3Editor
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme);
 		editor.setStrings(keeper.getTempID3Fields());

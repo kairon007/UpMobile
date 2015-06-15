@@ -119,7 +119,6 @@ public class DownloadsTab implements LoadPercentageInterface {
 			}
 			MusicData song = getItem(position);
 			if (song != null) {
-				boolean isWhiteTheme = Util.getThemeName(getContext()).equals(Util.WHITE_THEME);
 				holder.artist.setText(song.getSongArtist());
 				holder.title.setText(song.getSongTitle());
 				if (song.getSongBitmap() != null) {
@@ -129,13 +128,13 @@ public class DownloadsTab implements LoadPercentageInterface {
 				}
 				if (song.isDownloaded()) {
 					holder.downloadProgress.setVisibility(View.GONE);
-					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_ok_black : R.drawable.icon_ok);
+					holder.remove.setImageResource(Util.getResIdFromAttribute(activity, R.attr.icon_ok));
 				} else {
 					holder.downloadProgress.setVisibility(View.VISIBLE);
 					long progress = song.getDownloadProgress();
 					holder.downloadProgress.setIndeterminate(progress == 0);
 					holder.downloadProgress.setProgress((int) progress);
-					holder.remove.setImageResource(isWhiteTheme ? R.drawable.icon_cancel_black : R.drawable.icon_cancel);
+					holder.remove.setImageResource(Util.getResIdFromAttribute(activity, R.attr.icon_cancel));
 				}
 				holder.duration.setText(song.getSongDuration());
 			}
