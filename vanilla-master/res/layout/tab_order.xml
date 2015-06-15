@@ -1,60 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Copyright (C) 2012 Christopher Eby <kreed@kreed.org>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="?android:attr/dividerHorizontal"
+    android:orientation="vertical" >
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    <org.kreed.vanilla.DragListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/restore_default"
+        android:choiceMode="multipleChoice"
+        android:divider="@null" />
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+    <Button
+        android:id="@+id/restore_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/center"
+        android:layout_toStartOf="@+id/center"
+        android:text="@string/restore_default" />
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
--->
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:divider="?android:attr/dividerHorizontal"
-	android:showDividers="middle"
-	android:layout_height="fill_parent"
-	android:layout_width="fill_parent">
-	<org.kreed.vanilla.DragListView
-		android:id="@+id/list"
-		android:divider="@null"
-		android:layout_height="0px"
-		android:layout_width="fill_parent"
-		android:layout_weight="1"
-		android:choiceMode="multipleChoice" />
-	<LinearLayout
-		style="?android:attr/buttonBarStyle"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal">
+    <View
+        android:id="@+id/center"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true" />
 
-		<Button
-		    android:id="@+id/restore_default"
-		    style="?android:attr/buttonBarButtonStyle"
-		    android:layout_width="0px"
-		    android:layout_height="match_parent"
-		    android:layout_weight="1"
-		    android:text="@string/restore_default" />
+    <Button
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@+id/center"
+        android:layout_toRightOf="@+id/center"
+        android:text="@string/done" />
 
-		<Button
-		    android:id="@+id/done"
-		    style="?android:attr/buttonBarButtonStyle"
-		    android:layout_width="0px"
-		    android:layout_height="match_parent"
-		    android:layout_weight="1"
-		    android:text="@string/done" />
-
-	</LinearLayout>
-</LinearLayout>
+</RelativeLayout>

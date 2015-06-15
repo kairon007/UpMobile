@@ -2873,7 +2873,7 @@ if (notificationTitle != null && notificationDescription != null && notification
 			
 			
 			if (view != null && activity != null) {
-				LinearLayout crossPromoBox = (LinearLayout)view.findViewById(R.id.cross_promo_box);
+				RelativeLayout crossPromoBox = (RelativeLayout) view.findViewById(R.id.cross_promo_box);
 				
 			
 				
@@ -2994,7 +2994,7 @@ if (notificationTitle != null && notificationDescription != null && notification
 		try {
 			
 			if (view != null) {
-				LinearLayout crossPromoBox = (LinearLayout)view.findViewById(R.id.cross_promo_box);
+				RelativeLayout crossPromoBox = (RelativeLayout) view.findViewById(R.id.cross_promo_box);
 				if (crossPromoBox != null) crossPromoBox.setVisibility(View.GONE);
 			}
 		} catch(Exception e) {

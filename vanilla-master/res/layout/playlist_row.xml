@@ -1,6 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="48dip" >
+    android:layout_height="48dip" 
+    tools:ignore="ContentDescription">
 
     <ImageView
         android:id="@+id/grabberView"
@@ -8,16 +10,17 @@
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
         android:paddingLeft="12dp"
+        android:paddingStart="12dp"
         android:src="@drawable/grabber" />
 
     <org.kreed.vanilla.DragTextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/nameView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
         android:singleLine="true"
         android:textColor="#ffff" />
 

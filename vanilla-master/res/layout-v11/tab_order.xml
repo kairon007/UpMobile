@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="?android:attr/dividerHorizontal"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/playlist_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dip"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
-        android:inputType="text"
-        android:singleLine="true" />
+    <org.kreed.vanilla.DragListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/restore_default"
+        android:layout_alignParentTop="true"
+        android:choiceMode="multipleChoice"
+        android:divider="@null" />
 
     <Button
-        android:id="@+id/create"
+        android:id="@+id/restore_default"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/playlist_name"
         android:layout_toLeftOf="@+id/center"
         android:layout_toStartOf="@+id/center"
-        android:paddingTop="6dip"
-        android:singleLine="true"
-        android:text="@string/create" />
+        android:text="@string/restore_default" />
 
     <View
         android:id="@+id/center"
@@ -34,16 +33,15 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:id="@+id/cancel"
+        android:id="@+id/done"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/playlist_name"
         android:layout_toEndOf="@+id/center"
         android:layout_toRightOf="@+id/center"
-        android:paddingTop="6dip"
-        android:singleLine="true"
-        android:text="@string/cancel" />
+        android:text="@string/done" />
 
 </RelativeLayout>

@@ -6,7 +6,5 @@
     android:drawableLeft="@drawable/ic_action_download"
     android:drawablePadding="8dp"
     android:gravity="center_vertical"
-    android:padding="8dp"
-    android:text="some name.mp3" >
+    android:padding="8dp" />
 
-</TextView>

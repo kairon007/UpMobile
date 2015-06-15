@@ -849,7 +849,7 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	}
 
 	@Override
-	public void onPageScrollStateChanged(int state) {
+	public void onPageScrollStateChanged(int scrollState) {
 	}
 
 	@Override

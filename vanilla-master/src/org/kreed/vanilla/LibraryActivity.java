@@ -339,7 +339,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			pager.setOnPageChangeListener(pagerAdapter);
 //			View controls = getLayoutInflater().inflate(R.layout.actionbar_controls, null);
-			View controls = findViewById(R.id.LinearLayout1);
+			View controls = findViewById(R.id.actionbar_controls);
 			mTitle = (TextView) controls.findViewById(R.id.title);
 			mArtist = (TextView) controls.findViewById(R.id.artist);
 			mAlbum = (TextView) controls.findViewById(R.id.album);
