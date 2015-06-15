@@ -22,7 +22,7 @@
 
 package org.kreed.vanilla;
 
-import android.content.SharedPreferences; 
+import android.content.SharedPreferences;
 
 /**
  * Various actions that can be passed to {@link PlaybackService#performAction(Action, PlaybackActivity)}.

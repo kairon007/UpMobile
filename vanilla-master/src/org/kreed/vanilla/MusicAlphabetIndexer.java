@@ -16,11 +16,11 @@
 
 package org.kreed.vanilla;
 
+import java.util.Arrays;
+
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.util.Log;
-
-import java.util.Arrays;
 
 /**
  * Like android.widget.AlphabetIndexer, but handles MediaStore sorting order

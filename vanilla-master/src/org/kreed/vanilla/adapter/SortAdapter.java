@@ -1,4 +1,7 @@
-package org.kreed.vanilla;
+package org.kreed.vanilla.adapter;
+
+import org.kreed.vanilla.Limiter;
+import org.kreed.vanilla.R;
 
 import android.content.Intent;
 import android.view.View;

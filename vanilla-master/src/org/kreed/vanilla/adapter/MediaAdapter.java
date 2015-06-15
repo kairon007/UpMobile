@@ -20,13 +20,19 @@
  * THE SOFTWARE.
  */
 
-package org.kreed.vanilla;
+package org.kreed.vanilla.adapter;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
-import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
+import org.kreed.vanilla.LibraryActivity;
+import org.kreed.vanilla.Limiter;
+import org.kreed.vanilla.MediaUtils;
+import org.kreed.vanilla.MusicAlphabetIndexer;
+import org.kreed.vanilla.QueryTask;
+import org.kreed.vanilla.R;
+import org.kreed.vanilla.adapter.AdapterHelper.ViewBuilder;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -456,7 +462,7 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		ViewBuilder builder = AdapterHelper.getViewBuilder(view, mInflater, false, 0, false);
+		ViewBuilder builder = AdapterHelper.getViewBuilder(view, mInflater, 0);
 		Cursor cursor = mCursor;
 		cursor.moveToPosition(position);
 		int count = cursor.getColumnCount();
@@ -470,7 +476,11 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 		if (title != null && title.toUpperCase().contains(zaycevTag.toUpperCase())) {
 			title = title.replace(zaycevTag, "");
 		}
-		builder.setArrowClickListener(this).setMainClickListener(this).setId(cursor.getLong(0)).setExpandable(mExpandable).setLine1(title, null)
+		builder.setArrowClickListener(this)
+				.setMainClickListener(this)
+				.setId(cursor.getLong(0))
+				.setExpandable(mExpandable)
+				.setLine1(title, null)
 				.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? removeLastChar(cursor.getString(2)) : null)
 				.setNumber(count > 3 && mType != MediaUtils.TYPE_SONG ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
 		// if (mType == MediaUtils.TYPE_SONG &&

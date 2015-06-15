@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package org.kreed.vanilla;
+package org.kreed.vanilla.adapter;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -29,9 +29,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper;
-import ru.johnlife.lifetoolsmp3.adapter.AdapterHelper.ViewBuilder;
+import org.kreed.vanilla.LibraryActivity;
+import org.kreed.vanilla.Limiter;
+import org.kreed.vanilla.MediaUtils;
+import org.kreed.vanilla.R;
+import org.kreed.vanilla.adapter.AdapterHelper.ViewBuilder;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -46,11 +49,7 @@ import android.view.ViewGroup;
  * A list adapter that provides a view of the filesystem. The active directory
  * is set through a {@link Limiter} and rows are displayed using MediaViews.
  */
-public class FileSystemAdapter
-	extends SortAdapter
-	implements LibraryAdapter
-	         , View.OnClickListener
-{
+public class FileSystemAdapter extends SortAdapter implements LibraryAdapter, View.OnClickListener {
 	private static final Pattern SPACE_SPLIT = Pattern.compile("\\s+");
 	private static final Pattern FILE_SEPARATOR = Pattern.compile(File.separator);
 
@@ -136,7 +135,7 @@ public class FileSystemAdapter
 		mActivity = activity;
 		mLimiter = limiter;
 		mFolderIcon = activity.getResources().getDrawable(R.drawable.folder);
-		mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (limiter == null) {
 			limiter = buildLimiter(Environment.getExternalStorageDirectory());
 		}
@@ -198,11 +197,10 @@ public class FileSystemAdapter
 	}
 
 	@Override
-	public View getView(int pos, View convertView, ViewGroup parent)
-	{
+	public View getView(int pos, View convertView, ViewGroup parent) {
 		File file = mFiles[pos];
 		boolean isDirectory = file.isDirectory();
-		ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, mInflater, false, 0, false);
+		ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, mInflater, 0);
 		builder
 			.setArrowClickListener(this)
 			.setMainClickListener(this)

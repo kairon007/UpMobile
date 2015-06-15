@@ -22,6 +22,9 @@
 
 package org.kreed.vanilla;
 
+import org.kreed.vanilla.adapter.LibraryPagerAdapter;
+import org.kreed.vanilla.adapter.TabOrderAdapter;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;

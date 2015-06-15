@@ -30,6 +30,11 @@ import junit.framework.Assert;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
+import org.kreed.vanilla.adapter.FileSystemAdapter;
+import org.kreed.vanilla.adapter.LibraryAdapter;
+import org.kreed.vanilla.adapter.LibraryPagerAdapter;
+import org.kreed.vanilla.adapter.MediaAdapter;
+import org.kreed.vanilla.adapter.SortAdapter;
 import org.kreed.vanilla.app.VanillaApp;
 
 import ru.johnlife.lifetoolsmp3.RenameTask;
@@ -195,7 +200,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 	/**
 	 * If true, return target GINGERBREAD from getApplicationInfo().
 	 */
-	boolean mFakeTarget;
+	public boolean mFakeTarget;
 	/**
 	 * ApplicationInfo with targetSdkVersion set to Gingerbread.
 	 */
@@ -1470,7 +1475,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		mPagerAdapter.invalidateData();
 	}
 
-	protected void setSearchBoxVisible(boolean visible) {
+	public void setSearchBoxVisible(boolean visible) {
 		mSearchBoxVisible = visible;
 		mSearchBox.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}

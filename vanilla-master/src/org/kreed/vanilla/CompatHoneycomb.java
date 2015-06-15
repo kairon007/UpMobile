@@ -22,6 +22,8 @@
 
 package org.kreed.vanilla;
 
+import org.kreed.vanilla.adapter.LibraryPagerAdapter;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -68,7 +70,7 @@ public class CompatHoneycomb {
 
 		ActionBar ab = activity.getActionBar();
 		ab.removeAllTabs();
-		int[] order = activity.mPagerAdapter.mTabOrder;
+		int[] order = activity.mPagerAdapter.getTabOrder();
 		int[] titles = LibraryPagerAdapter.TITLES;
 		for (int i = 0, n = activity.mPagerAdapter.getCount(); i != n; ++i) {
 			ab.addTab(ab.newTab().setText(titles[order[i]]).setTabListener(listener));

@@ -20,10 +20,18 @@
  * THE SOFTWARE.
  */
 
-package org.kreed.vanilla;
+package org.kreed.vanilla.adapter;
 
 import java.util.Arrays;
 
+import org.kreed.vanilla.LibraryActivity;
+import org.kreed.vanilla.Limiter;
+import org.kreed.vanilla.MediaUtils;
+import org.kreed.vanilla.Nulldroid_Settings;
+import org.kreed.vanilla.PlaybackService;
+import org.kreed.vanilla.PrefKeys;
+import org.kreed.vanilla.R;
+import org.kreed.vanilla.SearchView;
 import org.kreed.vanilla.app.VanillaApp;
 
 import ru.johnlife.lifetoolsmp3.Util;
@@ -95,7 +103,8 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	/**
 	 * The user-chosen tab order.
 	 */
-	int[] mTabOrder;
+	private int[] mTabOrder;
+
 	/**
 	 * The number of visible tabs.
 	 */
@@ -928,4 +937,8 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
+	
+	public int[] getTabOrder() {
+		return mTabOrder;
+	}
 }

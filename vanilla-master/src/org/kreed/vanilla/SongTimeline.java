@@ -29,17 +29,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ListIterator;
 
-import junit.framework.Assert;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 /**
  * Contains the list of currently playing songs, implements repeat and shuffle
