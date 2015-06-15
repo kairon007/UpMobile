@@ -166,15 +166,28 @@ public class PlaylistView extends BasePlaylistView {
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 	        	for (int position : reverseSortedPositions) {
 	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
-	        		if (data.getClass() == MusicData.class) {
-	        			removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
+	        		if (null == data) return;
+	        		if (data.equals(swipeUndoAdapter.getSongs().get(position))) {
+		        		if (data.getClass() == MusicData.class) {
+		        			removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
+		        		} else {
+		        			removeData((PlaylistData) data, null);
+		        		}
 	        		} else {
-	        			removeData((PlaylistData) data, null);
-	        		}
-	            	if (adapter.isEmpty()) {
-	        			lView.setEmptyView(message);
+	        			data = swipeUndoAdapter.getSongs().get(position);
+		        		if (data.getClass() == MusicData.class) {
+		        			PlaylistData playlistBySong = getPlaylistBySong((MusicData) data);
+							playlistBySong.removeFromPlaylist(getContext(), playlistBySong.getId(), data.getId());
+		        		} else {
+		        			((PlaylistData) data).deletePlaylist(getContext(), data.getId());
+		        		}
+	        			swipeUndoAdapter.getSongs().remove(position);
 	        		}
 	            }
+	        	updatePlaylist();
+            	if (adapter.isEmpty()) {
+        			lView.setEmptyView(message);
+        		}
 	        }
 	    });
 		swipeUndoAdapter.setAbsListView((DynamicListView)listView);

@@ -14,7 +14,6 @@ import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -147,7 +146,7 @@ public abstract class BasePlaylistView extends View {
 		updateAdapter(playlists);
 	}
 	
-	private void updatePlaylist() {
+	public void updatePlaylist() {
 		ArrayList<AbstractSong> playlists = getPlaylists();
 		for (AbstractSong playlistData : playlists) {
 			((PlaylistData) playlistData).setSongs(((PlaylistData) playlistData).getSongsFromPlaylist(getContext(), playlistData.getId()));
@@ -160,6 +159,7 @@ public abstract class BasePlaylistView extends View {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				forceDelete();
 				AbstractSong data = (AbstractSong) adapter.getItem(position);
 				showMenu(view, data.getClass() == MusicData.class ? getPlaylistBySong((MusicData) data) : (PlaylistData)data, data.getClass() == MusicData.class ? (MusicData)data : null);
 				return false;

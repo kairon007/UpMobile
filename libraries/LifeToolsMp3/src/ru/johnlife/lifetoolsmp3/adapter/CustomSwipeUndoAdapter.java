@@ -1,9 +1,11 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +21,8 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	private final int DELAY = 3000;
 	private CanNotifyListener listener;
 	private ArrayList<DissmissTimer> timers = new ArrayList<DissmissTimer>();
+	private LinkedHashMap<Integer, AbstractSong> songs = new LinkedHashMap<Integer, AbstractSong>();
+	private BaseAdapter adapter;
 	
 	public interface CanNotifyListener {
 		
@@ -27,6 +31,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	public CustomSwipeUndoAdapter(BaseAdapter adapter, Context context, OnDismissCallback dismissCallback) {
 		super(adapter, context, dismissCallback);
+		this.adapter = adapter;
 	}
 	
 	@Override
@@ -35,6 +40,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 			listener.canNotify(false);
 		}
 		startTimer(position);
+		songs.put(position, (AbstractSong) adapter.getItem(position));
 		super.onUndoShown(view, position);
 	}
 	
@@ -160,14 +166,21 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	}
 	
 	public void forceDelete() {
+		ArrayList<DissmissTimer> removed = new ArrayList<DissmissTimer>();
 		for (DissmissTimer timer : timers) {
 			int position  = timer.getPosition();
 			dismiss(position);
+			removed.add(timer);
 			try {
 				timer.cancel();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		timers.removeAll(removed);
+	}
+
+	public LinkedHashMap<Integer, AbstractSong> getSongs() {
+		return songs;
 	}
 }
