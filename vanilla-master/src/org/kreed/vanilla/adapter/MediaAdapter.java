@@ -483,12 +483,11 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 				.setLine1(title, null)
 				.setLine2((count > 2 && mType != MediaUtils.TYPE_GENRE) ? removeLastChar(cursor.getString(2)) : null)
 				.setNumber(count > 3 && mType != MediaUtils.TYPE_SONG ? cursor.getString(3) : null, stringCaptions.get(mType, 0));
-		// if (mType == MediaUtils.TYPE_SONG &&
-		// Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
-		// long id = cursor.getLong(0);
-		// File file = PlaybackService.get(mActivity).getFilePath(mType, id);
-		// builder.startLoadCover(2, mActivity, file);
-		// }
+//		 if (mType == MediaUtils.TYPE_SONG && Settings.ENABLE_SHOW_ALBUM_COVERS_IN_LIBRARY_TAB) {
+//		 long id = cursor.getLong(0);
+//		 File file = PlaybackService.get(mActivity).getFilePath(mType, id);
+//		 builder.startLoadCover(2, mActivity, file);
+//		 }
 		return builder.build();
 	}
 
@@ -589,9 +588,7 @@ public class MediaAdapter extends SortAdapter implements SectionIndexer, Library
 	@Override
 	public int getCount() {
 		Cursor cursor = mCursor;
-		// Log.e("MediaAdapter","getCount");
-		if (cursor == null)
-			return 0;
+		if (cursor == null) return 0;
 		return cursor.getCount();
 	}
 

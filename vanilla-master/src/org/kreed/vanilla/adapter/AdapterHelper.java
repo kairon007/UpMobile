@@ -1,22 +1,10 @@
 package org.kreed.vanilla.adapter;
 
-import java.io.File;
-import java.util.Vector;
-
-import org.cmc.music.metadata.ImageData;
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,14 +23,13 @@ public class AdapterHelper {
 		private TextView number;
 		private TextView titleLine;
 		private TextView chunkTime;
-		private ImageView btnDownload;
+		private ImageView btnArrowDot;
 		private ImageView cover;
 		private View view;
 		private View left;
 		private TextView caption;
 		private boolean fullAction = true;
-		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
-		
+
 		private ViewBuilder(View view, boolean isCustomView) {
 			this.view = view;
 			this.view.setTag(this);
@@ -58,29 +45,29 @@ public class AdapterHelper {
 		}
 
 		private void init(final View view) {
-			artistLine = (TextView)view.findViewById(R.id.artistLine);
-			titleLine = (TextView)view.findViewById(R.id.titleLine);
+			artistLine = (TextView) view.findViewById(R.id.artistLine);
+			titleLine = (TextView) view.findViewById(R.id.titleLine);
 			chunkTime = (TextView) view.findViewById(R.id.chunkTime);
-			number = (TextView)view.findViewById(R.id.number);
-			caption = (TextView)view.findViewById(R.id.caption);
-			btnDownload = (ImageView)view.findViewById(R.id.btnDownload);
-			cover = (ImageView)view.findViewById(R.id.cover);
+			number = (TextView) view.findViewById(R.id.number);
+			caption = (TextView) view.findViewById(R.id.caption);
+			btnArrowDot = (ImageView) view.findViewById(R.id.btnDownload);
+			cover = (ImageView) view.findViewById(R.id.cover);
 			left = (View) number.getParent();
 		}
-		
+
 		public ViewBuilder setExpandable(boolean value) {
 			int idx = value ? 0 : 1;
 			if (null == cache[idx]) {
 				cache[idx] = BitmapFactory.decodeResource(view.getContext().getResources(), value ? R.drawable.arrow : R.drawable.threedot);
 			}
 			if (fullAction) {
-				btnDownload.setImageBitmap(cache[idx]);
+				btnArrowDot.setImageBitmap(cache[idx]);
 			}
 			return this;
 		}
-		
+
 		public ViewBuilder setButtonVisible(boolean value) {
-			btnDownload.setVisibility(value ? View.VISIBLE : View.GONE);
+			btnArrowDot.setVisibility(value ? View.VISIBLE : View.GONE);
 			return this;
 		}
 
@@ -90,7 +77,7 @@ public class AdapterHelper {
 		}
 
 		public ViewBuilder setArrowClickListener(OnClickListener listener) {
-			btnDownload.setOnClickListener(listener);
+			btnArrowDot.setOnClickListener(listener);
 			return this;
 		}
 
@@ -99,7 +86,7 @@ public class AdapterHelper {
 			setClickRedirect();
 			return this;
 		}
-		
+
 		private void setClickRedirect() {
 			View v = view.findViewById(R.id.boxInfoItem);
 			if (null != v) {
@@ -111,12 +98,12 @@ public class AdapterHelper {
 				});
 			}
 		}
-		
+
 		public ViewBuilder setId(long value) {
 			this.id = value;
 			return this;
 		}
-		
+
 		public ViewBuilder setLine1(String valueTitle, String valueTime) {
 			artistLine.setText(valueTitle);
 			setVisibility(titleLine, "");
@@ -127,14 +114,14 @@ public class AdapterHelper {
 			}
 			return this;
 		}
-		
+
 		public ViewBuilder setLine2(String value) {
 			titleLine.setText(value);
 			setVisibility(titleLine, value);
 			titleLine.setText(value);
 			return this;
 		}
-		
+
 		public ViewBuilder setNumber(String value, int stringArrayResourceId) {
 			number.setText(value);
 			setVisibility(number, value);
@@ -142,7 +129,7 @@ public class AdapterHelper {
 				try {
 					caption.setVisibility(View.VISIBLE);
 					String[] strings = caption.getContext().getResources().getStringArray(stringArrayResourceId);
-					int i = Math.max(0, Math.min(Integer.valueOf(value).intValue(), strings.length-1));
+					int i = Math.max(0, Math.min(Integer.valueOf(value).intValue(), strings.length - 1));
 					caption.setText(strings[i]);
 				} catch (NumberFormatException e) {
 					caption.setVisibility(View.GONE);
@@ -153,10 +140,11 @@ public class AdapterHelper {
 			determineLeftVisibility();
 			return this;
 		}
-		
+
 		/**
-		* switch - case - will not work for this case because of the restriction of this operator
-		**/
+		 * switch - case - will not work for this case because of the
+		 * restriction of this operator
+		 **/
 		public ViewBuilder setIcon(Object obj) {
 			if (null == obj || obj.equals(0)) {
 				cover.setVisibility(View.GONE);
@@ -171,7 +159,7 @@ public class AdapterHelper {
 					cover.setImageDrawable((Drawable) obj);
 					cover.setScaleType(ScaleType.CENTER_INSIDE);
 					cover.setContentDescription("");
-				} else if  (obj.getClass().equals(Bitmap.class)) {
+				} else if (obj.getClass().equals(Bitmap.class)) {
 					cover.setVisibility(View.VISIBLE);
 					cover.setImageBitmap((Bitmap) obj);
 					cover.setContentDescription("");
@@ -180,58 +168,9 @@ public class AdapterHelper {
 			determineLeftVisibility();
 			return this;
 		}
-		
-		public void startLoadCover(final int maxWidth, final Activity activity, final File file) {
-			if (null != loadCoverTask) {
-				loadCoverTask.cancel(true);
-			}
-			loadCoverTask = new AsyncTask<Void, Void, Bitmap> () {
-				
-				@Override
-				protected Bitmap doInBackground(Void... params) {
-					Resources res = activity.getResources();
-					try {
-						MusicMetadataSet src_set = new MyID3().read(file);
-						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-						Vector<ImageData> pictureList = metadata.getPictureList();
-						if ((pictureList == null) || (pictureList.size() == 0)) {
-							return  Util.getThemeName(activity).equals("AppTheme.White") ? 
-									BitmapFactory.decodeResource(res, R.drawable.fallback_cover_white) :
-									BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
-						}
-						ImageData imageData = (ImageData) pictureList.get(0);
-						BitmapFactory.Options opts = new BitmapFactory.Options();
-						opts.inJustDecodeBounds = true;
-						int scale = 1;
-						if ((maxWidth != -1) && (opts.outWidth > maxWidth)) {
-							int scaleWidth = opts.outWidth;
-							while (scaleWidth > maxWidth) {
-								scaleWidth /= 2;
-								scale *= 2;
-							}
-						}
-						opts = new BitmapFactory.Options();
-						opts.inPurgeable = true;
-						opts.inSampleSize = scale;
-						Bitmap bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0, imageData.imageData.length, opts);
-						return bitmap;
-					}
-					catch (Exception e) {
-					}
-					return Util.getThemeName(activity).equals("AppTheme.White") ? 
-							BitmapFactory.decodeResource(res, R.drawable.fallback_cover_white) :
-							BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
-				}
-				
-				@Override
-				protected void onPostExecute(Bitmap result) {
-					setIcon(result);
-				}
-			}.execute();
-		}
-		
+
 		private void setVisibility(View view, String value) {
-			boolean empty = value == null || "".equals(value) || "0:00".equals(value);
+			boolean empty = value == null || value.isEmpty() || "0:00".equals(value);
 			view.setVisibility(empty ? View.GONE : View.VISIBLE);
 		}
 
@@ -246,11 +185,11 @@ public class AdapterHelper {
 		public String getArtist() {
 			return artistLine.getText().toString();
 		}
-		
+
 		public String getTitle() {
 			return title;
 		}
-		
+
 		public View build() {
 			return view;
 		}
