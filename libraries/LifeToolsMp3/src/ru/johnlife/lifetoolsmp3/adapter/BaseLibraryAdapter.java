@@ -1,6 +1,9 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -50,6 +53,54 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected abstract void startSong(AbstractSong abstractSong);
 	
 	protected void remove() {};
+	
+	private final int CACHE_CAPACITY = 50;
+	
+	@SuppressWarnings("serial")
+	private final HashMap<Integer, Bitmap> hardBitmapCache = 
+			new LinkedHashMap<Integer, Bitmap>(CACHE_CAPACITY, 0.75f, true) {
+		@Override
+		protected boolean removeEldestEntry(LinkedHashMap.Entry<Integer, Bitmap> eldest) {			
+			if (size() > CACHE_CAPACITY) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	};
+	
+	public void putToCache(Integer url, Bitmap bitmap) {
+		if (bitmap != null) {
+			synchronized (hardBitmapCache) {
+				hardBitmapCache.put(url, bitmap);
+			}
+		}
+	}
+	
+	public Bitmap getFromCache(Integer id) {
+		Bitmap bitmap = null;
+		synchronized (hardBitmapCache) {
+			bitmap = hardBitmapCache.get(id);
+			if (bitmap != null) {
+				hardBitmapCache.remove(id);
+				hardBitmapCache.put(id, bitmap);
+				return bitmap;
+			}
+		}
+		return bitmap;
+	}
+
+	public void clearCache() {
+		for (Map.Entry<Integer, Bitmap> entry : hardBitmapCache.entrySet()) {
+			Bitmap b = entry.getValue();
+			if (b != null) {
+				b.recycle();
+			}
+			b = null;
+		}
+		hardBitmapCache.clear();
+		System.gc();
+	}
 
 	public BaseLibraryAdapter(Context context, int resource) {
 		super(context, resource);
@@ -101,18 +152,24 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 				}
 			});
 			
-			cover.setImageBitmap(getDefaultCover());			 
-			item.getCover(new OnBitmapReadyListener() {				
-				int tag = item.hashCode();
-				
-				@Override
-				public void onBitmapReady(Bitmap bmp) {
-					if (bmp != null) {
-						bmp = Util.resizeBitmap(bmp, Util.dpToPx(getContext(), 72), Util.dpToPx(getContext(), 72));
+			Bitmap bmp = getFromCache(item.hashCode());
+			if (null != bmp) {
+				cover.setImageBitmap(bmp);
+			} else {
+				cover.setImageBitmap(getDefaultCover());
+				item.getCover(new OnBitmapReadyListener() {
+					int tag = item.hashCode();
+
+					@Override
+					public void onBitmapReady(Bitmap bmp) {
+						if (bmp != null) {
+							bmp = Util.resizeBitmap(bmp, Util.dpToPx(getContext(), 72),	Util.dpToPx(getContext(), 72));
+						}
+						setCover(bmp, tag);
+						putToCache(item.hashCode(), bmp);
 					}
-					setCover(bmp, tag);
-				}				
-			});
+				});
+			}
 		}
 		
 		private void setCover(final Bitmap bmp, final int tag) {
