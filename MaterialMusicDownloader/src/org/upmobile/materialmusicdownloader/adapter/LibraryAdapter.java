@@ -112,6 +112,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	
 	@Override
 	protected void showPlaylistsDialog(final ArrayList<PlaylistData> playlistDatas, final View v, String[] data) {
+		int [] selectedPositions = new int[playlistDatas.size()];
+		for (int i=0;i <  playlistDatas.size(); i++) {
+			if (contains(playlistDatas.get(i), ((MusicData) v.getTag()))) {
+				selectedPositions[i] = i;
+			}
+		}
 		new MaterialDialog.Builder(getContext())
 		.theme(Theme.LIGHT)
 		.title(R.string.select_playlist)
@@ -136,6 +142,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				dialog.cancel();
 			}
 		})
+		.setSelectedItems(selectedPositions)
 		.autoDismiss(false)
 		.build()
 		.show();

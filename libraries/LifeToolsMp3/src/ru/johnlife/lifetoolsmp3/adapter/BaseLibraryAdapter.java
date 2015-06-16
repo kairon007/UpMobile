@@ -20,6 +20,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -241,18 +242,34 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	protected void showPlaylistsDialog(final ArrayList<PlaylistData> playlistDatas, final View v, String[] data) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		final View dialoglayout = LayoutInflater.from(getContext()).inflate(R.layout.playlist_select_dialog, null);
-		ListView listView = (ListView) dialoglayout.findViewById(R.id.listView);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.playlist_select_dialog_item, data);
+		final ListView listView = (ListView) dialoglayout.findViewById(R.id.listView);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.playlist_select_dialog_item, data){
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				View view = super.getView(position, convertView, parent);
+				if (contains(playlistDatas.get(position), ((MusicData) v.getTag()))) {
+					((TextView) view.findViewById(android.R.id.text1)).setBackgroundColor(Color.LTGRAY);
+				} else {
+					((TextView) view.findViewById(android.R.id.text1)).setBackgroundColor(Color.TRANSPARENT);
+				}
+				return view;
+			}
+
+			@Override
+			public boolean isEnabled(int position) {
+				if (contains(playlistDatas.get(position), ((MusicData) v.getTag()))) {
+					return false;
+				}
+				return true;
+			}
+
+		};
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong) {
-				if (contains(playlistDatas.get(paramInt), ((MusicData) v.getTag()))) {
-					showMessage(getContext(), R.string.song_in_the_playlist);
-					dialog.dismiss();
-					return;
-				}
 				playlistDatas.get(paramInt).addToPlaylist(paramView.getContext(), ((MusicData) v.getTag()).getId(), playlistDatas.get(paramInt).getId());
 				dialog.dismiss();
 			}

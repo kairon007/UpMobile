@@ -273,7 +273,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 				}
 				mBuilder.adapter = new MaterialDialogAdapter(mBuilder.context,
 						ListType.getLayoutForType(listType), R.id.title,
-						mBuilder.items);
+						mBuilder.items, mBuilder.positions);
 			}
 		}
 		if (builder.icon != null) {
@@ -1042,6 +1042,8 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 		protected int btnSelectorNeutral;
 		@DrawableRes
 		protected int btnSelectorNegative;
+		//FIXME
+		protected int[] positions;
 
 		public Builder(@NonNull Context context) {
 			this.context = context;
@@ -1432,6 +1434,12 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 				boolean wrapInScrollView) {
 			LayoutInflater li = LayoutInflater.from(this.context);
 			return customView(li.inflate(layoutRes, null), wrapInScrollView);
+		}
+		
+		public Builder setSelectedItems(int[] positions) {
+			this.positions = positions;
+			return this;
+			
 		}
 
 		/**
@@ -1908,7 +1916,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 					"This MaterialDialog instance does not yet have an adapter set to it. You cannot use setItems().");
 		if (mBuilder.adapter instanceof MaterialDialogAdapter) {
 			mBuilder.adapter = new MaterialDialogAdapter(mBuilder.context,
-					ListType.getLayoutForType(listType), R.id.title, items);
+					ListType.getLayoutForType(listType), R.id.title, items, mBuilder.positions);
 		} else {
 			throw new IllegalStateException(
 					"When using a custom adapter, setItems() cannot be used. Set items through the adapter instead.");
@@ -2057,12 +2065,17 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 
 	private class MaterialDialogAdapter extends ArrayAdapter<CharSequence> {
 		final int itemColor;
+		private int[] selectedPositions;
 
-		public MaterialDialogAdapter(Context context, int resource,
-				int textViewResourceId, CharSequence[] objects) {
+		public MaterialDialogAdapter(Context context, int resource, int textViewResourceId, CharSequence[] objects) {
 			super(context, resource, textViewResourceId, objects);
-			itemColor = DialogUtils.resolveColor(getContext(),
-					R.attr.md_item_color, defaultItemColor);
+			itemColor = DialogUtils.resolveColor(getContext(), R.attr.md_item_color, defaultItemColor);
+		}
+		
+		public MaterialDialogAdapter(Context context, int resource, int textViewResourceId, CharSequence[] objects, int[] selectedPositions) {
+			super(context, resource, textViewResourceId, objects);
+			this.selectedPositions = selectedPositions;
+			itemColor = DialogUtils.resolveColor(getContext(), R.attr.md_item_color, defaultItemColor);
 		}
 
 		@Override
@@ -2073,6 +2086,24 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 		@Override
 		public long getItemId(int position) {
 			return position;
+		}
+		
+		@Override
+		public boolean isEnabled(int position) {
+			if (containsPos(position)) {
+				return false;
+			}
+			return true;
+		}
+		
+		public boolean containsPos (int pos) {
+			if (null == selectedPositions) return false;
+			for (int i = 0; i < selectedPositions.length; i++) {
+				if (pos == selectedPositions[i]) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		@SuppressLint("WrongViewCast")
@@ -2099,10 +2130,17 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 			tv.setTextColor(itemColor);
 			setTypeface(tv, mBuilder.regularFont);
 			view.setTag(index + ":" + mBuilder.items[index]);
+			if (containsPos(index)) {
+				view.setBackgroundColor(Color.LTGRAY);
+				tv.setTextColor(Color.DKGRAY);
+			} else {
+				tv.setTextColor(itemColor);
+				view.setBackgroundColor(Color.TRANSPARENT);
+			}
 			return view;
 		}
 	}
-
+	
 	private enum ListType {
 		REGULAR, SINGLE, MULTI;
 		public static int getLayoutForType(ListType type) {
