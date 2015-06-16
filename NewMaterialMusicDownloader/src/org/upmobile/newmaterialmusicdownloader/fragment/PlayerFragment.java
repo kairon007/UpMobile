@@ -355,9 +355,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		SharedPreferences sp = NewMaterialApp.getSharedPreferences();
 		boolean stateVisualizer = sp.getBoolean(PREF_VISUALIZER, false);
 		cbShowVisualizer.setChecked(stateVisualizer);
-		if (!stateVisualizer) {
-			setupVisualizerFxAndUI(stateVisualizer);
-		}
+		setupVisualizerFxAndUI(stateVisualizer);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state) {
 			if (StateKeeper.DOWNLOADING == state) {
