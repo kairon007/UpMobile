@@ -53,6 +53,12 @@ public class PlaylistView extends BasePlaylistView{
 					showMessage(getContext(), R.string.playlist_cannot_be_empty);
 					return;
 				}
+				for (AbstractSong data : getAllItems()) {
+					if (data.getClass() == PlaylistData.class && ((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
+						showMessage(getContext(), R.string.playlist_already_exists);
+						return;
+					}
+				}
 				PlaylistView.this.createPlaylist(getContext().getContentResolver(), input.getText().toString());
 				Util.hideKeyboard(getContext(), input);
 				dialog.cancel();

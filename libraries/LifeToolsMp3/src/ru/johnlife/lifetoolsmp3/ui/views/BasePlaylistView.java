@@ -134,7 +134,7 @@ public abstract class BasePlaylistView extends View {
 	
 	public void collapseAll () {
 		ArrayList<MusicData> music = new ArrayList<MusicData>();
-		ArrayList<AbstractSong> playlists = adapter.getAll();
+		ArrayList<AbstractSong> playlists = getAllItems();
 		for (AbstractSong data : playlists ) {
 			if (data.getClass() == MusicData.class) {
 				music.add((MusicData) data);
@@ -170,7 +170,7 @@ public abstract class BasePlaylistView extends View {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				forceDelete();
-				ArrayList<AbstractSong> playlists = adapter.getAll();
+				ArrayList<AbstractSong> playlists = getAllItems();
 				AbstractSong abstractSong = playlists .get(position);
 				if (abstractSong.getClass() == PlaylistData.class) {
 					ArrayList<MusicData> songs = ((PlaylistData) abstractSong).getSongs();
@@ -214,7 +214,7 @@ public abstract class BasePlaylistView extends View {
 					showMessage(getContext(), R.string.no_previous_playlists);
 				} else {
 					boolean isPlaylistExists = false;
-					for (AbstractSong data : adapter.getAll()) {
+					for (AbstractSong data : getAllItems()) {
 						if (data.getId() == id) {
 							isPlaylistExists = true;
 							if (((PlaylistData) data).getSongs().size() == 0) {
@@ -255,9 +255,14 @@ public abstract class BasePlaylistView extends View {
 			public void onClick(DialogInterface dialog, int which) {
 				String newTitle =  ((EditText) dialoglayout.findViewById(R.id.newPlaylistET)).getText().toString().trim();
 				if (newTitle.isEmpty()) {
-					dialog.cancel();
 					showMessage(getContext(), R.string.playlist_cannot_be_empty);
 					return;
+				}
+				for (AbstractSong data : getAllItems()) {
+					if (data.getClass() == PlaylistData.class && ((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
+						showMessage(getContext(), R.string.playlist_already_exists);
+						return;
+					}
 				}
 				createPlaylist(getContext().getContentResolver(), ((EditText) dialoglayout.findViewById(R.id.newPlaylistET)).getText().toString());
 				Util.hideKeyboard(getContext(), dialoglayout);
@@ -265,6 +270,7 @@ public abstract class BasePlaylistView extends View {
 			}
 		});
 		dialog = newPlaylistDialog.create();
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 
@@ -313,6 +319,10 @@ public abstract class BasePlaylistView extends View {
 		}
 	}
 
+	public ArrayList<AbstractSong> getAllItems() {
+		return adapter.getAll();
+	}
+
 	private void updateAdapter(final ArrayList<AbstractSong> playlists) {
 		((Activity) getContext()).runOnUiThread(new Runnable() {
 			
@@ -327,7 +337,7 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void removeData(final PlaylistData data, final MusicData musicData) {
-		ArrayList<AbstractSong> playlists = adapter.getAll();
+		ArrayList<AbstractSong> playlists = getAllItems();
 		if (musicData == null) {
 			if (data.isExpanded()) {
 				playlists.removeAll(data.getSongs());
@@ -375,7 +385,7 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public PlaylistData getPlaylistBySong(MusicData song) {
-		for (AbstractSong playlistData : adapter.getAll()) {
+		for (AbstractSong playlistData : getAllItems()) {
 			if (playlistData.getClass() == PlaylistData.class && ((PlaylistData) playlistData).getSongs().contains(song)) {
 				return ((PlaylistData) playlistData);
 			}

@@ -102,7 +102,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private LinearLayout titleBox;
 	
 	private UndoBar undo;
-	private Integer undoMessage = Integer.valueOf(0);
+	private int undoMessage = 0;
 
 	// lyric sections
 	private SearchLyrics lyricsFetcher;
@@ -214,6 +214,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void init() {
 		scrollView = (NotifyingScrollView)contentView.findViewById(R.id.scroll_view);
 		scrollView.setImageResource(R.id.scrollable_cover);
+//		scrollView.setFakeImageView(R.id.visualizer);
 		play = (PlayPauseView) contentView.findViewById(R.id.playpause);
 		previous = (ImageView) contentView.findViewById(R.id.prev);
 		forward = (ImageView) contentView.findViewById(R.id.next);
