@@ -78,7 +78,7 @@ public class NotifyingScrollView extends ScrollView {
 	
 	public void recalculateCover(int res, int visId) {
 		Display display = ((BaseMiniPlayerActivity) getContext()).getWindowManager().getDefaultDisplay(); 
-		int height = (int)(display.getHeight()/2.6);
+		int height = (int)(display.getHeight()/2);
 		setMinImageSize(height, height);
 		((View)getParent()).findViewById(visId).getLayoutParams().height = height;
 		((View)getParent()).requestLayout();
@@ -87,6 +87,5 @@ public class NotifyingScrollView extends ScrollView {
 	public void setMinImageSize(int minWidth, int minHeight) {
 		image.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		image.getLayoutParams().height = minHeight;
-		image.getLayoutParams().width = minHeight;
 	}
 }
