@@ -48,7 +48,7 @@
     <!-- Application black theme. -->
     <style name="MaterialAppTheme.Black" parent="AppBaseTheme">
         <item name="elementSelector">@drawable/selectable_element_bg_black</item>
-        <item name="colorPrimaryDark">@color/black_material_accent</item>
+        <item name="colorPrimaryDark">@color/black_material_primary_dark</item>
         <item name="colorPrimary">@color/black_material_primary</item>
         <item name="colorAccent">@color/black_material_accent</item>
         <item name="colorAccentDark">@color/black_material_accent_dark</item>
