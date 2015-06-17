@@ -4,73 +4,77 @@
     android:layout_height="@dimen/material_item_height"
     android:background="@android:color/white"
     android:paddingLeft="8dp" >
-<!-- <ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/RippleStyleShortPress"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/material_item_height"
-    android:background="@android:color/white"
-    android:paddingLeft="8dp" > -->
 
-    <LinearLayout
+    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/RippleStyleShortPress"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingLeft="2dp"
-        android:visibility="visible" >
-
-        <ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView
-            android:id="@+id/item_cover"
-            android:layout_width="@dimen/material_action_bar_hight"
-            android:layout_height="@dimen/material_action_bar_hight"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_album_grey" />
+        android:layout_height="@dimen/material_item_height"
+        android:background="@android:color/white"
+        android:paddingLeft="8dp" >
 
         <LinearLayout
-            android:id="@+id/item_box_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" >
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+        	android:clickable="true"
+            android:paddingLeft="2dp"
+            android:visibility="visible" >
+
+            <ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView
+                android:id="@+id/item_cover"
+                android:layout_width="@dimen/material_action_bar_hight"
+                android:layout_height="@dimen/material_action_bar_hight"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_album_grey" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/textTitle"
-                    style="@style/TextStyleLine1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="Title" />
-
-                <TextView
-                    android:id="@+id/textDuration"
-                    style="@style/TextStyleLine2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="8dp"
-                    android:text="00:00"
-                    android:textAppearance="?android:textAppearanceMedium" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textHint"
-                style="@style/TextStyleLine2"
+                android:id="@+id/item_box_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-light"
-                android:text="Artist" />
+                android:orientation="vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/textTitle"
+                        style="@style/TextStyleLine1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="Title" />
+
+                    <TextView
+                        android:id="@+id/textDuration"
+                        style="@style/TextStyleLine2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="8dp"
+                        android:text="00:00"
+                        android:textAppearance="?android:textAppearanceMedium" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textHint"
+                    style="@style/TextStyleLine2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Artist" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+
 </FrameLayout>
-<!-- </ru.johnlife.lifetoolsmp3.ui.widget.RippleView> -->

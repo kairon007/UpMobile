@@ -6,56 +6,55 @@
     android:background="@android:color/white"
     android:gravity="center_vertical" >
 
-    <!--
-     <ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/RippleStyleShortPress"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@android:color/white"
-    android:gravity="center_vertical" >
-    -->
-
-    <LinearLayout
+    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        style="@style/RippleStyleShortPress"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:gravity="center_vertical" >
 
-        <ImageView
-            android:id="@+id/customGroupIndicator"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:paddingTop="8dp"
-            android:src="@drawable/ic_keyboard_arrow_down_white_18dp"
-            android:tint="?attr/colorPrimary"
-            android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/textTitle"
-            style="@style/TextStyleLine2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:lines="1" />
-
-        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
-            style="@style/RippleStyleCircle"
-            android:layout_width="64dp"
-            android:layout_height="64dp" 
-            android:layout_gravity="center_vertical">
+            android:clickable="true" >
 
             <ImageView
-                android:id="@+id/playAll"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_play"
-                android:tint="?attr/colorPrimary" />
-        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
-    </LinearLayout>
+                android:id="@+id/customGroupIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:paddingTop="8dp"
+                android:src="@drawable/ic_keyboard_arrow_down_white_18dp"
+                android:tint="?attr/colorPrimary"
+                android:visibility="visible" />
 
-    <!-- </ru.johnlife.lifetoolsmp3.ui.widget.RippleView> -->
+            <TextView
+                android:id="@+id/textTitle"
+                style="@style/TextStyleLine2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:lines="1" />
+
+            <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                style="@style/RippleStyleCircle"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center_vertical" >
+
+                <ImageView
+                    android:id="@+id/playAll"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_play"
+                    android:tint="?attr/colorPrimary" />
+            </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+        </LinearLayout>
+    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
 
 </FrameLayout>
