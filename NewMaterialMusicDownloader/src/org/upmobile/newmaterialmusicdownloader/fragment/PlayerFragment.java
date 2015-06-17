@@ -961,6 +961,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 				@Override
 				public void error(String error) {
+					if (null == getActivity()) return;
 					((MainActivity) getActivity()).runOnUiThread(new Runnable() {
 						
 						@Override
