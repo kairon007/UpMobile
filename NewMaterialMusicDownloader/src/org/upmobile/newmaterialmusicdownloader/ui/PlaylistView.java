@@ -16,12 +16,18 @@ import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import ru.johnlife.lifetoolsmp3.ui.button.fab.FloatingActionButton;
 import ru.johnlife.lifetoolsmp3.ui.button.fab.ScrollDirectionListener;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.DialogAction;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ButtonCallback;
+import ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,6 +144,12 @@ public class PlaylistView extends BasePlaylistView {
 	
 	@Override
 	protected void showDialog() {
+		final ArrayList<String> playlistNames = new ArrayList<>();
+		for (AbstractSong abstractSong : getAllItems()) {
+			if(abstractSong.getClass() == PlaylistData.class) {
+				playlistNames.add(((PlaylistData) abstractSong).getName().replace(getDirectory(), ""));
+			}
+		}
 		builder = new MaterialDialog.Builder(getContext())
 									.title(R.string.create_new_playlist)
 									.customView(R.layout.md_input_dialog, false)
@@ -148,7 +160,30 @@ public class PlaylistView extends BasePlaylistView {
 									.positiveText(R.string.create)
 									.negativeText(android.R.string.cancel);
 		dialog = builder.build();
-		((EditText)dialog.getCustomView().findViewById(android.R.id.edit)).setHint(R.string.playlist_name);
+		final FloatingEditText editText = (FloatingEditText) dialog.getCustomView().findViewById(android.R.id.edit);
+		editText.setHint(R.string.playlist_name);
+		final int defColor = editText.getHighlightedColor();
+		((FloatingEditText) dialog.getCustomView().findViewById(android.R.id.edit)).addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(playlistNames.contains(s.toString().trim())){
+					((FloatingEditText) editText).setHighlightedColor(Color.RED);
+					editText.setHint(R.string.playlist_already_exists);
+					dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+				} else {
+					((FloatingEditText) editText).setHighlightedColor(defColor);
+					editText.setHint(R.string.playlist_name);
+					dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+				}
+			}
+		});
 		dialog.show();
 	}
 

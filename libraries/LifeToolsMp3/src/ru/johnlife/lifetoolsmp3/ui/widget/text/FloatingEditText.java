@@ -3,7 +3,6 @@ package ru.johnlife.lifetoolsmp3.ui.widget.text;
 import ru.johnlife.lifetoolsmp3.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -17,13 +16,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.EditText;
 
-/**
- * @author Pallad!n
- *
- */
 public class FloatingEditText extends EditText {
 	
 	private static final long ANIMATION_DURATION = 120;
@@ -179,6 +173,10 @@ public class FloatingEditText extends EditText {
     public void setHighlightedColor(int color) {
         this.highlightedColor = color;
         invalidate();
+    }
+    
+    public int getHighlightedColor() {
+        return highlightedColor;
     }
 
     public void setValidateResult(boolean verified, String message) {

@@ -1043,7 +1043,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 		@DrawableRes
 		protected int btnSelectorNegative;
 		//FIXME
-		protected int[] positions;
+		protected ArrayList<Integer> positions;
 
 		public Builder(@NonNull Context context) {
 			this.context = context;
@@ -1436,7 +1436,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 			return customView(li.inflate(layoutRes, null), wrapInScrollView);
 		}
 		
-		public Builder setSelectedItems(int[] positions) {
+		public Builder setSelectedItems(ArrayList<Integer> positions) {
 			this.positions = positions;
 			return this;
 			
@@ -2065,16 +2065,16 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 
 	private class MaterialDialogAdapter extends ArrayAdapter<CharSequence> {
 		final int itemColor;
-		private int[] selectedPositions;
+		private ArrayList<Integer> selectedPositions;
 
 		public MaterialDialogAdapter(Context context, int resource, int textViewResourceId, CharSequence[] objects) {
 			super(context, resource, textViewResourceId, objects);
 			itemColor = DialogUtils.resolveColor(getContext(), R.attr.md_item_color, defaultItemColor);
 		}
 		
-		public MaterialDialogAdapter(Context context, int resource, int textViewResourceId, CharSequence[] objects, int[] selectedPositions) {
+		public MaterialDialogAdapter(Context context, int resource, int textViewResourceId, CharSequence[] objects, ArrayList<Integer> positions) {
 			super(context, resource, textViewResourceId, objects);
-			this.selectedPositions = selectedPositions;
+			this.selectedPositions = positions;
 			itemColor = DialogUtils.resolveColor(getContext(), R.attr.md_item_color, defaultItemColor);
 		}
 
@@ -2088,23 +2088,18 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 			return position;
 		}
 		
-		@Override
-		public boolean isEnabled(int position) {
-			if (containsPos(position)) {
-				return false;
-			}
-			return true;
-		}
-		
-		public boolean containsPos (int pos) {
-			if (null == selectedPositions) return false;
-			for (int i = 0; i < selectedPositions.length; i++) {
-				if (pos == selectedPositions[i]) {
-					return true;
-				}
-			}
-			return false;
-		}
+//		public boolean containsPos (int pos) {
+//			if (null == selectedPositions) return false;
+//			if (selectedPositions.length == 0) return false;
+//			android.util.Log.d("logd", "containsPos: " + selectedPositions.length);
+//			for (int i = 0; i < selectedPositions.length; i++) {
+////				android.util.Log.d("logd", "containsPos: " + i + " - "+ selectedPositions[i]);
+//				if (pos == selectedPositions[i]) {
+//					return true;
+//				}
+//			}
+//			return false;
+//		}
 
 		@SuppressLint("WrongViewCast")
 		@Override
@@ -2130,7 +2125,8 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 			tv.setTextColor(itemColor);
 			setTypeface(tv, mBuilder.regularFont);
 			view.setTag(index + ":" + mBuilder.items[index]);
-			if (containsPos(index)) {
+			android.util.Log.d("logd", "getView: " + selectedPositions.contains(index) + " - " + index);
+			if (selectedPositions.contains(index)) {
 				view.setBackgroundColor(Color.LTGRAY);
 				tv.setTextColor(Color.DKGRAY);
 			} else {

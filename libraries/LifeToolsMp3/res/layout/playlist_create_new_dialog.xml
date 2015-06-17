@@ -15,7 +15,7 @@
             android:layout_gravity="center"
             android:padding="4dp"
             android:text="@string/create_new_playlist"
-            android:textAppearance="?android:attr/textAppearanceMedium"  />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </FrameLayout>
 
     <View
@@ -32,5 +32,17 @@
 
         <requestFocus />
     </EditText>
+
+    <TextView
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:ellipsize="end"
+        android:lines="2"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/holo_red_light"
+        android:visibility="gone" />
 
 </LinearLayout>

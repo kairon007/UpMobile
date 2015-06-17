@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.DialogAction;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ButtonCallback;
 import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.Theme;
@@ -20,6 +21,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +111,12 @@ public class PlaylistView extends BasePlaylistView{
 	@SuppressLint("NewApi")
 	@Override
 	protected void showDialog() {
+		final ArrayList<String> playlistNames = new ArrayList<>();
+		for (AbstractSong abstractSong : getAllItems()) {
+			if(abstractSong.getClass() == PlaylistData.class) {
+				playlistNames.add(((PlaylistData) abstractSong).getName().replace(getDirectory(), ""));
+			}
+		}
 		builder = new MaterialDialog.Builder(getContext());
 		builder.theme(Theme.LIGHT)
 		.title(R.string.create_new_playlist)
@@ -124,6 +133,27 @@ public class PlaylistView extends BasePlaylistView{
 		.negativeText(android.R.string.cancel);
 		dialog = builder.build();
 		dialog.show();
+		EditText input = (EditText) dialog.findViewById(android.R.id.edit);
+		final TextView errorView = (TextView) dialog.findViewById(org.upmobile.materialmusicdownloader.R.id.errorMessage);
+		input.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(playlistNames.contains(s.toString().trim())){
+					errorView.setText(R.string.playlist_already_exists);
+					dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+				} else {
+					errorView.setText("");
+					dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+				}
+			}
+		});
 	}
 	
 	@Override

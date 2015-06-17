@@ -28,10 +28,22 @@
         android:id="@+id/newPlaylistET"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:textColor="@android:color/black"
-        android:ems="10" >
+        android:ems="10"
+        android:textColor="@android:color/black" >
 
         <requestFocus />
     </EditText>
+
+    <TextView
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:ellipsize="end"
+        android:lines="2"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/holo_red_light"
+        android:visibility="gone" />
 
 </LinearLayout>

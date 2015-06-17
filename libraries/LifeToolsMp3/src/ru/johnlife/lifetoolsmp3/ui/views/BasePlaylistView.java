@@ -11,6 +11,8 @@ import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.DialogAction;
+import ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,9 +24,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -237,6 +242,12 @@ public abstract class BasePlaylistView extends View {
 	}
 
 	protected void showDialog() {
+		final ArrayList<String> playlistNames = new ArrayList<>();
+		for (AbstractSong abstractSong : getAllItems()) {
+			if(abstractSong.getClass() == PlaylistData.class) {
+				playlistNames.add(((PlaylistData) abstractSong).getName().replace(getDirectory(), ""));
+			}
+		}
 		final View dialoglayout = LayoutInflater.from(getContext()).inflate(R.layout.playlist_create_new_dialog, null);
 		newPlaylistDialog = new AlertDialog.Builder(getContext());
 		newPlaylistDialog.setView(dialoglayout);
@@ -271,6 +282,29 @@ public abstract class BasePlaylistView extends View {
 		});
 		dialog = newPlaylistDialog.create();
 		dialog.setCancelable(false);
+		EditText editText = (EditText) dialoglayout.findViewById(R.id.newPlaylistET);
+		final TextView errorView = (TextView) dialoglayout.findViewById(R.id.errorView);
+		editText.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(playlistNames.contains(s.toString().trim())){
+					dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+					errorView.setText(R.string.playlist_already_exists);
+					errorView.setVisibility(View.VISIBLE);
+				} else {
+					dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+					errorView.setText("");
+					errorView.setVisibility(View.GONE);
+				}
+			}
+		});
 		dialog.show();
 	}
 

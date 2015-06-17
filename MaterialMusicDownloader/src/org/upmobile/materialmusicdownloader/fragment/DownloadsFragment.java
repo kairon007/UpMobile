@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class DownloadsFragment extends Fragment implements BaseMaterialFragment {

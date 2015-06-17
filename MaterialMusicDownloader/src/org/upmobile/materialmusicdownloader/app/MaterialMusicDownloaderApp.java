@@ -2,8 +2,8 @@ package org.upmobile.materialmusicdownloader.app;
 
 import org.upmobile.materialmusicdownloader.Constants;
 
-import android.content.SharedPreferences.Editor;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import android.content.SharedPreferences.Editor;
 
 public class MaterialMusicDownloaderApp extends MusicApp implements Constants {
 	

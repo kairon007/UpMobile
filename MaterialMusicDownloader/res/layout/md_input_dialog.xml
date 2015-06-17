@@ -24,8 +24,18 @@
         style="@style/FloatingEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLength="30"
         android:inputType="textFilter|textMultiLine"
+        android:maxLength="30"
         android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="visible" />
 
 </LinearLayout>

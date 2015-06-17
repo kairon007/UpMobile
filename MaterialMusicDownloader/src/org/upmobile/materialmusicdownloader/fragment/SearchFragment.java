@@ -6,14 +6,12 @@ import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.ui.SearchView;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class SearchFragment extends Fragment implements BaseMaterialFragment, Constants {
