@@ -323,6 +323,9 @@ public abstract class BasePlaylistView extends View {
 			@Override
 			public boolean onMenuItemClick(MenuItem paramMenuItem) {
 				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
+					if (data.getSongs().equals(playbackService.getArrayPlayback())) {
+						playbackService.stopPressed();						
+					}
 					removeData(data, musicData);
 				}
 				return false;

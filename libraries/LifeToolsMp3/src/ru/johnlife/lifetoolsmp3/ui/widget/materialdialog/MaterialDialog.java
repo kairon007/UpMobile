@@ -2125,8 +2125,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 			tv.setTextColor(itemColor);
 			setTypeface(tv, mBuilder.regularFont);
 			view.setTag(index + ":" + mBuilder.items[index]);
-			android.util.Log.d("logd", "getView: " + selectedPositions.contains(index) + " - " + index);
-			if (selectedPositions.contains(index)) {
+			if (null != selectedPositions && selectedPositions.contains(index)) {
 				view.setBackgroundColor(Color.LTGRAY);
 				tv.setTextColor(Color.DKGRAY);
 			} else {
