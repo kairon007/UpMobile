@@ -7,16 +7,76 @@
 
     <style name="AppTheme" parent="AppThemeBase">
         <item name="android:windowBackground">@color/window_background_dark</item>
+        <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
+        <item name="play_all">@drawable/play_all</item>        
+        <item name="search_background">@drawable/search_background</item>
+        <item name="listview_divider_color">@color/divider_color</item>
+        <item name="tab_order_list_divider_color">@null</item>
+        <item name="tab_order_list_divider_height">@dimen/list_devider_height_0</item>
+        <item name="tab_order_row_color">@android:color/white</item>
+        <item name="canvas_color">@android:color/white</item>
+        <item name="playback">@style/Playback</item>
+        <item name="full_playback_alt_table_background">@color/full_playback_alt_table_background_dark</item>
+        <item name="textview_background_color">@android:color/black</item>
+        <item name="library">@style/Library</item>
+        <item name="library_search_background">@drawable/search_background</item>
+        <item name="music_bottom_playback">@drawable/music_bottom_playback_bg</item>
+        <item name="dialog">@style/Dialog</item>
+        <item name="playlist_background_color">@android:color/black</item>
+        <item name="back_actionbar">@style/BackActionBar</item>
+        <item name="actionbar_bg_color">@android:color/black</item>
+        <item name="playlist_row">@layout/playlist_row</item>
+        <item name="preferences_bg">@android:color/black</item>
     </style>
 
     <style name="AppTheme.Black" parent="AppThemeBase">
         <item name="android:windowBackground">@color/window_background_black</item>
+        <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
+        <item name="play_all">@drawable/play_all</item>   
+        <item name="search_background">@drawable/search_background_black</item>
+        <item name="listview_divider_color">@color/divider_color</item>
+        <item name="tab_order_list_divider_color">@null</item>
+        <item name="tab_order_list_divider_height">@dimen/list_devider_height_0</item>
+        <item name="tab_order_row_color">@android:color/white</item>
+        <item name="canvas_color">@android:color/black</item>
+        <item name="playback">@style/Playback</item>
+        <item name="full_playback_alt_table_background">@color/full_playback_alt_table_background_dark</item>
+        <item name="textview_background_color">@android:color/black</item>
+        <item name="library">@style/Library.Black</item>
+        <item name="library_search_background">@drawable/search_background_black</item>
+        <item name="music_bottom_playback">@drawable/music_bottom_playback_bg_black</item>
+        <item name="dialog">@style/Dialog</item>
+        <item name="back_actionbar">@style/BackActionBar.Black</item>
+        <item name="playlist_background_color">@android:color/black</item>
+        <item name="actionbar_bg_color">@android:color/black</item>
+        <item name="playlist_row">@layout/playlist_row</item>
+        <item name="preferences_bg">@android:color/black</item>
     </style>
 
     <style name="AppTheme.White" parent="AppThemeBase.White">
         <item name="android:windowBackground">@color/window_background_light</item>
+        <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview_white</item>
+        <item name="play_all">@drawable/play_all_dark</item>        
+        <item name="search_background">@drawable/search_background_white</item>
+        <item name="listview_divider_color">@color/divider_color_light</item>
+        <item name="tab_order_list_divider_color">@color/divider_color_light</item>
+        <item name="tab_order_list_divider_height">@dimen/list_devider_height_1</item>
+        <item name="tab_order_row_color">@android:color/black</item>
+        <item name="canvas_color">@android:color/white</item>
+        <item name="playback">@style/Playback.White</item>
+        <item name="full_playback_alt_table_background">@color/full_playback_alt_table_background_light</item>
+        <item name="textview_background_color">@android:color/white</item>
+        <item name="library">@style/Library.White</item>
+        <item name="library_search_background">@drawable/search_background_white</item>
+        <item name="music_bottom_playback">@drawable/music_bottom_playback_bg_light</item>
+        <item name="dialog">@style/Dialog.White</item>
+        <item name="playlist_background_color">@android:color/white</item>
+        <item name="back_actionbar">@style/BackActionBar.White</item>
+        <item name="actionbar_bg_color">@android:color/white</item>
+        <item name="playlist_row">@layout/white_playlist_row</item>
+        <item name="preferences_bg">@android:color/white</item>
     </style>
-
+    
     <style name="Dialog" parent="android:Theme.Dialog" />
 
     <style name="Dialog.White" parent="android:Theme.Dialog" />

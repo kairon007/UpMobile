@@ -23,6 +23,7 @@
 package org.kreed.vanilla;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -121,10 +122,7 @@ public class PlaylistAdapter extends CursorAdapter implements Handler.Callback, 
 	 */
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		if ("AppTheme.White".equals(Util.getThemeName(context))) {
-			return mInflater.inflate(R.layout.white_playlist_row, null);
-		}
-		return mInflater.inflate(R.layout.playlist_row, null);
+		return mInflater.inflate(Util.getResIdFromAttribute((Activity) mContext, R.attr.playlist_row), null);
 	}
 
 	/**

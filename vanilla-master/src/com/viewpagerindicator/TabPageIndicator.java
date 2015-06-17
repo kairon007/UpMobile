@@ -20,6 +20,7 @@ package com.viewpagerindicator;
 import org.kreed.vanilla.R;
 
 import ru.johnlife.lifetoolsmp3.Util;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
@@ -122,13 +123,8 @@ public class TabPageIndicator extends HorizontalScrollView
 		tabView.setBackgroundResource(R.drawable.vpi__tab_indicator);
 		tabView.setPadding(padX, padY, padX, padY);
 		tabView.setGravity(Gravity.CENTER);
-		if ("AppTheme".equals(Util.getThemeName(getContext()))) {
-			tabView.setTextColor(getResources().getColor(R.color
-					.tab_page_indicator_textview));
-		} else if ("AppTheme.Black".equals(Util.getThemeName(getContext()))){
-			tabView.setTextColor(getResources().getColor(R.color
-					.tab_page_indicator_textview_white));
-		}
+		tabView.setTextColor(getResources().getColor(
+				Util.getResIdFromAttribute((Activity) getContext(), R.attr.tab_page_indicator_textview)));
 		tabView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 		tabView.setTypeface(tabView.getTypeface(), Typeface.BOLD);
 		tabView.setSingleLine();

@@ -12,7 +12,8 @@
         android:layout_above="@+id/restore_default"
         android:layout_alignParentTop="true"
         android:choiceMode="multipleChoice"
-        android:divider="@null" />
+        android:divider="?attr/tab_order_list_divider_color"
+        android:dividerHeight="?attr/tab_order_list_divider_height" />
 
     <Button
         android:id="@+id/restore_default"

@@ -13,5 +13,6 @@
     <dimen name="large_text">20sp</dimen>
     <dimen name="large_seekarc_margin">30dp</dimen>
     <dimen name="large_seekarc_padding">120dp</dimen>
-    
+    <dimen name="list_devider_height_0">0dp</dimen>
+    <dimen name="list_devider_height_1">1dp</dimen>
 </resources>

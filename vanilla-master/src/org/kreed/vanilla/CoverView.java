@@ -24,6 +24,7 @@ package org.kreed.vanilla;
 
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -213,12 +214,7 @@ public final class CoverView extends View implements Handler.Callback {
 		int x = 0;
 		int scrollX = mScrollX;
 
-		
-		if ("AppTheme.White".equals(Util.getThemeName(getContext()))){
-			canvas.drawColor(Color.WHITE);
-		} else {
-			canvas.drawColor(Color.BLACK);
-		}
+		canvas.drawColor(Util.getResIdFromAttribute(((Activity) getContext()), R.attr.canvas_color));
 
 		for (Bitmap bitmap : mActiveBitmaps) {
 			if (bitmap != null && scrollX + width > x && scrollX < x + width) {

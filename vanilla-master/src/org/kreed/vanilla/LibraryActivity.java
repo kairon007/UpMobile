@@ -283,24 +283,14 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		} else {
 			swichShowDialogRate = state.getBoolean(SWICH_SHOW_DIALOG_RATE);
 		}
-		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-			setTheme(R.style.Library_White);
-		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-			setTheme(R.style.Library_Black);
-		} else {
-			setTheme(R.style.Library);
-		}
+		setTheme(Util.getResIdFromAttribute(this, R.attr.library));
 		setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.library_content_top : R.layout.library_content);
 		// Advertisement.startAppInit(this);
 		// Advertisement.mobileCoreInit(this);
 		// Advertisement.moPubInit(this);
 		// Advertisement.airPushShow(this);
 		mSearchBox = findViewById(R.id.search_box);
-		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_white));
-		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-			mSearchBox.setBackgroundDrawable(getResources().getDrawable(R.drawable.search_background_black));
-		}
+		mSearchBox.setBackgroundResource(Util.getResIdFromAttribute(this, R.attr.library_search_background));
 		keeper = StateKeeper.getInstance();
 		mEditFilter = (EditText) findViewById(R.id.filter_text);
 		mEditFilter.addTextChangedListener(this);
@@ -396,13 +386,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 			getLayoutInflater().inflate(R.layout.library_controls, content, true);
 
 			mControls = findViewById(R.id.controls);
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				mControls.setBackgroundResource(R.drawable.music_bottom_playback_bg_light);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-				mControls.setBackgroundResource(R.drawable.music_bottom_playback_bg_black);
-			} else {
-				mControls.setBackgroundResource(R.drawable.music_bottom_playback_bg);
-			}
+			mControls.setBackgroundResource(Util.getResIdFromAttribute(this, R.attr.music_bottom_playback));
 			mTitle = (TextView) mControls.findViewById(R.id.title);
 			mArtist = (TextView) mControls.findViewById(R.id.artist);
 			mAlbum = (TextView) mControls.findViewById(R.id.album);
@@ -1182,6 +1166,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		alertDialog = null;
 		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 		final File file = PlaybackService.get(this).getFilePath(type, id);
+		//TODO remove isWhiteTheme param from constructor
 		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
 		editor = new MP3Editor(this, isWhiteTheme, new OnActionEndListener() {
 			
@@ -1384,11 +1369,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 
 		AlertDialog.Builder builder;
 
-		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog_White));
-		} else {
-			builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog));
-		}
+		builder = new AlertDialog.Builder(new ContextThemeWrapper(this, Util.getResIdFromAttribute(this, R.attr.dialog)));
 		int position = mPagerAdapter.getCurrentType();
 		if (position == -1) {
 			position = page;

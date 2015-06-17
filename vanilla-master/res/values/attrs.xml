@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="customAttrs">
+        <attr name="tab_page_indicator_textview" format="reference" />
+        <attr name="play_all" format="reference" />
+        <attr name="search_background" format="reference" />
+        <attr name="open" format="reference" />
+        <attr name="listview_divider_color" format="reference" />
+        <attr name="tab_order_list_divider_color" format="reference" />
+        <attr name="tab_order_list_divider_height" format="reference" />
+        <attr name="tab_order_row_color" format="reference" />
+        <attr name="canvas_color" format="reference" />
+        <attr name="playback" format="reference" />
+        <attr name="full_playback_alt_table_background" format="reference" />
+        <attr name="textview_background_color" format="reference" />
+        <attr name="textview_text_color" format="reference" />
+        <attr name="library" format="reference" />
+        <attr name="library_search_background" format="reference" />
+        <attr name="music_bottom_playback" format="reference" />
+        <attr name="dialog" format="reference" />
+        <attr name="back_actionbar" format="reference" />
+        <attr name="playlist_background_color" format="reference" />
+        <attr name="actionbar_bg_color" format="reference" />
+        <attr name="playlist_row" format="reference" />
+        <attr name="preferences_bg" format="reference" />
+    </declare-styleable>
+
+</resources>

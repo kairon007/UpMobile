@@ -360,9 +360,6 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				adapter = mArtistAdapter = new MediaAdapter(activity, MediaUtils.TYPE_ARTIST, null);
 				mArtistAdapter.setExpandable(mSongsPosition != -1 || mAlbumsPosition != -1);
 				mArtistHeader = header = (TextView) inflater.inflate(R.layout.library_row, listView);
-				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					mArtistHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
-				}
 				mArtistHeader.setTypeface(font);
 				break;
 			case MediaUtils.TYPE_ALBUM:
@@ -370,18 +367,12 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 				mAlbumAdapter.setExpandable(mSongsPosition != -1);
 				mPendingAlbumLimiter = null;
 				mAlbumHeader = header = (TextView) inflater.inflate(R.layout.library_row, listView);
-				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					mAlbumHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
-				}
 				mAlbumHeader.setTypeface(font);
 				break;
 			case MediaUtils.TYPE_SONG:
 				adapter = mSongAdapter = new MediaAdapter(activity, MediaUtils.TYPE_SONG, mPendingSongLimiter);
 				mPendingSongLimiter = null;
 				mSongHeader = header = (TextView) inflater.inflate(R.layout.library_row, listView);
-				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					mSongHeader.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_all_dark, 0, 0, 0);
-				}
 				mSongHeader.setTypeface(font);
 				mSongHeader.setText("");
 				break;
@@ -401,23 +392,13 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 					searchView = new SearchView(inflater);
 					viewSearchTab = searchView.getView();
 				}
-				if ("AppTheme.White".equals(Util.getThemeName(activity))) {
-					viewSearchTab.findViewById(R.id.choise_engines_layout).setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.search_background_white));
-					((ListView) viewSearchTab.findViewById(R.id.list)).setDivider(new ColorDrawable(activity.getResources().getColor(R.color.divider_color_light)));
-					((ListView) viewSearchTab.findViewById(R.id.list)).setDividerHeight(1);
-				} else if ("AppTheme.Black".equals(Util.getThemeName(activity))) {
-					viewSearchTab.findViewById(R.id.choise_engines_layout).setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.search_background_black));
-				}
 				container.addView(viewSearchTab);
 				return viewSearchTab;
 			default:
 				throw new IllegalArgumentException("Invalid media type: " + type);
 			}
 			listView = (ListView) inflater.inflate(R.layout.listview, null);
-			if ("AppTheme.White".equals(Util.getThemeName(mActivity))) {
-				listView.setDivider(new ColorDrawable(activity.getResources().getColor(R.color.divider_color_light)));
-				listView.setDividerHeight(1);
-			}
+			listView.setDivider(new ColorDrawable(Util.getResIdFromAttribute(activity, R.attr.listview_divider_color)));
 			listView.setOnCreateContextMenuListener(this);
 			listView.setOnItemClickListener(this);
 			listView.setOnScrollListener(this);

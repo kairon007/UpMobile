@@ -99,12 +99,7 @@ public class PlaylistActivity extends Activity
 	{
 		super.onCreate(state);
 		Log.d(getClass().getSimpleName(), "");
-		boolean isWhiteTheme = "AppTheme.White".equals(Util.getThemeName(this));
-		if (isWhiteTheme) {
-			setTheme(R.style.BackActionBar_White);
-		} else {
-			setTheme(R.style.BackActionBar);
-		}
+		setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));		
 		HandlerThread thread = new HandlerThread(getClass().getName());
 		thread.start();
 
@@ -114,12 +109,10 @@ public class PlaylistActivity extends Activity
 		view.setOnItemClickListener(this);
 		view.setOnCreateContextMenuListener(this);
 		mListView = view;
-		if (isWhiteTheme) {
-			view.setBackgroundColor(getResources().getColor(android.R.color.white));
-			if (Build.VERSION.SDK_INT > 10) getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.white)));
-		} else {
-			view.setBackgroundColor(getResources().getColor(android.R.color.black));
-			if (Build.VERSION.SDK_INT > 10) getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.black)));
+		view.setBackgroundColor(Util.getResIdFromAttribute(this, R.attr.playlist_background_color));
+		if (Build.VERSION.SDK_INT > 10) {
+			getActionBar().setBackgroundDrawable(new ColorDrawable(
+					Util.getResIdFromAttribute(this, R.attr.actionbar_bg_color)));
 		}
 		View header = LayoutInflater.from(this).inflate(R.layout.playlist_buttons, null);
 		mEditButton = (Button)header.findViewById(R.id.edit);

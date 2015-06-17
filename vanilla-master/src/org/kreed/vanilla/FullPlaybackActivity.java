@@ -152,11 +152,7 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	public void onCreate(Bundle icicle)
 	{
 		super.onCreate(icicle);
-		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-			setTheme(R.style.Playback_White);
-		} else {
-			setTheme(R.style.Playback);
-		}
+		setTheme(Util.getResIdFromAttribute(this, R.attr.playback));
 		setTitle(R.string.playback_view);
 		SharedPreferences settings = PlaybackService.getSettings(this);
 		int displayMode = Integer.parseInt(settings.getString(PrefKeys.DISPLAY_MODE, "2"));
@@ -214,13 +210,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			table.setOnClickListener(this);
 			table.setOnLongClickListener(this);
 			mInfoTable = table;
-			if ("AppTheme.White".equals(Util.getThemeName(this))){
-				findViewById(R.id.info_table).setBackgroundColor(
-						this.getResources().getColor(R.color.full_playback_alt_table_background_light));
-			} else {
-				findViewById(R.id.info_table).setBackgroundColor(
-						this.getResources().getColor(R.color.full_playback_alt_table_background_dark));
-			}
+			findViewById(R.id.info_table).setBackgroundColor(
+					Util.getResIdFromAttribute(this, R.attr.full_playback_alt_table_background));
 			mAlbum = (TextView)findViewById(R.id.album);
 			mArtist = (TextView)findViewById(R.id.artist);
 			
@@ -232,13 +223,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 
 		mControlsTop = findViewById(R.id.controls_top);
 		if (mControlsTop != null) {
-			if ("AppTheme.White".equals(Util.getThemeName(this))){
-				mControlsTop.setBackgroundColor(
-						this.getResources().getColor(R.color.full_playback_alt_table_background_light));
-			} else {
-				mControlsTop.setBackgroundColor(
-						this.getResources().getColor(R.color.full_playback_alt_table_background_dark));
-			}
+			mControlsTop.setBackgroundColor(
+					Util.getResIdFromAttribute(this, R.attr.full_playback_alt_table_background));
 		}
 		mElapsedView = (TextView)findViewById(R.id.elapsed);
 		mDurationView = (TextView)findViewById(R.id.duration);
@@ -473,13 +459,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	{
 		if (mOverlayText == null) {
 			TextView view = new TextView(this);
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				view.setBackgroundColor(Color.WHITE);
-				view.setTextColor(Color.BLACK);
-			} else {
-				view.setBackgroundColor(Color.BLACK);
-				view.setTextColor(Color.WHITE);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(this, R.attr.textview_background_color));
+			view.setTextColor(Util.getResIdFromAttribute(this, R.attr.textview_text_color));
 			view.setGravity(Gravity.CENTER);
 			view.setPadding(25, 25, 25, 25);
 			// Make the view clickable so it eats touch events

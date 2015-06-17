@@ -28,24 +28,11 @@ public class PreferencesActivity extends PreferenceActivity {
 	/**
 	 * Initialize the activity, loading the preference specifications.
 	 */
-
-	private static int colorBlack;
-	private static int colorWhite;
-	private static int colorDark;
-
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		colorBlack = getResources().getColor(android.R.color.black);
-		colorWhite = getResources().getColor(android.R.color.white);
-		colorDark = getResources().getColor(android.R.color.black); // old value is R.color.window_background_dark
-		if ("AppTheme.White".equals(Util.getThemeName(this))) {
-			setTheme(R.style.BackActionBar_White);
-		} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-			setTheme(R.style.BackActionBar_Black);
-		} else {
-			setTheme(R.style.BackActionBar);
-		}
+		setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));
 		super.onCreate(savedInstanceState);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			addPreferencesFromResource(R.xml.preferences);
@@ -85,13 +72,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_White);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_Black);
-			} else {
-				setTheme(R.style.BackActionBar);
-			}
+			setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_audio);
 		}
@@ -107,15 +88,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			Context context = inflater.getContext();
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			if ("AppTheme.White".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorWhite);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorBlack);
-			} else {
-				view.setBackgroundColor(colorDark);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
 			return view;
 		}
 	}
@@ -125,13 +99,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_White);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_Black);
-			} else {
-				setTheme(R.style.BackActionBar);
-			}
+			setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));
 			addPreferencesFromResource(R.xml.preference_playback);
 		}
 	}
@@ -146,15 +114,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			Context context = inflater.getContext();
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			if ("AppTheme.White".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorWhite);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorBlack);
-			} else {
-				view.setBackgroundColor(colorDark);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
 			return view;
 		}
 	}
@@ -163,13 +124,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_White);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_Black);
-			} else {
-				setTheme(R.style.BackActionBar);
-			}
+			setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_library_until_11);
 		}
@@ -187,15 +142,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			Context context = inflater.getContext();
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			if ("AppTheme.White".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorWhite);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorBlack);
-			} else {
-				view.setBackgroundColor(colorDark);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
 			return view;
 		}
 	}
@@ -204,13 +152,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_White);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_Black);
-			} else {
-				setTheme(R.style.BackActionBar);
-			}
+			setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_notifications);
 		}
@@ -226,15 +168,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			Context context = inflater.getContext();
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			if ("AppTheme.White".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorWhite);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorBlack);
-			} else {
-				view.setBackgroundColor(colorDark);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
 			return view;
 		}
 	}
@@ -243,13 +178,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_White);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_Black);
-			} else {
-				setTheme(R.style.BackActionBar);
-			}
+			setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_shake);
 		}
@@ -265,16 +194,9 @@ public class PreferencesActivity extends PreferenceActivity {
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			Context context = inflater.getContext();
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			view.setBackgroundColor(Color.TRANSPARENT);
-			if ("AppTheme.White".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorWhite);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorBlack);
-			} else {
-				view.setBackgroundColor(colorDark);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
 			return view;
 		}
 	}
@@ -283,13 +205,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_White);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_Black);
-			} else {
-				setTheme(R.style.BackActionBar);
-			}
+			setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_misc);
 		}
@@ -305,15 +221,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			Context context = inflater.getContext();
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			if ("AppTheme.White".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorWhite);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorBlack);
-			} else {
-				view.setBackgroundColor(colorDark);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
 			return view;
 		}
 	}
@@ -328,15 +237,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			Context context = inflater.getContext();
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			if ("AppTheme.White".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorWhite);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorBlack);
-			} else {
-				view.setBackgroundColor(colorDark);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
 			return view;
 		}
 	}
@@ -348,13 +250,7 @@ public class PreferencesActivity extends PreferenceActivity {
 			WebView view = new WebView(this);
 			view.getSettings().setJavaScriptEnabled(true);
 			view.loadUrl("file:///android_asset/about.html");
-			if ("AppTheme.White".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_White);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(this))) {
-				setTheme(R.style.BackActionBar_Black);
-			} else {
-				setTheme(R.style.BackActionBar);
-			}
+			setTheme(Util.getResIdFromAttribute(this, R.attr.back_actionbar));
 			setContentView(view);
 		}
 	}
@@ -363,18 +259,11 @@ public class PreferencesActivity extends PreferenceActivity {
 	public static class AboutFragment extends WebViewFragment {
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			Context context = inflater.getContext();
 			WebView view = (WebView) super.onCreateView(inflater, container, savedInstanceState);
 			view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 			view.getSettings().setJavaScriptEnabled(true);
 			view.loadUrl("file:///android_asset/about.html");
-			if ("AppTheme.White".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorWhite);
-			} else if ("AppTheme.Black".equals(Util.getThemeName(context))) {
-				view.setBackgroundColor(colorBlack);
-			} else {
-				view.setBackgroundColor(colorDark);
-			}
+			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
 			return view;
 		}
 	}

@@ -8,4 +8,4 @@
     android:gravity="left|center_vertical"
     android:padding="3dip"
     android:singleLine="true"
-    android:textColor="#ffff" />
+    android:textColor="?attr/tab_order_row_color" />
