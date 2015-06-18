@@ -7,6 +7,7 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
+import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -144,7 +145,12 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 				@Override
 				public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
 					((MainActivity) getContext()).setLastCheckPosition(which);
+					boolean playlistIsPlaying = playlistDatas.get(which).getSongs().equals(PlaybackService.get(getContext()).getArrayPlayback());
 					playlistDatas.get(which).addToPlaylist(getContext(), ((MusicData) v.getTag()).getId(), playlistDatas.get(which).getId());
+					if (playlistIsPlaying) {
+						ArrayList<MusicData> array = playlistDatas.get(which).getSongsFromPlaylist(getContext(), playlistDatas.get(which).getId());
+						PlaybackService.get(getContext()).addArrayPlayback(array.get(array.size() - 1));
+					}
 					dialog.cancel();
 				}
 			})

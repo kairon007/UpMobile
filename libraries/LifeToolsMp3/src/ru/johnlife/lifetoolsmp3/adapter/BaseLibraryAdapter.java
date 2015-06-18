@@ -270,7 +270,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 			@Override
 			public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong) {
+				boolean playlistIsPlaying = playlistDatas.get(paramInt).getSongs().equals(PlaybackService.get(getContext()).getArrayPlayback());
 				playlistDatas.get(paramInt).addToPlaylist(paramView.getContext(), ((MusicData) v.getTag()).getId(), playlistDatas.get(paramInt).getId());
+				if (playlistIsPlaying) {
+					ArrayList<MusicData> array = playlistDatas.get(paramInt).getSongsFromPlaylist(getContext(), playlistDatas.get(paramInt).getId());
+					PlaybackService.get(getContext()).addArrayPlayback(array.get(array.size() - 1));
+				}
 				dialog.dismiss();
 			}
 		});
