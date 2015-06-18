@@ -26,4 +26,6 @@ public interface Constants {
 	
 	public static final String EMPTY_STRING = "";
 	
+	public static final String PREF_SHOW_INFO_MESSAGE = "pref.show.info.message";
+	
 }

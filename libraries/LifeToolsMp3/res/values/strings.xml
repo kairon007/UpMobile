@@ -152,4 +152,8 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="playlist_already_exists">Playlist with the same name already exists</string>
 
+    <!-- need translate -->
+     <string name="not_show_again">Do not show again</string>
+     <string name="changes_relevant_when_downloading">The changes will be relevant only when downloading songs</string>
+     
 	</resources>

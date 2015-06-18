@@ -7,6 +7,7 @@ import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.DownloadListener.OnCancelDownload;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.ui.TrueSeekBar;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
@@ -30,6 +31,8 @@ import ru.johnlife.lifetoolsmp3.ui.widget.CheckBox;
 import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarStyle;
 import ru.johnlife.lifetoolsmp3.ui.widget.processbutton.iml.ActionProcessButton;
 import ru.johnlife.lifetoolsmp3.ui.widget.pulltozoomview.PullToZoomScrollViewEx;
 import android.app.DownloadManager;
@@ -47,7 +50,9 @@ import android.os.Looper;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -56,6 +61,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -124,6 +130,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private boolean isDestroy;
 	private boolean hasPost;
+	private boolean showInfoMessage = false;
 	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
@@ -207,7 +214,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
-//		contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		loadViewForCode();
 		isDestroy = false;
 		scrollView = (PullToZoomScrollViewEx) contentView.findViewById(R.id.scroll_view);
@@ -216,6 +222,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		init(playerContent);
 		setListeners();
 		initHeaderSize();
+		showInfoMessage = MaterialMusicDownloaderApp.getSharedPreferences().getBoolean(ru.johnlife.lifetoolsmp3.Constants.PREF_SHOW_INFO_MESSAGE, true);
 		return contentView;
 	}
 
@@ -355,6 +362,24 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 	
+	private void showInfoMessage() {
+		if (showInfoMessage) {
+			undo.clear();
+			undo.message(ru.johnlife.lifetoolsmp3.R.string.changes_relevant_when_downloading);
+			undo.duration(MESSAGE_DURATION);
+			undo.style(new UndoBarStyle(-1, ru.johnlife.lifetoolsmp3.R.string.not_show_again));
+			undo.listener(new UndoListener() {
+				
+				@Override
+				public void onUndo(Parcelable token) {
+					MaterialMusicDownloaderApp.getSharedPreferences().edit().putBoolean(ru.johnlife.lifetoolsmp3.Constants.PREF_SHOW_INFO_MESSAGE, false).apply();
+					showInfoMessage = false;
+				}
+			});
+			undo.show();
+		}
+	}
+	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
 		if (!buttonView.isEnabled()) return;
@@ -456,7 +481,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 
 		});
-		scrollView.setOnTouchListener(new OnTouchListener() {
+		playerContent.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -615,6 +640,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			etArtist.setVisibility(View.VISIBLE);
 			etArtist.requestFocus();
 			etArtist.setText(song.getArtist());
+			sizeWatcher(etArtist);
 			int size = song.getArtist().length();
 			etArtist.setSelection(size);
 		} else {
@@ -631,6 +657,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			etTitle.setVisibility(View.VISIBLE);
 			etTitle.requestFocus();
 			etTitle.setText(song.getTitle());
+			sizeWatcher(etTitle);
 			int size = song.getTitle().length();
 			etTitle.setSelection(size);
 		} else {
@@ -638,14 +665,31 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			etTitle.setVisibility(View.GONE);
 		}
 	}
+	
+	private void sizeWatcher(final EditText editText) {
+		editText.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				LayoutParams params = editText.getLayoutParams();
+				params.width = LayoutParams.WRAP_CONTENT;
+				editText.setLayoutParams(params);
+				etTitle.invalidate();
+			}
+		});
+	}
 
 	private void closeEditViews() {
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
 			Util.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
 			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
-			etArtist.setVisibility(View.GONE);
-			etTitle.setVisibility(View.GONE);
 			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
 				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
 				song.setTitle(title);
@@ -654,9 +698,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				String artist = Util.removeSpecialCharacters(etArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etArtist.getText().toString());
 				song.setArtist(artist);
 				tvArtist.setText(artist);
-			} else return;
+			} else {
+				return;
+				}
+			etArtist.setVisibility(View.GONE);
+			etTitle.setVisibility(View.GONE);
 			if (song.getClass() != MusicData.class) {
 				player.update(song.getTitle(), song.getArtist(), null);
+				showInfoMessage();
 			} else {
 				saveTags();
 			}

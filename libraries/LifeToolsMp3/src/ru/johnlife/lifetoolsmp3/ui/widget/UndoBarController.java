@@ -78,6 +78,7 @@ public class UndoBarController extends LinearLayout {
     private boolean mNavBarAvailable;
     private float mSmallestWidthDp;
     private UndoListener listener;
+	private Drawable drawable;
 
     private void addMessage(Message message) {
         mMessages.add(message);
@@ -455,25 +456,28 @@ public class UndoBarController extends LinearLayout {
             mButton.setText(currentMessage.style.titleRes);
             if (currentMessage.noIcon) {
                 mButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-            } else if (currentMessage.style.iconRes > 0) {
-                Drawable drawable = getResources().getDrawable(currentMessage.style.iconRes);
-                int iColor = mButton.getTextColors().getDefaultColor();
-
-                if (currentMessage.colorDrawable) {
-                    int red = (iColor & 0xFF0000) / 0xFFFF;
-                    int green = (iColor & 0xFF00) / 0xFF;
-                    int blue = iColor & 0xFF;
-
-                    float[] matrix = {0, 0, 0, 0, red
-                            , 0, 0, 0, 0, green
-                            , 0, 0, 0, 0, blue
-                            , 0, 0, 0, 1, 0};
-
-                    ColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
-
-                    drawable.setColorFilter(colorFilter);
+            } else if (currentMessage.style.iconRes >= -1) {
+            	if (currentMessage.style.iconRes > 0) {
+	                drawable = getResources().getDrawable(currentMessage.style.iconRes);
+	                int iColor = mButton.getTextColors().getDefaultColor();
+	
+	                if (currentMessage.colorDrawable) {
+	                    int red = (iColor & 0xFF0000) / 0xFFFF;
+	                    int green = (iColor & 0xFF00) / 0xFF;
+	                    int blue = iColor & 0xFF;
+	
+	                    float[] matrix = {0, 0, 0, 0, red
+	                            , 0, 0, 0, 0, green
+	                            , 0, 0, 0, 0, blue
+	                            , 0, 0, 0, 1, 0};
+	
+	                    ColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
+	
+	                    drawable.setColorFilter(colorFilter);
+	                } else if (currentMessage.style.iconRes == -1) {
+	                	drawable = null;
+	                }
                 }
-
                 mButton.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             }
         } else {

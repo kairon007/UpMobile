@@ -34,6 +34,8 @@ import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoBar;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarController.UndoListener;
+import ru.johnlife.lifetoolsmp3.ui.widget.UndoBarStyle;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView;
 import ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.font.DFont;
 import ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar;
@@ -145,6 +147,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private boolean isDestroy;
 	private boolean hasPost;
+	private boolean showInfoMessage = false;
 	
 	private void initUpdater() {
 		progressListener = new ProgressUpdaterListener() {
@@ -208,13 +211,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		contentView.findViewById(R.id.controlPane).measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 		scrollView.recalculateCover(R.id.controlPane, R.id.visualizer);
+		showInfoMessage = NewMaterialApp.getSharedPreferences().getBoolean(ru.johnlife.lifetoolsmp3.Constants.PREF_SHOW_INFO_MESSAGE, true);
 		return contentView;
 	}
 	
 	private void init() {
 		scrollView = (NotifyingScrollView)contentView.findViewById(R.id.scroll_view);
 		scrollView.setImageResource(R.id.scrollable_cover);
-//		scrollView.setFakeImageView(R.id.visualizer);
 		play = (PlayPauseView) contentView.findViewById(R.id.playpause);
 		previous = (ImageView) contentView.findViewById(R.id.prev);
 		forward = (ImageView) contentView.findViewById(R.id.next);
@@ -340,6 +343,24 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		case R.id.artistNameBox:
 			openArtistField();
 			break;
+		}
+	}
+	
+	private void showInfoMessage() {
+		if (showInfoMessage) {
+			undo.clear();
+			undo.message(ru.johnlife.lifetoolsmp3.R.string.changes_relevant_when_downloading);
+			undo.duration(MESSAGE_DURATION);
+			undo.style(new UndoBarStyle(-1, ru.johnlife.lifetoolsmp3.R.string.not_show_again));
+			undo.listener(new UndoListener() {
+				
+				@Override
+				public void onUndo(Parcelable token) {
+					NewMaterialApp.getSharedPreferences().edit().putBoolean(PREF_SHOW_INFO_MESSAGE, false).apply();
+					showInfoMessage = false;
+				}
+			});
+			undo.show();
 		}
 	}
 	
@@ -758,6 +779,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			etTitle.setVisibility(View.GONE);
 			if (song.getClass() != MusicData.class) {
 				player.update(song.getTitle(), song.getArtist(), null);
+				showInfoMessage();
 			} else if (!isSameWord){
 				saveTags();
 			}
@@ -790,8 +812,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void showLyrics() {
-		if (lastArtist.equals(song.getArtist()) && lastTitle.equals(song.getTitle())
-				&& !playerLyricsView.getText().toString().isEmpty()) return;
+		if (lastArtist.equals(song.getArtist()) && lastTitle.equals(song.getTitle()) && !playerLyricsView.getText().toString().isEmpty()) return;
 		contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 		playerLyricsView.setVisibility(View.GONE);
 		lastArtist = song.getArtist();

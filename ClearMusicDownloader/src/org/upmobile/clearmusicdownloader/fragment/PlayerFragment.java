@@ -9,6 +9,7 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
@@ -135,6 +136,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private boolean isDestroy;
     private boolean isUseAlbumCover = true;
     private boolean isNeedCalculateCover = true;
+    private boolean showInfoMessage = false;
     
     private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
@@ -146,7 +148,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playProgress.setVisibility(View.GONE);
 			play.setVisibility(View.VISIBLE);
 			changePlayPauseView(false);
-			showLyrics();
 			setElementsView(0);
 			downloadButtonState(true);
 			playerProgress.setEnabled(true);
@@ -214,6 +215,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		fromMenu = ((MainActivity) getActivity()).isBackButtonEnabled();
 		parentView.findViewById(R.id.title_bar_left_menu).setBackgroundDrawable(getResources().getDrawable(fromMenu ? R.drawable.titlebar_menu_selector : R.drawable.titlebar_back_selector));
 		song = player.getPlayingSong();
+		showInfoMessage = ClearMusicDownloaderApp.getSharedPreferences().getBoolean(PREF_SHOW_INFO_MESSAGE, true);
 		return parentView;
 	}
 	
@@ -240,7 +242,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		activity.getResideMenu().addIgnoredView(playerEtArtist);
 		activity.showMiniPlayer(false);
 		setKeyListener();
-		showLyrics();
+		showLyrics(song);
 		getCover(song);
 		startImageAnimation(playerCover);
 		setElementsView(player.getCurrentPosition());
@@ -505,6 +507,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (song.getClass() != MusicData.class) {
 			((RemoteSong) song).setHasCover(true);
 			player.update(song.getTitle(), song.getArtist(), null);
+			if (showInfoMessage) {
+				Toast toast = Toast.makeText(getActivity(), getResources().getString(R.string.changes_relevant_when_downloading), Toast.LENGTH_LONG);
+				toast.show();
+				ClearMusicDownloaderApp.getSharedPreferences().edit().putBoolean(ru.johnlife.lifetoolsmp3.Constants.PREF_SHOW_INFO_MESSAGE, false).apply();
+				showInfoMessage = false;
+			}
 		}
 	}
 	
@@ -679,7 +687,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	
-	private void showLyrics() {
+	private void showLyrics(final AbstractSong song) {
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancelSearch();
 		}
@@ -750,6 +758,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			download.setVisibility(View.VISIBLE);
 		}
+		showLyrics(player.getPlayingSong());
 	}
 	
 	private void getCover(final AbstractSong song) {
