@@ -12,12 +12,10 @@ import android.widget.TextView;
 
 public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 	
-	private boolean isWhiteTheme;
 	private LayoutInflater inflater;
 	
-	public CustomSpinnerAdapter(Context context, int resource, List<String> objects, boolean isWhiteTheme) {
+	public CustomSpinnerAdapter(Context context, int resource, List<String> objects) {
 		super(context, resource, objects);
-		this.isWhiteTheme = isWhiteTheme;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -25,9 +23,9 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = inflater.inflate(R.layout.item_spinner, parent, false);
 		TextView tvItem = (TextView) view.findViewById(R.id.spinnerItem);
-		if (isWhiteTheme) {
-			tvItem.setTextColor(getContext().getResources().getColor(android.R.color.black));
-		}
+//		if (isWhiteTheme) {
+//			tvItem.setTextColor(getContext().getResources().getColor(android.R.color.black));
+//		}
 		tvItem.setText(getItem(position).toString());
 		return tvItem;
 	}

@@ -114,4 +114,6 @@
         <dimen name="corner_radius">2dp</dimen>
     <dimen name="layer_padding">3dp</dimen>
         
+    <dimen name="list_devider_height_0">0dp</dimen>
+    <dimen name="list_devider_height_1">1dp</dimen>
 </resources>

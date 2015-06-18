@@ -42,7 +42,7 @@
             android:id="@+id/choise_engines_layout"
             android:layout_width="match_parent"
             android:layout_height="96dp"
-            android:background="@drawable/search_background"
+            android:background="?attr/choise_engines_layout_bg"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -89,7 +89,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/selectable_item_bg"
+                    android:background="?attr/search_bg"
                     android:src="@drawable/ic_download" />
             </LinearLayout>
 

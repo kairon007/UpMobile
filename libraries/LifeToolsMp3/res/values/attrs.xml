@@ -5,6 +5,19 @@
         <attr name="miniPlayerPlay" format="reference" />
         <attr name="miniPlayerPause" format="reference" />
         <attr name="miniPlayerDownload" format="reference" />
+        <attr name="listview_divider" format="reference" />
+        <attr name="listview_divider_height" format="reference" />
+        <attr name="search_bg" format="reference" />
+        <attr name="choise_engines_layout_bg" format="reference" />
+        <attr name="download_dialog" format="reference" />
+        <attr name="fallback_cover" format="reference" />
+        <attr name="row_online_search" format="reference" />
+        <attr name="dir_chooser_dialog" format="reference" />
+        <attr name="new_folder_dialog" format="reference" />
+        <attr name="directory_chooser_tv_color" format="reference" />
+        <attr name="lyrics_view" format="reference" />
+        <attr name="play" format="reference" />
+        <attr name="pause" format="reference" />
     </declare-styleable>
     
     <declare-styleable name="Undobar">

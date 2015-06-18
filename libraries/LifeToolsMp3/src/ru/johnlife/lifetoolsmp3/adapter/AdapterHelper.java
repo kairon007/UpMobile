@@ -12,11 +12,11 @@ import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -47,7 +47,7 @@ public class AdapterHelper {
 		private AsyncTask<Void, Void, Bitmap> loadCoverTask;
 		private boolean useIndicator;
 		
-		private ViewBuilder(View view, boolean whiteTheme, boolean isCustomView, boolean useIndicator) {
+		private ViewBuilder(View view, boolean isCustomView, boolean useIndicator) {
 			this.useIndicator = useIndicator;
 			view.setTag(this);
 			this.view = view;
@@ -242,9 +242,11 @@ public class AdapterHelper {
 						MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 						Vector<ImageData> pictureList = metadata.getPictureList();
 						if ((pictureList == null) || (pictureList.size() == 0)) {
-							return  Util.getThemeName(activity).equals("AppTheme.White") ? 
-									BitmapFactory.decodeResource(res, R.drawable.fallback_cover_white) :
-									BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
+//							return  Util.getThemeName(activity).equals("AppTheme.White") ? 
+//									BitmapFactory.decodeResource(res, R.drawable.fallback_cover_white) :
+//									BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
+							return BitmapFactory.decodeResource(res, 
+									Util.getResIdFromAttribute(activity, R.attr.fallback_cover));
 						}
 						ImageData imageData = (ImageData) pictureList.get(0);
 						BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -265,9 +267,11 @@ public class AdapterHelper {
 					}
 					catch (Exception e) {
 					}
-					return Util.getThemeName(activity).equals("AppTheme.White") ? 
-							BitmapFactory.decodeResource(res, R.drawable.fallback_cover_white) :
-							BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
+//					return Util.getThemeName(activity).equals("AppTheme.White") ? 
+//							BitmapFactory.decodeResource(res, R.drawable.fallback_cover_white) :
+//							BitmapFactory.decodeResource(res, R.drawable.fallback_cover);
+					return BitmapFactory.decodeResource(res, 
+							Util.getResIdFromAttribute(activity, R.attr.fallback_cover));
 				}
 				
 				@Override
@@ -304,27 +308,33 @@ public class AdapterHelper {
 		}
 	}
 
-	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater, boolean whiteTheme, int idCustomView, boolean useIndicator) {
+	public static ViewBuilder getViewBuilder(Context context, View convertView, LayoutInflater inflater, int idCustomView, boolean useIndicator) {
 		ViewBuilder builder;
 		if (null == convertView) {
 			boolean isCustomView = idCustomView > 0;
+//			if (isCustomView) {
+//				convertView = inflater.inflate(idCustomView, null);
+//			} else if (whiteTheme) {
+//				convertView = inflater.inflate(R.layout.row_online_search_white2, null);
+//			} else {
+//				if (Util.getSimpleThemeName(inflater.getContext()).equals("AppTheme.White")) {
+//					convertView = inflater.inflate(R.layout.row_online_search_white, null);
+//				} else {
+//					convertView = inflater.inflate(R.layout.row_online_search, null);
+//				}
+//			}
 			if (isCustomView) {
 				convertView = inflater.inflate(idCustomView, null);
-			} else if (whiteTheme) {
-				convertView = inflater.inflate(R.layout.row_online_search_white2, null);
 			} else {
-				if (Util.getSimpleThemeName(inflater.getContext()).equals("AppTheme.White")) {
-					convertView = inflater.inflate(R.layout.row_online_search_white, null);
-				} else {
-					convertView = inflater.inflate(R.layout.row_online_search, null);
-				}
+				convertView = inflater.inflate(Util.getResIdFromAttribute((Activity)context, R.attr.row_online_search), null);
 			}
-			builder = new ViewBuilder(convertView, whiteTheme, isCustomView, useIndicator);
+			
+			builder = new ViewBuilder(convertView, isCustomView, useIndicator);
 		} else {
 			try {
 				builder = (ViewBuilder) convertView.getTag();
 			} catch (Exception e) {
-				return getViewBuilder(null, inflater, whiteTheme, idCustomView, useIndicator); // something wrong with the supplied view - create new one
+				return getViewBuilder(context, null, inflater, idCustomView, useIndicator); // something wrong with the supplied view - create new one
 			}
 		}
 		return builder;

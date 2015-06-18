@@ -159,6 +159,7 @@ public abstract class OnlineSearchView extends View {
 	};
 	
 	public abstract void refreshLibrary();
+	//TODO: remove if it is possible
 	public abstract boolean isWhiteTheme(Context context);
 	public void specialInit(View view) {}
 	public boolean isUseDefaultSpinner(){ return false; }
@@ -197,8 +198,12 @@ public abstract class OnlineSearchView extends View {
 		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
 		if (searchField.getWidth() - view.findViewById(R.id.clear).getWidth() < width) {
 			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
-		} else searchField.setHint(R.string.hint_main_search);
-		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) search(searchField.getText().toString());
+		} else {
+			searchField.setHint(R.string.hint_main_search);
+		}
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && resultAdapter.isEmpty()) {
+			search(searchField.getText().toString());
+		}
 		setMessage(getResources().getString(R.string.search_your_results_appear_here));
 		initBoxEngines();
 		if (showDownloadLabel()) {
@@ -333,21 +338,21 @@ public abstract class OnlineSearchView extends View {
 			listView.setAdapter(resultAdapter);
 			animateListView(false);
 		}
-		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
-			if (isWhiteTheme(getContext())) {
-				listView.setDividerHeight(0);
-			} else {
-				listView.setDivider(getContext().getResources().getDrawable(R.drawable.layout_divider));
-			}
-			listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
-			view.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
-			int color = getContext().getResources().getColor(android.R.color.black);
-			searchField.setTextColor(color);
-			message.setTextColor(color);
-			if (null != spEnginesChoiserLayout) {
-				spEnginesChoiserLayout.setBackgroundResource(R.drawable.spinner_background);
-			}
-		}
+//		if (isWhiteTheme(getContext()) || Util.getThemeName(getContext()).equals(Util.WHITE_THEME)) {
+//			if (isWhiteTheme(getContext())) {
+//				listView.setDividerHeight(0);
+//			} else {
+//				listView.setDivider(getContext().getResources().getDrawable(R.drawable.layout_divider));
+//			}
+//			listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
+//			view.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
+//			int color = getContext().getResources().getColor(android.R.color.black);
+//			searchField.setTextColor(color);
+//			message.setTextColor(color);
+//			if (null != spEnginesChoiserLayout) {
+//				spEnginesChoiserLayout.setBackgroundResource(R.drawable.spinner_background);
+//			}
+//		}
 		listView.setEmptyView(message);
 		listView.setOnScrollListener(new OnScrollListener() {
 			
@@ -592,7 +597,7 @@ public abstract class OnlineSearchView extends View {
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				adapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
 			} else {
-				adapter = new CustomSpinnerAdapter(getContext(), R.layout.item_of_engine, list, isWhiteTheme(getContext()));	
+				adapter = new CustomSpinnerAdapter(getContext(), R.layout.item_of_engine, list);	
 			}
 			if (!isUseDefaultSpinner()) {
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -780,7 +785,7 @@ public abstract class OnlineSearchView extends View {
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			Song song = (Song) getItem(position);
-			final ViewBuilder builder = AdapterHelper.getViewBuilder(convertView, inflater, isWhiteTheme(getContext()), getIdCustomView(), usePlayingIndicator());
+			final ViewBuilder builder = AdapterHelper.getViewBuilder(getContext(), convertView, inflater, getIdCustomView(), usePlayingIndicator());
 			String title = song.getTitle().replace("&#039;", "'");
 			String artist = song.getArtist().replace("&#039;", "'");
 			String comment = song.getComment();
@@ -1115,7 +1120,8 @@ public abstract class OnlineSearchView extends View {
 		AlertDialog streamDialog = null;
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
+//			View v = inflater.inflate(isWhiteTheme(getContext()) ? R.layout.download_dialog_white : R.layout.download_dialog, null);
+			View v = inflater.inflate(Util.getResIdFromAttribute(((Activity)getContext()), R.attr.download_dialog), null);
 			player = new Player(v, song, isWhiteTheme(getContext()));
 			player.setTitle(song.getArtist() + " - " + song.getTitle());
 			player.setIsAppPT(isAppPT());

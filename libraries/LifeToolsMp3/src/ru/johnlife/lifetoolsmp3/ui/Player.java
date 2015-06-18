@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -233,12 +234,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
 		}
-		final View lyricsView;
-		if (isWhiteTheme) {
-			lyricsView = inflater.inflate(R.layout.lyrics_view_white, null);
-		} else {
-			lyricsView = inflater.inflate(R.layout.lyrics_view, null);
-		}
+//		final View lyricsView;
+//		if (isWhiteTheme) {
+//			lyricsView = inflater.inflate(R.layout.lyrics_view_white, null);
+//		} else {
+//			lyricsView = inflater.inflate(R.layout.lyrics_view, null);
+//		}
+		final View lyricsView = inflater.inflate(Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.lyrics_view), null);
 		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme);
 		b.setView(lyricsView);
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -459,7 +461,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void onPaused() {
 		if (!isAppPT) {
-			imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
+//			imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
+			imagePause = Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.play);
 		} else {
 			imagePause = R.drawable.play_pt;
 		}
@@ -468,7 +471,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void onResumed() {
 		if (!isAppPT) {
-			imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
+//			imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
+			imagePause = Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.pause);
 		} else {
 			imagePause = R.drawable.pause_pt;
 		}
@@ -519,7 +523,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 							@Override
 							public void onCompletion(MediaPlayer mp) {
 								mp.seekTo(0);
-								imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.play_white : R.drawable.play;
+//								imagePause = !Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White") ? R.drawable.play_white : R.drawable.play;
+								imagePause = Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.play);
 								button.setImageResource(imagePause);
 								progress.setProgress(0);
 								keeper.deactivateOptions(StateKeeper.IS_PLAYING_OPTION);
