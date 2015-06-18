@@ -210,8 +210,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 			table.setOnClickListener(this);
 			table.setOnLongClickListener(this);
 			mInfoTable = table;
-			findViewById(R.id.info_table).setBackgroundColor(
-					Util.getResIdFromAttribute(this, R.attr.full_playback_alt_table_background));
+			findViewById(R.id.info_table).setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(this, R.attr.full_playback_alt_table_background)));
 			mAlbum = (TextView)findViewById(R.id.album);
 			mArtist = (TextView)findViewById(R.id.artist);
 			
@@ -223,8 +223,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 
 		mControlsTop = findViewById(R.id.controls_top);
 		if (mControlsTop != null) {
-			mControlsTop.setBackgroundColor(
-					Util.getResIdFromAttribute(this, R.attr.full_playback_alt_table_background));
+			mControlsTop.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(this, R.attr.full_playback_alt_table_background)));
 		}
 		mElapsedView = (TextView)findViewById(R.id.elapsed);
 		mDurationView = (TextView)findViewById(R.id.duration);
@@ -459,8 +459,8 @@ public class FullPlaybackActivity extends PlaybackActivity	implements SeekBar.On
 	{
 		if (mOverlayText == null) {
 			TextView view = new TextView(this);
-			view.setBackgroundColor(Util.getResIdFromAttribute(this, R.attr.textview_background_color));
-			view.setTextColor(Util.getResIdFromAttribute(this, R.attr.textview_text_color));
+			view.setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.textview_background_color)));
+			view.setTextColor(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.textview_text_color)));
 			view.setGravity(Gravity.CENTER);
 			view.setPadding(25, 25, 25, 25);
 			// Make the view clickable so it eats touch events

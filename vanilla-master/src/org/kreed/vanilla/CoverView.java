@@ -214,7 +214,7 @@ public final class CoverView extends View implements Handler.Callback {
 		int x = 0;
 		int scrollX = mScrollX;
 
-		canvas.drawColor(Util.getResIdFromAttribute(((Activity) getContext()), R.attr.canvas_color));
+		canvas.drawColor(getResources().getColor(Util.getResIdFromAttribute(((Activity) getContext()), R.attr.canvas_color)));
 
 		for (Bitmap bitmap : mActiveBitmaps) {
 			if (bitmap != null && scrollX + width > x && scrollX < x + width) {

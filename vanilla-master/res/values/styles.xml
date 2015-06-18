@@ -14,7 +14,6 @@
         <item name="tab_order_list_divider_color">@null</item>
         <item name="tab_order_list_divider_height">@dimen/list_devider_height_0</item>
         <item name="tab_order_row_color">@android:color/white</item>
-        <item name="canvas_color">@android:color/white</item>
         <item name="playback">@style/Playback</item>
         <item name="full_playback_alt_table_background">@color/full_playback_alt_table_background_dark</item>
         <item name="textview_background_color">@android:color/black</item>

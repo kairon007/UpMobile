@@ -109,7 +109,7 @@ public class PlaylistActivity extends Activity
 		view.setOnItemClickListener(this);
 		view.setOnCreateContextMenuListener(this);
 		mListView = view;
-		view.setBackgroundColor(Util.getResIdFromAttribute(this, R.attr.playlist_background_color));
+		view.setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.playlist_background_color)));
 		if (Build.VERSION.SDK_INT > 10) {
 			getActionBar().setBackgroundDrawable(new ColorDrawable(
 					Util.getResIdFromAttribute(this, R.attr.actionbar_bg_color)));

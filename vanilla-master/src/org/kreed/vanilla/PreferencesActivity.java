@@ -89,7 +89,8 @@ public class PreferencesActivity extends PreferenceActivity {
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
+			view.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg)));
 			return view;
 		}
 	}
@@ -115,7 +116,8 @@ public class PreferencesActivity extends PreferenceActivity {
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
+			view.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg)));
 			return view;
 		}
 	}
@@ -143,7 +145,8 @@ public class PreferencesActivity extends PreferenceActivity {
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
+			view.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg)));
 			return view;
 		}
 	}
@@ -169,7 +172,8 @@ public class PreferencesActivity extends PreferenceActivity {
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
+			view.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg)));
 			return view;
 		}
 	}
@@ -196,7 +200,8 @@ public class PreferencesActivity extends PreferenceActivity {
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
 			view.setBackgroundColor(Color.TRANSPARENT);
-			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
+			view.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg)));
 			return view;
 		}
 	}
@@ -222,7 +227,8 @@ public class PreferencesActivity extends PreferenceActivity {
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
+			view.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg)));
 			return view;
 		}
 	}
@@ -238,7 +244,8 @@ public class PreferencesActivity extends PreferenceActivity {
 		@Override
 		public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = (View) super.onCreateView(inflater, container, savedInstanceState);
-			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
+			view.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg)));
 			return view;
 		}
 	}
@@ -263,7 +270,8 @@ public class PreferencesActivity extends PreferenceActivity {
 			view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 			view.getSettings().setJavaScriptEnabled(true);
 			view.loadUrl("file:///android_asset/about.html");
-			view.setBackgroundColor(Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg));
+			view.setBackgroundColor(getResources().getColor(
+					Util.getResIdFromAttribute(getActivity(), R.attr.preferences_bg)));
 			return view;
 		}
 	}
