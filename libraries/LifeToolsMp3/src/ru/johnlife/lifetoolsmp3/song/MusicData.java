@@ -88,7 +88,6 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		artist = cursor.getString(3);
 		duration = cursor.getLong(4);
 		album = cursor.getString(5);
-		comment = getComment();
 	}
 
 	public void reset(final Context context) {
