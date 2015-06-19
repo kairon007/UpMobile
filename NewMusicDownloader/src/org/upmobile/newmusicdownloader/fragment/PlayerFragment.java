@@ -581,13 +581,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			return;
 		}
 		playerCover.invalidate();
-		if (delta > 0) {
-			player.shift(1);
-			downloadButtonState(!player.isGettingURl());
-		} else if (delta < 0) {
-			player.shift(-1);
-			downloadButtonState(!player.isGettingURl());
+		if (delta > 0 && (player.getArrayPlayback().size() - 1) == player.getArrayPlayback().indexOf(player.getPlayingSong())) {
+			player.play(player.getArrayPlayback().get(0));
+			((MainActivity) getActivity()).showMessage(ru.johnlife.lifetoolsmp3.R.string.repeat_list);
+		} else {
+			player.pause();
+			player.shift(delta);
 		}
+		downloadButtonState(!player.isGettingURl());
 		getCover(player.getPlayingSong());
 	}
 

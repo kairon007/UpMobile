@@ -576,8 +576,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			forceDownload();
 			hasPost = false;
 		}
-		player.shift(delta);
-		player.pause();
+		if (delta > 0 && (player.getArrayPlayback().size() - 1) == player.getArrayPlayback().indexOf(player.getPlayingSong())) {
+			player.play(player.getArrayPlayback().get(0));
+			((MainActivity) getActivity()).showMessage(ru.johnlife.lifetoolsmp3.R.string.repeat_list);
+		} else {
+			player.pause();
+			player.shift(delta);
+		}
 		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
 		if (song.getClass() == MusicData.class || isDownloaded) {
 			download.setVisibility(View.GONE);

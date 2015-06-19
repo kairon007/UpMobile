@@ -422,11 +422,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		int position = arrayPlayback.indexOf(playingSong);
 		position += delta;
 		if (position >= arrayPlayback.size()) {
-			if (sourceSong() == SMODE_SONG_FROM_INTERNET) {
-				stopPressed();
-				return;
-			}
-			position = 0;
+			stopPressed();
+			return;
 		} else if (position < 0) {
 			position = arrayPlayback.size() - 1;
 		}

@@ -627,8 +627,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			hasPost = false;
 		}
 		play.setClickable(false);
-		player.shift(delta);
-		player.pause();
+		if (delta > 0 && (player.getArrayPlayback().size() - 1) == player.getArrayPlayback().indexOf(player.getPlayingSong())) {
+			player.play(player.getArrayPlayback().get(0));
+			((MainActivity) getActivity()).showMessage(ru.johnlife.lifetoolsmp3.R.string.repeat_list);
+		} else {
+			player.pause();
+			player.shift(delta);
+		}
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
 		playerProgress.setSecondaryProgress(0);
