@@ -496,99 +496,112 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 		@Override
 		public void run() {
-			Cursor c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
-			final String artist = song.getArtist().trim();
-			final String title = song.getTitle().trim();
-			if (c.moveToFirst()) {
-				int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-				switch (status) {
-				case DownloadManager.ERROR_CANNOT_RESUME:
-				case DownloadManager.ERROR_FILE_ERROR:
-				case DownloadManager.ERROR_HTTP_DATA_ERROR:
-				case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
-				case DownloadManager.ERROR_UNKNOWN:
-				case DownloadManager.STATUS_FAILED:
-					failed(c, artist, title);
-					return;
-				case DownloadManager.STATUS_RUNNING:
-					if (isFullAction()) {
+			Cursor c = null;
+			try {
+				 c = manager.query(new DownloadManager.Query().setFilterById(currentDownloadId));
+				final String artist = song.getArtist().trim();
+				final String title = song.getTitle().trim();
+				if (c.moveToFirst()) {
+					int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+					switch (status) {
+					case DownloadManager.ERROR_CANNOT_RESUME:
+					case DownloadManager.ERROR_FILE_ERROR:
+					case DownloadManager.ERROR_HTTP_DATA_ERROR:
+					case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+					case DownloadManager.ERROR_UNKNOWN:
+					case DownloadManager.STATUS_FAILED:
+						failed(artist, title);
+						c.close();
+						return;
+					case DownloadManager.STATUS_RUNNING:
+						if (isFullAction()) {
+							break;
+						}
+						int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+						int idIndex = c.getColumnIndex(DownloadManager.COLUMN_ID);
+						int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+						int size = c.getInt(sizeIndex);
+						long id = c.getLong(idIndex);
+						if (null != item) {
+							item.setId(id);
+						}
+						int downloaded = c.getInt(downloadedIndex);
+						c.close();
+						if (size != -1 && size != 0) {
+							progress = downloaded * 100 / size;
+						} else {
+							progress = downloaded * 100 / DEFAULT_SONG;
+						}
+						notifyDuringDownload(currentDownloadId, progress);
+						break;
+					case DownloadManager.STATUS_SUCCESSFUL:
+						if (c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR) > BAD_SONG) {
+							new File(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).delete();
+							notifyAboutFailed(currentDownloadId, song);
+							removeFromDownloads(currentDownloadId);
+							this.cancel();
+							c.close();
+						} else {
+							progress = 100;
+							notifyDuringDownload(currentDownloadId, progress);
+							int columnIndex = 0;
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+							} else if (columnIndex != -1) {
+								columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+							}
+							if (columnIndex == -1){
+								c.close();
+								return;
+							}
+							String path = c.getString(columnIndex);
+							c.close();
+							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+								path = cutPath(path);
+								if (path.contains("%20")) {
+									path.replaceAll("%20", " ");
+								}
+							}
+							src = new File(path);
+							if (setMetadataToFile(src, useAlbumCover, song)) {
+								insertToMediaStore(song, path);
+							}
+							setFileUri(currentDownloadId, src.getAbsolutePath());
+							prepare(src, song, path);
+							DownloadCache.getInstanse().remove(artist, title);
+							if (null != infolistener) {
+								infolistener.success(song.getUrl());
+							}
+							this.cancel();
+						}
+						return;
+					default:
 						break;
 					}
-					int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
-					int idIndex = c.getColumnIndex(DownloadManager.COLUMN_ID);
-					int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
-					int size = c.getInt(sizeIndex);
-					long id = c.getLong(idIndex);
-					if (null != item) {
-						item.setId(id);
-					}
-					int downloaded = c.getInt(downloadedIndex);
-					if (size != -1 && size != 0) {
-						progress = downloaded * 100 / size;
-					} else {
-						progress = downloaded * 100 / DEFAULT_SONG;
-					}
-					notifyDuringDownload(currentDownloadId, progress);
-					break;
-				case DownloadManager.STATUS_SUCCESSFUL:
-					if (c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR) > BAD_SONG) {
-						new File(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).delete();
-						notifyAboutFailed(currentDownloadId, song);
-						removeFromDownloads(currentDownloadId);
-						this.cancel();
-					} else {
-						progress = 100;
-						notifyDuringDownload(currentDownloadId, progress);
-						int columnIndex = 0;
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-							columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-						} else if (columnIndex != -1) {
-							columnIndex = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-						}
-						if (columnIndex == -1)
-							return;
-						String path = c.getString(columnIndex);
-						c.close();
-						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-							path = cutPath(path);
-							if (path.contains("%20")) {
-								path.replaceAll("%20", " ");
-							}
-						}
-						src = new File(path);
-						if (setMetadataToFile(src, useAlbumCover, song)) {
-							insertToMediaStore(song, path);
-						}
-						setFileUri(currentDownloadId, src.getAbsolutePath());
-						prepare(src, song, path);
-						DownloadCache.getInstanse().remove(artist, title);
-						if (null != infolistener) {
-							infolistener.success(song.getUrl());
-						}
-						this.cancel();
-					}
-					return;
-				default:
-					break;
 				}
-			}
-			c.close();
-			if (isBadInet()) {
-				counter++;
-			} else {
-				counter = 0;
-			}
-			if (counter > 100) {
-				notifyAboutFailed(currentDownloadId, song);
-				DownloadCache.getInstanse().remove(artist, title);
-				manager.remove(currentDownloadId);
-				this.cancel();
+				c.close();
+				if (isBadInet()) {
+					counter++;
+				} else {
+					counter = 0;
+				}
+				if (counter > 100) {
+					notifyAboutFailed(currentDownloadId, song);
+					DownloadCache.getInstanse().remove(artist, title);
+					manager.remove(currentDownloadId);
+					this.cancel();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (c != null) {
+					c.close();
+				}
 			}
 		}
 
-		private void failed(Cursor c, final String artist, final String title) {
+		private void failed(final String artist, final String title) {
 			notifyAboutFailed(currentDownloadId, song);
-			c.close();
 			DownloadCache.getInstanse().remove(artist, title);
 			if (null != infolistener) {
 				infolistener.erorr("");
