@@ -358,6 +358,7 @@ public class RippleView extends FrameLayout implements OnGestureListener {
 	
 	private ViewParent getSwipeParent() {
 		ViewParent parent = getParent();
+		if (parent.getParent() instanceof RippleView) return null;
 		while (null != parent && parent instanceof ViewGroup) {
 			if (parent instanceof SwipeUndoView) {
 				return parent.getParent();
