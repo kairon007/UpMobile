@@ -22,7 +22,6 @@ import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,6 +108,7 @@ public class SearchViewTab  extends OnlineSearchView {
 					SearchViewTab.this.alertProgressDialog.dismiss();
 					StateKeeper.getInstance().closeDialog(StateKeeper.PROGRESS_DIALOG);
 					startPlay(song, data, getCoverFromList(view));
+					android.util.Log.d("logd", "success: " +  getCoverFromList(view));
 				}
 				
 				@Override
@@ -118,17 +118,8 @@ public class SearchViewTab  extends OnlineSearchView {
 	}
 	
 	private Bitmap getCoverFromList(View v) {
-		listViewImage = null;
-		if (!((ImageView) v.findViewById(R.id.cover)).getContentDescription().equals(getResources().getString(R.string.default_cover))) {
-			Drawable draw = ((ImageView) v.findViewById(R.id.cover)).getDrawable();
-			if (null != listViewImage) {
-				listViewImage.recycle();
-			}
-			listViewImage = ((BitmapDrawable) draw).getBitmap();
-			return listViewImage;
-		} else {
-			return ((BitmapDrawable) getResources().getDrawable(R.drawable.fallback_cover)).getBitmap();
-		}
+		Bitmap bitmap = ((BitmapDrawable) ((ImageView) v.findViewById(R.id.cover)).getDrawable()).getBitmap();
+		return Util.resizeBitmap(bitmap, Util.dpToPx(getContext(), 64), Util.dpToPx(getContext(), 64));
 	}
 	
 	private int getTrackIndexPosition(ListView list, String song, String title) {

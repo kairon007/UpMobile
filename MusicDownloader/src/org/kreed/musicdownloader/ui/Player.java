@@ -137,7 +137,11 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 		songProgress.setOnSeekBarChangeListener(this);
 		songTitle.setText(title);
 		songArtist.setText(artist);
-		songCover.setImageBitmap(cover);
+		if (null != cover) {
+			songCover.setImageBitmap(cover);
+		} else {
+			songCover.setImageResource(R.drawable.fallback_cover);;
+		}
 		if (null != currentImageButton) buttonPlay.setImageResource(currentImageButton);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			Context context = view.getContext();
