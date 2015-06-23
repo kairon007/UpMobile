@@ -17,10 +17,10 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,17 +137,20 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
                 ((MainActivity) getActivity()).isDarkActionBar(getActivity()) ? R.drawable.ic_drawer_compat : R.drawable.ic_drawer_compat_black,      /* nav drawer image to replace 'Up' caret */
-                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+                R.string.navigation_drawer_open
         ) {
             @Override
             public void onDrawerClosed(View drawerView) {
+            	syncState();
                 super.onDrawerClosed(drawerView);
             }
+            
+            
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                syncState();
                 if (!isAdded()) return;
             	if (!isVisibleSettings()) {
             		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true); //	
@@ -173,6 +176,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {
+            	android.util.Log.d("logd", "run: ");
                 mDrawerToggle.syncState();
             }
         });

@@ -40,7 +40,6 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     private NavigationDrawerCallbacks mCallbacks;
     private OnNavigationDrawerState drawerState;
     private android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
-    private android.support.v4.app.ActionBarDrawerToggle drawerToggle;
     private List<BaseMaterialFragment> mFragments;
    
     private DrawerLayout mDrawerLayout;
@@ -150,7 +149,6 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
         
-        if (useOldToggle()) {
 	        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
 	                getActivity(),                    /* host Activity */
 	                mDrawerLayout,                    /* DrawerLayout object */
@@ -165,27 +163,6 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 					super.onDrawerOpened(drawerView);
 				}
 			}; /* "close drawer" description for accessibility */
-		} else {
-        	drawerToggle = new android.support.v4.app.ActionBarDrawerToggle(
-	                    getActivity(),                    /* host Activity */
-	                    mDrawerLayout,                    /* DrawerLayout object */
-	                    R.drawable.ic_drawer_compat,      /* nav drawer image to replace 'Up' caret */
-	                    R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-	                    R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-	            ) {
-        		
-				@Override
-				public void onDrawerOpened(View drawerView) {
-					if (null != drawerState) {
-						drawerState.onDrawerOpen();
-					}
-					super.onDrawerOpened(drawerView);
-				}
-				
-			};
-        	
-        }
-        
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
@@ -199,22 +176,15 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {
-            	if (useOldToggle()) {
-            		mDrawerToggle.syncState();
-            	} else {
-            		drawerToggle.syncState();
-            	}
+            	mDrawerToggle.syncState();
             }
         });
 
-        mDrawerLayout.setDrawerListener(useOldToggle() ? mDrawerToggle : drawerToggle);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
     
     public boolean isDrawerIndicatorEnabled() {
-		if (useOldToggle()) {
-			return mDrawerToggle.isDrawerIndicatorEnabled();
-		}
-		return drawerToggle.isDrawerIndicatorEnabled();
+		return mDrawerToggle.isDrawerIndicatorEnabled();
 	}
 
     private void selectItem(int position) {
@@ -261,18 +231,12 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		// Forward the new configuration the drawer toggle component.
-		if (useOldToggle()) {
 			mDrawerToggle.onConfigurationChanged(newConfig);
-		} else {
-			drawerToggle.onConfigurationChanged(newConfig);
-		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (useOldToggle() && mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		} else if (drawerToggle.onOptionsItemSelected(item)) {
+		if ( mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -284,13 +248,8 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     
     public void setEnabled(boolean enabled) {
     	if (!isAdded()) return;
-		if (useOldToggle()) {
-	    	mDrawerToggle.setDrawerIndicatorEnabled(enabled);
-	    	mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_ab_up_compat_trim));
-		} else {
-			drawerToggle.setDrawerIndicatorEnabled(enabled);
-	    	drawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_ab_up_compat));
-		}
+	    mDrawerToggle.setDrawerIndicatorEnabled(enabled);
+	    mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_ab_up_compat_trim));
 		mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     	setHasOptionsMenu(enabled);
     }

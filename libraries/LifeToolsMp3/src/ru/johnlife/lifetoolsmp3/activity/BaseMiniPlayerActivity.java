@@ -26,7 +26,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -38,7 +38,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public abstract class BaseMiniPlayerActivity extends ActionBarActivity implements OnClickListener {
+public abstract class BaseMiniPlayerActivity extends AppCompatActivity implements OnClickListener {
 
 	protected final String ARRAY_SAVE = "extras_array_save";
 	protected PlaybackService service;
