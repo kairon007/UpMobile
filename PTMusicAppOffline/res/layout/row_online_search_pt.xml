@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/selectable_item_bg"
-        android:clickable="true"
         android:orientation="horizontal"
         android:paddingLeft="8dp"
         android:paddingStart="8dp" >
