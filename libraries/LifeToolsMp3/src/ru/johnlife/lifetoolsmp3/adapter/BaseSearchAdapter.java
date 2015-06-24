@@ -43,8 +43,6 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 	protected abstract Object initRefreshProgress();
 	protected abstract void download(RemoteSong song, final int position);
 	protected boolean showDownloadLabel() { return false; }
-	protected boolean showFullElement() { return true; }
-	protected boolean showDownloadButton() { return showFullElement() ? false : true; }
 	protected boolean usePlayingIndicator() { return false; }
 	protected int getAdapterBackground() { return 0; }
 	
