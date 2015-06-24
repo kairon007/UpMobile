@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
@@ -134,5 +135,10 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 		return adapter;
+	}
+
+	@Override
+	protected ListView getListView(View view) {
+		return (ListView) view.findViewById(R.id.list);
 	}
 }
