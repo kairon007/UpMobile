@@ -3,10 +3,10 @@ package mp3.music.player.us.ui;
 import mp3.music.player.us.Constants;
 import mp3.music.player.us.Nulldroid_Advertisement;
 import mp3.music.player.us.Nulldroid_Settings;
-import mp3.music.player.us.ui.activities.HomeActivity;
+import mp3.music.player.us.R;
+import mp3.music.player.us.adapters.SearchAdapter;
 import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.PreferenceUtils;
-import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
@@ -15,11 +15,18 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
 
 public class SearchView extends OnlineSearchView {
 	
+	private SearchAdapter adapter;
+
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		if (null == adapter) {
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
 	}
 
 	@Override
@@ -52,10 +59,10 @@ public class SearchView extends OnlineSearchView {
 		return flag;
 	}
 
-	@Override
-	public void refreshLibrary() {
-		HomeActivity.refreshLibrary();
-	}
+//	@Override
+//	public void refreshLibrary() {
+//		HomeActivity.refreshLibrary();
+//	}
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
@@ -70,7 +77,20 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	public BaseSearchAdapter getAdapter() {
-		// TODO Auto-generated method stub
-		return null;
+		if (null == adapter) {
+			new NullPointerException("Adapter must not be null");
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
+		return adapter;
+	}
+	
+	@Override
+	protected boolean showFullElement() {
+		return true;
+	}
+
+	@Override
+	protected ListView getListView(View v) {
+		return (ListView) v.findViewById(R.id.list);
 	}
 }

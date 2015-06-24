@@ -776,10 +776,12 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
 			alertProgressDialog.cancel();
 		}
+		android.util.Log.d("logd", "getDownloadUrl: " + showFullElement());
 		if (!showFullElement()) {
 			click(view, position);
 			return;
 		}
+		android.util.Log.d("logd", "getDownloadUrl: ");
 		listViewImage = null;
 		if (!((ImageView) view.findViewById(R.id.cover)).getContentDescription().equals(getResources().getString(R.string.default_cover))) {
 			Drawable draw = ((ImageView) view.findViewById(R.id.cover)).getDrawable();
@@ -890,7 +892,8 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		AlertDialog streamDialog = null;
 		if (null == player) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View v = inflater.inflate(Util.getResIdFromAttribute(((Activity)getContext()), R.attr.download_dialog), null);
+			int layoutId = Util.getResIdFromAttribute(((Activity)getContext()), R.attr.download_dialog);
+			View v = inflater.inflate(layoutId > 0 ? layoutId : R.layout.download_dialog, null);
 			player = new Player(v, song, isWhiteTheme(getContext()));
 			player.setTitle(song.getArtist() + " - " + song.getTitle());
 			player.setIsAppPT(isAppPT());
