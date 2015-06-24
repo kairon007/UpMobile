@@ -37,8 +37,6 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 
 	private View refreshProgress;
 	private FrameLayout footer;
-	protected ListView listView;
-	
 	protected PlaybackService service;
 
 	protected abstract BaseSettings getSettings();
@@ -120,10 +118,6 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 			refreshProgress.setVisibility(View.GONE);
 			footer.setVisibility(View.GONE);	
 		}
-	}
-	
-	public void setListView(ListView listView) {
-		this.listView = listView;
 	}
 	
 	public void showMessage(Context context, String message) {

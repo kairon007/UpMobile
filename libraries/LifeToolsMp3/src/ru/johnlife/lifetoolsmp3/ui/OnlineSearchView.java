@@ -96,6 +96,9 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	
 	protected PlaybackService service;// init in subclasses
 
+	private String lastSearchString = "";
+	private BaseSearchAdapter baseSearchAdapter;
+	
 	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
 	private int clickPosition;
 	private boolean isRestored = false;
@@ -130,6 +133,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	protected abstract Nulldroid_Advertisment getAdvertisment();
 	protected abstract void stopSystemPlayer(Context context);
 	public abstract BaseSearchAdapter getAdapter();
+	protected abstract ListView getListView(View v);
 	protected void hideView () { }	//hide player in MusicDownloder application
 	protected void click(View view, int position) { Util.hideKeyboard(getContext(), view); }
 	protected boolean showDownloadLabel() { return false; }
@@ -144,7 +148,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		super(inflater.getContext());
 		init(inflater);
 		initSearchEngines(getContext(), null);
-		getAdapter().setListView(listView);
 		keeper = StateKeeper.getInstance();
 		keeper.restoreState(this);
 		sPref = MusicApp.getSharedPreferences();
@@ -311,8 +314,8 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		}
 		if (!isRestored) {
 			listView.addHeaderView(emptyHeader);
-			listView.addFooterView(getAdapter().getProgressView(), null, false);
-			listView.setAdapter(getAdapter());
+			listView.addFooterView(baseSearchAdapter.getProgressView(), null, false);
+			listView.setAdapter(baseSearchAdapter);
 			animateListView(false);
 		}
 		listView.setEmptyView(message);
@@ -352,12 +355,13 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+				android.util.Log.d("logd", "onItemClick: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + position);
 				try {
-					if (position == getAdapter().getCount()) return; // progress click
-					getAdapter().notifyDataSetChanged();
+					if (position == baseSearchAdapter.getCount()) return; // progress click
+					baseSearchAdapter.notifyDataSetChanged();
 					viewItem = view;
 					clickPosition = position;
-					getDownloadUrl(view, position);
+					getDownloadUrl(view, (position - 1));
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -383,7 +387,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 			trySearch();
 			return view;
 		}
-		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && getAdapter().isEmpty()) {
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && baseSearchAdapter.isEmpty()) {
 			showBaseProgress();
 			message.setVisibility(View.GONE);
 		} else {
@@ -436,7 +440,8 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		view = (ViewGroup) inflater.inflate(R.layout.search, null);
 		message = (TextView) view.findViewById(R.id.message);
 		progress = view.findViewById(R.id.progress);
-		listView = (ListView) view.findViewById(R.id.list);
+		listView = getListView(view);
+		baseSearchAdapter = getAdapter();
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
 		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
@@ -633,8 +638,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		edit.putString(OnlineSearchView.DOWNLOAD_DIR, downloadPath);
 		edit.commit();
 	}
-	
-	private String lastSearchString = "";
 	
 	public int defaultCover() {
 		return R.drawable.fallback_cover;
@@ -1006,7 +1009,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	
 	public void restoreAdapter(ArrayList<Song> list, int position) {
 		getAdapter().add(list);
-		getAdapter().setListView(listView);
 		listView.addHeaderView(emptyHeader);
 		listView.addFooterView(getAdapter().getProgressView(), null, false);
 		listView.setAdapter(getAdapter());

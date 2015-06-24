@@ -21,6 +21,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
@@ -204,5 +205,11 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 		return adapter;
+	}
+	
+	@Override
+	protected ListView getListView(View v) {
+		ListView listV = (ListView) v.findViewById(R.id.list);
+		return listV;
 	}
 }

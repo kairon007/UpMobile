@@ -25,6 +25,7 @@ THE SOFTWARE.
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
+    android:choiceMode="singleChoice"
     android:cacheColorHint="@android:color/transparent"
     android:divider="?attr/listview_divider"
     android:dividerHeight="?attr/listview_divider_height"
