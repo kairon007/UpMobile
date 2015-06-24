@@ -144,7 +144,7 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 			artist.setText(item.getArtist().replace("&#039;", "'"));
 			showDurationd(item.getDuration() > 0);
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-			info.setTag(position);
+//			info.setTag(position);
 			if (null != threeDot) {
 				threeDot.setTag(position);
 			}

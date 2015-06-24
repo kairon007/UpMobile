@@ -18,6 +18,7 @@ import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
@@ -105,5 +106,10 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 		return adapter;
+	}
+
+	@Override
+	protected ListView getListView(View v) {
+		return (ListView) v.findViewById(R.id.list);
 	}
 }

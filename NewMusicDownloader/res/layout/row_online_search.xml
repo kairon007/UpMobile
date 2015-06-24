@@ -1,157 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/boxInfoItem"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:divider="@drawable/layout_divider"
+    android:background="@drawable/selectable_item_bg"
+    android:descendantFocusability="blocksDescendants"
     android:dividerPadding="4dp"
     android:orientation="horizontal"
+    android:padding="4dp"
     android:showDividers="middle" >
 
+    <FrameLayout
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center_vertical" >
+
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
     <LinearLayout
-        android:id="@+id/boxInfoItem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/selectable_item_bg"
-        android:clickable="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="4dp" >
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp" >
 
-        <FrameLayout
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_gravity="center_vertical" >
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <TextView
-                    android:id="@+id/number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:lines="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="22sp" />
-
-                <TextView
-                    android:id="@+id/caption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/number"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-8dp"
-                    android:gravity="center_horizontal"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/cover"
+            <TextView
+                android:id="@+id/titleLine"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/font_size_title" />
+
+            <TextView
+                android:id="@+id/artistLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titleLine"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-thin"
+                android:singleLine="true"
+                android:textSize="@dimen/font_size_normal" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/playingIndicator"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_beat"
+            android:visibility="gone" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp" >
+            android:orientation="vertical" >
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical" >
+            <TextView
+                android:id="@+id/chunkTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="right"
+                android:paddingRight="4dp"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/font_size_title"
+                android:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/titleLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/font_size_title" />
-
-                <TextView
-                    android:id="@+id/artistLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/titleLine"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-thin"
-                    android:singleLine="true"
-                    android:textSize="@dimen/font_size_normal" />
-            </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/playingIndicator"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_beat"
-                android:visibility="gone" />
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/infoView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/chunkTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:gravity="right"
-                    android:paddingRight="4dp"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/font_size_title"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/infoView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="right"
-                    android:paddingRight="4dp"
-                    android:singleLine="true"
-                    android:textColor="@android:color/holo_green_light"
-                    android:textSize="@dimen/font_size_normal"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/threeDot"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/selectable_item_bg"
-                android:scaleType="centerInside"
-                android:src="@drawable/threedot"
-                android:visibility="visible" />
+                android:layout_weight="0"
+                android:gravity="right"
+                android:paddingRight="4dp"
+                android:singleLine="true"
+                android:textColor="@android:color/holo_green_light"
+                android:textSize="@dimen/font_size_normal"
+                android:visibility="gone" />
         </LinearLayout>
-    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/btnDownload"
-        android:layout_width="48dp"
-        android:layout_height="64dp"
-        android:background="@drawable/selectable_item_bg"
-        android:contentDescription="@string/expand"
-        android:longClickable="true"
-        android:scaleType="center"
-        android:src="@drawable/icon_download"
-        android:visibility="gone" />
+        <ImageView
+            android:id="@+id/threeDot"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selectable_item_bg"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:scaleType="centerInside"
+            android:src="@drawable/threedot"
+            android:visibility="visible" />
+    </LinearLayout>
 
 </LinearLayout>
