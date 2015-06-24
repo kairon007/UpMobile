@@ -9,11 +9,9 @@ import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,25 +74,12 @@ public class SearchAdapter extends BaseSearchAdapter {
 			setDownloadLable(lableStatus);
 			showPlayingIndicator(hasPlayingSong);
 			cover.setImageResource(R.drawable.ic_album_grey);
-			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong) item).isHasCoverFromSearch()) {
-				((RemoteSong) item).getSmallCover(false, new OnBitmapReadyListener() {
-							@Override
-							public void onBitmapReady(Bitmap bmp) {
-								if (null != bmp) {
-									cover.setImageBitmap(bmp);
-								}
-							}
-						});
-			}
 			super.hold(item, position);
 		}
 		
 		@Override
 		public void onClick(View view) {
 			switch(view.getId()) {
-			case R.id.boxInfoItem:
-				listView.performItemClick(view, (int) view.getTag(), view.getId());
-				break;
 			case R.id.threeDot:
 				showMenu(view);
 				break;
