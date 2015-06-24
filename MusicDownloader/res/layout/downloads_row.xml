@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selectable_item_bg"
-        android:divider="@drawable/layout_divider"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selectable_item_bg"
+    android:divider="@drawable/layout_divider"
     android:dividerPadding="4dp"
     android:minHeight="@dimen/layout_library_height"
     android:orientation="horizontal"
-    android:showDividers="middle"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp" >
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:showDividers="middle" >
 
-        <FrameLayout
-            android:layout_width="48dp"
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:minHeight="48dp" >
+
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:minHeight="48dp" >
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/fallback_cover" />
+    </FrameLayout>
 
-            <ImageView
-                android:id="@+id/cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:scaleType="fitCenter"
-                android:src="@drawable/fallback_cover" />
-        </FrameLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="8dp" >
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="8dp" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/songTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <TextView
-                    android:id="@+id/totalTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/songArtist"
-                android:layout_width="wrap_content"
+                android:id="@+id/songTitle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/totalTime"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true" />
+                android:layout_gravity="right"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/cancel"
+        <TextView
+            android:id="@+id/songArtist"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/selectable_item_bg"
-            android:src="@drawable/icon_cancel" />
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/selectable_item_bg"
+        android:src="@drawable/icon_cancel" />
 
 </LinearLayout>

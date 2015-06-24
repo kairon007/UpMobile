@@ -8,6 +8,7 @@ import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.PreferenceUtils;
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
@@ -65,5 +66,11 @@ public class SearchView extends OnlineSearchView {
 	public boolean isWhiteTheme(Context context) {
 		String theme = Util.getThemeName(context);
 		return null != theme && theme.equals(Constants.WHITE_THEME);
+	}
+
+	@Override
+	public BaseSearchAdapter getAdapter() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

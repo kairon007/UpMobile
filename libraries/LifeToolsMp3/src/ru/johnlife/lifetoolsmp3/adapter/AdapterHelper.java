@@ -312,17 +312,6 @@ public class AdapterHelper {
 		ViewBuilder builder;
 		if (null == convertView) {
 			boolean isCustomView = idCustomView > 0;
-//			if (isCustomView) {
-//				convertView = inflater.inflate(idCustomView, null);
-//			} else if (whiteTheme) {
-//				convertView = inflater.inflate(R.layout.row_online_search_white2, null);
-//			} else {
-//				if (Util.getSimpleThemeName(inflater.getContext()).equals("AppTheme.White")) {
-//					convertView = inflater.inflate(R.layout.row_online_search_white, null);
-//				} else {
-//					convertView = inflater.inflate(R.layout.row_online_search, null);
-//				}
-//			}
 			if (isCustomView) {
 				convertView = inflater.inflate(idCustomView, null);
 			} else {

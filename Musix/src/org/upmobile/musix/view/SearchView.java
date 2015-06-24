@@ -3,9 +3,11 @@ package org.upmobile.musix.view;
 import org.upmobile.musix.Nulldroid_Advertisement;
 import org.upmobile.musix.Nulldroid_Settings;
 import org.upmobile.musix.R;
+import org.upmobile.musix.listadapters.SearchAdapter;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
@@ -19,16 +21,27 @@ import android.view.View;
 public class SearchView extends OnlineSearchView {
 
 	private ProgressDialog progressDialog;
+	private BaseSearchAdapter adapter;
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		if (null == adapter) {
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
 	}
 
 	@Override
-	protected BaseSettings getSettings() {
-		return new Nulldroid_Settings();
-	}
+	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }
+	
+	@Override
+	public boolean isWhiteTheme(Context context) { return false; }
 
+	@Override
+	protected boolean showFullElement() { return true; }
+
+	@Override
+	public boolean isUseDefaultSpinner() { return true; }
+	
 	@Override
 	protected Nulldroid_Advertisement getAdvertisment() {
 		try {
@@ -40,43 +53,14 @@ public class SearchView extends OnlineSearchView {
 		}
 		return null;
 	}
-	
-	@Override
-	protected String getDirectory() {
-		return EMPTY_DIRECTORY;
-	}
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
 		PlaybackService.get(context).stop();
 	}
 
-	@Override
-	public void refreshLibrary() {
-	}
-
-	@Override
-	public boolean isWhiteTheme(Context context) {
-		return false;
-	}
-
-	@Override
-	protected boolean showFullElement() {
-		return true;
-	}
-
-	@Override
-	public int defaultCover() {
-		return R.drawable.def_player_cover;
-	}
-
 	public void saveState() {
 		StateKeeper.getInstance().saveStateAdapter(this);
-	}
-
-	@Override
-	public boolean isUseDefaultSpinner() {
-		return true;
 	}
 
 	@Override
@@ -101,6 +85,15 @@ public class SearchView extends OnlineSearchView {
 		if (null != progressDialog && progressDialog.isShowing()) {
 			progressDialog.cancel();
 		}
+	}
+
+	@Override
+	public BaseSearchAdapter getAdapter() {
+		if (null == adapter) {
+			new NullPointerException("Adapter must not be null");
+			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
+		return adapter;
 	}
 
 }

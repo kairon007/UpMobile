@@ -5,6 +5,7 @@
         <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
         <item name="android:alertDialogStyle">@style/AlertDialogStyle</item>
         <item name="android:spinnerStyle">@style/SpinnerAppTheme</item>
+        <item name="download_dialog">@layout/download_dialog</item>
     </style>
 
     <style name="Text.Menu">

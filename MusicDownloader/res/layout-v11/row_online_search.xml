@@ -19,40 +19,14 @@
         android:paddingLeft="8dp"
         android:paddingStart="8dp" >
 
-        <RelativeLayout
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:minHeight="48dp" >
-
-            <TextView
-                android:id="@+id/number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
-                android:lines="1"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/caption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/number"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="-10dp"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/default_cover"
-                android:scaleType="fitCenter"
-                android:src="@drawable/fallback_cover" />
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/default_cover"
+            android:scaleType="fitCenter"
+            android:src="@drawable/fallback_cover" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -105,7 +79,6 @@
         android:contentDescription="@string/expand"
         android:longClickable="true"
         android:scaleType="center"
-        android:src="@null"
-        android:visibility="gone" />
+        android:src="@drawable/icon_download" />
 
 </LinearLayout>

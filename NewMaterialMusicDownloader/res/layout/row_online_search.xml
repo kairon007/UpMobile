@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             android:padding="4dp" >
 
@@ -73,8 +74,8 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center_vertical" >
 
                     <TextView
@@ -155,16 +156,5 @@
             </LinearLayout>
         </LinearLayout>
     </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
-
-    <ImageView
-        android:id="@+id/btnDownload"
-        android:layout_width="48dp"
-        android:layout_height="64dp"
-        android:background="@drawable/selectable_item_bg"
-        android:contentDescription="@string/expand"
-        android:longClickable="true"
-        android:scaleType="center"
-        android:src="@drawable/icon_download"
-        android:visibility="gone" />
 
 </LinearLayout>

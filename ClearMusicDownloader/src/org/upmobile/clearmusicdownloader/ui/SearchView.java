@@ -6,10 +6,11 @@ import org.upmobile.clearmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
-import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
+import org.upmobile.clearmusicdownloader.adapters.SearchAdapter;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -25,23 +26,44 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 
 	private PlaybackService service;
 	private ImageView baseProgress;
-	private ImageView refreshProgress;
+	private BaseSearchAdapter adapter;
     
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		if (null == adapter) {
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
 	}
 
 	@Override
 	public View getView() {
-		View v = super.getView();
 		listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-		return v;
+		return super.getView();
 	}
 	
 	@Override
-	public boolean isUseDefaultSpinner() {
-		return true;
+	public void specialInit(View v) {
+		baseProgress = (ImageView) v.findViewById(R.id.loader_image);
 	}
+	
+	@Override
+	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }
+
+	@Override
+	protected Nulldroid_Advertisement getAdvertisment() { return new Nulldroid_Advertisement(); }
+
+	@Override
+	protected void stopSystemPlayer(Context context) {}
+
+	//TODO remove if it possible 
+	@Override
+	public boolean isWhiteTheme(Context context) { return false; }
+
+	@Override
+	protected boolean showFullElement() { return false; }
+
+	@Override
+	public boolean isUseDefaultSpinner() { return true; }
 	
 	@Override
 	protected void click(final View view, int position) {
@@ -49,9 +71,9 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			service = PlaybackService.get(getContext());
 			service.setOnErrorListener(this);
 		}
-		if (!service.isCorrectlyState(Song.class, getResultAdapter().getCount())) {
+		if (!service.isCorrectlyState(Song.class, getAdapter().getCount())) {
 			ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
-			for (AbstractSong abstractSong : getResultAdapter().getAll()) {
+			for (AbstractSong abstractSong : getAdapter().getAll()) {
 				try {
 					list.add(abstractSong.cloneSong());
 				} catch (CloneNotSupportedException e) {
@@ -62,51 +84,11 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		} 
 		((MainActivity) getContext()).showPlayerElement();
 		try {
-			((MainActivity) getContext()).startSong(((Song)getResultAdapter().getItem(position)).cloneSong());
+			((MainActivity) getContext()).startSong(((Song) getAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 		super.click(view, position);
-	}
-
-	@Override
-	protected BaseSettings getSettings() {
-		return new Nulldroid_Settings();
-	}
-
-	@Override
-	protected Nulldroid_Advertisement getAdvertisment() {
-		return new Nulldroid_Advertisement();
-	}
-
-	@Override
-	protected void stopSystemPlayer(Context context) {
-
-	}
-
-	@Override
-	public void refreshLibrary() {
-
-	}
-
-	@Override
-	public boolean isWhiteTheme(Context context) {
-		return false;
-	}
-
-	@Override
-	protected boolean showFullElement() {
-		return false;
-	}
-
-	@Override
-	protected boolean showDownloadButton() {
-		return false;
-	}
-
-	@Override
-	public void specialInit(View v) {
-		baseProgress = (ImageView) v.findViewById(R.id.loader_image);
 	}
 
 	@Override
@@ -117,23 +99,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	public void hideBaseProgress() {
 		hideAnimation(baseProgress);
-	}
-
-	@Override
-	public Object initRefreshProgress() {
-		refreshProgress = new ImageView(getContext());
-		refreshProgress.setImageResource(com.special.R.drawable.loader);
-		return refreshProgress;
-	}
-
-	@Override
-	public void showRefreshProgress() {
-		showAnimation(refreshProgress);
-	}
-
-	@Override
-	public void hideRefreshProgress() {
-		hideAnimation(refreshProgress);
 	}
 
 	private void hideAnimation(ImageView image) {
@@ -149,16 +114,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	public void saveState() {
 		StateKeeper.getInstance().saveStateAdapter(this);
 	}
-	
-	@Override
-	public int defaultCover() {
-		return R.drawable.def_cover_circle;
-	}
-	
-	@Override
-	protected String getDirectory() {
-		return ClearMusicDownloaderApp.getDirectory();
-	}
 
 	@Override
 	public void error(final String error) {
@@ -171,14 +126,13 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 			}
 		});
 	}
-	
+
 	@Override
-	protected int getIdCustomView() {
-		return R.layout.row_online_search;
-	}
-	
-	@Override
-	protected boolean showDownloadLabel() {
-		return true;
+	public BaseSearchAdapter getAdapter() {
+		if (null == adapter) {
+			new NullPointerException("Adapter must not be null");
+			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
+		return adapter;
 	}
 }

@@ -3,19 +3,18 @@ package org.upmobile.materialmusicdownloader.ui;
 import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
-import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+import org.upmobile.materialmusicdownloader.adapter.SearchAdapter;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
@@ -27,15 +26,30 @@ import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 public class SearchView extends OnlineSearchView implements Constants, PlaybackService.OnErrorListener{
-
+	
+	private BaseSearchAdapter adapter;
+	
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		if (null == adapter) {
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
 	}
+	
+	//TODO remove if it possible
+	@Override
+	public boolean isWhiteTheme(Context context) { return false; }
+
+	@Override
+	protected boolean showFullElement() { return false; }
+	
+	@Override
+	public boolean isUseDefaultSpinner() { return true; }
 	
 	@Override
 	protected void click(final View view, int position) {
-		AbstractSong playingSong = (AbstractSong) getResultAdapter().getItem(position);
-		if (!service.isCorrectlyStateFullCheck(Song.class, getResultAdapter().getCount(), new ArrayList<AbstractSong>(getResultAdapter().getAll()))) {
+		AbstractSong playingSong = (AbstractSong) getAdapter().getItem(position);
+		if (!service.isCorrectlyStateFullCheck(Song.class, getAdapter().getCount(), new ArrayList<AbstractSong>(getAdapter().getAll()))) {
 			updatePlaybackArray();
 		}
 		if (service.getArrayPlayback().indexOf(playingSong) == -1){
@@ -48,7 +62,7 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 
 	private void updatePlaybackArray() {
 		ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
-		for (AbstractSong abstractSong : getResultAdapter().getAll()) {
+		for (AbstractSong abstractSong : getAdapter().getAll()) {
 			try {
 				list.add(abstractSong.cloneSong());
 			} catch (CloneNotSupportedException e) {
@@ -69,54 +83,17 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	}
 
 	@Override
-	protected void stopSystemPlayer(Context context) {
-
-	}
-
-	@Override
-	public void refreshLibrary() {
-
-	}
+	protected void stopSystemPlayer(Context context) {}
 
 	@Override
 	protected void showMessage(String msg) {
 		((MainActivity)getContext()).showMessage(msg);
 	}
 	
-	@Override
-	public boolean isWhiteTheme(Context context) {
-		return false;
-	}
-
-	@Override
-	protected boolean showFullElement() {
-		return false;
-	}
-	
-	@Override
-	protected boolean showDownloadButton() {
-		return false;
-	}
-
 	public void saveState() {
 		StateKeeper.getInstance().saveStateAdapter(this);
 	}
-	
-	@Override
-	public int defaultCover() {
-		return 0;
-	}
-	
-	@Override
-	public boolean isUseDefaultSpinner() {
-		return true;
-	}
-	
-	@Override
-	public Object initRefreshProgress() {
-		return LayoutInflater.from(getContext()).inflate(R.layout.progress, null);
-	}
-	
+
 	@Override
 	public Bitmap getDeafultBitmapCover() {
 		String cover =  getResources().getString(R.string.font_musics);
@@ -125,7 +102,7 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	
 	@Override
 	protected void animateListView(boolean isRestored) {
-		final AnimationAdapter animAdapter = new AlphaInAnimationAdapter(getResultAdapter());
+		final AnimationAdapter animAdapter = new AlphaInAnimationAdapter(getAdapter());
 		animAdapter.setAbsListView(listView);
 		if (isRestored) {
 			animAdapter.getViewAnimator().disableAnimations();
@@ -143,11 +120,6 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 			listView.setAdapter(animAdapter);
 		}
 	}
-	
-	@Override
-	protected String getDirectory() {
-		return MaterialMusicDownloaderApp.getDirectory();
-	}
 
 	@Override
 	public void error(final String error) {
@@ -162,18 +134,7 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	}
 	
 	@Override
-	protected boolean showDownloadLabel() {
-		return true;
-	}
-	
-	@Override
-	protected void download(final View v, RemoteSong song, final int position) {
-		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-		downloadListener = new DownloadListener(getContext(), song, id);
-		downloadListener.setDownloadPath(getDirectory());
-		downloadListener.setUseAlbumCover(true);
-		downloadListener.downloadSong(false);
-	}
+	protected boolean showDownloadLabel() { return true; }
 	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
@@ -235,9 +196,13 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 			service.removeStatePlayerListener(stateListener);
 		}
 	}
-	
+
 	@Override
-	protected boolean usePlayingIndicator() {
-		return true;
+	public BaseSearchAdapter getAdapter() {
+		if (null == adapter) {
+			new NullPointerException("Adapter must not be null");
+			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
+		return adapter;
 	}
 }

@@ -25,7 +25,7 @@ public class MusicDownloaderApp extends MusicApp {
 		@Override
 		public void onServiceConnected(ComponentName paramComponentName, IBinder paramIBinder) {
 			try {
-				MusicDownloaderApp.this.playerService = ((PlayerService.PlayerBinder) paramIBinder).getService();
+				playerService = ((PlayerService.PlayerBinder) paramIBinder).getService();
 			} catch (Exception e) {
 				e.printStackTrace();
 				Log.e(getClass().getSimpleName(), e.getMessage());

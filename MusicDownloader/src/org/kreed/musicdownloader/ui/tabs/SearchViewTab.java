@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.kreed.musicdownloader.Nulldroid_Advertisement;
 import org.kreed.musicdownloader.Nulldroid_Settings;
 import org.kreed.musicdownloader.R;
+import org.kreed.musicdownloader.adapter.SearchAdapter;
 import org.kreed.musicdownloader.app.MusicDownloaderApp;
 import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.listeners.DownloadListener;
@@ -15,6 +16,7 @@ import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
@@ -34,22 +36,23 @@ public class SearchViewTab  extends OnlineSearchView {
 	private MainActivity activity;
 	private ViewPagerAdapter parentAdapter;
 	private String path;
-	private Bitmap listViewImage;
+	private BaseSearchAdapter adapter;
 
 	public SearchViewTab(LayoutInflater inflater, ViewPagerAdapter parentAdapter, MainActivity activity) {
 		super(inflater);
 		this.parentAdapter = parentAdapter;
 		this.activity = activity;
+		if (null == adapter) {
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
 	}
 	
 	@Override
-	protected boolean showFullElement() {
-		return false;
-	}
+	protected boolean showFullElement() { return false; }
 
 	@Override
 	protected void click(final View view, int position) {
-		final RemoteSong song = (RemoteSong) getResultAdapter().getItem(position);
+		final RemoteSong song = (RemoteSong) getAdapter().getItem(position);
 		final MusicData data = new MusicData();
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
@@ -108,7 +111,6 @@ public class SearchViewTab  extends OnlineSearchView {
 					SearchViewTab.this.alertProgressDialog.dismiss();
 					StateKeeper.getInstance().closeDialog(StateKeeper.PROGRESS_DIALOG);
 					startPlay(song, data, getCoverFromList(view));
-					android.util.Log.d("logd", "success: " +  getCoverFromList(view));
 				}
 				
 				@Override
@@ -156,13 +158,7 @@ public class SearchViewTab  extends OnlineSearchView {
 	}
 
 	@Override
-	public void refreshLibrary() {
-		// do nothing, just for others projects
-	}
-
-	@Override
-	protected void stopSystemPlayer(Context context) {
-	}
+	protected void stopSystemPlayer(Context context) {}
 
 	//TODO remove this method (and in superclass)
 	@Override
@@ -181,5 +177,14 @@ public class SearchViewTab  extends OnlineSearchView {
 				((MainActivity) activity).setCoverToPlayer(bitmap);
 			}
 		});
+	}
+
+	@Override
+	public BaseSearchAdapter getAdapter() {
+		if (null == adapter) {
+			new NullPointerException("Adapter must not be null");
+			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
+		return adapter;
 	}
 }

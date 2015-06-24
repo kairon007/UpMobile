@@ -2,6 +2,7 @@ package com.simpleandroid.music;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.Activity;
@@ -17,6 +18,7 @@ public class SearchView extends OnlineSearchView {
 
 	private IMediaPlaybackService mService = null;
 	private Activity activity;
+	private BaseSearchAdapter adapter;
 
 	private ServiceConnection osc = new ServiceConnection() {
 		public void onServiceConnected(ComponentName classname, IBinder obj) {
@@ -33,11 +35,17 @@ public class SearchView extends OnlineSearchView {
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		if (null == adapter) {
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
 	}
 	
 	public SearchView(Activity activity) {
 		super((LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE));
 		this.activity = activity;
+		if (null == adapter) {
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
 	}
 
 	@Override
@@ -51,17 +59,25 @@ public class SearchView extends OnlineSearchView {
 	}
 
 	@Override
-	public void refreshLibrary() {
-		// do nothing, just for others projects
-	}
+	public void refreshLibrary() {} // do nothing, just for others projects
 
 	@Override
 	protected void stopSystemPlayer(Context context) {
 		if (activity != null) MusicUtils.bindToService(activity, osc);
 	}
-
+	
+	//TODO need remove if it possible
 	@Override
 	public boolean isWhiteTheme(Context context) {
 		return Util.getThemeName(context).equals("AppTheme.White");
+	}
+
+	@Override
+	public BaseSearchAdapter getAdapter() {
+		if (null == adapter) {
+			new NullPointerException("Adapter must not be null");
+			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
+		}
+		return adapter;
 	}
 }

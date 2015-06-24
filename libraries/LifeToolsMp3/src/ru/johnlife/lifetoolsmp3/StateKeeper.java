@@ -208,7 +208,7 @@ public class StateKeeper {
 		searchView = null;
 		view.unregisterObserver();
 		songField = view.getSearchField().getText().toString();
-		results = view.getResultAdapter().getAll();
+		results = view.getAdapter().getAll();
 		if (results != null && !results.isEmpty()) listViewPosition = view.getListViewPosition();
 		else message = view.getMessage();
 		if (view != null) taskIterator = view.getTaskIterator();

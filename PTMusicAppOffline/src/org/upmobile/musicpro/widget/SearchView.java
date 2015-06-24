@@ -4,10 +4,12 @@ import org.upmobile.musicpro.Nulldroid_Advertisement;
 import org.upmobile.musicpro.Nulldroid_Settings;
 import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.activity.MainActivity;
+import org.upmobile.musicpro.adapter.SearchAdapter;
 import org.upmobile.musicpro.service.MusicService;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.app.ProgressDialog;
@@ -16,21 +18,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 public class SearchView extends OnlineSearchView {
+	
+	private BaseSearchAdapter adapter;
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
+		System.out.println("!!! SearchView");
+		if (null == adapter) {
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search_pt);
+		}
 		StateKeeper.getInstance().activateOptions(StateKeeper.IS_PT_TEXT);
 	}
 
+	//TODO remove if it possible
 	@Override
-	protected BaseSettings getSettings() {
-		return new Nulldroid_Settings();
-	}
+	protected boolean isAppPT() { return true; }
 	
 	@Override
-	protected String getDirectory() {
-		return EMPTY_DIRECTORY;
-	}
+	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }
+	
+	@Override
+	public boolean isUseDefaultSpinner() { return true; }
+	
+	@Override
+	public boolean isWhiteTheme(Context context) { return false; }
 
 	@Override
 	protected Nulldroid_Advertisement getAdvertisment() {
@@ -42,11 +53,6 @@ public class SearchView extends OnlineSearchView {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	@Override
-	protected boolean isAppPT() {
-		return true;
 	}
 
 	@Override
@@ -61,44 +67,18 @@ public class SearchView extends OnlineSearchView {
 	}
 	
 	@Override
-	protected int getDropDownViewResource() {
-		return 0;
-	}
-	
-	@Override
-	public boolean isUseDefaultSpinner() {
-		return true;
-	}
-
-	@Override
-	public void refreshLibrary() {
-
-	}
-	
-	@Override
-		protected int getAdapterBackground() {
-			return R.drawable.bg_list_selector;
-	}
-	
-	@Override
 	public void specialInit(View view) {
 		if (StateKeeper.getInstance().checkState(StateKeeper.SEARCH_EXE_OPTION)) {
 			progressSecond = ProgressDialog.show(view.getContext(), getResources().getString(R.string.app_name), getResources().getString(R.string.searching), true);
 		}
 	}
-	
-	@Override
-	public int defaultCover() {
-		return R.drawable.ic_music_node_search;
-	}
-	
-	@Override
-	protected int getIdCustomView() {
-		return R.layout.row_online_search_pt;
-	}
 
 	@Override
-	public boolean isWhiteTheme(Context context) {
-		return false;
+	public BaseSearchAdapter getAdapter() {
+		if (null == adapter) {
+			System.out.println("!!! getAdapter adapter == null");
+			adapter = new SearchAdapter(getContext(), R.layout.row_online_search_pt);
+		}
+		return adapter;
 	}
 }
