@@ -976,7 +976,7 @@ public class ActionBarSherlockCompat extends ActionBarSherlock implements MenuBu
             throw new IllegalStateException("You must use Theme.Sherlock, Theme.Sherlock.Light, Theme.Sherlock.Light.DarkActionBar, or a derivative.");
         }
 
-        if (a.getBoolean(R.styleable.SherlockTheme_windowNoTitle, false)) {
+        if (a.getBoolean(R.styleable.SherlockTheme_windowNoTitleABS, false)) {
             requestFeature(Window.FEATURE_NO_TITLE);
         } else if (a.getBoolean(R.styleable.SherlockTheme_windowActionBarABS, false)) {
             // Don't allow an action bar if there is no title.

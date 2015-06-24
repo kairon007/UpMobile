@@ -79,7 +79,7 @@
         <item name="searchViewEditQueryBackgroundABS">?selectableItemBackgroundABS</item>
         <item name="searchResultListItemHeightABS">58dp</item>
 
-        <item name="windowNoTitle">false</item>
+        <item name="windowNoTitleABS">false</item>
         <item name="windowActionBarABS">true</item>
         <item name="windowActionModeOverlayABS">false</item>
         <item name="windowContentOverlayABS">@null</item>
@@ -153,7 +153,7 @@
         <item name="searchViewEditQueryBackgroundABS">?selectableItemBackgroundABS</item>
         <item name="searchResultListItemHeightABS">58dp</item>
 
-        <item name="windowNoTitle">false</item>
+        <item name="windowNoTitleABS">false</item>
         <item name="windowActionBarABS">true</item>
         <item name="windowActionModeOverlayABS">false</item>
         <item name="windowContentOverlayABS">@null</item>
@@ -198,10 +198,10 @@
 
     <style name="Theme.Sherlock.NoActionBar">
         <item name="windowActionBarABS">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="windowNoTitleABS">true</item>
     </style>
     <style name="Theme.Sherlock.Light.NoActionBar">
         <item name="windowActionBarABS">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="windowNoTitleABS">true</item>
     </style>
 </resources>

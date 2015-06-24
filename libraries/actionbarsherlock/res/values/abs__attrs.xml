@@ -151,8 +151,8 @@
         <attr name="textAppearanceListItemSmallABS" format="reference" />
 
 
-        <attr name="windowMinWidthMajor" format="dimension" />
-        <attr name="windowMinWidthMinor" format="dimension" />
+        <attr name="windowMinWidthMajorABS" format="dimension" />
+        <attr name="windowMinWidthMinorABS" format="dimension" />
 
 
 
@@ -166,7 +166,7 @@
         <attr name="popupMenuStyleABS" format="reference" />
         <attr name="dropdownListPreferredItemHeightABS" format="dimension" />
         <attr name="actionSpinnerItemStyle" format="reference" />
-        <attr name="windowNoTitle" format="boolean"/>
+        <attr name="windowNoTitleABS" format="boolean"/>
         <attr name="windowActionBarABS" format="boolean"/>
         <attr name="windowActionBarOverlayABS" format="boolean"/>
         <attr name="windowActionModeOverlayABS" format="boolean"/>
