@@ -8,11 +8,14 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
 
 public class SearchView extends OnlineSearchView {
 	
 	private PlaybackService service;
 	private BaseSearchAdapter adapter;
+	private ListView lView;
 
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
@@ -53,5 +56,11 @@ public class SearchView extends OnlineSearchView {
 			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 		return adapter;
+	}
+
+	@Override
+	protected ListView getListView(View v) {
+		lView = (ListView) v.findViewById(R.id.list);
+		return lView;
 	}
 }

@@ -63,13 +63,13 @@
                 android:id="@+id/artistLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/chunkTime"
-                android:layout_toStartOf="@+id/chunkTime"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:layout_toLeftOf="@+id/chunkTime"
+                android:layout_toStartOf="@+id/chunkTime"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/font_size_title" />
 
@@ -77,10 +77,10 @@
                 android:id="@+id/chunkTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:gravity="end"
                 android:singleLine="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/font_size_title"
                 android:visibility="visible" />
@@ -104,8 +104,8 @@
         android:background="@drawable/selectable_item_bg"
         android:contentDescription="@string/expand"
         android:longClickable="true"
+        android:visibility="gone"
         android:scaleType="center"
-        android:src="@null"
-        android:visibility="gone" />
+        android:src="@null" />
 
 </LinearLayout>

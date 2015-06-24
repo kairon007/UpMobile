@@ -197,8 +197,8 @@ public class AdapterHelper {
 
 	public static ViewBuilder getViewBuilder(View convertView, LayoutInflater inflater, int isCutomView) {
 		ViewBuilder builder;
-		if (null == convertView) {
-			convertView = inflater.inflate(R.layout.row_online_search, null);
+		if (null == convertView) { 
+			convertView = inflater.inflate(org.kreed.vanilla.R.layout.adapter_row, null);
 			builder = new ViewBuilder(convertView, isCutomView > 0);
 		} else {
 			try {
