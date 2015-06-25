@@ -1141,57 +1141,54 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		SharedPreferences prefs = MusicApp.getSharedPreferences();
 		return prefs.getString("search_engines_title_8", "Search Engine 8");
 	}
-	
+
 	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
-		Class<? extends BaseSearchTask> objClass = SearchPleer.class;
 		if (null != searchEngineName) {
 			switch (searchEngineName) {
 			case "SearchVmusice":
-				objClass = SearchVmusice.class;
+				return SearchVmusice.class;
 			case "SearchZvukoff":
-				objClass = SearchZvukoff.class;
+				return SearchZvukoff.class;
 			case "SearchPleer":
-				objClass = SearchPleer.class;
+				return SearchPleer.class;
 			case "SearchPleerV2":
-				objClass = SearchPleerV2.class;
+				return SearchPleerV2.class;
 			case "SearchSoArdIyyin":
-				objClass = SearchSoArdIyyin.class;
+				return SearchSoArdIyyin.class;
 			case "SearchMyFreeMp3":
-				objClass = SearchMyFreeMp3.class;
+				return SearchMyFreeMp3.class;
 			case "SearchPoisk":
-				objClass = SearchPoisk.class;
+				return SearchPoisk.class;
 			case "SearchHulkShare":
-				objClass = SearchHulkShare.class;
+				return SearchHulkShare.class;
 			case "SearchMp3skull":
-				objClass = SearchMp3skull.class;
+				return SearchMp3skull.class;
 			case "SearchGrooveshark":
-				objClass = SearchGrooveshark.class;
+				return SearchGrooveshark.class;
 			case "SearchTing":
 				return SearchTing.class;
 			case "SearchJamendo":
-				objClass = SearchJamendo.class;
+				return SearchJamendo.class;
 			case "SearchYouTube":
-				objClass = SearchYouTube.class;
+				return SearchYouTube.class;
 			case "SearchVK":
-				objClass = SearchVK.class;
+				return SearchVK.class;
 			case "SearchTaringaMp3":
-				objClass = SearchTaringaMp3.class;
+				return SearchTaringaMp3.class;
 			case "SearchKugou":
-				objClass = SearchKugou.class;
+				return SearchKugou.class;
 			case "SearchGoearV2":
-				objClass = SearchGoearV2.class;
+				return SearchGoearV2.class;
 			case "SearchSogou":
-				objClass = SearchSogou.class;
+				return SearchSogou.class;
 			case "SearchYouTubeMusic":
-				objClass = SearchYouTubeMusic.class;
+				return SearchYouTubeMusic.class;
 			case "SearchSoundCloud":
-				objClass = SearchSoundCloud.class;
+				return SearchSoundCloud.class;
 			case "SearchMp3World":
-				objClass = SearchMp3World.class;
-			default:
-				objClass = SearchPleer.class;
+				return SearchMp3World.class;
 			}
 		}
-		return objClass;
+		return SearchPleer.class;
 	}
 }
