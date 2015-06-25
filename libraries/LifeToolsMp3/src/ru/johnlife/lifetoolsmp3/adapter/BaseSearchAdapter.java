@@ -24,7 +24,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
@@ -144,7 +143,9 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 			artist.setText(item.getArtist().replace("&#039;", "'"));
 			showDurationd(item.getDuration() > 0);
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-//			info.setTag(position);
+			if (null != btnDownload) {
+				btnDownload.setTag(position);
+			}
 			if (null != threeDot) {
 				threeDot.setTag(position);
 			}

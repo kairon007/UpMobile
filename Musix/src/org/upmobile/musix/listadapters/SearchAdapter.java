@@ -58,7 +58,6 @@ public class SearchAdapter extends BaseSearchAdapter {
 			duration = (TextView) view.findViewById(R.id.chunkTime);
 			btnDownload = (ImageView) view.findViewById(R.id.btnDownload);
 			btnDownload.setOnClickListener(this);
-			info.setOnClickListener(this);
 		}
 		
 		@Override
@@ -70,11 +69,8 @@ public class SearchAdapter extends BaseSearchAdapter {
 		@Override
 		public void onClick(View view) {
 			switch(view.getId()) {
-			case R.id.boxInfoItem:
-				listView.performItemClick(view, (int) view.getTag(), view.getId());
-				break;
 			case R.id.btnDownload:
-				int position = (int) info.getTag();
+				int position = (int) view.getTag();
 				download((RemoteSong) getItem(position), position);
 				break;
 			}

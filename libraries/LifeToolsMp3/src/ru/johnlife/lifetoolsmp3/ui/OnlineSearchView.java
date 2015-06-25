@@ -22,7 +22,28 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
+import ru.johnlife.lifetoolsmp3.engines.SearchGoearV2;
+import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
+import ru.johnlife.lifetoolsmp3.engines.SearchHulkShare;
+import ru.johnlife.lifetoolsmp3.engines.SearchJamendo;
+import ru.johnlife.lifetoolsmp3.engines.SearchKugou;
+import ru.johnlife.lifetoolsmp3.engines.SearchMp3World;
+import ru.johnlife.lifetoolsmp3.engines.SearchMp3skull;
+import ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3;
+import ru.johnlife.lifetoolsmp3.engines.SearchPleer;
+import ru.johnlife.lifetoolsmp3.engines.SearchPleerV2;
+import ru.johnlife.lifetoolsmp3.engines.SearchPoisk;
+import ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin;
+import ru.johnlife.lifetoolsmp3.engines.SearchSogou;
+import ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud;
+import ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3;
+import ru.johnlife.lifetoolsmp3.engines.SearchTing;
+import ru.johnlife.lifetoolsmp3.engines.SearchVK;
+import ru.johnlife.lifetoolsmp3.engines.SearchVmusice;
 import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
+import ru.johnlife.lifetoolsmp3.engines.SearchYouTube;
+import ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic;
+import ru.johnlife.lifetoolsmp3.engines.SearchZvukoff;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
@@ -70,6 +91,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -80,31 +102,32 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public abstract class OnlineSearchView extends View implements OnTouchListener, OnClickListener {
+public abstract class OnlineSearchView extends View implements OnTouchListener, OnClickListener, OnItemClickListener {
 
-	public static final String EMPTY_DIRECTORY = "directory.not.create.for.application";
-	public static List<Engine> engines = Collections.emptyList();
 	private static final Void[] NO_PARAMS = {};
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
+
+	public static final String EMPTY_DIRECTORY = "directory.not.create.for.application";
+	public static List<Engine> engines = Collections.emptyList();
 	
+	private AlertDialog alertDialog;
 	protected AlertDialog.Builder progressDialog;
 	protected AlertDialog alertProgressDialog;
-	protected DownloadClickListener downloadListener;
-	protected ListView listView;
-	protected ProgressDialog progressSecond;	// For PtMusicAppOffline
-	
-	protected PlaybackService service;// init in subclasses
 
-	private String lastSearchString = "";
-	private BaseSearchAdapter baseSearchAdapter;
+	protected DownloadClickListener downloadListener;
+	protected PlaybackService service;// init in subclasses
+	
+	/*!!! ADAPTERS !!!*/
+	private BaseSearchAdapter adapter;
+	private ArrayAdapter<String> enginesAdapter;
 	
 	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
 	private int clickPosition;
 	private boolean isRestored = false;
+	private String lastSearchString = "";
 	private String extraSearch = null;
 	private String keyEngines;
-	private ArrayAdapter<String> adapter;
 	private Iterator<Engine> taskIterator;
 	private SharedPreferences sPref;
 	private StateKeeper keeper;
@@ -112,7 +135,15 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	private RemoteSong downloadSong;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
+	private Bitmap listViewImage;
+	private BaseSearchTask searchTask;
+	
+	/*!!! VIEWS !!!*/
 	private ViewGroup view;
+	protected ListView listView;
+	private View clearBtn;
+	private View downloads;
+	private View searchBtn;
 	private View spEnginesChoiserScroll;
 	private View emptyHeader;
 	private View progress;
@@ -120,9 +151,8 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	private TextView message;
 	private TextView searchField;
 	private Spinner spEnginesChoiser;
-	private AlertDialog alertDialog;
-	private Bitmap listViewImage;
-	private BaseSearchTask searchTask;
+	protected ProgressDialog progressSecond;	// For PtMusicAppOffline
+	private View touchInterceptor;
 	
 	//TODO: remove if it is possible
 	public abstract boolean isWhiteTheme(Context context);
@@ -159,7 +189,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		} else {
 			searchField.setHint(R.string.hint_main_search);
 		}
-		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && getAdapter().isEmpty()) {
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && adapter.isEmpty()) {
 			search(searchField.getText().toString());
 		}
 		setMessage(getResources().getString(R.string.search_your_results_appear_here));
@@ -251,8 +281,8 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 				
 				@Override
 				public void run() {
-					View v = getViewByPosition(getAdapter().getPosition(song));
-					TextView infoView = (TextView) v.findViewById(R.id.infoView);
+					View view = getViewByPosition(adapter.getPosition(song));
+					TextView infoView = (TextView) view.findViewById(R.id.infoView);
 					if (null == infoView) return;
 					infoView.setVisibility(View.VISIBLE);
 					infoView.setText(R.string.downloading);
@@ -266,14 +296,14 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 
 		@Override
 		public void onFinishParsing(List<Song> songsList) {
-			getAdapter().setVisibilityProgress(false);
+			adapter.setVisibilityProgress(false);
 			if (keeper.checkState(StateKeeper.SEARCH_STOP_OPTION)) {
-				getAdapter().clear();
+				adapter.clear();
 				return;
 			}
 			if (songsList.isEmpty()) {
 				getNextResults(false);
-				if (!taskIterator.hasNext() && getAdapter().isEmpty()) {
+				if (!taskIterator.hasNext() && adapter.isEmpty()) {
 					try {
 						String src = getContext().getResources().getText(R.string.search_no_results_for).toString() + " " + searchField.getText().toString();
 						message.setText(src);
@@ -287,7 +317,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 				try {
 					for (Song song : songsList) {
 						if (!contains(song)) {
-							getAdapter().add(song);
+							adapter.add(song);
 						}
 					}
 				} catch (Exception e) {
@@ -298,8 +328,8 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	};
 	
 	private boolean contains (Song song) {
-		for (int i = 0; i < getAdapter().getCount(); i++) {
-			if (((Song) getAdapter().getItem(i)).getComment().equals(song.getComment())) {
+		for (int i = 0; i < adapter.getCount(); i++) {
+			if (((Song) adapter.getItem(i)).getComment().equals(song.getComment())) {
 				return true;
 			}
 		}
@@ -308,14 +338,14 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	
 	public View getView() {
 		if (!showFullElement()) {
-			view.findViewById(R.id.downloads).setVisibility(View.GONE);
+			downloads.setVisibility(View.GONE);
 		} else {
-			view.findViewById(R.id.downloads).setOnClickListener(this);
+			downloads.setOnClickListener(this);
 		}
 		if (!isRestored) {
 			listView.addHeaderView(emptyHeader);
-			listView.addFooterView(baseSearchAdapter.getProgressView(), null, false);
-			listView.setAdapter(baseSearchAdapter);
+			listView.addFooterView(adapter.getProgressView(), null, false);
+			listView.setAdapter(adapter);
 			animateListView(false);
 		}
 		listView.setEmptyView(message);
@@ -351,22 +381,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 			}
 			
 		});
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-				android.util.Log.d("logd", "onItemClick: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + position);
-				try {
-					if (position == baseSearchAdapter.getCount()) return; // progress click
-					baseSearchAdapter.notifyDataSetChanged();
-					viewItem = view;
-					clickPosition = position;
-					getDownloadUrl(view, (position - 1));
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			
 			@Override
@@ -378,16 +392,12 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 				return false;
 			}
 		});
-		view.findViewById(R.id.clear).setOnClickListener(this);
-		view.findViewById(R.id.search).setOnClickListener(this);
-		view.findViewById(R.id.touch_interceptor).setOnTouchListener(this);
-		searchField.setOnTouchListener(this);
 		if (extraSearch != null) {
 			searchField.setText(extraSearch);
 			trySearch();
 			return view;
 		}
-		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && baseSearchAdapter.isEmpty()) {
+		if (keeper.checkState(StateKeeper.SEARCH_EXE_OPTION) && adapter.isEmpty()) {
 			showBaseProgress();
 			message.setVisibility(View.GONE);
 		} else {
@@ -405,7 +415,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 			searchField.setText(null);
 			setMessage(getResources().getString(R.string.search_your_results_appear_here));
 			getNextResults(true);
-			getAdapter().clear();
+			adapter.clear();
 			keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 			keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			hideBaseProgress();
@@ -432,21 +442,52 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 				view.setFocusableInTouchMode(true);
 			}
 			return view.performClick();
+		} else if (id == R.id.choise_engines) {
+			if (((Activity) getContext()).getWindowManager().getDefaultDisplay().getHeight() < 400) {
+				Util.hideKeyboard(getContext(), view);
+			}
+			return view.performClick();
 		}
 		return false;
 	}
 	
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		try {
+			if (position == adapter.getCount()) return; // progress click
+			adapter.notifyDataSetChanged();
+			viewItem = view;
+			clickPosition = position;
+			getDownloadUrl(view, (position - 1));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void init(LayoutInflater inflater) {
 		view = (ViewGroup) inflater.inflate(R.layout.search, null);
+		listView = getListView(view);
+		adapter = getAdapter();
 		message = (TextView) view.findViewById(R.id.message);
 		progress = view.findViewById(R.id.progress);
-		listView = getListView(view);
-		baseSearchAdapter = getAdapter();
+		clearBtn = view.findViewById(R.id.clear);
+		searchBtn = view.findViewById(R.id.search);
+		downloads = view.findViewById(R.id.downloads);
+		touchInterceptor = view.findViewById(R.id.touch_interceptor);
 		searchField = (TextView) view.findViewById(R.id.text);
 		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
 		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
 		emptyHeader = inflate(getContext(), R.layout.empty_header, null);
 		specialInit(view);
+		setListeners();
+	}
+	
+	private void setListeners() {
+		clearBtn.setOnClickListener(this);
+		searchBtn.setOnClickListener(this);
+		touchInterceptor.setOnTouchListener(this);
+		searchField.setOnTouchListener(this);
+		listView.setOnItemClickListener(this);
 	}
 	
 	public int getScrollListView() {
@@ -509,41 +550,32 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		ArrayList<String> list = getSettings().getEnginesArray(getContext());
 		if (list.size() > 1) {
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-				adapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
+				enginesAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
 			} else {
-				adapter = new CustomSpinnerAdapter(getContext(), R.layout.item_of_engine, list);	
+				enginesAdapter = new CustomSpinnerAdapter(getContext(), R.layout.item_of_engine, list);	
 			}
 			if (!isUseDefaultSpinner()) {
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				enginesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			} else {
 				if (getDropDownViewResource() > 0) {
-					adapter.setDropDownViewResource(getDropDownViewResource());
+					enginesAdapter.setDropDownViewResource(getDropDownViewResource());
 				}
 			}
-			spEnginesChoiser.setAdapter(adapter);
+			spEnginesChoiser.setAdapter(enginesAdapter);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
 				android.view.ViewGroup.LayoutParams params = spEnginesChoiser.getLayoutParams();
 				params.width = 170;
 				spEnginesChoiser.setLayoutParams(params);
 			}
-			int id = adapter.getPosition(keyEngines);
+			int id = enginesAdapter.getPosition(keyEngines);
 			spEnginesChoiser.setSelection(id);
-			spEnginesChoiser.setOnTouchListener(new OnTouchListener() {
-
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					if (((Activity) getContext()).getWindowManager().getDefaultDisplay().getHeight() < 400) {
-						Util.hideKeyboard(getContext(), v);
-					}
-					return false;
-				}
-			});
+			spEnginesChoiser.setOnTouchListener(this);
 			spEnginesChoiser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 					lastSearchString = searchField.getText().toString();
-					keyEngines = adapter.getItem(position);
+					keyEngines = enginesAdapter.getItem(position);
 					sPref = MusicApp.getSharedPreferences();
 					SharedPreferences.Editor editor = sPref.edit();
 					if (keyEngines.equals(getTitleSearchEngine())) {
@@ -671,9 +703,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 			if (getAdvertisment().isOnlineLib(getContext())) {
 				getAdvertisment().searchStartLib(getContext());
 			}
-		} catch (Exception e) {
-
-		}
+		} catch (Exception e) { }
 	}
 
 	public ArrayList<String> getDMCABlacklistedItems(String remoteSetting) {
@@ -695,10 +725,9 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		return searchEngines;
 	}
 	
+	@SuppressLint("DefaultLocale")
 	public boolean isBlacklistedQuery(String songName) {
-
 		ArrayList<String> dmcaSearchQueryBlacklist = getDMCABlacklistedItems("dmca_searchquery_blacklist");
-
 		if (songName != null) {
 			// serach blacklist
 			for (String blacklistedSearchQuery : BaseSearchTask.blacklist) {
@@ -707,7 +736,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 					return true;
 				}
 			}
-
 			// serach dmca_searchquery blacklist
 			for (String blacklistedSearchQuery : dmcaSearchQueryBlacklist) {
 				blacklistedSearchQuery = blacklistedSearchQuery.toLowerCase();
@@ -776,12 +804,10 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
 			alertProgressDialog.cancel();
 		}
-		android.util.Log.d("logd", "getDownloadUrl: " + showFullElement());
 		if (!showFullElement()) {
 			click(view, position);
 			return;
 		}
-		android.util.Log.d("logd", "getDownloadUrl: ");
 		listViewImage = null;
 		if (!((ImageView) view.findViewById(R.id.cover)).getContentDescription().equals(getResources().getString(R.string.default_cover))) {
 			Drawable draw = ((ImageView) view.findViewById(R.id.cover)).getDrawable();
@@ -1011,7 +1037,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	}
 	
 	public void restoreAdapter(ArrayList<Song> list, int position) {
-		getAdapter().add(list);
+		adapter.add(list);
 		listView.addHeaderView(emptyHeader);
 		listView.addFooterView(getAdapter().getProgressView(), null, false);
 		listView.setAdapter(getAdapter());
@@ -1065,7 +1091,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	}
 
 	public void notifyAdapter() {
-		getAdapter().notifyDataSetChanged();
+		adapter.notifyDataSetChanged();
 	}
 
 	public static String getTitleSearchEngine() {
@@ -1117,55 +1143,55 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	}
 	
 	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
-		if (searchEngineName != null) {
-			if (searchEngineName.equals("SearchVmusice")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchVmusice.class;
-			} else if (searchEngineName.equals("SearchZvukoff")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchZvukoff.class;
-			} else if (searchEngineName.equals("SearchPleer")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
-			} else if (searchEngineName.equals("SearchPleerV2")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchPleerV2.class;
-			} else if (searchEngineName.equals("SearchZvukoff")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchZvukoff.class;
-			} else if (searchEngineName.equals("SearchSoArdIyyin")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin.class;
-			} else if (searchEngineName.equals("SearchMyFreeMp3")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3.class;
-			} else if (searchEngineName.equals("SearchPleer")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
-			} else if (searchEngineName.equals("SearchPoisk")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchPoisk.class;
-			} else if (searchEngineName.equals("SearchHulkShare")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchHulkShare.class;
-			} else if (searchEngineName.equals("SearchMp3skull")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchMp3skull.class;
-			} else if (searchEngineName.equals("SearchGrooveshark")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark.class;
-			} else if (searchEngineName.equals("SearchTing")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchTing.class;
-			} else if (searchEngineName.equals("SearchJamendo")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchJamendo.class;
-			} else if (searchEngineName.equals("SearchYouTube")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchYouTube.class;
-			} else if (searchEngineName.equals("SearchVK")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchVK.class;
-			} else if (searchEngineName.equals("SearchTaringaMp3")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3.class;
-			} else if (searchEngineName.equals("SearchKugou")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchKugou.class;
-			} else if (searchEngineName.equals("SearchGoearV2")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchGoearV2.class;
-			} else if (searchEngineName.equals("SearchSogou")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSogou.class;
-			} else if (searchEngineName.equals("SearchYouTubeMusic")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic.class; 
-			} else if (searchEngineName.equals("SearchSoundCloud")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud.class;
-			} else if (searchEngineName.equals("SearchMp3World")) {
-				return ru.johnlife.lifetoolsmp3.engines.SearchMp3World.class;
-			} 
+		Class<? extends BaseSearchTask> objClass = SearchPleer.class;
+		if (null != searchEngineName) {
+			switch (searchEngineName) {
+			case "SearchVmusice":
+				objClass = SearchVmusice.class;
+			case "SearchZvukoff":
+				objClass = SearchZvukoff.class;
+			case "SearchPleer":
+				objClass = SearchPleer.class;
+			case "SearchPleerV2":
+				objClass = SearchPleerV2.class;
+			case "SearchSoArdIyyin":
+				objClass = SearchSoArdIyyin.class;
+			case "SearchMyFreeMp3":
+				objClass = SearchMyFreeMp3.class;
+			case "SearchPoisk":
+				objClass = SearchPoisk.class;
+			case "SearchHulkShare":
+				objClass = SearchHulkShare.class;
+			case "SearchMp3skull":
+				objClass = SearchMp3skull.class;
+			case "SearchGrooveshark":
+				objClass = SearchGrooveshark.class;
+			case "SearchTing":
+				return SearchTing.class;
+			case "SearchJamendo":
+				objClass = SearchJamendo.class;
+			case "SearchYouTube":
+				objClass = SearchYouTube.class;
+			case "SearchVK":
+				objClass = SearchVK.class;
+			case "SearchTaringaMp3":
+				objClass = SearchTaringaMp3.class;
+			case "SearchKugou":
+				objClass = SearchKugou.class;
+			case "SearchGoearV2":
+				objClass = SearchGoearV2.class;
+			case "SearchSogou":
+				objClass = SearchSogou.class;
+			case "SearchYouTubeMusic":
+				objClass = SearchYouTubeMusic.class;
+			case "SearchSoundCloud":
+				objClass = SearchSoundCloud.class;
+			case "SearchMp3World":
+				objClass = SearchMp3World.class;
+			default:
+				objClass = SearchPleer.class;
+			}
 		}
-		return ru.johnlife.lifetoolsmp3.engines.SearchPleer.class;
+		return objClass;
 	}
 }
