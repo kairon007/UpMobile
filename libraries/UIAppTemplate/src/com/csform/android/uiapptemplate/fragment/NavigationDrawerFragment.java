@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.text.Html;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -51,10 +52,9 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     private int previousSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-	private ArrayList<DrawerItem> mDrawerItems;
+	private List<DrawerItem> mDrawerItems;
 
-    public NavigationDrawerFragment() {
-    }
+    public NavigationDrawerFragment() { }
     
     public interface OnNavigationDrawerState {
     	public void onDrawerOpen();
@@ -112,6 +112,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		mDrawerItems.add(new DrawerItem(((UIMainActivity) getActivity()).getSettingsIcon(), ((UIMainActivity) getActivity()).getDirectory(), DrawerItem.Types.TYPE_SETTING ));
 		mAdapter = new DrawerAdapter(getActivity(), mDrawerItems, true);
 		mDrawerListView.setAdapter(mAdapter);
+		selectItem(mCurrentSelectedPosition);
 	}
 	
     public boolean isDrawerOpen() {
@@ -145,10 +146,8 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         
-
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
-        
 	        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
 	                getActivity(),                    /* host Activity */
 	                mDrawerLayout,                    /* DrawerLayout object */
@@ -191,7 +190,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     	mCurrentSelectedPosition = position;
     	if (null != mDrawerListView) {
     		if (position != SETTINGS_FRAGMENT && position != 6) {
-        		mDrawerListView.setItemChecked(position, true);
+    			mDrawerListView.setItemChecked(position, true);
                 previousSelectedPosition = mCurrentSelectedPosition;
         	} else {
         		setSelectedItem(previousSelectedPosition);
@@ -231,7 +230,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		// Forward the new configuration the drawer toggle component.
-			mDrawerToggle.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	@Override
@@ -242,7 +241,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		return super.onOptionsItemSelected(item);
 	}
 
-    private android.support.v7.app.ActionBar getActionBar() {
+    private ActionBar getActionBar() {
         return ((UIMainActivity) getActivity()).getSupportActionBar();
     }
     
