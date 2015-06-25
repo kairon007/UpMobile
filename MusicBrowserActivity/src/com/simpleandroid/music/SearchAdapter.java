@@ -38,7 +38,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 		return new SearchViewHolder(view);
 	}
 	
-	private class SearchViewHolder extends BaseSearchViewHolder implements OnClickListener  {
+	private class SearchViewHolder extends BaseSearchViewHolder {
 		
 		public SearchViewHolder(View view) {
 			info = (ViewGroup) view.findViewById(R.id.boxInfoItem);
@@ -46,14 +46,11 @@ public class SearchAdapter extends BaseSearchAdapter {
 			title = (TextView) view.findViewById(R.id.titleLine);
 			artist = (TextView) view.findViewById(R.id.artistLine);
 			duration = (TextView) view.findViewById(R.id.chunkTime);
-			btnDownload = (ImageView) view.findViewById(R.id.btnDownload);
-			btnDownload.setOnClickListener(this);
-			info.setOnClickListener(this);
 		}
 
 		@Override
-		public void onClick(View view) {
-			
+		protected void hold(Song item, int position) {
+			super.hold(item, position);
 		}
 		
 	}

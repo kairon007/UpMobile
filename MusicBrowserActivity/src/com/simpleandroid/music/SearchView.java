@@ -13,6 +13,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
 
 public class SearchView extends OnlineSearchView {
 
@@ -59,9 +61,6 @@ public class SearchView extends OnlineSearchView {
 	}
 
 	@Override
-	public void refreshLibrary() {} // do nothing, just for others projects
-
-	@Override
 	protected void stopSystemPlayer(Context context) {
 		if (activity != null) MusicUtils.bindToService(activity, osc);
 	}
@@ -79,5 +78,10 @@ public class SearchView extends OnlineSearchView {
 			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 		return adapter;
+	}
+
+	@Override
+	protected ListView getListView(View v) {
+		return (ListView) v.findViewById(R.id.list);
 	}
 }
